@@ -54,9 +54,18 @@
         /* PROFILE */
         .profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
         .profile-avt { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--scratch-blue); }
+
+        /* LOADING SCREEN CỰC XỊN */
+        #globalLoader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
     </style>
 </head>
 <body>
+
+    <!-- MÀN HÌNH CHỜ ĐỘC LẬP (LOADING SCREEN) -->
+    <div id="globalLoader">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 4rem; color: #4c97ff; margin-bottom: 20px;"></i>
+        <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối hệ thống...</h2>
+    </div>
 
     <nav class="navbar">
         <div class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV</div>
@@ -136,28 +145,44 @@
         let allProjects = [];
         let currentPlayingFileId = null;
 
-        // KIỂM TRA ĐĂNG NHẬP SAU KHI REDIRECT TỪ SCRATCH
+        // XỬ LÝ LÚC MỞ TRANG (TÍCH HỢP LOADING SCREEN BẮT LỖI TẬN GỐC)
         window.onload = async () => {
+            const loader = document.getElementById('globalLoader');
+            const loaderText = document.getElementById('loaderText');
             const urlParams = new URLSearchParams(window.location.search);
             const privateCode = urlParams.get('privateCode');
+            
             if (privateCode) {
                 window.history.replaceState({}, document.title, window.location.pathname);
-                document.getElementById('navActions').innerHTML = `<span>Đang xác thực...</span>`;
-                const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
-                    method: 'POST', body: JSON.stringify({ privateCode })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = { username: data.username, sessionToken: data.sessionToken };
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    // Lấy thêm thông tin avt
-                    const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
-                    currentUser.avt = profData.avt;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                } else alert("Xác thực Scratch thất bại!");
+                loaderText.innerText = "Đang xác thực bảo mật qua Scratch...";
+                
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
+                        method: 'POST', body: JSON.stringify({ privateCode })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        currentUser = { username: data.username, sessionToken: data.sessionToken };
+                        loaderText.innerText = "Đang tải hồ sơ...";
+                        const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
+                        currentUser.avt = profData.avt || '';
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    } else {
+                        alert(`❌ Đăng nhập thất bại: ${data.error || data.details}`);
+                    }
+                } catch (err) {
+                    alert(`❌ LỖI NGHIÊM TRỌNG (Hệ thống Cloudflare):\nCấu hình Google Sheets của bạn đang gặp vấn đề.\nChi tiết lỗi: ${err.message}`);
+                }
             }
+            
+            loaderText.innerText = "Đang tải kho dự án...";
+            await fetchProjects();
             updateNav();
-            fetchProjects();
+            
+            // Tắt Loading Screen mượt mà
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 400);
         };
 
         // GIAO DIỆN NAVBAR
@@ -182,17 +207,23 @@
 
         // LOAD GAME
         async function fetchProjects() {
-            const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
-            allProjects = res;
-            document.getElementById('projectList').innerHTML = allProjects.map(p => `
-                <div class="card">
-                    <div class="card-thumb" onclick="playGame('${p.fileId}', '${p.title}')"><i class="fa-solid fa-play"></i></div>
-                    <div class="card-body">
-                        <div class="card-title" onclick="playGame('${p.fileId}', '${p.title}')">${p.title}</div>
-                        <div class="card-author" onclick="openProfile('${p.author}')">By: ${p.author}</div>
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
+                if(res.error) throw new Error(res.error + " - " + res.details);
+                allProjects = res;
+                
+                document.getElementById('projectList').innerHTML = allProjects.map(p => `
+                    <div class="card">
+                        <div class="card-thumb" onclick="playGame('${p.fileId}', '${p.title}')"><i class="fa-solid fa-play"></i></div>
+                        <div class="card-body">
+                            <div class="card-title" onclick="playGame('${p.fileId}', '${p.title}')">${p.title}</div>
+                            <div class="card-author" onclick="openProfile('${p.author}')">By: ${p.author}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch(e) {
+                document.getElementById('projectList').innerHTML = `<div style="color:red; grid-column: 1/-1;">❌ Lỗi máy chủ không thể tải game. Chi tiết: ${e.message}</div>`;
+            }
         }
 
         // CHƠI GAME & BÌNH LUẬN
@@ -280,7 +311,7 @@
             const res = await (await fetch(`${WORKER_URL}/api/user/update`, { method: 'POST', body: form })).json();
             if (res.success) {
                 currentUser.avt = res.avtId; localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                openProfile(currentUser.username); // Reload modal
+                openProfile(currentUser.username); 
             } else alert(res.error);
             btn.innerText = "Lưu thay đổi";
         }
