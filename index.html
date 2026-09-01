@@ -10,7 +10,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* NAVBAR */
         .navbar { background: var(--tw-red); height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; color: white; }
         .navbar-brand { font-size: 1.2rem; font-weight: bold; }
         .nav-actions { display: flex; gap: 10px; align-items: center; }
@@ -21,7 +20,6 @@
         .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; }
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin-top: 20px;}
         
-        /* CARD */
         .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; }
         .card:hover { border-color: var(--scratch-blue); box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2); transform: translateY(-4px); }
         .card-thumb { height: 140px; background: #e9f1fc; display: flex; align-items: center; justify-content: center; color: var(--scratch-blue); font-size: 3.5rem; }
@@ -30,7 +28,6 @@
         .card-author { font-size: 0.85rem; color: #777; font-weight: bold;}
         .card-author:hover { text-decoration: underline; color: var(--scratch-blue); }
 
-        /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .modal { background: white; border-radius: 8px; width: 100%; max-width: 500px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;}
         .modal-header { background: var(--scratch-blue); color: white; padding: 16px 20px; display: flex; justify-content: space-between; font-weight: bold; }
@@ -40,7 +37,6 @@
         input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 15px; font-family: inherit;}
         label { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;}
 
-        /* PLAYER & COMMENTS */
         .modal-player { max-width: 900px; }
         .player-wrapper { display: flex; flex-direction: column; height: 100%; }
         iframe { width: 100%; height: 400px; border: none; background: #000; }
@@ -51,12 +47,10 @@
         .comment-author { font-weight: bold; font-size: 0.9rem; color: var(--scratch-blue); }
         .comment-text { font-size: 0.95rem; margin-top: 3px; }
         
-        /* PROFILE */
         .profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
         .profile-avt { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--scratch-blue); }
 
-        /* LOADING SCREEN CỰC XỊN */
-        #globalLoader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
+        #globalLoader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.3s ease; }
     </style>
 </head>
 <body>
@@ -67,18 +61,18 @@
         <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối hệ thống...</h2>
     </div>
 
-    <!-- THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
+    <!-- THANH ĐIỀU HƯỚNG -->
     <nav class="navbar">
-        <div class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV</div>
+        <div class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV Workshop</div>
         <div class="nav-actions" id="navActions">
             <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
         </div>
     </nav>
 
-    <!-- NỘI DUNG CHÍNH (HIỂN THỊ GAME) -->
+    <!-- NỘI DUNG CHÍNH -->
     <div class="container">
         <h2 style="border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">Khám phá dự án</h2>
-        <div class="project-grid" id="projectList">Đang tải...</div>
+        <div class="project-grid" id="projectList">Đang tải danh sách game...</div>
     </div>
 
     <!-- MODAL ĐĂNG GAME -->
@@ -87,7 +81,7 @@
             <div class="modal-header"><span>Tải lên dự án</span><button class="btn-close" onclick="closeModal('uploadModal')">&times;</button></div>
             <div class="modal-body">
                 <form onsubmit="handleUpload(event)">
-                    <label>Tên dự án</label> <input type="text" id="projTitle" required>
+                    <label>Tên dự án</label> <input type="text" id="projTitle" required placeholder="Nhập tên game...">
                     <label>File (.sb3) - Tối đa 20MB</label> <input type="file" id="projFile" accept=".sb3" required>
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;" id="btnUpload">Đăng dự án</button>
                 </form>
@@ -142,37 +136,30 @@
     </div>
 
     <script>
-        // ==============================================================
-        // BƯỚC QUAN TRỌNG: ĐIỀN MÃ CLIENT ID CỦA SCRATCH WIKI OAUTH VÀO ĐÂY NHÉ:
-        // ==============================================================
-        const WIKI_CLIENT_ID = "70970406"; 
-        // ==============================================================
-
+        // ⚠️ ĐIỀN MÃ CLIENT ID CỦA SCRATCH WIKI OAUTH VÀO ĐÂY:
+        const WIKI_CLIENT_ID = "ĐIỀN_SỐ_CLIENT_ID_CỦA_BẠN_VÀO_ĐÂY"; 
+        
         const WORKER_URL = "https://app.studiodanv.workers.dev";
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = [];
         let currentPlayingFileId = null;
 
-        // BẮT MÃ TỪ SCRATCH WIKI TRẢ VỀ VÀ XỬ LÝ LÚC VỪA MỞ TRANG
-        window.onload = async () => {
+        // HÀM KHỞI CHẠY SIÊU AN TOÀN (KHÔNG BAO GIỜ BỊ TREO MÀN HÌNH)
+        async function startApp() {
             const loader = document.getElementById('globalLoader');
             const loaderText = document.getElementById('loaderText');
-            const urlParams = new URLSearchParams(window.location.search);
             
-            const authCode = urlParams.get('code');
-            const authState = urlParams.get('state');
-            
-            if (authCode && authState) {
-                // Xóa URL cho sạch sẽ để không bị rối mắt
-                window.history.replaceState({}, document.title, window.location.pathname);
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const authCode = urlParams.get('code');
+                const authState = urlParams.get('state');
                 
-                // Kiểm tra State chống giả mạo
-                const savedState = localStorage.getItem('oauth_state');
-                if (authState !== savedState) {
-                    alert("Lỗi bảo mật: Đăng nhập thất bại (Dữ liệu phiên không khớp).");
-                } else {
-                    loaderText.innerText = "Đang xác thực bảo mật với Scratch Wiki...";
-                    try {
+                if (authCode && authState) {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    const savedState = localStorage.getItem('oauth_state');
+                    
+                    if (authState === savedState) {
+                        if (loaderText) loaderText.innerText = "Đang xác thực bảo mật Scratch...";
                         const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
                             method: 'POST', body: JSON.stringify({ code: authCode })
                         });
@@ -180,28 +167,47 @@
                         
                         if (data.success) {
                             currentUser = { username: data.username, sessionToken: data.sessionToken };
-                            loaderText.innerText = "Đang tải hồ sơ của bạn...";
-                            const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
-                            currentUser.avt = profData.avt || '';
+                            try {
+                                const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
+                                currentUser.avt = profData.avt || '';
+                            } catch(e) {}
                             localStorage.setItem('danv_user', JSON.stringify(currentUser));
                         } else {
                             alert(`❌ Đăng nhập thất bại: ${data.error || data.details}`);
                         }
-                    } catch (err) {
-                        alert(`❌ LỖI MÁY CHỦ:\nKhông thể kết nối đến máy chủ Cloudflare.\nChi tiết lỗi: ${err.message}`);
                     }
                 }
+                
+                if (loaderText) loaderText.innerText = "Đang tải danh sách game...";
+                await fetchProjects();
+                updateNav();
+            } catch (err) {
+                console.error("Lỗi khởi động:", err);
+            } finally {
+                // TẮT MÀN HÌNH LOADING NGAY LẬP TỨC
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => { loader.style.display = 'none'; }, 300);
+                }
             }
-            
-            loaderText.innerText = "Đang tải kho dự án...";
-            await fetchProjects();
-            updateNav();
-            
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-        };
+        }
 
-        // GIAO DIỆN NAVBAR
+        // TỰ ĐỘNG CHẠY NGAY KHI FILE HTML VỪA TẢI XONG
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startApp);
+        } else {
+            startApp();
+        }
+
+        // KHÓA AN TOÀN 3 GIÂY: Sau tối đa 3 giây, ép tắt màn hình Loading
+        setTimeout(() => {
+            const loader = document.getElementById('globalLoader');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 300);
+            }
+        }, 3000);
+
         function updateNav() {
             const nav = document.getElementById('navActions');
             if (currentUser) {
@@ -215,52 +221,51 @@
             }
         }
 
-        // HÀM CHUYỂN HƯỚNG SANG TRANG ĐĂNG NHẬP CỦA SCRATCH WIKI
         function loginScratch() {
-            if (!WIKI_CLIENT_ID || WIKI_CLIENT_ID === "ĐIỀN_SỐ_CLIENT_ID_CỦA_BẠN_VÀO_ĐÂY") {
-                alert("Lỗi: Bạn chưa điền Client ID vào code HTML!");
+            if (!WIKI_CLIENT_ID || WIKI_CLIENT_ID.includes("ĐIỀN_SỐ")) {
+                alert("Vui lòng điền WIKI_CLIENT_ID vào code HTML trước!");
                 return;
             }
             const redirectUri = window.location.origin + window.location.pathname;
-            const state = Math.random().toString(36).substring(2); // Tạo mã ngẫu nhiên để bảo mật
-            localStorage.setItem('oauth_state', state); 
-            
-            // Chuyển hướng người dùng qua Scratch Wiki để họ bấm nút "Xác nhận"
-            const authUrl = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scopes=identify&state=${state}`;
-            window.location.href = authUrl;
+            const state = Math.random().toString(36).substring(2);
+            localStorage.setItem('oauth_state', state);
+            window.location.href = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scopes=identify&state=${state}`;
         }
 
         function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); }
 
-        // LOAD GAME TỪ MÁY CHỦ VỀ
         async function fetchProjects() {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
                 if(res.error) throw new Error(res.error + " - " + res.details);
                 allProjects = res;
                 
+                if (allProjects.length === 0) {
+                    document.getElementById('projectList').innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #888;">Chưa có game nào được đăng!</div>`;
+                    return;
+                }
+
                 document.getElementById('projectList').innerHTML = allProjects.map(p => `
                     <div class="card">
                         <div class="card-thumb" onclick="playGame('${p.fileId}', '${p.title}')"><i class="fa-solid fa-play"></i></div>
                         <div class="card-body">
                             <div class="card-title" onclick="playGame('${p.fileId}', '${p.title}')">${p.title}</div>
-                            <div class="card-author" onclick="openProfile('${p.author}')">By: ${p.author}</div>
+                            <div class="card-author" onclick="openProfile('${p.author}')">Tác giả: ${p.author}</div>
                         </div>
                     </div>
                 `).join('');
             } catch(e) {
-                document.getElementById('projectList').innerHTML = `<div style="color:red; grid-column: 1/-1;">❌ Lỗi máy chủ không thể tải game. Chi tiết: ${e.message}</div>`;
+                document.getElementById('projectList').innerHTML = `<div style="color:red; grid-column: 1/-1;">❌ Lỗi kết nối Google Sheets: ${e.message}</div>`;
             }
         }
 
-        // CHƠI GAME & BÌNH LUẬN
         function playGame(fileId, title) {
             currentPlayingFileId = fileId;
             document.getElementById('playerTitle').innerText = title;
             document.getElementById('gameIframe').src = `https://turbowarp.org/embed.html?project_url=${encodeURIComponent(WORKER_URL+'/api/project/'+fileId)}&ui-theme=dark&autoplay=on`;
             
             const proj = allProjects.find(p => p.fileId === fileId);
-            renderComments(proj.comments || []);
+            renderComments(proj ? (proj.comments || []) : []);
             
             if (currentUser) {
                 document.getElementById('commentForm').style.display = 'flex';
@@ -299,7 +304,6 @@
             }
         }
 
-        // XEM & SỬA PROFILE
         async function openProfile(username) {
             document.getElementById('profNameTitle').innerText = `Hồ sơ: ${username}`;
             document.getElementById('profUsername').innerText = username;
@@ -311,13 +315,13 @@
             const data = await (await fetch(`${WORKER_URL}/api/user/${username}`)).json();
             document.getElementById('profAvt').src = getAvtUrl(data.avt);
             document.getElementById('profStatus').innerText = data.status || "Chưa có trạng thái";
-            document.getElementById('profBio').innerText = data.bio || "Người dùng này lười quá, chưa viết gì cả!";
+            document.getElementById('profBio').innerText = data.bio || "Người dùng này chưa viết giới thiệu!";
 
             if (currentUser && currentUser.username === username) {
                 document.getElementById('editProfileForm').style.display = 'block';
-                document.getElementById('editStatus').value = data.status;
-                document.getElementById('editBio').value = data.bio;
-                document.getElementById('editProfileForm').dataset.currentAvt = data.avt;
+                document.getElementById('editStatus').value = data.status || "";
+                document.getElementById('editBio').value = data.bio || "";
+                document.getElementById('editProfileForm').dataset.currentAvt = data.avt || "";
             }
         }
 
@@ -343,7 +347,6 @@
             btn.innerText = "Lưu thay đổi";
         }
 
-        // ĐĂNG GAME
         async function handleUpload(e) {
             e.preventDefault();
             const file = document.getElementById('projFile').files[0];
@@ -352,10 +355,10 @@
             const btn = document.getElementById('btnUpload'); btn.innerText = "Đang tải...";
             const form = new FormData();
             form.append("file", file); form.append("title", document.getElementById('projTitle').value);
-            form.append("author", currentUser.username);
+            form.append("author", currentUser ? currentUser.username : "Ẩn danh");
 
             const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
-            if (res.success) { alert("Thành công!"); closeModal('uploadModal'); fetchProjects(); }
+            if (res.success) { alert("Đăng game thành công!"); closeModal('uploadModal'); fetchProjects(); }
             btn.innerText = "Đăng dự án";
         }
 
