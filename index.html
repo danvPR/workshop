@@ -61,12 +61,13 @@
 </head>
 <body>
 
-    <!-- MÀN HÌNH CHỜ ĐỘC LẬP (LOADING SCREEN) -->
+    <!-- MÀN HÌNH CHỜ (LOADING) -->
     <div id="globalLoader">
         <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 4rem; color: #4c97ff; margin-bottom: 20px;"></i>
         <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối hệ thống...</h2>
     </div>
 
+    <!-- THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
     <nav class="navbar">
         <div class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV</div>
         <div class="nav-actions" id="navActions">
@@ -74,6 +75,7 @@
         </div>
     </nav>
 
+    <!-- NỘI DUNG CHÍNH (HIỂN THỊ GAME) -->
     <div class="container">
         <h2 style="border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">Khám phá dự án</h2>
         <div class="project-grid" id="projectList">Đang tải...</div>
@@ -140,39 +142,54 @@
     </div>
 
     <script>
+        // ==============================================================
+        // BƯỚC QUAN TRỌNG: ĐIỀN MÃ CLIENT ID CỦA SCRATCH WIKI OAUTH VÀO ĐÂY NHÉ:
+        // ==============================================================
+        const WIKI_CLIENT_ID = "70970406"; 
+        // ==============================================================
+
         const WORKER_URL = "https://app.studiodanv.workers.dev";
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = [];
         let currentPlayingFileId = null;
 
-        // XỬ LÝ LÚC MỞ TRANG (TÍCH HỢP LOADING SCREEN BẮT LỖI TẬN GỐC)
+        // BẮT MÃ TỪ SCRATCH WIKI TRẢ VỀ VÀ XỬ LÝ LÚC VỪA MỞ TRANG
         window.onload = async () => {
             const loader = document.getElementById('globalLoader');
             const loaderText = document.getElementById('loaderText');
             const urlParams = new URLSearchParams(window.location.search);
-            const privateCode = urlParams.get('privateCode');
             
-            if (privateCode) {
+            const authCode = urlParams.get('code');
+            const authState = urlParams.get('state');
+            
+            if (authCode && authState) {
+                // Xóa URL cho sạch sẽ để không bị rối mắt
                 window.history.replaceState({}, document.title, window.location.pathname);
-                loaderText.innerText = "Đang xác thực bảo mật qua Scratch...";
                 
-                try {
-                    const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
-                        method: 'POST', body: JSON.stringify({ privateCode })
-                    });
-                    const data = await res.json();
-                    
-                    if (data.success) {
-                        currentUser = { username: data.username, sessionToken: data.sessionToken };
-                        loaderText.innerText = "Đang tải hồ sơ...";
-                        const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
-                        currentUser.avt = profData.avt || '';
-                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    } else {
-                        alert(`❌ Đăng nhập thất bại: ${data.error || data.details}`);
+                // Kiểm tra State chống giả mạo
+                const savedState = localStorage.getItem('oauth_state');
+                if (authState !== savedState) {
+                    alert("Lỗi bảo mật: Đăng nhập thất bại (Dữ liệu phiên không khớp).");
+                } else {
+                    loaderText.innerText = "Đang xác thực bảo mật với Scratch Wiki...";
+                    try {
+                        const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
+                            method: 'POST', body: JSON.stringify({ code: authCode })
+                        });
+                        const data = await res.json();
+                        
+                        if (data.success) {
+                            currentUser = { username: data.username, sessionToken: data.sessionToken };
+                            loaderText.innerText = "Đang tải hồ sơ của bạn...";
+                            const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
+                            currentUser.avt = profData.avt || '';
+                            localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        } else {
+                            alert(`❌ Đăng nhập thất bại: ${data.error || data.details}`);
+                        }
+                    } catch (err) {
+                        alert(`❌ LỖI MÁY CHỦ:\nKhông thể kết nối đến máy chủ Cloudflare.\nChi tiết lỗi: ${err.message}`);
                     }
-                } catch (err) {
-                    alert(`❌ LỖI NGHIÊM TRỌNG (Hệ thống Cloudflare):\nCấu hình Google Sheets của bạn đang gặp vấn đề.\nChi tiết lỗi: ${err.message}`);
                 }
             }
             
@@ -180,7 +197,6 @@
             await fetchProjects();
             updateNav();
             
-            // Tắt Loading Screen mượt mà
             loader.style.opacity = '0';
             setTimeout(() => loader.style.display = 'none', 400);
         };
@@ -190,7 +206,7 @@
             const nav = document.getElementById('navActions');
             if (currentUser) {
                 nav.innerHTML = `
-                    <span style="font-weight:bold; cursor:pointer;" onclick="openProfile('${currentUser.username}')">👋 ${currentUser.username}</span>
+                    <span style="font-weight:bold; cursor:pointer;" onclick="openProfile('${currentUser.username}')">👋 Chào, ${currentUser.username}</span>
                     <button class="btn" onclick="document.getElementById('uploadModal').style.display='flex'">Đăng game</button>
                     <button class="btn" style="background:#444;" onclick="logout()">Thoát</button>
                 `;
@@ -199,13 +215,24 @@
             }
         }
 
+        // HÀM CHUYỂN HƯỚNG SANG TRANG ĐĂNG NHẬP CỦA SCRATCH WIKI
         function loginScratch() {
-            const redirectUrl = btoa(window.location.origin + window.location.pathname);
-            window.location.href = `https://auth.itinerary.eu.org/auth/?redirect=${redirectUrl}&name=StudioDANV`;
+            if (!WIKI_CLIENT_ID || WIKI_CLIENT_ID === "ĐIỀN_SỐ_CLIENT_ID_CỦA_BẠN_VÀO_ĐÂY") {
+                alert("Lỗi: Bạn chưa điền Client ID vào code HTML!");
+                return;
+            }
+            const redirectUri = window.location.origin + window.location.pathname;
+            const state = Math.random().toString(36).substring(2); // Tạo mã ngẫu nhiên để bảo mật
+            localStorage.setItem('oauth_state', state); 
+            
+            // Chuyển hướng người dùng qua Scratch Wiki để họ bấm nút "Xác nhận"
+            const authUrl = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scopes=identify&state=${state}`;
+            window.location.href = authUrl;
         }
+
         function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); }
 
-        // LOAD GAME
+        // LOAD GAME TỪ MÁY CHỦ VỀ
         async function fetchProjects() {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
