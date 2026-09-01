@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudioDANV Workshop</title>
-    <!-- Thư viện Icon để lấy hình giống Scratch -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* MÀU SẮC CHUẨN CỦA TURBOWARP & SCRATCH */
         :root {
-            --tw-red: #ff4c4c;           /* Đỏ cam của TurboWarp */
-            --scratch-blue: #4c97ff;     /* Xanh dương của khối lệnh Scratch */
+            --tw-red: #ff4c4c;
+            --scratch-blue: #4c97ff;
             --scratch-blue-hover: #3381e5;
-            --bg-color: #f2f2f2;         /* Màu nền xám nhạt */
+            --bg-color: #f2f2f2;
             --border-color: #d9d9d9;
             --text-main: #333333;
             --text-muted: #777777;
@@ -29,7 +27,6 @@
             flex-direction: column;
         }
 
-        /* THANH MENU (NAVBAR) KIỂU TURBOWARP */
         .navbar {
             background-color: var(--tw-red);
             height: 50px;
@@ -40,225 +37,71 @@
             color: white;
         }
 
-        .navbar-brand {
-            font-size: 1.2rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .navbar-brand { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .btn-nav { background: rgba(0,0,0,0.15); border: none; color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-nav:hover { background: rgba(0,0,0,0.25); }
 
-        .btn-nav {
-            background-color: rgba(0,0,0,0.15);
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-nav:hover { background-color: rgba(0,0,0,0.25); }
-
-        /* KHU VỰC CHỨA DỰ ÁN */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 24px 20px;
-            flex: 1;
-            width: 100%;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
+        .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
         .section-title { font-size: 1.4rem; font-weight: bold; }
         
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 24px;
-        }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
 
-        /* THẺ DỰ ÁN (CARD) */
-        .card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            border-color: var(--scratch-blue);
-            box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2);
-            transform: translateY(-4px);
-        }
-
-        .card-thumb {
-            height: 140px;
-            background: #e9f1fc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--scratch-blue);
-            font-size: 3.5rem;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-        }
-
+        .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: all 0.2s; display: flex; flex-direction: column; }
+        .card:hover { border-color: var(--scratch-blue); box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2); transform: translateY(-4px); }
+        .card-thumb { height: 140px; background: #e9f1fc; display: flex; align-items: center; justify-content: center; color: var(--scratch-blue); font-size: 3.5rem; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .card-body { padding: 12px; }
+        .card-title { font-weight: bold; font-size: 1rem; color: var(--scratch-blue); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+        .card-author { font-size: 0.85rem; color: var(--text-muted); }
+        .card-date { font-size: 0.75rem; color: #aaa; margin-top: 4px; }
 
-        .card-title {
-            font-weight: bold;
-            font-size: 1rem;
-            color: var(--scratch-blue);
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            cursor: pointer;
-        }
-
-        .card-author {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* HỘP THOẠI (MODAL) CHUẨN SCRATCH */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: fadeIn 0.2s ease-out;
-        }
-
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal { background: white; border-radius: 8px; width: 100%; max-width: 450px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: fadeIn 0.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        .modal-header {
-            background: var(--scratch-blue);
-            color: white;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .btn-close {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            line-height: 1;
-        }
-
+        
+        .modal-header { background: var(--scratch-blue); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .btn-close { background: transparent; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1; }
         .modal-body { padding: 24px; }
 
-        /* FORM NHẬP LIỆU */
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        .form-control:focus {
-            border-color: var(--scratch-blue);
-            box-shadow: 0 0 0 3px rgba(76, 151, 255, 0.25);
-        }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 1rem; outline: none; }
+        .form-control:focus { border-color: var(--scratch-blue); box-shadow: 0 0 0 3px rgba(76, 151, 255, 0.25); }
 
-        /* NÚT CHỌN FILE LÀM ĐẸP */
         .file-input-wrapper { position: relative; width: 100%; }
-        .file-input-wrapper input[type=file] {
-            position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
-        }
-        .btn-upload {
-            background: #fafafa; border: 2px dashed #ccc; padding: 25px;
-            text-align: center; border-radius: 6px; font-weight: bold; color: var(--text-muted);
-            transition: all 0.2s;
-        }
+        .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .btn-upload { background: #fafafa; border: 2px dashed #ccc; padding: 25px; text-align: center; border-radius: 6px; font-weight: bold; color: var(--text-muted); transition: all 0.2s; }
         .file-input-wrapper:hover .btn-upload { border-color: var(--scratch-blue); color: var(--scratch-blue); background: #f0f6ff; }
-
-        .btn-submit {
-            background: var(--scratch-blue);
-            color: white; border: none; padding: 14px; width: 100%;
-            border-radius: 6px; font-size: 1rem; font-weight: bold;
-            cursor: pointer; transition: background 0.2s;
-        }
+        .btn-submit { background: var(--scratch-blue); color: white; border: none; padding: 14px; width: 100%; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .btn-submit:hover { background: var(--scratch-blue-hover); }
         .btn-submit:disabled { background: #a0c4ff; cursor: not-allowed; }
 
-        /* TRÌNH PHÁT GAME (PLAYER MODAL) */
-        .modal-player {
-            max-width: 800px;
-            height: 85vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .modal-player .modal-header { background: var(--tw-red); } /* Header đỏ giống hệt TurboWarp */
+        .modal-player { max-width: 800px; height: 85vh; display: flex; flex-direction: column; }
+        .modal-player .modal-header { background: var(--tw-red); }
         iframe { width: 100%; flex: 1; border: none; background: #000; }
         
-        /* KHI CHƯA CÓ GAME */
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); grid-column: 1 / -1; }
         .empty-state i { font-size: 4rem; color: #d9d9d9; margin-bottom: 16px; }
     </style>
 </head>
 <body>
 
-    <!-- THANH MENU -->
     <nav class="navbar">
         <div class="navbar-brand">
-            <i class="fa-solid fa-cat"></i>
-            StudioDANV Workshop
+            <i class="fa-solid fa-cat"></i> StudioDANV Workshop
         </div>
         <button class="btn-nav" onclick="openUploadModal()">
             <i class="fa-solid fa-cloud-arrow-up"></i> Tải lên dự án
         </button>
     </nav>
 
-    <!-- NỘI DUNG CHÍNH -->
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">Khám phá dự án</h2>
-            <span id="projectCount" style="color: var(--text-muted); font-weight: bold;">0 dự án</span>
+            <span id="projectCount" style="color: var(--text-muted); font-weight: bold;">Đang tải...</span>
         </div>
         <div class="project-grid" id="projectList">
-            <!-- Game sẽ xuất hiện ở đây -->
+            <!-- Game tải từ Google Sheets sẽ hiện ở đây -->
         </div>
     </div>
 
@@ -280,7 +123,7 @@
                         <input type="text" id="projAuthor" class="form-control" required placeholder="Tên của bạn...">
                     </div>
                     <div class="form-group">
-                        <label>File dự án (.sb3)</label>
+                        <label>File dự án (.sb3) - Tối đa 20MB</label>
                         <div class="file-input-wrapper">
                             <div class="btn-upload" id="uploadText">
                                 <i class="fa-solid fa-file-arrow-up" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
@@ -295,41 +138,48 @@
         </div>
     </div>
 
-    <!-- HỘP THOẠI CHƠI GAME (TURBOWARP EMBED) -->
+    <!-- HỘP THOẠI CHƠI GAME -->
     <div class="modal-overlay" id="playerModal">
         <div class="modal modal-player">
             <div class="modal-header">
                 <span id="playerTitle">Đang tải game...</span>
                 <button class="btn-close" onclick="closePlayerModal()">&times;</button>
             </div>
-            <!-- Trình phát lấy trực tiếp engine của TurboWarp -->
             <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad"></iframe>
         </div>
     </div>
 
-    <!-- MÃ ĐIỀU KHIỂN JAVASCRIPT -->
     <script>
-const WORKER_API_URL = "https://app.studiodanv.workers.dev";
+        // TRẠM API CLOUDFLARE CỦA BẠN ĐÃ ĐƯỢC CHUẨN HÓA SẴN
+        const WORKER_API_URL = "https://app.studiodanv.workers.dev";
         let projects = [];
 
-        // HÀM TẢI DANH SÁCH TỪ GOOGLE SHEETS (QUA WORKER)
+        // HÀM 1: LẤY DATA TỪ GOOGLE SHEETS
         async function fetchProjects() {
             try {
                 const res = await fetch(`${WORKER_API_URL}/api/projects`);
-                projects = await res.json();
+                const data = await res.json();
+                
+                if(data.error) {
+                    throw new Error(data.error + " - " + data.message);
+                }
+                
+                projects = data;
                 renderProjects();
             } catch(e) {
-                console.error("Lỗi tải dự án:", e);
-                document.getElementById('projectList').innerHTML = `<div class="empty-state">Lỗi kết nối máy chủ!</div>`;
+                console.error("Lỗi:", e);
+                document.getElementById('projectList').innerHTML = `<div class="empty-state">❌ Lỗi kết nối Google Sheets.<br><small>${e.message}</small></div>`;
+                document.getElementById('projectCount').innerText = `Lỗi`;
             }
         }
 
+        // HÀM 2: VẼ GIAO DIỆN CÁC THẺ GAME
         function renderProjects() {
             const container = document.getElementById('projectList');
             document.getElementById('projectCount').innerText = `${projects.length} dự án`;
             
             if (projects.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h2>Chưa có dự án nào</h2></div>`;
+                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h2>Chưa có dự án nào</h2><p>Trống không! Hãy đăng dự án đầu tiên nhé.</p></div>`;
                 return;
             }
 
@@ -341,27 +191,13 @@ const WORKER_API_URL = "https://app.studiodanv.workers.dev";
                     <div class="card-body" onclick="playGame('${p.fileId}', '${p.title}')">
                         <div class="card-title" title="${p.title}">${p.title}</div>
                         <div class="card-author">Tác giả: ${p.author}</div>
-                        <div style="font-size: 0.75rem; color: #aaa; margin-top: 4px;">${p.date || ''}</div>
+                        <div class="card-date">${p.date || ''}</div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function updateFileName() {
-            // (Giữ nguyên hàm này như code cũ)
-            const fileInput = document.getElementById('projFile');
-            const uploadText = document.getElementById('uploadText');
-            if (fileInput.files.length > 0) {
-                uploadText.innerHTML = `<i class="fa-solid fa-check-circle" style="font-size: 32px; margin-bottom: 10px; display: block;"></i> Đã chọn: ${fileInput.files[0].name}`;
-                uploadText.style.borderColor = "#4c97ff";
-                uploadText.style.color = "#4c97ff";
-                uploadText.style.background = "#f0f6ff";
-            } else {
-                uploadText.innerHTML = `<i class="fa-solid fa-file-arrow-up" style="font-size: 32px; margin-bottom: 10px; display: block;"></i> Kéo thả hoặc nhấn để chọn file .sb3`;
-                uploadText.style = "";
-            }
-        }
-
+        // HÀM 3: XỬ LÝ UPLOAD
         async function handleUpload(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSubmit');
@@ -369,8 +205,14 @@ const WORKER_API_URL = "https://app.studiodanv.workers.dev";
             const author = document.getElementById('projAuthor').value;
             const file = document.getElementById('projFile').files[0];
 
+            // ⚠️ KIỂM TRA GIỚI HẠN DUNG LƯỢNG (CHẶN NẾU > 20MB)
+            if (file.size > 20 * 1024 * 1024) {
+                alert(`❌ TỪ CHỐI TẢI LÊN: File của bạn nặng ${(file.size/1024/1024).toFixed(1)}MB.\n\nAPI Telegram bị giới hạn không cho phép Player tải file lớn hơn 20MB. Vui lòng vào TurboWarp xoá bớt nhạc hoặc nén hình ảnh lại!`);
+                return;
+            }
+
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên hệ thống...`;
 
             try {
                 const formData = new FormData();
@@ -382,17 +224,30 @@ const WORKER_API_URL = "https://app.studiodanv.workers.dev";
                 const data = await response.json();
 
                 if (data.success) {
-                    alert("Đăng dự án thành công!");
+                    alert("🎉 Đăng dự án lên Workshop thành công!");
                     closeUploadModal();
-                    fetchProjects(); // Tải lại danh sách từ Google Sheets
+                    fetchProjects(); // Gọi lấy lại danh sách mới nhất từ Sheets
                 } else {
-                    alert('❌ Lỗi: ' + (data.error || 'Không thể lưu file') + ' - ' + JSON.stringify(data.details));
+                    alert(`❌ ${data.error}\nChi tiết: ${data.message}`);
                 }
             } catch (err) {
-                alert('❌ Lỗi mất kết nối: File có thể quá nặng (vượt quá 15MB)');
+                alert('❌ Lỗi kết nối mạng: Mất kết nối tới Worker.');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `Lưu vào Workshop`;
+            }
+        }
+
+        // HÀM 4: CHƠI GAME & ĐIỀU KHIỂN GIAO DIỆN
+        function updateFileName() {
+            const fileInput = document.getElementById('projFile');
+            const uploadText = document.getElementById('uploadText');
+            if (fileInput.files.length > 0) {
+                uploadText.innerHTML = `<i class="fa-solid fa-check-circle" style="font-size: 32px; margin-bottom: 10px; display: block;"></i> Đã chọn: ${fileInput.files[0].name}`;
+                uploadText.style.borderColor = "#4c97ff"; uploadText.style.color = "#4c97ff"; uploadText.style.background = "#f0f6ff";
+            } else {
+                uploadText.innerHTML = `<i class="fa-solid fa-file-arrow-up" style="font-size: 32px; margin-bottom: 10px; display: block;"></i> Kéo thả hoặc nhấn để chọn file .sb3`;
+                uploadText.style = "";
             }
         }
 
@@ -404,17 +259,10 @@ const WORKER_API_URL = "https://app.studiodanv.workers.dev";
         }
 
         function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
-        function closeUploadModal() { 
-            document.getElementById('uploadModal').style.display = 'none'; 
-            document.getElementById('uploadForm').reset();
-            updateFileName();
-        }
-        function closePlayerModal() { 
-            document.getElementById('playerModal').style.display = 'none'; 
-            document.getElementById('gameIframe').src = ''; 
-        }
+        function closeUploadModal() { document.getElementById('uploadModal').style.display = 'none'; document.getElementById('uploadForm').reset(); updateFileName(); }
+        function closePlayerModal() { document.getElementById('playerModal').style.display = 'none'; document.getElementById('gameIframe').src = ''; }
 
-        // KHI MỞ WEB LÊN, TỰ ĐỘNG GỌI HÀM LẤY DATA TỪ GOOGLE SHEETS
+        // KHI TRANG WEB VỪA MỞ, TỰ ĐỘNG CHẠY HÀM LẤY DATA
         fetchProjects();
     </script>
 </body>
