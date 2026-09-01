@@ -309,25 +309,27 @@
 
     <!-- MÃ ĐIỀU KHIỂN JAVASCRIPT -->
     <script>
-        // ---------------------------------------------------------
-        // 🔴 ĐÃ LIÊN KẾT VỚI API TRUNG CHUYỂN TỪ CLOUDFLARE WORKER CỦA BẠN
-        // ---------------------------------------------------------
-        const WORKER_API_URL = "https://app.studiodanv.workers.dev";
-        
-        let projects = JSON.parse(localStorage.getItem('studiodanv_projects') || '[]');
+const WORKER_API_URL = "https://app.studiodanv.workers.dev";
+        let projects = [];
+
+        // HÀM TẢI DANH SÁCH TỪ GOOGLE SHEETS (QUA WORKER)
+        async function fetchProjects() {
+            try {
+                const res = await fetch(`${WORKER_API_URL}/api/projects`);
+                projects = await res.json();
+                renderProjects();
+            } catch(e) {
+                console.error("Lỗi tải dự án:", e);
+                document.getElementById('projectList').innerHTML = `<div class="empty-state">Lỗi kết nối máy chủ!</div>`;
+            }
+        }
 
         function renderProjects() {
             const container = document.getElementById('projectList');
             document.getElementById('projectCount').innerText = `${projects.length} dự án`;
             
             if (projects.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-solid fa-box-open"></i>
-                        <h2>Chưa có dự án nào</h2>
-                        <p style="margin-top: 8px;">Hãy bấm "Tải lên dự án" ở góc phải để bắt đầu nhé!</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h2>Chưa có dự án nào</h2></div>`;
                 return;
             }
 
@@ -339,12 +341,14 @@
                     <div class="card-body" onclick="playGame('${p.fileId}', '${p.title}')">
                         <div class="card-title" title="${p.title}">${p.title}</div>
                         <div class="card-author">Tác giả: ${p.author}</div>
+                        <div style="font-size: 0.75rem; color: #aaa; margin-top: 4px;">${p.date || ''}</div>
                     </div>
                 </div>
             `).join('');
         }
 
         function updateFileName() {
+            // (Giữ nguyên hàm này như code cũ)
             const fileInput = document.getElementById('projFile');
             const uploadText = document.getElementById('uploadText');
             if (fileInput.files.length > 0) {
@@ -366,46 +370,39 @@
             const file = document.getElementById('projFile').files[0];
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên hệ thống...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên...`;
 
             try {
                 const formData = new FormData();
                 formData.append('file', file);
+                formData.append('title', title);
+                formData.append('author', author);
 
-                // Gửi file sang Cloudflare Worker của bạn
-                const response = await fetch(`${WORKER_API_URL}/api/upload`, {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch(`${WORKER_API_URL}/api/upload`, { method: 'POST', body: formData });
                 const data = await response.json();
 
                 if (data.success) {
-                    projects.unshift({ title, author, fileId: data.file_id });
-                    localStorage.setItem('studiodanv_projects', JSON.stringify(projects));
-                    renderProjects();
+                    alert("Đăng dự án thành công!");
                     closeUploadModal();
+                    fetchProjects(); // Tải lại danh sách từ Google Sheets
                 } else {
-                    alert('❌ Lỗi: ' + (data.error || 'Không thể lưu file lên Telegram'));
+                    alert('❌ Lỗi: ' + (data.error || 'Không thể lưu file') + ' - ' + JSON.stringify(data.details));
                 }
             } catch (err) {
-                alert('❌ Lỗi kết nối máy chủ: ' + err.message);
+                alert('❌ Lỗi mất kết nối: File có thể quá nặng (vượt quá 15MB)');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `Lưu vào Workshop`;
             }
         }
 
-        // Mở game bằng trình phát TurboWarp nhúng (Embed)
         function playGame(fileId, title) {
             document.getElementById('playerTitle').innerText = title;
-            // Link tải file từ Worker của bạn
             const fileUrl = `${WORKER_API_URL}/api/project/${fileId}`;
-            // Ép vào trình phát TurboWarp
             document.getElementById('gameIframe').src = `https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&ui-theme=dark&autoplay=on`;
             document.getElementById('playerModal').style.display = 'flex';
         }
 
-        // Các hàm Đóng/Mở Modal
         function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
         function closeUploadModal() { 
             document.getElementById('uploadModal').style.display = 'none'; 
@@ -417,8 +414,8 @@
             document.getElementById('gameIframe').src = ''; 
         }
 
-        // Khởi chạy khi load trang
-        renderProjects();
+        // KHI MỞ WEB LÊN, TỰ ĐỘNG GỌI HÀM LẤY DATA TỪ GOOGLE SHEETS
+        fetchProjects();
     </script>
 </body>
 </html>
