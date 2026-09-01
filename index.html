@@ -6,264 +6,302 @@
     <title>StudioDANV Workshop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --tw-red: #ff4c4c;
-            --scratch-blue: #4c97ff;
-            --scratch-blue-hover: #3381e5;
-            --bg-color: #f2f2f2;
-            --border-color: #d9d9d9;
-            --text-main: #333333;
-            --text-muted: #777777;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --tw-red: #ff4c4c; --scratch-blue: #4c97ff; --bg-color: #f2f2f2; --text-main: #333; --border-color: #d9d9d9;}
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         
-        body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .navbar {
-            background-color: var(--tw-red);
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            color: white;
-        }
-
-        .navbar-brand { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .btn-nav { background: rgba(0,0,0,0.15); border: none; color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .btn-nav:hover { background: rgba(0,0,0,0.25); }
-
+        /* NAVBAR */
+        .navbar { background: var(--tw-red); height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; color: white; }
+        .navbar-brand { font-size: 1.2rem; font-weight: bold; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn { background: rgba(0,0,0,0.15); border: none; color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: rgba(0,0,0,0.25); }
+        .btn-primary { background: var(--scratch-blue); } .btn-primary:hover { background: #3381e5; }
+        
         .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
-        .section-title { font-size: 1.4rem; font-weight: bold; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin-top: 20px;}
         
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
-
-        .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: all 0.2s; display: flex; flex-direction: column; }
+        /* CARD */
+        .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; }
         .card:hover { border-color: var(--scratch-blue); box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2); transform: translateY(-4px); }
-        .card-thumb { height: 140px; background: #e9f1fc; display: flex; align-items: center; justify-content: center; color: var(--scratch-blue); font-size: 3.5rem; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+        .card-thumb { height: 140px; background: #e9f1fc; display: flex; align-items: center; justify-content: center; color: var(--scratch-blue); font-size: 3.5rem; }
         .card-body { padding: 12px; }
-        .card-title { font-weight: bold; font-size: 1rem; color: var(--scratch-blue); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
-        .card-author { font-size: 0.85rem; color: var(--text-muted); }
-        .card-date { font-size: 0.75rem; color: #aaa; margin-top: 4px; }
+        .card-title { font-weight: bold; color: var(--scratch-blue); margin-bottom: 4px; }
+        .card-author { font-size: 0.85rem; color: #777; font-weight: bold;}
+        .card-author:hover { text-decoration: underline; color: var(--scratch-blue); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal { background: white; border-radius: 8px; width: 100%; max-width: 450px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: fadeIn 0.2s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        /* MODALS */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal { background: white; border-radius: 8px; width: 100%; max-width: 500px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;}
+        .modal-header { background: var(--scratch-blue); color: white; padding: 16px 20px; display: flex; justify-content: space-between; font-weight: bold; }
+        .btn-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        .modal-body { padding: 20px; overflow-y: auto; }
         
-        .modal-header { background: var(--scratch-blue); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; }
-        .btn-close { background: transparent; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1; }
-        .modal-body { padding: 24px; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 15px; font-family: inherit;}
+        label { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;}
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
-        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 1rem; outline: none; }
-        .form-control:focus { border-color: var(--scratch-blue); box-shadow: 0 0 0 3px rgba(76, 151, 255, 0.25); }
-
-        .file-input-wrapper { position: relative; width: 100%; }
-        .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        .btn-upload { background: #fafafa; border: 2px dashed #ccc; padding: 25px; text-align: center; border-radius: 6px; font-weight: bold; color: var(--text-muted); transition: all 0.2s; }
-        .file-input-wrapper:hover .btn-upload { border-color: var(--scratch-blue); color: var(--scratch-blue); background: #f0f6ff; }
-        .btn-submit { background: var(--scratch-blue); color: white; border: none; padding: 14px; width: 100%; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .btn-submit:hover { background: var(--scratch-blue-hover); }
-        .btn-submit:disabled { background: #a0c4ff; cursor: not-allowed; }
-
-        .modal-player { max-width: 800px; height: 85vh; display: flex; flex-direction: column; }
-        .modal-player .modal-header { background: var(--tw-red); }
-        iframe { width: 100%; flex: 1; border: none; background: #000; }
+        /* PLAYER & COMMENTS */
+        .modal-player { max-width: 900px; }
+        .player-wrapper { display: flex; flex-direction: column; height: 100%; }
+        iframe { width: 100%; height: 400px; border: none; background: #000; }
+        .comments-section { padding: 20px; background: #fafafa; border-top: 1px solid var(--border-color); flex: 1; overflow-y: auto;}
+        .comment-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        .avt-circle { width: 40px; height: 40px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
+        .comment-content { background: white; padding: 10px 15px; border-radius: 15px; border: 1px solid #eee; width: 100%;}
+        .comment-author { font-weight: bold; font-size: 0.9rem; color: var(--scratch-blue); }
+        .comment-text { font-size: 0.95rem; margin-top: 3px; }
         
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); grid-column: 1 / -1; }
-        .empty-state i { font-size: 4rem; color: #d9d9d9; margin-bottom: 16px; }
+        /* PROFILE */
+        .profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
+        .profile-avt { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--scratch-blue); }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="navbar-brand">
-            <i class="fa-solid fa-cat"></i> StudioDANV Workshop
+        <div class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV</div>
+        <div class="nav-actions" id="navActions">
+            <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
         </div>
-        <button class="btn-nav" onclick="openUploadModal()">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Tải lên dự án
-        </button>
     </nav>
 
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Khám phá dự án</h2>
-            <span id="projectCount" style="color: var(--text-muted); font-weight: bold;">Đang tải...</span>
-        </div>
-        <div class="project-grid" id="projectList">
-            <!-- Game tải từ Google Sheets sẽ hiện ở đây -->
-        </div>
+        <h2 style="border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">Khám phá dự án</h2>
+        <div class="project-grid" id="projectList">Đang tải...</div>
     </div>
 
-    <!-- HỘP THOẠI ĐĂNG DỰ ÁN -->
+    <!-- MODAL ĐĂNG GAME -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal">
-            <div class="modal-header">
-                <span>Chia sẻ dự án (.sb3)</span>
-                <button class="btn-close" onclick="closeUploadModal()">&times;</button>
-            </div>
+            <div class="modal-header"><span>Tải lên dự án</span><button class="btn-close" onclick="closeModal('uploadModal')">&times;</button></div>
             <div class="modal-body">
-                <form id="uploadForm" onsubmit="handleUpload(event)">
-                    <div class="form-group">
-                        <label>Tên dự án</label>
-                        <input type="text" id="projTitle" class="form-control" required placeholder="Nhập tên trò chơi...">
-                    </div>
-                    <div class="form-group">
-                        <label>Tác giả</label>
-                        <input type="text" id="projAuthor" class="form-control" required placeholder="Tên của bạn...">
-                    </div>
-                    <div class="form-group">
-                        <label>File dự án (.sb3) - Tối đa 20MB</label>
-                        <div class="file-input-wrapper">
-                            <div class="btn-upload" id="uploadText">
-                                <i class="fa-solid fa-file-arrow-up" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
-                                Kéo thả hoặc nhấn để chọn file .sb3
-                            </div>
-                            <input type="file" id="projFile" accept=".sb3" required onchange="updateFileName()">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" id="btnSubmit">Lưu vào Workshop</button>
+                <form onsubmit="handleUpload(event)">
+                    <label>Tên dự án</label> <input type="text" id="projTitle" required>
+                    <label>File (.sb3) - Tối đa 20MB</label> <input type="file" id="projFile" accept=".sb3" required>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;" id="btnUpload">Đăng dự án</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- HỘP THOẠI CHƠI GAME -->
+    <!-- MODAL PROFILE -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header"><span id="profNameTitle">Hồ sơ</span><button class="btn-close" onclick="closeModal('profileModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="profile-header">
+                    <img src="" id="profAvt" class="profile-avt" onerror="this.src='https://scratch.mit.edu/images/avatar_default.gif'">
+                    <div>
+                        <h2 id="profUsername" style="color: var(--scratch-blue);">Username</h2>
+                        <p id="profStatus" style="color: #666; font-style: italic; font-size: 0.9rem;">What I'm doing...</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;"><b>About me:</b> <p id="profBio" style="white-space: pre-line;"></p></div>
+                
+                <div id="editProfileForm" style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                    <h3 style="margin-bottom: 10px;">Chỉnh sửa hồ sơ</h3>
+                    <form onsubmit="handleUpdateProfile(event)">
+                        <label>Đổi Avatar (File ảnh)</label> <input type="file" id="editAvt" accept="image/*">
+                        <label>What I'm doing</label> <input type="text" id="editStatus">
+                        <label>About me</label> <textarea id="editBio" rows="3"></textarea>
+                        <button type="submit" class="btn btn-primary" id="btnUpdateProf">Lưu thay đổi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PLAYER & COMMENTS -->
     <div class="modal-overlay" id="playerModal">
         <div class="modal modal-player">
-            <div class="modal-header">
-                <span id="playerTitle">Đang tải game...</span>
-                <button class="btn-close" onclick="closePlayerModal()">&times;</button>
+            <div class="modal-header"><span id="playerTitle">Game</span><button class="btn-close" onclick="closeModal('playerModal'); document.getElementById('gameIframe').src='';">&times;</button></div>
+            <div class="player-wrapper">
+                <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad"></iframe>
+                <div class="comments-section">
+                    <h3 style="margin-bottom: 15px;">Bình luận</h3>
+                    <div id="commentList"></div>
+                    <form onsubmit="postComment(event)" id="commentForm" style="display:none; margin-top: 15px; display: flex; gap: 10px;">
+                        <input type="text" id="commentText" placeholder="Viết bình luận..." required style="margin: 0; flex: 1;">
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                    </form>
+                    <div id="loginToComment" style="text-align: center; color: #888; margin-top: 10px;">Đăng nhập để bình luận.</div>
+                </div>
             </div>
-            <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad"></iframe>
         </div>
     </div>
 
     <script>
-        // TRẠM API CLOUDFLARE CỦA BẠN ĐÃ ĐƯỢC CHUẨN HÓA SẴN
-        const WORKER_API_URL = "https://app.studiodanv.workers.dev";
-        let projects = [];
+        const WORKER_URL = "https://app.studiodanv.workers.dev";
+        let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
+        let allProjects = [];
+        let currentPlayingFileId = null;
 
-        // HÀM 1: LẤY DATA TỪ GOOGLE SHEETS
-        async function fetchProjects() {
-            try {
-                const res = await fetch(`${WORKER_API_URL}/api/projects`);
+        // KIỂM TRA ĐĂNG NHẬP SAU KHI REDIRECT TỪ SCRATCH
+        window.onload = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const privateCode = urlParams.get('privateCode');
+            if (privateCode) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                document.getElementById('navActions').innerHTML = `<span>Đang xác thực...</span>`;
+                const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
+                    method: 'POST', body: JSON.stringify({ privateCode })
+                });
                 const data = await res.json();
-                
-                if(data.error) {
-                    throw new Error(data.error + " - " + data.message);
-                }
-                
-                projects = data;
-                renderProjects();
-            } catch(e) {
-                console.error("Lỗi:", e);
-                document.getElementById('projectList').innerHTML = `<div class="empty-state">❌ Lỗi kết nối Google Sheets.<br><small>${e.message}</small></div>`;
-                document.getElementById('projectCount').innerText = `Lỗi`;
+                if (data.success) {
+                    currentUser = { username: data.username, sessionToken: data.sessionToken };
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    // Lấy thêm thông tin avt
+                    const profData = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json();
+                    currentUser.avt = profData.avt;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                } else alert("Xác thực Scratch thất bại!");
+            }
+            updateNav();
+            fetchProjects();
+        };
+
+        // GIAO DIỆN NAVBAR
+        function updateNav() {
+            const nav = document.getElementById('navActions');
+            if (currentUser) {
+                nav.innerHTML = `
+                    <span style="font-weight:bold; cursor:pointer;" onclick="openProfile('${currentUser.username}')">👋 ${currentUser.username}</span>
+                    <button class="btn" onclick="document.getElementById('uploadModal').style.display='flex'">Đăng game</button>
+                    <button class="btn" style="background:#444;" onclick="logout()">Thoát</button>
+                `;
+            } else {
+                nav.innerHTML = `<button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>`;
             }
         }
 
-        // HÀM 2: VẼ GIAO DIỆN CÁC THẺ GAME
-        function renderProjects() {
-            const container = document.getElementById('projectList');
-            document.getElementById('projectCount').innerText = `${projects.length} dự án`;
-            
-            if (projects.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><h2>Chưa có dự án nào</h2><p>Trống không! Hãy đăng dự án đầu tiên nhé.</p></div>`;
-                return;
-            }
+        function loginScratch() {
+            const redirectUrl = btoa(window.location.origin + window.location.pathname);
+            window.location.href = `https://auth.itinerary.eu.org/auth/?redirect=${redirectUrl}&name=StudioDANV`;
+        }
+        function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); }
 
-            container.innerHTML = projects.map(p => `
+        // LOAD GAME
+        async function fetchProjects() {
+            const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
+            allProjects = res;
+            document.getElementById('projectList').innerHTML = allProjects.map(p => `
                 <div class="card">
-                    <div class="card-thumb" onclick="playGame('${p.fileId}', '${p.title}')">
-                        <i class="fa-solid fa-play"></i>
-                    </div>
-                    <div class="card-body" onclick="playGame('${p.fileId}', '${p.title}')">
-                        <div class="card-title" title="${p.title}">${p.title}</div>
-                        <div class="card-author">Tác giả: ${p.author}</div>
-                        <div class="card-date">${p.date || ''}</div>
+                    <div class="card-thumb" onclick="playGame('${p.fileId}', '${p.title}')"><i class="fa-solid fa-play"></i></div>
+                    <div class="card-body">
+                        <div class="card-title" onclick="playGame('${p.fileId}', '${p.title}')">${p.title}</div>
+                        <div class="card-author" onclick="openProfile('${p.author}')">By: ${p.author}</div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // HÀM 3: XỬ LÝ UPLOAD
-        async function handleUpload(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            const title = document.getElementById('projTitle').value;
-            const author = document.getElementById('projAuthor').value;
-            const file = document.getElementById('projFile').files[0];
-
-            // ⚠️ KIỂM TRA GIỚI HẠN DUNG LƯỢNG (CHẶN NẾU > 20MB)
-            if (file.size > 20 * 1024 * 1024) {
-                alert(`❌ TỪ CHỐI TẢI LÊN: File của bạn nặng ${(file.size/1024/1024).toFixed(1)}MB.\n\nAPI Telegram bị giới hạn không cho phép Player tải file lớn hơn 20MB. Vui lòng vào TurboWarp xoá bớt nhạc hoặc nén hình ảnh lại!`);
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên hệ thống...`;
-
-            try {
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('title', title);
-                formData.append('author', author);
-
-                const response = await fetch(`${WORKER_API_URL}/api/upload`, { method: 'POST', body: formData });
-                const data = await response.json();
-
-                if (data.success) {
-                    alert("🎉 Đăng dự án lên Workshop thành công!");
-                    closeUploadModal();
-                    fetchProjects(); // Gọi lấy lại danh sách mới nhất từ Sheets
-                } else {
-                    alert(`❌ ${data.error}\nChi tiết: ${data.message}`);
-                }
-            } catch (err) {
-                alert('❌ Lỗi kết nối mạng: Mất kết nối tới Worker.');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `Lưu vào Workshop`;
-            }
-        }
-
-        // HÀM 4: CHƠI GAME & ĐIỀU KHIỂN GIAO DIỆN
-        function updateFileName() {
-            const fileInput = document.getElementById('projFile');
-            const uploadText = document.getElementById('uploadText');
-            if (fileInput.files.length > 0) {
-                uploadText.innerHTML = `<i class="fa-solid fa-check-circle" style="font-size: 32px; margin-bottom: 10px; display: block;"></i> Đã chọn: ${fileInput.files[0].name}`;
-                uploadText.style.borderColor = "#4c97ff"; uploadText.style.color = "#4c97ff"; uploadText.style.background = "#f0f6ff";
-            } else {
-                uploadText.innerHTML = `<i class="fa-solid fa-file-arrow-up" style="font-size: 32px; margin-bottom: 10px; display: block;"></i> Kéo thả hoặc nhấn để chọn file .sb3`;
-                uploadText.style = "";
-            }
-        }
-
+        // CHƠI GAME & BÌNH LUẬN
         function playGame(fileId, title) {
+            currentPlayingFileId = fileId;
             document.getElementById('playerTitle').innerText = title;
-            const fileUrl = `${WORKER_API_URL}/api/project/${fileId}`;
-            document.getElementById('gameIframe').src = `https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&ui-theme=dark&autoplay=on`;
+            document.getElementById('gameIframe').src = `https://turbowarp.org/embed.html?project_url=${encodeURIComponent(WORKER_URL+'/api/project/'+fileId)}&ui-theme=dark&autoplay=on`;
+            
+            const proj = allProjects.find(p => p.fileId === fileId);
+            renderComments(proj.comments || []);
+            
+            if (currentUser) {
+                document.getElementById('commentForm').style.display = 'flex';
+                document.getElementById('loginToComment').style.display = 'none';
+            }
             document.getElementById('playerModal').style.display = 'flex';
         }
 
-        function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
-        function closeUploadModal() { document.getElementById('uploadModal').style.display = 'none'; document.getElementById('uploadForm').reset(); updateFileName(); }
-        function closePlayerModal() { document.getElementById('playerModal').style.display = 'none'; document.getElementById('gameIframe').src = ''; }
+        function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : 'https://scratch.mit.edu/images/avatar_default.gif'; }
 
-        // KHI TRANG WEB VỪA MỞ, TỰ ĐỘNG CHẠY HÀM LẤY DATA
-        fetchProjects();
+        function renderComments(comments) {
+            document.getElementById('commentList').innerHTML = comments.map(c => `
+                <div class="comment-box">
+                    <img src="${getAvtUrl(c.avt)}" class="avt-circle" onclick="openProfile('${c.author}')" style="cursor:pointer;">
+                    <div class="comment-content">
+                        <div class="comment-author" onclick="openProfile('${c.author}')" style="cursor:pointer;">${c.author} <span style="font-size:0.75rem; color:#999; font-weight:normal;">${c.time}</span></div>
+                        <div class="comment-text">${c.text}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function postComment(e) {
+            e.preventDefault();
+            const text = document.getElementById('commentText').value;
+            const res = await fetch(`${WORKER_URL}/api/comment`, {
+                method: 'POST', body: JSON.stringify({ fileId: currentPlayingFileId, username: currentUser.username, sessionToken: currentUser.sessionToken, text: text, avt: currentUser.avt })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('commentText').value = '';
+                const proj = allProjects.find(p => p.fileId === currentPlayingFileId);
+                if(!proj.comments) proj.comments = [];
+                proj.comments.push(data.comment);
+                renderComments(proj.comments);
+            }
+        }
+
+        // XEM & SỬA PROFILE
+        async function openProfile(username) {
+            document.getElementById('profNameTitle').innerText = `Hồ sơ: ${username}`;
+            document.getElementById('profUsername').innerText = username;
+            document.getElementById('profStatus').innerText = "Đang tải...";
+            document.getElementById('profBio').innerText = "";
+            document.getElementById('editProfileForm').style.display = 'none';
+            document.getElementById('profileModal').style.display = 'flex';
+
+            const data = await (await fetch(`${WORKER_URL}/api/user/${username}`)).json();
+            document.getElementById('profAvt').src = getAvtUrl(data.avt);
+            document.getElementById('profStatus').innerText = data.status || "Chưa có trạng thái";
+            document.getElementById('profBio').innerText = data.bio || "Người dùng này lười quá, chưa viết gì cả!";
+
+            if (currentUser && currentUser.username === username) {
+                document.getElementById('editProfileForm').style.display = 'block';
+                document.getElementById('editStatus').value = data.status;
+                document.getElementById('editBio').value = data.bio;
+                document.getElementById('editProfileForm').dataset.currentAvt = data.avt;
+            }
+        }
+
+        async function handleUpdateProfile(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnUpdateProf'); btn.innerText = "Đang lưu...";
+            
+            const form = new FormData();
+            form.append("username", currentUser.username);
+            form.append("sessionToken", currentUser.sessionToken);
+            form.append("bio", document.getElementById('editBio').value);
+            form.append("status", document.getElementById('editStatus').value);
+            form.append("currentAvt", document.getElementById('editProfileForm').dataset.currentAvt);
+            
+            const file = document.getElementById('editAvt').files[0];
+            if (file) form.append("avtFile", file);
+
+            const res = await (await fetch(`${WORKER_URL}/api/user/update`, { method: 'POST', body: form })).json();
+            if (res.success) {
+                currentUser.avt = res.avtId; localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                openProfile(currentUser.username); // Reload modal
+            } else alert(res.error);
+            btn.innerText = "Lưu thay đổi";
+        }
+
+        // ĐĂNG GAME
+        async function handleUpload(e) {
+            e.preventDefault();
+            const file = document.getElementById('projFile').files[0];
+            if (file.size > 20*1024*1024) return alert("File > 20MB. Vui lòng giảm dung lượng!");
+            
+            const btn = document.getElementById('btnUpload'); btn.innerText = "Đang tải...";
+            const form = new FormData();
+            form.append("file", file); form.append("title", document.getElementById('projTitle').value);
+            form.append("author", currentUser.username);
+
+            const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
+            if (res.success) { alert("Thành công!"); closeModal('uploadModal'); fetchProjects(); }
+            btn.innerText = "Đăng dự án";
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     </script>
 </body>
 </html>
