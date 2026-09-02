@@ -52,6 +52,11 @@
         .player-container { background: #000; border-radius: 8px; overflow: hidden; height: 560px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
         iframe { width: 100%; height: 100%; border: none; }
 
+        /* THANH CÔNG CỤ TRÊN TRANG #EDITOR */
+        .editor-topbar { background: #1e293b; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; color: white; }
+        .editor-title-input { background: #334155; border: 1px solid #475569; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.95rem; width: 280px; outline: none; }
+        .editor-title-input:focus { border-color: var(--scratch-blue); }
+
         /* HỆ THỐNG BÌNH LUẬN & REPLY */
         .comment-section { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 20px; margin-top: 24px; }
         .comment-box { display: flex; gap: 12px; margin-bottom: 16px; position: relative; }
@@ -97,12 +102,12 @@
         <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối hệ thống...</h2>
     </div>
 
-    <!-- 🌟 NAVIGATION BAR ĐIỀU HƯỚNG HIỆN ĐẠI -->
-    <nav class="navbar">
+    <!-- 🌟 NAVIGATION BAR -->
+    <nav class="navbar" id="mainNavbar">
         <div class="nav-left">
             <a href="#home" class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV</a>
             <a href="#home" class="nav-link"><i class="fa-solid fa-compass"></i> Khám phá</a>
-            <a href="#create" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> Khởi tạo</a>
+            <a href="#editor" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> Khởi tạo</a>
         </div>
         <div class="nav-actions" id="navActions">
             <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
@@ -121,7 +126,7 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- 📄 TRANG 2: CHI TIẾT DỰ ÁN & CHƠI GAME (PROJECT PAGE) -->
+    <!-- 📄 TRANG 2: CHI TIẾT DỰ ÁN & CHƠI GAME (#PROJECT) -->
     <!-- ============================================================== -->
     <div id="projectView" class="page-view">
         <div class="project-header-bar">
@@ -130,17 +135,17 @@
                 <p style="font-size: 0.9rem; color: #64748b;">Tác giả: <a id="projPageAuthor" href="#" style="color: inherit; font-weight: bold;">Author</a></p>
             </div>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-create" id="btnSeeInside" onclick="toggleSeeInside()"><i class="fa-solid fa-code"></i> See inside</button>
+                <button class="btn btn-create" id="btnSeeInside" onclick="openSeeInsideEditor()"><i class="fa-solid fa-code"></i> See inside</button>
                 <a id="btnDownloadSb3" href="#" download class="btn" style="background:#64748b;"><i class="fa-solid fa-download"></i> Tải .sb3</a>
             </div>
         </div>
 
-        <!-- Khung Player đã sửa lỗi Invalid Embed -->
+        <!-- 🌟 ĐÃ SỬA CHUẨN ĐƯỜNG DẪN PLAYER (HẾT HOÀN TOÀN LỖI INVALID EMBED) -->
         <div class="player-container">
             <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
         </div>
 
-        <!-- Khu vực bình luận dự án -->
+        <!-- Bình luận dự án -->
         <div class="comment-section">
             <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-comments"></i> Bình luận về dự án</h3>
             
@@ -164,7 +169,27 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- 📄 TRANG 3: TRANG CÁ NHÂN (PROFILE PAGE) -->
+    <!-- 📄 TRANG 3: TRÌNH SOẠN THẢO TRỰC TIẾP (#EDITOR - TOÀN MÀN HÌNH) -->
+    <!-- ============================================================== -->
+    <div id="editorView" class="page-view" style="max-width: 100%; height: calc(100vh - 54px); padding: 0; display: flex; flex-direction: column;">
+        <!-- Thanh công cụ của Editor -->
+        <div class="editor-topbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <a href="#home" class="btn" style="background: #334155;"><i class="fa-solid fa-arrow-left"></i> Workshop</a>
+                <input type="text" id="editorProjTitle" class="editor-title-input" placeholder="Đặt tên cho dự án...">
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="btn btn-create" onclick="openDirectUploadModal()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Đăng lên Workshop
+                </button>
+            </div>
+        </div>
+        <!-- Iframe TurboWarp Editor -->
+        <iframe id="editorIframe" style="flex: 1;" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- 📄 TRANG 4: TRANG CÁ NHÂN (#PROFILE) -->
     <!-- ============================================================== -->
     <div id="profileView" class="page-view">
         <div class="profile-card">
@@ -181,7 +206,6 @@
             </div>
         </div>
 
-        <!-- Form chỉnh sửa hồ sơ -->
         <div id="editProfBox" style="display: none; background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 24px;">
             <h3 style="margin-bottom: 15px;">Cập nhật thông tin cá nhân</h3>
             <form onsubmit="handleSaveProfile(event)">
@@ -195,11 +219,9 @@
             </form>
         </div>
 
-        <!-- Dự án của tác giả này -->
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-folder-open"></i> Dự án đã đăng tải</h3>
         <div class="project-grid" id="userProjectList" style="margin-bottom: 30px;">Đang tải...</div>
 
-        <!-- Bình luận trên trang cá nhân -->
         <div class="comment-section">
             <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-message"></i> Lưu bút trên trang cá nhân</h3>
             
@@ -223,7 +245,7 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- 📄 TRANG 4: HỘP THƯ THÔNG BÁO (MESSAGES PAGE) -->
+    <!-- 📄 TRANG 5: HỘP THƯ THÔNG BÁO (#MESSAGES) -->
     <!-- ============================================================== -->
     <div id="messagesView" class="page-view">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px;">
@@ -233,21 +255,17 @@
         <div id="notifList">Đang tải thông báo...</div>
     </div>
 
-    <!-- ============================================================== -->
-    <!-- 📄 TRANG 5: PHÒNG CODE TRỰC TIẾP (CREATE PAGE) -->
-    <!-- ============================================================== -->
-    <div id="createView" class="page-view" style="max-width: 100%; height: calc(100vh - 54px); padding: 0;">
-        <iframe id="createIframe" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
-    </div>
-
-    <!-- MODAL UPLOAD DỰ ÁN -->
+    <!-- MODAL UPLOAD DỰ ÁN (DÙNG CHUNG CẢ TRANG CHỦ LẪN TRANG EDITOR) -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal">
-            <div class="modal-header"><span>Tải lên dự án mới</span><button class="btn-close" onclick="closeUploadModal()">&times;</button></div>
+            <div class="modal-header"><span>Xuất bản dự án lên Workshop</span><button class="btn-close" onclick="closeUploadModal()">&times;</button></div>
             <div class="modal-body">
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; font-size: 0.85rem;">
+                    💡 <b>Mẹo:</b> Trong trình soạn thảo, hãy vào menu <b>Tệp (File) -> Lưu về máy tính</b>, sau đó chọn file vừa tải để đăng ngay!
+                </div>
                 <form onsubmit="handleUpload(event)">
                     <label>Tên dự án:</label> <input type="text" id="projTitle" required placeholder="Ví dụ: Flappy Bird 2.0">
-                    <label>File Scratch (.sb3) - Tối đa 20MB:</label> <input type="file" id="projFile" accept=".sb3" required>
+                    <label>Chọn file (.sb3) vừa lưu - Tối đa 20MB:</label> <input type="file" id="projFile" accept=".sb3" required>
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;" id="btnUploadSubmit">Đăng lên Workshop</button>
                 </form>
             </div>
@@ -265,14 +283,12 @@
         let allProjects = [];
         let activeReplyProj = null;
         let activeReplyUser = null;
-        let isEditorMode = false;
         let currentProjData = null;
 
         // 1. KHỞI TẠO VÀ BẮT ĐẦU ROUTER
         async function startApp() {
             const loader = document.getElementById('globalLoader');
             try {
-                // Xử lý OAuth2 callback từ Scratch Wiki
                 const urlParams = new URLSearchParams(window.location.search);
                 const authCode = urlParams.get('code');
                 const authState = urlParams.get('state');
@@ -304,7 +320,7 @@
                 
                 if (currentUser) {
                     checkNotifications();
-                    setInterval(checkNotifications, 20000); // Tự kiểm tra tin nhắn mỗi 20s
+                    setInterval(checkNotifications, 20000);
                 }
             } catch (err) {
                 console.error("Lỗi:", err);
@@ -321,7 +337,10 @@
             const hash = window.location.hash || '#home';
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none');
 
-            if (hash.startsWith('#project/')) {
+            if (hash.startsWith('#editor')) {
+                const fileId = hash.replace('#editor/', '').replace('#editor', '');
+                openEditorPage(fileId);
+            } else if (hash.startsWith('#project/')) {
                 const fileId = hash.replace('#project/', '');
                 openProjectPage(fileId);
             } else if (hash.startsWith('#profile/')) {
@@ -329,8 +348,6 @@
                 openProfilePage(username);
             } else if (hash === '#messages') {
                 openMessagesPage();
-            } else if (hash === '#create') {
-                openCreatePage();
             } else {
                 openHomePage();
             }
@@ -373,7 +390,7 @@
         }
 
         // ==========================================
-        // 🏠 TRANG CHỦ (HOME PAGE)
+        // 🏠 TRANG CHỦ (#HOME)
         // ==========================================
         async function fetchProjects() {
             try {
@@ -404,7 +421,7 @@
         }
 
         // ==========================================
-        // 🎮 TRANG CHI TIẾT GAME (PROJECT PAGE - SỬA LỖI EMBED)
+        // 🎮 TRANG CHI TIẾT GAME (#PROJECT - SỬA LINK CHUẨN)
         // ==========================================
         function openProjectPage(fileId) {
             document.getElementById('projectView').style.display = 'block';
@@ -415,7 +432,6 @@
                 return;
             }
             currentProjData = proj;
-            isEditorMode = false;
             
             document.getElementById('projPageTitle').innerText = proj.title;
             const authorLink = document.getElementById('projPageAuthor');
@@ -424,10 +440,9 @@
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`;
             document.getElementById('btnDownloadSb3').href = fileUrl;
-            document.getElementById('btnSeeInside').innerHTML = `<i class="fa-solid fa-code"></i> See inside`;
             
-            // 🌟 SỬA ĐÚNG LINK EMBED CỦA TURBOWARP (HẾT LỖI INVALID EMBED)
-            document.getElementById('gameIframe').src = `https://turbowarp.org/embed?project_url=${encodeURIComponent(fileUrl)}&ui-theme=dark&autoplay=on`;
+            // 🌟 ĐƯỜNG DẪN PLAYER CHUẨN CỦA TURBOWARP (KHÔNG DÙNG /EMBED NỮA)
+            document.getElementById('gameIframe').src = `https://turbowarp.org/?project_url=${encodeURIComponent(fileUrl)}&autoplay=on`;
 
             renderComments(proj.comments || [], 'Proj');
             
@@ -440,25 +455,38 @@
             }
         }
 
-        function toggleSeeInside() {
+        function openSeeInsideEditor() {
             if (!currentProjData) return;
-            const fileUrl = `${WORKER_URL}/api/project/${currentProjData.fileId}`;
-            const iframe = document.getElementById('gameIframe');
-            const btn = document.getElementById('btnSeeInside');
-
-            if (!isEditorMode) {
-                iframe.src = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
-                btn.innerHTML = `<i class="fa-solid fa-play"></i> Chơi game`;
-                isEditorMode = true;
-            } else {
-                iframe.src = `https://turbowarp.org/embed?project_url=${encodeURIComponent(fileUrl)}&ui-theme=dark&autoplay=on`;
-                btn.innerHTML = `<i class="fa-solid fa-code"></i> See inside`;
-                isEditorMode = false;
-            }
+            location.hash = `#editor/${currentProjData.fileId}`;
         }
 
         // ==========================================
-        // 👤 TRANG CÁ NHÂN (PROFILE PAGE)
+        // 🛠️ TRANG SOẠN THẢO CODE TRỰC TIẾP (#EDITOR)
+        // ==========================================
+        function openEditorPage(fileId) {
+            document.getElementById('editorView').style.display = 'flex';
+            const iframe = document.getElementById('editorIframe');
+            const titleInput = document.getElementById('editorProjTitle');
+
+            if (fileId) {
+                const proj = allProjects.find(p => p.fileId === fileId);
+                const title = proj ? proj.title : "Dự án";
+                titleInput.value = `${title} (Remix)`;
+                const fileUrl = `${WORKER_URL}/api/project/${fileId}`;
+                iframe.src = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
+            } else {
+                titleInput.value = "Dự án mới";
+                iframe.src = 'https://turbowarp.org/editor';
+            }
+        }
+
+        function openDirectUploadModal() {
+            const currentTitle = document.getElementById('editorProjTitle').value;
+            openUploadModal(currentTitle);
+        }
+
+        // ==========================================
+        // 👤 TRANG CÁ NHÂN (#PROFILE)
         // ==========================================
         async function openProfilePage(username) {
             document.getElementById('profileView').style.display = 'block';
@@ -470,7 +498,6 @@
             const isOwn = currentUser && currentUser.username === username;
             document.getElementById('btnToggleEditProf').style.display = isOwn ? 'inline-block' : 'none';
 
-            // Tải danh sách game của riêng tác giả này
             const userProjs = allProjects.filter(p => p.author === username);
             const userList = document.getElementById('userProjectList');
             if (userProjs.length === 0) {
@@ -486,7 +513,6 @@
                 `).join('');
             }
 
-            // Lấy thông tin profile & bình luận
             try {
                 const data = await (await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)).json();
                 document.getElementById('profAvt').src = getAvtUrl(data.avt);
@@ -542,7 +568,7 @@
         }
 
         // ==========================================
-        // 🔔 HỘP THƯ THÔNG BÁO (MESSAGES PAGE)
+        // 🔔 HỘP THƯ THÔNG BÁO (#MESSAGES)
         // ==========================================
         async function checkNotifications() {
             if (!currentUser) return;
@@ -593,18 +619,7 @@
         }
 
         // ==========================================
-        // 🛠️ PHÒNG CODE TRỰC TIẾP (CREATE PAGE)
-        // ==========================================
-        function openCreatePage() {
-            document.getElementById('createView').style.display = 'block';
-            const iframe = document.getElementById('createIframe');
-            if (!iframe.src || iframe.src === 'about:blank') {
-                iframe.src = 'https://turbowarp.org/editor';
-            }
-        }
-
-        // ==========================================
-        // 💬 XỬ LÝ BÌNH LUẬN & REPLY LỒNG NHAU
+        // 💬 XỬ LÝ BÌNH LUẬN & REPLY
         // ==========================================
         function renderComments(comments, type) {
             const container = document.getElementById(`commentList${type}`);
@@ -704,7 +719,10 @@
         // ==========================================
         // 📤 UPLOAD DỰ ÁN
         // ==========================================
-        function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
+        function openUploadModal(defaultTitle = "") {
+            document.getElementById('projTitle').value = defaultTitle;
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
         function closeUploadModal() { document.getElementById('uploadModal').style.display = 'none'; }
 
         async function handleUpload(e) {
@@ -739,7 +757,7 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // KHỞI ĐỘNG
+        // KHỞI ĐỘNG HỆ THỐNG
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', startApp);
         } else {
