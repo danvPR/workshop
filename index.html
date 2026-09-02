@@ -7,99 +7,126 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --primary: #0da57a; /* Xanh lá CCW */
-            --bg-dark: #121212; 
-            --bg-panel: #1e1e1e;
-            --text-main: #e0e0e0;
-            --border-color: #333;
+            --primary: #0da57a; 
+            --bg-body: #f4f5f7; 
+            --bg-panel: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e5e7eb;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* NAVBAR TỐI */
-        .navbar { background: #000; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #222;}
+        /* NAVBAR ĐEN CHỦ ĐẠO */
+        .navbar { background: #111111; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .nav-left { display: flex; align-items: center; gap: 20px; }
         .navbar-brand { font-size: 1.3rem; font-weight: bold; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .nav-link { color: #aaa; text-decoration: none; font-weight: bold; font-size: 0.95rem; padding: 8px 12px; transition: 0.2s; }
-        .nav-link:hover, .nav-link.active { color: var(--primary); }
-        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .nav-link { color: #cccccc; text-decoration: none; font-weight: bold; font-size: 0.95rem; padding: 8px 12px; transition: 0.2s; }
+        .nav-link:hover { color: var(--primary); }
+        .nav-actions { display: flex; gap: 15px; align-items: center; position: relative; }
         
-        .btn { background: #333; border: none; color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
-        .btn:hover { background: #444; }
-        .btn-primary { background: var(--primary); color: #000;} .btn-primary:hover { background: #0c916b; }
+        .btn { background: #e2e8f0; border: none; color: #333; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 0.9rem;}
+        .btn:hover { background: #cbd5e1; }
+        .btn-primary { background: var(--primary); color: #fff;} .btn-primary:hover { background: #0c916b; }
         
-        .badge { background: #ffcc00; color: #000; border-radius: 10px; padding: 2px 6px; font-size: 0.7rem; font-weight: bold; position: absolute; top: -5px; right: -5px; display: none; }
-        .badge.active { display: block; }
-
+        /* CÁC PAGE VIEW */
         .page-view { display: none; max-width: 1200px; margin: 0 auto; padding: 30px 20px; flex: 1; width: 100%; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* GRID DỰ ÁN */
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; margin-top: 20px;}
-        .card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; cursor: pointer; transition: 0.2s; }
-        .card:hover { border-color: var(--primary); transform: translateY(-4px); }
-        .card-thumb { height: 160px; background: #2a2a2a; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 3rem; }
+        /* DANH SÁCH DỰ ÁN */
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-top: 20px;}
+        .card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card-thumb { height: 160px; background: #eef2f6; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .card-body { padding: 15px; }
-        .card-title { font-weight: bold; color: #fff; margin-bottom: 6px; font-size: 1.1rem;}
-        .card-author { font-size: 0.85rem; color: #888; }
+        .card-title { font-weight: bold; color: var(--text-main); margin-bottom: 6px; font-size: 1.1rem;}
+        .card-author { font-size: 0.85rem; color: var(--text-muted); }
 
-        /* ================= CCW PROJECT LAYOUT ================= */
+        /* CCW LAYOUT SÁNG */
         .ccw-layout { display: flex; gap: 25px; align-items: flex-start; }
         .ccw-main { flex: 2.5; min-width: 0; }
-        .ccw-sidebar { flex: 1; background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; height: 600px; }
+        .ccw-sidebar { flex: 1.2; background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; height: 600px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         
-        .player-container { background: #000; border-radius: 10px; overflow: hidden; height: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333;}
+        .player-container { background: #f8f9fa; border-radius: 12px; overflow: hidden; height: 500px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; }
         .player-iframe { width: 100%; height: 100%; border: none; }
         
-        /* Thanh tương tác dưới Player */
-        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; background: var(--bg-panel); padding: 15px 20px; border-radius: 10px; border: 1px solid var(--border-color); }
+        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; background: var(--bg-panel); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .action-btns { display: flex; gap: 15px; }
-        .act-btn { background: none; border: none; color: #aaa; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .act-btn:hover { color: #fff; }
+        .act-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-weight: bold;}
+        .act-btn:hover { color: #111; }
         .act-btn.active.like { color: #ff4c4c; }
-        .act-btn.active.star { color: #ffcc00; }
+        .act-btn.active.star { color: #f5b041; }
 
-        /* TABS TRONG SIDEBAR */
+        /* TABS (ĐẢO LẠI) */
         .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border-color); }
-        .tab-btn { flex: 1; background: none; border: none; color: #888; padding: 15px 0; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-btn { flex: 1; background: none; border: none; color: var(--text-muted); padding: 15px 0; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.95rem;}
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); color: #111;}
         .tab-content { padding: 20px; overflow-y: auto; flex: 1; display: none; }
         .tab-content.active { display: block; }
 
-        /* COMMENTS */
+        /* THÔNG TIN TAB BỐ CỤC LẠI */
+        .info-section { margin-bottom: 25px; }
+        .info-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px; border-bottom: 1px dashed #ddd; padding-bottom: 5px;}
+        .info-text { color: var(--text-main); font-size: 0.95rem; white-space: pre-line; line-height: 1.5; }
+
+        /* BÌNH LUẬN */
         .comment-box { display: flex; gap: 12px; margin-bottom: 20px; }
-        .avt-circle { width: 40px; height: 40px; border-radius: 50%; background: #444; object-fit: cover;}
-        .comment-text { background: #2a2a2a; padding: 10px 15px; border-radius: 12px; font-size: 0.9rem; color: #ddd; word-wrap: break-word;}
-        .comment-img-render { max-width: 100%; border-radius: 8px; margin-top: 8px; border: 1px solid #444;}
+        .avt-circle { width: 38px; height: 38px; border-radius: 50%; background: #ddd; object-fit: cover;}
+        .comment-text { background: #f1f5f9; padding: 12px 16px; border-radius: 0 16px 16px 16px; font-size: 0.9rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; margin-top: 4px;}
+        .comment-img-render { max-width: 100%; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd;}
         
-        /* CHỖ NHẬP BÌNH LUẬN */
-        .comment-input-area { border-top: 1px solid var(--border-color); padding: 15px; background: #222; }
-        .comment-input-wrapper { display: flex; gap: 10px; align-items: center; background: #111; padding: 8px 15px; border-radius: 20px; border: 1px solid #333;}
-        .comment-input-wrapper input { background: none; border: none; color: white; flex: 1; outline: none; }
-        .upload-icon-btn { cursor: pointer; width: 24px; height: 24px; opacity: 0.7; transition: 0.2s; }
-        .upload-icon-btn:hover { opacity: 1; }
+        .comment-input-area { border-top: 1px solid var(--border-color); padding: 15px; background: #fafafa; }
+        .comment-input-wrapper { display: flex; gap: 8px; align-items: center; background: #fff; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color); }
+        .comment-input-wrapper input { background: none; border: none; color: #111; flex: 1; outline: none; font-size: 0.9rem;}
+        .action-icon-btn { cursor: pointer; width: 22px; height: 22px; opacity: 0.6; transition: 0.2s; }
+        .action-icon-btn:hover { opacity: 1; }
+        
+        /* GIPHY PANEL */
+        #giphyPanel { display: none; position: absolute; bottom: 70px; right: 20px; width: 250px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 10px; z-index: 100; }
+        .gif-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; max-height: 200px; overflow-y: auto; margin-top: 10px; }
+        .gif-item { width: 100%; cursor: pointer; border-radius: 4px; }
 
-        /* TRANG CÁ NHÂN (PROFILE) */
-        .profile-card { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border-color); padding: 30px; display: flex; gap: 30px; align-items: center; margin-bottom: 30px;}
-        .profile-avt-lg { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover;}
+        /* FORM UPLOAD & EDIT */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 8px; color: #555; font-size: 0.9rem;}
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: #fff;}
+        .form-control:focus { border-color: var(--primary); outline: none; }
 
-        /* MODALS */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-width: 500px; overflow: hidden; }
-        .modal-header { padding: 15px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); font-weight: bold; }
-        .btn-close { background: none; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer; }
+        /* THÔNG BÁO (TOAST) */
+        #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #fff; border-left: 5px solid var(--primary); padding: 15px 20px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s forwards; color: #333; font-weight: 500; min-width: 250px;}
+        .toast.error { border-left-color: #ff4c4c; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
+
+        /* BẢNG NOTIFICATION */
+        .notif-dropdown { display: none; position: absolute; top: 40px; right: 0; width: 320px; background: #fff; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); border: 1px solid #eee; overflow: hidden; z-index: 1000; }
+        .notif-header { padding: 12px 15px; font-weight: bold; border-bottom: 1px solid #eee; background: #fafafa; display: flex; justify-content: space-between; }
+        .notif-list { max-height: 300px; overflow-y: auto; }
+        .notif-item { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; display: flex; gap: 10px; text-decoration: none; color: #333; transition: 0.2s;}
+        .notif-item:hover { background: #f8f9fa; }
+        .notif-item.unread { background: #f0fdf4; }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { background: #fff; border-radius: 12px; width: 100%; max-width: 500px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .modal-header { padding: 15px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; font-weight: bold; background: #fafafa;}
+        .btn-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
         .modal-body { padding: 20px; }
-        input[type="text"], textarea { width: 100%; background: #111; color: white; border: 1px solid #333; padding: 12px; border-radius: 6px; margin-bottom: 15px; }
-
-        #globalLoader { position: fixed; inset: 0; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        
+        #globalLoader { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
 <body>
-
+    <!-- LOADER -->
     <div id="globalLoader">
-        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
-        <h2 id="loaderText" style="color: #aaa;">Đang kết nối nền tảng...</h2>
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+        <h3 style="color: #666; font-weight:normal;">Đang kết nối nền tảng...</h3>
     </div>
+
+    <!-- HỆ THỐNG THÔNG BÁO WEB (TOAST) -->
+    <div id="toastContainer"></div>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -113,75 +140,87 @@
 
     <!-- TRANG 1: KHÁM PHÁ (HOME) -->
     <div id="homeView" class="page-view">
-        <h2 style="margin-bottom: 20px;">Tác phẩm tiêu biểu</h2>
-        <div class="project-grid" id="projectList">Đang tải...</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Tác phẩm tiêu biểu</h2>
+        </div>
+        <div class="project-grid" id="projectList">Đang tải dữ liệu...</div>
     </div>
 
     <!-- TRANG 2: CHI TIẾT DỰ ÁN (CCW LAYOUT) -->
     <div id="projectView" class="page-view">
         <div class="ccw-layout">
-            <!-- Cột trái: Player & Hành động -->
             <div class="ccw-main">
-                <div class="player-container" id="playerContainer">
-                    <!-- Tránh load xoay vòng: src chỉ gán khi bấm vào -->
-                </div>
+                <div class="player-container" id="playerContainer"></div>
                 
                 <div class="action-bar">
                     <div>
-                        <h2 id="projPageTitle" style="color: #fff; margin-bottom: 5px;">Tên dự án</h2>
-                        <span style="color: #888; font-size: 0.9rem;">Tác giả: <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none;">Author</a></span>
+                        <h2 id="projPageTitle" style="color: #111; margin-bottom: 5px;">Tên dự án</h2>
+                        <span style="color: var(--text-muted); font-size: 0.9rem;">Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></span>
                     </div>
                     <div class="action-btns">
-                        <button class="act-btn" id="btnLike" onclick="toggleAction('like')"><i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">0</span></button>
+                        <button class="act-btn" id="btnLike" onclick="toggleAction('like')"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                         <button class="act-btn" id="btnStar" onclick="toggleAction('star')"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
-                        <a id="btnSeeInside" href="#" target="_blank" class="btn" style="background: #333;"><i class="fa-solid fa-code"></i> Mã nguồn</a>
-                        <a id="btnDownloadSb3" href="#" download class="btn btn-primary"><i class="fa-solid fa-download"></i> Tải về</a>
+                        <a id="btnSeeInside" href="#" target="_blank" class="btn"><i class="fa-solid fa-code"></i> Mã nguồn</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Cột phải: Tabs Thông tin & Bình luận -->
-            <div class="ccw-sidebar">
+            <div class="ccw-sidebar" style="position:relative;">
                 <div class="sidebar-tabs">
-                    <button class="tab-btn active" onclick="switchTab('comments')">Bình luận</button>
-                    <button class="tab-btn" onclick="switchTab('info')">Thông tin</button>
+                    <!-- ĐẢO TAB THÔNG TIN LÊN TRƯỚC -->
+                    <button class="tab-btn active" onclick="switchTab('info')">Thông tin</button>
+                    <button class="tab-btn" onclick="switchTab('comments')">Bình luận</button>
                 </div>
                 
-                <!-- Tab Bình luận -->
-                <div id="tab-comments" class="tab-content active" style="display: flex; flex-direction: column; padding:0;">
-                    <div id="commentListProj" style="flex: 1; padding: 20px; overflow-y: auto;">Chưa có bình luận.</div>
-                    
-                    <div class="comment-input-area">
-                        <div id="replyBannerProj" style="display:none; color: var(--primary); font-size:0.8rem; margin-bottom:8px;">
-                            Đang trả lời <b id="replyUserLabelProj"></b> <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="cancelReply()"></i>
-                        </div>
-                        <form onsubmit="handlePostComment(event)" id="commentFormProj" style="display:none;">
-                            <div class="comment-input-wrapper">
-                                <input type="text" id="commentTextProj" placeholder="Để lại bình luận động viên tác giả..." required>
-                                <!-- Nút Upload Ảnh bằng Icon có sẵn -->
-                                <label for="commentImgUpload">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="upload-icon-btn" title="Gửi ảnh">
-                                </label>
-                                <input type="file" id="commentImgUpload" accept="image/*" style="display:none;" onchange="alert('Đã chọn ảnh: ' + this.files[0].name)">
-                                <button type="submit" style="background:none; border:none; color:var(--primary); cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
-                            </div>
-                        </form>
-                        <div id="loginPromptProj" style="text-align: center; color: #888; font-size: 0.9rem;">
-                            <a href="javascript:void(0)" onclick="loginScratch()" style="color: var(--primary);">Đăng nhập</a> để bình luận.
-                        </div>
+                <!-- Tab Thông tin (Được thiết kế lại bố cục) -->
+                <div id="tab-info" class="tab-content active">
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: -20px;">
+                        <button class="btn" id="btnEditInfo" style="display:none; padding:4px 10px; font-size:0.8rem;" onclick="openModal('editInfoModal')"><i class="fa-solid fa-pen"></i> Sửa</button>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-title">Hướng dẫn vận hành</div>
+                        <div class="info-text" id="projDesc">Đang cập nhật...</div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-title">Đội ngũ sáng tạo / Credits</div>
+                        <div class="info-text" id="projCredits">Đang cập nhật...</div>
                     </div>
                 </div>
 
-                <!-- Tab Thông tin & Credits -->
-                <div id="tab-info" class="tab-content">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <h4 style="color:#aaa;">| Hướng dẫn vận hành</h4>
-                        <i class="fa-solid fa-pen" id="btnEditInfo" style="cursor:pointer; color:var(--primary); display:none;" onclick="openEditInfoModal()"></i>
-                    </div>
-                    <p id="projDesc" style="color: #ddd; font-size: 0.9rem; white-space: pre-line; margin-bottom: 20px;"></p>
+                <!-- Tab Bình luận -->
+                <div id="tab-comments" class="tab-content" style="display: flex; flex-direction: column; padding:0;">
+                    <div id="commentListProj" style="flex: 1; padding: 20px; overflow-y: auto;">Chưa có bình luận.</div>
                     
-                    <h4 style="color:#aaa; margin-bottom: 10px;">| Đội ngũ sáng tạo (Credits)</h4>
-                    <p id="projCredits" style="color: #ddd; font-size: 0.9rem; white-space: pre-line;"></p>
+                    <div class="comment-input-area" style="position: relative;">
+                        <div id="replyBannerProj" style="display:none; color: var(--primary); font-size:0.8rem; margin-bottom:8px; font-weight:bold;">
+                            Đang trả lời <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply()"></i>
+                        </div>
+                        <form onsubmit="handlePostComment(event)" id="commentFormProj" style="display:none;">
+                            <div class="comment-input-wrapper">
+                                <input type="text" id="commentTextProj" placeholder="Viết bình luận..." required autocomplete="off">
+                                
+                                <!-- Nút chọn GIF -->
+                                <img src="https://cdn-icons-png.flaticon.com/512/3712/3712217.png" class="action-icon-btn" title="Chèn GIF" onclick="toggleGiphy()">
+                                
+                                <!-- Nút Upload Ảnh -->
+                                <label for="commentImgUpload" style="margin:0; display:flex;">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Gửi ảnh">
+                                </label>
+                                <input type="file" id="commentImgUpload" accept="image/*" style="display:none;" onchange="showToast('Đã chọn ảnh: ' + this.files[0].name, 'success')">
+                                
+                                <button type="submit" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-paper-plane"></i></button>
+                            </div>
+                        </form>
+                        <div id="loginPromptProj" style="text-align: center; color: #888; font-size: 0.9rem;">
+                            <a href="javascript:void(0)" onclick="loginScratch()" style="color: var(--primary); font-weight:bold;">Đăng nhập</a> để bình luận.
+                        </div>
+
+                        <!-- KHUNG GIPHY -->
+                        <div id="giphyPanel">
+                            <input type="text" id="giphySearch" class="form-control" placeholder="Tìm kiếm GIF..." onkeyup="searchGiphy(this.value)" style="padding:6px; font-size:0.85rem;">
+                            <div class="gif-grid" id="giphyResults"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -189,58 +228,98 @@
 
     <!-- TRANG 3: PROFILE -->
     <div id="profileView" class="page-view">
-        <div class="profile-card">
-            <img id="profAvt" src="" class="profile-avt-lg" onerror="this.src='https://scratch.mit.edu/images/avatar_default.gif'">
+        <div style="background:var(--bg-panel); border-radius:12px; border:1px solid var(--border-color); padding:30px; display:flex; gap:30px; align-items:center; margin-bottom:30px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+            <img id="profAvt" src="" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid #f1f5f9;">
             <div style="flex: 1;">
-                <h1 id="profUsername" style="margin-bottom: 5px;">Username</h1>
-                <p id="profStatus" style="color: #aaa; font-style: italic; margin-bottom: 15px;">Trạng thái...</p>
-                <h4 style="color:#888; margin-bottom:5px;">| Giới thiệu (Bio)</h4>
-                <p id="profBio" style="color: #ccc; white-space: pre-line;"></p>
-                <button id="btnToggleEditProf" class="btn" style="margin-top: 15px; display: none;" onclick="openModal('editProfileModal')">Chỉnh sửa hồ sơ</button>
+                <h1 id="profUsername" style="margin-bottom:5px; color:#111;">Username</h1>
+                <h5 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; margin-bottom:5px;">Trạng thái / Giới thiệu</h5>
+                <p id="profBio" style="color:var(--text-main); line-height:1.5;"></p>
             </div>
         </div>
-        <h3 style="margin-bottom: 20px;">| Tác phẩm đã phát hành</h3>
+        <h3 style="margin-bottom: 20px; padding-bottom:10px; border-bottom:1px solid #ddd;">Tác phẩm của tác giả</h3>
         <div class="project-grid" id="userProjectList"></div>
     </div>
 
-    <!-- MODALS CHỨC NĂNG -->
-    <div class="modal-overlay" id="uploadModal">
-        <div class="modal">
-            <div class="modal-header"><span>Xuất bản dự án</span><button class="btn-close" onclick="closeModal('uploadModal')">&times;</button></div>
-            <div class="modal-body">
-                <form onsubmit="handleUpload(event)">
-                    <label>Tên tác phẩm:</label> <input type="text" id="projTitleUp" required>
-                    <label>File .sb3 (Max 20MB):</label> <input type="file" id="projFileUp" accept=".sb3" required style="padding:0; background:none; border:none;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="btnUploadSubmit">Đăng lên nền tảng</button>
-                </form>
-            </div>
+    <!-- TRANG 4: UPLOAD (TRANG ĐỘC LẬP) -->
+    <div id="uploadView" class="page-view" style="max-width: 700px;">
+        <div style="background:var(--bg-panel); padding:30px; border-radius:12px; border:1px solid var(--border-color); box-shadow:0 4px 20px rgba(0,0,0,0.05);">
+            <h2 style="margin-bottom:20px; color:#111; border-bottom:1px solid #eee; padding-bottom:10px;">Xuất bản dự án mới</h2>
+            <form onsubmit="handleUpload(event)">
+                <div class="form-group">
+                    <label>Tên tác phẩm *</label>
+                    <input type="text" id="upTitle" class="form-control" required placeholder="Nhập tên dự án...">
+                </div>
+                <div style="display:flex; gap:20px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>File .sb3 (Max 20MB) *</label>
+                        <input type="file" id="upFile" accept=".sb3" class="form-control" required style="padding: 9px;">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Ảnh bìa (Thumbnail)</label>
+                        <input type="file" id="upThumb" accept="image/*" class="form-control" style="padding: 9px;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Hướng dẫn vận hành (Cách chơi)</label>
+                    <textarea id="upDesc" class="form-control" rows="4" placeholder="Sử dụng phím mũi tên để di chuyển..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Đội ngũ sáng tạo (Credits)</label>
+                    <textarea id="upCredits" class="form-control" rows="3" placeholder="Ghi công nguồn hình ảnh, âm thanh..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnSubmitUpload" style="width:100%; justify-content:center; padding:12px; font-size:1.05rem;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Đăng lên nền tảng
+                </button>
+            </form>
         </div>
     </div>
 
+    <!-- MODAL SỬA THÔNG TIN -->
     <div class="modal-overlay" id="editInfoModal">
         <div class="modal">
-            <div class="modal-header"><span>Chỉnh sửa thông tin dự án</span><button class="btn-close" onclick="closeModal('editInfoModal')">&times;</button></div>
+            <div class="modal-header"><span>Cập nhật Thông tin</span><button class="btn-close" onclick="closeModal('editInfoModal')">&times;</button></div>
             <div class="modal-body">
                 <form onsubmit="saveProjectInfo(event)">
-                    <label>Hướng dẫn vận hành / Mô tả:</label> <textarea id="editDescInput" rows="4"></textarea>
-                    <label>Đội ngũ / Nguồn (Credits):</label> <textarea id="editCreditsInput" rows="3"></textarea>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Lưu thay đổi</button>
+                    <div class="form-group">
+                        <label>Hướng dẫn vận hành:</label> 
+                        <textarea id="editDescInput" class="form-control" rows="5"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Đội ngũ / Nguồn (Credits):</label> 
+                        <textarea id="editCreditsInput" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center;">Lưu thay đổi</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- CORE SCRIPT -->
     <script>
         const WIKI_CLIENT_ID = "70970406"; 
-        const WORKER_URL = "https://app.studiodanv.workers.dev";
+        const WORKER_URL = "https://app.studiodanv.workers.dev"; // Hãy thay nếu deploy tên khác
+        const GIPHY_API_KEY = "GlVGYHqc3SyCEGpoqCG1Z5z5HmfcjQOj"; // Khóa Beta công khai
         
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = [];
         let currentProj = null;
         let activeReplyUser = null;
+        let selectedGifUrl = null;
 
-        // KHỞI TẠO BỀN VỮNG (Không lỗi loading)
+        // 1. HỆ THỐNG TOAST (THAY THẾ ALERT)
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            const icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#ff4c4c"></i>' : '<i class="fa-solid fa-circle-check" style="color:var(--primary)"></i>';
+            toast.innerHTML = `${icon} <span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // 2. KHỞI TẠO APP
         document.addEventListener('DOMContentLoaded', async () => {
             const loader = document.getElementById('globalLoader');
             try {
@@ -253,30 +332,29 @@
                         currentUser = { username: data.username, sessionToken: data.sessionToken };
                         try { const prof = await (await fetch(`${WORKER_URL}/api/user/${data.username}`)).json(); currentUser.avt = prof.avt; } catch(e){}
                         localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    }
+                        showToast(`Chào mừng ${data.username} trở lại!`, 'success');
+                    } else showToast("Đăng nhập thất bại!", 'error');
                 }
                 await loadProjects();
                 updateNav();
                 handleRouting();
-            } catch (e) {
-                console.error(e);
-            } finally {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 300);
-            }
+            } catch (e) { console.error(e); } 
+            finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 300); }
         });
 
+        // 3. ĐIỀU HƯỚNG BẰNG HASH
         window.addEventListener('hashchange', handleRouting);
-
         function handleRouting() {
             const hash = window.location.hash || '#home';
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none');
-            // Xóa iframe cũ tránh chạy ngầm
+            
+            // XÓA SẠCH IFRAME KHI RỜI ĐI ĐỂ NGĂN LỖI LOAD XOAY VÒNG
             document.getElementById('playerContainer').innerHTML = ''; 
 
             if (hash.startsWith('#project/')) openProjectPage(hash.replace('#project/', ''));
             else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')));
-            else if (hash === '#create') window.open('https://turbowarp.org/editor', '_blank'); // Tạo tab mới an toàn
+            else if (hash === '#upload') openUploadPage();
+            else if (hash === '#create') window.open('https://turbowarp.org/editor', '_blank'); 
             else openHomePage();
         }
 
@@ -284,19 +362,23 @@
             const nav = document.getElementById('navActions');
             if (currentUser) {
                 nav.innerHTML = `
-                    <div style="position:relative; margin-right:10px;">
-                        <i class="fa-solid fa-envelope" style="font-size:1.2rem; cursor:pointer;" onclick="alert('Chức năng Hộp thư sắp ra mắt!')"></i>
-                        <span id="notifBadge" class="badge">0</span>
+                    <div style="position:relative;">
+                        <button class="btn" style="padding:8px; border-radius:50%;" onclick="toggleNotif()"><i class="fa-solid fa-bell"></i></button>
+                        <div class="notif-dropdown" id="notifPanel">
+                            <div class="notif-header">Thông báo <button style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:0.8rem;" onclick="markRead()">Đánh dấu đã đọc</button></div>
+                            <div class="notif-list" id="notifList"><div style="padding:15px;text-align:center;color:#888;">Đang tải...</div></div>
+                        </div>
                     </div>
-                    <button class="btn btn-primary" onclick="openModal('uploadModal')"><i class="fa-solid fa-cloud-arrow-up"></i> Xuất bản</button>
-                    <a href="#profile/${currentUser.username}" class="btn" style="background: transparent; border: 1px solid #444;">
-                        <img src="${getAvtUrl(currentUser.avt)}" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
+                    <a href="#upload" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Tải lên</a>
+                    <a href="#profile/${currentUser.username}" class="btn" style="background:transparent; border:1px solid var(--border-color);">
+                        <img src="${getAvtUrl(currentUser.avt)}" style="width:22px; height:22px; border-radius:50%; object-fit:cover;">
                         ${currentUser.username}
                     </a>
-                    <button class="btn" style="background:#333;" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <button class="btn" style="background:#ffebee; color:#ff4c4c;" onclick="logout()"><i class="fa-solid fa-power-off"></i></button>
                 `;
+                fetchNotifications();
             } else {
-                nav.innerHTML = `<button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-user"></i> Đăng nhập Scratch</button>`;
+                nav.innerHTML = `<button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-user"></i> Đăng nhập</button>`;
             }
         }
 
@@ -305,61 +387,81 @@
             localStorage.setItem('oauth_state', state);
             window.location.href = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&scopes=identify&state=${state}`;
         }
-        function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); location.hash='#home'; }
+        function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); location.hash='#home'; showToast("Đã đăng xuất."); }
 
         async function loadProjects() {
             try { const res = await (await fetch(`${WORKER_URL}/api/projects`)).json(); if(!res.error) allProjects = res; } catch(e){}
         }
 
-        // TRANG CHỦ
+        // 4. CÁC TRANG (VIEWS)
         function openHomePage() {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('projectList').innerHTML = allProjects.map(p => `
                 <div class="card" onclick="location.hash='#project/${p.fileId}'">
-                    <div class="card-thumb"><img src="https://cdn-icons-png.flaticon.com/512/808/808439.png" width="60" style="opacity:0.8"></div>
+                    <div class="card-thumb">
+                        ${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}
+                    </div>
                     <div class="card-body">
                         <div class="card-title">${escapeHtml(p.title)}</div>
-                        <div class="card-author">Tác giả: ${escapeHtml(p.author)}</div>
-                        <div style="margin-top: 8px; font-size: 0.8rem; color:#666;">
-                            <i class="fa-solid fa-thumbs-up"></i> ${p.likes ? p.likes.length : 0} &nbsp;&nbsp;
-                            <i class="fa-solid fa-star"></i> ${p.stars ? p.stars.length : 0}
+                        <div class="card-author">Bởi: ${escapeHtml(p.author)}</div>
+                        <div style="margin-top: 10px; font-size: 0.85rem; color:var(--text-muted); display:flex; gap:15px;">
+                            <span><i class="fa-solid fa-heart" style="color:#ff4c4c"></i> ${p.likes ? p.likes.length : 0}</span>
+                            <span><i class="fa-solid fa-star" style="color:#f5b041"></i> ${p.stars ? p.stars.length : 0}</span>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // TRANG CHI TIẾT
+        function openUploadPage() {
+            if(!currentUser) { showToast("Vui lòng đăng nhập để đăng bài!", "error"); location.hash="#home"; return; }
+            document.getElementById('uploadView').style.display = 'block';
+        }
+
+        async function openProfilePage(username) {
+            document.getElementById('profileView').style.display = 'block';
+            document.getElementById('profUsername').innerText = username;
+            document.getElementById('profBio').innerText = "Đang tải dữ liệu...";
+            
+            try {
+                const prof = await (await fetch(`${WORKER_URL}/api/user/${username}`)).json();
+                document.getElementById('profAvt').src = getAvtUrl(prof.avt);
+                document.getElementById('profBio').innerText = prof.bio || "Người dùng này chưa cập nhật giới thiệu.";
+            } catch(e) {}
+
+            const userProjs = allProjects.filter(p => p.author === username);
+            document.getElementById('userProjectList').innerHTML = userProjs.length ? userProjs.map(p => `
+                <div class="card" onclick="location.hash='#project/${p.fileId}'">
+                    <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
+                    <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div></div>
+                </div>
+            `).join('') : '<p style="color:#888;">Chưa có tác phẩm nào.</p>';
+        }
+
         function openProjectPage(fileId) {
             document.getElementById('projectView').style.display = 'block';
             const proj = allProjects.find(p => p.fileId === fileId);
-            if (!proj) return;
+            if (!proj) { showToast("Không tìm thấy dự án", "error"); location.hash="#home"; return; }
             currentProj = proj;
 
             document.getElementById('projPageTitle').innerText = proj.title;
             document.getElementById('projPageAuthor').innerText = proj.author;
             document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
-            // Gán Iframe tự động chơi
+            // IFRAME CHUẨN TURBOWARP (KHÔNG GÂY LỖI)
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`;
-            document.getElementById('playerContainer').innerHTML = `<iframe class="player-iframe" src="https://packager.turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&autoplay=true" allowfullscreen></iframe>`;
+            document.getElementById('playerContainer').innerHTML = `<iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&autoplay=true" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
             
-            document.getElementById('btnDownloadSb3').href = fileUrl;
             document.getElementById('btnSeeInside').href = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
             
-            document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn vận hành.";
-            document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
+            document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn.";
+            document.getElementById('projCredits').innerText = proj.credits || "Chưa có thông tin.";
             
-            // Trạng thái Nút Like/Star
-            updateActionBtns();
+            switchTab('info'); updateActionBtns(); renderComments();
 
-            // Phân quyền Edit Info
-            if (currentUser && currentUser.username === proj.author) {
-                document.getElementById('btnEditInfo').style.display = 'inline-block';
-            } else document.getElementById('btnEditInfo').style.display = 'none';
+            if (currentUser && currentUser.username === proj.author) document.getElementById('btnEditInfo').style.display = 'inline-block';
+            else document.getElementById('btnEditInfo').style.display = 'none';
 
-            // Bình luận
-            renderComments();
             if (currentUser) {
                 document.getElementById('commentFormProj').style.display = 'block';
                 document.getElementById('loginPromptProj').style.display = 'none';
@@ -369,87 +471,99 @@
             }
         }
 
+        // 5. CHỨC NĂNG DỰ ÁN
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
             event.target.classList.add('active');
-            document.getElementById(`tab-${tab}`).style.display = 'flex';
+            document.getElementById(`tab-${tab}`).style.display = 'block';
         }
 
-        // TƯƠNG TÁC (LIKE/STAR)
         function updateActionBtns() {
             const likes = currentProj.likes || []; const stars = currentProj.stars || [];
-            document.getElementById('likeCount').innerText = likes.length;
-            document.getElementById('starCount').innerText = stars.length;
-            
+            document.getElementById('likeCount').innerText = likes.length; document.getElementById('starCount').innerText = stars.length;
             const btnLike = document.getElementById('btnLike'); const btnStar = document.getElementById('btnStar');
             if (currentUser && likes.includes(currentUser.username)) btnLike.classList.add('active', 'like'); else btnLike.classList.remove('active', 'like');
             if (currentUser && stars.includes(currentUser.username)) btnStar.classList.add('active', 'star'); else btnStar.classList.remove('active', 'star');
         }
 
         async function toggleAction(type) {
-            if (!currentUser) return alert("Vui lòng đăng nhập!");
-            const res = await fetch(`${WORKER_URL}/api/project/action`, {
-                method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: `toggle_${type}` })
-            });
-            if ((await res.json()).success) {
-                let list = currentProj[`${type}s`] || [];
-                if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username);
-                else list.push(currentUser.username);
-                currentProj[`${type}s`] = list;
-                updateActionBtns();
-            }
+            if (!currentUser) return showToast("Vui lòng đăng nhập!", "error");
+            await fetch(`${WORKER_URL}/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: `toggle_${type}` }) });
+            let list = currentProj[`${type}s`] || [];
+            if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username); else list.push(currentUser.username);
+            currentProj[`${type}s`] = list; updateActionBtns();
         }
 
-        // CHỈNH SỬA THÔNG TIN
-        function openEditInfoModal() {
-            document.getElementById('editDescInput').value = currentProj.description || '';
-            document.getElementById('editCreditsInput').value = currentProj.credits || '';
-            openModal('editInfoModal');
-        }
-        async function saveProjectInfo(e) {
+        // TẢI LÊN DỰ ÁN MỚI
+        async function handleUpload(e) {
             e.preventDefault();
-            const desc = document.getElementById('editDescInput').value;
-            const cred = document.getElementById('editCreditsInput').value;
-            await fetch(`${WORKER_URL}/api/project/action`, {
-                method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: "update_info", payload: { description: desc, credits: cred } })
-            });
-            currentProj.description = desc; currentProj.credits = cred;
-            document.getElementById('projDesc').innerText = desc; document.getElementById('projCredits').innerText = cred;
-            closeModal('editInfoModal');
+            const btn = document.getElementById('btnSubmitUpload'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên...'; btn.disabled = true;
+            
+            const form = new FormData(); 
+            form.append("file", document.getElementById('upFile').files[0]); 
+            if(document.getElementById('upThumb').files[0]) form.append("thumb", document.getElementById('upThumb').files[0]);
+            form.append("title", document.getElementById('upTitle').value); 
+            form.append("author", currentUser.username);
+            form.append("description", document.getElementById('upDesc').value);
+            form.append("credits", document.getElementById('upCredits').value);
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
+                if (res.success) { showToast("Xuất bản thành công!", "success"); await loadProjects(); location.hash = `#project/${res.file_id}`; }
+                else showToast("Lỗi tải lên", "error");
+            } catch(err) { showToast("Lỗi kết nối", "error"); }
+            
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Đăng lên nền tảng'; btn.disabled = false;
         }
 
-        // BÌNH LUẬN (Có Ảnh)
+        // BÌNH LUẬN & GIPHY
         function renderComments() {
             const list = currentProj.comments || [];
-            document.getElementById('commentListProj').innerHTML = list.length === 0 ? '<div style="color:#666;">Chưa có bình luận. Hãy là người đầu tiên!</div>' : 
+            document.getElementById('commentListProj').innerHTML = list.length === 0 ? '<div style="color:#888; text-align:center; padding:20px;">Chưa có bình luận. Hãy mở lời!</div>' : 
             list.map(c => `
                 <div class="comment-box">
                     <img src="${getAvtUrl(c.avt)}" class="avt-circle">
                     <div style="flex:1;">
-                        <a href="#profile/${c.author}" class="comment-author">${c.author}</a> <span style="font-size:0.75rem; color:#666;">${c.time}</span>
-                        ${c.replyToUser ? `<div style="font-size:0.8rem; color:var(--primary);">↳ Trả lời @${c.replyToUser}</div>` : ''}
+                        <a href="#profile/${c.author}" style="font-weight:bold; color:#111; text-decoration:none;">${c.author}</a> 
+                        <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">${c.time}</span>
+                        ${c.replyToUser ? `<div style="font-size:0.8rem; color:var(--primary); font-weight:bold;">↳ Trả lời @${c.replyToUser}</div>` : ''}
                         <div class="comment-text">
                             ${escapeHtml(c.text)}
                             ${c.imageId ? `<br><img src="${WORKER_URL}/api/project/${c.imageId}" class="comment-img-render">` : ''}
+                            ${c.gifUrl ? `<br><img src="${c.gifUrl}" class="comment-img-render" style="max-width:200px;">` : ''}
                         </div>
-                        ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.8rem; cursor:pointer; margin-top:5px;" onclick="startReply('${c.author}')">Trả lời</button>` : ''}
+                        ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.8rem; cursor:pointer; margin-top:5px; font-weight:bold;" onclick="startReply('${c.author}')">Trả lời</button>` : ''}
                     </div>
                 </div>
             `).join('');
+            document.getElementById('commentListProj').scrollTop = document.getElementById('commentListProj').scrollHeight;
         }
 
-        function startReply(user) {
-            activeReplyUser = user;
-            document.getElementById('replyUserLabelProj').innerText = `@${user}`;
-            document.getElementById('replyBannerProj').style.display = 'block';
-        }
+        function startReply(user) { activeReplyUser = user; document.getElementById('replyUserLabelProj').innerText = `@${user}`; document.getElementById('replyBannerProj').style.display = 'block'; }
         function cancelReply() { activeReplyUser = null; document.getElementById('replyBannerProj').style.display = 'none'; }
+
+        function toggleGiphy() {
+            const p = document.getElementById('giphyPanel');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+            if(p.style.display === 'block') searchGiphy('scratch');
+        }
+        async function searchGiphy(q) {
+            if(!q) return;
+            const res = await (await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${q}&limit=8`)).json();
+            document.getElementById('giphyResults').innerHTML = res.data.map(g => `<img src="${g.images.fixed_width_small.url}" class="gif-item" onclick="selectGif('${g.images.fixed_height.url}')">`).join('');
+        }
+        function selectGif(url) {
+            selectedGifUrl = url;
+            document.getElementById('giphyPanel').style.display = 'none';
+            document.getElementById('commentTextProj').value += " [Đã đính kèm GIF]";
+            showToast("Đã chọn GIF!", "success");
+        }
 
         async function handlePostComment(e) {
             e.preventDefault();
             if (!currentUser) return;
-            const text = document.getElementById('commentTextProj').value;
+            let text = document.getElementById('commentTextProj').value.replace(" [Đã đính kèm GIF]", "");
             const imgFile = document.getElementById('commentImgUpload').files[0];
             let imgId = null;
 
@@ -458,41 +572,60 @@
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: formData })).json();
                 if (upRes.success) imgId = upRes.file_id;
             }
+            if(!text && !imgId && !selectedGifUrl) return;
 
             const res = await fetch(`${WORKER_URL}/api/comment`, {
                 method: 'POST', body: JSON.stringify({
-                    fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author,
-                    username: currentUser.username, sessionToken: currentUser.sessionToken,
-                    text: text, avt: currentUser.avt, replyToUser: activeReplyUser, imageId: imgId
+                    fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author, username: currentUser.username, sessionToken: currentUser.sessionToken,
+                    text: text, avt: currentUser.avt, replyToUser: activeReplyUser, imageId: imgId, gifUrl: selectedGifUrl
                 })
             });
             const data = await res.json();
             if (data.success) {
-                document.getElementById('commentTextProj').value = '';
-                document.getElementById('commentImgUpload').value = '';
-                cancelReply();
+                document.getElementById('commentTextProj').value = ''; document.getElementById('commentImgUpload').value = '';
+                cancelReply(); selectedGifUrl = null;
                 if (!currentProj.comments) currentProj.comments = [];
-                currentProj.comments.push(data.comment);
-                renderComments();
+                currentProj.comments.push(data.comment); renderComments();
             }
         }
 
-        // TẢI FILE DỰ ÁN
-        async function handleUpload(e) {
-            e.preventDefault();
-            const file = document.getElementById('projFileUp').files[0];
-            const btn = document.getElementById('btnUploadSubmit'); btn.innerText = "Đang tải lên...";
-            const form = new FormData(); form.append("file", file); form.append("title", document.getElementById('projTitleUp').value); form.append("author", currentUser.username);
-            const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
-            if (res.success) { closeModal('uploadModal'); await loadProjects(); location.hash = `#project/${res.file_id}`; }
-            btn.innerText = "Đăng lên nền tảng";
+        // 6. THÔNG BÁO VÀ TIỆN ÍCH
+        async function fetchNotifications() {
+            if(!currentUser) return;
+            try {
+                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${currentUser.username}`)).json();
+                const unread = notifs.filter(n => !n.read).length;
+                if(unread > 0) document.getElementById('navActions').innerHTML += `<div style="position:absolute; top:2px; left:22px; width:10px; height:10px; background:red; border-radius:50%;"></div>`;
+                
+                document.getElementById('notifList').innerHTML = notifs.length ? notifs.map(n => `
+                    <a href="${n.link}" class="notif-item ${n.read ? '' : 'unread'}" onclick="document.getElementById('notifPanel').style.display='none'">
+                        <img src="${getAvtUrl(n.senderAvt)}" style="width:36px; height:36px; border-radius:50%;">
+                        <div><div style="font-size:0.9rem;">${escapeHtml(n.text)}</div><div style="font-size:0.75rem; color:#888; margin-top:3px;">${n.time}</div></div>
+                    </a>
+                `).join('') : '<div style="padding:15px;text-align:center;color:#888;">Chưa có thông báo.</div>';
+            } catch(e){}
+        }
+        function toggleNotif() { const p = document.getElementById('notifPanel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
+        async function markRead() {
+            await fetch(`${WORKER_URL}/api/notifications/read`, { method: 'POST', body: JSON.stringify({ username: currentUser.username }) });
+            fetchNotifications(); showToast("Đã đánh dấu đọc tất cả.", "success");
         }
 
-        // TIỆN ÍCH
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : 'https://scratch.mit.edu/images/avatar_default.gif'; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
+        
+        // SỬA THÔNG TIN BỞI AUTHOR
+        async function saveProjectInfo(e) {
+            e.preventDefault();
+            const desc = document.getElementById('editDescInput').value; const cred = document.getElementById('editCreditsInput').value;
+            await fetch(`${WORKER_URL}/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: "update_info", payload: { description: desc, credits: cred } }) });
+            currentProj.description = desc; currentProj.credits = cred;
+            document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = cred || "Chưa có thông tin.";
+            closeModal('editInfoModal'); showToast("Cập nhật thành công!", "success");
+        }
+        document.getElementById('btnEditInfo').addEventListener('click', () => { document.getElementById('editDescInput').value = currentProj.description || ''; document.getElementById('editCreditsInput').value = currentProj.credits || ''; });
     </script>
 </body>
 </html>
