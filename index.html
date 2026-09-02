@@ -6,46 +6,59 @@
     <title>StudioDANV Workshop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --tw-red: #ff4c4c; --scratch-blue: #4c97ff; --bg-color: #f2f2f2; --text-main: #333; --border-color: #d9d9d9;}
+        :root { 
+            --tw-red: #ff4c4c; 
+            --scratch-blue: #4c97ff; 
+            --scratch-green: #0fbd8c;
+            --bg-color: #f2f2f2; 
+            --text-main: #333; 
+            --border-color: #d9d9d9;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         
-        .navbar { background: var(--tw-red); height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; color: white; }
-        .navbar-brand { font-size: 1.2rem; font-weight: bold; }
+        /* NAVBAR */
+        .navbar { background: var(--tw-red); height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar-brand { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .nav-actions { display: flex; gap: 10px; align-items: center; }
-        .btn { background: rgba(0,0,0,0.15); border: none; color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn { background: rgba(0,0,0,0.15); border: none; color: white; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }
         .btn:hover { background: rgba(0,0,0,0.25); }
         .btn-primary { background: var(--scratch-blue); } .btn-primary:hover { background: #3381e5; }
+        .btn-create { background: var(--scratch-green); } .btn-create:hover { background: #0da57a; }
         
-        .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; }
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin-top: 20px;}
+        .container { max-width: 1050px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; margin-top: 20px;}
         
-        .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; }
-        .card:hover { border-color: var(--scratch-blue); box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2); transform: translateY(-4px); }
-        .card-thumb { height: 140px; background: #e9f1fc; display: flex; align-items: center; justify-content: center; color: var(--scratch-blue); font-size: 3.5rem; }
+        /* CARD */
+        .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column;}
+        .card:hover { border-color: var(--scratch-blue); box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2); transform: translateY(-3px); }
+        .card-thumb { height: 140px; background: #e9f1fc; display: flex; align-items: center; justify-content: center; color: var(--scratch-blue); font-size: 3rem; }
         .card-body { padding: 12px; }
         .card-title { font-weight: bold; color: var(--scratch-blue); margin-bottom: 4px; }
-        .card-author { font-size: 0.85rem; color: #777; font-weight: bold;}
+        .card-author { font-size: 0.85rem; color: #777; }
         .card-author:hover { text-decoration: underline; color: var(--scratch-blue); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal { background: white; border-radius: 8px; width: 100%; max-width: 500px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;}
-        .modal-header { background: var(--scratch-blue); color: white; padding: 16px 20px; display: flex; justify-content: space-between; font-weight: bold; }
+        /* MODALS */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 15px; }
+        .modal { background: white; border-radius: 8px; width: 100%; max-width: 500px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        .modal-header { background: var(--scratch-blue); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
         .btn-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
         .modal-body { padding: 20px; overflow-y: auto; }
         
         input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 15px; font-family: inherit;}
         label { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;}
 
-        .modal-player { max-width: 900px; }
+        /* FULLSCREEN EDITOR & PLAYER */
+        .modal-player { max-width: 1000px; height: 90vh; }
+        .modal-editor { max-width: 95vw; height: 95vh; }
         .player-wrapper { display: flex; flex-direction: column; height: 100%; }
-        iframe { width: 100%; height: 400px; border: none; background: #000; }
-        .comments-section { padding: 20px; background: #fafafa; border-top: 1px solid var(--border-color); flex: 1; overflow-y: auto;}
-        .comment-box { display: flex; gap: 10px; margin-bottom: 15px; }
-        .avt-circle { width: 40px; height: 40px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
-        .comment-content { background: white; padding: 10px 15px; border-radius: 15px; border: 1px solid #eee; width: 100%;}
-        .comment-author { font-weight: bold; font-size: 0.9rem; color: var(--scratch-blue); }
-        .comment-text { font-size: 0.95rem; margin-top: 3px; }
+        iframe { width: 100%; height: 460px; border: none; background: #000; flex: 1; }
+        .comments-section { padding: 15px 20px; background: #fafafa; border-top: 1px solid var(--border-color); height: 200px; overflow-y: auto;}
+        .comment-box { display: flex; gap: 10px; margin-bottom: 12px; }
+        .avt-circle { width: 36px; height: 36px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
+        .comment-content { background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #eee; width: 100%;}
+        .comment-author { font-weight: bold; font-size: 0.85rem; color: var(--scratch-blue); }
+        .comment-text { font-size: 0.9rem; margin-top: 2px; }
         
         .profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
         .profile-avt { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--scratch-blue); }
@@ -61,21 +74,76 @@
         <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối hệ thống...</h2>
     </div>
 
-    <!-- THANH ĐIỀU HƯỚNG -->
+    <!-- THANH MENU TRÊN CÙNG -->
     <nav class="navbar">
-        <div class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV Workshop</div>
+        <div class="navbar-brand">
+            <i class="fa-solid fa-cat"></i> StudioDANV Workshop
+        </div>
         <div class="nav-actions" id="navActions">
-            <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
+            <!-- Nút Khởi tạo Studio -->
+            <button class="btn btn-create" onclick="openCreateEditor()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Khởi tạo
+            </button>
+            <button class="btn btn-primary" onclick="loginScratch()">
+                <i class="fa-solid fa-right-to-bracket"></i> Login with Scratch
+            </button>
         </div>
     </nav>
 
-    <!-- NỘI DUNG CHÍNH -->
+    <!-- NỘI DUNG DANH SÁCH GAME -->
     <div class="container">
         <h2 style="border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">Khám phá dự án</h2>
         <div class="project-grid" id="projectList">Đang tải danh sách game...</div>
     </div>
 
-    <!-- MODAL ĐĂNG GAME -->
+    <!-- 🌟 MODAL 1: PHÒNG CODE TRỰC TIẾP (ONLINE SCRATCH IDE) -->
+    <div class="modal-overlay" id="editorModal">
+        <div class="modal modal-editor">
+            <div class="modal-header" style="background: var(--tw-red);">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-code"></i> StudioDANV Code Studio (Lập trình trực tiếp)
+                </span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <small style="font-weight: normal; opacity: 0.9;">Mẹo: Vào <b>File -> Save to your computer</b> để tải file .sb3 về</small>
+                    <button class="btn-close" onclick="closeEditorModal()">&times;</button>
+                </div>
+            </div>
+            <iframe id="editorIframe" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
+        </div>
+    </div>
+
+    <!-- 🌟 MODAL 2: PLAYER & BÌNH LUẬN (CÓ NÚT SEE INSIDE) -->
+    <div class="modal-overlay" id="playerModal">
+        <div class="modal modal-player">
+            <div class="modal-header">
+                <span id="playerTitle">Game</span>
+                <!-- Khu vực nút điều khiển: See Inside & Đóng -->
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button class="btn btn-create" id="btnSeeInside" onclick="seeInside()" style="font-size: 0.8rem; padding: 5px 10px;">
+                        <i class="fa-solid fa-code"></i> See inside (Xem code)
+                    </button>
+                    <button class="btn btn-primary" id="btnPlayMode" onclick="playMode()" style="display: none; font-size: 0.8rem; padding: 5px 10px; background: #ff4c4c;">
+                        <i class="fa-solid fa-play"></i> Chơi game
+                    </button>
+                    <button class="btn-close" onclick="closePlayerModal()">&times;</button>
+                </div>
+            </div>
+            <div class="player-wrapper">
+                <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
+                <div class="comments-section">
+                    <h3 style="margin-bottom: 10px; font-size: 1rem;">Bình luận</h3>
+                    <div id="commentList"></div>
+                    <form onsubmit="postComment(event)" id="commentForm" style="display:none; margin-top: 10px; display: flex; gap: 10px;">
+                        <input type="text" id="commentText" placeholder="Viết bình luận..." required style="margin: 0; flex: 1;">
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                    </form>
+                    <div id="loginToComment" style="text-align: center; color: #888; font-size: 0.9rem;">Đăng nhập để bình luận.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ĐĂNG DỰ ÁN -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal">
             <div class="modal-header"><span>Tải lên dự án</span><button class="btn-close" onclick="closeModal('uploadModal')">&times;</button></div>
@@ -83,13 +151,13 @@
                 <form onsubmit="handleUpload(event)">
                     <label>Tên dự án</label> <input type="text" id="projTitle" required placeholder="Nhập tên game...">
                     <label>File (.sb3) - Tối đa 20MB</label> <input type="file" id="projFile" accept=".sb3" required>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;" id="btnUpload">Đăng dự án</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;" id="btnUpload">Đăng dự án lên Workshop</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PROFILE -->
+    <!-- MODAL 4: PROFILE -->
     <div class="modal-overlay" id="profileModal">
         <div class="modal">
             <div class="modal-header"><span id="profNameTitle">Hồ sơ</span><button class="btn-close" onclick="closeModal('profileModal')">&times;</button></div>
@@ -116,35 +184,15 @@
         </div>
     </div>
 
-    <!-- MODAL PLAYER & COMMENTS -->
-    <div class="modal-overlay" id="playerModal">
-        <div class="modal modal-player">
-            <div class="modal-header"><span id="playerTitle">Game</span><button class="btn-close" onclick="closeModal('playerModal'); document.getElementById('gameIframe').src='';">&times;</button></div>
-            <div class="player-wrapper">
-                <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad"></iframe>
-                <div class="comments-section">
-                    <h3 style="margin-bottom: 15px;">Bình luận</h3>
-                    <div id="commentList"></div>
-                    <form onsubmit="postComment(event)" id="commentForm" style="display:none; margin-top: 15px; display: flex; gap: 10px;">
-                        <input type="text" id="commentText" placeholder="Viết bình luận..." required style="margin: 0; flex: 1;">
-                        <button type="submit" class="btn btn-primary">Gửi</button>
-                    </form>
-                    <div id="loginToComment" style="text-align: center; color: #888; margin-top: 10px;">Đăng nhập để bình luận.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // ⚠️ ĐIỀN MÃ CLIENT ID CỦA SCRATCH WIKI OAUTH VÀO ĐÂY:
         const WIKI_CLIENT_ID = "70970406"; 
-        
         const WORKER_URL = "https://app.studiodanv.workers.dev";
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = [];
         let currentPlayingFileId = null;
+        let currentPlayingTitle = "";
 
-        // HÀM KHỞI CHẠY SIÊU AN TOÀN (KHÔNG BAO GIỜ BỊ TREO MÀN HÌNH)
+        // KHỞI ĐỘNG HỆ THỐNG
         async function startApp() {
             const loader = document.getElementById('globalLoader');
             const loaderText = document.getElementById('loaderText');
@@ -158,10 +206,8 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                     const savedState = localStorage.getItem('oauth_state');
                     
-                    if (authState !== savedState) {
-                        alert("⚠️ Lỗi bảo mật: Dữ liệu phiên không khớp. Hãy bấm đăng nhập lại!");
-                    } else {
-                        if (loaderText) loaderText.innerText = "Đang xác thực bảo mật Scratch...";
+                    if (authState === savedState) {
+                        if (loaderText) loaderText.innerText = "Đang xác thực Scratch...";
                         const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
                             method: 'POST', body: JSON.stringify({ code: authCode })
                         });
@@ -176,11 +222,8 @@
                             localStorage.setItem('danv_user', JSON.stringify(currentUser));
                             alert(`🎉 Đăng nhập thành công! Chào mừng ${data.username}`);
                         } else {
-                            // BÁO LỖI CHI TIẾT
                             let detailStr = typeof data.details === 'object' ? JSON.stringify(data.details, null, 2) : (data.details || 'Không có');
-                            let payloadStr = data.sentPayload ? `\n\n[Thông tin kiểm tra]:\n- Client ID gửi đi: ${data.sentPayload.client_id}\n- Đã có Secret trên Cloudflare: ${data.sentPayload.has_secret ? 'ĐÃ CÓ (TỐT)' : 'CHƯA CÓ (LỖI)'}` : '';
-                            
-                            alert(`❌ Đăng nhập thất bại: ${data.error}\n(Mã HTTP: ${data.http_status || 'N/A'})\n\n[Chi tiết từ máy chủ]:\n${detailStr}${payloadStr}`);
+                            alert(`❌ Đăng nhập thất bại: ${data.error}\n\n[Chi tiết]:\n${detailStr}`);
                         }
                     }
                 }
@@ -189,7 +232,7 @@
                 await fetchProjects();
                 updateNav();
             } catch (err) {
-                console.error("Lỗi khởi động:", err);
+                console.error("Lỗi:", err);
             } finally {
                 if (loader) {
                     loader.style.opacity = '0';
@@ -198,14 +241,12 @@
             }
         }
 
-        // TỰ ĐỘNG CHẠY NGAY KHI FILE HTML VỪA TẢI XONG
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', startApp);
         } else {
             startApp();
         }
 
-        // KHÓA AN TOÀN 3 GIÂY: Sau tối đa 3 giây, ép tắt màn hình Loading
         setTimeout(() => {
             const loader = document.getElementById('globalLoader');
             if (loader && loader.style.display !== 'none') {
@@ -216,22 +257,24 @@
 
         function updateNav() {
             const nav = document.getElementById('navActions');
+            const createBtn = `<button class="btn btn-create" onclick="openCreateEditor()"><i class="fa-solid fa-wand-magic-sparkles"></i> Khởi tạo</button>`;
+            
             if (currentUser) {
                 nav.innerHTML = `
+                    ${createBtn}
                     <span style="font-weight:bold; cursor:pointer;" onclick="openProfile('${currentUser.username}')">👋 Chào, ${currentUser.username}</span>
-                    <button class="btn" onclick="document.getElementById('uploadModal').style.display='flex'">Đăng game</button>
+                    <button class="btn" onclick="document.getElementById('uploadModal').style.display='flex'"><i class="fa-solid fa-cloud-arrow-up"></i> Đăng game</button>
                     <button class="btn" style="background:#444;" onclick="logout()">Thoát</button>
                 `;
             } else {
-                nav.innerHTML = `<button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>`;
+                nav.innerHTML = `
+                    ${createBtn}
+                    <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
+                `;
             }
         }
 
         function loginScratch() {
-            if (!WIKI_CLIENT_ID || WIKI_CLIENT_ID.includes("ĐIỀN_SỐ")) {
-                alert("Vui lòng điền WIKI_CLIENT_ID vào code HTML trước!");
-                return;
-            }
             const redirectUri = window.location.origin + window.location.pathname;
             const state = Math.random().toString(36).substring(2);
             localStorage.setItem('oauth_state', state);
@@ -240,6 +283,40 @@
 
         function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); }
 
+        // ==========================================
+        // 🌟 TÍNH NĂNG: KHỞI TẠO DỰ ÁN & SEE INSIDE
+        // ==========================================
+        
+        // 1. Mở phòng lập trình code trống
+        function openCreateEditor() {
+            document.getElementById('editorIframe').src = 'https://turbowarp.org/editor';
+            document.getElementById('editorModal').style.display = 'flex';
+        }
+        function closeEditorModal() {
+            document.getElementById('editorModal').style.display = 'none';
+            document.getElementById('editorIframe').src = '';
+        }
+
+        // 2. Chế độ Xem bên trong khối lệnh (See Inside)
+        function seeInside() {
+            if (!currentPlayingFileId) return;
+            const fileUrl = `${WORKER_URL}/api/project/${currentPlayingFileId}`;
+            // Mở code của chính game đó trong TurboWarp Editor
+            document.getElementById('gameIframe').src = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
+            document.getElementById('btnSeeInside').style.display = 'none';
+            document.getElementById('btnPlayMode').style.display = 'inline-flex';
+        }
+
+        // 3. Quay lại chế độ chơi game
+        function playMode() {
+            if (!currentPlayingFileId) return;
+            const fileUrl = `${WORKER_URL}/api/project/${currentPlayingFileId}`;
+            document.getElementById('gameIframe').src = `https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&ui-theme=dark&autoplay=on`;
+            document.getElementById('btnSeeInside').style.display = 'inline-flex';
+            document.getElementById('btnPlayMode').style.display = 'none';
+        }
+
+        // LOAD GAME
         async function fetchProjects() {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
@@ -247,7 +324,7 @@
                 allProjects = res;
                 
                 if (allProjects.length === 0) {
-                    document.getElementById('projectList').innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #888;">Chưa có game nào được đăng!</div>`;
+                    document.getElementById('projectList').innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #888;">Chưa có game nào được đăng! Hãy bấm "Khởi tạo" để tạo dự án đầu tiên nhé.</div>`;
                     return;
                 }
 
@@ -267,8 +344,11 @@
 
         function playGame(fileId, title) {
             currentPlayingFileId = fileId;
+            currentPlayingTitle = title;
             document.getElementById('playerTitle').innerText = title;
-            document.getElementById('gameIframe').src = `https://turbowarp.org/embed.html?project_url=${encodeURIComponent(WORKER_URL+'/api/project/'+fileId)}&ui-theme=dark&autoplay=on`;
+            
+            // Đặt về chế độ chơi game mặc định
+            playMode();
             
             const proj = allProjects.find(p => p.fileId === fileId);
             renderComments(proj ? (proj.comments || []) : []);
@@ -278,6 +358,12 @@
                 document.getElementById('loginToComment').style.display = 'none';
             }
             document.getElementById('playerModal').style.display = 'flex';
+        }
+
+        function closePlayerModal() {
+            document.getElementById('playerModal').style.display = 'none';
+            document.getElementById('gameIframe').src = '';
+            currentPlayingFileId = null;
         }
 
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : 'https://scratch.mit.edu/images/avatar_default.gif'; }
@@ -365,7 +451,7 @@
 
             const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
             if (res.success) { alert("Đăng game thành công!"); closeModal('uploadModal'); fetchProjects(); }
-            btn.innerText = "Đăng dự án";
+            btn.innerText = "Đăng dự án lên Workshop";
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
