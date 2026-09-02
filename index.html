@@ -158,7 +158,9 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                     const savedState = localStorage.getItem('oauth_state');
                     
-                    if (authState === savedState) {
+                    if (authState !== savedState) {
+                        alert("⚠️ Lỗi bảo mật: Dữ liệu phiên không khớp. Hãy bấm đăng nhập lại!");
+                    } else {
                         if (loaderText) loaderText.innerText = "Đang xác thực bảo mật Scratch...";
                         const res = await fetch(`${WORKER_URL}/api/auth/verify`, {
                             method: 'POST', body: JSON.stringify({ code: authCode })
@@ -172,8 +174,13 @@
                                 currentUser.avt = profData.avt || '';
                             } catch(e) {}
                             localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                            alert(`🎉 Đăng nhập thành công! Chào mừng ${data.username}`);
                         } else {
-                            alert(`❌ Đăng nhập thất bại: ${data.error || data.details}`);
+                            // BÁO LỖI CHI TIẾT
+                            let detailStr = typeof data.details === 'object' ? JSON.stringify(data.details, null, 2) : (data.details || 'Không có');
+                            let payloadStr = data.sentPayload ? `\n\n[Thông tin kiểm tra]:\n- Client ID gửi đi: ${data.sentPayload.client_id}\n- Đã có Secret trên Cloudflare: ${data.sentPayload.has_secret ? 'ĐÃ CÓ (TỐT)' : 'CHƯA CÓ (LỖI)'}` : '';
+                            
+                            alert(`❌ Đăng nhập thất bại: ${data.error}\n(Mã HTTP: ${data.http_status || 'N/A'})\n\n[Chi tiết từ máy chủ]:\n${detailStr}${payloadStr}`);
                         }
                     }
                 }
@@ -184,7 +191,6 @@
             } catch (err) {
                 console.error("Lỗi khởi động:", err);
             } finally {
-                // TẮT MÀN HÌNH LOADING NGAY LẬP TỨC
                 if (loader) {
                     loader.style.opacity = '0';
                     setTimeout(() => { loader.style.display = 'none'; }, 300);
