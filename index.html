@@ -17,11 +17,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         
+        /* NAVBAR */
         .navbar { background: var(--tw-red); height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        .nav-left { display: flex; align-items: center; gap: 15px; }
-        .navbar-brand { font-size: 1.25rem; font-weight: bold; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .nav-link { color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem; padding: 6px 12px; border-radius: 4px; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
-        .nav-link:hover { background: rgba(0,0,0,0.15); }
+        .nav-brand { font-size: 1.25rem; font-weight: bold; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .nav-actions { display: flex; gap: 10px; align-items: center; }
         
         .btn { background: rgba(0,0,0,0.15); border: none; color: white; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; text-decoration: none; }
@@ -29,12 +27,8 @@
         .btn-primary { background: var(--scratch-blue); } .btn-primary:hover { background: #3381e5; }
         .btn-create { background: var(--scratch-green); } .btn-create:hover { background: #0da57a; }
         
-        .badge { background: #ffcc00; color: #333; border-radius: 10px; padding: 2px 7px; font-size: 0.75rem; font-weight: bold; margin-left: 4px; display: none; }
-        .badge.active { display: inline-block; }
-
-        .page-view { display: none; max-width: 1050px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; animation: fadeIn 0.2s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        /* CONTAINER & GRID */
+        .container { max-width: 1050px; margin: 0 auto; padding: 24px 20px; flex: 1; width: 100%; }
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; margin-top: 20px;}
         .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column;}
         .card:hover { border-color: var(--scratch-blue); box-shadow: 0 4px 12px rgba(76, 151, 255, 0.2); transform: translateY(-3px); }
@@ -43,43 +37,32 @@
         .card-title { font-weight: bold; color: var(--scratch-blue); margin-bottom: 4px; }
         .card-author { font-size: 0.85rem; color: #777; }
 
-        .project-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: white; padding: 16px 20px; border-radius: 8px; border: 1px solid var(--border-color); }
-        .player-container { background: #000; border-radius: 8px; overflow: hidden; height: 560px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .editor-topbar { background: #1e293b; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; color: white; }
-        .editor-title-input { background: #334155; border: 1px solid #475569; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.95rem; width: 280px; outline: none; }
-        .editor-title-input:focus { border-color: var(--scratch-blue); }
-
-        .comment-section { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 20px; margin-top: 24px; }
-        .comment-box { display: flex; gap: 12px; margin-bottom: 16px; position: relative; }
-        .comment-box.is-reply { margin-left: 45px; border-left: 2px solid #e0e0e0; padding-left: 12px; }
-        .avt-circle { width: 40px; height: 40px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
-        .comment-content { background: #f8fafc; padding: 10px 15px; border-radius: 12px; border: 1px solid #e2e8f0; width: 100%;}
-        .comment-author { font-weight: bold; font-size: 0.9rem; color: var(--scratch-blue); text-decoration: none; }
-        .comment-time { font-size: 0.75rem; color: #94a3b8; margin-left: 6px; }
-        .comment-text { font-size: 0.95rem; margin-top: 4px; line-height: 1.4; }
-        .btn-reply { background: none; border: none; color: #64748b; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 5px; padding: 0; }
-        .btn-reply:hover { color: var(--scratch-blue); text-decoration: underline; }
-        
-        .reply-banner { background: #e0f2fe; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; color: #0369a1; display: none; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-
-        .profile-card { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 24px; margin-bottom: 24px; display: flex; gap: 24px; align-items: flex-start; }
-        .profile-avt-lg { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--scratch-blue); }
-        .profile-meta h1 { font-size: 1.6rem; color: var(--scratch-blue); margin-bottom: 4px; }
-        .profile-status { font-style: italic; color: #64748b; margin-bottom: 12px; }
-        .profile-bio { white-space: pre-line; color: #334155; line-height: 1.5; }
-
-        .notif-item { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; display: flex; gap: 14px; align-items: center; text-decoration: none; color: inherit; transition: 0.2s; }
-        .notif-item:hover { border-color: var(--scratch-blue); transform: translateX(3px); }
-        .notif-item.unread { background: #f0f7ff; border-left: 4px solid var(--scratch-blue); }
-        
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-        .modal { background: white; border-radius: 8px; width: 100%; max-width: 480px; overflow: hidden; }
+        /* MODALS (CỬA SỔ POPUP) */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+        .modal { background: white; border-radius: 8px; width: 100%; max-width: 500px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
         .modal-header { background: var(--scratch-blue); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
         .btn-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-        .modal-body { padding: 20px; }
+        .modal-body { padding: 20px; overflow-y: auto; }
+        
+        /* PLAYER MODAL */
+        .modal-player { max-width: 850px; }
+        .player-actions-bar { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 12px; }
+        .player-wrapper { background: #000; border-radius: 6px; overflow: hidden; height: 420px; margin-bottom: 16px; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* COMMENTS */
+        .comment-box { display: flex; gap: 10px; margin-bottom: 12px; }
+        .avt-circle { width: 36px; height: 36px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
+        .comment-content { background: #f8fafc; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; width: 100%;}
+        .comment-author { font-weight: bold; font-size: 0.85rem; color: var(--scratch-blue); }
+        .comment-text { font-size: 0.9rem; margin-top: 2px; }
+
+        /* PROFILE */
+        .profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
+        .profile-avt { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--scratch-blue); }
+
         input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 12px; }
+        label { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 4px; }
         
         #globalLoader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.3s ease; }
     </style>
@@ -88,22 +71,20 @@
 
     <div id="globalLoader">
         <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 4rem; color: #4c97ff; margin-bottom: 20px;"></i>
-        <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối hệ thống...</h2>
+        <h2 id="loaderText" style="font-family: monospace; font-size: 1.2rem; color: #94a3b8;">Đang kết nối Workshop...</h2>
     </div>
 
-    <nav class="navbar" id="mainNavbar">
-        <div class="nav-left">
-            <a href="#home" class="navbar-brand"><i class="fa-solid fa-cat"></i> StudioDANV</a>
-            <a href="#home" class="nav-link"><i class="fa-solid fa-compass"></i> Khám phá</a>
-            <a href="#editor" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> Khởi tạo</a>
-        </div>
+    <!-- THANH MENU -->
+    <nav class="navbar">
+        <a href="#" class="nav-brand"><i class="fa-solid fa-cat"></i> StudioDANV Workshop</a>
         <div class="nav-actions" id="navActions">
+            <button class="btn btn-create" onclick="openTurboWarpEditor()"><i class="fa-solid fa-wand-magic-sparkles"></i> Tạo dự án mới</button>
             <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
         </div>
     </nav>
 
-    <!-- TRANG CHỦ -->
-    <div id="homeView" class="page-view">
+    <!-- DANH SÁCH DỰ ÁN TRANG CHỦ -->
+    <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
             <h2>Khám phá dự án cộng đồng</h2>
             <span id="projectCount" style="color: #64748b; font-weight: bold;">0 dự án</span>
@@ -111,161 +92,117 @@
         <div class="project-grid" id="projectList">Đang tải danh sách game...</div>
     </div>
 
-    <!-- TRANG CHI TIẾT GAME (#PROJECT) -->
-    <div id="projectView" class="page-view">
-        <div class="project-header-bar">
-            <div>
-                <h1 id="projPageTitle" style="font-size: 1.4rem; color: var(--scratch-blue); margin-bottom: 4px;">Tên dự án</h1>
-                <p style="font-size: 0.9rem; color: #64748b;">Tác giả: <a id="projPageAuthor" href="#" style="color: inherit; font-weight: bold;">Author</a></p>
+    <!-- 🌟 MODAL 1: CHƠI GAME & XEM CODE -->
+    <div class="modal-overlay" id="playerModal">
+        <div class="modal modal-player">
+            <div class="modal-header">
+                <span id="playerTitle">Tên dự án</span>
+                <button class="btn-close" onclick="closePlayerModal()">&times;</button>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-create" id="btnSeeInside" onclick="openSeeInsideEditor()"><i class="fa-solid fa-code"></i> See inside</button>
-                <a id="btnDownloadSb3" href="#" download class="btn" style="background:#64748b;"><i class="fa-solid fa-download"></i> Tải .sb3</a>
-            </div>
-        </div>
-
-        <!-- Khung Player chuẩn Packager Embed (Không bao giờ bị lỗi) -->
-        <div class="player-container">
-            <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
-        </div>
-
-        <div class="comment-section">
-            <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-comments"></i> Bình luận về dự án</h3>
-            
-            <div id="replyBannerProj" class="reply-banner">
-                <span>Đang trả lời: <b id="replyUserLabelProj">@User</b></span>
-                <button onclick="cancelReply('Proj')" style="background:none; border:none; color:#0369a1; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <form onsubmit="handlePostComment(event, 'Proj')" id="commentFormProj" style="display:none; margin-bottom: 20px;">
-                <textarea id="commentTextProj" rows="2" placeholder="Chia sẻ cảm nghĩ hoặc góp ý của bạn..." required></textarea>
-                <div style="text-align: right;">
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Gửi bình luận</button>
+            <div class="modal-body">
+                <!-- Thanh công cụ điều khiển nhanh -->
+                <div class="player-actions-bar">
+                    <button class="btn btn-primary" id="btnOpenNewTabPlay" onclick="openGameInNewTab()"><i class="fa-solid fa-up-right-from-square"></i> Mở chơi Tab mới (Cực mượt)</button>
+                    <button class="btn btn-create" id="btnOpenSeeInsideTab" onclick="openSeeInsideInNewTab()"><i class="fa-solid fa-code"></i> See inside (Xem code)</button>
+                    <a id="btnDownloadSb3" href="#" download class="btn" style="background:#64748b;"><i class="fa-solid fa-download"></i> Tải .sb3</a>
                 </div>
-            </form>
-            <div id="loginPromptProj" style="text-align: center; color: #64748b; padding: 15px; background: #f8fafc; border-radius: 6px; margin-bottom: 15px;">
-                <a href="javascript:void(0)" onclick="loginScratch()" style="color: var(--scratch-blue); font-weight: bold;">Đăng nhập</a> để tham gia bình luận!
-            </div>
 
-            <div id="commentListProj">Chưa có bình luận nào.</div>
-        </div>
-    </div>
-
-    <!-- TRANG SOẠN THẢO CODE TRỰC TIẾP (#EDITOR) -->
-    <div id="editorView" class="page-view" style="max-width: 100%; height: calc(100vh - 54px); padding: 0; display: flex; flex-direction: column;">
-        <div class="editor-topbar">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <a href="#home" class="btn" style="background: #334155;"><i class="fa-solid fa-arrow-left"></i> Workshop</a>
-                <input type="text" id="editorProjTitle" class="editor-title-input" placeholder="Đặt tên cho dự án...">
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <button class="btn btn-create" onclick="openDirectUploadModal()">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Đăng lên Workshop
-                </button>
-            </div>
-        </div>
-        <iframe id="editorIframe" style="flex: 1;" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
-    </div>
-
-    <!-- TRANG CÁ NHÂN (#PROFILE) -->
-    <div id="profileView" class="page-view">
-        <div class="profile-card">
-            <img id="profAvt" src="" class="profile-avt-lg" onerror="this.src='https://scratch.mit.edu/images/avatar_default.gif'">
-            <div class="profile-meta" style="flex: 1;">
-                <h1 id="profUsername">Username</h1>
-                <p id="profStatus" class="profile-status">What I'm doing...</p>
-                <div style="margin-bottom: 8px; font-weight: bold; color: #475569;">About me:</div>
-                <p id="profBio" class="profile-bio">Chưa có thông tin giới thiệu.</p>
-                
-                <button id="btnToggleEditProf" class="btn btn-primary" onclick="toggleEditProfile()" style="margin-top: 15px; display: none;">
-                    <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa hồ sơ
-                </button>
-            </div>
-        </div>
-
-        <div id="editProfBox" style="display: none; background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-            <h3 style="margin-bottom: 15px;">Cập nhật thông tin cá nhân</h3>
-            <form onsubmit="handleSaveProfile(event)">
-                <label>Đổi Avatar (Chọn file ảnh):</label>
-                <input type="file" id="editAvtFile" accept="image/*">
-                <label>What I'm doing (Trạng thái ngắn):</label>
-                <input type="text" id="editStatusInput">
-                <label>About me (Giới thiệu bản thân):</label>
-                <textarea id="editBioInput" rows="3"></textarea>
-                <button type="submit" class="btn btn-create" id="btnSaveProf">Lưu thay đổi</button>
-            </form>
-        </div>
-
-        <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-folder-open"></i> Dự án đã đăng tải</h3>
-        <div class="project-grid" id="userProjectList" style="margin-bottom: 30px;">Đang tải...</div>
-
-        <div class="comment-section">
-            <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-message"></i> Lưu bút trên trang cá nhân</h3>
-            
-            <div id="replyBannerUser" class="reply-banner">
-                <span>Đang trả lời: <b id="replyUserLabelUser">@User</b></span>
-                <button onclick="cancelReply('User')" style="background:none; border:none; color:#0369a1; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <form onsubmit="handlePostComment(event, 'User')" id="commentFormUser" style="display:none; margin-bottom: 20px;">
-                <textarea id="commentTextUser" rows="2" placeholder="Để lại lời nhắn cho tác giả..." required></textarea>
-                <div style="text-align: right;">
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Gửi lời nhắn</button>
+                <!-- Khung nhúng Player -->
+                <div class="player-wrapper">
+                    <iframe id="gameIframe" allow="fullscreen; autoplay; gamepad; camera; microphone"></iframe>
                 </div>
-            </form>
-            <div id="loginPromptUser" style="text-align: center; color: #64748b; padding: 15px; background: #f8fafc; border-radius: 6px; margin-bottom: 15px;">
-                <a href="javascript:void(0)" onclick="loginScratch()" style="color: var(--scratch-blue); font-weight: bold;">Đăng nhập</a> để để lại lời nhắn!
+
+                <!-- Tác giả & Bình luận -->
+                <div style="margin-bottom: 15px; font-size: 0.95rem;">
+                    Tác giả: <a href="javascript:void(0)" id="playerAuthorLink" onclick="openAuthorProfile()" style="color: var(--scratch-blue); font-weight: bold; text-decoration: none;">Author</a>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 15px;">
+                    <h3 style="margin-bottom: 10px; font-size: 1rem;">Bình luận</h3>
+                    <div id="commentList" style="max-height: 180px; overflow-y: auto; margin-bottom: 12px;"></div>
+                    
+                    <form onsubmit="handlePostComment(event)" id="commentForm" style="display:none; display: flex; gap: 8px;">
+                        <input type="text" id="commentInput" placeholder="Viết bình luận của bạn..." required style="margin: 0; flex: 1;">
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                    </form>
+                    <div id="loginToComment" style="text-align: center; color: #888; font-size: 0.85rem; padding: 6px; background: #fafafa; border-radius: 4px;">
+                        <a href="javascript:void(0)" onclick="loginScratch()" style="color: var(--scratch-blue); font-weight: bold;">Đăng nhập</a> để tham gia bình luận.
+                    </div>
+                </div>
             </div>
-
-            <div id="commentListUser">Chưa có lời nhắn nào.</div>
         </div>
     </div>
 
-    <!-- HỘP THƯ THÔNG BÁO (#MESSAGES) -->
-    <div id="messagesView" class="page-view">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px;">
-            <h2><i class="fa-solid fa-bell"></i> Hộp thư thông báo</h2>
-            <button class="btn" onclick="markAllNotificationsRead()" style="background:#64748b; font-size:0.85rem;"><i class="fa-solid fa-check-double"></i> Đánh dấu đã đọc</button>
+    <!-- 🌟 MODAL 2: PROFILE CÁ NHÂN -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="profNameTitle">Hồ sơ</span>
+                <button class="btn-close" onclick="closeModal('profileModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-header">
+                    <img id="profAvt" src="" class="profile-avt" onerror="this.src='https://scratch.mit.edu/images/avatar_default.gif'">
+                    <div>
+                        <h2 id="profUsername" style="color: var(--scratch-blue);">Username</h2>
+                        <p id="profStatus" style="color: #666; font-style: italic; font-size: 0.9rem;">What I'm doing...</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;"><b>About me:</b> <p id="profBio" style="white-space: pre-line; color: #444;"></p></div>
+
+                <!-- Form sửa Profile (chỉ hiện khi là chính chủ) -->
+                <div id="editProfBox" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px;">
+                    <h4 style="margin-bottom: 10px;">Chỉnh sửa thông tin</h4>
+                    <form onsubmit="handleSaveProfile(event)">
+                        <label>Đổi Avatar (File ảnh):</label> <input type="file" id="editAvtFile" accept="image/*">
+                        <label>What I'm doing:</label> <input type="text" id="editStatusInput">
+                        <label>About me:</label> <textarea id="editBioInput" rows="2"></textarea>
+                        <button type="submit" class="btn btn-create" id="btnSaveProf">Lưu thay đổi</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div id="notifList">Đang tải thông báo...</div>
     </div>
 
-    <!-- MODAL UPLOAD DỰ ÁN -->
+    <!-- 🌟 MODAL 3: ĐĂNG DỰ ÁN (.SB3) -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal">
-            <div class="modal-header"><span>Xuất bản dự án lên Workshop</span><button class="btn-close" onclick="closeUploadModal()">&times;</button></div>
+            <div class="modal-header">
+                <span>Đăng dự án lên Workshop</span>
+                <button class="btn-close" onclick="closeModal('uploadModal')">&times;</button>
+            </div>
             <div class="modal-body">
-                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; font-size: 0.85rem;">
-                    💡 <b>Mẹo:</b> Trong trình soạn thảo, hãy vào menu <b>Tệp (File) -> Lưu về máy tính</b>, sau đó chọn file vừa tải để đăng ngay!
-                </div>
                 <form onsubmit="handleUpload(event)">
-                    <label>Tên dự án:</label> <input type="text" id="projTitle" required placeholder="Ví dụ: Flappy Bird 2.0">
-                    <label>Chọn file (.sb3) vừa lưu - Tối đa 20MB:</label> <input type="file" id="projFile" accept=".sb3" required>
+                    <label>Tên dự án:</label>
+                    <input type="text" id="projTitle" required placeholder="Ví dụ: Flappy Bird 2.0">
+                    <label>Chọn file Scratch (.sb3) - Tối đa 20MB:</label>
+                    <input type="file" id="projFile" accept=".sb3" required>
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;" id="btnUploadSubmit">Đăng lên Workshop</button>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT HỆ THỐNG -->
     <script>
         const WIKI_CLIENT_ID = "70970406"; 
         const WORKER_URL = "https://app.studiodanv.workers.dev";
         
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = [];
-        let activeReplyProj = null;
-        let activeReplyUser = null;
-        let currentProjData = null;
+        let currentProj = null;
 
+        // 1. KHỞI TẠO TRANG
         async function startApp() {
             const loader = document.getElementById('globalLoader');
             try {
+                // Xử lý OAuth2 đăng nhập
                 const urlParams = new URLSearchParams(window.location.search);
                 const authCode = urlParams.get('code');
                 const authState = urlParams.get('state');
                 
                 if (authCode && authState) {
-                    window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+                    window.history.replaceState({}, document.title, window.location.pathname);
                     const savedState = localStorage.getItem('oauth_state');
                     
                     if (authState === savedState) {
@@ -280,19 +217,13 @@
                                 currentUser.avt = prof.avt || '';
                             } catch(e) {}
                             localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                            alert(`🎉 Chào mừng ${data.username} đã đăng nhập!`);
+                            alert(`🎉 Chào mừng ${data.username} đã đăng nhập thành công!`);
                         }
                     }
                 }
 
                 await fetchProjects();
                 updateNav();
-                handleRouting();
-                
-                if (currentUser) {
-                    checkNotifications();
-                    setInterval(checkNotifications, 20000);
-                }
             } catch (err) {
                 console.error("Lỗi:", err);
             } finally {
@@ -303,44 +234,26 @@
             }
         }
 
-        function handleRouting() {
-            const hash = window.location.hash || '#home';
-            document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none');
-
-            if (hash.startsWith('#editor')) {
-                const fileId = hash.replace('#editor/', '').replace('#editor', '');
-                openEditorPage(fileId);
-            } else if (hash.startsWith('#project/')) {
-                const fileId = hash.replace('#project/', '');
-                openProjectPage(fileId);
-            } else if (hash.startsWith('#profile/')) {
-                const username = decodeURIComponent(hash.replace('#profile/', ''));
-                openProfilePage(username);
-            } else if (hash === '#messages') {
-                openMessagesPage();
-            } else {
-                openHomePage();
-            }
-        }
-        window.addEventListener('hashchange', handleRouting);
-
+        // 2. THANH NAVBAR
         function updateNav() {
             const nav = document.getElementById('navActions');
+            const createBtn = `<button class="btn btn-create" onclick="openTurboWarpEditor()"><i class="fa-solid fa-wand-magic-sparkles"></i> Tạo dự án</button>`;
+            
             if (currentUser) {
                 nav.innerHTML = `
-                    <button class="btn btn-create" onclick="openUploadModal()"><i class="fa-solid fa-cloud-arrow-up"></i> Đăng game</button>
-                    <a href="#messages" class="btn" title="Thông báo">
-                        <i class="fa-solid fa-bell"></i>
-                        <span id="notifBadge" class="badge">0</span>
-                    </a>
-                    <a href="#profile/${currentUser.username}" class="btn" style="background: rgba(0,0,0,0.25);">
+                    ${createBtn}
+                    <button class="btn btn-primary" onclick="openModal('uploadModal')"><i class="fa-solid fa-cloud-arrow-up"></i> Đăng game</button>
+                    <a href="javascript:void(0)" onclick="openProfile('${currentUser.username}')" class="btn" style="background: rgba(0,0,0,0.25);">
                         <img src="${getAvtUrl(currentUser.avt)}" style="width:20px; height:20px; border-radius:50%; object-fit:cover;">
                         ${currentUser.username}
                     </a>
                     <button class="btn" style="background:#444;" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i></button>
                 `;
             } else {
-                nav.innerHTML = `<button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>`;
+                nav.innerHTML = `
+                    ${createBtn}
+                    <button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-right-to-bracket"></i> Login with Scratch</button>
+                `;
             }
         }
 
@@ -355,121 +268,149 @@
             localStorage.removeItem('danv_user'); 
             currentUser = null; 
             updateNav(); 
-            window.location.hash = '#home';
         }
 
+        // Mở trình soạn thảo TurboWarp trên Tab mới (100% không lo lỗi)
+        function openTurboWarpEditor() {
+            window.open('https://turbowarp.org/editor', '_blank');
+        }
+
+        // 3. TẢI VÀ HIỂN THỊ DỰ ÁN
         async function fetchProjects() {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/projects`)).json();
                 if(!res.error) allProjects = res;
+                
+                document.getElementById('projectCount').innerText = `${allProjects.length} dự án`;
+                const list = document.getElementById('projectList');
+                
+                if (allProjects.length === 0) {
+                    list.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#888; padding:40px;">Chưa có dự án nào. Hãy bấm "Tạo dự án" để bắt đầu!</div>`;
+                    return;
+                }
+
+                list.innerHTML = allProjects.map(p => `
+                    <div class="card" onclick="openPlayerModal('${p.fileId}')">
+                        <div class="card-thumb"><i class="fa-solid fa-play"></i></div>
+                        <div class="card-body">
+                            <div class="card-title">${escapeHtml(p.title)}</div>
+                            <div class="card-author">Tác giả: <b>${escapeHtml(p.author)}</b></div>
+                        </div>
+                    </div>
+                `).join('');
             } catch(e) {}
         }
 
-        function openHomePage() {
-            document.getElementById('homeView').style.display = 'block';
-            document.getElementById('projectCount').innerText = `${allProjects.length} dự án`;
-            const list = document.getElementById('projectList');
+        // 4. MỞ CỬA SỔ CHƠI GAME (MODAL)
+        function openPlayerModal(fileId) {
+            const proj = allProjects.find(p => p.fileId === fileId);
+            if (!proj) return;
+            currentProj = proj;
+
+            document.getElementById('playerTitle').innerText = proj.title;
+            document.getElementById('playerAuthorLink').innerText = proj.author;
             
-            if (allProjects.length === 0) {
-                list.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Chưa có dự án nào. Hãy bấm "Khởi tạo" để tạo game đầu tiên!</div>`;
-                return;
+            const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`;
+            document.getElementById('btnDownloadSb3').href = fileUrl;
+            
+            // Nhúng player trực tiếp
+            document.getElementById('gameIframe').src = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
+
+            renderComments(proj.comments || []);
+            
+            if (currentUser) {
+                document.getElementById('commentForm').style.display = 'flex';
+                document.getElementById('loginToComment').style.display = 'none';
+            } else {
+                document.getElementById('commentForm').style.display = 'none';
+                document.getElementById('loginToComment').style.display = 'block';
             }
 
-            list.innerHTML = allProjects.map(p => `
-                <div class="card" onclick="location.hash='#project/${p.fileId}'">
-                    <div class="card-thumb"><i class="fa-solid fa-play"></i></div>
-                    <div class="card-body">
-                        <div class="card-title">${escapeHtml(p.title)}</div>
-                        <div class="card-author">Bởi: <b>${escapeHtml(p.author)}</b></div>
+            openModal('playerModal');
+        }
+
+        function closePlayerModal() {
+            closeModal('playerModal');
+            document.getElementById('gameIframe').src = '';
+            currentProj = null;
+        }
+
+        function openGameInNewTab() {
+            if (!currentProj) return;
+            const fileUrl = `${WORKER_URL}/api/project/${currentProj.fileId}`;
+            window.open(`https://turbowarp.org/?project_url=${encodeURIComponent(fileUrl)}`, '_blank');
+        }
+
+        function openSeeInsideInNewTab() {
+            if (!currentProj) return;
+            const fileUrl = `${WORKER_URL}/api/project/${currentProj.fileId}`;
+            window.open(`https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`, '_blank');
+        }
+
+        function openAuthorProfile() {
+            if (!currentProj) return;
+            openProfile(currentProj.author);
+        }
+
+        // 5. BÌNH LUẬN
+        function renderComments(comments) {
+            const container = document.getElementById('commentList');
+            if (comments.length === 0) {
+                container.innerHTML = `<div style="color:#888; font-style:italic;">Chưa có bình luận nào.</div>`;
+                return;
+            }
+            container.innerHTML = comments.map(c => `
+                <div class="comment-box">
+                    <img src="${getAvtUrl(c.avt)}" class="avt-circle" onclick="openProfile('${encodeURIComponent(c.author)}')" style="cursor:pointer;">
+                    <div class="comment-content">
+                        <div><a href="javascript:void(0)" onclick="openProfile('${encodeURIComponent(c.author)}')" class="comment-author">${escapeHtml(c.author)}</a> <small style="color:#94a3b8; font-size:0.75rem;">${c.time}</small></div>
+                        <div class="comment-text">${escapeHtml(c.text)}</div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // 🌟 KHỞI CHẠY PLAYER VỚI PACKAGER EMBED CHUẨN XÁC
-        function openProjectPage(fileId) {
-            document.getElementById('projectView').style.display = 'block';
-            const proj = allProjects.find(p => p.fileId === fileId);
-            if (!proj) {
-                document.getElementById('projPageTitle').innerText = "Đang tải dữ liệu...";
-                fetchProjects().then(() => openProjectPage(fileId));
-                return;
-            }
-            currentProjData = proj;
+        async function handlePostComment(e) {
+            e.preventDefault();
+            if (!currentUser || !currentProj) return;
             
-            document.getElementById('projPageTitle').innerText = proj.title;
-            const authorLink = document.getElementById('projPageAuthor');
-            authorLink.innerText = proj.author;
-            authorLink.href = `#profile/${encodeURIComponent(proj.author)}`;
-            
-            const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`;
-            document.getElementById('btnDownloadSb3').href = fileUrl;
-            
-            // 🌟 ĐÃ THAY BẰNG PACKAGER EMBED PLAYER (HOÀN TOÀN KHÔNG BỊ LỖI CHẶN EMBED)
-            document.getElementById('gameIframe').src = `https://packager.turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&autoplay=true`;
+            const input = document.getElementById('commentInput');
+            const text = input.value;
 
-            renderComments(proj.comments || [], 'Proj');
-            
-            if (currentUser) {
-                document.getElementById('commentFormProj').style.display = 'block';
-                document.getElementById('loginPromptProj').style.display = 'none';
-            } else {
-                document.getElementById('commentFormProj').style.display = 'none';
-                document.getElementById('loginPromptProj').style.display = 'block';
+            const res = await fetch(`${WORKER_URL}/api/comment`, {
+                method: 'POST', body: JSON.stringify({
+                    fileId: currentProj.fileId,
+                    projTitle: currentProj.title,
+                    projAuthor: currentProj.author,
+                    username: currentUser.username,
+                    sessionToken: currentUser.sessionToken,
+                    text: text,
+                    avt: currentUser.avt
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                input.value = '';
+                if (!currentProj.comments) currentProj.comments = [];
+                currentProj.comments.push(data.comment);
+                renderComments(currentProj.comments);
             }
         }
 
-        function openSeeInsideEditor() {
-            if (!currentProjData) return;
-            location.hash = `#editor/${currentProjData.fileId}`;
-        }
-
-        function openEditorPage(fileId) {
-            document.getElementById('editorView').style.display = 'flex';
-            const iframe = document.getElementById('editorIframe');
-            const titleInput = document.getElementById('editorProjTitle');
-
-            if (fileId) {
-                const proj = allProjects.find(p => p.fileId === fileId);
-                const title = proj ? proj.title : "Dự án";
-                titleInput.value = `${title} (Remix)`;
-                const fileUrl = `${WORKER_URL}/api/project/${fileId}`;
-                iframe.src = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
-            } else {
-                titleInput.value = "Dự án mới";
-                iframe.src = 'https://turbowarp.org/editor';
-            }
-        }
-
-        function openDirectUploadModal() {
-            const currentTitle = document.getElementById('editorProjTitle').value;
-            openUploadModal(currentTitle);
-        }
-
-        async function openProfilePage(username) {
-            document.getElementById('profileView').style.display = 'block';
+        // 6. PROFILE MODAL
+        async function openProfile(username) {
+            document.getElementById('profNameTitle').innerText = `Hồ sơ: ${username}`;
             document.getElementById('profUsername').innerText = username;
             document.getElementById('profStatus').innerText = "Đang tải...";
             document.getElementById('profBio').innerText = "";
             document.getElementById('editProfBox').style.display = 'none';
-            
-            const isOwn = currentUser && currentUser.username === username;
-            document.getElementById('btnToggleEditProf').style.display = isOwn ? 'inline-block' : 'none';
 
-            const userProjs = allProjects.filter(p => p.author === username);
-            const userList = document.getElementById('userProjectList');
-            if (userProjs.length === 0) {
-                userList.innerHTML = `<div style="grid-column:1/-1; color:#888;">Tác giả này chưa đăng tải dự án nào.</div>`;
-            } else {
-                userList.innerHTML = userProjs.map(p => `
-                    <div class="card" onclick="location.hash='#project/${p.fileId}'">
-                        <div class="card-thumb"><i class="fa-solid fa-play"></i></div>
-                        <div class="card-body">
-                            <div class="card-title">${escapeHtml(p.title)}</div>
-                        </div>
-                    </div>
-                `).join('');
+            const isOwn = currentUser && currentUser.username === username;
+            if (isOwn) {
+                document.getElementById('editProfBox').style.display = 'block';
             }
+
+            openModal('profileModal');
 
             try {
                 const data = await (await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)).json();
@@ -482,22 +423,7 @@
                     document.getElementById('editBioInput').value = data.bio || "";
                     document.getElementById('editProfBox').dataset.currentAvt = data.avt || "";
                 }
-
-                renderComments(data.comments || [], 'User');
             } catch(e) {}
-
-            if (currentUser) {
-                document.getElementById('commentFormUser').style.display = 'block';
-                document.getElementById('loginPromptUser').style.display = 'none';
-            } else {
-                document.getElementById('commentFormUser').style.display = 'none';
-                document.getElementById('loginPromptUser').style.display = 'block';
-            }
-        }
-
-        function toggleEditProfile() {
-            const box = document.getElementById('editProfBox');
-            box.style.display = box.style.display === 'none' ? 'block' : 'none';
         }
 
         async function handleSaveProfile(e) {
@@ -520,164 +446,16 @@
                 currentUser.avt = res.avtId;
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 updateNav();
-                openProfilePage(currentUser.username);
+                openProfile(currentUser.username);
             } else alert(res.error);
             btn.innerText = "Lưu thay đổi";
         }
 
-        async function checkNotifications() {
-            if (!currentUser) return;
-            try {
-                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
-                const unreadCount = notifs.filter(n => !n.read).length;
-                const badge = document.getElementById('notifBadge');
-                if (badge) {
-                    badge.innerText = unreadCount;
-                    if (unreadCount > 0) badge.classList.add('active');
-                    else badge.classList.remove('active');
-                }
-            } catch(e) {}
-        }
-
-        async function openMessagesPage() {
-            document.getElementById('messagesView').style.display = 'block';
-            if (!currentUser) {
-                document.getElementById('notifList').innerHTML = `<div style="text-align:center; padding:40px;">Vui lòng đăng nhập để xem hộp thư.</div>`;
-                return;
-            }
-            try {
-                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
-                const list = document.getElementById('notifList');
-                if (notifs.length === 0) {
-                    list.innerHTML = `<div style="text-align:center; color:#888; padding:40px;">Hộp thư trống! Bạn chưa có thông báo nào.</div>`;
-                    return;
-                }
-                list.innerHTML = notifs.map(n => `
-                    <a href="${n.link}" class="notif-item ${n.read ? '' : 'unread'}">
-                        <img src="${getAvtUrl(n.senderAvt)}" class="avt-circle">
-                        <div style="flex:1;">
-                            <div style="font-size:0.95rem;">${escapeHtml(n.text)}</div>
-                            <small style="color:#94a3b8;">${n.time}</small>
-                        </div>
-                    </a>
-                `).join('');
-            } catch(e) {}
-        }
-
-        async function markAllNotificationsRead() {
-            if (!currentUser) return;
-            await fetch(`${WORKER_URL}/api/notifications/read`, {
-                method: 'POST', body: JSON.stringify({ username: currentUser.username })
-            });
-            checkNotifications();
-            openMessagesPage();
-        }
-
-        function renderComments(comments, type) {
-            const container = document.getElementById(`commentList${type}`);
-            if (comments.length === 0) {
-                container.innerHTML = `<div style="color:#888; font-style:italic;">Chưa có bình luận nào. Hãy là người đầu tiên!</div>`;
-                return;
-            }
-
-            container.innerHTML = comments.map(c => `
-                <div class="comment-box ${c.replyToUser ? 'is-reply' : ''}">
-                    <img src="${getAvtUrl(c.avt)}" class="avt-circle" onclick="location.hash='#profile/${encodeURIComponent(c.author)}'" style="cursor:pointer;">
-                    <div class="comment-content">
-                        <div>
-                            <a href="#profile/${encodeURIComponent(c.author)}" class="comment-author">${escapeHtml(c.author)}</a>
-                            ${c.replyToUser ? `<span style="font-size:0.8rem; color:#0284c7; font-weight:bold;">↳ trả lời @${escapeHtml(c.replyToUser)}</span>` : ''}
-                            <span class="comment-time">${c.time}</span>
-                        </div>
-                        <div class="comment-text">${escapeHtml(c.text)}</div>
-                        ${currentUser ? `<button class="btn-reply" onclick="startReply('${c.author}', '${type}')"><i class="fa-solid fa-reply"></i> Trả lời</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function startReply(targetAuthor, type) {
-            if (type === 'Proj') {
-                activeReplyProj = targetAuthor;
-                document.getElementById('replyUserLabelProj').innerText = `@${targetAuthor}`;
-                document.getElementById('replyBannerProj').style.display = 'flex';
-                document.getElementById('commentTextProj').focus();
-            } else {
-                activeReplyUser = targetAuthor;
-                document.getElementById('replyUserLabelUser').innerText = `@${targetAuthor}`;
-                document.getElementById('replyBannerUser').style.display = 'flex';
-                document.getElementById('commentTextUser').focus();
-            }
-        }
-
-        function cancelReply(type) {
-            if (type === 'Proj') {
-                activeReplyProj = null;
-                document.getElementById('replyBannerProj').style.display = 'none';
-            } else {
-                activeReplyUser = null;
-                document.getElementById('replyBannerUser').style.display = 'none';
-            }
-        }
-
-        async function handlePostComment(e, type) {
-            e.preventDefault();
-            if (!currentUser) return;
-
-            if (type === 'Proj') {
-                const text = document.getElementById('commentTextProj').value;
-                const res = await fetch(`${WORKER_URL}/api/comment`, {
-                    method: 'POST', body: JSON.stringify({
-                        fileId: currentProjData.fileId,
-                        projTitle: currentProjData.title,
-                        projAuthor: currentProjData.author,
-                        username: currentUser.username,
-                        sessionToken: currentUser.sessionToken,
-                        text: text,
-                        avt: currentUser.avt,
-                        replyToUser: activeReplyProj
-                    })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('commentTextProj').value = '';
-                    cancelReply('Proj');
-                    if (!currentProjData.comments) currentProjData.comments = [];
-                    currentProjData.comments.push(data.comment);
-                    renderComments(currentProjData.comments, 'Proj');
-                }
-            } else {
-                const text = document.getElementById('commentTextUser').value;
-                const targetUser = window.location.hash.replace('#profile/', '');
-                const res = await fetch(`${WORKER_URL}/api/user/comment`, {
-                    method: 'POST', body: JSON.stringify({
-                        targetUser: decodeURIComponent(targetUser),
-                        username: currentUser.username,
-                        sessionToken: currentUser.sessionToken,
-                        text: text,
-                        avt: currentUser.avt,
-                        replyToUser: activeReplyUser
-                    })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('commentTextUser').value = '';
-                    cancelReply('User');
-                    openProfilePage(decodeURIComponent(targetUser));
-                }
-            }
-        }
-
-        function openUploadModal(defaultTitle = "") {
-            document.getElementById('projTitle').value = defaultTitle;
-            document.getElementById('uploadModal').style.display = 'flex';
-        }
-        function closeUploadModal() { document.getElementById('uploadModal').style.display = 'none'; }
-
+        // 7. UPLOAD DỰ ÁN
         async function handleUpload(e) {
             e.preventDefault();
             const file = document.getElementById('projFile').files[0];
-            if (file.size > 20*1024*1024) return alert("File > 20MB. Vui lòng giảm dung lượng!");
+            if (file.size > 20*1024*1024) return alert("File > 20MB. Vui lòng nén bớt dung lượng!");
             
             const btn = document.getElementById('btnUploadSubmit');
             btn.innerText = "Đang tải lên...";
@@ -690,17 +468,16 @@
             const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
             if (res.success) {
                 alert("🎉 Đăng dự án thành công!");
-                closeUploadModal();
+                closeModal('uploadModal');
                 await fetchProjects();
-                location.hash = `#project/${res.file_id}`;
             } else alert(res.error);
             btn.innerText = "Đăng lên Workshop";
         }
 
-        function getAvtUrl(id) { 
-            return id ? `${WORKER_URL}/api/project/${id}` : 'https://scratch.mit.edu/images/avatar_default.gif'; 
-        }
-
+        // TIỆN ÍCH MODAL
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : 'https://scratch.mit.edu/images/avatar_default.gif'; }
         function escapeHtml(text) {
             if (!text) return '';
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
