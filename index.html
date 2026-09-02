@@ -7,16 +7,10 @@
     <link rel="icon" type="image/png" href="https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --primary: #0da57a; --primary-dark: #0a8260;
-            --bg-body: #f4f5f7; --bg-panel: #ffffff;
-            --text-main: #222222; --text-muted: #666666;
-            --border-color: #e5e7eb;
-        }
+        /* [Giữ nguyên toàn bộ CSS của bản V8.5 trước đó...] */
+        :root { --primary: #0da57a; --primary-dark: #0a8260; --bg-body: #f4f5f7; --bg-panel: #ffffff; --text-main: #222222; --text-muted: #666666; --border-color: #e5e7eb; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-        
-        /* NAVBAR */
         .navbar { background: #111111; height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
         .nav-left { display: flex; align-items: center; gap: 20px; }
         .navbar-brand { display: flex; align-items: center; text-decoration: none; }
@@ -25,19 +19,14 @@
         .nav-link { color: #bbbbbb; text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 8px 12px; transition: 0.2s; }
         .nav-link:hover { color: var(--primary); }
         .nav-actions { display: flex; gap: 12px; align-items: center; position: relative; }
-        
         .nav-user-pill { background: #222222; color: #ffffff !important; border: 1px solid #444444; padding: 6px 14px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
         .nav-user-pill:hover { border-color: var(--primary); background: #2a2a2a; }
         .nav-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
-
         .btn { background: #e2e8f0; border: none; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 0.9rem;}
         .btn:hover { background: #cbd5e1; }
         .btn-primary { background: var(--primary); color: #fff;} .btn-primary:hover { background: var(--primary-dark); }
-        
         .page-view { display: none; max-width: 1200px; margin: 0 auto; padding: 30px 20px; flex: 1; width: 100%; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* GRID DỰ ÁN */
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-top: 20px;}
         .card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative;}
         .card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
@@ -47,63 +36,46 @@
         .card-body { padding: 15px; }
         .card-title { font-weight: bold; color: var(--text-main); margin-bottom: 6px; font-size: 1.05rem; }
         .card-author { font-size: 0.85rem; color: var(--text-muted); }
-
-        /* CCW PROJECT VIEW */
         .ccw-layout { display: flex; gap: 25px; align-items: flex-start; }
         .ccw-main { flex: 2.5; min-width: 0; }
         .ccw-sidebar { flex: 1.3; background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; height: 600px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        
         .player-container { background: #000; border-radius: 12px; overflow: hidden; height: 500px; border: 1px solid var(--border-color); }
         .player-iframe { width: 100%; height: 100%; border: none; }
-        
         .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; background: var(--bg-panel); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border-color); }
         .action-btns { display: flex; gap: 18px; align-items: center;}
-        /* TIM VÀ SAO TO HƠN */
         .act-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-weight: bold;}
         .act-btn span { font-size: 1.1rem; }
         .act-btn:hover { color: #111; transform: scale(1.05); }
         .act-btn.active.like { color: #ff4c4c; }
         .act-btn.active.star { color: #f5b041; }
-
-        /* TABS */
         .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border-color); }
         .tab-btn { flex: 1; background: none; border: none; color: var(--text-muted); padding: 14px 0; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.95rem;}
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .tab-content { padding: 20px; overflow-y: auto; flex: 1; display: none; }
         .tab-content.active { display: block; }
-
         .info-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 18px; }
         .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .info-body { font-size: 0.95rem; color: #333; white-space: pre-line; line-height: 1.6; }
-
-        /* BÌNH LUẬN & THỤT LỀ */
         .comment-thread { margin-bottom: 18px; }
         .comment-box { display: flex; gap: 10px; margin-bottom: 8px; position: relative; }
         .avt-circle { width: 36px; height: 36px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
         .comment-text-bubble { background: #f1f5f9; padding: 10px 14px; border-radius: 0 14px 14px 14px; font-size: 0.9rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; margin-top: 4px; line-height: 1.4; display: inline-block;}
         .comment-img-render { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd; object-fit: contain;}
-        
         .replies-container { margin-left: 36px; padding-left: 12px; border-left: 2px solid #e2e8f0; margin-top: 8px; }
         .replies-container .avt-circle { width: 28px; height: 28px; }
         .replies-container .comment-text-bubble { padding: 8px 12px; font-size: 0.85rem; }
-        
         .btn-view-more-replies { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: bold; cursor: pointer; padding: 4px 0; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px;}
         .btn-view-more-replies:hover { text-decoration: underline; }
-        
         .btn-delete-cmt { background: none; border: none; color: #ff4c4c; font-size: 0.8rem; cursor: pointer; font-weight: bold; margin-left: 10px; opacity: 0.7;}
         .btn-delete-cmt:hover { opacity: 1; text-decoration: underline;}
-
         .comment-input-area { border-top: 1px solid var(--border-color); padding: 12px 15px; background: #fafafa; }
         .comment-img-preview-box { display: none; align-items: center; gap: 8px; background: #eef2f6; padding: 6px 10px; border-radius: 8px; margin-bottom: 8px; width: fit-content; border: 1px solid #cbd5e1; }
         .comment-img-preview-box img { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; border: 1px solid #bbb; }
         .btn-remove-preview { background: #ff4c4c; color: #fff; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
         .comment-input-wrapper { display: flex; gap: 8px; align-items: center; background: #fff; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color); }
         .comment-input-wrapper input { background: none; border: none; color: #111; flex: 1; outline: none; font-size: 0.9rem;}
         .action-icon-btn { cursor: pointer; width: 22px; height: 22px; opacity: 0.6; transition: 0.2s; }
         .action-icon-btn:hover { opacity: 1; }
-
-        /* ================= PROFILE NÂNG CẤP & CÓ ẢNH BÌA BANNER ================= */
         .profile-hero { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .profile-cover-bg { height: 140px; background: linear-gradient(135deg, #0da57a 0%, #0f172a 100%); position: relative; }
         .profile-info-row { display: flex; padding: 0 30px 25px; gap: 25px; align-items: flex-end; margin-top: -55px; position: relative; }
@@ -114,44 +86,33 @@
         .profile-stats-bar { display: flex; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; }
         .stat-badge { font-size: 0.9rem; color: var(--text-muted); cursor: pointer; }
         .stat-badge b { color: #111; font-weight: 700; font-size: 1.1rem;}
-
         .profile-bio-box { background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #eef2f6; margin-top: 15px; }
         .profile-bio-box h4 { font-size: 0.8rem; text-transform: uppercase; color: #888; margin-bottom: 4px; letter-spacing: 0.5px; }
         .profile-bio-box p { font-size: 0.95rem; color: #333; line-height: 1.5; white-space: pre-line; }
-
-        /* THIẾT KẾ BANNER CÓ ẢNH BÌA */
         .profile-featured-banner { display: flex; background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--primary);}
         .banner-thumb-area { width: 350px; background: #111; flex-shrink: 0; }
         .banner-thumb-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s;}
         .profile-featured-banner:hover .banner-thumb-area img { opacity: 1; transform: scale(1.02);}
         .banner-info-area { padding: 30px; display: flex; flex-direction: column; justify-content: center; flex: 1;}
-
         .profile-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
         .prof-tab-btn { background: none; border: none; padding: 12px 20px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.95rem; transition: 0.2s;}
         .prof-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-        /* UPLOAD */
         .upload-card-wrapper { background: var(--bg-panel); border-radius: 16px; border: 1px solid var(--border-color); padding: 35px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); }
         .upload-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; margin-top: 20px; }
         .thumb-dropzone { border: 2px dashed #cbd5e1; border-radius: 14px; background: #f8fafc; height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: 0.2s; }
         .thumb-dropzone:hover { border-color: var(--primary); background: #f0fdf4; }
         .thumb-preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; display: none; }
         .thumb-placeholder { text-align: center; color: #64748b; padding: 20px; }
-
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-weight: bold; margin-bottom: 6px; color: #444; font-size: 0.9rem;}
         .form-control { width: 100%; padding: 11px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: #fff;}
         .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(13,165,122,0.1); }
-
         .timeline-item { padding: 12px 15px; border-left: 3px solid var(--primary); background: var(--bg-panel); margin-bottom: 10px; border-radius: 0 8px 8px 0; border: 1px solid var(--border-color); border-left-width: 3px; }
-
-        /* MENU THÔNG BÁO SIÊU RỘNG & ĐÁNH DẤU ĐỌC */
         #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: #fff; border-left: 5px solid var(--primary); padding: 14px 18px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s forwards; color: #333; font-weight: 500;}
         .toast.error { border-left-color: #ff4c4c; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; } }
-
         .notif-badge { position: absolute; top: -5px; right: -5px; background: #ff4c4c; color: white; font-size: 0.7rem; font-weight: bold; border-radius: 10px; padding: 2px 6px; border: 2px solid #111; }
         .notif-dropdown { display: none; position: absolute; top: 45px; right: 0; width: 420px; max-width: 90vw; background: #fff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid #eee; overflow: hidden; z-index: 1000; }
         .notif-header { padding: 14px 18px; font-weight: bold; border-bottom: 1px solid #eee; background: #fafafa; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;}
@@ -159,13 +120,11 @@
         .notif-item { padding: 14px 18px; border-bottom: 1px solid #f1f1f1; display: flex; gap: 12px; text-decoration: none; color: #333; transition: 0.2s; align-items: flex-start;}
         .notif-item:hover { background: #f8f9fa; }
         .notif-item.unread { background: #ebf8f4; font-weight: bold; }
-
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; }
         .modal { background: #fff; border-radius: 14px; width: 100%; max-width: 520px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .modal-header { padding: 16px 22px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; font-weight: bold; background: #fafafa;}
         .btn-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
         .modal-body { padding: 22px; }
-
         #globalLoader { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
@@ -177,7 +136,6 @@
 
     <div id="toastContainer"></div>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-left">
             <a href="#home" class="navbar-brand">
@@ -189,7 +147,7 @@
         <div class="nav-actions" id="navActions"></div>
     </nav>
 
-    <!-- TRANG 1: KHÁM PHÁ -->
+    <!-- KHÁM PHÁ -->
     <div id="homeView" class="page-view">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2>Tác phẩm tiêu biểu</h2>
@@ -197,7 +155,7 @@
         <div class="project-grid" id="projectList">Đang tải dữ liệu...</div>
     </div>
 
-    <!-- TRANG 2: CHI TIẾT DỰ ÁN -->
+    <!-- DỰ ÁN -->
     <div id="projectView" class="page-view">
         <div class="ccw-layout">
             <div class="ccw-main">
@@ -211,7 +169,7 @@
                         <button class="act-btn" id="btnLike" onclick="toggleAction('like')"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                         <button class="act-btn" id="btnStar" onclick="toggleAction('star')"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
                         <a id="btnSeeInside" href="#" target="_blank" class="btn"><i class="fa-solid fa-code"></i> Mã nguồn</a>
-                        <!-- Nút setting cho chủ dự án -->
+                        <!-- Nút Setting Ẩn Hiện -->
                         <button class="btn" id="btnProjSettings" style="display:none; background:#333; color:#fff;" onclick="openModal('projSettingsModal')"><i class="fa-solid fa-gear"></i> Quản lý</button>
                     </div>
                 </div>
@@ -267,7 +225,7 @@
         </div>
     </div>
 
-    <!-- TRANG 3: PROFILE -->
+    <!-- PROFILE -->
     <div id="profileView" class="page-view">
         <div id="profile404" style="display:none; text-align:center; padding:100px 20px;">
             <i class="fa-solid fa-user-slash" style="font-size:5rem; color:#ccc; margin-bottom:20px;"></i>
@@ -277,11 +235,8 @@
         </div>
 
         <div id="profileContent">
-            <!-- BANNER THIẾT KẾ MỚI KÈM ẢNH BÌA -->
             <div id="profileBannerArea" style="display:none;" class="profile-featured-banner">
-                <div class="banner-thumb-area">
-                    <img id="profBannerThumb" src="" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
-                </div>
+                <div class="banner-thumb-area"><img id="profBannerThumb" src="" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'"></div>
                 <div class="banner-info-area">
                     <span style="background:rgba(255,255,255,0.2); color:#fff; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold; width:max-content; margin-bottom:10px;">TÁC PHẨM NỔI BẬT</span>
                     <h2 id="profBannerTitle" style="font-size:1.8rem; margin-bottom:8px;">Tên dự án nổi bật</h2>
@@ -362,7 +317,7 @@
     <div id="uploadView" class="page-view" style="max-width: 900px;">
         <div class="upload-card-wrapper">
             <h2 style="color:#111; border-bottom:1px solid #eee; padding-bottom:15px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> Xuất bản tác phẩm mới</h2>
-            <form onsubmit="handleUpload(event)">
+            <form id="uploadFormDOM">
                 <div class="upload-grid">
                     <div>
                         <label style="font-weight:bold; color:#444; display:block; margin-bottom:8px;">Ảnh bìa dự án (Thumbnail)</label>
@@ -389,7 +344,7 @@
                     </div>
                 </div>
                 <div style="margin-top:25px; padding-top:20px; border-top:1px solid #eee;">
-                    <button type="submit" class="btn btn-primary" id="btnSubmitUpload" style="width:100%; justify-content:center; padding:14px; font-size:1.1rem; border-radius:10px;">
+                    <button type="button" onclick="handleUploadBtn()" class="btn btn-primary" id="btnSubmitUpload" style="width:100%; justify-content:center; padding:14px; font-size:1.1rem; border-radius:10px;">
                         <i class="fa-solid fa-rocket"></i> Đăng lên nền tảng
                     </button>
                 </div>
@@ -397,26 +352,26 @@
         </div>
     </div>
 
-    <!-- MODAL QUẢN LÝ DỰ ÁN (CHỦ SỞ HỮU) -->
+    <!-- MODAL SETTING PROJECT (CHỦ SỞ HỮU) -->
     <div class="modal-overlay" id="projSettingsModal">
         <div class="modal">
-            <div class="modal-header"><span>Cài đặt Dự án</span><button class="btn-close" onclick="closeModal('projSettingsModal')">&times;</button></div>
+            <div class="modal-header"><span>Quản lý Dự án</span><button class="btn-close" onclick="closeModal('projSettingsModal')">&times;</button></div>
             <div class="modal-body">
                 <div style="border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:15px;">
-                    <h4 style="margin-bottom:10px;">Thay đổi thông tin</h4>
-                    <form onsubmit="saveProjectInfo(event)">
+                    <h4 style="margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Thay đổi thông tin</h4>
+                    <form id="editProjForm">
                         <div class="form-group"><label>Quyền hiển thị:</label><select id="editProjVisibility" class="form-control"><option value="public">Công khai</option><option value="private">Riêng tư (Ẩn khỏi trang chủ)</option></select></div>
                         <div class="form-group"><label>Hướng dẫn vận hành:</label><textarea id="editDescInput" class="form-control" rows="3"></textarea></div>
                         <div class="form-group"><label>Đội ngũ (Credits):</label><textarea id="editCreditsInput" class="form-control" rows="2"></textarea></div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center;">Lưu thông tin</button>
+                        <button type="button" onclick="saveProjectInfoBtn()" class="btn btn-primary" style="width: 100%; justify-content:center;">Lưu thông tin</button>
                     </form>
                 </div>
                 <div>
-                    <h4 style="margin-bottom:10px; color:#ff8c00;">Cập nhật phiên bản mới</h4>
-                    <p style="font-size:0.85rem; color:#888; margin-bottom:10px;">Tải lên file .sb3 mới. Phiên bản cũ sẽ được lưu trữ lại.</p>
-                    <form onsubmit="handleUpdateProjectFile(event)">
+                    <h4 style="margin-bottom:10px; color:#ff8c00;"><i class="fa-solid fa-upload"></i> Cập nhật phiên bản mới</h4>
+                    <p style="font-size:0.85rem; color:#888; margin-bottom:10px;">Tải lên file .sb3 mới. Phiên bản cũ sẽ được lưu trữ tự động.</p>
+                    <form id="updateProjForm">
                         <input type="file" id="updateProjFile" accept=".sb3" class="form-control" required style="padding: 8px; margin-bottom:10px;">
-                        <button type="submit" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content:center; background:#ff8c00; color:#fff;">Tải bản cập nhật lên</button>
+                        <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content:center; background:#ff8c00; color:#fff;">Tải bản cập nhật lên</button>
                     </form>
                 </div>
             </div>
@@ -427,12 +382,12 @@
         <div class="modal">
             <div class="modal-header"><span>Chỉnh sửa hồ sơ cá nhân</span><button class="btn-close" onclick="closeModal('editProfileModal')">&times;</button></div>
             <div class="modal-body">
-                <form onsubmit="saveProfileInfo(event)">
+                <form id="editProfForm">
                     <div class="form-group"><label>Đổi Ảnh đại diện (Tối đa 5MB):</label><input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;"></div>
                     <div class="form-group"><label>Trạng thái (Status):</label><input type="text" id="editStatusInput" class="form-control" placeholder="Đang làm game..."></div>
                     <div class="form-group"><label>Giới thiệu (Bio):</label><textarea id="editBioInput" class="form-control" rows="3"></textarea></div>
                     <div class="form-group"><label>Dự án làm Banner nổi bật:</label><select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select></div>
-                    <button type="submit" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center;">Lưu thông tin</button>
+                    <button type="button" onclick="saveProfileInfoBtn()" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center;">Lưu thông tin</button>
                 </form>
             </div>
         </div>
@@ -440,7 +395,7 @@
 
     <script>
         const WIKI_CLIENT_ID = "70970406"; 
-        const WORKER_URL = "https://app.studiodanv.workers.dev";
+        const WORKER_URL = "https://app.studiodanv.workers.dev"; // Thay domain nếu bạn deploy tên khác
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
@@ -463,13 +418,38 @@
             setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
+        // BỌC API FETCH ĐỂ TỰ ĐỘNG CHÈN TOKEN (ANTI-AJAX)
+        async function apiFetch(endpoint, options = {}) {
+            if(!options.headers) options.headers = {};
+            options.headers["X-Client-Type"] = "StudioDANV-Web";
+            
+            // Tự động chèn Auth vào Body đối với POST Json
+            if(options.method === 'POST' && typeof options.body === 'string' && currentUser) {
+                let bodyObj = JSON.parse(options.body);
+                bodyObj.username = currentUser.username;
+                bodyObj.sessionToken = currentUser.sessionToken;
+                options.body = JSON.stringify(bodyObj);
+            }
+
+            try {
+                const res = await fetch(WORKER_URL + endpoint, options);
+                if(res.status === 401 || res.status === 403) {
+                    showToast("Phiên làm việc hết hạn hoặc bị chặn. Vui lòng đăng nhập lại.", "error");
+                    logout(); return null;
+                }
+                return await res.json();
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ", "error"); return null;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const loader = document.getElementById('globalLoader');
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('code')) {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-                    const res = await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }) });
+                    const res = await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }), headers:{"X-Client-Type":"StudioDANV-Web"} });
                     const data = await res.json();
                     if (data.success) {
                         currentUser = { username: data.username, sessionToken: data.sessionToken, avt: data.avt };
@@ -565,10 +545,10 @@
         function openProjectPage(idParam) {
             document.getElementById('projectView').style.display = 'block';
             const proj = allProjects.find(p => p.projectId === idParam || p.fileId === idParam);
-            if (!proj) { showToast("Không tìm thấy dự án hoặc không có quyền", "error"); location.hash="#home"; return; }
+            if (!proj) { showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); location.hash="#home"; return; }
             currentProj = proj;
 
-            document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Ẩn</span>' : '');
+            document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             document.getElementById('projPageAuthor').innerText = proj.author;
             document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
@@ -607,10 +587,12 @@
 
         async function toggleAction(type) {
             if (!currentUser) return showToast("Vui lòng đăng nhập!", "error");
-            await fetch(`${WORKER_URL}/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: `toggle_${type}` }) });
-            let list = currentProj[`${type}s`] || [];
-            if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username); else list.push(currentUser.username);
-            currentProj[`${type}s`] = list; updateActionBtns();
+            const res = await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: `toggle_${type}` }) });
+            if(res && res.success) {
+                let list = currentProj[`${type}s`] || [];
+                if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username); else list.push(currentUser.username);
+                currentProj[`${type}s`] = list; updateActionBtns();
+            }
         }
 
         // ================= XỬ LÝ BÌNH LUẬN =================
@@ -622,7 +604,6 @@
             list.forEach(c => { if (c.parentId) { if (!repliesMap[c.parentId]) repliesMap[c.parentId] = []; repliesMap[c.parentId].push(c); } else { rootComments.push(c); } });
             rootComments.sort((a, b) => parseInt(b.id) - parseInt(a.id));
 
-            // Quyền xóa comment
             const canDelete = (c) => {
                 if(!currentUser) return false;
                 if(type === 'proj') return currentProj.author.toLowerCase() === currentUser.username.toLowerCase();
@@ -682,12 +663,12 @@
 
         async function deleteComment(type, commentId) {
             if(!confirm("Xác nhận xóa bình luận này?")) return;
-            const endpoint = type === 'proj' ? `${WORKER_URL}/api/project/action` : `${WORKER_URL}/api/user/comment`;
-            const payload = type === 'proj' ? { fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: "delete_comment", payload: { commentId } }
-            : { targetUser: viewingProfileUser, username: currentUser.username, sessionToken: currentUser.sessionToken, action: "delete", commentId };
+            const endpoint = type === 'proj' ? `/api/project/action` : `/api/user/comment`;
+            const payload = type === 'proj' ? { fileId: currentProj.fileId, action: "delete_comment", payload: { commentId } }
+            : { targetUser: viewingProfileUser, action: "delete", commentId };
             
-            const res = await (await fetch(endpoint, { method: 'POST', body: JSON.stringify(payload) })).json();
-            if(res.success) {
+            const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
+            if(res && res.success) {
                 showToast("Đã xóa bình luận", "success");
                 if(type==='proj') { currentProj.comments = currentProj.comments.filter(c=>c.id!==commentId && c.parentId!==commentId); renderCommentList('proj', currentProj.comments); }
                 else { fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(r=>r.json()).then(data=>{ renderCommentList('prof', data.comments||[]); }); }
@@ -732,21 +713,25 @@
             submitBtn.disabled = true; const origHtml = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
             let imgId = null;
-            try {
-                if (imgFile) { const fd = new FormData(); fd.append("file", imgFile); const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd })).json(); if (upRes.success) imgId = upRes.file_id; }
-                const endpoint = type === 'proj' ? `${WORKER_URL}/api/comment` : `${WORKER_URL}/api/user/comment`;
-                const payload = type === 'proj' ? { fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author, username: currentUser.username, sessionToken: currentUser.sessionToken, text, avt: currentUser.avt, parentId: replyState.proj.parentId, replyToUser: replyState.proj.user, imageId: imgId } 
-                : { targetUser: viewingProfileUser, username: currentUser.username, sessionToken: currentUser.sessionToken, text, avt: currentUser.avt, parentId: replyState.prof.parentId, replyToUser: replyState.prof.user, imageId: imgId };
+            if (imgFile) { 
+                const fd = new FormData(); fd.append("file", imgFile); 
+                fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
+                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
+                if (upRes.success) imgId = upRes.file_id; 
+            }
+            
+            const endpoint = type === 'proj' ? `/api/comment` : `/api/user/comment`;
+            const payload = type === 'proj' ? { fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author, text, avt: currentUser.avt, parentId: replyState.proj.parentId, replyToUser: replyState.proj.user, imageId: imgId } 
+            : { targetUser: viewingProfileUser, text, avt: currentUser.avt, parentId: replyState.prof.parentId, replyToUser: replyState.prof.user, imageId: imgId };
 
-                const res = await fetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
-                const data = await res.json();
-                if (data.success) {
-                    textInput.value = ''; removeCommentImage(type); cancelReply(type);
-                    if (type === 'proj') { if (!currentProj.comments) currentProj.comments = []; currentProj.comments.push(data.comment); renderCommentList('proj', currentProj.comments); } 
-                    else { fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(res => res.json()).then(pData => { renderCommentList('prof', pData.comments || []); }); }
-                    showToast("Đã gửi!", "success");
-                } else showToast("Lỗi", "error");
-            } catch(err) { showToast("Lỗi kết nối", "error"); } finally { isPosting[type] = false; submitBtn.disabled = false; submitBtn.innerHTML = origHtml; }
+            const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
+            if (res && res.success) {
+                textInput.value = ''; removeCommentImage(type); cancelReply(type);
+                if (type === 'proj') { if (!currentProj.comments) currentProj.comments = []; currentProj.comments.push(res.comment); renderCommentList('proj', currentProj.comments); } 
+                else { fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(r => r.json()).then(pData => { renderCommentList('prof', pData.comments || []); }); }
+                showToast("Đã gửi!", "success");
+            }
+            isPosting[type] = false; submitBtn.disabled = false; submitBtn.innerHTML = origHtml;
         }
 
         // ================= TRANG PROFILE 404 & FOLLOW =================
@@ -764,13 +749,12 @@
             } catch(e) { document.getElementById('profile404').style.display = 'block'; return; }
 
             document.getElementById('profileContent').style.display = 'block';
-            document.getElementById('profUsername').innerText = viewingProfileData.username; // Real capitalized name
+            document.getElementById('profUsername').innerText = viewingProfileData.username; 
             document.getElementById('profAvt').src = getAvtUrl(viewingProfileData.avt);
             document.getElementById('profBio').innerText = viewingProfileData.bio || "Chưa có phần giới thiệu.";
             document.getElementById('profStatus').innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || "Chưa có trạng thái")}`;
             document.getElementById('profileBannerArea').style.display = 'none';
 
-            // Phân quyền Owner / Follower
             if (currentUser && currentUser.username.toLowerCase() === username.toLowerCase()) {
                 document.getElementById('btnEditProfModal').style.display = 'inline-flex';
                 document.getElementById('btnFollowProf').style.display = 'none';
@@ -842,41 +826,35 @@
 
         async function toggleFollow() {
             if(!currentUser) return showToast("Đăng nhập để theo dõi", "error");
-            const btnF = document.getElementById('btnFollowProf');
-            btnF.disabled = true;
-            const res = await (await fetch(`${WORKER_URL}/api/user/follow`, { method: 'POST', body: JSON.stringify({ targetUser: viewingProfileUser, username: currentUser.username, sessionToken: currentUser.sessionToken }) })).json();
-            if(res.success) openProfilePage(viewingProfileUser);
+            const btnF = document.getElementById('btnFollowProf'); btnF.disabled = true;
+            const res = await apiFetch(`/api/user/follow`, { method: 'POST', body: JSON.stringify({ targetUser: viewingProfileUser }) });
+            if(res && res.success) openProfilePage(viewingProfileUser);
             btnF.disabled = false;
         }
 
-        async function saveProfileInfo(e) {
-            e.preventDefault();
+        async function saveProfileInfoBtn() {
             const btn = document.getElementById('btnSaveProfSubmit'); btn.innerText = "Đang lưu..."; btn.disabled = true;
-            
-            const file = document.getElementById('editAvtFile').files[0];
-            let newAvtId = undefined;
+            const file = document.getElementById('editAvtFile').files[0]; let newAvtId = undefined;
 
             if (file) {
                 if (file.size > 5 * 1024 * 1024) { showToast("Ảnh vượt quá 5MB!", "error"); btn.innerText = "Lưu thông tin"; btn.disabled = false; return; }
-                const fData = new FormData(); fData.append("file", file);
-                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fData })).json();
+                const fData = new FormData(); fData.append("file", file); fData.append("username", currentUser.username); fData.append("sessionToken", currentUser.sessionToken);
+                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fData, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (upRes.success) { newAvtId = upRes.file_id; currentUser.avt = newAvtId; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
             }
 
-            const payload = { username: currentUser.username, sessionToken: currentUser.sessionToken, avtId: newAvtId, bio: document.getElementById('editBioInput').value, status: document.getElementById('editStatusInput').value, featuredProject: document.getElementById('editFeaturedProjSelect').value };
-            const res = await fetch(`${WORKER_URL}/api/user/update`, { method: 'POST', body: JSON.stringify(payload) });
-            if ((await res.json()).success) { closeModal('editProfileModal'); showToast("Hồ sơ đã cập nhật!", "success"); openProfilePage(currentUser.username); }
+            const payload = { avtId: newAvtId, bio: document.getElementById('editBioInput').value, status: document.getElementById('editStatusInput').value, featuredProject: document.getElementById('editFeaturedProjSelect').value };
+            const res = await apiFetch(`/api/user/update`, { method: 'POST', body: JSON.stringify(payload) });
+            if (res && res.success) { closeModal('editProfileModal'); showToast("Hồ sơ đã cập nhật!", "success"); openProfilePage(currentUser.username); }
             btn.innerText = "Lưu thông tin"; btn.disabled = false;
         }
 
-        // ================= UPLOAD TRỰC QUAN MỚI =================
+        // ================= UPLOAD TRỰC QUAN MỚI (CÓ BẢO MẬT KÉP) =================
         function handleThumbnailPreviewBig(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = document.getElementById('thumbPreviewBig');
-                    img.src = e.target.result; img.style.display = 'block';
-                    document.getElementById('thumbPlaceholder').style.display = 'none';
+                    const img = document.getElementById('thumbPreviewBig'); img.src = e.target.result; img.style.display = 'block'; document.getElementById('thumbPlaceholder').style.display = 'none';
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -887,8 +865,8 @@
             document.getElementById('uploadView').style.display = 'block';
         }
 
-        async function handleUpload(e) {
-            e.preventDefault();
+        async function handleUploadBtn() {
+            if(!document.getElementById('upFile').files[0] || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
             const btn = document.getElementById('btnSubmitUpload'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xuất bản...'; btn.disabled = true;
             
             const form = new FormData(); 
@@ -899,11 +877,15 @@
             form.append("author", currentUser.username);
             form.append("description", document.getElementById('upDesc').value);
             form.append("credits", document.getElementById('upCredits').value);
+            
+            // SECURITY: Gửi token vào Form
+            form.append("username", currentUser.username);
+            form.append("sessionToken", currentUser.sessionToken);
 
             try {
-                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
+                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (res.success) { showToast("Xuất bản thành công!", "success"); await loadProjects(); location.hash = `#project/${res.file_id}`; }
-                else showToast("Lỗi tải lên", "error");
+                else showToast(res.error || "Lỗi tải lên", "error");
             } catch(err) { showToast("Lỗi kết nối", "error"); }
             btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Đăng lên nền tảng'; btn.disabled = false;
         }
@@ -924,16 +906,12 @@
                 const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
                 const unreadCount = notifs.filter(n => !n.read).length;
                 const badge = document.getElementById('notifBadge');
-                if(unreadCount > 0) { badge.innerText = unreadCount; badge.style.display = 'block'; } 
-                else { badge.style.display = 'none'; }
+                if(unreadCount > 0) { badge.innerText = unreadCount; badge.style.display = 'block'; } else { badge.style.display = 'none'; }
 
                 document.getElementById('notifList').innerHTML = notifs.length ? notifs.map(n => `
                     <a href="${n.link}" class="notif-item ${n.read ? '' : 'unread'}">
                         <div style="width:30px; text-align:center;">${getNotifIcon(n.text)}</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.9rem; line-height:1.4;">${escapeHtml(n.text)}</div>
-                            <div style="font-size:0.75rem; color:#888; margin-top:4px;">${n.time}</div>
-                        </div>
+                        <div style="flex:1;"><div style="font-size:0.9rem; line-height:1.4;">${escapeHtml(n.text)}</div><div style="font-size:0.75rem; color:#888; margin-top:4px;">${n.time}</div></div>
                     </a>
                 `).join('') : '<div style="padding:15px;text-align:center;color:#888;">Chưa có thông báo.</div>';
             } catch(e){}
@@ -942,7 +920,7 @@
         function toggleNotif() { const p = document.getElementById('notifPanel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
         
         async function markAllRead() {
-            await fetch(`${WORKER_URL}/api/notifications/read`, { method: 'POST', body: JSON.stringify({ username: currentUser.username }) });
+            await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) });
             fetchNotifications(true); showToast("Đã đánh dấu đọc tất cả", "success"); document.getElementById('notifPanel').style.display='none';
         }
 
@@ -965,32 +943,36 @@
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        async function saveProjectInfo(e) {
-            e.preventDefault();
+        async function saveProjectInfoBtn() {
             const vis = document.getElementById('editProjVisibility').value; const desc = document.getElementById('editDescInput').value; const cred = document.getElementById('editCreditsInput').value;
             
-            await fetch(`${WORKER_URL}/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: "change_visibility", payload: { visibility: vis } }) });
-            await fetch(`${WORKER_URL}/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, username: currentUser.username, sessionToken: currentUser.sessionToken, action: "update_info", payload: { description: desc, credits: cred } }) });
+            await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "change_visibility", payload: { visibility: vis } }) });
+            await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "update_info", payload: { description: desc, credits: cred } }) });
             
             currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
             document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = cred || "Tác giả gốc.";
-            document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Ẩn</span>' : '');
+            document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             
             closeModal('projSettingsModal'); showToast("Đã lưu thông tin dự án!", "success");
         }
 
-        async function handleUpdateProjectFile(e) {
-            e.preventDefault();
+        async function handleUpdateProjectFileBtn() {
+            if(!document.getElementById('updateProjFile').files[0]) return;
             const btn = document.getElementById('btnUpdateProjSubmit'); btn.innerText = "Đang tải lên..."; btn.disabled = true;
+            
             const form = new FormData(); 
             form.append("file", document.getElementById('updateProjFile').files[0]); 
             form.append("updateProjectId", currentProj.projectId || currentProj.fileId);
             form.append("author", currentUser.username);
+            
+            // SECURITY: Gửi token vào form cập nhật
+            form.append("username", currentUser.username);
+            form.append("sessionToken", currentUser.sessionToken);
 
             try {
-                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form })).json();
+                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (res.success) { showToast("Cập nhật phiên bản thành công!", "success"); closeModal('projSettingsModal'); setTimeout(()=>{location.reload();}, 1000); }
-                else showToast("Lỗi tải lên", "error");
+                else showToast(res.error || "Lỗi tải lên", "error");
             } catch(err) { showToast("Lỗi kết nối", "error"); }
             btn.innerText = "Tải bản cập nhật lên"; btn.disabled = false;
         }
