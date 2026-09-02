@@ -25,7 +25,7 @@
         .nav-link:hover { color: var(--primary); }
         .nav-actions { display: flex; gap: 12px; align-items: center; position: relative; }
         
-        /* NÚT USER TRÊN NAVBAR: SỬA LỖI CHỮ ĐEN NỀN ĐEN */
+        /* USER PILL */
         .nav-user-pill { background: #222222; color: #ffffff !important; border: 1px solid #444444; padding: 6px 14px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
         .nav-user-pill:hover { border-color: var(--primary); background: #2a2a2a; }
         .nav-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
@@ -69,24 +69,40 @@
         .tab-content { padding: 20px; overflow-y: auto; flex: 1; display: none; }
         .tab-content.active { display: block; }
 
-        /* THIẾT KẾ THÔNG TIN RỘNG RÃI & HIỆN ĐẠI */
+        /* THÔNG TIN CARD */
         .info-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 18px; }
         .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .info-body { font-size: 0.95rem; color: #333; white-space: pre-line; line-height: 1.6; }
 
-        /* BÌNH LUẬN */
-        .comment-box { display: flex; gap: 12px; margin-bottom: 16px; }
-        .avt-circle { width: 38px; height: 38px; border-radius: 50%; background: #ddd; object-fit: cover;}
-        .comment-text { background: #f1f5f9; padding: 10px 14px; border-radius: 0 14px 14px 14px; font-size: 0.9rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; margin-top: 4px; line-height: 1.4;}
-        .comment-img-render { max-width: 100%; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd;}
+        /* ================= BÌNH LUẬN & THỤT LỀ REPLY ================= */
+        .comment-thread { margin-bottom: 18px; }
+        .comment-box { display: flex; gap: 10px; margin-bottom: 8px; }
+        .avt-circle { width: 36px; height: 36px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
+        .comment-text-bubble { background: #f1f5f9; padding: 10px 14px; border-radius: 0 14px 14px 14px; font-size: 0.9rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; margin-top: 4px; line-height: 1.4;}
+        .comment-img-render { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd; object-fit: contain;}
         
+        /* KHU VỰC TRẢ LỜI THỤT LỀ */
+        .replies-container { margin-left: 36px; padding-left: 12px; border-left: 2px solid #e2e8f0; margin-top: 8px; }
+        .replies-container .avt-circle { width: 28px; height: 28px; }
+        .replies-container .comment-text-bubble { padding: 8px 12px; font-size: 0.85rem; }
+        
+        .btn-view-more-replies { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: bold; cursor: pointer; padding: 4px 0; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px;}
+        .btn-view-more-replies:hover { text-decoration: underline; }
+
+        /* Ô NHẬP COMMENT & XEM TRƯỚC ẢNH */
         .comment-input-area { border-top: 1px solid var(--border-color); padding: 12px 15px; background: #fafafa; }
+        
+        /* PREVIEW THUMBNAIL ẢNH TRƯỚC KHI GỬI */
+        #commentImgPreviewContainer { display: none; align-items: center; gap: 8px; background: #eef2f6; padding: 6px 10px; border-radius: 8px; margin-bottom: 8px; width: fit-content; border: 1px solid #cbd5e1; }
+        #commentImgPreviewSrc { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; border: 1px solid #bbb; }
+        .btn-remove-preview { background: #ff4c4c; color: #fff; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
         .comment-input-wrapper { display: flex; gap: 8px; align-items: center; background: #fff; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color); }
         .comment-input-wrapper input { background: none; border: none; color: #111; flex: 1; outline: none; font-size: 0.9rem;}
         .action-icon-btn { cursor: pointer; width: 22px; height: 22px; opacity: 0.6; transition: 0.2s; }
         .action-icon-btn:hover { opacity: 1; }
 
-        /* PROFILE TRANG TRỌNG */
+        /* PROFILE */
         .profile-banner-card { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 12px; padding: 25px; color: #fff; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
         .profile-header-card { background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border-color); padding: 25px; display: flex; gap: 25px; align-items: center; margin-bottom: 25px; }
         .profile-avt-lg { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -95,7 +111,6 @@
         .prof-tab-btn { background: none; border: none; padding: 10px 18px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.95rem;}
         .prof-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* ACTIVITY TIMELINE */
         .timeline-item { padding: 12px 15px; border-left: 3px solid var(--primary); background: var(--bg-panel); margin-bottom: 10px; border-radius: 0 8px 8px 0; border: 1px solid var(--border-color); border-left-width: 3px; }
 
         /* FORM */
@@ -175,12 +190,11 @@
 
             <div class="ccw-sidebar">
                 <div class="sidebar-tabs">
-                    <!-- TỰ ĐỘNG ACTIVE TAB THÔNG TIN -->
                     <button class="tab-btn active" id="tabBtn-info" onclick="switchProjTab('info')">Thông tin</button>
                     <button class="tab-btn" id="tabBtn-comments" onclick="switchProjTab('comments')">Bình luận</button>
                 </div>
                 
-                <!-- TAB THÔNG TIN: THIẾT KẾ MỚI RỘNG RÃI -->
+                <!-- TAB THÔNG TIN -->
                 <div id="tabContent-info" class="tab-content active">
                     <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
                         <button class="btn" id="btnEditInfo" style="display:none; padding:4px 10px; font-size:0.8rem;" onclick="openModal('editInfoModal')"><i class="fa-solid fa-pen"></i> Chỉnh sửa</button>
@@ -200,17 +214,30 @@
                     <div id="commentListProj" style="flex:1; padding:20px; overflow-y:auto;">Chưa có bình luận.</div>
                     
                     <div class="comment-input-area">
+                        <!-- BANNER ĐANG TRẢ LỜI -->
                         <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.8rem; margin-bottom:8px; font-weight:bold;">
                             Đang trả lời <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply()"></i>
                         </div>
+
+                        <!-- KHUNG XEM TRƯỚC ẢNH ĐÍNH KÈM -->
+                        <div id="commentImgPreviewContainer">
+                            <img id="commentImgPreviewSrc" src="" alt="preview">
+                            <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
+                            <button type="button" class="btn-remove-preview" onclick="removeCommentImage()" title="Gỡ ảnh">&times;</button>
+                        </div>
+
                         <form onsubmit="handlePostComment(event)" id="commentFormProj" style="display:none;">
                             <div class="comment-input-wrapper">
                                 <input type="text" id="commentTextProj" placeholder="Viết bình luận..." autocomplete="off">
+                                
                                 <label for="commentImgUpload" style="margin:0; display:flex;">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Gửi ảnh">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
                                 </label>
-                                <input type="file" id="commentImgUpload" accept="image/*" style="display:none;" onchange="showToast('Đã đính kèm ảnh: ' + this.files[0].name, 'info')">
-                                <button type="submit" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-paper-plane"></i></button>
+                                <input type="file" id="commentImgUpload" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this)">
+                                
+                                <button type="submit" id="btnSubmitComment" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.1rem;">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
                             </div>
                         </form>
                         <div id="loginPromptProj" style="text-align:center; color:#888; font-size:0.9rem;">
@@ -222,9 +249,8 @@
         </div>
     </div>
 
-    <!-- TRANG 3: PROFILE (CẢI TIẾN TOÀN DIỆN) -->
+    <!-- TRANG 3: PROFILE -->
     <div id="profileView" class="page-view">
-        <!-- BANNER DỰ ÁN TIÊU BIỂU (NẾU CÓ) -->
         <div id="profileBannerArea" style="display:none;" class="profile-banner-card">
             <div>
                 <span style="background:var(--primary); color:#fff; padding:3px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold;">DỰ ÁN NỔI BẬT</span>
@@ -234,7 +260,6 @@
             <a id="btnPlayBannerProj" href="#" class="btn btn-primary" style="padding:10px 18px;"><i class="fa-solid fa-play"></i> Xem ngay</a>
         </div>
 
-        <!-- HEADER PROFILE -->
         <div class="profile-header-card">
             <img id="profAvt" src="https://i.ibb.co/QFg1cVVD/image.png" class="profile-avt-lg" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
             <div style="flex:1;">
@@ -252,7 +277,6 @@
             </div>
         </div>
 
-        <!-- PROFILE TABS -->
         <div class="profile-nav-tabs">
             <button class="prof-tab-btn active" onclick="switchProfTab('projects')"><i class="fa-solid fa-folder-open"></i> Tác phẩm</button>
             <button class="prof-tab-btn" onclick="switchProfTab('likes')"><i class="fa-solid fa-heart"></i> Đã thích</button>
@@ -260,25 +284,13 @@
             <button class="prof-tab-btn" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments"></i> Bình luận hồ sơ</button>
         </div>
 
-        <!-- NỘI DUNG TỪNG TAB TRONG PROFILE -->
-        <div id="profTab-projects" class="prof-tab-content">
-            <div class="project-grid" id="userProjectList">Đang tải...</div>
-        </div>
-        
-        <div id="profTab-likes" class="prof-tab-content" style="display:none;">
-            <div class="project-grid" id="userLikedList">Đang tải...</div>
-        </div>
-
-        <div id="profTab-activities" class="prof-tab-content" style="display:none;">
-            <div id="userActivityList" style="max-width:700px;">Chưa có hoạt động nào.</div>
-        </div>
-
+        <div id="profTab-projects" class="prof-tab-content"><div class="project-grid" id="userProjectList">Đang tải...</div></div>
+        <div id="profTab-likes" class="prof-tab-content" style="display:none;"><div class="project-grid" id="userLikedList">Đang tải...</div></div>
+        <div id="profTab-activities" class="prof-tab-content" style="display:none;"><div id="userActivityList" style="max-width:700px;">Chưa có hoạt động nào.</div></div>
         <div id="profTab-comments" class="prof-tab-content" style="display:none; max-width:700px;">
             <div style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:20px;">
                 <form onsubmit="handlePostProfileComment(event)" id="profCommentForm">
-                    <div class="form-group">
-                        <textarea id="profCommentText" class="form-control" rows="2" placeholder="Để lại lời nhắn trên hồ sơ này..." required></textarea>
-                    </div>
+                    <div class="form-group"><textarea id="profCommentText" class="form-control" rows="2" placeholder="Để lại lời nhắn trên hồ sơ này..." required></textarea></div>
                     <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Gửi bình luận</button>
                 </form>
             </div>
@@ -286,7 +298,7 @@
         </div>
     </div>
 
-    <!-- TRANG 4: UPLOAD (TRANG ĐỘC LẬP) -->
+    <!-- TRANG 4: UPLOAD -->
     <div id="uploadView" class="page-view" style="max-width: 700px;">
         <div style="background:var(--bg-panel); padding:30px; border-radius:12px; border:1px solid var(--border-color); box-shadow:0 4px 20px rgba(0,0,0,0.05);">
             <h2 style="margin-bottom:20px; color:#111; border-bottom:1px solid #eee; padding-bottom:10px;">Xuất bản tác phẩm</h2>
@@ -320,7 +332,7 @@
         </div>
     </div>
 
-    <!-- MODAL SỬA PROFILE (AVATAR MAX 5MB, BIO, STATUS, BANNER) -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="editProfileModal">
         <div class="modal">
             <div class="modal-header"><span>Chỉnh sửa hồ sơ cá nhân</span><button class="btn-close" onclick="closeModal('editProfileModal')">&times;</button></div>
@@ -340,9 +352,7 @@
                     </div>
                     <div class="form-group">
                         <label>Chọn dự án làm Banner nổi bật:</label> 
-                        <select id="editFeaturedProjSelect" class="form-control">
-                            <option value="">-- Không chọn --</option>
-                        </select>
+                        <select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center;">Lưu thông tin</button>
                 </form>
@@ -350,20 +360,13 @@
         </div>
     </div>
 
-    <!-- MODAL SỬA THÔNG TIN DỰ ÁN -->
     <div class="modal-overlay" id="editInfoModal">
         <div class="modal">
             <div class="modal-header"><span>Cập nhật Thông tin</span><button class="btn-close" onclick="closeModal('editInfoModal')">&times;</button></div>
             <div class="modal-body">
                 <form onsubmit="saveProjectInfo(event)">
-                    <div class="form-group">
-                        <label>Hướng dẫn vận hành:</label> 
-                        <textarea id="editDescInput" class="form-control" rows="5"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Đội ngũ / Nguồn (Credits):</label> 
-                        <textarea id="editCreditsInput" class="form-control" rows="3"></textarea>
-                    </div>
+                    <div class="form-group"><label>Hướng dẫn vận hành:</label><textarea id="editDescInput" class="form-control" rows="5"></textarea></div>
+                    <div class="form-group"><label>Đội ngũ / Nguồn (Credits):</label><textarea id="editCreditsInput" class="form-control" rows="3"></textarea></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center;">Lưu thay đổi</button>
                 </form>
             </div>
@@ -378,10 +381,14 @@
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = [];
         let currentProj = null;
+        
+        // Quản lý trạng thái Reply & Expand
+        let activeReplyParentId = null;
         let activeReplyUser = null;
+        let expandedReplyThreads = {}; 
+        let isPostingComment = false; // Chống spam/gửi 2 lần
         let viewingProfileUser = null;
 
-        // TOAST THÔNG BÁO
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -389,13 +396,9 @@
             const icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#ff4c4c"></i>' : '<i class="fa-solid fa-circle-check" style="color:var(--primary)"></i>';
             toast.innerHTML = `${icon} <span>${msg}</span>`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'fadeOut 0.3s forwards';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // KHỞI TẠO APP
         document.addEventListener('DOMContentLoaded', async () => {
             const loader = document.getElementById('globalLoader');
             try {
@@ -430,7 +433,6 @@
             else openHomePage();
         }
 
-        // CẬP NHẬT NAVBAR (SỬA LỖI CHỮ ĐEN TRÊN NỀN ĐEN)
         function updateNav() {
             const nav = document.getElementById('navActions');
             if (currentUser) {
@@ -466,7 +468,6 @@
             try { const res = await (await fetch(`${WORKER_URL}/api/projects`)).json(); if(!res.error) allProjects = res; } catch(e){}
         }
 
-        // TRANG CHỦ
         function openHomePage() {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('projectList').innerHTML = allProjects.map(p => `
@@ -486,7 +487,6 @@
             `).join('');
         }
 
-        // TRANG CHI TIẾT DỰ ÁN
         function openProjectPage(fileId) {
             document.getElementById('projectView').style.display = 'block';
             const proj = allProjects.find(p => p.fileId === fileId);
@@ -497,7 +497,6 @@
             document.getElementById('projPageAuthor').innerText = proj.author;
             document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
-            // Iframe chuẩn Turbowarp
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`;
             document.getElementById('playerContainer').innerHTML = `<iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&autoplay=true" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
             document.getElementById('btnSeeInside').href = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
@@ -505,10 +504,11 @@
             document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn vận hành.";
             document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
-            // TỰ ĐỘNG CHỌN SẴN TAB THÔNG TIN
             switchProjTab('info');
             updateActionBtns();
             renderComments();
+            removeCommentImage();
+            cancelReply();
 
             if (currentUser && currentUser.username === proj.author) document.getElementById('btnEditInfo').style.display = 'inline-block';
             else document.getElementById('btnEditInfo').style.display = 'none';
@@ -545,67 +545,182 @@
             currentProj[`${type}s`] = list; updateActionBtns();
         }
 
-        // BÌNH LUẬN DỰ ÁN
+        // ================= XỬ LÝ BÌNH LUẬN & THỤT LỀ CÂU TRẢ LỜI =================
         function renderComments() {
             const list = currentProj.comments || [];
-            document.getElementById('commentListProj').innerHTML = list.length === 0 ? '<div style="color:#888; text-align:center; padding:20px;">Chưa có bình luận nào.</div>' : 
-            list.map(c => `
-                <div class="comment-box">
-                    <img src="${getAvtUrl(c.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
-                    <div style="flex:1;">
-                        <a href="#profile/${c.author}" style="font-weight:bold; color:#111; text-decoration:none;">${c.author}</a> 
-                        <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">${c.time}</span>
-                        ${c.replyToUser ? `<div style="font-size:0.8rem; color:var(--primary); font-weight:bold;">↳ Trả lời @${c.replyToUser}</div>` : ''}
-                        <div class="comment-text">
-                            ${escapeHtml(c.text)}
-                            ${c.imageId ? `<br><img src="${WORKER_URL}/api/project/${c.imageId}" class="comment-img-render">` : ''}
+            const container = document.getElementById('commentListProj');
+            if (list.length === 0) {
+                container.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">Chưa có bình luận nào.</div>';
+                return;
+            }
+
+            // Phân nhóm thành Root Comments và Replies
+            const rootComments = [];
+            const repliesMap = {};
+
+            list.forEach(c => {
+                if (c.parentId) {
+                    if (!repliesMap[c.parentId]) repliesMap[c.parentId] = [];
+                    repliesMap[c.parentId].push(c);
+                } else {
+                    rootComments.push(c);
+                }
+            });
+
+            container.innerHTML = rootComments.map(root => {
+                const replies = repliesMap[root.id] || [];
+                const isExpanded = expandedReplyThreads[root.id] || false;
+                const visibleReplies = isExpanded ? replies : replies.slice(0, 3);
+                const hasMore = replies.length > 3;
+
+                return `
+                    <div class="comment-thread" id="thread-${root.id}">
+                        <!-- ROOT COMMENT -->
+                        <div class="comment-box">
+                            <img src="${getAvtUrl(root.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <div style="flex:1;">
+                                <a href="#profile/${root.author}" style="font-weight:bold; color:#111; text-decoration:none;">${root.author}</a> 
+                                <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">${root.time}</span>
+                                <div class="comment-text-bubble">
+                                    ${escapeHtml(root.text)}
+                                    ${root.imageId ? `<br><img src="${WORKER_URL}/api/project/${root.imageId}" class="comment-img-render">` : ''}
+                                </div>
+                                ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.8rem; cursor:pointer; margin-top:4px; font-weight:bold;" onclick="startReply('${root.id}', '${root.author}')">Trả lời</button>` : ''}
+                            </div>
                         </div>
-                        ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.8rem; cursor:pointer; margin-top:4px; font-weight:bold;" onclick="startReply('${c.author}')">Trả lời</button>` : ''}
+
+                        <!-- CÂU TRẢ LỜI (THỤT LỀ) -->
+                        ${replies.length > 0 ? `
+                            <div class="replies-container">
+                                ${visibleReplies.map(rep => `
+                                    <div class="comment-box">
+                                        <img src="${getAvtUrl(rep.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
+                                        <div style="flex:1;">
+                                            <a href="#profile/${rep.author}" style="font-weight:bold; color:#111; text-decoration:none;">${rep.author}</a> 
+                                            <span style="font-size:0.75rem; color:var(--text-muted); margin-left:6px;">${rep.time}</span>
+                                            ${rep.replyToUser ? `<span style="font-size:0.75rem; color:var(--primary); font-weight:bold; margin-left:4px;">↳ @${rep.replyToUser}</span>` : ''}
+                                            <div class="comment-text-bubble">
+                                                ${escapeHtml(rep.text)}
+                                                ${rep.imageId ? `<br><img src="${WORKER_URL}/api/project/${rep.imageId}" class="comment-img-render">` : ''}
+                                            </div>
+                                            ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.75rem; cursor:pointer; margin-top:2px; font-weight:bold;" onclick="startReply('${root.id}', '${rep.author}')">Trả lời</button>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+
+                                ${hasMore ? `
+                                    <button class="btn-view-more-replies" onclick="toggleExpandReplies('${root.id}')">
+                                        <i class="fa-solid ${isExpanded ? 'fa-angle-up' : 'fa-reply'}"></i> 
+                                        ${isExpanded ? 'Thu gọn câu trả lời' : `Xem thêm ${replies.length - 3} câu trả lời...`}
+                                    </button>
+                                ` : ''}
+                            </div>
+                        ` : ''}
                     </div>
-                </div>
-            `).join('');
-            document.getElementById('commentListProj').scrollTop = document.getElementById('commentListProj').scrollHeight;
+                `;
+            }).join('');
         }
 
-        function startReply(user) { activeReplyUser = user; document.getElementById('replyUserLabelProj').innerText = `@${user}`; document.getElementById('replyBannerProj').style.display = 'block'; }
-        function cancelReply() { activeReplyUser = null; document.getElementById('replyBannerProj').style.display = 'none'; }
+        function toggleExpandReplies(rootId) {
+            expandedReplyThreads[rootId] = !expandedReplyThreads[rootId];
+            renderComments();
+        }
 
+        function startReply(parentId, user) {
+            activeReplyParentId = parentId;
+            activeReplyUser = user;
+            document.getElementById('replyUserLabelProj').innerText = `@${user}`;
+            document.getElementById('replyBannerProj').style.display = 'block';
+            document.getElementById('commentTextProj').focus();
+        }
+
+        function cancelReply() {
+            activeReplyParentId = null;
+            activeReplyUser = null;
+            document.getElementById('replyBannerProj').style.display = 'none';
+        }
+
+        // PREVIEW ẢNH ĐÍNH KÈM
+        function handleCommentImagePreview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('commentImgPreviewSrc').src = e.target.result;
+                    document.getElementById('commentImgPreviewContainer').style.display = 'flex';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function removeCommentImage() {
+            document.getElementById('commentImgUpload').value = '';
+            document.getElementById('commentImgPreviewSrc').src = '';
+            document.getElementById('commentImgPreviewContainer').style.display = 'none';
+        }
+
+        // GỬI BÌNH LUẬN (CHỐNG GỬI 2 LẦN & CÓ LOADING)
         async function handlePostComment(e) {
             e.preventDefault();
+            if (isPostingComment) return; // Khoá gửi nhiều lần
             if (!currentUser) return showToast("Bạn cần đăng nhập để bình luận!", "error");
+
             const textInput = document.getElementById('commentTextProj');
             const text = textInput.value.trim();
             const imgFile = document.getElementById('commentImgUpload').files[0];
-            let imgId = null;
 
             if (!text && !imgFile) return;
 
-            if (imgFile) {
-                const formData = new FormData(); formData.append("file", imgFile);
-                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: formData })).json();
-                if (upRes.success) imgId = upRes.file_id;
-            }
+            // Bật trạng thái loading
+            isPostingComment = true;
+            const submitBtn = document.getElementById('btnSubmitComment');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
+            let imgId = null;
             try {
+                if (imgFile) {
+                    const formData = new FormData(); 
+                    formData.append("file", imgFile);
+                    const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: formData })).json();
+                    if (upRes.success) imgId = upRes.file_id;
+                }
+
                 const res = await fetch(`${WORKER_URL}/api/comment`, {
                     method: 'POST', body: JSON.stringify({
-                        fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author, username: currentUser.username, sessionToken: currentUser.sessionToken,
-                        text: text, avt: currentUser.avt, replyToUser: activeReplyUser, imageId: imgId
+                        fileId: currentProj.fileId,
+                        projTitle: currentProj.title,
+                        projAuthor: currentProj.author,
+                        username: currentUser.username,
+                        sessionToken: currentUser.sessionToken,
+                        text: text,
+                        avt: currentUser.avt,
+                        parentId: activeReplyParentId,
+                        replyToUser: activeReplyUser,
+                        imageId: imgId
                     })
                 });
                 const data = await res.json();
                 if (data.success) {
-                    textInput.value = ''; document.getElementById('commentImgUpload').value = '';
+                    textInput.value = '';
+                    removeCommentImage();
                     cancelReply();
                     if (!currentProj.comments) currentProj.comments = [];
-                    currentProj.comments.push(data.comment); 
+                    currentProj.comments.push(data.comment);
                     renderComments();
                     showToast("Đã gửi bình luận!", "success");
-                } else showToast("Lỗi: " + (data.error || "Không thể gửi"), "error");
-            } catch(err) { showToast("Lỗi kết nối", "error"); }
+                } else {
+                    showToast("Lỗi: " + (data.error || "Không thể gửi"), "error");
+                }
+            } catch(err) {
+                showToast("Lỗi kết nối", "error");
+            } finally {
+                isPostingComment = false;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+            }
         }
 
-        // ================= TRANG PROFILE NÂNG CẤP =================
+        // ================= TRANG PROFILE =================
         async function openProfilePage(username) {
             document.getElementById('profileView').style.display = 'block';
             viewingProfileUser = username;
@@ -628,7 +743,6 @@
                 document.getElementById('profBio').innerText = profileData.bio || "Người dùng này chưa có giới thiệu.";
                 document.getElementById('profStatus').innerText = profileData.status || "Chưa có trạng thái.";
                 
-                // Hiển thị banner nếu có
                 if (profileData.featuredProject) {
                     const featProj = allProjects.find(p => p.fileId === profileData.featuredProject);
                     if (featProj) {
@@ -640,7 +754,6 @@
                 }
             } catch(e) {}
 
-            // Danh sách tác phẩm
             const userProjs = allProjects.filter(p => p.author === username);
             document.getElementById('userProjectList').innerHTML = userProjs.length ? userProjs.map(p => `
                 <div class="card" onclick="location.hash='#project/${p.fileId}'">
@@ -649,7 +762,6 @@
                 </div>
             `).join('') : '<p style="color:#888;">Chưa có tác phẩm nào.</p>';
 
-            // Danh sách dự án đã thích
             const likedProjs = allProjects.filter(p => p.likes && p.likes.includes(username));
             document.getElementById('userLikedList').innerHTML = likedProjs.length ? likedProjs.map(p => `
                 <div class="card" onclick="location.hash='#project/${p.fileId}'">
@@ -658,7 +770,6 @@
                 </div>
             `).join('') : '<p style="color:#888;">Chưa thích dự án nào.</p>';
 
-            // Timeline Hoạt động
             const activities = (profileData && profileData.activities) ? profileData.activities : [];
             document.getElementById('userActivityList').innerHTML = activities.length ? activities.map(a => `
                 <div class="timeline-item">
@@ -667,9 +778,7 @@
                 </div>
             `).join('') : '<p style="color:#888;">Chưa có hoạt động nào được ghi lại.</p>';
 
-            // Bình luận hồ sơ
             renderProfileComments(profileData ? profileData.comments : []);
-
             switchProfTab('projects');
         }
 
@@ -715,7 +824,6 @@
             }
         }
 
-        // LƯU PROFILE (UPLOAD AVATAR TỐI ĐA 5MB)
         async function saveProfileInfo(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSaveProfSubmit'); btn.innerText = "Đang lưu..."; btn.disabled = true;
@@ -756,7 +864,7 @@
             btn.innerText = "Lưu thông tin"; btn.disabled = false;
         }
 
-        // MỞ TRANG UPLOAD
+        // ================= UPLOAD TRANG RIÊNG =================
         function openUploadPage() {
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
             document.getElementById('uploadView').style.display = 'block';
@@ -783,7 +891,7 @@
             btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Đăng lên nền tảng'; btn.disabled = false;
         }
 
-        // THÔNG BÁO
+        // THÔNG BÁO & TIỆN ÍCH
         async function fetchNotifications() {
             if(!currentUser) return;
             try {
@@ -802,13 +910,11 @@
             fetchNotifications(); showToast("Đã đánh dấu đã đọc", "success");
         }
 
-        // TIỆN ÍCH MODAL
         function openModal(id) { 
             document.getElementById(id).style.display = 'flex'; 
             if (id === 'editProfileModal') {
                 document.getElementById('editBioInput').value = document.getElementById('profBio').innerText.replace("Chưa có giới thiệu.", "");
                 document.getElementById('editStatusInput').value = document.getElementById('profStatus').innerText.replace("Chưa có trạng thái.", "");
-                // Đổ danh sách dự án của user vào select
                 const myProjs = allProjects.filter(p => p.author === currentUser.username);
                 document.getElementById('editFeaturedProjSelect').innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.fileId}">${escapeHtml(p.title)}</option>`).join('');
             }
@@ -817,7 +923,6 @@
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        // SỬA THÔNG TIN DỰ ÁN
         async function saveProjectInfo(e) {
             e.preventDefault();
             const desc = document.getElementById('editDescInput').value; const cred = document.getElementById('editCreditsInput').value;
