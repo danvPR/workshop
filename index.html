@@ -1131,19 +1131,34 @@
             }
         }
 
+        let isProjectImported = false;
+
         function openUploadPage() {
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
             document.getElementById('uploadView').style.display = 'block';
 
-            // Báo tín hiệu ngược lại cho TurboWarp biết tab Upload đã sẵn sàng nhận file
-            if (window.opener) {
-                window.opener.postMessage({ type: "DANV_WORKSHOP_READY" }, "*");
+            // PHÁT TÍN HIỆU ĐỊNH KỲ: Cứ mỗi 300ms phát 1 lần cho đến khi nhận được file thành công
+            if (window.opener && !isProjectImported) {
+                let attempts = 0;
+                const heartbeat = setInterval(() => {
+                    attempts++;
+                    if (isProjectImported || attempts > 35) {
+                        clearInterval(heartbeat);
+                        return;
+                    }
+                    try {
+                        window.opener.postMessage({ type: "DANV_WORKSHOP_READY" }, "*");
+                    } catch (err) {
+                        clearInterval(heartbeat);
+                    }
+                }, 300);
             }
         }
 
         // LẮNG NGHE FILE VÀ ẢNH TRUYỀN TỪ EXTENSION TURBOWARP
         window.addEventListener('message', async (event) => {
             if (event.data && event.data.type === "DANV_IMPORT_PROJECT") {
+                isProjectImported = true; // Đánh dấu đã nhận thành công để dừng phát tín hiệu
                 const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
 
                 // 1. Tự động điền Tên dự án
@@ -1159,20 +1174,23 @@
                     document.getElementById('upFile').files = dt.files;
                 }
 
-                // 3. Tự động nạp Thumbnail chụp từ Stage vào ô ảnh bìa
+                // 3. Tự động nạp Thumbnail vào ô ảnh bìa lớn
                 if (thumbDataUrl && document.getElementById('upThumb')) {
-                    const blob = await (await fetch(thumbDataUrl)).blob();
-                    const thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
-                    const dtThumb = new DataTransfer();
-                    dtThumb.items.add(thumbFile);
-                    document.getElementById('upThumb').files = dtThumb.files;
+                    try {
+                        const blob = await (await fetch(thumbDataUrl)).blob();
+                        const thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
+                        const dtThumb = new DataTransfer();
+                        dtThumb.items.add(thumbFile);
+                        document.getElementById('upThumb').files = dtThumb.files;
 
-                    // Hiện ảnh bìa lên khung lớn
-                    const img = document.getElementById('thumbPreviewBig');
-                    if (img) {
-                        img.src = thumbDataUrl;
-                        img.style.display = 'block';
-                        document.getElementById('thumbPlaceholder').style.display = 'none';
+                        const img = document.getElementById('thumbPreviewBig');
+                        if (img) {
+                            img.src = thumbDataUrl;
+                            img.style.display = 'block';
+                            document.getElementById('thumbPlaceholder').style.display = 'none';
+                        }
+                    } catch (e) {
+                        console.warn("Lỗi nạp blob thumbnail:", e);
                     }
                 }
 
