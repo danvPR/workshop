@@ -1134,7 +1134,51 @@
         function openUploadPage() {
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
             document.getElementById('uploadView').style.display = 'block';
+
+            // Báo tín hiệu ngược lại cho TurboWarp biết tab Upload đã sẵn sàng nhận file
+            if (window.opener) {
+                window.opener.postMessage({ type: "DANV_WORKSHOP_READY" }, "*");
+            }
         }
+
+        // LẮNG NGHE FILE VÀ ẢNH TRUYỀN TỪ EXTENSION TURBOWARP
+        window.addEventListener('message', async (event) => {
+            if (event.data && event.data.type === "DANV_IMPORT_PROJECT") {
+                const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
+
+                // 1. Tự động điền Tên dự án
+                if (title && document.getElementById('upTitle')) {
+                    document.getElementById('upTitle').value = title;
+                }
+
+                // 2. Chuyển ArrayBuffer thành File .sb3 và nạp thẳng vào ô input file
+                if (sb3Buffer && document.getElementById('upFile')) {
+                    const sb3File = new File([sb3Buffer], fileName || "project.sb3", { type: "application/x-scratch-project" });
+                    const dt = new DataTransfer();
+                    dt.items.add(sb3File);
+                    document.getElementById('upFile').files = dt.files;
+                }
+
+                // 3. Tự động nạp Thumbnail chụp từ Stage vào ô ảnh bìa
+                if (thumbDataUrl && document.getElementById('upThumb')) {
+                    const blob = await (await fetch(thumbDataUrl)).blob();
+                    const thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
+                    const dtThumb = new DataTransfer();
+                    dtThumb.items.add(thumbFile);
+                    document.getElementById('upThumb').files = dtThumb.files;
+
+                    // Hiện ảnh bìa lên khung lớn
+                    const img = document.getElementById('thumbPreviewBig');
+                    if (img) {
+                        img.src = thumbDataUrl;
+                        img.style.display = 'block';
+                        document.getElementById('thumbPlaceholder').style.display = 'none';
+                    }
+                }
+
+                showToast("Đã tự động nạp dự án & ảnh bìa từ TurboWarp!", "success");
+            }
+        });
 
         async function handleUploadBtn() {
             if(!document.getElementById('upFile').files[0] || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
