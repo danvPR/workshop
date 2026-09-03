@@ -769,7 +769,7 @@
             document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            document.getElementById('playerContainer').innerHTML = `<iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&autoplay=true" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
+            document.getElementById('playerContainer').innerHTML = `<iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
             document.getElementById('btnSeeInside').href = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
             document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
