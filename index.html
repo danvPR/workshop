@@ -7,10 +7,16 @@
     <link rel="icon" type="image/png" href="https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* [Giữ nguyên toàn bộ CSS của bản V8.5 trước đó...] */
-        :root { --primary: #0da57a; --primary-dark: #0a8260; --bg-body: #f4f5f7; --bg-panel: #ffffff; --text-main: #222222; --text-muted: #666666; --border-color: #e5e7eb; }
+        :root { 
+            --primary: #0da57a; --primary-dark: #0a8260;
+            --bg-body: #f4f5f7; --bg-panel: #ffffff;
+            --text-main: #222222; --text-muted: #666666;
+            --border-color: #e5e7eb;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* NAVBAR */
         .navbar { background: #111111; height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
         .nav-left { display: flex; align-items: center; gap: 20px; }
         .navbar-brand { display: flex; align-items: center; text-decoration: none; }
@@ -19,14 +25,20 @@
         .nav-link { color: #bbbbbb; text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 8px 12px; transition: 0.2s; }
         .nav-link:hover { color: var(--primary); }
         .nav-actions { display: flex; gap: 12px; align-items: center; position: relative; }
+        
         .nav-user-pill { background: #222222; color: #ffffff !important; border: 1px solid #444444; padding: 6px 14px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
         .nav-user-pill:hover { border-color: var(--primary); background: #2a2a2a; }
         .nav-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
+
         .btn { background: #e2e8f0; border: none; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 0.9rem;}
         .btn:hover { background: #cbd5e1; }
         .btn-primary { background: var(--primary); color: #fff;} .btn-primary:hover { background: var(--primary-dark); }
+        .btn-danger { background: #fee2e2; color: #ef4444; } .btn-danger:hover { background: #fca5a5; color: #b91c1c; }
+        
         .page-view { display: none; max-width: 1200px; margin: 0 auto; padding: 30px 20px; flex: 1; width: 100%; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* GRID DỰ ÁN */
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-top: 20px;}
         .card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative;}
         .card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
@@ -36,11 +48,15 @@
         .card-body { padding: 15px; }
         .card-title { font-weight: bold; color: var(--text-main); margin-bottom: 6px; font-size: 1.05rem; }
         .card-author { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* CCW PROJECT VIEW */
         .ccw-layout { display: flex; gap: 25px; align-items: flex-start; }
         .ccw-main { flex: 2.5; min-width: 0; }
         .ccw-sidebar { flex: 1.3; background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; height: 600px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        
         .player-container { background: #000; border-radius: 12px; overflow: hidden; height: 500px; border: 1px solid var(--border-color); }
         .player-iframe { width: 100%; height: 100%; border: none; }
+        
         .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; background: var(--bg-panel); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border-color); }
         .action-btns { display: flex; gap: 18px; align-items: center;}
         .act-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-weight: bold;}
@@ -48,71 +64,99 @@
         .act-btn:hover { color: #111; transform: scale(1.05); }
         .act-btn.active.like { color: #ff4c4c; }
         .act-btn.active.star { color: #f5b041; }
+
         .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border-color); }
         .tab-btn { flex: 1; background: none; border: none; color: var(--text-muted); padding: 14px 0; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.95rem;}
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .tab-content { padding: 20px; overflow-y: auto; flex: 1; display: none; }
         .tab-content.active { display: block; }
+
         .info-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 18px; }
         .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .info-body { font-size: 0.95rem; color: #333; white-space: pre-line; line-height: 1.6; }
-        .comment-thread { margin-bottom: 18px; }
-        .comment-box { display: flex; gap: 10px; margin-bottom: 8px; position: relative; }
-        .avt-circle { width: 36px; height: 36px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
-        .comment-text-bubble { background: #f1f5f9; padding: 10px 14px; border-radius: 0 14px 14px 14px; font-size: 0.9rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; margin-top: 4px; line-height: 1.4; display: inline-block;}
-        .comment-img-render { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd; object-fit: contain;}
-        .replies-container { margin-left: 36px; padding-left: 12px; border-left: 2px solid #e2e8f0; margin-top: 8px; }
+
+        /* SỬA LỖI BỐ CỤC COMMENTS TẠI ĐÂY */
+        .comment-thread { margin-bottom: 20px; }
+        .comment-box { display: flex; gap: 12px; margin-bottom: 8px; }
+        .avt-circle { width: 38px; height: 38px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
+        .comment-content-area { flex: 1; min-width: 0; }
+        .comment-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+        .comment-author-name { font-weight: bold; color: #111; text-decoration: none; font-size: 0.95rem; }
+        .comment-time { font-size: 0.75rem; color: var(--text-muted); }
+        .scratch-badge { color: #0da57a; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 3px; background: #e6f4ea; padding: 2px 6px; border-radius: 10px;}
+        
+        .comment-text-bubble { display: inline-block; background: #f1f5f9; padding: 10px 14px; border-radius: 0 14px 14px 14px; font-size: 0.95rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; line-height: 1.4; max-width: 100%;}
+        .comment-img-render { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd; object-fit: contain; display: block;}
+        
+        .replies-container { margin-left: 50px; border-left: 2px solid #e2e8f0; padding-left: 12px; margin-top: 8px; }
         .replies-container .avt-circle { width: 28px; height: 28px; }
         .replies-container .comment-text-bubble { padding: 8px 12px; font-size: 0.85rem; }
-        .btn-view-more-replies { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: bold; cursor: pointer; padding: 4px 0; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px;}
-        .btn-view-more-replies:hover { text-decoration: underline; }
-        .btn-delete-cmt { background: none; border: none; color: #ff4c4c; font-size: 0.8rem; cursor: pointer; font-weight: bold; margin-left: 10px; opacity: 0.7;}
-        .btn-delete-cmt:hover { opacity: 1; text-decoration: underline;}
+        
+        .btn-action-cmt { background: none; border: none; font-size: 0.8rem; cursor: pointer; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;}
+        .btn-action-cmt.reply { color: #888; } .btn-action-cmt.reply:hover { color: var(--primary); }
+        .btn-action-cmt.delete { color: #ff4c4c; opacity: 0.7;} .btn-action-cmt.delete:hover { opacity: 1; }
+        .btn-action-cmt.report { color: #f5b041; opacity: 0.7;} .btn-action-cmt.report:hover { opacity: 1; }
+        
         .comment-input-area { border-top: 1px solid var(--border-color); padding: 12px 15px; background: #fafafa; }
         .comment-img-preview-box { display: none; align-items: center; gap: 8px; background: #eef2f6; padding: 6px 10px; border-radius: 8px; margin-bottom: 8px; width: fit-content; border: 1px solid #cbd5e1; }
         .comment-img-preview-box img { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; border: 1px solid #bbb; }
         .btn-remove-preview { background: #ff4c4c; color: #fff; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
         .comment-input-wrapper { display: flex; gap: 8px; align-items: center; background: #fff; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color); }
         .comment-input-wrapper input { background: none; border: none; color: #111; flex: 1; outline: none; font-size: 0.9rem;}
         .action-icon-btn { cursor: pointer; width: 22px; height: 22px; opacity: 0.6; transition: 0.2s; }
         .action-icon-btn:hover { opacity: 1; }
+
+        /* PROFILE */
         .profile-hero { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .profile-cover-bg { height: 140px; background: linear-gradient(135deg, #0da57a 0%, #0f172a 100%); position: relative; }
         .profile-info-row { display: flex; padding: 0 30px 25px; gap: 25px; align-items: flex-end; margin-top: -55px; position: relative; }
         .profile-avt-lg { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff;}
         .profile-main-meta { flex: 1; padding-bottom: 5px; }
         .profile-username-title { font-size: 1.6rem; font-weight: 800; color: #111; display: flex; align-items: center; gap: 10px; }
+        .profile-location { font-size: 0.9rem; color: #888; display: flex; align-items: center; gap: 5px; margin-top: 4px;}
         .profile-status-badge { display: inline-flex; align-items: center; gap: 6px; background: #e6f4ea; color: #0a8260; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-top: 6px; }
+        
         .profile-stats-bar { display: flex; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; }
         .stat-badge { font-size: 0.9rem; color: var(--text-muted); cursor: pointer; }
         .stat-badge b { color: #111; font-weight: 700; font-size: 1.1rem;}
+
         .profile-bio-box { background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #eef2f6; margin-top: 15px; }
         .profile-bio-box h4 { font-size: 0.8rem; text-transform: uppercase; color: #888; margin-bottom: 4px; letter-spacing: 0.5px; }
         .profile-bio-box p { font-size: 0.95rem; color: #333; line-height: 1.5; white-space: pre-line; }
+
         .profile-featured-banner { display: flex; background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--primary);}
         .banner-thumb-area { width: 350px; background: #111; flex-shrink: 0; }
         .banner-thumb-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s;}
         .profile-featured-banner:hover .banner-thumb-area img { opacity: 1; transform: scale(1.02);}
         .banner-info-area { padding: 30px; display: flex; flex-direction: column; justify-content: center; flex: 1;}
+
         .profile-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
         .prof-tab-btn { background: none; border: none; padding: 12px 20px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.95rem; transition: 0.2s;}
         .prof-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        /* UPLOAD & SETTINGS */
         .upload-card-wrapper { background: var(--bg-panel); border-radius: 16px; border: 1px solid var(--border-color); padding: 35px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); }
         .upload-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; margin-top: 20px; }
         .thumb-dropzone { border: 2px dashed #cbd5e1; border-radius: 14px; background: #f8fafc; height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: 0.2s; }
         .thumb-dropzone:hover { border-color: var(--primary); background: #f0fdf4; }
         .thumb-preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; display: none; }
         .thumb-placeholder { text-align: center; color: #64748b; padding: 20px; }
+
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-weight: bold; margin-bottom: 6px; color: #444; font-size: 0.9rem;}
         .form-control { width: 100%; padding: 11px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: #fff;}
         .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(13,165,122,0.1); }
+
         .timeline-item { padding: 12px 15px; border-left: 3px solid var(--primary); background: var(--bg-panel); margin-bottom: 10px; border-radius: 0 8px 8px 0; border: 1px solid var(--border-color); border-left-width: 3px; }
+
+        /* TOAST & NOTIFICATIONS */
         #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: #fff; border-left: 5px solid var(--primary); padding: 14px 18px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s forwards; color: #333; font-weight: 500;}
         .toast.error { border-left-color: #ff4c4c; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; } }
+
         .notif-badge { position: absolute; top: -5px; right: -5px; background: #ff4c4c; color: white; font-size: 0.7rem; font-weight: bold; border-radius: 10px; padding: 2px 6px; border: 2px solid #111; }
         .notif-dropdown { display: none; position: absolute; top: 45px; right: 0; width: 420px; max-width: 90vw; background: #fff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid #eee; overflow: hidden; z-index: 1000; }
         .notif-header { padding: 14px 18px; font-weight: bold; border-bottom: 1px solid #eee; background: #fafafa; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;}
@@ -120,18 +164,20 @@
         .notif-item { padding: 14px 18px; border-bottom: 1px solid #f1f1f1; display: flex; gap: 12px; text-decoration: none; color: #333; transition: 0.2s; align-items: flex-start;}
         .notif-item:hover { background: #f8f9fa; }
         .notif-item.unread { background: #ebf8f4; font-weight: bold; }
+
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; }
         .modal { background: #fff; border-radius: 14px; width: 100%; max-width: 520px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .modal-header { padding: 16px 22px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; font-weight: bold; background: #fafafa;}
         .btn-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
         .modal-body { padding: 22px; }
+
         #globalLoader { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
 <body>
     <div id="globalLoader">
         <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
-        <h3 style="color: #666; font-weight:normal;">Đang tải StudioDANV...</h3>
+        <h3 style="color: #666; font-weight:normal;" id="loaderText">Đang tải StudioDANV...</h3>
     </div>
 
     <div id="toastContainer"></div>
@@ -141,21 +187,21 @@
             <a href="#home" class="navbar-brand">
                 <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
-            <a href="#home" class="nav-link"><i class="fa-solid fa-compass"></i> Khám phá</a>
-            <a href="#create" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> Sáng tạo</a>
+            <a href="#home" class="nav-link" data-i18n="nav_explore"><i class="fa-solid fa-compass"></i> Khám phá</a>
+            <a href="#create" class="nav-link" data-i18n="nav_create"><i class="fa-solid fa-wand-magic-sparkles"></i> Sáng tạo</a>
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
 
-    <!-- KHÁM PHÁ -->
+    <!-- TRANG 1: KHÁM PHÁ -->
     <div id="homeView" class="page-view">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>Tác phẩm tiêu biểu</h2>
+            <h2 data-i18n="home_featured">Tác phẩm tiêu biểu</h2>
         </div>
         <div class="project-grid" id="projectList">Đang tải dữ liệu...</div>
     </div>
 
-    <!-- DỰ ÁN -->
+    <!-- TRANG 2: DỰ ÁN -->
     <div id="projectView" class="page-view">
         <div class="ccw-layout">
             <div class="ccw-main">
@@ -169,8 +215,9 @@
                         <button class="act-btn" id="btnLike" onclick="toggleAction('like')"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                         <button class="act-btn" id="btnStar" onclick="toggleAction('star')"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
                         <a id="btnSeeInside" href="#" target="_blank" class="btn"><i class="fa-solid fa-code"></i> Mã nguồn</a>
-                        <!-- Nút Setting Ẩn Hiện -->
-                        <button class="btn" id="btnProjSettings" style="display:none; background:#333; color:#fff;" onclick="openModal('projSettingsModal')"><i class="fa-solid fa-gear"></i> Quản lý</button>
+                        <button class="btn btn-danger" onclick="openReportModal('project')"><i class="fa-solid fa-flag"></i></button>
+                        <button class="btn" id="btnProjSettings" style="display:none; background:#333; color:#fff;" onclick="openModal('projSettingsModal')"><i class="fa-solid fa-gear"></i></button>
+                        <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> Gỡ</button>
                     </div>
                 </div>
             </div>
@@ -217,7 +264,7 @@
                             </div>
                         </form>
                         <div id="loginPromptProj" style="text-align:center; color:#888; font-size:0.9rem;">
-                            <a href="javascript:void(0)" onclick="loginScratch()" style="color:var(--primary); font-weight:bold;">Đăng nhập</a> để bình luận.
+                            <button class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập để bình luận</button>
                         </div>
                     </div>
                 </div>
@@ -225,12 +272,11 @@
         </div>
     </div>
 
-    <!-- PROFILE -->
+    <!-- TRANG 3: PROFILE -->
     <div id="profileView" class="page-view">
         <div id="profile404" style="display:none; text-align:center; padding:100px 20px;">
             <i class="fa-solid fa-user-slash" style="font-size:5rem; color:#ccc; margin-bottom:20px;"></i>
             <h2 style="color:#555; margin-bottom:10px;">404 - Không tìm thấy người dùng</h2>
-            <p style="color:#888; margin-bottom:20px;">Hồ sơ này không tồn tại hoặc chữ cái không hợp lệ.</p>
             <button class="btn btn-primary" onclick="location.hash='#home'"><i class="fa-solid fa-house"></i> Về Trang chủ</button>
         </div>
 
@@ -241,7 +287,7 @@
                     <span style="background:rgba(255,255,255,0.2); color:#fff; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold; width:max-content; margin-bottom:10px;">TÁC PHẨM NỔI BẬT</span>
                     <h2 id="profBannerTitle" style="font-size:1.8rem; margin-bottom:8px;">Tên dự án nổi bật</h2>
                     <p id="profBannerDesc" style="color:#cbd5e1; font-size:0.95rem; margin-bottom:15px; line-height:1.5;"></p>
-                    <a id="btnPlayBannerProj" href="#" class="btn btn-primary" style="width:max-content; padding:10px 25px;"><i class="fa-solid fa-play"></i> Trải nghiệm ngay</a>
+                    <a id="btnPlayBannerProj" href="#" class="btn btn-primary" style="width:max-content; padding:10px 25px;"><i class="fa-solid fa-play"></i> Trải nghiệm</a>
                 </div>
             </div>
 
@@ -253,13 +299,19 @@
                     </div>
                     <div class="profile-main-meta">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div class="profile-username-title" id="profUsername">Username</div>
+                            <div class="profile-username-title">
+                                <span id="profDisplayName">Display Name</span>
+                                <span id="profScratchBadge" style="display:none;" title="Tài khoản Scratch đã xác thực"><i class="fa-solid fa-circle-check" style="color:#3b82f6; font-size:1.2rem;"></i></span>
+                            </div>
                             <div style="display:flex; gap:10px;">
                                 <button id="btnFollowProf" class="btn btn-primary" style="display:none;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> Theo dõi</button>
-                                <button id="btnEditProfModal" class="btn" style="display:none;" onclick="openModal('editProfileModal')"><i class="fa-solid fa-user-pen"></i> Chỉnh sửa</button>
+                                <button id="btnAdminWarn" class="btn btn-danger" style="display:none;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
                             </div>
                         </div>
+                        <div style="color:var(--text-muted); font-size:0.95rem; margin-top:2px;">@<span id="profUsername">username</span></div>
+                        <div class="profile-location" id="profLocation"><i class="fa-solid fa-location-dot"></i> Đang cập nhật...</div>
                         <div class="profile-status-badge" id="profStatus"><i class="fa-solid fa-comment-dots"></i> ...</div>
+                        
                         <div class="profile-stats-bar">
                             <div class="stat-badge">Tác phẩm: <b id="statProjectCount">0</b></div>
                             <div class="stat-badge">Lượt Thích: <b id="statLikeCount">0</b></div>
@@ -305,7 +357,7 @@
                         </div>
                     </form>
                     <div id="loginPromptProf" style="text-align:center; color:#888; font-size:0.9rem;">
-                        <a href="javascript:void(0)" onclick="loginScratch()" style="color:var(--primary); font-weight:bold;">Đăng nhập</a> để bình luận.
+                        <button class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập để bình luận</button>
                     </div>
                 </div>
                 <div id="profCommentList">Chưa có lời nhắn nào.</div>
@@ -313,7 +365,7 @@
         </div>
     </div>
 
-    <!-- UPLOAD -->
+    <!-- TRANG 4: UPLOAD -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
         <div class="upload-card-wrapper">
             <h2 style="color:#111; border-bottom:1px solid #eee; padding-bottom:15px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> Xuất bản tác phẩm mới</h2>
@@ -352,7 +404,139 @@
         </div>
     </div>
 
-    <!-- MODAL SETTING PROJECT (CHỦ SỞ HỮU) -->
+    <!-- TRANG 5: CÀI ĐẶT TÀI KHOẢN (SETTINGS) -->
+    <div id="settingsView" class="page-view" style="max-width: 800px;">
+        <div class="upload-card-wrapper">
+            <h2 style="color:#111; border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:20px;"><i class="fa-solid fa-gear" style="color:var(--primary);"></i> Cài đặt tài khoản</h2>
+            
+            <div style="display:flex; gap:30px; align-items:flex-start;">
+                <!-- Form Đổi Thông tin -->
+                <div style="flex:1;">
+                    <h4 style="margin-bottom:15px;">Hồ sơ công khai</h4>
+                    <form id="editProfForm">
+                        <div class="form-group"><label>Đổi Ảnh đại diện (Tối đa 5MB):</label><input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;"></div>
+                        <div class="form-group"><label>Tên hiển thị (Display Name):</label><input type="text" id="editDisplayNameInput" class="form-control" placeholder="Tên hiển thị tự do..."></div>
+                        <div class="form-group"><label>Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" placeholder="Ví dụ: Hà Nội, VN"></div>
+                        <div class="form-group"><label>Trạng thái (Status):</label><input type="text" id="editStatusInput" class="form-control" placeholder="Đang làm game..."></div>
+                        <div class="form-group"><label>Giới thiệu (Bio):</label><textarea id="editBioInput" class="form-control" rows="3"></textarea></div>
+                        <div class="form-group"><label>Dự án làm Banner nổi bật:</label><select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select></div>
+                        <button type="button" onclick="saveProfileInfoBtn()" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center;">Lưu thông tin</button>
+                    </form>
+                </div>
+
+                <!-- Các Liên Kết & Cài Đặt Khác -->
+                <div style="width:300px; background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #eef2f6;">
+                    <h4 style="margin-bottom:15px;">Xác thực & Liên kết</h4>
+                    <div id="scratchLinkStatus" style="margin-bottom:15px;">
+                        <div style="font-size:0.85rem; color:#666; margin-bottom:6px;">Tài khoản Scratch:</div>
+                        <!-- Sẽ render bằng JS -->
+                    </div>
+
+                    <h4 style="margin-bottom:15px; margin-top:30px;">Tùy chọn</h4>
+                    <div class="form-group">
+                        <label>Ngôn ngữ (Language):</label>
+                        <select id="langSelect" class="form-control" onchange="changeLanguage(this.value)">
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top:30px; font-size:0.85rem; color:#888;">
+                        <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" style="color:var(--primary); text-decoration:none; display:block; margin-bottom:6px;">Điều khoản sử dụng (TOS)</a>
+                        <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" style="color:var(--primary); text-decoration:none; display:block; margin-bottom:15px;">Chính sách bảo mật</a>
+                        <div style="border-top:1px solid #ddd; padding-top:10px;">Hỗ trợ: <a href="mailto:studiodanv@gmail.com" style="color:#333; font-weight:bold;">studiodanv@gmail.com</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODALS HỆ THỐNG ================= -->
+
+    <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span>Đăng nhập</span><button class="btn-close" onclick="closeModal('loginModal')">&times;</button></div>
+            <div class="modal-body">
+                <form onsubmit="handleLoginNative(event)">
+                    <div class="form-group"><label>Tài khoản / Email:</label><input type="text" id="loginId" class="form-control" required></div>
+                    <div class="form-group"><label>Mật khẩu:</label><input type="password" id="loginPw" class="form-control" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:15px;">Đăng nhập</button>
+                    <div style="text-align:center; font-size:0.9rem; color:#666;">
+                        Chưa có tài khoản? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal')" style="color:var(--primary); font-weight:bold;">Đăng ký ngay</a>
+                    </div>
+                    <div style="text-align:center; margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+                        <button type="button" class="btn" onclick="loginScratch()" style="width:100%; justify-content:center; background:#f1f5f9; color:#3b82f6;"><img src="https://scratch.mit.edu/favicon.ico" width="16"> Đăng nhập bằng Scratch (Cũ)</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width:450px;">
+            <div class="modal-header"><span>Đăng ký Tài khoản</span><button class="btn-close" onclick="closeModal('registerModal')">&times;</button></div>
+            <div class="modal-body">
+                <form onsubmit="handleRegisterRequest(event)">
+                    <div class="form-group"><label>Tên đăng nhập (ID viết liền không dấu):</label><input type="text" id="regUsername" class="form-control" required pattern="[A-Za-z0-9_]+" title="Chỉ dùng chữ, số và gạch dưới"></div>
+                    <div class="form-group"><label>Tên hiển thị (Tùy do, có dấu):</label><input type="text" id="regDisplayName" class="form-control" required></div>
+                    <div class="form-group"><label>Email hợp lệ (Dùng nhận mã xác nhận):</label><input type="email" id="regEmail" class="form-control" required></div>
+                    <div class="form-group"><label>Mật khẩu:</label><input type="password" id="regPw" class="form-control" required minlength="6"></div>
+                    <button type="submit" class="btn btn-primary" id="btnReqReg" style="width:100%; justify-content:center;">Tiếp tục (Gửi mã về Mail)</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span>Xác nhận Email</span><button class="btn-close" onclick="closeModal('otpModal')">&times;</button></div>
+            <div class="modal-body" style="text-align:center;">
+                <p style="margin-bottom:15px; color:#555;">Vui lòng nhập mã 6 số vừa được gửi tới Email của bạn.</p>
+                <div class="form-group"><input type="text" id="regOtpCode" class="form-control" placeholder="------" style="text-align:center; font-size:1.5rem; letter-spacing:5px;" required maxlength="6"></div>
+                <button type="button" onclick="handleRegisterConfirm()" class="btn btn-primary" style="width:100%; justify-content:center;">Hoàn tất Đăng ký</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP BẮT BUỘC UPDATE CHO USER CŨ -->
+    <div class="modal-overlay" id="legacyUpdateModal" style="background:rgba(0,0,0,0.9);">
+        <div class="modal" style="max-width:450px;">
+            <div class="modal-header"><span>Cập nhật Thông tin Bảo mật</span></div>
+            <div class="modal-body">
+                <p style="color:#ef4444; font-weight:bold; margin-bottom:15px;"><i class="fa-solid fa-triangle-exclamation"></i> StudioDANV đã nâng cấp hệ thống độc lập!</p>
+                <p style="font-size:0.9rem; color:#555; margin-bottom:20px;">Vì bạn đăng nhập bằng hệ thống Scratch cũ, vui lòng bổ sung Email và thiết lập Mật khẩu để bảo vệ tài khoản và sử dụng các tính năng mới.</p>
+                <form onsubmit="handleLegacyUpdate(event)">
+                    <div class="form-group"><label>Email của bạn:</label><input type="email" id="legEmail" class="form-control" required></div>
+                    <div class="form-group"><label>Thiết lập Mật khẩu mới:</label><input type="password" id="legPw" class="form-control" required minlength="6"></div>
+                    <div class="form-group"><label>Tỉnh thành / Quốc gia:</label><input type="text" id="legLocation" class="form-control" required placeholder="Ví dụ: Hà Nội, VN"></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Cập nhật ngay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TỐ CÁO -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span>Tố cáo Vi phạm</span><button class="btn-close" onclick="closeModal('reportModal')">&times;</button></div>
+            <div class="modal-body">
+                <form onsubmit="handleReportSubmit(event)">
+                    <div class="form-group"><label>Lý do Tố cáo:</label>
+                        <select id="reportReason" class="form-control">
+                            <option value="Spam / Quảng cáo rác">Spam / Quảng cáo rác</option>
+                            <option value="Ngôn từ đả kích, xúc phạm">Ngôn từ đả kích, xúc phạm</option>
+                            <option value="Vi phạm bản quyền (Re-up không ghi nguồn)">Vi phạm bản quyền (Re-up không ghi nguồn)</option>
+                            <option value="Nội dung không phù hợp">Nội dung đồi trụy / Không phù hợp</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="width:100%; justify-content:center;"><i class="fa-solid fa-flag"></i> Gửi Tố cáo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL QUẢN LÝ DỰ ÁN DÀNH CHO CHỦ SỞ HỮU -->
     <div class="modal-overlay" id="projSettingsModal">
         <div class="modal">
             <div class="modal-header"><span>Quản lý Dự án</span><button class="btn-close" onclick="closeModal('projSettingsModal')">&times;</button></div>
@@ -378,69 +562,59 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="editProfileModal">
-        <div class="modal">
-            <div class="modal-header"><span>Chỉnh sửa hồ sơ cá nhân</span><button class="btn-close" onclick="closeModal('editProfileModal')">&times;</button></div>
+    <!-- MODAL QUYỀN ADMIN -->
+    <div class="modal-overlay" id="adminPrivateModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span>[Admin] Gỡ Dự Án</span><button class="btn-close" onclick="closeModal('adminPrivateModal')">&times;</button></div>
             <div class="modal-body">
-                <form id="editProfForm">
-                    <div class="form-group"><label>Đổi Ảnh đại diện (Tối đa 5MB):</label><input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;"></div>
-                    <div class="form-group"><label>Trạng thái (Status):</label><input type="text" id="editStatusInput" class="form-control" placeholder="Đang làm game..."></div>
-                    <div class="form-group"><label>Giới thiệu (Bio):</label><textarea id="editBioInput" class="form-control" rows="3"></textarea></div>
-                    <div class="form-group"><label>Dự án làm Banner nổi bật:</label><select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select></div>
-                    <button type="button" onclick="saveProfileInfoBtn()" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center;">Lưu thông tin</button>
-                </form>
+                <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">Ép buộc dự án này chuyển thành "Riêng tư". Tác giả sẽ nhận được thông báo về lý do gỡ.</p>
+                <div class="form-group"><input type="text" id="adminForceReason" class="form-control" placeholder="Lý do gỡ (Bắt buộc)..."></div>
+                <button type="button" onclick="submitAdminForcePrivate()" class="btn btn-danger" style="width:100%; justify-content:center;">Xác nhận Gỡ bỏ</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="adminWarnModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span>[Admin] Cảnh cáo User</span><button class="btn-close" onclick="closeModal('adminWarnModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><input type="text" id="adminWarnReason" class="form-control" placeholder="Lý do cảnh cáo..."></div>
+                <button type="button" onclick="submitAdminWarn()" class="btn btn-danger" style="width:100%; justify-content:center;"><i class="fa-solid fa-triangle-exclamation"></i> Gửi Cảnh cáo</button>
             </div>
         </div>
     </div>
 
+    <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
         const WIKI_CLIENT_ID = "70970406"; 
-        const WORKER_URL = "https://app.studiodanv.workers.dev"; // Thay domain nếu bạn deploy tên khác
+        const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
-        let allProjects = [];
-        let currentProj = null;
-        let viewingProfileUser = null;
-        let viewingProfileData = null;
-
+        let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let replyState = { proj: { parentId: null, user: null }, prof: { parentId: null, user: null } };
         let expandedThreads = { proj: {}, prof: {} };
         let isPosting = { proj: false, prof: false };
+        let reportTarget = { type: null, id: null };
 
+        // TOAST
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
-            const icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#ff4c4c"></i>' : '<i class="fa-solid fa-circle-check" style="color:var(--primary)"></i>';
-            toast.innerHTML = `${icon} <span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
+            const toast = document.createElement('div'); toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            toast.innerHTML = `${type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#ff4c4c"></i>' : '<i class="fa-solid fa-circle-check" style="color:var(--primary)"></i>'} <span>${msg}</span>`;
+            container.appendChild(toast); setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // BỌC API FETCH ĐỂ TỰ ĐỘNG CHÈN TOKEN (ANTI-AJAX)
+        // FETCH BẢO MẬT
         async function apiFetch(endpoint, options = {}) {
-            if(!options.headers) options.headers = {};
-            options.headers["X-Client-Type"] = "StudioDANV-Web";
-            
-            // Tự động chèn Auth vào Body đối với POST Json
-            if(options.method === 'POST' && typeof options.body === 'string' && currentUser) {
-                let bodyObj = JSON.parse(options.body);
-                bodyObj.username = currentUser.username;
-                bodyObj.sessionToken = currentUser.sessionToken;
-                options.body = JSON.stringify(bodyObj);
+            if(!options.headers) options.headers = {}; options.headers["X-Client-Type"] = "StudioDANV-Web";
+            if(options.method === 'POST' && typeof options.body === 'string' && currentUser && !endpoint.includes("upload")) {
+                let bodyObj = JSON.parse(options.body); bodyObj.username = currentUser.username; bodyObj.sessionToken = currentUser.sessionToken; options.body = JSON.stringify(bodyObj);
             }
-
             try {
                 const res = await fetch(WORKER_URL + endpoint, options);
-                if(res.status === 401 || res.status === 403) {
-                    showToast("Phiên làm việc hết hạn hoặc bị chặn. Vui lòng đăng nhập lại.", "error");
-                    logout(); return null;
-                }
+                if(res.status === 401 || res.status === 403) { showToast("Phiên làm việc hết hạn hoặc bị chặn.", "error"); logout(); return null; }
                 return await res.json();
-            } catch(e) {
-                showToast("Lỗi kết nối máy chủ", "error"); return null;
-            }
+            } catch(e) { showToast("Lỗi kết nối máy chủ", "error"); return null; }
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -449,22 +623,79 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('code')) {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-                    const res = await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }), headers:{"X-Client-Type":"StudioDANV-Web"} });
-                    const data = await res.json();
-                    if (data.success) {
-                        currentUser = { username: data.username, sessionToken: data.sessionToken, avt: data.avt };
-                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                        showToast(`Chào mừng ${data.username}!`, 'success');
+                    
+                    // NẾU CODE TỪ LINK SCRATCH MÀ ĐÃ CÓ CURRENTUSER => NGHĨA LÀ HỌ ĐANG LIÊN KẾT NICK
+                    if (localStorage.getItem('is_linking_scratch') === 'true' && currentUser) {
+                        localStorage.removeItem('is_linking_scratch');
+                        const res = await apiFetch(`/api/auth/link_scratch`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }) });
+                        if(res && res.success) { showToast("Đã liên kết Scratch thành công!", "success"); location.hash = `#settings`; }
+                    } else {
+                        // NẾU LÀ ĐĂNG NHẬP SCRATCH THEO KIỂU CŨ
+                        const res = await (await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }), headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
+                        if (res.success) {
+                            currentUser = { username: res.username, sessionToken: res.sessionToken, avt: res.avt };
+                            localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                            showToast(`Đăng nhập tạm thời thành công!`, 'success');
+                            // Check xem đã có mail chưa, chưa có thì ép cập nhật
+                            checkLegacyUser();
+                        }
                     }
+                } else if(currentUser) {
+                    checkLegacyUser();
                 }
-                await loadProjects();
-                updateNav();
-                handleRouting();
+
+                await loadProjects(); updateNav(); handleRouting();
                 setInterval(autoFetchData, 15000);
-            } catch (e) { console.error(e); } 
-            finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 300); }
+            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 300); }
         });
 
+        // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ)
+        async function checkLegacyUser() {
+            if(!currentUser) return;
+            const res = await apiFetch(`/api/user/${encodeURIComponent(currentUser.username)}`, { method:'GET' });
+            if(res && !res.email) { openModal('legacyUpdateModal'); } 
+            else if(res) { currentUser.role = res.role; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
+        }
+        async function handleLegacyUpdate(e) {
+            e.preventDefault();
+            const email = document.getElementById('legEmail').value; const pw = document.getElementById('legPw').value; const loc = document.getElementById('legLocation').value;
+            const res = await apiFetch(`/api/auth/legacy_update`, { method: 'POST', body: JSON.stringify({ email, password: pw, location: loc }) });
+            if(res && res.success) { showToast("Cập nhật bảo mật thành công!", "success"); closeModal('legacyUpdateModal'); location.reload(); }
+        }
+
+        // ================= AUTHENTICATION (NATIVE) =================
+        async function handleRegisterRequest(e) {
+            e.preventDefault(); const btn = document.getElementById('btnReqReg'); btn.disabled = true; btn.innerText = "Đang gửi OTP...";
+            const username = document.getElementById('regUsername').value; const email = document.getElementById('regEmail').value; const displayName = document.getElementById('regDisplayName').value;
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/register_req`, { method: 'POST', headers:{"Content-Type":"application/json", "X-Client-Type":"StudioDANV-Web"}, body: JSON.stringify({ username, email, displayName }) })).json();
+                if(res.success) { closeModal('registerModal'); openModal('otpModal'); showToast("Đã gửi mã xác nhận đến Email của bạn", "success"); } 
+                else showToast(res.error, "error");
+            } catch(err){} btn.disabled = false; btn.innerText = "Tiếp tục";
+        }
+        async function handleRegisterConfirm() {
+            const code = document.getElementById('regOtpCode').value; const email = document.getElementById('regEmail').value; const pw = document.getElementById('regPw').value;
+            if(code.length < 6) return showToast("Nhập đủ 6 số", "error");
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/register_confirm`, { method: 'POST', headers:{"Content-Type":"application/json", "X-Client-Type":"StudioDANV-Web"}, body: JSON.stringify({ email, code, password: pw, location: "Đang cập nhật" }) })).json();
+                if(res.success) { currentUser = { username: res.username, sessionToken: res.sessionToken }; localStorage.setItem('danv_user', JSON.stringify(currentUser)); closeModal('otpModal'); showToast("Đăng ký thành công!", "success"); location.reload(); }
+                else showToast(res.error, "error");
+            } catch(err){}
+        }
+        async function handleLoginNative(e) {
+            e.preventDefault();
+            const loginId = document.getElementById('loginId').value; const pw = document.getElementById('loginPw').value;
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { method: 'POST', headers:{"Content-Type":"application/json", "X-Client-Type":"StudioDANV-Web"}, body: JSON.stringify({ loginId, password: pw }) })).json();
+                if(res.success) { currentUser = { username: res.username, sessionToken: res.sessionToken, avt: res.avt, role: res.role }; localStorage.setItem('danv_user', JSON.stringify(currentUser)); closeModal('loginModal'); showToast("Đăng nhập thành công", "success"); location.reload(); }
+                else showToast(res.error, "error");
+            } catch(err){}
+        }
+        function loginScratch() { const state = Math.random().toString(36).substring(2); localStorage.setItem('oauth_state', state); window.location.href = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&scopes=identify&state=${state}`; }
+        function linkScratchAuth() { localStorage.setItem('is_linking_scratch', 'true'); loginScratch(); }
+        function logout() { localStorage.removeItem('danv_user'); currentUser = null; location.reload(); }
+
+        // ================= ROUTING & NAV =================
         async function autoFetchData() {
             if(currentUser) fetchNotifications(true);
             const hash = window.location.hash;
@@ -472,11 +703,8 @@
                 try {
                     const res = await (await fetch(`${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}`)).json();
                     if(!res.error) {
-                        allProjects = res;
-                        const latestProj = allProjects.find(p => p.projectId === currentProj.projectId || p.fileId === currentProj.fileId);
-                        if(latestProj && JSON.stringify(latestProj.comments) !== JSON.stringify(currentProj.comments)) {
-                            currentProj.comments = latestProj.comments; renderCommentList('proj', currentProj.comments);
-                        }
+                        allProjects = res; const latestProj = allProjects.find(p => p.projectId === currentProj.projectId || p.fileId === currentProj.fileId);
+                        if(latestProj && JSON.stringify(latestProj.comments) !== JSON.stringify(currentProj.comments)) { currentProj.comments = latestProj.comments; renderCommentList('proj', currentProj.comments); }
                     }
                 } catch(e){}
             }
@@ -484,13 +712,11 @@
 
         window.addEventListener('hashchange', handleRouting);
         function handleRouting() {
-            const hash = window.location.hash || '#home';
-            document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none');
-            document.getElementById('playerContainer').innerHTML = ''; 
-
+            const hash = window.location.hash || '#home'; document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); document.getElementById('playerContainer').innerHTML = ''; 
             if (hash.startsWith('#project/')) openProjectPage(hash.replace('#project/', ''));
             else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')));
             else if (hash === '#upload') openUploadPage();
+            else if (hash === '#settings') openSettingsPage();
             else if (hash === '#create') window.open('https://turbowarp.org/editor', '_blank'); 
             else openHomePage();
         }
@@ -498,50 +724,39 @@
         function updateNav() {
             const nav = document.getElementById('navActions');
             if (currentUser) {
+                const adminIcon = currentUser.role === 'admin' ? `<a href="#settings" style="color:#f5b041; margin-right:10px;"><i class="fa-solid fa-shield"></i></a>` : '';
                 nav.innerHTML = `
                     <div style="position:relative;">
+                        ${adminIcon}
                         <button class="btn" style="padding:8px; border-radius:50%; background:#222; color:#fff;" onclick="toggleNotif()"><i class="fa-solid fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none;">0</span></button>
-                        <div class="notif-dropdown" id="notifPanel">
-                            <div class="notif-header">Thông báo <button class="btn" style="padding:4px 8px; font-size:0.8rem;" onclick="markAllRead()"><i class="fa-solid fa-check-double"></i> Đã đọc tất cả</button></div>
-                            <div class="notif-list" id="notifList"><div style="padding:15px;text-align:center;color:#888;">Đang tải...</div></div>
-                        </div>
+                        <div class="notif-dropdown" id="notifPanel"><div class="notif-header">Thông báo <button class="btn" style="padding:4px 8px; font-size:0.8rem;" onclick="markAllRead()"><i class="fa-solid fa-check-double"></i> Đã đọc tất cả</button></div><div class="notif-list" id="notifList"><div style="padding:15px;text-align:center;color:#888;">Đang tải...</div></div></div>
                     </div>
                     <a href="#upload" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Tải lên</a>
+                    <a href="#settings" class="btn" style="padding:8px; border-radius:50%;" title="Cài đặt"><i class="fa-solid fa-gear"></i></a>
                     <a href="#profile/${currentUser.username}" class="nav-user-pill"><img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" onerror="this.src='${DEFAULT_AVATAR}'"><span>${escapeHtml(currentUser.username)}</span></a>
-                    <button class="btn" style="background:#ffebee; color:#ff4c4c; padding:8px 12px;" onclick="logout()" title="Đăng xuất"><i class="fa-solid fa-power-off"></i></button>
                 `;
                 fetchNotifications();
-            } else {
-                nav.innerHTML = `<button class="btn btn-primary" onclick="loginScratch()"><i class="fa-solid fa-user"></i> Đăng nhập</button>`;
-            }
+            } else { nav.innerHTML = `<button class="btn btn-primary" onclick="openModal('loginModal')"><i class="fa-solid fa-user"></i> Đăng nhập</button>`; }
         }
 
-        function loginScratch() { const state = Math.random().toString(36).substring(2); localStorage.setItem('oauth_state', state); window.location.href = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&scopes=identify&state=${state}`; }
-        function logout() { localStorage.removeItem('danv_user'); currentUser = null; updateNav(); location.hash='#home'; showToast("Đã đăng xuất."); }
-
-        async function loadProjects() {
-            try { const res = await (await fetch(`${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}`)).json(); if(!res.error) allProjects = res; } catch(e){}
-        }
-
+        async function loadProjects() { try { const res = await (await fetch(`${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}`)).json(); if(!res.error) allProjects = res; } catch(e){} }
+        
         function openHomePage() {
             document.getElementById('homeView').style.display = 'block';
-            document.getElementById('projectList').innerHTML = allProjects.filter(p => p.visibility !== 'private' || (currentUser && p.author.toLowerCase() === currentUser.username.toLowerCase())).map(p => `
+            document.getElementById('projectList').innerHTML = allProjects.map(p => `
                 <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
                     ${p.visibility === 'private' ? '<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>' : ''}
                     <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}</div>
                     <div class="card-body">
                         <div class="card-title">${escapeHtml(p.title)}</div>
                         <div class="card-author">Bởi: ${escapeHtml(p.author)}</div>
-                        <div style="margin-top: 10px; font-size: 0.85rem; color:var(--text-muted); display:flex; gap:15px;">
-                            <span><i class="fa-solid fa-heart" style="color:#ff4c4c"></i> ${p.likes ? p.likes.length : 0}</span>
-                            <span><i class="fa-solid fa-star" style="color:#f5b041"></i> ${p.stars ? p.stars.length : 0}</span>
-                        </div>
+                        <div style="margin-top: 10px; font-size: 0.85rem; color:var(--text-muted); display:flex; gap:15px;"><span><i class="fa-solid fa-heart" style="color:#ff4c4c"></i> ${p.likes ? p.likes.length : 0}</span><span><i class="fa-solid fa-star" style="color:#f5b041"></i> ${p.stars ? p.stars.length : 0}</span></div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // ================= DỰ ÁN =================
+        // ================= DỰ ÁN & BÌNH LUẬN =================
         function openProjectPage(idParam) {
             document.getElementById('projectView').style.display = 'block';
             const proj = allProjects.find(p => p.projectId === idParam || p.fileId === idParam);
@@ -549,32 +764,28 @@
             currentProj = proj;
 
             document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
-            document.getElementById('projPageAuthor').innerText = proj.author;
-            document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
+            document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
             document.getElementById('playerContainer').innerHTML = `<iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}&autoplay=true" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
             document.getElementById('btnSeeInside').href = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
+            document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
-            document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn.";
-            document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
-            
-            switchProjTab('info'); updateActionBtns(); renderCommentList('proj', currentProj.comments || []);
-            removeCommentImage('proj'); cancelReply('proj');
+            switchProjTab('info'); updateActionBtns(); renderCommentList('proj', currentProj.comments || []); removeCommentImage('proj'); cancelReply('proj');
 
-            if (currentUser && currentUser.username.toLowerCase() === proj.author.toLowerCase()) {
-                document.getElementById('btnProjSettings').style.display = 'inline-flex';
-            } else { document.getElementById('btnProjSettings').style.display = 'none'; }
+            if (currentUser && currentUser.username.toLowerCase() === proj.author.toLowerCase()) document.getElementById('btnProjSettings').style.display = 'inline-flex';
+            else document.getElementById('btnProjSettings').style.display = 'none';
+
+            if (currentUser && currentUser.role === 'admin') document.getElementById('btnAdminForcePrivate').style.display = 'inline-flex';
+            else document.getElementById('btnAdminForcePrivate').style.display = 'none';
 
             if (currentUser) { document.getElementById('commentFormProj').style.display = 'block'; document.getElementById('loginPromptProj').style.display = 'none'; } 
             else { document.getElementById('commentFormProj').style.display = 'none'; document.getElementById('loginPromptProj').style.display = 'block'; }
         }
 
         function switchProjTab(tabName) {
-            document.getElementById('tabBtn-info').classList.toggle('active', tabName === 'info');
-            document.getElementById('tabBtn-comments').classList.toggle('active', tabName === 'comments');
-            document.getElementById('tabContent-info').style.display = tabName === 'info' ? 'block' : 'none';
-            document.getElementById('tabContent-comments').style.display = tabName === 'comments' ? 'flex' : 'none';
+            document.getElementById('tabBtn-info').classList.toggle('active', tabName === 'info'); document.getElementById('tabBtn-comments').classList.toggle('active', tabName === 'comments');
+            document.getElementById('tabContent-info').style.display = tabName === 'info' ? 'block' : 'none'; document.getElementById('tabContent-comments').style.display = tabName === 'comments' ? 'flex' : 'none';
         }
 
         function updateActionBtns() {
@@ -586,7 +797,7 @@
         }
 
         async function toggleAction(type) {
-            if (!currentUser) return showToast("Vui lòng đăng nhập!", "error");
+            if (!currentUser) return openModal('loginModal');
             const res = await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: `toggle_${type}` }) });
             if(res && res.success) {
                 let list = currentProj[`${type}s`] || [];
@@ -595,10 +806,10 @@
             }
         }
 
-        // ================= XỬ LÝ BÌNH LUẬN =================
+        // BỐ CỤC COMMENT ĐÃ ĐƯỢC SỬA LỖI (CHIA KHỐI HEADER TRÊN, TEXT BUBBLE DƯỚI)
         function renderCommentList(type, list) {
             const container = document.getElementById(type === 'proj' ? 'commentListProj' : 'profCommentList');
-            if (!list || list.length === 0) { container.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">Chưa có lời nhắn nào.</div>'; return; }
+            if (!list || list.length === 0) { container.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">Chưa có bình luận.</div>'; return; }
 
             const rootComments = []; const repliesMap = {};
             list.forEach(c => { if (c.parentId) { if (!repliesMap[c.parentId]) repliesMap[c.parentId] = []; repliesMap[c.parentId].push(c); } else { rootComments.push(c); } });
@@ -606,8 +817,9 @@
 
             const canDelete = (c) => {
                 if(!currentUser) return false;
-                if(type === 'proj') return currentProj.author.toLowerCase() === currentUser.username.toLowerCase();
-                if(type === 'prof') return viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase();
+                if(currentUser.role === 'admin') return true;
+                if(type === 'proj') return currentProj.author.toLowerCase() === currentUser.username.toLowerCase() || c.author.toLowerCase() === currentUser.username.toLowerCase();
+                if(type === 'prof') return viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase() || c.author.toLowerCase() === currentUser.username.toLowerCase();
                 return false;
             };
 
@@ -619,16 +831,19 @@
                     <div class="comment-thread" id="${type}-thread-${root.id}">
                         <div class="comment-box">
                             <img src="${getAvtUrl(root.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
-                            <div style="flex:1;">
-                                <a href="#profile/${root.author}" style="font-weight:bold; color:#111; text-decoration:none;">${root.author}</a> 
-                                <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">${root.time}</span>
+                            <div class="comment-content-area">
+                                <div class="comment-header">
+                                    <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
+                                    <span class="comment-time">${root.time}</span>
+                                </div>
                                 <div class="comment-text-bubble">
                                     ${escapeHtml(root.text)}
                                     ${root.imageId ? `<br><img src="${WORKER_URL}/api/project/${root.imageId}" class="comment-img-render">` : ''}
                                 </div>
                                 <div style="margin-top:4px;">
-                                    ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.8rem; cursor:pointer; font-weight:bold;" onclick="startReply('${type}', '${root.id}', '${root.author}')">Trả lời</button>` : ''}
-                                    ${canDelete(root) ? `<button class="btn-delete-cmt" onclick="deleteComment('${type}', '${root.id}')">[Xóa]</button>` : ''}
+                                    ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${root.author}')">Trả lời</button>` : ''}
+                                    ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${root.id}')"><i class="fa-solid fa-flag"></i></button>` : ''}
+                                    ${canDelete(root) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${root.id}')">[Xóa]</button>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -638,17 +853,20 @@
                                 ${visibleReplies.map(rep => `
                                     <div class="comment-box">
                                         <img src="${getAvtUrl(rep.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
-                                        <div style="flex:1;">
-                                            <a href="#profile/${rep.author}" style="font-weight:bold; color:#111; text-decoration:none;">${rep.author}</a> 
-                                            <span style="font-size:0.75rem; color:var(--text-muted); margin-left:6px;">${rep.time}</span>
-                                            ${rep.replyToUser ? `<span style="font-size:0.75rem; color:var(--primary); font-weight:bold; margin-left:4px;">↳ @${rep.replyToUser}</span>` : ''}
+                                        <div class="comment-content-area">
+                                            <div class="comment-header">
+                                                <a href="#profile/${rep.author}" class="comment-author-name">${rep.author}</a> 
+                                                <span class="comment-time">${rep.time}</span>
+                                            </div>
                                             <div class="comment-text-bubble">
+                                                ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
                                                 ${escapeHtml(rep.text)}
                                                 ${rep.imageId ? `<br><img src="${WORKER_URL}/api/project/${rep.imageId}" class="comment-img-render">` : ''}
                                             </div>
                                             <div style="margin-top:2px;">
-                                                ${currentUser ? `<button style="background:none; border:none; color:#888; font-size:0.75rem; cursor:pointer; font-weight:bold;" onclick="startReply('${type}', '${root.id}', '${rep.author}')">Trả lời</button>` : ''}
-                                                ${canDelete(rep) ? `<button class="btn-delete-cmt" style="font-size:0.75rem;" onclick="deleteComment('${type}', '${rep.id}')">[Xóa]</button>` : ''}
+                                                ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">Trả lời</button>` : ''}
+                                                ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${rep.id}')"><i class="fa-solid fa-flag"></i></button>` : ''}
+                                                ${canDelete(rep) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${rep.id}')">[Xóa]</button>` : ''}
                                             </div>
                                         </div>
                                     </div>
@@ -689,22 +907,11 @@
         }
 
         function cancelReply(type) { replyState[type].parentId = null; replyState[type].user = null; document.getElementById(type === 'proj' ? 'replyBannerProj' : 'replyBannerProf').style.display = 'none'; }
-
-        function handleCommentImagePreview(input, type) {
-            if (input.files && input.files[0]) {
-                const r = new FileReader();
-                r.onload = function(e) { document.getElementById(type === 'proj' ? 'commentImgPreviewSrcProj' : 'commentImgPreviewSrcProf').src = e.target.result; document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'flex'; };
-                r.readAsDataURL(input.files[0]);
-            }
-        }
-
+        function handleCommentImagePreview(input, type) { if (input.files && input.files[0]) { const r = new FileReader(); r.onload = function(e) { document.getElementById(type === 'proj' ? 'commentImgPreviewSrcProj' : 'commentImgPreviewSrcProf').src = e.target.result; document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'flex'; }; r.readAsDataURL(input.files[0]); } }
         function removeCommentImage(type) { document.getElementById(type === 'proj' ? 'commentImgUploadProj' : 'commentImgUploadProf').value = ''; document.getElementById(type === 'proj' ? 'commentImgPreviewSrcProj' : 'commentImgPreviewSrcProf').src = ''; document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'none'; }
 
         async function handlePostComment(e, type) {
-            e.preventDefault();
-            if (isPosting[type]) return;
-            if (!currentUser) return showToast("Bạn cần đăng nhập!", "error");
-
+            e.preventDefault(); if (isPosting[type]) return; if (!currentUser) return openModal('loginModal');
             const textInput = document.getElementById(type === 'proj' ? 'commentTextProj' : 'commentTextProf');
             const text = textInput.value.trim(); const imgFile = document.getElementById(type === 'proj' ? 'commentImgUploadProj' : 'commentImgUploadProf').files[0];
             if (!text && !imgFile) return;
@@ -714,8 +921,7 @@
 
             let imgId = null;
             if (imgFile) { 
-                const fd = new FormData(); fd.append("file", imgFile); 
-                fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
+                const fd = new FormData(); fd.append("file", imgFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
                 if (upRes.success) imgId = upRes.file_id; 
             }
@@ -734,13 +940,10 @@
             isPosting[type] = false; submitBtn.disabled = false; submitBtn.innerHTML = origHtml;
         }
 
-        // ================= TRANG PROFILE 404 & FOLLOW =================
+        // ================= PROFILE & SETTINGS =================
         async function openProfilePage(username) {
-            document.getElementById('profileView').style.display = 'block';
-            viewingProfileUser = username;
-            
-            document.getElementById('profileContent').style.display = 'none';
-            document.getElementById('profile404').style.display = 'none';
+            document.getElementById('profileView').style.display = 'block'; viewingProfileUser = username;
+            document.getElementById('profileContent').style.display = 'none'; document.getElementById('profile404').style.display = 'none';
 
             try {
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`);
@@ -749,42 +952,34 @@
             } catch(e) { document.getElementById('profile404').style.display = 'block'; return; }
 
             document.getElementById('profileContent').style.display = 'block';
+            document.getElementById('profDisplayName').innerText = viewingProfileData.display_name;
             document.getElementById('profUsername').innerText = viewingProfileData.username; 
             document.getElementById('profAvt').src = getAvtUrl(viewingProfileData.avt);
+            document.getElementById('profLocation').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(viewingProfileData.location)}`;
             document.getElementById('profBio').innerText = viewingProfileData.bio || "Chưa có phần giới thiệu.";
             document.getElementById('profStatus').innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || "Chưa có trạng thái")}`;
-            document.getElementById('profileBannerArea').style.display = 'none';
+            
+            // Huy hiệu Scratch
+            if(viewingProfileData.scratch_linked) {
+                const badge = document.getElementById('profScratchBadge');
+                badge.style.display = 'inline-block';
+                badge.title = `Tài khoản Scratch đã xác thực: @${viewingProfileData.scratch_linked}`;
+            } else { document.getElementById('profScratchBadge').style.display = 'none'; }
 
-            if (currentUser && currentUser.username.toLowerCase() === username.toLowerCase()) {
-                document.getElementById('btnEditProfModal').style.display = 'inline-flex';
-                document.getElementById('btnFollowProf').style.display = 'none';
-            } else {
-                document.getElementById('btnEditProfModal').style.display = 'none';
-                if(currentUser) {
-                    const isFollowing = viewingProfileData.followers.includes(currentUser.username);
-                    const btnF = document.getElementById('btnFollowProf');
-                    btnF.style.display = 'inline-flex';
-                    btnF.innerHTML = isFollowing ? '<i class="fa-solid fa-check"></i> Đang theo dõi' : '<i class="fa-solid fa-user-plus"></i> Theo dõi';
-                    btnF.className = isFollowing ? 'btn' : 'btn btn-primary';
-                }
-            }
+            document.getElementById('profileBannerArea').style.display = 'none';
+            if (currentUser && currentUser.username.toLowerCase() === username.toLowerCase()) { document.getElementById('btnEditProfModal').style.display = 'inline-flex'; document.getElementById('btnFollowProf').style.display = 'none'; } 
+            else { document.getElementById('btnEditProfModal').style.display = 'none'; if(currentUser) { const isFollowing = viewingProfileData.followers.includes(currentUser.username); const btnF = document.getElementById('btnFollowProf'); btnF.style.display = 'inline-flex'; btnF.innerHTML = isFollowing ? '<i class="fa-solid fa-check"></i> Đang theo dõi' : '<i class="fa-solid fa-user-plus"></i> Theo dõi'; btnF.className = isFollowing ? 'btn' : 'btn btn-primary'; } }
+
+            // Admin Tool
+            if(currentUser && currentUser.role === 'admin' && currentUser.username.toLowerCase() !== username.toLowerCase()) { document.getElementById('btnAdminWarn').style.display = 'inline-flex'; } else { document.getElementById('btnAdminWarn').style.display = 'none'; }
 
             if (viewingProfileData.featuredProject) {
                 const featProj = allProjects.find(p => p.fileId === viewingProfileData.featuredProject || p.projectId === viewingProfileData.featuredProject);
-                if (featProj) {
-                    document.getElementById('profBannerTitle').innerText = featProj.title;
-                    document.getElementById('profBannerDesc').innerText = featProj.description ? featProj.description.substring(0, 120) + "..." : "Tác phẩm tâm huyết của tác giả";
-                    document.getElementById('profBannerThumb').src = featProj.thumbId ? `${WORKER_URL}/api/project/${featProj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
-                    document.getElementById('btnPlayBannerProj').href = `#project/${featProj.projectId || featProj.fileId}`;
-                    document.getElementById('profileBannerArea').style.display = 'flex';
-                }
+                if (featProj) { document.getElementById('profBannerTitle').innerText = featProj.title; document.getElementById('profBannerDesc').innerText = featProj.description ? featProj.description.substring(0, 120) + "..." : "Tác phẩm tâm huyết của tác giả"; document.getElementById('profBannerThumb').src = featProj.thumbId ? `${WORKER_URL}/api/project/${featProj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png'; document.getElementById('btnPlayBannerProj').href = `#project/${featProj.projectId || featProj.fileId}`; document.getElementById('profileBannerArea').style.display = 'flex'; }
             }
 
             const userProjs = allProjects.filter(p => p.author.toLowerCase() === username.toLowerCase() && (p.visibility !== 'private' || (currentUser && currentUser.username.toLowerCase()===username.toLowerCase())));
-            document.getElementById('statProjectCount').innerText = userProjs.length;
-            document.getElementById('statLikeCount').innerText = userProjs.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0);
-            document.getElementById('statFollowersCount').innerText = viewingProfileData.followers.length;
-            document.getElementById('statFollowingCount').innerText = viewingProfileData.following.length;
+            document.getElementById('statProjectCount').innerText = userProjs.length; document.getElementById('statLikeCount').innerText = userProjs.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0); document.getElementById('statFollowersCount').innerText = viewingProfileData.followers.length; document.getElementById('statFollowingCount').innerText = viewingProfileData.following.length;
 
             document.getElementById('userProjectList').innerHTML = userProjs.length ? userProjs.map(p => `
                 <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
@@ -795,35 +990,19 @@
             `).join('') : '<p style="color:#888;">Chưa có tác phẩm nào.</p>';
 
             const likedProjs = allProjects.filter(p => p.likes && p.likes.includes(username));
-            document.getElementById('userLikedList').innerHTML = likedProjs.length ? likedProjs.map(p => `
-                <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
-                    <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
-                    <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">Bởi: ${p.author}</div></div>
-                </div>
-            `).join('') : '<p style="color:#888;">Chưa thích dự án nào.</p>';
+            document.getElementById('userLikedList').innerHTML = likedProjs.length ? likedProjs.map(p => `<div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'"><div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div><div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">Bởi: ${p.author}</div></div></div>`).join('') : '<p style="color:#888;">Chưa thích dự án nào.</p>';
 
             const activities = viewingProfileData.activities || [];
-            document.getElementById('userActivityList').innerHTML = activities.length ? activities.map(a => `
-                <div class="timeline-item">
-                    <div style="font-size:0.95rem;"><b>${escapeHtml(viewingProfileData.username)}</b> ${a.action} <a href="${a.link}" style="color:var(--primary); font-weight:bold; text-decoration:none;">"${escapeHtml(a.detail)}"</a></div>
-                    <div style="font-size:0.75rem; color:#888; margin-top:4px;">${a.time}</div>
-                </div>
-            `).join('') : '<p style="color:#888;">Chưa có hoạt động nào được ghi lại.</p>';
+            document.getElementById('userActivityList').innerHTML = activities.length ? activities.map(a => `<div class="timeline-item"><div style="font-size:0.95rem;"><b>${escapeHtml(viewingProfileData.username)}</b> ${a.action} <a href="${a.link}" style="color:var(--primary); font-weight:bold; text-decoration:none;">"${escapeHtml(a.detail)}"</a></div><div style="font-size:0.75rem; color:#888; margin-top:4px;">${a.time}</div></div>`).join('') : '<p style="color:#888;">Chưa có hoạt động nào được ghi lại.</p>';
 
-            renderCommentList('prof', viewingProfileData.comments);
-            removeCommentImage('prof'); cancelReply('prof'); switchProfTab('projects');
+            renderCommentList('prof', viewingProfileData.comments); removeCommentImage('prof'); cancelReply('prof'); switchProfTab('projects');
             
             if (currentUser) { document.getElementById('profCommentForm').style.display = 'block'; document.getElementById('loginPromptProf').style.display = 'none'; } 
             else { document.getElementById('profCommentForm').style.display = 'none'; document.getElementById('loginPromptProf').style.display = 'block'; }
         }
 
-        function switchProfTab(tab) {
-            document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.prof-tab-content').forEach(c => c.style.display = 'none');
-            document.getElementById(`tabBtnProf-${tab}`).classList.add('active');
-            document.getElementById(`profTab-${tab}`).style.display = 'block';
-        }
-
+        function switchProfTab(tab) { document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.prof-tab-content').forEach(c => c.style.display = 'none'); document.getElementById(`tabBtnProf-${tab}`).classList.add('active'); document.getElementById(`profTab-${tab}`).style.display = 'block'; }
+        
         async function toggleFollow() {
             if(!currentUser) return showToast("Đăng nhập để theo dõi", "error");
             const btnF = document.getElementById('btnFollowProf'); btnF.disabled = true;
@@ -832,30 +1011,52 @@
             btnF.disabled = false;
         }
 
+        async function openSettingsPage() {
+            if(!currentUser) return location.hash='#home';
+            document.getElementById('settingsView').style.display = 'block';
+            try {
+                const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
+                const pData = await res.json();
+                document.getElementById('editDisplayNameInput').value = pData.display_name;
+                document.getElementById('editLocationInput').value = pData.location !== 'Chưa rõ' ? pData.location : '';
+                document.getElementById('editStatusInput').value = pData.status;
+                document.getElementById('editBioInput').value = pData.bio;
+                
+                const myProjs = allProjects.filter(p => p.author.toLowerCase() === currentUser.username.toLowerCase());
+                const select = document.getElementById('editFeaturedProjSelect');
+                select.innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.projectId || p.fileId}">${escapeHtml(p.title)}</option>`).join('');
+                select.value = pData.featuredProject;
+
+                if(pData.scratch_linked) {
+                    document.getElementById('scratchLinkStatus').innerHTML = `<div style="padding:10px; background:#e6f4ea; color:#0a8260; border-radius:8px; border:1px solid #bbf7d0; font-weight:bold; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check"></i> Đã liên kết: @${pData.scratch_linked}</div>`;
+                } else {
+                    document.getElementById('scratchLinkStatus').innerHTML = `<p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Lấy thẻ huy hiệu chính chủ bằng cách liên kết tài khoản Scratch.</p><button type="button" class="btn btn-primary" onclick="linkScratchAuth()"><img src="https://scratch.mit.edu/favicon.ico" width="16"> Liên kết ngay</button>`;
+                }
+            } catch(e){}
+        }
+
         async function saveProfileInfoBtn() {
             const btn = document.getElementById('btnSaveProfSubmit'); btn.innerText = "Đang lưu..."; btn.disabled = true;
             const file = document.getElementById('editAvtFile').files[0]; let newAvtId = undefined;
-
             if (file) {
                 if (file.size > 5 * 1024 * 1024) { showToast("Ảnh vượt quá 5MB!", "error"); btn.innerText = "Lưu thông tin"; btn.disabled = false; return; }
                 const fData = new FormData(); fData.append("file", file); fData.append("username", currentUser.username); fData.append("sessionToken", currentUser.sessionToken);
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fData, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (upRes.success) { newAvtId = upRes.file_id; currentUser.avt = newAvtId; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
             }
-
-            const payload = { avtId: newAvtId, bio: document.getElementById('editBioInput').value, status: document.getElementById('editStatusInput').value, featuredProject: document.getElementById('editFeaturedProjSelect').value };
+            const payload = { avtId: newAvtId, display_name: document.getElementById('editDisplayNameInput').value, location: document.getElementById('editLocationInput').value, bio: document.getElementById('editBioInput').value, status: document.getElementById('editStatusInput').value, featuredProject: document.getElementById('editFeaturedProjSelect').value };
             const res = await apiFetch(`/api/user/update`, { method: 'POST', body: JSON.stringify(payload) });
-            if (res && res.success) { closeModal('editProfileModal'); showToast("Hồ sơ đã cập nhật!", "success"); openProfilePage(currentUser.username); }
+            if (res && res.success) { showToast("Đã cập nhật cài đặt!", "success"); }
             btn.innerText = "Lưu thông tin"; btn.disabled = false;
         }
 
-        // ================= UPLOAD TRỰC QUAN MỚI (CÓ BẢO MẬT KÉP) =================
+        function changeLanguage(lang) { localStorage.setItem('lang', lang); showToast("Đã đổi ngôn ngữ (Cần F5 để áp dụng hoàn toàn)", "success"); }
+
+        // ================= UPLOAD TRỰC QUAN MỚI =================
         function handleThumbnailPreviewBig(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('thumbPreviewBig'); img.src = e.target.result; img.style.display = 'block'; document.getElementById('thumbPlaceholder').style.display = 'none';
-                };
+                reader.onload = function(e) { const img = document.getElementById('thumbPreviewBig'); img.src = e.target.result; img.style.display = 'block'; document.getElementById('thumbPlaceholder').style.display = 'none'; };
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -869,34 +1070,55 @@
             if(!document.getElementById('upFile').files[0] || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
             const btn = document.getElementById('btnSubmitUpload'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xuất bản...'; btn.disabled = true;
             
-            const form = new FormData(); 
-            form.append("file", document.getElementById('upFile').files[0]); 
-            if(document.getElementById('upThumb').files[0]) form.append("thumb", document.getElementById('upThumb').files[0]);
-            form.append("title", document.getElementById('upTitle').value); 
-            form.append("visibility", document.getElementById('upVisibility').value); 
-            form.append("author", currentUser.username);
-            form.append("description", document.getElementById('upDesc').value);
-            form.append("credits", document.getElementById('upCredits').value);
-            
-            // SECURITY: Gửi token vào Form
-            form.append("username", currentUser.username);
-            form.append("sessionToken", currentUser.sessionToken);
+            const form = new FormData(); form.append("file", document.getElementById('upFile').files[0]); if(document.getElementById('upThumb').files[0]) form.append("thumb", document.getElementById('upThumb').files[0]);
+            form.append("title", document.getElementById('upTitle').value); form.append("visibility", document.getElementById('upVisibility').value); form.append("author", currentUser.username); form.append("description", document.getElementById('upDesc').value); form.append("credits", document.getElementById('upCredits').value);
+            form.append("username", currentUser.username); form.append("sessionToken", currentUser.sessionToken);
 
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
-                if (res.success) { showToast("Xuất bản thành công!", "success"); await loadProjects(); location.hash = `#project/${res.file_id}`; }
-                else showToast(res.error || "Lỗi tải lên", "error");
+                if (res.success) { showToast("Xuất bản thành công!", "success"); await loadProjects(); location.hash = `#project/${res.file_id}`; } else showToast(res.error || "Lỗi tải lên", "error");
             } catch(err) { showToast("Lỗi kết nối", "error"); }
             btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Đăng lên nền tảng'; btn.disabled = false;
         }
 
-        // ================= THÔNG BÁO MENU RỘNG & ĐỌC TẤT CẢ =================
+        // ================= REPORT & ADMIN =================
+        function openReportModal(type, id = null) {
+            if(!currentUser) return openModal('loginModal');
+            reportTarget.type = type;
+            reportTarget.id = id || (type === 'project' ? currentProj.fileId : viewingProfileUser);
+            openModal('reportModal');
+        }
+
+        async function handleReportSubmit(e) {
+            e.preventDefault();
+            const reason = document.getElementById('reportReason').value;
+            const res = await apiFetch(`/api/report`, { method: 'POST', body: JSON.stringify({ targetType: reportTarget.type, targetId: reportTarget.id, reason }) });
+            if(res && res.success) { showToast("Cảm ơn bạn đã báo cáo. Quản trị viên sẽ xem xét.", "success"); closeModal('reportModal'); }
+        }
+
+        function openAdminPrivateModal() { openModal('adminPrivateModal'); }
+        async function submitAdminForcePrivate() {
+            const reason = document.getElementById('adminForceReason').value;
+            if(!reason) return showToast("Phải nhập lý do gỡ", "error");
+            const res = await apiFetch(`/api/admin/action`, { method: 'POST', body: JSON.stringify({ action: "force_private", payload: { fileId: currentProj.fileId, author: currentProj.author, reason } }) });
+            if(res && res.success) { showToast("Đã gỡ dự án về Riêng tư!", "success"); closeModal('adminPrivateModal'); location.reload(); }
+        }
+
+        function openAdminWarnModal() { openModal('adminWarnModal'); }
+        async function submitAdminWarn() {
+            const reason = document.getElementById('adminWarnReason').value;
+            if(!reason) return showToast("Phải nhập lý do cảnh cáo", "error");
+            const res = await apiFetch(`/api/admin/action`, { method: 'POST', body: JSON.stringify({ action: "warn_user", payload: { targetUser: viewingProfileUser, reason } }) });
+            if(res && res.success) { showToast("Đã gửi cảnh cáo!", "success"); closeModal('adminWarnModal'); }
+        }
+
+        // ================= TIỆN ÍCH KHÁC =================
         function getNotifIcon(text) {
             if (text.includes("Thích")) return '<i class="fa-solid fa-heart" style="color:#ff4c4c; font-size:1.2rem;"></i>';
             if (text.includes("Sao")) return '<i class="fa-solid fa-star" style="color:#f5b041; font-size:1.2rem;"></i>';
-            if (text.includes("bình luận")) return '<i class="fa-solid fa-comment" style="color:var(--primary); font-size:1.2rem;"></i>';
-            if (text.includes("lời nhắn")) return '<i class="fa-solid fa-comments" style="color:#3b82f6; font-size:1.2rem;"></i>';
+            if (text.includes("bình luận") || text.includes("lời nhắn")) return '<i class="fa-solid fa-comment" style="color:var(--primary); font-size:1.2rem;"></i>';
             if (text.includes("theo dõi")) return '<i class="fa-solid fa-user-plus" style="color:#8b5cf6; font-size:1.2rem;"></i>';
+            if (text.includes("Quản trị viên") || text.includes("HỆ THỐNG")) return '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444; font-size:1.2rem;"></i>';
             return '<i class="fa-solid fa-bell" style="color:#888; font-size:1.2rem;"></i>';
         }
 
@@ -918,63 +1140,31 @@
         }
 
         function toggleNotif() { const p = document.getElementById('notifPanel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
-        
-        async function markAllRead() {
-            await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) });
-            fetchNotifications(true); showToast("Đã đánh dấu đọc tất cả", "success"); document.getElementById('notifPanel').style.display='none';
-        }
+        async function markAllRead() { await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) }); fetchNotifications(true); showToast("Đã đánh dấu đọc tất cả", "success"); document.getElementById('notifPanel').style.display='none'; }
 
-        // ================= CÀI ĐẶT QUẢN LÝ DỰ ÁN =================
-        function openModal(id) { 
-            document.getElementById(id).style.display = 'flex'; 
-            if (id === 'editProfileModal') {
-                document.getElementById('editBioInput').value = document.getElementById('profBio').innerText.replace("Chưa có phần giới thiệu.", "");
-                document.getElementById('editStatusInput').value = viewingProfileData ? viewingProfileData.status : "";
-                const myProjs = allProjects.filter(p => p.author.toLowerCase() === currentUser.username.toLowerCase());
-                document.getElementById('editFeaturedProjSelect').innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.projectId || p.fileId}">${escapeHtml(p.title)}</option>`).join('');
-            }
-            if (id === 'projSettingsModal') {
-                document.getElementById('editProjVisibility').value = currentProj.visibility || 'public';
-                document.getElementById('editDescInput').value = currentProj.description || ''; 
-                document.getElementById('editCreditsInput').value = currentProj.credits || '';
-            }
-        }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
         async function saveProjectInfoBtn() {
             const vis = document.getElementById('editProjVisibility').value; const desc = document.getElementById('editDescInput').value; const cred = document.getElementById('editCreditsInput').value;
-            
             await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "change_visibility", payload: { visibility: vis } }) });
             await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "update_info", payload: { description: desc, credits: cred } }) });
-            
             currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
             document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = cred || "Tác giả gốc.";
             document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
-            
             closeModal('projSettingsModal'); showToast("Đã lưu thông tin dự án!", "success");
         }
 
         async function handleUpdateProjectFileBtn() {
             if(!document.getElementById('updateProjFile').files[0]) return;
             const btn = document.getElementById('btnUpdateProjSubmit'); btn.innerText = "Đang tải lên..."; btn.disabled = true;
-            
-            const form = new FormData(); 
-            form.append("file", document.getElementById('updateProjFile').files[0]); 
-            form.append("updateProjectId", currentProj.projectId || currentProj.fileId);
-            form.append("author", currentUser.username);
-            
-            // SECURITY: Gửi token vào form cập nhật
-            form.append("username", currentUser.username);
-            form.append("sessionToken", currentUser.sessionToken);
-
+            const form = new FormData(); form.append("file", document.getElementById('updateProjFile').files[0]); form.append("updateProjectId", currentProj.projectId || currentProj.fileId); form.append("author", currentUser.username); form.append("username", currentUser.username); form.append("sessionToken", currentUser.sessionToken);
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
-                if (res.success) { showToast("Cập nhật phiên bản thành công!", "success"); closeModal('projSettingsModal'); setTimeout(()=>{location.reload();}, 1000); }
-                else showToast(res.error || "Lỗi tải lên", "error");
-            } catch(err) { showToast("Lỗi kết nối", "error"); }
-            btn.innerText = "Tải bản cập nhật lên"; btn.disabled = false;
+                if (res.success) { showToast("Cập nhật phiên bản thành công!", "success"); closeModal('projSettingsModal'); setTimeout(()=>{location.reload();}, 1000); } else showToast(res.error || "Lỗi tải lên", "error");
+            } catch(err) { showToast("Lỗi kết nối", "error"); } btn.innerText = "Tải bản cập nhật lên"; btn.disabled = false;
         }
     </script>
 </body>
