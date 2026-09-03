@@ -505,12 +505,11 @@
             <div class="modal-header"><span>Cập nhật Thông tin Bảo mật</span></div>
             <div class="modal-body">
                 <p style="color:#ef4444; font-weight:bold; margin-bottom:15px;"><i class="fa-solid fa-triangle-exclamation"></i> StudioDANV đã nâng cấp hệ thống độc lập!</p>
-                <p style="font-size:0.9rem; color:#555; margin-bottom:20px;">Vì bạn đăng nhập bằng hệ thống Scratch cũ, vui lòng bổ sung Email và thiết lập Mật khẩu để bảo vệ tài khoản và sử dụng các tính năng mới.</p>
+                <p style="font-size:0.9rem; color:#555; margin-bottom:20px;">Vì bạn đăng nhập bằng hệ thống Scratch cũ, vui lòng bổ sung Email và thiết lập Mật khẩu. Tỉnh thành sẽ được hệ thống xác định tự động!</p>
                 <form onsubmit="handleLegacyUpdate(event)">
                     <div class="form-group"><label>Email của bạn:</label><input type="email" id="legEmail" class="form-control" required></div>
                     <div class="form-group"><label>Thiết lập Mật khẩu mới:</label><input type="password" id="legPw" class="form-control" required minlength="6"></div>
-                    <div class="form-group"><label>Tỉnh thành / Quốc gia:</label><input type="text" id="legLocation" class="form-control" required placeholder="Ví dụ: Hà Nội, VN"></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Cập nhật ngay</button>
+                    <button type="submit" class="btn btn-primary" id="btnLegacyUpdate" style="width:100%; justify-content:center;">Cập nhật ngay</button>
                 </form>
             </div>
         </div>
@@ -653,14 +652,16 @@
         async function checkLegacyUser() {
             if(!currentUser) return;
             const res = await apiFetch(`/api/user/${encodeURIComponent(currentUser.username)}`, { method:'GET' });
-            if(res && !res.email) { openModal('legacyUpdateModal'); } 
+            if(res && res.needs_update) { openModal('legacyUpdateModal'); } 
             else if(res) { currentUser.role = res.role; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
         }
         async function handleLegacyUpdate(e) {
             e.preventDefault();
-            const email = document.getElementById('legEmail').value; const pw = document.getElementById('legPw').value; const loc = document.getElementById('legLocation').value;
-            const res = await apiFetch(`/api/auth/legacy_update`, { method: 'POST', body: JSON.stringify({ email, password: pw, location: loc }) });
+            const btn = document.getElementById('btnLegacyUpdate'); btn.disabled = true; btn.innerText = "Đang cập nhật...";
+            const email = document.getElementById('legEmail').value; const pw = document.getElementById('legPw').value;
+            const res = await apiFetch(`/api/auth/legacy_update`, { method: 'POST', body: JSON.stringify({ email, password: pw }) });
             if(res && res.success) { showToast("Cập nhật bảo mật thành công!", "success"); closeModal('legacyUpdateModal'); location.reload(); }
+            else { btn.disabled = false; btn.innerText = "Cập nhật ngay"; }
         }
 
         // ================= AUTHENTICATION (NATIVE) =================
