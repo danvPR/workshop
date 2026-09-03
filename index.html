@@ -1199,12 +1199,30 @@
         });
 
         async function handleUploadBtn() {
-            if(!document.getElementById('upFile').files[0] || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
-            const btn = document.getElementById('btnSubmitUpload'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xuất bản...'; btn.disabled = true;
+            const fileInput = document.getElementById('upFile').files[0];
+            if(!fileInput || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
             
-            const form = new FormData(); form.append("file", document.getElementById('upFile').files[0]); if(document.getElementById('upThumb').files[0]) form.append("thumb", document.getElementById('upThumb').files[0]);
-            form.append("title", document.getElementById('upTitle').value); form.append("visibility", document.getElementById('upVisibility').value); form.append("author", currentUser.username); form.append("description", document.getElementById('upDesc').value); form.append("credits", document.getElementById('upCredits').value);
-            form.append("username", currentUser.username); form.append("sessionToken", currentUser.sessionToken);
+            const btn = document.getElementById('btnSubmitUpload'); 
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xuất bản...'; btn.disabled = true;
+            
+            const form = new FormData(); 
+            
+            const CHUNK_SIZE = 18 * 1024 * 1024; 
+            let offset = 0; let chunkIndex = 0;
+            while (offset < fileInput.size) {
+                const chunk = fileInput.slice(offset, offset + CHUNK_SIZE);
+                form.append("chunks", chunk, `part_${chunkIndex}.sb3`);
+                offset += CHUNK_SIZE; chunkIndex++;
+            }
+
+            if(document.getElementById('upThumb').files[0]) form.append("thumb", document.getElementById('upThumb').files[0]);
+            form.append("title", document.getElementById('upTitle').value); 
+            form.append("visibility", document.getElementById('upVisibility').value); 
+            form.append("author", currentUser.username); 
+            form.append("description", document.getElementById('upDesc').value); 
+            form.append("credits", document.getElementById('upCredits').value);
+            form.append("username", currentUser.username); 
+            form.append("sessionToken", currentUser.sessionToken);
 
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
@@ -1290,13 +1308,33 @@
         }
 
         async function handleUpdateProjectFileBtn() {
-            if(!document.getElementById('updateProjFile').files[0]) return;
-            const btn = document.getElementById('btnUpdateProjSubmit'); btn.innerText = "Đang tải lên..."; btn.disabled = true;
-            const form = new FormData(); form.append("file", document.getElementById('updateProjFile').files[0]); form.append("updateProjectId", currentProj.projectId || currentProj.fileId); form.append("author", currentUser.username); form.append("username", currentUser.username); form.append("sessionToken", currentUser.sessionToken);
+            const fileInput = document.getElementById('updateProjFile').files[0];
+            if(!fileInput) return;
+            
+            const btn = document.getElementById('btnUpdateProjSubmit'); 
+            btn.innerText = "Đang tải lên..."; btn.disabled = true;
+            
+            const form = new FormData(); 
+            
+            const CHUNK_SIZE = 18 * 1024 * 1024; 
+            let offset = 0; let chunkIndex = 0;
+            while (offset < fileInput.size) {
+                const chunk = fileInput.slice(offset, offset + CHUNK_SIZE);
+                form.append("chunks", chunk, `part_${chunkIndex}.sb3`);
+                offset += CHUNK_SIZE; chunkIndex++;
+            }
+
+            form.append("updateProjectId", currentProj.projectId || currentProj.fileId); 
+            form.append("author", currentUser.username); 
+            form.append("username", currentUser.username); 
+            form.append("sessionToken", currentUser.sessionToken);
+            
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (res.success) { showToast("Cập nhật phiên bản thành công!", "success"); closeModal('projSettingsModal'); setTimeout(()=>{location.reload();}, 1000); } else showToast(res.error || "Lỗi tải lên", "error");
-            } catch(err) { showToast("Lỗi kết nối", "error"); } btn.innerText = "Tải bản cập nhật lên"; btn.disabled = false;
+            } catch(err) { showToast("Lỗi kết nối", "error"); } 
+            
+            btn.innerText = "Tải bản cập nhật lên"; btn.disabled = false;
         }
     </script>
 </body>
