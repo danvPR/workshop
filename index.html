@@ -55,9 +55,15 @@
         .ccw-main { flex: 2.5; min-width: 0; }
         .ccw-sidebar { flex: 1.3; background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; height: 600px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         
-        .player-container { background: #000; border-radius: 12px; overflow: hidden; height: 500px; border: 1px solid var(--border-color); }
+        .player-container { background: #000; border-radius: 12px; overflow: hidden; width: 100%; aspect-ratio: 16 / 9; max-height: 550px; border: 1px solid var(--border-color); }
         .player-iframe { width: 100%; height: 100%; border: none; }
-        
+
+        @media (max-width: 900px) {
+            .ccw-layout { flex-direction: column; }
+            .ccw-sidebar { width: 100%; height: auto; min-height: 500px; }
+            .action-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
+        }
+ 
         .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; background: var(--bg-panel); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border-color); }
         .action-btns { display: flex; gap: 18px; align-items: center;}
         .act-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-weight: bold;}
@@ -214,7 +220,10 @@
                 <div class="action-bar">
                     <div>
                         <h2 id="projPageTitle" style="color: #111; margin-bottom: 4px;">Tên dự án</h2>
-                        <span style="color: var(--text-muted); font-size: 0.9rem;">Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></span>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">
+                            Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold; margin-right: 15px;">Author</a>
+                            <i class="fa-regular fa-clock"></i> <span id="projPageDate">Đang cập nhật...</span>
+                        </div>
                     </div>
                     <div class="action-btns">
                         <button class="act-btn" id="btnLike" onclick="toggleAction('like')"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
@@ -449,7 +458,8 @@
                     <div style="margin-top:30px; font-size:0.85rem; color:#888;">
                         <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" style="color:var(--primary); text-decoration:none; display:block; margin-bottom:6px;">Điều khoản sử dụng (TOS)</a>
                         <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" style="color:var(--primary); text-decoration:none; display:block; margin-bottom:15px;">Chính sách bảo mật</a>
-                        <div style="border-top:1px solid #ddd; padding-top:10px;">Hỗ trợ: <a href="mailto:studiodanv@gmail.com" style="color:#333; font-weight:bold;">studiodanv@gmail.com</a></div>
+                        <div style="border-top:1px solid #ddd; padding-top:10px; margin-bottom:20px;">Hỗ trợ: <a href="mailto:studiodanv@gmail.com" style="color:#333; font-weight:bold;">studiodanv@gmail.com</a></div>
+                        <button class="btn btn-danger" onclick="logout()" style="width: 100%; justify-content: center;"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất tài khoản</button>
                     </div>
                 </div>
             </div>
@@ -538,40 +548,40 @@
     </div>
 
     <!-- MODAL QUẢN LÝ DỰ ÁN DÀNH CHO CHỦ SỞ HỮU -->
+    <!-- MODAL QUẢN LÝ DỰ ÁN DÀNH CHO CHỦ SỞ HỮU -->
     <div class="modal-overlay" id="projSettingsModal">
-        <div class="modal" style="max-width: 580px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="modal" style="max-width: 650px; max-height: 90vh; display: flex; flex-direction: column;">
             <div class="modal-header">
                 <span><i class="fa-solid fa-sliders" style="color:var(--primary);"></i> Quản lý Dự án</span>
                 <button class="btn-close" onclick="closeModal('projSettingsModal')">&times;</button>
             </div>
-            <div class="modal-body" style="overflow-y: auto; padding: 20px;">
+            <div class="modal-body" style="overflow-y: auto; padding: 25px; background: #f8fafc;">
                 
                 <!-- PHẦN 1: THÔNG TIN & ẢNH BÌA -->
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 12px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                    <h4 style="margin-bottom: 15px; color: #1e293b; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
                         <i class="fa-solid fa-pen-to-square" style="color: var(--primary);"></i> Thông tin & Ảnh bìa
                     </h4>
                     
-                    <!-- Khung xem trước và đổi thumbnail -->
                     <div class="form-group">
-                        <label>Ảnh bìa dự án (Thumbnail):</label>
-                        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 8px;">
-                            <div style="width: 140px; height: 80px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid #cbd5e1; flex-shrink: 0;">
+                        <label>Ảnh bìa dự án (Thumbnail hiện tại):</label>
+                        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 15px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                            <div style="width: 160px; height: 90px; border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0;">
                                 <img id="editThumbPreview" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             <div>
-                                <label for="editThumbFile" class="btn" style="cursor: pointer; font-size: 0.85rem; padding: 7px 14px; background: #fff; border: 1px solid #cbd5e1;">
+                                <label for="editThumbFile" class="btn btn-primary" style="cursor: pointer; font-size: 0.9rem; padding: 8px 16px;">
                                     <i class="fa-solid fa-camera"></i> Đổi ảnh bìa mới
                                 </label>
                                 <input type="file" id="editThumbFile" accept="image/*" style="display: none;" onchange="handlePreviewNewThumb(this)">
-                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 5px;">Hỗ trợ JPG, PNG (Khuyên dùng tỉ lệ 16:9).</div>
+                                <div style="font-size: 0.8rem; color: #64748b; margin-top: 8px;">Hỗ trợ JPG, PNG (Khuyên dùng tỉ lệ 16:9). Tối đa 5MB.</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Quyền hiển thị:</label>
-                        <select id="editProjVisibility" class="form-control">
+                        <select id="editProjVisibility" class="form-control" style="background: #f8fafc;">
                             <option value="public">Công khai (Mọi người đều thấy)</option>
                             <option value="private">Riêng tư (Ẩn khỏi trang chủ)</option>
                         </select>
@@ -579,40 +589,40 @@
 
                     <div class="form-group">
                         <label>Hướng dẫn vận hành:</label>
-                        <textarea id="editDescInput" class="form-control" rows="3" placeholder="Cách chơi, điều khiển phím..."></textarea>
+                        <textarea id="editDescInput" class="form-control" rows="4" style="background: #f8fafc;"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Đội ngũ sáng tạo (Credits):</label>
-                        <textarea id="editCreditsInput" class="form-control" rows="2" placeholder="Ghi nhận nguồn tác giả, âm thanh..."></textarea>
+                        <textarea id="editCreditsInput" class="form-control" rows="2" style="background: #f8fafc;"></textarea>
                     </div>
 
-                    <button type="button" onclick="saveProjectInfoBtn()" class="btn btn-primary" id="btnSaveProjInfo" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.95rem;">
-                        <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi thông tin & Ảnh bìa
+                    <button type="button" onclick="saveProjectInfoBtn()" class="btn btn-primary" id="btnSaveProjInfo" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
+                        <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
                     </button>
                 </div>
 
                 <!-- PHẦN 2: CẬP NHẬT FILE GAME MỚI (.SB3) -->
-                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 8px; color: #c2410c; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                    <h4 style="margin-bottom: 10px; color: #c2410c; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Cập nhật bản Game mới (.sb3)
                     </h4>
-                    <p style="font-size: 0.85rem; color: #7c2d12; margin-bottom: 12px;">Tải lên file Scratch mới (Tối đa 200MB). Bản hiện tại sẽ được tự động lưu vào lịch sử.</p>
+                    <p style="font-size: 0.9rem; color: #9a3412; margin-bottom: 15px;">Tải lên file Scratch mới (Tối đa 200MB). Bản hiện tại sẽ được tự động lưu vào lịch sử bên dưới.</p>
                     <div class="form-group">
-                        <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 8px; background: #fff;">
+                        <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 10px; background: #fff;">
                     </div>
-                    <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content: center; background: #ea580c; color: #fff; padding: 10px; font-size: 0.95rem;">
+                    <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content: center; background: #ea580c; color: #fff; padding: 12px; font-size: 1rem;">
                         <i class="fa-solid fa-rocket"></i> Tải bản cập nhật lên
                     </button>
                 </div>
 
                 <!-- PHẦN 3: LỊCH SỬ CÁC PHIÊN BẢN CŨ -->
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
-                    <h4 style="margin-bottom: 10px; color: #334155; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                    <h4 style="margin-bottom: 15px; color: #334155; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
                         <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử các phiên bản cũ
                     </h4>
-                    <div id="projectVersionList" style="max-height: 160px; overflow-y: auto;">
-                        <p style="color: #94a3b8; font-size: 0.85rem;">Đang tải danh sách...</p>
+                    <div id="projectVersionList" style="max-height: 200px; overflow-y: auto; padding-right: 5px;">
+                        <p style="color: #94a3b8; font-size: 0.9rem;">Đang tải danh sách...</p>
                     </div>
                 </div>
 
@@ -1389,39 +1399,132 @@
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        async function saveProjectInfoBtn() {
-            const vis = document.getElementById('editProjVisibility').value; const desc = document.getElementById('editDescInput').value; const cred = document.getElementById('editCreditsInput').value;
-            await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "change_visibility", payload: { visibility: vis } }) });
-            await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "update_info", payload: { description: desc, credits: cred } }) });
-            currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
-            document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = cred || "Tác giả gốc.";
-            document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
-            closeModal('projSettingsModal'); showToast("Đã lưu thông tin dự án!", "success");
+        // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
+        const originalOpenProjectPage = openProjectPage;
+        openProjectPage = function(idParam) {
+            originalOpenProjectPage(idParam);
+            if(currentProj) {
+                document.getElementById('projPageDate').innerText = currentProj.date || 'Đang cập nhật...';
+                const btnSettings = document.getElementById('btnProjSettings');
+                if(btnSettings) btnSettings.onclick = openProjSettingsModal;
+            }
+        };
+
+        // ================= TÍNH NĂNG QUẢN LÝ DỰ ÁN =================
+
+        // 1. TỰ ĐỘNG ĐIỀN DỮ LIỆU KHI MỞ BẢNG
+        function openProjSettingsModal() {
+            if (!currentProj) return;
+
+            // Điền text
+            document.getElementById('editProjVisibility').value = currentProj.visibility || 'public';
+            document.getElementById('editDescInput').value = currentProj.description || '';
+            document.getElementById('editCreditsInput').value = currentProj.credits || '';
+
+            // Điền ảnh bìa
+            const thumbImg = document.getElementById('editThumbPreview');
+            if (thumbImg) {
+                thumbImg.src = currentProj.thumbId ? `${WORKER_URL}/api/project/${currentProj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+            }
+            if (document.getElementById('editThumbFile')) document.getElementById('editThumbFile').value = '';
+            if (document.getElementById('updateProjFile')) document.getElementById('updateProjFile').value = '';
+
+            // Render Lịch sử
+            renderProjectVersions();
+
+            openModal('projSettingsModal');
         }
 
+        // 2. XEM TRƯỚC ẢNH BÌA
+        function handlePreviewNewThumb(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { document.getElementById('editThumbPreview').src = e.target.result; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 3. RENDER LỊCH SỬ PHIÊN BẢN (Hòa đồng Data Cũ & Mới)
+        function renderProjectVersions() {
+            const listEl = document.getElementById('projectVersionList');
+            if (!listEl) return;
+            const versions = currentProj.versions || [];
+            
+            if (!versions.length) {
+                listEl.innerHTML = '<div style="padding: 15px; background: #f1f5f9; border-radius: 8px; color: #64748b; font-size: 0.9rem; text-align: center;"><i class="fa-solid fa-seedling"></i> Dự án đang ở phiên bản gốc đầu tiên, chưa có bản cập nhật nào.</div>';
+                return;
+            }
+
+            listEl.innerHTML = versions.map((v, idx) => {
+                // Xử lý tương thích: Nếu v chỉ là chuỗi string (data cũ) hoặc là object (data mới)
+                const fid = typeof v === 'string' ? v : v.fileId;
+                const timeStr = typeof v === 'string' ? 'Phiên bản cũ (Trước bản cập nhật V9)' : (v.time || 'Không rõ ngày');
+                
+                return `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:10px; transition:0.2s;">
+                    <div style="flex:1;">
+                        <div style="font-weight:bold; color:#1e293b; font-size:0.95rem;">Bản lưu #${idx + 1}</div>
+                        <div style="color:#64748b; font-size:0.8rem; margin-top:4px;"><i class="fa-regular fa-calendar-check"></i> ${timeStr}</div>
+                    </div>
+                    <a href="https://turbowarp.org/editor?project_url=${encodeURIComponent(`${WORKER_URL}/api/project/${fid}`)}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.85rem; background:#e2e8f0; color:#334155; white-space:nowrap;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở xem lại
+                    </a>
+                </div>
+            `}).reverse().join('');
+        }
+
+        // 4. LƯU THÔNG TIN & ẢNH BÌA
+        async function saveProjectInfoBtn() {
+            const btn = document.getElementById('btnSaveProjInfo');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...'; btn.disabled = true;
+
+            const vis = document.getElementById('editProjVisibility').value;
+            const desc = document.getElementById('editDescInput').value;
+            const cred = document.getElementById('editCreditsInput').value;
+            const thumbFile = document.getElementById('editThumbFile').files[0];
+
+            let newThumbId = null;
+            if (thumbFile) {
+                const fd = new FormData(); fd.append("file", thumbFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
+                try {
+                    const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
+                    if (upRes.success) newThumbId = upRes.file_id;
+                } catch(e) {
+                    showToast("Lỗi tải ảnh bìa", "error"); btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi'; btn.disabled = false; return;
+                }
+            }
+
+            const payload = { description: desc, credits: cred, visibility: vis };
+            if (newThumbId) payload.thumbId = newThumbId;
+
+            const res = await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "update_info", payload }) });
+
+            if (res && res.success) {
+                currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
+                if (newThumbId) currentProj.thumbId = newThumbId;
+
+                document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn.";
+                document.getElementById('projCredits').innerText = cred || "Tác giả gốc.";
+                document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
+                
+                closeModal('projSettingsModal'); showToast("Đã lưu thông tin!", "success");
+            }
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi'; btn.disabled = false;
+        }
+
+        // 5. CẬP NHẬT FILE GAME
         async function handleUpdateProjectFileBtn() {
             const fileInput = document.getElementById('updateProjFile').files[0];
-            if(!fileInput) return;
+            if (!fileInput) return showToast("Vui lòng chọn file .sb3", "error");
 
-            // --- KIỂM TRA ĐỊNH DẠNG VÀ DUNG LƯỢNG ---
-            if(!fileInput.name.toLowerCase().endsWith('.sb3')) {
-                showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error");
-                document.getElementById('updateProjFile').value = ""; // Xóa lựa chọn sai
-                return;
-            }
-            if(fileInput.size > 200 * 1024 * 1024) {
-                showToast("Lỗi: File quá lớn! Giới hạn tối đa là 200MB.", "error");
-                document.getElementById('updateProjFile').value = ""; // Xóa lựa chọn sai
-                return;
-            }
-            // ----------------------------------------
-            
-            const btn = document.getElementById('btnUpdateProjSubmit'); 
-            btn.innerText = "Đang tải lên..."; btn.disabled = true;
-            
-            const form = new FormData(); 
-            
-            const CHUNK_SIZE = 18 * 1024 * 1024; 
+            if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Chỉ cho phép tải file .sb3!", "error"); document.getElementById('updateProjFile').value = ""; return; }
+            if (fileInput.size > 200 * 1024 * 1024) { showToast("File quá lớn! Tối đa 200MB.", "error"); document.getElementById('updateProjFile').value = ""; return; }
+
+            const btn = document.getElementById('btnUpdateProjSubmit');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải bản mới lên...'; btn.disabled = true;
+
+            const form = new FormData();
+            const CHUNK_SIZE = 18 * 1024 * 1024;
             let offset = 0; let chunkIndex = 0;
             while (offset < fileInput.size) {
                 const chunk = fileInput.slice(offset, offset + CHUNK_SIZE);
@@ -1429,17 +1532,16 @@
                 offset += CHUNK_SIZE; chunkIndex++;
             }
 
-            form.append("updateProjectId", currentProj.projectId || currentProj.fileId); 
-            form.append("author", currentUser.username); 
-            form.append("username", currentUser.username); 
-            form.append("sessionToken", currentUser.sessionToken);
-            
+            form.append("updateProjectId", currentProj.projectId || currentProj.fileId);
+            form.append("author", currentUser.username); form.append("username", currentUser.username); form.append("sessionToken", currentUser.sessionToken);
+
             try {
-                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
-                if (res.success) { showToast("Cập nhật phiên bản thành công!", "success"); closeModal('projSettingsModal'); setTimeout(()=>{location.reload();}, 1000); } else showToast(res.error || "Lỗi tải lên", "error");
-            } catch(err) { showToast("Lỗi kết nối", "error"); } 
-            
-            btn.innerText = "Tải bản cập nhật lên"; btn.disabled = false;
+                const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: form, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
+                if (res.success) { showToast("Cập nhật bản mới thành công!", "success"); closeModal('projSettingsModal'); setTimeout(() => { location.reload(); }, 1000); } 
+                else showToast(res.error || "Lỗi tải lên", "error");
+            } catch (err) { showToast("Lỗi kết nối", "error"); }
+
+            btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Tải bản cập nhật lên'; btn.disabled = false;
         }
     </script>
 </body>
