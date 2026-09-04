@@ -1137,19 +1137,41 @@
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
             document.getElementById('uploadView').style.display = 'block';
 
-            // PHÁT TÍN HIỆU ĐỊNH KỲ: Cứ mỗi 300ms phát 1 lần cho đến khi nhận được file thành công
+            // PHÁT TÍN HIỆU ĐỊNH KỲ VÀ HIỂN THỊ LOADING SCREEN TRÊN WEB
             if (window.opener && !isProjectImported) {
+                // TẠO MÀN HÌNH CHỜ NHẬN FILE
+                let importLoader = document.getElementById('danv-import-loader');
+                if(!importLoader) {
+                    importLoader = document.createElement('div');
+                    importLoader.id = 'danv-import-loader';
+                    importLoader.innerHTML = `
+                        <div style="position:fixed; inset:0; background:rgba(255,255,255,0.95); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                            <i class="fa-solid fa-cloud-arrow-down fa-bounce" style="font-size:4rem; color:var(--primary); margin-bottom:20px;"></i>
+                            <h2 style="color:#111; margin-bottom:10px;">Đang nhận dữ liệu từ TurboWarp...</h2>
+                            <p style="color:#666; font-size:1rem; margin-bottom:20px; max-width:400px;">Quá trình nén file lớn bên TurboWarp có thể mất từ 10 - 20 giây. Vui lòng giữ nguyên trang này.</p>
+                            <button class="btn btn-danger" onclick="document.getElementById('danv-import-loader').remove();">Bỏ qua / Tự tải lên thủ công</button>
+                        </div>
+                    `;
+                    document.body.appendChild(importLoader);
+                }
+
                 let attempts = 0;
                 const heartbeat = setInterval(() => {
                     attempts++;
-                    if (isProjectImported || attempts > 35) {
+                    // Tăng số lần thử lên 100 lần (Khoảng 30 giây) để đủ thời gian chờ nén file siêu nặng
+                    if (isProjectImported || attempts > 100) {
                         clearInterval(heartbeat);
+                        if (attempts > 100 && document.getElementById('danv-import-loader')) {
+                            document.getElementById('danv-import-loader').remove();
+                            showToast("Thời gian chờ quá lâu. Bạn có thể tự chọn file thủ công.", "error");
+                        }
                         return;
                     }
                     try {
                         window.opener.postMessage({ type: "DANV_WORKSHOP_READY" }, "*");
                     } catch (err) {
                         clearInterval(heartbeat);
+                        if(document.getElementById('danv-import-loader')) document.getElementById('danv-import-loader').remove();
                     }
                 }, 300);
             }
@@ -1158,7 +1180,12 @@
         // LẮNG NGHE FILE VÀ ẢNH TRUYỀN TỪ EXTENSION TURBOWARP
         window.addEventListener('message', async (event) => {
             if (event.data && event.data.type === "DANV_IMPORT_PROJECT") {
-                isProjectImported = true; // Đánh dấu đã nhận thành công để dừng phát tín hiệu
+                isProjectImported = true; // Đánh dấu đã nhận thành công
+                
+                // ẨN MÀN HÌNH CHỜ KHI ĐÃ NHẬN ĐƯỢC FILE
+                const importLoader = document.getElementById('danv-import-loader');
+                if(importLoader) importLoader.remove();
+
                 const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
 
                 // 1. Tự động điền Tên dự án
@@ -1201,6 +1228,11 @@
         async function handleUploadBtn() {
             const fileInput = document.getElementById('upFile').files[0];
             if(!fileInput || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
+            
+            // --- KIỂM TRA ĐỊNH DẠNG VÀ DUNG LƯỢNG ---
+            if(!fileInput.name.toLowerCase().endsWith('.sb3')) return showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error");
+            if(fileInput.size > 200 * 1024 * 1024) return showToast("Kích thước tải lên tối đa là 200MB.", "error");
+            // ----------------------------------------
             
             const btn = document.getElementById('btnSubmitUpload'); 
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xuất bản...'; btn.disabled = true;
@@ -1310,6 +1342,19 @@
         async function handleUpdateProjectFileBtn() {
             const fileInput = document.getElementById('updateProjFile').files[0];
             if(!fileInput) return;
+
+            // --- KIỂM TRA ĐỊNH DẠNG VÀ DUNG LƯỢNG ---
+            if(!fileInput.name.toLowerCase().endsWith('.sb3')) {
+                showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error");
+                document.getElementById('updateProjFile').value = ""; // Xóa lựa chọn sai
+                return;
+            }
+            if(fileInput.size > 200 * 1024 * 1024) {
+                showToast("Lỗi: File quá lớn! Giới hạn tối đa là 200MB.", "error");
+                document.getElementById('updateProjFile').value = ""; // Xóa lựa chọn sai
+                return;
+            }
+            // ----------------------------------------
             
             const btn = document.getElementById('btnUpdateProjSubmit'); 
             btn.innerText = "Đang tải lên..."; btn.disabled = true;
