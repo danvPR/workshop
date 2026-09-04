@@ -645,7 +645,7 @@
                 }
 
                 await loadProjects(); updateNav(); handleRouting();
-                setInterval(autoFetchData, 15000);
+                setInterval(autoFetchData, 35000);
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 300); }
         });
 
@@ -699,27 +699,29 @@
 
         // ================= ROUTING & NAV =================
         async function autoFetchData() {
-            if(currentUser) fetchNotifications(true);
-            const hash = window.location.hash;
-            if(hash.startsWith('#project/') && currentProj) {
-                try {
-                    const res = await (await fetch(`${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}`)).json();
-                    if(!res.error) {
-                        allProjects = res; const latestProj = allProjects.find(p => p.projectId === currentProj.projectId || p.fileId === currentProj.fileId);
-                        if(latestProj && JSON.stringify(latestProj.comments) !== JSON.stringify(currentProj.comments)) { currentProj.comments = latestProj.comments; renderCommentList('proj', currentProj.comments); }
-                    }
-                } catch(e){}
-            }
+            // 🛡️ TIẾT KIỆM REQUEST 1: Nếu người dùng đang ẩn tab hoặc không bật web thì KHÔNG quét
+            if (document.hidden) return; 
+
+            // 🛡️ TIẾT KIỆM REQUEST 2: Chạy ngầm chỉ quét DUY NHẤT Chuông Thông Báo (rất nhẹ)
+            if (currentUser) fetchNotifications(true);
         }
 
         window.addEventListener('hashchange', handleRouting);
-        function handleRouting() {
-            const hash = window.location.hash || '#home'; document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); document.getElementById('playerContainer').innerHTML = ''; 
+        async function handleRouting() {
+            const hash = window.location.hash || '#home'; 
+            document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
+            document.getElementById('playerContainer').innerHTML = ''; 
+            
+            // 🔥 CHỈ LẤY DATA KHI THỰC SỰ CẦN: Khi người dùng bấm chuyển trang, tải mới 100%
+            if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
+                await loadProjects(); 
+            }
+
             if (hash.startsWith('#project/')) openProjectPage(hash.replace('#project/', ''));
             else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')));
             else if (hash === '#upload') openUploadPage();
             else if (hash === '#settings') openSettingsPage();
-            else if (hash === '#create') window.open('https://turbowarp.org/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ', '_blank'); 
+            else if (hash === '#create') window.open('https://turbowarp.org/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADUmqZgc3b1FGVgaw8XD8aFzd067NfAALlGwAC5enQVHp1kixhKgTtPQQ', '_blank'); 
             else openHomePage();
         }
 
