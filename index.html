@@ -83,6 +83,15 @@
         .info-body { font-size: 0.95rem; color: #333; white-space: pre-line; line-height: 1.6; }
 
         /* SỬA LỖI BỐ CỤC COMMENTS TẠI ĐÂY */
+        @keyframes highlightBlink {
+            0%, 50% { background-color: #fef08a; transform: scale(1.02); border-radius: 12px; }
+            100% { background-color: transparent; transform: scale(1); border-radius: 12px; }
+        }
+        .highlight-blink {
+            animation: highlightBlink 2.5s ease-out forwards;
+            padding: 5px;
+            margin: -5px;
+        }
         .comment-thread { margin-bottom: 20px; }
         .comment-box { display: flex; gap: 12px; margin-bottom: 8px; }
         .avt-circle { width: 38px; height: 38px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
@@ -791,17 +800,19 @@
 
         window.addEventListener('hashchange', handleRouting);
         async function handleRouting() {
-            const hash = window.location.hash || '#home'; 
+            const fullHash = window.location.hash || '#home'; 
+            const [hash, queryStr] = fullHash.split('?');
+            const urlParams = new URLSearchParams(queryStr || '');
+
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
             document.getElementById('playerContainer').innerHTML = ''; 
             
-            // 🔥 CHỈ LẤY DATA KHI THỰC SỰ CẦN: Khi người dùng bấm chuyển trang, tải mới 100%
             if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
                 await loadProjects(); 
             }
 
-            if (hash.startsWith('#project/')) openProjectPage(hash.replace('#project/', ''));
-            else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')));
+            if (hash.startsWith('#project/')) openProjectPage(hash.replace('#project/', ''), urlParams);
+            else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#upload') openUploadPage();
             else if (hash === '#settings') openSettingsPage();
             else if (hash === '#notifications') openNotificationsPage();
@@ -861,7 +872,14 @@
             document.getElementById('btnSeeInside').href = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
             document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
-            switchProjTab('info'); updateActionBtns(); renderCommentList('proj', currentProj.comments || []); removeCommentImage('proj'); cancelReply('proj');
+            updateActionBtns(); renderCommentList('proj', currentProj.comments || []); removeCommentImage('proj'); cancelReply('proj');
+            
+            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
+                switchProjTab('comments');
+                if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('proj', urlParams.get('c')), 500);
+            } else {
+                switchProjTab('info');
+            }
 
             if (currentUser && currentUser.username.toLowerCase() === proj.author.toLowerCase()) document.getElementById('btnProjSettings').style.display = 'inline-flex';
             else document.getElementById('btnProjSettings').style.display = 'none';
@@ -919,7 +937,7 @@
 
                 return `
                     <div class="comment-thread" id="${type}-thread-${root.id}">
-                        <div class="comment-box">
+                        <div class="comment-box" id="comment-box-${root.id}">
                             <img src="${getAvtUrl(root.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
                             <div class="comment-content-area">
                                 <div class="comment-header">
@@ -941,7 +959,7 @@
                         ${replies.length > 0 ? `
                             <div class="replies-container">
                                 ${visibleReplies.map(rep => `
-                                    <div class="comment-box">
+                                    <div class="comment-box" id="comment-box-${rep.id}">
                                         <img src="${getAvtUrl(rep.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
                                         <div class="comment-content-area">
                                             <div class="comment-header">
@@ -967,6 +985,28 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // HÀM MỚI: TÌM, MỞ RỘNG VÀ CUỘN ĐẾN BÌNH LUẬN
+        function highlightAndScrollComment(type, commentId) {
+            let list = type === 'proj' ? (currentProj.comments || []) : (viewingProfileData.comments || []);
+            let target = list.find(c => c.id === commentId);
+            if (!target) return;
+
+            // Nếu nó là phản hồi con, bắt buộc phải mở rộng nhánh cha ra trước
+            if (target.parentId) {
+                expandedThreads[type][target.parentId] = true;
+                renderCommentList(type, list); 
+            }
+
+            setTimeout(() => {
+                const el = document.getElementById(`comment-box-${commentId}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('highlight-blink');
+                    setTimeout(() => el.classList.remove('highlight-blink'), 3000);
+                }
+            }, 100);
         }
 
         async function deleteComment(type, commentId) {
@@ -1032,7 +1072,7 @@
 
         // ================= PROFILE & SETTINGS =================
         // ================= TRANG PROFILE =================
-        async function openProfilePage(username) {
+        async function openProfilePage(username, urlParams = null) {
             document.getElementById('profileView').style.display = 'block';
             viewingProfileUser = username;
             
@@ -1146,7 +1186,13 @@
             renderCommentList('prof', viewingProfileData.comments || []);
             removeCommentImage('prof'); 
             cancelReply('prof'); 
-            switchProfTab('projects');
+            
+            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
+                switchProfTab('comments');
+                if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('prof', urlParams.get('c')), 500);
+            } else {
+                switchProfTab('projects');
+            }
             
             const formProf = document.getElementById('profCommentForm');
             const promptProf = document.getElementById('loginPromptProf');
@@ -1434,7 +1480,7 @@
         // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH
         let notifDisplayLimit = 50; // Biến giới hạn load 50 tin nhắn
 
-        // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH
+        // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH (ĐÃ CÓ TỰ ĐỘNG CHUYỂN TAB COMMENTS)
         function formatScratchNotif(n) {
             let senderLink = `<a href="#profile/${n.sender}" style="font-weight:bold; color:#575e75; text-decoration:none;">${n.sender}</a>`;
             let mainText = escapeHtml(n.text);
@@ -1448,7 +1494,12 @@
                 return { actionHtml, bubbleHtml: '' };
             }
 
-            // Text sau khi escapeHtml sẽ đổi dấu ngoặc kép (") thành &quot;
+            // Tự động chèn lệnh mở tab Comments (?tab=comments) nếu là thông báo về bình luận
+            let linkWithTab = n.link;
+            if (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn")) {
+                if (!linkWithTab.includes('?')) linkWithTab += '?tab=comments';
+            }
+
             let quoteMatch = mainText.match(/&quot;(.*?)&quot;/); 
 
             // 2. BÌNH LUẬN CÓ BONG BÓNG + MÔ PHỎNG BOX TRẢ LỜI
@@ -1457,7 +1508,7 @@
                 textBeforeQuote = textBeforeQuote.replace(n.sender, senderLink);
                 let targetText = n.link.includes('profile') ? "thông tin cá nhân" : "dự án";
                 
-                actionHtml = `${textBeforeQuote} <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">${targetText}</a>`;
+                actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">${targetText}</a>`;
 
                 bubbleHtml = `
                     <div style="display:flex; align-items:flex-start; gap:15px; padding-left: 28px; margin-top: 10px;">
@@ -1470,8 +1521,8 @@
                             
                             <!-- Box mô phỏng Reply -->
                             <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                                <input type="text" placeholder="Viết bình luận..." style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="location.hash='${n.link}'">
-                                <button class="btn btn-primary" onclick="location.hash='${n.link}'" style="border-radius: 20px; padding: 9px 20px;">Trả lời</button>
+                                <input type="text" placeholder="Viết bình luận..." style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="location.hash='${linkWithTab}'">
+                                <button class="btn btn-primary" onclick="location.hash='${linkWithTab}'" style="border-radius: 20px; padding: 9px 20px;">Trả lời</button>
                             </div>
                         </div>
                     </div>
@@ -1481,7 +1532,6 @@
                 actionHtml = mainText.replace(n.sender, senderLink);
                 const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
                 
-                // Fix lỗi bắt sai link cho các dữ liệu cũ/mới
                 if (projRegex.test(actionHtml)) {
                     actionHtml = actionHtml.replace(projRegex, `dự án <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">"$1"</a>`);
                 } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
@@ -1584,8 +1634,8 @@
 
         // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
         const originalOpenProjectPage = openProjectPage;
-        openProjectPage = function(idParam) {
-            originalOpenProjectPage(idParam);
+        openProjectPage = function(idParam, urlParams = null) {
+            originalOpenProjectPage(idParam, urlParams);
             if(currentProj) {
                 document.getElementById('projPageDate').innerText = currentProj.date || 'Đang cập nhật...';
                 const btnSettings = document.getElementById('btnProjSettings');
