@@ -299,7 +299,7 @@
                 <div class="banner-thumb-area"><img id="profBannerThumb" src="" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'"></div>
                 <div class="banner-info-area">
                     <span style="background:rgba(255,255,255,0.2); color:#fff; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold; width:max-content; margin-bottom:10px;">TÁC PHẨM NỔI BẬT</span>
-                    <h2 id="profBannerTitle" style="font-size:1.8rem; margin-bottom:8px;">Tên dự án nổi bật</h2>
+                    <h2 id="profBannerTitle" style="font-size:1.8rem; margin-bottom:8px; color: #fff;">Tên dự án nổi bật</h2>
                     <p id="profBannerDesc" style="color:#cbd5e1; font-size:0.95rem; margin-bottom:15px; line-height:1.5;"></p>
                     <a id="btnPlayBannerProj" href="#" class="btn btn-primary" style="width:max-content; padding:10px 25px;"><i class="fa-solid fa-play"></i> Trải nghiệm</a>
                 </div>
@@ -468,8 +468,11 @@
 
     <!-- TRANG 6: THÔNG BÁO (TIN NHẮN) GIỐNG SCRATCH -->
     <div id="notificationsView" class="page-view" style="max-width: 950px; padding: 0 20px 40px 20px;">
-        <div style="background: #855cd6; padding: 35px 40px; border-radius: 12px 12px 0 0; color: #fff;">
+        <div style="background: #855cd6; padding: 35px 40px; border-radius: 12px 12px 0 0; color: #fff; display: flex; justify-content: space-between; align-items: center;">
             <h1 style="margin: 0; font-size: 2.2rem; font-weight: bold;">Tin nhắn</h1>
+            <button class="btn" style="background: rgba(255,255,255,0.2); color: #fff; border: none; font-weight: bold;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'" onclick="markAllNotifsRead(event)">
+                <i class="fa-solid fa-check-double"></i> Đánh dấu đã đọc tất cả
+            </button>
         </div>
         <div style="background: #f2f5f7; border: 1px solid #d9d9d9; border-top: none; border-radius: 0 0 12px 12px; min-height: 400px;">
             <div id="notifPageList">
@@ -814,7 +817,7 @@
                     <div style="display:flex; align-items:center; gap:15px;">
                         ${adminIcon}
                         <a href="#notifications" style="position:relative; display:inline-flex; align-items:center; justify-content:center; padding: 6px; border-radius: 8px; transition: 0.2s; text-decoration:none;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">
-                            <img src="https://scratch.mit.edu/images/nav-notifications.png" style="height: 30px;">
+                            <img src="https://scratch.mit.edu/images/nav-notifications.png" style="height: 22px; opacity: 0.9;">
                             <span class="notif-badge" id="notifBadge" style="display:none; right: -2px; top: -2px;">0</span>
                         </a>
                     </div>
@@ -1429,15 +1432,28 @@
         }
 
         // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH
+        let notifDisplayLimit = 50; // Biến giới hạn load 50 tin nhắn
+
+        // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH
         function formatScratchNotif(n) {
             let senderLink = `<a href="#profile/${n.sender}" style="font-weight:bold; color:#575e75; text-decoration:none;">${n.sender}</a>`;
             let mainText = escapeHtml(n.text);
             let actionHtml = ''; let bubbleHtml = '';
 
-            let quoteMatch = mainText.match(/"(.*?)"/);
-            // NẾU LÀ BÌNH LUẬN (Có chứa ngoặc kép)
+            // 1. CẢNH CÁO TỪ ADMIN VÀ HỆ THỐNG (Khung màu đỏ chữ trắng)
+            if (n.sender === "HỆ THỐNG" || mainText.includes("Cảnh cáo") || mainText.includes("bị gỡ")) {
+                actionHtml = `<div style="background: #ef4444; color: #fff; padding: 15px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(239,68,68,0.2); border: 2px solid #b91c1c;">
+                    <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px; font-size:1.2rem;"></i> ${mainText}
+                </div>`;
+                return { actionHtml, bubbleHtml: '' };
+            }
+
+            // Text sau khi escapeHtml sẽ đổi dấu ngoặc kép (") thành &quot;
+            let quoteMatch = mainText.match(/&quot;(.*?)&quot;/); 
+
+            // 2. BÌNH LUẬN CÓ BONG BÓNG + MÔ PHỎNG BOX TRẢ LỜI
             if (quoteMatch && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
-                let textBeforeQuote = mainText.split(':')[0]; // Lấy phần đầu "admin đã bình luận"
+                let textBeforeQuote = mainText.split(':')[0] || mainText.split('&quot;')[0]; 
                 textBeforeQuote = textBeforeQuote.replace(n.sender, senderLink);
                 let targetText = n.link.includes('profile') ? "thông tin cá nhân" : "dự án";
                 
@@ -1446,76 +1462,119 @@
                 bubbleHtml = `
                     <div style="display:flex; align-items:flex-start; gap:15px; padding-left: 28px; margin-top: 10px;">
                         <a href="#profile/${n.sender}"><img src="${getAvtUrl(n.senderAvt)}" style="width:48px; height:48px; border-radius:4px; border:1px solid #d9d9d9; object-fit:cover;"></a>
-                        <div style="background:#fff; border:1px solid #d9d9d9; border-radius:6px; padding:12px 18px; position:relative; min-width: 120px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                            <!-- Mũi tên nhọn chĩa vào Avatar -->
-                            <div style="position:absolute; left:-6px; top:15px; width:10px; height:10px; background:#fff; border-left:1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; transform:rotate(45deg);"></div>
-                            <span style="color:#575e75; font-size:0.95rem;">${quoteMatch[1]}</span>
+                        <div style="flex:1; max-width: 600px;">
+                            <div style="background:#fff; border:1px solid #d9d9d9; border-radius:6px; padding:12px 18px; position:relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                                <div style="position:absolute; left:-6px; top:15px; width:10px; height:10px; background:#fff; border-left:1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; transform:rotate(45deg);"></div>
+                                <span style="color:#575e75; font-size:0.95rem;">${quoteMatch[1]}</span>
+                            </div>
+                            
+                            <!-- Box mô phỏng Reply -->
+                            <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                                <input type="text" placeholder="Viết bình luận..." style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="location.hash='${n.link}'">
+                                <button class="btn btn-primary" onclick="location.hash='${n.link}'" style="border-radius: 20px; padding: 9px 20px;">Trả lời</button>
+                            </div>
                         </div>
                     </div>
                 `;
             } else {
-                // CÁC THÔNG BÁO KHÁC (Thích, Theo dõi...)
+                // 3. CÁC THÔNG BÁO KHÁC (Thích, Theo dõi, v.v...)
                 actionHtml = mainText.replace(n.sender, senderLink);
-                if (actionHtml.includes('dự án "')) {
-                    actionHtml = actionHtml.replace(/dự án "(.*?)"/, `dự án <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">"$1"</a>`);
-                } else if (!actionHtml.includes('<a')) {
+                const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
+                
+                // Fix lỗi bắt sai link cho các dữ liệu cũ/mới
+                if (projRegex.test(actionHtml)) {
+                    actionHtml = actionHtml.replace(projRegex, `dự án <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">"$1"</a>`);
+                } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
                     actionHtml += ` <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
                 }
             }
             return { actionHtml, bubbleHtml };
         }
 
-        async function fetchNotifications(silent = false) {
+        // HÀM CLICK ĐÁNH DẤU ĐỌC TẤT CẢ
+        async function markAllNotifsRead(event) {
             if(!currentUser) return;
-            try {
-                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
-                window.cachedNotifs = notifs; // Lưu lại để Render mượt hơn
-                const unreadCount = notifs.filter(n => !n.read).length;
-                const badge = document.getElementById('notifBadge');
-                if(unreadCount > 0) { badge.innerText = unreadCount; badge.style.display = 'block'; } else { badge.style.display = 'none'; }
-            } catch(e){}
+            const btn = event.currentTarget;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            
+            await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) });
+            showToast("Đã đánh dấu đọc tất cả", "success");
+            
+            const badge = document.getElementById('notifBadge');
+            if(badge) badge.style.display = 'none';
+            
+            if(window.cachedNotifs) {
+                window.cachedNotifs = window.cachedNotifs.map(n => ({...n, read: true}));
+                renderNotifList(); // Cập nhật lại màu nền ngay lập tức
+            }
+            btn.innerHTML = origHtml;
         }
 
-        // HÀM MỞ TRANG TIN NHẮN VÀ RENDER
+        // HÀM MỞ TRANG TIN NHẮN
         async function openNotificationsPage() {
             if(!currentUser) return location.hash='#home';
             document.getElementById('notificationsView').style.display = 'block';
+            notifDisplayLimit = 50; // Reset lại giới hạn về 50 mỗi khi mở trang
             
             const container = document.getElementById('notifPageList');
             container.innerHTML = '<div style="padding:40px; text-align:center; color:#855cd6;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i></div>';
 
-            const badge = document.getElementById('notifBadge');
-            if(badge) badge.style.display = 'none'; // Xóa số thông báo đỏ ngay khi bấm vào
-
-            let notifs = [];
             try {
-                // Đánh dấu đã đọc tất cả
-                await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) }); 
-                notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
+                // KHÔNG GỌI API ĐÁNH DẤU ĐÃ ĐỌC Ở ĐÂY NỮA
+                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
+                window.cachedNotifs = notifs; 
             } catch(e) {
-                notifs = window.cachedNotifs || []; // Dùng lại data cũ nếu mạng chậm
+                window.cachedNotifs = window.cachedNotifs || [];
             }
+            renderNotifList();
+        }
+
+        // HÀM RENDER TIN NHẮN & NÚT "XEM THÊM"
+        function renderNotifList() {
+            const container = document.getElementById('notifPageList');
+            const notifs = window.cachedNotifs || [];
 
             if (!notifs || notifs.length === 0) {
                 container.innerHTML = '<div style="padding:40px; text-align:center; color:#575e75; font-size:1.1rem;">Bạn chưa có tin nhắn nào.</div>';
                 return;
             }
 
-            container.innerHTML = notifs.map(n => {
+            // Chỉ cắt đúng số lượng cho phép (Mặc định 50)
+            const visibleNotifs = notifs.slice(0, notifDisplayLimit);
+
+            let html = visibleNotifs.map(n => {
                 const { actionHtml, bubbleHtml } = formatScratchNotif(n);
+                // Ẩn icon chuông nếu là Cảnh cáo khung đỏ cho đẹp
+                const isWarning = actionHtml.includes('background: #ef4444');
                 return `
                     <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${n.read ? '#f2f5f7' : '#fff'};">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: ${bubbleHtml ? '10px' : '0'};">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                ${getNotifIcon(n.text)}
-                                <span style="font-size:1rem; color:#575e75;">${actionHtml}</span>
+                            <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                                ${isWarning ? '' : getNotifIcon(n.text)}
+                                <span style="font-size:1rem; color:#575e75; line-height:1.5; flex:1;">${actionHtml}</span>
                             </div>
-                            <span style="font-size:0.9rem; color:#858585; white-space:nowrap; margin-left:15px;">${timeAgo(n.time)}</span>
+                            <span style="font-size:0.85rem; color:#858585; white-space:nowrap; margin-left:15px; margin-top:2px;">${timeAgo(n.time)}</span>
                         </div>
                         ${bubbleHtml}
                     </div>
                 `;
             }).join('');
+
+            // Nếu số tin nhắn gốc > số đang hiển thị, hiện nút "Xem thêm"
+            if (notifs.length > notifDisplayLimit) {
+                html += `
+                <div style="padding: 30px; text-align: center;">
+                    <button class="btn btn-primary" style="padding: 10px 30px; border-radius: 20px; font-weight: bold;" onclick="loadMoreNotifs()">Xem thêm tin nhắn cũ</button>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // HÀM KÍCH HOẠT NÚT XEM THÊM
+        function loadMoreNotifs() {
+            notifDisplayLimit += 50;
+            renderNotifList();
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
