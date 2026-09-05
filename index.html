@@ -466,6 +466,18 @@
         </div>
     </div>
 
+    <!-- TRANG 6: THÔNG BÁO (TIN NHẮN) GIỐNG SCRATCH -->
+    <div id="notificationsView" class="page-view" style="max-width: 950px; padding: 0 20px 40px 20px;">
+        <div style="background: #855cd6; padding: 35px 40px; border-radius: 12px 12px 0 0; color: #fff;">
+            <h1 style="margin: 0; font-size: 2.2rem; font-weight: bold;">Tin nhắn</h1>
+        </div>
+        <div style="background: #f2f5f7; border: 1px solid #d9d9d9; border-top: none; border-radius: 0 0 12px 12px; min-height: 400px;">
+            <div id="notifPageList">
+                <!-- Nội dung tin nhắn sẽ render ở đây -->
+            </div>
+        </div>
+    </div>
+
     <!-- ================= MODALS HỆ THỐNG ================= -->
 
     <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
@@ -789,6 +801,7 @@
             else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')));
             else if (hash === '#upload') openUploadPage();
             else if (hash === '#settings') openSettingsPage();
+            else if (hash === '#notifications') openNotificationsPage();
             else if (hash === '#create') window.open('https://turbowarp.org/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ', '_blank'); 
             else openHomePage();
         }
@@ -798,10 +811,12 @@
             if (currentUser) {
                 const adminIcon = currentUser.role === 'admin' ? `<a href="#settings" style="color:#f5b041; margin-right:10px;"><i class="fa-solid fa-shield"></i></a>` : '';
                 nav.innerHTML = `
-                    <div style="position:relative;">
+                    <div style="display:flex; align-items:center; gap:15px;">
                         ${adminIcon}
-                        <button class="btn" style="padding:8px; border-radius:50%; background:#222; color:#fff;" onclick="toggleNotif()"><i class="fa-solid fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none;">0</span></button>
-                        <div class="notif-dropdown" id="notifPanel"><div class="notif-header">Thông báo <button class="btn" style="padding:4px 8px; font-size:0.8rem;" onclick="markAllRead()"><i class="fa-solid fa-check-double"></i> Đã đọc tất cả</button></div><div class="notif-list" id="notifList"><div style="padding:15px;text-align:center;color:#888;">Đang tải...</div></div></div>
+                        <a href="#notifications" style="position:relative; display:inline-flex; align-items:center; justify-content:center; padding: 6px; border-radius: 8px; transition: 0.2s; text-decoration:none;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">
+                            <img src="https://scratch.mit.edu/images/nav-notifications.png" style="height: 30px;">
+                            <span class="notif-badge" id="notifBadge" style="display:none; right: -2px; top: -2px;">0</span>
+                        </a>
                     </div>
                     <a href="#upload" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Tải lên</a>
                     <a href="#settings" class="btn" style="padding:8px; border-radius:50%;" title="Cài đặt"><i class="fa-solid fa-gear"></i></a>
@@ -1383,34 +1398,125 @@
         }
 
         // ================= TIỆN ÍCH KHÁC =================
+        // TÍNH THỜI GIAN TƯƠNG ĐỐI (Giây trước, Phút trước...)
+        function timeAgo(dateString) {
+            try {
+                let clean = dateString.replace(/,/g, '').trim().split(' ');
+                let t = clean[0].includes(':') ? clean[0] : clean[1];
+                let d = clean[0].includes('/') ? clean[0] : clean[1];
+                if(!t || !d) return dateString;
+                let [h, m, s] = t.split(':'); let [D, M, Y] = d.split('/');
+                let past = new Date(Y, M-1, D, h, m, s).getTime();
+                let diff = Math.floor((Date.now() - past) / 1000);
+                
+                if (diff < 0) return "vừa xong";
+                if (diff < 60) return diff + " giây trước";
+                if (diff < 3600) return Math.floor(diff/60) + " phút trước";
+                if (diff < 86400) return Math.floor(diff/3600) + " giờ trước";
+                if (diff < 2592000) return Math.floor(diff/86400) + " ngày trước";
+                if (diff < 31104000) return Math.floor(diff/2592000) + " tháng trước";
+                return Math.floor(diff/31104000) + " năm trước";
+            } catch(e) { return dateString; }
+        }
+
         function getNotifIcon(text) {
             if (text.includes("Thích")) return '<i class="fa-solid fa-heart" style="color:#ff4c4c; font-size:1.2rem;"></i>';
             if (text.includes("Sao")) return '<i class="fa-solid fa-star" style="color:#f5b041; font-size:1.2rem;"></i>';
-            if (text.includes("bình luận") || text.includes("lời nhắn")) return '<i class="fa-solid fa-comment" style="color:var(--primary); font-size:1.2rem;"></i>';
+            if (text.includes("bình luận") || text.includes("lời nhắn") || text.includes("trả lời")) return '<i class="fa-solid fa-comment" style="color:#4b97ff; font-size:1.2rem;"></i>';
             if (text.includes("theo dõi")) return '<i class="fa-solid fa-user-plus" style="color:#8b5cf6; font-size:1.2rem;"></i>';
-            if (text.includes("Quản trị viên") || text.includes("HỆ THỐNG")) return '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444; font-size:1.2rem;"></i>';
+            if (text.includes("Quản trị viên") || text.includes("HỆ THỐNG") || text.includes("bị gỡ")) return '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444; font-size:1.2rem;"></i>';
             return '<i class="fa-solid fa-bell" style="color:#888; font-size:1.2rem;"></i>';
+        }
+
+        // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH
+        function formatScratchNotif(n) {
+            let senderLink = `<a href="#profile/${n.sender}" style="font-weight:bold; color:#575e75; text-decoration:none;">${n.sender}</a>`;
+            let mainText = escapeHtml(n.text);
+            let actionHtml = ''; let bubbleHtml = '';
+
+            let quoteMatch = mainText.match(/"(.*?)"/);
+            // NẾU LÀ BÌNH LUẬN (Có chứa ngoặc kép)
+            if (quoteMatch && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
+                let textBeforeQuote = mainText.split(':')[0]; // Lấy phần đầu "admin đã bình luận"
+                textBeforeQuote = textBeforeQuote.replace(n.sender, senderLink);
+                let targetText = n.link.includes('profile') ? "thông tin cá nhân" : "dự án";
+                
+                actionHtml = `${textBeforeQuote} <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">${targetText}</a>`;
+
+                bubbleHtml = `
+                    <div style="display:flex; align-items:flex-start; gap:15px; padding-left: 28px; margin-top: 10px;">
+                        <a href="#profile/${n.sender}"><img src="${getAvtUrl(n.senderAvt)}" style="width:48px; height:48px; border-radius:4px; border:1px solid #d9d9d9; object-fit:cover;"></a>
+                        <div style="background:#fff; border:1px solid #d9d9d9; border-radius:6px; padding:12px 18px; position:relative; min-width: 120px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                            <!-- Mũi tên nhọn chĩa vào Avatar -->
+                            <div style="position:absolute; left:-6px; top:15px; width:10px; height:10px; background:#fff; border-left:1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; transform:rotate(45deg);"></div>
+                            <span style="color:#575e75; font-size:0.95rem;">${quoteMatch[1]}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // CÁC THÔNG BÁO KHÁC (Thích, Theo dõi...)
+                actionHtml = mainText.replace(n.sender, senderLink);
+                if (actionHtml.includes('dự án "')) {
+                    actionHtml = actionHtml.replace(/dự án "(.*?)"/, `dự án <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">"$1"</a>`);
+                } else if (!actionHtml.includes('<a')) {
+                    actionHtml += ` <a href="${n.link}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
+                }
+            }
+            return { actionHtml, bubbleHtml };
         }
 
         async function fetchNotifications(silent = false) {
             if(!currentUser) return;
             try {
                 const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
+                window.cachedNotifs = notifs; // Lưu lại để Render mượt hơn
                 const unreadCount = notifs.filter(n => !n.read).length;
                 const badge = document.getElementById('notifBadge');
                 if(unreadCount > 0) { badge.innerText = unreadCount; badge.style.display = 'block'; } else { badge.style.display = 'none'; }
-
-                document.getElementById('notifList').innerHTML = notifs.length ? notifs.map(n => `
-                    <a href="${n.link}" class="notif-item ${n.read ? '' : 'unread'}">
-                        <div style="width:30px; text-align:center;">${getNotifIcon(n.text)}</div>
-                        <div style="flex:1;"><div style="font-size:0.9rem; line-height:1.4;">${escapeHtml(n.text)}</div><div style="font-size:0.75rem; color:#888; margin-top:4px;">${n.time}</div></div>
-                    </a>
-                `).join('') : '<div style="padding:15px;text-align:center;color:#888;">Chưa có thông báo.</div>';
             } catch(e){}
         }
 
-        function toggleNotif() { const p = document.getElementById('notifPanel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
-        async function markAllRead() { await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) }); fetchNotifications(true); showToast("Đã đánh dấu đọc tất cả", "success"); document.getElementById('notifPanel').style.display='none'; }
+        // HÀM MỞ TRANG TIN NHẮN VÀ RENDER
+        async function openNotificationsPage() {
+            if(!currentUser) return location.hash='#home';
+            document.getElementById('notificationsView').style.display = 'block';
+            
+            const container = document.getElementById('notifPageList');
+            container.innerHTML = '<div style="padding:40px; text-align:center; color:#855cd6;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i></div>';
+
+            const badge = document.getElementById('notifBadge');
+            if(badge) badge.style.display = 'none'; // Xóa số thông báo đỏ ngay khi bấm vào
+
+            let notifs = [];
+            try {
+                // Đánh dấu đã đọc tất cả
+                await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) }); 
+                notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
+            } catch(e) {
+                notifs = window.cachedNotifs || []; // Dùng lại data cũ nếu mạng chậm
+            }
+
+            if (!notifs || notifs.length === 0) {
+                container.innerHTML = '<div style="padding:40px; text-align:center; color:#575e75; font-size:1.1rem;">Bạn chưa có tin nhắn nào.</div>';
+                return;
+            }
+
+            container.innerHTML = notifs.map(n => {
+                const { actionHtml, bubbleHtml } = formatScratchNotif(n);
+                return `
+                    <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${n.read ? '#f2f5f7' : '#fff'};">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: ${bubbleHtml ? '10px' : '0'};">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                ${getNotifIcon(n.text)}
+                                <span style="font-size:1rem; color:#575e75;">${actionHtml}</span>
+                            </div>
+                            <span style="font-size:0.9rem; color:#858585; white-space:nowrap; margin-left:15px;">${timeAgo(n.time)}</span>
+                        </div>
+                        ${bubbleHtml}
+                    </div>
+                `;
+            }).join('');
+        }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
