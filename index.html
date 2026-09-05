@@ -858,7 +858,7 @@
         }
 
         // ================= DỰ ÁN & BÌNH LUẬN =================
-        function openProjectPage(idParam) {
+        function openProjectPage(idParam, urlParams = null) {
             document.getElementById('projectView').style.display = 'block';
             const proj = allProjects.find(p => p.projectId === idParam || p.fileId === idParam);
             if (!proj) { showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); location.hash="#home"; return; }
@@ -987,10 +987,11 @@
             }).join('');
         }
 
-        // HÀM MỚI: TÌM, MỞ RỘNG VÀ CUỘN ĐẾN BÌNH LUẬN
+        // HÀM MỚI: TÌM, MỞ RỘNG VÀ CUỘN ĐẾN BÌNH LUẬN 
         function highlightAndScrollComment(type, commentId) {
             let list = type === 'proj' ? (currentProj.comments || []) : (viewingProfileData.comments || []);
-            let target = list.find(c => c.id === commentId);
+            // Đảm bảo so sánh đúng định dạng chuỗi
+            let target = list.find(c => String(c.id) === String(commentId));
             if (!target) return;
 
             // Nếu nó là phản hồi con, bắt buộc phải mở rộng nhánh cha ra trước
@@ -999,14 +1000,20 @@
                 renderCommentList(type, list); 
             }
 
-            setTimeout(() => {
+            // Dùng hàm đệ quy để chờ trình duyệt Render xong DOM rồi mới cuộn
+            let attempts = 0;
+            const tryScroll = () => {
                 const el = document.getElementById(`comment-box-${commentId}`);
                 if (el) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     el.classList.add('highlight-blink');
                     setTimeout(() => el.classList.remove('highlight-blink'), 3000);
+                } else if (attempts < 15) { // Thử lại tối đa 15 lần (1.5 giây)
+                    attempts++;
+                    setTimeout(tryScroll, 100);
                 }
-            }, 100);
+            };
+            tryScroll(); // Kích hoạt lệnh cuộn
         }
 
         async function deleteComment(type, commentId) {
@@ -1494,10 +1501,12 @@
                 return { actionHtml, bubbleHtml: '' };
             }
 
-            // Tự động chèn lệnh mở tab Comments (?tab=comments) nếu là thông báo về bình luận
+            // Tự động chèn lệnh mở tab Comments (?tab=comments) một cách cưỡng chế
             let linkWithTab = n.link;
             if (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn")) {
-                if (!linkWithTab.includes('?')) linkWithTab += '?tab=comments';
+                if (!linkWithTab.includes('tab=comments')) {
+                    linkWithTab += linkWithTab.includes('?') ? '&tab=comments' : '?tab=comments';
+                }
             }
 
             let quoteMatch = mainText.match(/&quot;(.*?)&quot;/); 
