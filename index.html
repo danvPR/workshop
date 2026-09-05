@@ -789,7 +789,7 @@
             else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')));
             else if (hash === '#upload') openUploadPage();
             else if (hash === '#settings') openSettingsPage();
-            else if (hash === '#create') window.open('https://turbowarp.org/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ', '_blank'); 
+            else if (hash === '#create') window.open('https://aftercode-web-wheat.vercel.app/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ', '_blank'); 
             else openHomePage();
         }
 
@@ -839,8 +839,8 @@
             document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            document.getElementById('playerContainer').innerHTML = `<iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(fileUrl)}" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
-            document.getElementById('btnSeeInside').href = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
+            document.getElementById('playerContainer').innerHTML = `<iframe src="https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
+            document.getElementById('btnSeeInside').href = `https://aftercode-web-wheat.vercel.app/editor?project_url=${encodeURIComponent(fileUrl)}`;
             document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
             switchProjTab('info'); updateActionBtns(); renderCommentList('proj', currentProj.comments || []); removeCommentImage('proj'); cancelReply('proj');
@@ -1484,7 +1484,7 @@
                         <div style="font-weight:bold; color:#1e293b; font-size:0.95rem;">Bản lưu #${idx + 1}</div>
                         <div style="color:#64748b; font-size:0.8rem; margin-top:4px;"><i class="fa-regular fa-calendar-check"></i> ${timeStr}</div>
                     </div>
-                    <a href="https://turbowarp.org/editor?project_url=${encodeURIComponent(`${WORKER_URL}/api/project/${fid}`)}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.85rem; background:#e2e8f0; color:#334155; white-space:nowrap;">
+                    <a href="https://aftercode-web-wheat.vercel.app/editor?project_url=${encodeURIComponent(`${WORKER_URL}/api/project/${fid}`)}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.85rem; background:#e2e8f0; color:#334155; white-space:nowrap;">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở xem lại
                     </a>
                 </div>
