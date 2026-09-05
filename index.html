@@ -83,14 +83,13 @@
         .info-body { font-size: 0.95rem; color: #333; white-space: pre-line; line-height: 1.6; }
 
         /* SỬA LỖI BỐ CỤC COMMENTS TẠI ĐÂY */
-        @keyframes highlightBlink {
-            0%, 50% { background-color: #fef08a; transform: scale(1.02); border-radius: 12px; }
-            100% { background-color: transparent; transform: scale(1); border-radius: 12px; }
-        }
-        .highlight-blink {
-            animation: highlightBlink 2.5s ease-out forwards;
+        .highlight-permanent {
+            background-color: #fef08a !important;
+            border: 1px solid #facc15;
+            border-radius: 12px;
             padding: 5px;
             margin: -5px;
+            transition: all 0.3s ease;
         }
         .comment-thread { margin-bottom: 20px; }
         .comment-box { display: flex; gap: 12px; margin-bottom: 8px; }
@@ -514,9 +513,9 @@
             <div class="modal-header"><span>Đăng ký Tài khoản</span><button class="btn-close" onclick="closeModal('registerModal')">&times;</button></div>
             <div class="modal-body">
                 <form onsubmit="handleRegisterRequest(event)">
-                    <div class="form-group"><label>Tên đăng nhập (ID viết liền không dấu):</label><input type="text" id="regUsername" class="form-control" required pattern="[A-Za-z0-9_]+" title="Chỉ dùng chữ, số và gạch dưới"></div>
-                    <div class="form-group"><label>Tên hiển thị (Tùy do, có dấu):</label><input type="text" id="regDisplayName" class="form-control" required></div>
-                    <div class="form-group"><label>Email hợp lệ (Dùng nhận mã xác nhận):</label><input type="email" id="regEmail" class="form-control" required></div>
+                    <div class="form-group"><label>Tên đăng nhập (Username):</label><input type="text" id="regUsername" class="form-control" required pattern="[A-Za-z0-9_\-]+" title="Chỉ dùng chữ, số, gạch dưới (_) và gạch ngang (-)"></div>
+                    <div class="form-group"><label>Tên hiển thị:</label><input type="text" id="regDisplayName" class="form-control" required></div>
+                    <div class="form-group"><label>Email hợp lệ:</label><input type="email" id="regEmail" class="form-control" required></div>
                     <div class="form-group"><label>Mật khẩu:</label><input type="password" id="regPw" class="form-control" required minlength="6"></div>
                     <button type="submit" class="btn btn-primary" id="btnReqReg" style="width:100%; justify-content:center;">Tiếp tục (Gửi mã về Mail)</button>
                 </form>
@@ -829,7 +828,7 @@
                         ${adminIcon}
                         <a href="#notifications" style="position:relative; display:inline-flex; align-items:center; justify-content:center; padding: 6px; border-radius: 8px; transition: 0.2s; text-decoration:none;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">
                             <img src="https://scratch.mit.edu/images/nav-notifications.png" style="height: 22px; opacity: 0.9;">
-                            <span class="notif-badge" id="notifBadge" style="display:none; right: -2px; top: -2px;">0</span>
+                            <span class="notif-badge" id="notifBadge" style="display:none; right: -6px; top: -4px; z-index: 10; min-width: 18px; text-align: center;">0</span>
                         </a>
                     </div>
                     <a href="#upload" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Tải lên</a>
@@ -1006,8 +1005,9 @@
                 const el = document.getElementById(`comment-box-${commentId}`);
                 if (el) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    el.classList.add('highlight-blink');
-                    setTimeout(() => el.classList.remove('highlight-blink'), 3000);
+                    // Tẩy thẻ highlight cũ (nếu có) để tránh loạn màu, rồi bôi vàng vĩnh viễn thẻ mới
+                    document.querySelectorAll('.highlight-permanent').forEach(node => node.classList.remove('highlight-permanent'));
+                    el.classList.add('highlight-permanent');
                 } else if (attempts < 15) { // Thử lại tối đa 15 lần (1.5 giây)
                     attempts++;
                     setTimeout(tryScroll, 100);
@@ -1570,6 +1570,28 @@
             btn.innerHTML = origHtml;
         }
 
+        // HÀM LẤY DỮ LIỆU THÔNG BÁO & HIỂN THỊ SỐ ĐỎ TRÊN HỘP THƯ
+        async function fetchNotifications(silent = false) {
+            if(!currentUser) return;
+            try {
+                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
+                window.cachedNotifs = notifs; // Lưu lại bộ nhớ tạm
+                const unreadCount = notifs.filter(n => !n.read).length;
+                const badge = document.getElementById('notifBadge');
+                
+                if (badge) {
+                    if (unreadCount > 0) { 
+                        badge.innerText = unreadCount > 99 ? '99+' : unreadCount; 
+                        badge.style.display = 'flex'; 
+                        badge.style.justifyContent = 'center'; 
+                        badge.style.alignItems = 'center'; 
+                    } else { 
+                        badge.style.display = 'none'; 
+                    }
+                }
+            } catch(e){}
+        }
+        
         // HÀM MỞ TRANG TIN NHẮN
         async function openNotificationsPage() {
             if(!currentUser) return location.hash='#home';
@@ -1607,7 +1629,7 @@
                 // Ẩn icon chuông nếu là Cảnh cáo khung đỏ cho đẹp
                 const isWarning = actionHtml.includes('background: #ef4444');
                 return `
-                    <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${n.read ? '#f2f5f7' : '#fff'};">
+                    <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${n.read ? '#f2f5f7' : '#e6f0ff'};">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: ${bubbleHtml ? '10px' : '0'};">
                             <div style="display:flex; align-items:center; gap:10px; flex:1;">
                                 ${isWarning ? '' : getNotifIcon(n.text)}
