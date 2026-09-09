@@ -235,6 +235,7 @@
         .btn-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
         .modal-body { padding: 22px; }
 
+        #globalLoader { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; opacity: 1; transition: opacity 0.5s ease; }
         #globalLoader { position: fixed; inset: 0; background: var(--bg-panel); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         
         /* CẬP NHẬT MÀU NỀN THEO THEME CHO CÁC ELEMENT CỐ ĐỊNH */
@@ -1145,7 +1146,7 @@
 
                 await loadProjects(); updateNav(); handleRouting();
                 setInterval(autoFetchData, 35000);
-            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 300); }
+            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
 
         // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ)
