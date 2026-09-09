@@ -1254,7 +1254,16 @@
             } else { nav.innerHTML = `<button class="btn btn-primary" onclick="openModal('loginModal')"><i class="fa-solid fa-user"></i> ${t('nav_login')}</button>`; }
         }
 
-        async function loadProjects() { try { const res = await (await fetch(`${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}`)).json(); if(!res.error) allProjects = res; } catch(e){} }
+        async function loadProjects() { 
+            try { 
+                let fetchUrl = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser ? currentUser.username : '')}`;
+                if (currentUser && currentUser.sessionToken) {
+                    fetchUrl += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                }
+                const res = await (await fetch(fetchUrl)).json(); 
+                if (!res.error) allProjects = res; 
+            } catch(e){} 
+        }
         
         function openHomePage() {
             document.getElementById('homeView').style.display = 'block';
@@ -2190,9 +2199,10 @@
         async function fetchNotifications(silent = false) {
             if(!currentUser) return;
             try {
-                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`)).json();
-                window.cachedNotifs = notifs; // Lưu lại bộ nhớ tạm
-                const unreadCount = notifs.filter(n => !n.read).length;
+                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`)).json();
+                if (notifs.error) return; // Nếu không khớp token thì bỏ qua
+                window.cachedNotifs = Array.isArray(notifs) ? notifs : []; // Lưu lại bộ nhớ tạm
+                const unreadCount = window.cachedNotifs.filter(n => !n.read).length;
                 const badge = document.getElementById('notifBadge');
                 
                 if (badge) {
@@ -2218,7 +2228,7 @@
             container.innerHTML = '<div style="padding:40px; text-align:center; color:#855cd6;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i></div>';
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}`);
+                const res = await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`);
                 const data = await res.json();
                 // 🛡️ Kiểm tra nếu Backend trả về lỗi thì ép về mảng rỗng [] thay vì giữ Object lỗi
                 window.cachedNotifs = Array.isArray(data) ? data : []; 
@@ -2527,8 +2537,26 @@
         // Hàm mở trang Sáng tạo và Tự động mở Tab Editor
         function openCreatePage() {
             document.getElementById('createView').style.display = 'block';
-            reopenEditor();
         }
+
+        // HÀM MỞ TRÌNH CHỈNH SỬA (AFTERCODE / TURBOWARP)
+function reopenEditor() {
+    // 1. Kiểm tra xem người dùng đang chọn Engine nào trong Cài đặt (Mặc định là aftercode)
+    const engineChoice = localStorage.getItem('engine') || 'aftercode';
+    
+    // 2. Xác định URL của Engine tương ứng
+    const editorUrl = engineChoice === 'turbowarp' 
+        ? 'https://turbowarp.org/editor' 
+        : 'https://aftercode-web-wheat.vercel.app/editor.html';
+    
+    // 3. Mở trong Tab mới
+    const newWindow = window.open(editorUrl, '_blank');
+    
+    // 4. (Tùy chọn) Báo lỗi nếu trình duyệt chặn Pop-up
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+        showToast("Trình duyệt đã chặn mở tab mới. Vui lòng cho phép Pop-up hoặc bấm nút 'Mở lại tab'!", "error");
+    }
+}
 
         // ================= HỆ THỐNG ASSETS STORE =================
         async function fetchAssetsList() {
