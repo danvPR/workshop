@@ -2729,13 +2729,16 @@ function reopenEditor() {
                     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên: Phần ${i + 1}/${totalChunks}...`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
-                    // 
                     chunkForm.append("file", chunk, `asset_part_${i}.${fileExt}`);
                     chunkForm.append("username", currentUser.username);
                     chunkForm.append("sessionToken", currentUser.sessionToken);
 
                     const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: chunkForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
-                    if (!res.success) throw new Error(res.error || "Lỗi tải mảnh ghép");
+                    
+                    // 🔒 Kiểm tra nếu không có mã file_id thì báo lỗi ngay lập tức
+                    if (!res || !res.success || !res.file_id) {
+                        throw new Error(res?.error || "Không thể tải lên phần này của tệp âm thanh!");
+                    }
                     uploadedIds.push(res.file_id);
                 }
 
