@@ -2020,6 +2020,7 @@
                             : `<span style="font-size:0.85rem; color:#888; background:#f1f5f9; padding:6px 12px; border-radius:6px;"><i class="fa-solid fa-circle-question"></i> ${targetInfo.label}</span>`
                         }
                         ${r.targetType === 'project' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="currentProj={fileId:'${r.targetId}', author:''}; openAdminPrivateModal();"><i class="fa-solid fa-shield-halved"></i> Gỡ dự án</button>` : ''}
+                        ${r.targetType === 'asset' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="adminHideAsset('${r.targetId}')"><i class="fa-solid fa-eye-slash"></i> Gỡ Asset</button>` : ''}
                         ${r.targetType === 'user' || r.targetType === 'profile' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="viewingProfileUser='${r.targetId}'; openAdminWarnModal();"><i class="fa-solid fa-triangle-exclamation"></i> Cảnh cáo</button>` : ''}
                         <button class="btn" style="font-size:0.85rem; padding:6px 12px;" onclick="openResolveAdminModal(${r.rowIndex}, '${escapeHtml(r.reporter)}')"><i class="fa-solid fa-check"></i> Đánh dấu xong</button>
                     </div>
@@ -2068,6 +2069,26 @@
 
             btn.innerHTML = originalText;
             btn.disabled = false;
+        }
+        
+        async function adminHideAsset(assetId) {
+            const reason = prompt("Nhập lý do gỡ tài nguyên này về trạng thái riêng tư/ẩn:");
+            if (!reason) return;
+            
+            const res = await apiFetch(`/api/admin/action`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: "hide_asset",
+                    payload: { assetId, reason }
+                })
+            });
+            
+            if (res && res.success) {
+                showToast("Đã ẩn tài nguyên khỏi Cửa hàng thành công!", "success");
+                loadAdminReports(); // Làm mới danh sách báo cáo
+            } else {
+                showToast("Không thể ẩn tài nguyên. Vui lòng thử lại!", "error");
+            }
         }
 
         function openAdminWarnModal() { openModal('adminWarnModal'); }
@@ -2619,10 +2640,14 @@ function reopenEditor() {
                 const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
                 
                 let previewHtml = `<i class="fa-solid fa-file" style="font-size:4rem; color:#cbd5e1;"></i>`;
-                if (['png','jpg','jpeg','gif','webp','svg'].includes(fileExt)) {
+                if (['png','jpg','jpeg','gif','webp'].includes(fileExt)) {
                     previewHtml = `<img src="${fileUrl}" loading="lazy">`;
+                } else if (fileExt === 'svg') {
+                    // Tránh render trực tiếp SVG để an toàn bảo mật
+                    previewHtml = `<i class="fa-solid fa-bezier-curve" style="font-size:3.5rem; color:var(--primary);"></i>`;
                 } else if (['mp3','wav','ogg'].includes(fileExt)) {
-                    previewHtml = `<i class="fa-solid fa-music" style="font-size:3.5rem; color:#855cd6;"></i><audio controls style="position:absolute; bottom:5px; width:90%; height:30px;"><source src="${fileUrl}" type="audio/mpeg"></audio>`;
+                    // ⚡ TỐI ƯU DATA: Thêm preload="none" để KHÔNG tải trước nhạc khi chưa bấm Play
+                    previewHtml = `<i class="fa-solid fa-music" style="font-size:3.5rem; color:#855cd6;"></i><audio controls preload="none" style="position:absolute; bottom:5px; width:90%; height:30px;"><source src="${fileUrl}"></audio>`;
                 }
 
                 // Logic Vote
