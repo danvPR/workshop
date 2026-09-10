@@ -1786,25 +1786,45 @@
             const grid = document.getElementById('klipyGifGrid');
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:#855cd6;"></i></div>';
             try {
-                // Tận dụng Tenor Compatibility của Klipy để lấy dữ liệu dễ dàng
+                // Sử dụng chuẩn Tenor Compatibility v2 của Klipy API
                 let url = query 
-                    ? `https://api.klipy.com/v1/search?key=${KLIPY_API_KEY}&q=${encodeURIComponent(query)}&limit=20` 
-                    : `https://api.klipy.com/v1/trending?key=${KLIPY_API_KEY}&limit=20`;
-                const res = await (await fetch(url)).json();
-                let items = res.results || [];
+                    ? `https://api.klipy.com/v2/search?key=${KLIPY_API_KEY}&q=${encodeURIComponent(query)}&limit=20` 
+                    : `https://api.klipy.com/v2/featured?key=${KLIPY_API_KEY}&limit=20`;
                 
-                if (items.length === 0) return grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888;">Không tìm thấy GIF nào.</div>';
+                const res = await fetch(url);
+                
+                // 🛡️ BẮT LỖI RÕ RÀNG TỪ MÁY CHỦ KLIPY
+                if (!res.ok) {
+                    let errorText = await res.text();
+                    try { errorText = JSON.parse(errorText).error || errorText; } catch(e){}
+                    throw new Error(`Mã lỗi ${res.status}: ${errorText}`);
+                }
+                
+                const data = await res.json();
+                let items = data.results || [];
+                
+                if (items.length === 0) {
+                    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888;">Không tìm thấy GIF nào.</div>';
+                    return;
+                }
 
                 grid.innerHTML = items.map(item => {
-                    const gifUrl = item.media_formats?.gif?.url || item.url;
-                    const previewUrl = item.media_formats?.nanogif?.url || item.media_formats?.tinygif?.url || gifUrl;
+                    // Hỗ trợ cả định dạng v1 và v2 của Tenor/Klipy
+                    const gifUrl = item.media_formats?.gif?.url || item.media?.[0]?.gif?.url || item.url;
+                    const previewUrl = item.media_formats?.nanogif?.url || item.media_formats?.tinygif?.url || item.media?.[0]?.nanogif?.url || gifUrl;
                     return `
                         <div style="background:#e2e8f0; border-radius:8px; overflow:hidden; cursor:pointer; height:130px; transition: 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1" onclick="attachKlipyGif('${gifUrl}', '${currentKlipyType}')">
                             <img src="${previewUrl}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
                         </div>
                     `;
                 }).join('');
-            } catch(e) { grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ff4c4c;">Lỗi kết nối máy chủ Klipy.</div>'; }
+            } catch(e) { 
+                console.error("Klipy Detail Error:", e);
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ff4c4c; padding:20px; font-size:0.9rem; word-break: break-word; background: #fee2e2; border-radius: 8px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size:1.5rem; margin-bottom:10px;"></i><br>
+                    <b>Không thể kết nối Klipy API:</b><br>${escapeHtml(e.message)}
+                </div>`; 
+            }
         }
         
         function attachKlipyGif(url, type) {
