@@ -1306,8 +1306,11 @@
                 switchProjTab('info');
             }
 
-            if (currentUser && currentUser.username.toLowerCase() === proj.author.toLowerCase()) document.getElementById('btnProjSettings').style.display = 'inline-flex';
-            else document.getElementById('btnProjSettings').style.display = 'none';
+            if (currentUser && (currentUser.username.toLowerCase() === proj.author.toLowerCase() || currentUser.role === 'admin')) {
+                document.getElementById('btnProjSettings').style.display = 'inline-flex';
+            } else {
+                document.getElementById('btnProjSettings').style.display = 'none';
+            }
 
             if (currentUser && currentUser.role === 'admin') document.getElementById('btnAdminForcePrivate').style.display = 'inline-flex';
             else document.getElementById('btnAdminForcePrivate').style.display = 'none';
@@ -2383,6 +2386,17 @@
             document.getElementById('editProjVisibility').value = currentProj.visibility || 'public';
             document.getElementById('editDescInput').value = currentProj.description || '';
             document.getElementById('editCreditsInput').value = currentProj.credits || '';
+
+            // Admin không được phép sửa file sb3 của người khác
+            const updateFileSection = document.getElementById('updateProjFile');
+            if (updateFileSection) {
+                const sectionContainer = updateFileSection.parentElement.parentElement;
+                if (currentUser.username.toLowerCase() !== currentProj.author.toLowerCase()) {
+                    sectionContainer.style.display = 'none'; // Ẩn với Admin
+                } else {
+                    sectionContainer.style.display = 'block'; // Hiện với chính chủ
+                }
+            }
 
             // Điền ảnh bìa
             const thumbImg = document.getElementById('editThumbPreview');
