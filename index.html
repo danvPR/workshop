@@ -1452,13 +1452,31 @@
         }
 
         // ================= DỰ ÁN & BÌNH LUẬN =================
-        function openProjectPage(idParam, urlParams = null) {
+        async function openProjectPage(idParam, urlParams = null) {
             document.getElementById('projectView').style.display = 'block';
-            const proj = allProjects.find(p => p.projectId === idParam || p.fileId === idParam);
+            
+            // Xóa iframe cũ và hiện loading mượt mà
+            document.getElementById('playerContainer').innerHTML = '<div style="text-align:center; padding: 100px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary);"></i></div>';
+
+            let proj = allProjects.find(p => p.projectId === idParam || p.fileId === idParam);
+            
+            // 🛡️ 
+            if (!proj) {
+                try {
+                    let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(idParam)}&limit=1`;
+                    if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                    const res = await (await fetch(fetchUrl)).json();
+                    if (res.projects && res.projects.length > 0) {
+                        proj = res.projects[0];
+                        allProjects.push(proj); // Caching để mở lại nhanh hơn
+                    }
+                } catch(e) {}
+            }
+
             if (!proj) { showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); location.hash="#home"; return; }
             currentProj = proj;
 
-            // 🛡️ BẬT FORM BÌNH LUẬN NGAY LẬP TỨC CHO USER ĐÃ LOGIN
+            // 🛡️ 
             if (currentUser) { 
                 document.getElementById('commentFormProj').style.display = 'block'; 
                 document.getElementById('loginPromptProj').style.display = 'none'; 
