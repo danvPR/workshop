@@ -402,10 +402,46 @@
 
     <!-- TRANG 1: KHÁM PHÁ -->
     <div id="homeView" class="page-view">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 data-i18n="home_featured">Tác phẩm tiêu biểu</h2>
+        
+        <!-- BỘ SƯU TẬP (STUDIOS / PLAYLISTS) -->
+        <div style="margin-bottom: 30px;">
+            <h2 style="margin-bottom: 15px; font-size: 1.4rem;"><i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> Bộ sưu tập & Sự kiện</h2>
+            <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
+                <!-- Mẫu Studio (Admin có thể hardcode hoặc load từ API sau này) -->
+                <div style="min-width: 250px; height: 120px; border-radius: 12px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://i.ibb.co/QFg1cVVD/image.png') center/cover; padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; color: white; cursor: pointer; transition: 0.2s;" onclick="applySearchTag('#gamejam2026')">
+                    <h3 style="margin: 0; color: #fff !important; font-size: 1.1rem;">🏆 GameJam 2026</h3>
+                    <span style="font-size: 0.8rem; opacity: 0.8;">Các dự án xuất sắc nhất</span>
+                </div>
+                <div style="min-width: 250px; height: 120px; border-radius: 12px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://cdn.pixabay.com/photo/2017/08/10/01/29/bat-2616853_1280.png') center/cover; padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; color: white; cursor: pointer; transition: 0.2s;" onclick="applySearchTag('#kinhdi')">
+                    <h3 style="margin: 0; color: #fff !important; font-size: 1.1rem;">👻 Game Kinh Dị</h3>
+                    <span style="font-size: 0.8rem; opacity: 0.8;">Tuyển tập đáng sợ nhất</span>
+                </div>
+            </div>
         </div>
-        <div class="project-grid" id="projectList">Đang tải dữ liệu...</div>
+
+        <!-- THANH TÌM KIẾM & BỘ LỌC -->
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-panel); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div class="asset-search-bar" style="flex: 1; min-width: 280px; max-width: 100%; margin: 0; background: var(--bg-input);">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); padding-left: 10px;"></i>
+                <input type="text" id="homeSearchInput" placeholder="Tìm kiếm dự án, tác giả, tag..." onkeyup="if(event.key==='Enter') execHomeSearch()">
+                <button class="btn btn-primary" style="padding: 6px 15px; border-radius: 20px; margin-right: 2px;" onclick="execHomeSearch()">Tìm</button>
+            </div>
+
+            <div style="display: flex; gap: 10px; overflow-x: auto;">
+                <button class="btn home-filter-btn active" data-sort="recent" onclick="changeHomeSort('recent')"><i class="fa-regular fa-clock"></i> Mới nhất</button>
+                <button class="btn home-filter-btn" data-sort="trending" onclick="changeHomeSort('trending')"><i class="fa-solid fa-fire" style="color:#ff4c4c;"></i> Thịnh hành</button>
+                <button class="btn home-filter-btn" data-sort="popular" onclick="changeHomeSort('popular')"><i class="fa-solid fa-gamepad" style="color:#3b82f6;"></i> Chơi nhiều</button>
+            </div>
+        </div>
+        
+        <!-- DANH SÁCH DỰ ÁN & NÚT LOAD MORE -->
+        <div class="project-grid" id="projectList" style="margin-bottom: 30px;">Đang tải dữ liệu...</div>
+        
+        <div style="text-align: center; padding-bottom: 40px; display: none;" id="homeLoadMoreArea">
+            <button class="btn" style="padding: 12px 35px; border-radius: 25px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadMoreProjects()">
+                <i class="fa-solid fa-angle-down"></i> Xem thêm tác phẩm
+            </button>
+        </div>
     </div>
 
     <!-- TRANG 2: DỰ ÁN -->
@@ -1001,6 +1037,13 @@
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         
+        // --- Home Pagination & Filter ---
+        let homeCurrentPage = 1;
+        let homeSearchQuery = "";
+        let homeSortMode = "recent";
+        let homeHasMore = false;
+        const HOME_ITEMS_PER_PAGE = 16; // Tải 4 dòng (mỗi dòng 4 dự án tùy màn hình)
+
         // --- Assets ---
         let allAssets = []; let displayedAssetsCount = 0; const ASSETS_PER_PAGE = 16; 
         let currentAssetSearchQuery = "";
@@ -1255,15 +1298,107 @@
             } else { nav.innerHTML = `<button class="btn btn-primary" onclick="openModal('loginModal')"><i class="fa-solid fa-user"></i> ${t('nav_login')}</button>`; }
         }
 
-        async function loadProjects() { 
+        // 🔄 Hàm loadProjects được nâng cấp hỗ trợ tìm kiếm và phân trang
+        async function loadProjects(isLoadMore = false) { 
+            if (!isLoadMore) {
+                homeCurrentPage = 1;
+                document.getElementById('projectList').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+            }
+
             try { 
-                let fetchUrl = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser ? currentUser.username : '')}`;
-                if (currentUser && currentUser.sessionToken) {
-                    fetchUrl += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
+                if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                
+                const res = await (await fetch(url)).json(); 
+                
+                if (res.projects) {
+                    if (isLoadMore) {
+                        allProjects = allProjects.concat(res.projects);
+                    } else {
+                        allProjects = res.projects;
+                    }
+                    homeHasMore = res.hasMore;
+                    renderHomeProjects(isLoadMore);
                 }
-                const res = await (await fetch(fetchUrl)).json(); 
-                if (!res.error) allProjects = res; 
-            } catch(e){} 
+            } catch(e){ console.error("Lỗi tải dự án", e); } 
+        }
+
+        // Render HTML cho danh sách dự án
+        function renderHomeProjects(isAppend = false) {
+            const container = document.getElementById('projectList');
+            const loadMoreBtn = document.getElementById('homeLoadMoreArea');
+            
+            if (allProjects.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; padding:50px 20px; color:var(--text-muted);">Không tìm thấy tác phẩm nào phù hợp.</div>`;
+                loadMoreBtn.style.display = 'none';
+                return;
+            }
+
+            const html = allProjects.map(p => `
+                <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
+                    ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
+                    <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}</div>
+                    <div class="card-body">
+                        <div class="card-title">${escapeHtml(p.title)}</div>
+                        <div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div>
+                        <div style="margin-top: 10px; font-size: 0.85rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; gap:12px;">
+                                <span title="Lượt thích"><i class="fa-solid fa-heart" style="color:#ff4c4c"></i> ${p.likes ? p.likes.length : 0}</span>
+                                <span title="Lượt yêu thích"><i class="fa-solid fa-star" style="color:#f5b041"></i> ${p.stars ? p.stars.length : 0}</span>
+                            </div>
+                            <span style="opacity:0.8;" title="Lượt chơi"><i class="fa-solid fa-play"></i> ${p.views || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            if (isAppend) {
+                // Xóa phần tử div chứa code spinner loading (nếu có) rồi append HTML
+                container.insertAdjacentHTML('beforeend', html.substring(container.innerHTML.length > 10 ? 0 : html.length)); // Thay thế toàn bộ nếu bị trùng do logic đơn giản
+                container.innerHTML = html; // Cách an toàn nhất cho grid
+            } else {
+                container.innerHTML = html;
+            }
+
+            loadMoreBtn.style.display = homeHasMore ? 'block' : 'none';
+        }
+
+        // Các hàm hỗ trợ cho UI Trang chủ
+        function openHomePage() {
+            document.getElementById('homeView').style.display = 'block';
+            // Không gọi lại render hay load ở đây nếu đã load lúc đầu
+        }
+
+        function execHomeSearch() {
+            homeSearchQuery = document.getElementById('homeSearchInput').value.trim();
+            loadProjects(false);
+        }
+
+        function applySearchTag(tag) {
+            document.getElementById('homeSearchInput').value = tag;
+            execHomeSearch();
+            document.getElementById('homeSearchInput').scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+
+        function changeHomeSort(mode) {
+            homeSortMode = mode;
+            // Update CSS active state
+            document.querySelectorAll('.home-filter-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.dataset.sort === mode) b.classList.add('active');
+                b.style.borderColor = (b.dataset.sort === mode) ? 'var(--primary)' : 'var(--border-color)';
+            });
+            loadProjects(false);
+        }
+
+        function loadMoreProjects() {
+            if (homeHasMore) {
+                homeCurrentPage++;
+                const btn = document.querySelector('#homeLoadMoreArea button');
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+                loadProjects(true).then(() => btn.innerHTML = orig);
+            }
         }
         
         function openHomePage() {
@@ -1305,6 +1440,14 @@
                 if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('proj', urlParams.get('c')), 500);
             } else {
                 switchProjTab('info');
+            }
+
+            // 👁️ [MỚI] Tự động cộng 1 lượt xem ngầm khi mở dự án
+            if (currentUser) {
+                apiFetch(`/api/project/action`, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ fileId: currentProj.fileId, action: "add_view" }) 
+                }).catch(e => {});
             }
 
             if (currentUser && (currentUser.username.toLowerCase() === proj.author.toLowerCase() || currentUser.role === 'admin')) {
