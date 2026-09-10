@@ -423,7 +423,11 @@
         <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-panel); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
             <div class="asset-search-bar" style="flex: 1; min-width: 280px; max-width: 100%; margin: 0; background: var(--bg-input);">
                 <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); padding-left: 10px;"></i>
-                <input type="text" id="homeSearchInput" placeholder="Tìm kiếm dự án, tác giả, tag..." onkeyup="if(event.key==='Enter') execHomeSearch()">
+                <input type="text" id="homeSearchInput" placeholder="Tìm kiếm dự án, tác giả, tag..." onkeyup="if(event.key==='Enter') execHomeSearch()" oninput="toggleClearSearchBtn()">
+                
+                <!-- Nút Xóa (X) ẩn mặc định -->
+                <button id="homeSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding: 0 10px; font-size: 1.2rem;" onclick="clearHomeSearch()" title="Xóa tìm kiếm">&times;</button>
+                
                 <button class="btn btn-primary" style="padding: 6px 15px; border-radius: 20px; margin-right: 2px;" onclick="execHomeSearch()">Tìm</button>
             </div>
 
@@ -449,21 +453,29 @@
         <div class="ccw-layout">
             <div class="ccw-main">
                 <div class="player-container" id="playerContainer"></div>
-                <div class="action-bar">
-                    <div>
-                        <h2 id="projPageTitle" style="color: #111; margin-bottom: 4px;">Tên dự án</h2>
-                        <div style="color: var(--text-muted); font-size: 0.9rem;">
-                            Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold; margin-right: 15px;">Author</a>
-                            <i class="fa-regular fa-clock"></i> <span id="projPageDate">Đang cập nhật...</span>
+                <div class="action-bar" style="align-items: flex-start; padding: 20px;">
+                    <!-- Thông tin tác giả & Tiêu đề -->
+                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                        <a href="#" id="projPageAuthorLinkAvt" title="Xem trang cá nhân">
+                            <img id="projPageAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                        </a>
+                        <div>
+                            <h2 id="projPageTitle" style="color: var(--text-title); margin-bottom: 6px; font-size: 1.4rem; line-height: 1.2;">Tên dự án</h2>
+                            <div style="color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                <span>Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></span>
+                                <span id="projPageDate" style="cursor: help;" title="Thời gian đăng"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="action-btns">
-                        <button class="act-btn" id="btnLike" onclick="toggleAction('like')"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
-                        <button class="act-btn" id="btnStar" onclick="toggleAction('star')"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
-                        <a id="btnSeeInside" href="#" target="_blank" class="btn"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
-                        <button class="btn btn-danger" onclick="openReportModal('project')"><i class="fa-solid fa-flag"></i></button>
-                        <button class="btn" id="btnProjSettings" style="display:none; background:#333; color:#fff;" onclick="openModal('projSettingsModal')"><i class="fa-solid fa-gear"></i></button>
-                        <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> Gỡ</button>
+                    
+                    <!-- Các nút chức năng -->
+                    <div class="action-btns" style="flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
+                        <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
+                        <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
+                        <a id="btnSeeInside" href="#" target="_blank" class="btn" style="border-radius: 20px; padding: 8px 18px;"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
+                        <button class="btn btn-danger" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="openReportModal('project')" title="Báo cáo vi phạm"><i class="fa-solid fa-flag"></i></button>
+                        <button class="btn" id="btnProjSettings" style="display:none; background:#334155; color:#fff; border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="openModal('projSettingsModal')" title="Cài đặt dự án"><i class="fa-solid fa-gear"></i></button>
+                        <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none; border-radius: 20px; padding: 8px 15px;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> Gỡ</button>
                     </div>
                 </div>
             </div>
@@ -1369,8 +1381,21 @@
             // Không gọi lại render hay load ở đây nếu đã load lúc đầu
         }
 
+        function toggleClearSearchBtn() {
+            const input = document.getElementById('homeSearchInput').value;
+            document.getElementById('homeSearchClearBtn').style.display = input.length > 0 ? 'block' : 'none';
+        }
+
+        function clearHomeSearch() {
+            document.getElementById('homeSearchInput').value = '';
+            document.getElementById('homeSearchClearBtn').style.display = 'none';
+            homeSearchQuery = '';
+            loadProjects(false); // Load lại danh sách gốc
+        }
+
         function execHomeSearch() {
             homeSearchQuery = document.getElementById('homeSearchInput').value.trim();
+            toggleClearSearchBtn();
             loadProjects(false);
         }
 
@@ -1382,12 +1407,21 @@
 
         function changeHomeSort(mode) {
             homeSortMode = mode;
+            
+            // TÍNH NĂNG MỚI: Tự động Reset thanh tìm kiếm khi bấm sang Tab khác
+            if (homeSearchQuery !== "") {
+                document.getElementById('homeSearchInput').value = '';
+                document.getElementById('homeSearchClearBtn').style.display = 'none';
+                homeSearchQuery = '';
+            }
+
             // Update CSS active state
             document.querySelectorAll('.home-filter-btn').forEach(b => {
                 b.classList.remove('active');
                 if (b.dataset.sort === mode) b.classList.add('active');
                 b.style.borderColor = (b.dataset.sort === mode) ? 'var(--primary)' : 'var(--border-color)';
             });
+            
             loadProjects(false);
         }
 
@@ -1442,6 +1476,24 @@
                 switchProjTab('info');
             }
 
+            // Cập nhật Avatar tác giả (Fetch ngầm từ API User)
+            document.getElementById('projPageAuthorLinkAvt').href = `#profile/${proj.author}`;
+            document.getElementById('projPageAuthorAvt').src = DEFAULT_AVATAR; // Gán ảnh mặc định trước
+            fetch(`${WORKER_URL}/api/user/${encodeURIComponent(proj.author)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if(data && data.avt) document.getElementById('projPageAuthorAvt').src = getAvtUrl(data.avt);
+                }).catch(e=>{});
+
+            // Cập nhật Thời gian tương đối (Hover để xem giờ gốc)
+            const dateSpan = document.getElementById('projPageDate');
+            if (proj.date) {
+                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(proj.date)}`;
+                dateSpan.title = proj.date; // Hiển thị giờ cụ thể khi Hover
+            } else {
+                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> Đang cập nhật...`;
+            }
+            
             // 👁️ [MỚI] Tự động cộng 1 lượt xem ngầm khi mở dự án
             if (currentUser) {
                 apiFetch(`/api/project/action`, { 
@@ -1514,7 +1566,7 @@
                             <div class="comment-content-area">
                                 <div class="comment-header">
                                     <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
-                                    <span class="comment-time">${root.time}</span>
+                                    <span class="comment-time" title="${root.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(root.time)}</span>
                                 </div>
                                 <div class="comment-text-bubble">
                                     ${escapeHtml(root.text)}
@@ -1536,7 +1588,7 @@
                                         <div class="comment-content-area">
                                             <div class="comment-header">
                                                 <a href="#profile/${rep.author}" class="comment-author-name">${rep.author}</a> 
-                                                <span class="comment-time">${rep.time}</span>
+                                                <span class="comment-time" title="${rep.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(rep.time)}</span>
                                             </div>
                                             <div class="comment-text-bubble">
                                                 ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
