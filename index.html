@@ -191,6 +191,7 @@
         .banner-thumb-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s;}
         .profile-featured-banner:hover .banner-thumb-area img { opacity: 1; transform: scale(1.02);}
         .banner-info-area { padding: 30px; display: flex; flex-direction: column; justify-content: center; flex: 1;}
+        #profBannerTitle, .profile-featured-banner h2 { color: #ffffff !important; }
 
         .profile-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
         .prof-tab-btn { background: none; border: none; padding: 12px 20px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.95rem; transition: 0.2s;}
@@ -2545,6 +2546,11 @@
         function changeEngine(engine) {
             localStorage.setItem('engine', engine);
             updateEngineUI(engine);
+            // Cập nhật tên Engine hiển thị ngay lập tức
+            const engineLabel = document.getElementById('createEngineName');
+            if (engineLabel) {
+                engineLabel.innerText = engine === 'turbowarp' ? 'TurboWarp' : 'Aftercode';
+            }
             showToast(`Đã chuyển Engine sang ${engine === 'aftercode' ? 'Aftercode' : 'TurboWarp'}`, "success");
         }
 
@@ -2569,9 +2575,16 @@
             updateEngineUI(localStorage.getItem('engine') || 'aftercode');
         };
 
-        // Hàm mở trang Sáng tạo và Tự động mở Tab Editor
+        // Hàm mở trang Sáng tạo editor
         function openCreatePage() {
             document.getElementById('createView').style.display = 'block';
+            // Đồng bộ tên Engine hiện tại ra màn hình thông báo
+            const engineChoice = localStorage.getItem('engine') || 'aftercode';
+            const engineLabel = document.getElementById('createEngineName');
+            if (engineLabel) {
+                engineLabel.innerText = engineChoice === 'turbowarp' ? 'TurboWarp' : 'Aftercode';
+            }
+            reopenEditor();
         }
 
         // HÀM MỞ TRÌNH CHỈNH SỬA (AFTERCODE / TURBOWARP)
