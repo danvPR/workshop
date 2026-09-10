@@ -1065,6 +1065,7 @@
         let expandedThreads = { proj: {}, prof: {} };
         let isPosting = { proj: false, prof: false };
         let reportTarget = { type: null, id: null };
+        let commentLimits = { proj: 10, prof: 10 }; // Giới hạn hiển thị 10 bình luận ban đầu
 
         // ==========================================
         // BỘ MÁY ĐA NGÔN NGỮ (I18N ENGINE)
@@ -1467,6 +1468,7 @@
             document.getElementById('btnSeeInside').href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
             document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
+            commentLimits.proj = 10; // Reset số lượng bình luận khi mở dự án mới
             updateActionBtns(); renderCommentList('proj', currentProj.comments || []); removeCommentImage('proj'); cancelReply('proj');
             
             if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
@@ -1608,7 +1610,32 @@
                         ` : ''}
                     </div>
                 `;
-            }).join('');
+            });
+
+            // 🛡️ LỌC SỐ LƯỢNG BÌNH LUẬN HIỂN THỊ
+            const limit = commentLimits[type];
+            const visibleRoots = rootHtmlArray.slice(0, limit);
+            const hasMoreRoots = rootHtmlArray.length > limit;
+
+            container.innerHTML = visibleRoots.join('') + (hasMoreRoots ? `
+                <div style="text-align: center; margin-top: 15px; padding-bottom: 10px;">
+                    <button class="btn" style="border-radius: 20px; font-weight: bold; padding: 8px 25px;" onclick="loadMoreComments('${type}')">
+                        <i class="fa-solid fa-angle-down"></i> Xem thêm bình luận
+                    </button>
+                </div>
+            ` : '');
+        }
+
+        // HÀM XỬ LÝ NÚT XEM THÊM
+        function loadMoreComments(type) {
+            commentLimits[type] += 10; // Mỗi lần bấm tải thêm 10 bình luận
+            if (type === 'proj') {
+                renderCommentList('proj', currentProj.comments || []);
+            } else {
+                fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`)
+                    .then(r => r.json())
+                    .then(data => renderCommentList('prof', data.comments || []));
+            }
         }
 
         // HÀM MỚI: TÌM, MỞ RỘNG VÀ CUỘN ĐẾN BÌNH LUẬN 
@@ -1618,11 +1645,22 @@
             let target = list.find(c => String(c.id) === String(commentId));
             if (!target) return;
 
+            // Tìm vị trí của bình luận gốc để xem nó có nằm ngoài giới hạn hiển thị hiện tại không
+            let rootId = target.parentId ? target.parentId : target.id;
+            let rootComments = list.filter(c => !c.parentId).sort((a, b) => parseInt(b.id) - parseInt(a.id));
+            let rootIndex = rootComments.findIndex(c => String(c.id) === String(rootId));
+            
+            // Nếu bình luận nằm sâu bên dưới, tự động mở rộng Limit
+            if (rootIndex >= commentLimits[type]) {
+                commentLimits[type] = rootIndex + 5; 
+            }
+
             // Nếu nó là phản hồi con, bắt buộc phải mở rộng nhánh cha ra trước
             if (target.parentId) {
                 expandedThreads[type][target.parentId] = true;
-                renderCommentList(type, list); 
             }
+            
+            renderCommentList(type, list);
 
             // Dùng hàm đệ quy để chờ trình duyệt Render xong DOM rồi mới cuộn
             let attempts = 0;
@@ -1715,9 +1753,16 @@
             try {
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`);
                 if(res.status === 404) { if(p404) p404.style.display = 'block'; return; }
+                
+                // 🛡️
+                if(!res.ok) { 
+                    showToast("Máy chủ đang bận xử lý, vui lòng tải lại trang sau giây lát!", "error"); 
+                    location.hash = "#home"; 
+                    return; 
+                }
+                
                 viewingProfileData = await res.json();
             } catch(e) { if(p404) p404.style.display = 'block'; return; }
-
             document.getElementById('profileContent').style.display = 'block';
             
             // Đổ dữ liệu text an toàn (Tránh Crash)
@@ -1826,6 +1871,7 @@
                 `).join('') : `<p style="color:#888;">${t('prof_empty_activities')}</p>`;
             }
 
+            commentLimits.prof = 10; // Reset số lượng bình luận khi mở profile mới
             renderCommentList('prof', viewingProfileData.comments || []);
             removeCommentImage('prof'); 
             cancelReply('prof'); 
