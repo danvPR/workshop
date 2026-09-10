@@ -1814,18 +1814,24 @@
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:#855cd6;"></i></div>';
             
             const customerId = getKlipyCustomerId();
-            const locale = (typeof currentLang !== 'undefined' && currentLang) ? currentLang : 'vi';
+            // Chuẩn hóa locale sang ISO 3166 để tránh bị Klipy V1 từ chối mã 'vi'
+            const locale = (typeof currentLang !== 'undefined' && currentLang === 'vi') ? 'vn' : 'en';
 
             try {
-                // 🛡️ CHUYỂN SANG ENDPOINT NATIVE CHUẨN CỦA KLIPY ĐỂ DASHBOARD GHI NHẬN STATS
                 let url = query 
                     ? `https://api.klipy.com/api/v1/${KLIPY_API_KEY}/gifs/search?q=${encodeURIComponent(query)}&page=1&per_page=24&customer_id=${encodeURIComponent(customerId)}&locale=${locale}` 
                     : `https://api.klipy.com/api/v1/${KLIPY_API_KEY}/gifs/trending?page=1&per_page=24&customer_id=${encodeURIComponent(customerId)}&locale=${locale}`;
                 
-                let res = await fetch(url);
+                let res;
+                // Bọc riêng fetch V1: nếu bị lỗi CORS hoặc không hỗ trợ, ép kích hoạt fallback sang V2
+                try {
+                    res = await fetch(url);
+                } catch (fetchErr) {
+                    res = { ok: false };
+                }
                 
-                // Fallback tự động nếu tài khoản chưa bật v1 thì gọi qua Tenor compatibility
-                if (!res.ok) {
+                // Fallback tự động gọi qua Tenor compatibility (V2) nếu V1 lỗi
+                if (!res || !res.ok) {
                     const fallbackUrl = query 
                         ? `https://api.klipy.com/v2/search?key=${KLIPY_API_KEY}&q=${encodeURIComponent(query)}&limit=24&client_key=${encodeURIComponent(customerId)}` 
                         : `https://api.klipy.com/v2/featured?key=${KLIPY_API_KEY}&limit=24&client_key=${encodeURIComponent(customerId)}`;
@@ -1840,11 +1846,12 @@
                 
                 const data = await res.json();
                 
-                // Xử lý linh hoạt cả 2 định dạng trả về của Klipy
+                // Hỗ trợ xử lý mọi kiểu đóng gói mảng dữ liệu trả về từ Klipy / Tenor
                 let items = [];
                 if (data.data && Array.isArray(data.data.data)) items = data.data.data;
                 else if (data.data && Array.isArray(data.data)) items = data.data;
                 else if (Array.isArray(data.results)) items = data.results;
+                else if (Array.isArray(data)) items = data;
                 
                 if (items.length === 0) {
                     grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888;">Không tìm thấy GIF nào.</div>';
@@ -1852,13 +1859,17 @@
                 }
 
                 grid.innerHTML = items.map(item => {
-                    const gifUrl = item.file?.gif?.url || item.media_formats?.gif?.url || item.url || (item.media && item.media[0]?.gif?.url);
-                    const previewUrl = item.file?.nanogif?.url || item.file?.gif?.url || item.media_formats?.nanogif?.url || item.media_formats?.tinygif?.url || gifUrl;
+                    // Lấy đường dẫn link ảnh bao phủ tất cả các phiên bản API
+                    const gifUrl = item.file?.gif?.url || item.media_formats?.gif?.url || item.images?.original?.url || item.url || (item.media && item.media[0]?.gif?.url);
+                    const previewUrl = item.file?.nanogif?.url || item.file?.gif?.url || item.media_formats?.nanogif?.url || item.media_formats?.tinygif?.url || item.images?.fixed_height_small?.url || gifUrl;
                     const slug = item.slug || item.id || "";
                     
+                    // Bỏ qua item nếu không lấy được URL hợp lệ
+                    if (!gifUrl || !previewUrl) return '';
+
                     return `
                         <div style="background:#e2e8f0; border-radius:8px; overflow:hidden; cursor:pointer; height:130px; transition: 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1" onclick="attachKlipyGif('${gifUrl}', '${currentKlipyType}', '${slug}')">
-                            <img src="${previewUrl}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+                            <img src="${previewUrl}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     `;
                 }).join('');
@@ -1878,20 +1889,22 @@
             document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'flex';
             closeModal('klipyGifModal');
 
-            // 📊 GHI NHẬN HÀNH ĐỘNG CHIA SẺ (SHARE EVENT) LÊN KLIPY DASHBOARD
+            // 📊 GHI NHẬN HÀNH ĐỘNG CHIA SẺ (Bọc try-catch chống chặn lỗi)
             if (slug && KLIPY_API_KEY) {
-                const customerId = getKlipyCustomerId();
-                fetch(`https://api.klipy.com/api/v1/${KLIPY_API_KEY}/gifs/share/${encodeURIComponent(slug)}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        customer_id: customerId,
-                        q: currentKlipyLastQuery || ""
-                    })
-                }).catch(() => {});
+                try {
+                    const customerId = getKlipyCustomerId();
+                    fetch(`https://api.klipy.com/api/v1/${KLIPY_API_KEY}/gifs/share/${encodeURIComponent(slug)}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            customer_id: customerId,
+                            q: currentKlipyLastQuery || ""
+                        })
+                    }).catch(() => {});
+                } catch(err) {}
             }
         }
-        
+
         async function handlePostComment(e, type) {
             e.preventDefault(); if (isPosting[type]) return; if (!currentUser) return openModal('loginModal');
             const textInput = document.getElementById(type === 'proj' ? 'commentTextProj' : 'commentTextProf');
