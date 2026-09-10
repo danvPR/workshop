@@ -1458,6 +1458,15 @@
             if (!proj) { showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); location.hash="#home"; return; }
             currentProj = proj;
 
+            // 🛡️ BẬT FORM BÌNH LUẬN NGAY LẬP TỨC CHO USER ĐÃ LOGIN
+            if (currentUser) { 
+                document.getElementById('commentFormProj').style.display = 'block'; 
+                document.getElementById('loginPromptProj').style.display = 'none'; 
+            } else { 
+                document.getElementById('commentFormProj').style.display = 'none'; 
+                document.getElementById('loginPromptProj').style.display = 'block'; 
+            }
+
             document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
@@ -1557,7 +1566,7 @@
                 return false;
             };
 
-            container.innerHTML = rootComments.map(root => {
+            const rootHtmlArray = rootComments.map(root => {
                 const replies = repliesMap[root.id] || []; const isExpanded = expandedThreads[type][root.id] || false;
                 const visibleReplies = isExpanded ? replies : replies.slice(0, 3); const hasMore = replies.length > 3;
 
