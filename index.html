@@ -1777,7 +1777,10 @@
                 }
             }
 
-            const userProjs = allProjects.filter(p => p.author.toLowerCase() === username.toLowerCase() && (p.visibility !== 'private' || (currentUser && currentUser.username.toLowerCase()===username.toLowerCase())));
+            let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(username)}&limit=100`;
+            if (currentUser) projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+            const projRes = await (await fetch(projUrl)).json();
+            const userProjs = projRes.projects || [];
             
             const statProj = document.getElementById('statProjectCount'); if(statProj) statProj.innerText = userProjs.length;
             const statLike = document.getElementById('statLikeCount'); if(statLike) statLike.innerText = userProjs.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0);
@@ -1798,7 +1801,10 @@
                 `).join('') : `<p style="color:#888;">${t('prof_empty_projects')}</p>`;
             }
 
-            const likedProjs = allProjects.filter(p => p.likes && p.likes.includes(username));
+            let likedUrl = `${WORKER_URL}/api/projects?likedBy=${encodeURIComponent(username)}&limit=100`;
+            if (currentUser) likedUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+            const likedRes = await (await fetch(likedUrl)).json();
+            const likedProjs = likedRes.projects || [];
             const likedListEl = document.getElementById('userLikedList');
             if(likedListEl) {
                 likedListEl.innerHTML = likedProjs.length ? likedProjs.map(p => `
