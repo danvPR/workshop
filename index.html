@@ -1746,6 +1746,24 @@
             document.getElementById('profileView').style.display = 'block';
             viewingProfileUser = username;
             
+            // Xử lý hiển thị form đăng nhập lập tức, không chờ API
+            const formProf = document.getElementById('profCommentForm');
+            const promptProf = document.getElementById('loginPromptProf');
+            if (currentUser) { 
+                if(formProf) formProf.style.display = 'block'; 
+                if(promptProf) promptProf.style.display = 'none'; 
+            } else { 
+                if(formProf) formProf.style.display = 'none'; 
+                if(promptProf) promptProf.style.display = 'block'; 
+            }
+
+            // Chuyển Tab mặc định ngay lập tức, tránh việc tải xong API mới chuyển gây giật/nhảy tab
+            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
+                switchProfTab('comments');
+            } else {
+                switchProfTab('projects');
+            }
+
             document.getElementById('profileContent').style.display = 'none';
             const p404 = document.getElementById('profile404');
             if(p404) p404.style.display = 'none';
@@ -1876,21 +1894,9 @@
             removeCommentImage('prof'); 
             cancelReply('prof'); 
             
-            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
-                switchProfTab('comments');
-                if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('prof', urlParams.get('c')), 500);
-            } else {
-                switchProfTab('projects');
-            }
-            
-            const formProf = document.getElementById('profCommentForm');
-            const promptProf = document.getElementById('loginPromptProf');
-            if (currentUser) { 
-                if(formProf) formProf.style.display = 'block'; 
-                if(promptProf) promptProf.style.display = 'none'; 
-            } else { 
-                if(formProf) formProf.style.display = 'none'; 
-                if(promptProf) promptProf.style.display = 'block'; 
+            // Chỉ thực hiện scroll đến bình luận nếu có (vì Tab đã được chuyển ở đầu hàm)
+            if (urlParams && urlParams.get('c')) {
+                setTimeout(() => highlightAndScrollComment('prof', urlParams.get('c')), 500);
             }
         }
 
