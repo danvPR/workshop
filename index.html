@@ -644,20 +644,44 @@
         </div>
     </div>
 
-    <!-- TRANG 4: UPLOAD -->
+    <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
-        <div class="upload-card-wrapper">
-            <h2 style="color:#111; border-bottom:1px solid #eee; padding-bottom:15px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_title">Xuất bản tác phẩm mới</span></h2>
+        
+        <!-- BƯỚC 1: MENU CHỌN HÀNH ĐỘNG -->
+        <div id="uploadChoiceStep" class="upload-card-wrapper" style="text-align: center;">
+            <h2 style="color:var(--text-title); margin-bottom: 30px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> Bạn muốn làm gì?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 750px; margin: 0 auto;">
+                <!-- Nút Đăng mới -->
+                <div onclick="showUploadNew()" style="background: var(--bg-secondary); border: 2px solid var(--border-color); padding: 40px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='none';">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 15px;"></i>
+                    <h3 style="margin-bottom: 10px; color: var(--text-title);">Đăng tác phẩm mới</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Xuất bản một dự án Scratch (.sb3) hoàn toàn mới lên nền tảng.</p>
+                </div>
+                <!-- Nút Cập nhật -->
+                <div onclick="showUploadUpdate()" style="background: var(--bg-secondary); border: 2px solid var(--border-color); padding: 40px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='none';">
+                    <i class="fa-solid fa-clock-rotate-left" style="font-size: 3.5rem; color: #ea580c; margin-bottom: 15px;"></i>
+                    <h3 style="margin-bottom: 10px; color: var(--text-title);">Cập nhật bản mới</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Tải lên file (.sb3) mới cho dự án đã đăng. Giữ nguyên lượt thích và bình luận.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BƯỚC 2A: ĐĂNG TÁC PHẨM MỚI -->
+        <div id="uploadNewFormStep" class="upload-card-wrapper" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 15px; border-bottom:1px solid var(--border-color); padding-bottom:15px; margin-bottom: 20px;">
+                <button class="btn" onclick="resetUploadView()" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_title">Xuất bản tác phẩm mới</span></h2>
+            </div>
             <form id="uploadFormDOM">
                 <div class="upload-grid">
                     <div>
-                            <label style="font-weight:bold; color:#444; display:block; margin-bottom:8px;" data-i18n="upload_thumb_label">Ảnh bìa dự án</label>
+                        <label style="font-weight:bold; color:var(--text-title); display:block; margin-bottom:8px;" data-i18n="upload_thumb_label">Ảnh bìa dự án</label>
                         <label for="upThumb" class="thumb-dropzone">
                             <img id="thumbPreviewBig" class="thumb-preview-img" alt="Thumbnail Preview">
                             <div class="thumb-placeholder" id="thumbPlaceholder">
                                 <i class="fa-solid fa-image" style="font-size:3.5rem; color:#cbd5e1; margin-bottom:10px;"></i>
-                                <div style="font-weight:bold; color:#475569;" data-i18n="upload_thumb_hint">Bấm để chọn hoặc kéo ảnh vào đây</div>
-                                <div style="font-size:0.8rem; color:#94a3b8; margin-top:4px;" data-i18n="upload_thumb_formats">Hỗ trợ JPG, PNG (Tỉ lệ 16:9)</div>
+                                <div style="font-weight:bold;" data-i18n="upload_thumb_hint">Bấm để chọn hoặc kéo ảnh vào đây</div>
+                                <div style="font-size:0.8rem; margin-top:4px;" data-i18n="upload_thumb_formats">Hỗ trợ JPG, PNG (Tỉ lệ 16:9)</div>
                             </div>
                         </label>
                         <input type="file" id="upThumb" accept="image/*" style="display:none;" onchange="handleThumbnailPreviewBig(this)">
@@ -674,12 +698,24 @@
                         <div class="form-group"><label data-i18n="upload_credits_label">Đội ngũ sáng tạo / Credits</label><textarea id="upCredits" class="form-control" rows="3" data-i18n-ph="upload_credits_ph" placeholder="Ghi nhận nguồn hình ảnh, âm thanh..."></textarea></div>
                     </div>
                 </div>
-                <div style="margin-top:25px; padding-top:20px; border-top:1px solid #eee;">
+                <div style="margin-top:25px; padding-top:20px; border-top:1px solid var(--border-color);">
                     <button type="button" onclick="handleUploadBtn()" class="btn btn-primary" id="btnSubmitUpload" style="width:100%; justify-content:center; padding:14px; font-size:1.1rem; border-radius:10px;">
                         <i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>
                     </button>
                 </div>
             </form>
+        </div>
+
+        <!-- BƯỚC 2B: CHỌN DỰ ÁN ĐỂ CẬP NHẬT -->
+        <div id="uploadUpdateStep" class="upload-card-wrapper" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 15px; border-bottom:1px solid var(--border-color); padding-bottom:15px; margin-bottom: 20px;">
+                <button class="btn" onclick="resetUploadView()" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-clock-rotate-left" style="color:#ea580c;"></i> Chọn dự án cần cập nhật</h2>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Chọn dự án bên dưới. Hệ thống sẽ mở bảng quản lý dự án để bạn tiến hành nạp file game (.sb3) mới nhất.</p>
+            <div class="project-grid" id="uploadUpdateProjectList">
+                <!-- Danh sách dự án đổ bằng JS -->
+            </div>
         </div>
     </div>
 
@@ -2200,7 +2236,11 @@
                 document.getElementById('editStatusInput').value = pData.status;
                 document.getElementById('editBioInput').value = pData.bio;
                 
-                const myProjs = allProjects.filter(p => p.author.toLowerCase() === currentUser.username.toLowerCase());
+                // Kéo danh sách toàn bộ dự án của tác giả trực tiếp từ máy chủ để tránh thiếu cache
+                let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
+                const projRes = await (await fetch(projUrl)).json();
+                const myProjs = projRes.projects || [];
+                
                 const select = document.getElementById('editFeaturedProjSelect');
                 select.innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.projectId || p.fileId}">${escapeHtml(p.title)}</option>`).join('');
                 select.value = pData.featuredProject;
@@ -2241,9 +2281,59 @@
 
         let isProjectImported = false;
 
+        function resetUploadView() {
+            document.getElementById('uploadChoiceStep').style.display = 'block';
+            document.getElementById('uploadNewFormStep').style.display = 'none';
+            document.getElementById('uploadUpdateStep').style.display = 'none';
+        }
+
+        function showUploadNew() {
+            document.getElementById('uploadChoiceStep').style.display = 'none';
+            document.getElementById('uploadNewFormStep').style.display = 'block';
+            document.getElementById('uploadUpdateStep').style.display = 'none';
+        }
+
+        async function showUploadUpdate() {
+            document.getElementById('uploadChoiceStep').style.display = 'none';
+            document.getElementById('uploadNewFormStep').style.display = 'none';
+            document.getElementById('uploadUpdateStep').style.display = 'block';
+            
+            const listEl = document.getElementById('uploadUpdateProjectList');
+            listEl.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+            
+            try {
+                let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
+                const projRes = await (await fetch(projUrl)).json();
+                const myProjs = projRes.projects || [];
+                
+                if (myProjs.length === 0) {
+                    listEl.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#888;">Bạn chưa có dự án nào để cập nhật.</div>';
+                    return;
+                }
+                
+                listEl.innerHTML = myProjs.map(p => `
+                    <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'; setTimeout(() => { openProjSettingsModal(); document.getElementById('updateProjFile').scrollIntoView({behavior: 'smooth', block: 'center'}); }, 800);">
+                        ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
+                        <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
+                        <div class="card-body">
+                            <div class="card-title">${escapeHtml(p.title)}</div>
+                            <div style="margin-top: 10px;">
+                                <button class="btn btn-primary" style="width:100%; font-size:0.85rem; background: #ea580c;"><i class="fa-solid fa-pen"></i> Nạp bản cập nhật</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                listEl.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#ff4c4c;">Lỗi tải dữ liệu</div>';
+            }
+        }
+
         function openUploadPage() {
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
             document.getElementById('uploadView').style.display = 'block';
+            
+            // Luôn đặt lại về màn hình chọn mỗi khi mở trang
+            resetUploadView();
 
             // PHÁT TÍN HIỆU ĐỊNH KỲ VÀ HIỂN THỊ LOADING SCREEN TRÊN WEB
             if (window.opener && !isProjectImported) {
@@ -2293,6 +2383,9 @@
                 // ẨN MÀN HÌNH CHỜ KHI ĐÃ NHẬN ĐƯỢC FILE
                 const importLoader = document.getElementById('danv-import-loader');
                 if(importLoader) importLoader.remove();
+                
+                // Tự động chuyển qua form upload mới
+                showUploadNew();
 
                 const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
 
