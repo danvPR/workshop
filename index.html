@@ -2315,9 +2315,45 @@
 
         async function toggleFollow() {
             if(!currentUser) return showToast(t('comment_login'), "error");
-            const btnF = document.getElementById('btnFollowProf'); btnF.disabled = true;
+            const btnF = document.getElementById('btnFollowProf'); 
+            btnF.disabled = true;
+
             const res = await apiFetch(`/api/user/follow`, { method: 'POST', body: JSON.stringify({ targetUser: viewingProfileUser }) });
-            if(res && res.success) openProfilePage(viewingProfileUser);
+            
+            if(res && res.success) {
+                // 1. XÓA BỘ NHỚ ĐỆM 
+                if (typeof profileCache !== 'undefined' && profileCache[viewingProfileUser]) {
+                    delete profileCache[viewingProfileUser];
+                }
+
+                // 2. CẬP NHẬT GIAO DIỆN
+                if (viewingProfileData) {
+                    if (!viewingProfileData.followers) viewingProfileData.followers = [];
+                    
+                    const myIndex = viewingProfileData.followers.indexOf(currentUser.username);
+                    const isNowFollowing = (myIndex === -1); // Nếu chưa có thì là Đang theo dõi, có rồi thì là Bỏ theo dõi
+
+                    if (isNowFollowing) {
+                        viewingProfileData.followers.push(currentUser.username);
+                        showToast("Đã theo dõi " + viewingProfileUser, "success");
+                    } else {
+                        viewingProfileData.followers.splice(myIndex, 1);
+                        showToast("Đã hủy theo dõi", "info");
+                    }
+
+                    // Đổi giao diện nút bấm
+                    btnF.innerHTML = isNowFollowing 
+                        ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` 
+                        : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`;
+                    btnF.className = isNowFollowing ? 'btn' : 'btn btn-primary';
+
+                    // Cập nhật lại số lượng Followers
+                    const statFollowersEl = document.getElementById('statFollowersCount');
+                    if (statFollowersEl) {
+                        statFollowersEl.innerText = viewingProfileData.followers.length;
+                    }
+                }
+            }
             btnF.disabled = false;
         }
 
