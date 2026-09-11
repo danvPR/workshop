@@ -1298,6 +1298,16 @@
 
         window.addEventListener('hashchange', handleRouting);
         async function handleRouting() {
+            // 1. Bật màn hình Loading ngay khi bắt đầu chuyển trang
+            const loader = document.getElementById('globalLoader');
+            if (loader) {
+                loader.style.display = 'flex';
+                loader.style.opacity = '1';
+                // Đổi chữ loading cho phù hợp
+                const loaderText = document.getElementById('loaderText');
+                if (loaderText) loaderText.innerText = "Đang tải dữ liệu...";
+            }
+
             const fullHash = window.location.hash || '#home'; 
             const [hash, queryStr] = fullHash.split('?');
             const urlParams = new URLSearchParams(queryStr || '');
@@ -1306,22 +1316,30 @@
             document.getElementById('playerContainer').innerHTML = ''; 
             
             if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
-                await loadProjects(); 
+                // Nếu đã có data thì không fetch lại từ đầu để tránh lag
+                if (allProjects.length === 0) await loadProjects(); 
             }
             // tải dữ liệu tài nguyên khi vào trang assets
             if (hash.startsWith('#assets')) {
-                await fetchAssetsList();
+                if (allAssets.length === 0) await fetchAssetsList();
             }
 
-            if (hash.startsWith('#project/')) openProjectPage(hash.replace('#project/', ''), urlParams);
-            else if (hash.startsWith('#profile/')) openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
+            // Chạy hàm mở trang và ĐỢI nó hoàn tất (thêm await để đồng bộ)
+            if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
+            else if (hash.startsWith('#profile/')) await openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#upload') openUploadPage();
-            else if (hash === '#settings') openSettingsPage();
-            else if (hash === '#notifications') openNotificationsPage();
+            else if (hash === '#settings') await openSettingsPage();
+            else if (hash === '#notifications') await openNotificationsPage();
             else if (hash === '#create') openCreatePage();
-            else if (hash === '#admin') openAdminPage();
-            else if (hash.startsWith('#assets')) openAssetsPage(urlParams); // Dẫn vào trang Assets
+            else if (hash === '#admin') await openAdminPage();
+            else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
             else openHomePage();
+
+            // 2. Tắt màn hình Loading khi mọi thứ đã sẵn sàng
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 300);
+            }
         }
 
         function updateNav() {
@@ -1529,7 +1547,14 @@
             document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
             
             commentLimits.proj = 10; // Reset số lượng bình luận khi mở dự án mới
-            updateActionBtns(); renderCommentList('proj', currentProj.comments || []); removeCommentImage('proj'); cancelReply('proj');
+            updateActionBtns(); 
+            
+            // Hiện loading
+            document.getElementById('commentListProj').innerHTML = '<div style="text-align:center; padding: 30px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="color:#666; font-size:0.9rem; margin-top:10px; display:inline-block;">Đang tải bình luận...</span></div>';
+            setTimeout(() => {
+                renderCommentList('proj', currentProj.comments || []); 
+                removeCommentImage('proj'); cancelReply('proj');
+            }, 300); // Đợi DOM sẵn sàng
             
             if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
                 switchProjTab('comments');
@@ -2137,7 +2162,14 @@
             }
 
             commentLimits.prof = 10; // Reset số lượng bình luận khi mở profile mới
-            renderCommentList('prof', viewingProfileData.comments || []);
+            
+            // Hiện loading cho bình luận Profile
+            const profCmtEl = document.getElementById('profCommentList');
+            if (profCmtEl) profCmtEl.innerHTML = '<div style="text-align:center; padding: 30px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="color:#666; font-size:0.9rem; margin-top:10px; display:inline-block;">Đang tải lời nhắn...</span></div>';
+            
+            setTimeout(() => {
+                renderCommentList('prof', viewingProfileData.comments || []);
+            }, 300);
             removeCommentImage('prof'); 
             cancelReply('prof'); 
             
