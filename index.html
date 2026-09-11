@@ -2458,48 +2458,6 @@
                 showToast("Đã nhận dữ liệu từ Trình chỉnh sửa! Vui lòng chọn Đăng mới hoặc Cập nhật.", "success");
             }
         });
-                
-                // Tự động chuyển qua form upload mới
-                showUploadNew();
-
-                const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
-
-                // 1. Tự động điền Tên dự án
-                if (title && document.getElementById('upTitle')) {
-                    document.getElementById('upTitle').value = title;
-                }
-
-                // 2. Chuyển ArrayBuffer thành File .sb3 và nạp thẳng vào ô input file
-                if (sb3Buffer && document.getElementById('upFile')) {
-                    const sb3File = new File([sb3Buffer], fileName || "project.sb3", { type: "application/x-scratch-project" });
-                    const dt = new DataTransfer();
-                    dt.items.add(sb3File);
-                    document.getElementById('upFile').files = dt.files;
-                }
-
-                // 3. Tự động nạp Thumbnail vào ô ảnh bìa lớn
-                if (thumbDataUrl && document.getElementById('upThumb')) {
-                    try {
-                        const blob = await (await fetch(thumbDataUrl)).blob();
-                        const thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
-                        const dtThumb = new DataTransfer();
-                        dtThumb.items.add(thumbFile);
-                        document.getElementById('upThumb').files = dtThumb.files;
-
-                        const img = document.getElementById('thumbPreviewBig');
-                        if (img) {
-                            img.src = thumbDataUrl;
-                            img.style.display = 'block';
-                            document.getElementById('thumbPlaceholder').style.display = 'none';
-                        }
-                    } catch (e) {
-                        console.warn("Lỗi nạp blob thumbnail:", e);
-                    }
-                }
-
-                showToast("Đã nạp chương trình và ảnh bìa.", "success");
-            }
-        });
 
         async function handleUploadBtn() {
             const fileInput = document.getElementById('upFile').files[0];
