@@ -2351,7 +2351,12 @@
             listEl.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
             
             try {
+                // 
                 let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
+                if (currentUser) {
+                    projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                }
+                
                 const projRes = await (await fetch(projUrl)).json();
                 const myProjs = projRes.projects || [];
                 
@@ -2426,7 +2431,7 @@
 
         let pendingImportedData = null; // Biến lưu tạm dữ liệu từ Extension
 
-        
+
         // LẮNG NGHE FILE VÀ ẢNH TRUYỀN TỪ EXTENSION TURBOWARP
         window.addEventListener('message', async (event) => {
             if (event.data && event.data.type === "DANV_IMPORT_PROJECT") {
