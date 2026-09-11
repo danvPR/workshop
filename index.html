@@ -2291,7 +2291,56 @@
             document.getElementById('uploadChoiceStep').style.display = 'none';
             document.getElementById('uploadNewFormStep').style.display = 'block';
             document.getElementById('uploadUpdateStep').style.display = 'none';
+            
+            // Tự động điền dữ liệu nếu đang có File chờ (nhận từ Extension)
+            if (pendingImportedData) {
+                if (pendingImportedData.title && document.getElementById('upTitle')) {
+                    document.getElementById('upTitle').value = pendingImportedData.title;
+                }
+                if (pendingImportedData.sb3File && document.getElementById('upFile')) {
+                    const dt = new DataTransfer();
+                    dt.items.add(pendingImportedData.sb3File);
+                    document.getElementById('upFile').files = dt.files;
+                }
+                if (pendingImportedData.thumbFile && document.getElementById('upThumb')) {
+                    const dtThumb = new DataTransfer();
+                    dtThumb.items.add(pendingImportedData.thumbFile);
+                    document.getElementById('upThumb').files = dtThumb.files;
+                    const img = document.getElementById('thumbPreviewBig');
+                    if (img) {
+                        img.src = pendingImportedData.thumbDataUrl;
+                        img.style.display = 'block';
+                        document.getElementById('thumbPlaceholder').style.display = 'none';
+                    }
+                }
+            }
         }
+
+        // Hàm xử lý việc Click chọn dự án để Update
+        window.handleSelectProjectToUpdate = function(id) {
+            location.hash = '#project/' + id; // 1. Chuyển sang trang dự án đó
+            
+            // 2. Đợi trang load xong (800ms) rồi bật bảng Cài đặt
+            setTimeout(() => {
+                openProjSettingsModal();
+                
+                // 3. Đợi bảng cài đặt bật lên xong (200ms) mới dán File vào để tránh bị ghi đè xóa mất
+                setTimeout(() => {
+                    const updateSection = document.getElementById('updateProjFile');
+                    if (updateSection) {
+                        updateSection.scrollIntoView({behavior: 'smooth', block: 'center'});
+                        
+                        // Tự động dán file .sb3 từ Extension vào khu vực cập nhật (nếu có)
+                        if (pendingImportedData && pendingImportedData.sb3File) {
+                            const dt = new DataTransfer();
+                            dt.items.add(pendingImportedData.sb3File);
+                            updateSection.files = dt.files;
+                            showToast("Đã tự động dán file game mới vào ô!", "success");
+                        }
+                    }
+                }, 200);
+            }, 800);
+        };
 
         async function showUploadUpdate() {
             document.getElementById('uploadChoiceStep').style.display = 'none';
@@ -2312,7 +2361,7 @@
                 }
                 
                 listEl.innerHTML = myProjs.map(p => `
-                    <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'; setTimeout(() => { openProjSettingsModal(); document.getElementById('updateProjFile').scrollIntoView({behavior: 'smooth', block: 'center'}); }, 800);">
+                    <div class="card" onclick="handleSelectProjectToUpdate('${p.projectId || p.fileId}')">
                         ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
                         <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
                         <div class="card-body">
@@ -2375,6 +2424,8 @@
             }
         }
 
+        let pendingImportedData = null; // Biến lưu tạm dữ liệu từ Extension
+
         // LẮNG NGHE FILE VÀ ẢNH TRUYỀN TỪ EXTENSION TURBOWARP
         window.addEventListener('message', async (event) => {
             if (event.data && event.data.type === "DANV_IMPORT_PROJECT") {
@@ -2383,6 +2434,30 @@
                 // ẨN MÀN HÌNH CHỜ KHI ĐÃ NHẬN ĐƯỢC FILE
                 const importLoader = document.getElementById('danv-import-loader');
                 if(importLoader) importLoader.remove();
+                
+                const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
+                
+                // Lưu dữ liệu vào biến tạm để chờ người dùng quyết định (New hay Update)
+                pendingImportedData = { title, thumbDataUrl };
+                
+                if (sb3Buffer) {
+                    pendingImportedData.sb3File = new File([sb3Buffer], fileName || "project.sb3", { type: "application/x-scratch-project" });
+                }
+                
+                if (thumbDataUrl) {
+                    try {
+                        const blob = await (await fetch(thumbDataUrl)).blob();
+                        pendingImportedData.thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
+                    } catch (e) {
+                        console.warn("Lỗi nạp blob thumbnail:", e);
+                    }
+                }
+                
+                // Trả về màn hình Menu để người dùng tự chọn
+                resetUploadView();
+                showToast("Đã nhận dữ liệu từ Trình chỉnh sửa! Vui lòng chọn Đăng mới hoặc Cập nhật.", "success");
+            }
+        });
                 
                 // Tự động chuyển qua form upload mới
                 showUploadNew();
