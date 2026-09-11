@@ -3465,11 +3465,9 @@ function reopenEditor() {
                 const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
                 
                 let previewHtml = `<i class="fa-solid fa-file" style="font-size:4rem; color:#cbd5e1;"></i>`;
-                if (['png','jpg','jpeg','gif','webp'].includes(fileExt)) {
-                    previewHtml = `<img src="${fileUrl}" loading="lazy">`;
-                } else if (fileExt === 'svg') {
-                    // Tránh render trực tiếp SVG để an toàn bảo mật
-                    previewHtml = `<i class="fa-solid fa-bezier-curve" style="font-size:3.5rem; color:var(--primary);"></i>`;
+                if (['png','jpg','jpeg','gif','webp','svg'].includes(fileExt)) {
+                    // 🛡️ AN TOÀN
+                    previewHtml = `<img src="${fileUrl}" loading="lazy" style="padding: 10px;" onerror="this.outerHTML='<i class=\\\'fa-solid fa-bezier-curve\\\' style=\\\'font-size:3.5rem; color:var(--primary);\\\'></i>'">`;
                 } else if (['mp3','wav','ogg'].includes(fileExt)) {
                     // ⚡ TỐI ƯU DATA: Thêm preload="none" để KHÔNG tải trước nhạc khi chưa bấm Play
                     previewHtml = `<i class="fa-solid fa-music" style="font-size:3.5rem; color:#855cd6;"></i><audio controls preload="none" style="position:absolute; bottom:5px; width:90%; height:30px;"><source src="${fileUrl}"></audio>`;
