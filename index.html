@@ -343,6 +343,17 @@
         .vote-btn:hover { background: var(--border-color); }
         .vote-btn.up.active { color: #10b981; background: rgba(16, 185, 129, 0.1); }
         .vote-btn.down.active { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+        /* SKELETON LOADING (GIAI ĐOẠN 4) */
+        .skeleton { 
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 50%, var(--bg-secondary) 75%); 
+            background-size: 200% 100%; 
+            animation: shimmer 1.5s infinite; 
+            border-radius: 4px; 
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-text { height: 14px; margin-bottom: 6px; }
+        .skeleton-card .card-thumb { height: 160px; border-radius: 12px 12px 0 0; }
     </style>
 </head>
 <body>
@@ -611,9 +622,24 @@
                 <button class="prof-tab-btn" id="tabBtnProf-comments" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments"></i> <span data-i18n="prof_comments">Lời nhắn</span></button>
             </div>
 
-            <div id="profTab-projects" class="prof-tab-content active"><div class="project-grid" id="userProjectList">Đang tải...</div></div>
-            <div id="profTab-likes" class="prof-tab-content"><div class="project-grid" id="userLikedList">Đang tải...</div></div>
-            <div id="profTab-activities" class="prof-tab-content"><div id="userActivityList" style="max-width:750px;">Chưa có hoạt động nào.</div></div>
+            <div id="profTab-projects" class="prof-tab-content active">
+                <div class="project-grid" id="userProjectList"></div>
+                <div id="profLoadMore-projects" style="text-align: center; padding: 20px 0; display: none;">
+                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('projects', true)"><i class="fa-solid fa-angle-down"></i> Xem thêm tác phẩm</button>
+                </div>
+            </div>
+            <div id="profTab-likes" class="prof-tab-content">
+                <div class="project-grid" id="userLikedList"></div>
+                <div id="profLoadMore-likes" style="text-align: center; padding: 20px 0; display: none;">
+                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('likes', true)"><i class="fa-solid fa-angle-down"></i> Xem thêm lượt thích</button>
+                </div>
+            </div>
+            <div id="profTab-activities" class="prof-tab-content">
+                <div id="userActivityList" style="max-width:750px;"></div>
+                <div id="profLoadMore-activities" style="text-align: center; padding: 20px 0; display: none;">
+                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('activities', true)"><i class="fa-solid fa-angle-down"></i> Xem thêm hoạt động</button>
+                </div>
+            </div>
             <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
                 <div style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
                     <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
@@ -1117,6 +1143,12 @@
         let attachedGifUrls = { proj: null, prof: null }; // Biến nhớ GIF đang chọn
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
+        
+        // --- Smart Caching & Lazy Load cho Profile ---
+        let profileCache = {}; // Lưu trữ profile để load 0 giây
+        const PROF_CACHE_TTL = 3 * 60 * 1000; // Giữ Cache 3 phút
+        let profTabState = { projects: {}, likes: {}, activities: {} }; // Trạng thái Lazy Load Tab
+        const PROF_ITEMS_PER_PAGE = 12; // Tải 12 dự án mỗi lần bấm xem thêm
         
         // --- Home Pagination & Filter ---
         let homeCurrentPage = 1;
@@ -2049,49 +2081,45 @@
         }
 
         // ================= PROFILE & SETTINGS =================
-        // ================= TRANG PROFILE =================
+        
+        
+        
+        
+        
+        // ================= TRANG PROFILE (ĐÃ TỐI ƯU HÓA HOÀN TOÀN) =================
         async function openProfilePage(username, urlParams = null) {
             document.getElementById('profileView').style.display = 'block';
             viewingProfileUser = username;
             
-            // Xử lý hiển thị form đăng nhập lập tức, không chờ API
+            // 1. Xử lý khung nhập bình luận
             const formProf = document.getElementById('profCommentForm');
             const promptProf = document.getElementById('loginPromptProf');
-            if (currentUser) { 
-                if(formProf) formProf.style.display = 'block'; 
-                if(promptProf) promptProf.style.display = 'none'; 
-            } else { 
-                if(formProf) formProf.style.display = 'none'; 
-                if(promptProf) promptProf.style.display = 'block'; 
-            }
-
-            // Chuyển Tab mặc định ngay lập tức, tránh việc tải xong API mới chuyển gây giật/nhảy tab
-            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
-                switchProfTab('comments');
-            } else {
-                switchProfTab('projects');
-            }
+            if (currentUser) { if(formProf) formProf.style.display = 'block'; if(promptProf) promptProf.style.display = 'none'; } 
+            else { if(formProf) formProf.style.display = 'none'; if(promptProf) promptProf.style.display = 'block'; }
 
             document.getElementById('profileContent').style.display = 'none';
-            const p404 = document.getElementById('profile404');
-            if(p404) p404.style.display = 'none';
+            const p404 = document.getElementById('profile404'); if(p404) p404.style.display = 'none';
 
-            try {
-                const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`);
-                if(res.status === 404) { if(p404) p404.style.display = 'block'; return; }
-                
-                // 🛡️
-                if(!res.ok) { 
-                    showToast("Máy chủ đang bận xử lý, vui lòng tải lại trang sau giây lát!", "error"); 
-                    location.hash = "#home"; 
-                    return; 
-                }
-                
-                viewingProfileData = await res.json();
-            } catch(e) { if(p404) p404.style.display = 'block'; return; }
+            // 2. BỘ NHỚ ĐỆM (CACHE): Nếu vừa vào xem dưới 3 phút thì lấy ngay từ RAM (0 giây loading)
+            // (Nếu là chính mình thì luôn tải mới để không bị kẹt thông tin vừa sửa)
+            const isCurrentUser = currentUser && currentUser.username.toLowerCase() === username.toLowerCase();
+            const now = Date.now();
+            
+            if (!isCurrentUser && profileCache[username] && (now - profileCache[username].timestamp < PROF_CACHE_TTL)) {
+                viewingProfileData = profileCache[username].data; // Lấy từ Cache tức thì
+            } else {
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`);
+                    if(res.status === 404) { if(p404) p404.style.display = 'block'; return; }
+                    if(!res.ok) { showToast("Máy chủ đang bận!", "error"); location.hash = "#home"; return; }
+                    viewingProfileData = await res.json();
+                    profileCache[username] = { data: viewingProfileData, timestamp: now }; // Lưu Cache
+                } catch(e) { if(p404) p404.style.display = 'block'; return; }
+            }
+            
             document.getElementById('profileContent').style.display = 'block';
             
-            // Đổ dữ liệu text an toàn (Tránh Crash)
+            // 3. Đổ nhanh thông tin chữ cơ bản
             const elName = document.getElementById('profDisplayName'); if(elName) elName.innerText = viewingProfileData.display_name || username;
             const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || username;
             const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
@@ -2101,42 +2129,12 @@
             
             const badge = document.getElementById('profScratchBadge');
             if(badge) {
-                if(viewingProfileData.scratch_linked) {
-                    badge.style.display = 'inline-block';
-                    badge.title = `Tài khoản Scratch đã xác thực: @${viewingProfileData.scratch_linked}`;
-                } else { badge.style.display = 'none'; }
+                if(viewingProfileData.scratch_linked) { badge.style.display = 'inline-block'; badge.title = `Xác thực: @${viewingProfileData.scratch_linked}`; } 
+                else { badge.style.display = 'none'; }
             }
 
-            const bannerArea = document.getElementById('profileBannerArea');
-            if(bannerArea) bannerArea.style.display = 'none';
-
-            const btnEdit = document.getElementById('btnEditProfModal');
-            const btnFollow = document.getElementById('btnFollowProf');
-            if (currentUser && currentUser.username.toLowerCase() === username.toLowerCase()) { 
-                if(btnEdit) btnEdit.style.display = 'inline-flex'; 
-                if(btnFollow) btnFollow.style.display = 'none'; 
-            } else { 
-                if(btnEdit) btnEdit.style.display = 'none'; 
-                if(currentUser && btnFollow) { 
-                    const followers = viewingProfileData.followers || [];
-                    const isFollowing = followers.includes(currentUser.username); 
-                    btnFollow.style.display = 'inline-flex'; 
-                    btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`; 
-                    btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary'; 
-                } 
-            }
-
-            const btnReportProf = document.getElementById('btnReportProf');
-            if(btnReportProf) {
-                btnReportProf.style.display = (currentUser && currentUser.username.toLowerCase() !== username.toLowerCase()) ? 'inline-flex' : 'none';
-            }
-
-            const btnWarn = document.getElementById('btnAdminWarn');
-            if(btnWarn) {
-                if(currentUser && currentUser.role === 'admin' && currentUser.username.toLowerCase() !== username.toLowerCase()) { btnWarn.style.display = 'inline-flex'; } 
-                else { btnWarn.style.display = 'none'; }
-            }
-
+            // Xử lý Banner nổi bật
+            const bannerArea = document.getElementById('profileBannerArea'); if(bannerArea) bannerArea.style.display = 'none';
             if (viewingProfileData.featuredProject) {
                 const featProj = allProjects.find(p => p.fileId === viewingProfileData.featuredProject || p.projectId === viewingProfileData.featuredProject);
                 if (featProj && bannerArea) { 
@@ -2148,75 +2146,173 @@
                 }
             }
 
-            let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(username)}&limit=100`;
-            if (currentUser) projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
-            const projRes = await (await fetch(projUrl)).json();
-            const userProjs = projRes.projects || [];
-            
-            const statProj = document.getElementById('statProjectCount'); if(statProj) statProj.innerText = userProjs.length;
-            const statLike = document.getElementById('statLikeCount'); if(statLike) statLike.innerText = userProjs.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0);
-            
-            const followersList = viewingProfileData.followers || [];
-            const followingList = viewingProfileData.following || [];
-            const statFlw = document.getElementById('statFollowersCount'); if(statFlw) statFlw.innerText = followersList.length;
-            const statFlwing = document.getElementById('statFollowingCount'); if(statFlwing) statFlwing.innerText = followingList.length;
-
-            const projListEl = document.getElementById('userProjectList');
-            if(projListEl) {
-                projListEl.innerHTML = userProjs.length ? userProjs.map(p => `
-                    <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
-                        ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
-                        <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
-                        <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
-                    </div>
-                `).join('') : `<p style="color:#888;">${t('prof_empty_projects')}</p>`;
+            // Xử lý nút Follow / Edit
+            const btnEdit = document.getElementById('btnEditProfModal'); const btnFollow = document.getElementById('btnFollowProf');
+            if (isCurrentUser) { 
+                if(btnEdit) btnEdit.style.display = 'inline-flex'; if(btnFollow) btnFollow.style.display = 'none'; 
+            } else { 
+                if(btnEdit) btnEdit.style.display = 'none'; 
+                if(currentUser && btnFollow) { 
+                    const isFollowing = (viewingProfileData.followers || []).includes(currentUser.username); 
+                    btnFollow.style.display = 'inline-flex'; 
+                    btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`; 
+                    btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary'; 
+                } 
             }
-
-            let likedUrl = `${WORKER_URL}/api/projects?likedBy=${encodeURIComponent(username)}&limit=100`;
-            if (currentUser) likedUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
-            const likedRes = await (await fetch(likedUrl)).json();
-            const likedProjs = likedRes.projects || [];
-            const likedListEl = document.getElementById('userLikedList');
-            if(likedListEl) {
-                likedListEl.innerHTML = likedProjs.length ? likedProjs.map(p => `
-                    <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
-                        <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
-                        <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
-                    </div>
-                `).join('') : `<p style="color:#888;">${t('prof_empty_likes')}</p>`;
-            }
-
-            const activities = viewingProfileData.activities || [];
-            const actListEl = document.getElementById('userActivityList');
-            if(actListEl) {
-                actListEl.innerHTML = activities.length ? activities.map(a => `
-                    <div class="timeline-item">
-                        <div style="font-size:0.95rem;"><b>${escapeHtml(viewingProfileData.username)}</b> ${a.action} <a href="${a.link}" style="color:var(--primary); font-weight:bold; text-decoration:none;">"${escapeHtml(a.detail)}"</a></div>
-                        <div style="font-size:0.75rem; color:#888; margin-top:4px;">${a.time}</div>
-                    </div>
-                `).join('') : `<p style="color:#888;">${t('prof_empty_activities')}</p>`;
-            }
-
-            commentLimits.prof = 10; // Reset số lượng bình luận khi mở profile mới
             
-            // Hiện loading cho bình luận Profile
-            const profCmtEl = document.getElementById('profCommentList');
-            if (profCmtEl) profCmtEl.innerHTML = '<div style="text-align:center; padding: 30px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="color:#666; font-size:0.9rem; margin-top:10px; display:inline-block;">Đang tải lời nhắn...</span></div>';
-            
-            setTimeout(() => {
-                renderCommentList('prof', viewingProfileData.comments || []);
-            }, 300);
-            removeCommentImage('prof'); 
-            cancelReply('prof'); 
-            
-            // Chỉ thực hiện scroll đến bình luận nếu có (vì Tab đã được chuyển ở đầu hàm)
-            if (urlParams && urlParams.get('c')) {
+            document.getElementById('btnReportProf').style.display = (currentUser && !isCurrentUser) ? 'inline-flex' : 'none';
+            document.getElementById('btnAdminWarn').style.display = (currentUser && currentUser.role === 'admin' && !isCurrentUser) ? 'inline-flex' : 'none';
+
+            // Đặt số liệu nhanh
+            document.getElementById('statProjectCount').innerText = "..."; 
+            document.getElementById('statLikeCount').innerText = "..."; 
+            document.getElementById('statFollowersCount').innerText = (viewingProfileData.followers || []).length;
+            document.getElementById('statFollowingCount').innerText = (viewingProfileData.following || []).length;
+
+            // Đặt lại trạng thái ban đầu cho các Tab
+            profTabState = {
+                projects: { page: 1, hasMore: false, loaded: false },
+                likes: { page: 1, hasMore: false, loaded: false },
+                activities: { page: 1, hasMore: false, loaded: false }
+            };
+
+            // Dọn sạch rác màn hình cũ
+            document.getElementById('userProjectList').innerHTML = ''; 
+            document.getElementById('userLikedList').innerHTML = ''; 
+            document.getElementById('userActivityList').innerHTML = '';
+            document.getElementById('profLoadMore-projects').style.display = 'none'; 
+            document.getElementById('profLoadMore-likes').style.display = 'none'; 
+            document.getElementById('profLoadMore-activities').style.display = 'none';
+
+            // Xử lý Tab bình luận (nếu truy cập qua đường link thông báo)
+            commentLimits.prof = 10;
+            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
+                switchProfTab('comments');
                 setTimeout(() => highlightAndScrollComment('prof', urlParams.get('c')), 500);
+            } else {
+                switchProfTab('projects'); // Mặc định mở Tab Tác phẩm đầu tiên
+            }
+
+            const profCmtEl = document.getElementById('profCommentList');
+            if (profCmtEl && !profCmtEl.innerHTML.includes('highlight-permanent')) {
+                profCmtEl.innerHTML = '<div style="text-align:center; padding: 30px;"><div class="skeleton skeleton-text" style="width:100%; height:80px; border-radius:12px;"></div></div>';
+                setTimeout(() => { renderCommentList('prof', viewingProfileData.comments || []); removeCommentImage('prof'); cancelReply('prof'); }, 300);
             }
         }
 
-        function switchProfTab(tab) { document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.prof-tab-content').forEach(c => c.style.display = 'none'); document.getElementById(`tabBtnProf-${tab}`).classList.add('active'); document.getElementById(`profTab-${tab}`).style.display = 'block'; }
-        
+        // HÀM CHUYỂN ĐỔI TAB (CHỈ TẢI DATA KHI BẤM VÀO TAB ĐÓ)
+        function switchProfTab(tab) { 
+            document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active')); 
+            document.querySelectorAll('.prof-tab-content').forEach(c => c.style.display = 'none'); 
+            document.getElementById(`tabBtnProf-${tab}`).classList.add('active'); 
+            document.getElementById(`profTab-${tab}`).style.display = 'block'; 
+
+            // Nếu Tab này chưa từng tải dữ liệu trước đó, thì bắt đầu tải
+            if (tab !== 'comments' && !profTabState[tab].loaded) {
+                loadProfTab(tab, false);
+            }
+        }
+
+        // HÀM TẠO KHỐI KHUNG XƯƠNG (SKELETON) TRONG KHI CHỜ DỮ LIỆU
+        function getSkeletonHTML(type) {
+            if (type === 'card') {
+                return Array(4).fill(0).map(() => `
+                    <div class="card skeleton-card" style="border-color:transparent; box-shadow:none; pointer-events:none;">
+                        <div class="card-thumb skeleton"></div>
+                        <div class="card-body"><div class="skeleton skeleton-text" style="width: 80%;"></div><div class="skeleton skeleton-text" style="width: 50%;"></div></div>
+                    </div>
+                `).join('');
+            }
+            if (type === 'activity') {
+                return Array(3).fill(0).map(() => `<div class="timeline-item skeleton" style="height: 55px; margin-bottom: 10px; background:transparent;"></div>`).join('');
+            }
+            return '';
+        }
+
+        // HÀM TẢI DỮ LIỆU & PHÂN TRANG (MỖI LẦN TẢI 12 DỰ ÁN)
+        async function loadProfTab(tab, isLoadMore = false) {
+            const state = profTabState[tab];
+            if (isLoadMore) state.page++;
+            
+            const container = document.getElementById(tab === 'projects' ? 'userProjectList' : (tab === 'likes' ? 'userLikedList' : 'userActivityList'));
+            const loadMoreBtn = document.getElementById(`profLoadMore-${tab}`);
+            
+            if (!isLoadMore) {
+                container.innerHTML = getSkeletonHTML(tab === 'activities' ? 'activity' : 'card');
+            } else {
+                const btnOrig = loadMoreBtn.innerHTML;
+                loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...';
+                loadMoreBtn.setAttribute('data-orig', btnOrig);
+            }
+
+            try {
+                let html = '';
+                if (tab === 'projects' || tab === 'likes') {
+                    let apiUrl = `${WORKER_URL}/api/projects?${tab==='projects' ? 'author' : 'likedBy'}=${encodeURIComponent(viewingProfileUser)}&page=${state.page}&limit=${PROF_ITEMS_PER_PAGE}`;
+                    if (currentUser) apiUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                    
+                    const res = await (await fetch(apiUrl)).json();
+                    const items = res.projects || [];
+                    state.hasMore = res.hasMore;
+                    
+                    // Cập nhật lại số liệu thống kê chuẩn
+                    if (tab === 'projects' && !isLoadMore && res.total !== undefined) {
+                        document.getElementById('statProjectCount').innerText = res.total;
+                        document.getElementById('statLikeCount').innerText = items.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0) + (res.total > PROF_ITEMS_PER_PAGE ? '+' : '');
+                    }
+                    
+                    if (!isLoadMore && items.length === 0) {
+                        html = `<p style="color:#888; grid-column:1/-1; text-align:center;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
+                    } else {
+                        html = items.map(p => `
+                            <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
+                                ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
+                                <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
+                                <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
+                            </div>
+                        `).join('');
+                    }
+                } 
+                else if (tab === 'activities') {
+                    const allActivities = viewingProfileData.activities || [];
+                    const startIndex = (state.page - 1) * PROF_ITEMS_PER_PAGE;
+                    const endIndex = startIndex + PROF_ITEMS_PER_PAGE;
+                    const items = allActivities.slice(startIndex, endIndex);
+                    state.hasMore = endIndex < allActivities.length;
+
+                    if (!isLoadMore && items.length === 0) {
+                        html = `<p style="color:#888; text-align:center;">Chưa có hoạt động nào.</p>`;
+                    } else {
+                        html = items.map(a => `
+                            <div class="timeline-item">
+                                <div style="font-size:0.95rem;"><b>${escapeHtml(viewingProfileData.username)}</b> ${a.action} <a href="${a.link}" style="color:var(--primary); font-weight:bold; text-decoration:none;">"${escapeHtml(a.detail)}"</a></div>
+                                <div style="font-size:0.75rem; color:#888; margin-top:4px;">${a.time}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                if (isLoadMore) {
+                    container.insertAdjacentHTML('beforeend', html);
+                    loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
+                } else {
+                    container.innerHTML = html;
+                    state.loaded = true;
+                }
+                
+                loadMoreBtn.style.display = state.hasMore ? 'block' : 'none';
+
+            } catch (e) {
+                if (!isLoadMore) container.innerHTML = '<p style="color:#ef4444; grid-column:1/-1;">Lỗi tải dữ liệu.</p>';
+                if (isLoadMore) loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
+            }
+        }
+
+
+
+
+
+
         async function toggleFollow() {
             if(!currentUser) return showToast(t('comment_login'), "error");
             const btnF = document.getElementById('btnFollowProf'); btnF.disabled = true;
@@ -2351,7 +2447,7 @@
             listEl.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
             
             try {
-                // 
+                // ĐẢM BẢO ĐÍNH KÈM TOKEN ĐỂ MÁY CHỦ NHẬN DIỆN VÀ TRẢ VỀ CẢ DỰ ÁN RIÊNG TƯ
                 let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
                 if (currentUser) {
                     projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
@@ -2365,6 +2461,7 @@
                     return;
                 }
                 
+                // VẪN GIỮ ĐƯỢC CHỨC NĂNG TỰ ĐỘNG DÁN FILE BẰNG handleSelectProjectToUpdate
                 listEl.innerHTML = myProjs.map(p => `
                     <div class="card" onclick="handleSelectProjectToUpdate('${p.projectId || p.fileId}')">
                         ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
