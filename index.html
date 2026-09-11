@@ -354,6 +354,29 @@
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         .skeleton-text { height: 14px; margin-bottom: 6px; }
         .skeleton-card .card-thumb { height: 160px; border-radius: 12px 12px 0 0; }
+        /* HIGHLIGHT TAB ACTIVE DYNAMIC */
+        .nav-link.active { color: var(--primary) !important; position: relative; }
+        .nav-link.active::after { content: ''; position: absolute; bottom: 0; left: 10px; right: 10px; height: 3px; background: var(--primary); border-radius: 3px 3px 0 0; }
+
+        /* 📱 NAVIGATION BAR PHONE */
+        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-panel); border-top: 1px solid var(--border-color); z-index: 2000; justify-content: space-around; padding: 8px 0; padding-bottom: env(safe-area-inset-bottom, 8px); box-shadow: 0 -4px 15px rgba(0,0,0,0.08); }
+        .mobile-nav-link { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); text-decoration: none; font-size: 0.72rem; gap: 4px; font-weight: bold; transition: 0.2s; }
+        .mobile-nav-link i { font-size: 1.25rem; }
+        .mobile-nav-link.active { color: var(--primary); transform: translateY(-2px); }
+        .mobile-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+        
+        @media (max-width: 768px) {
+            .navbar .nav-left > .nav-link { display: none; }
+            .mobile-bottom-nav { display: flex; }
+            body { padding-bottom: 65px; } /* Đẩy trang lên chống bị thanh bar che */
+        }
+
+        /* 💬 GIAO DIỆN GLOBAL CHAT */
+        .chat-msg-row { display: flex; gap: 12px; margin-bottom: 14px; }
+        .chat-msg-row.mine { flex-direction: row-reverse; }
+        .chat-bubble { max-width: 78%; background: var(--bg-secondary); padding: 10px 14px; border-radius: 0 14px 14px 14px; border: 1px solid var(--border-color); font-size: 0.95rem; word-break: break-word; }
+        .chat-msg-row.mine .chat-bubble { background: #e6f4ea; border-color: #bbf7d0; border-radius: 14px 0 14px 14px; color: #0a8260; }
+        [data-theme="dark"] .chat-msg-row.mine .chat-bubble { background: #064e3b; border-color: #065f46; color: #fff; }
     </style>
 </head>
 <body>
@@ -369,11 +392,21 @@
             <a href="#home" class="navbar-brand">
                 <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
-            <a href="#home" class="nav-link"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
-            <a href="#create" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
-            <a href="#assets" class="nav-link" style="color: #f5b041;"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
+            <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
+            <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span>Giao lưu</span></a>
+            <a href="#create" class="nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
+            <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
         </div>
         <div class="nav-actions" id="navActions"></div>
+    </nav>
+
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+        <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span>Giao lưu</span></a>
+        <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Sáng tạo</span></a>
+        <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span>Tài nguyên</span></a>
+        <div id="mobileUserNav"></div>
     </nav>
 
     <!-- TRANG SÁNG TẠO -->
@@ -410,6 +443,53 @@
             <button class="btn" style="padding: 10px 30px; font-weight: bold; border-radius: 20px;" onclick="loadMoreAssets()"><i class="fa-solid fa-angle-down"></i> <span data-i18n="assets_load_more">Xem thêm</span></button>
         </div>
     </div>
+
+    
+    <!-- TRANG GLOBAL CHAT -->
+    <div id="chatView" class="page-view" style="max-width: 950px; padding: 20px 15px;">
+        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; display: flex; flex-direction: column; height: 75vh; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden;">
+            <div style="padding: 14px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary);">
+                <h3 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-earth-americas" style="color: #3b82f6;"></i> Kênh Giao Lưu Toàn Cầu</h3>
+                <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-circle fa-fade" style="color:#10b981; font-size:0.6rem;"></i> Live Chat</span>
+            </div>
+            
+            <div id="chatMessageList" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column;">
+                <div style="text-align:center; color:#888; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu chat...</div>
+            </div>
+
+            <!-- Khung nhập Chat -->
+            <div class="comment-input-area" style="padding: 12px 20px;">
+                <div id="replyBannerChat" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:8px; font-weight:bold;">
+                    Đang trả lời <span id="replyUserLabelChat"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('chat')"></i>
+                </div>
+                <div id="commentImgPreviewChat" class="comment-img-preview-box">
+                    <img id="commentImgPreviewSrcChat" src="" alt="preview">
+                    <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
+                    <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" title="Gỡ ảnh">&times;</button>
+                </div>
+                
+                <form onsubmit="handlePostChat(event)" id="chatForm" style="display:none;">
+                    <div class="comment-input-wrapper">
+                        <input type="text" id="commentTextChat" placeholder="Nhập tin nhắn..." autocomplete="off">
+                        <label for="commentImgUploadChat" style="margin:0; display:flex;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
+                        </label>
+                        <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
+                        <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('chat')" title="Chèn GIF">
+                            <i class="fa-solid fa-gift" style="font-size: 1.3rem; color: #855cd6;"></i>
+                        </button>
+                        <button type="submit" id="btnSubmitChat" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.15rem; margin-left: 12px;">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+                <div id="chatLoginPrompt" style="text-align:center; color:#888; font-size:0.9rem;">
+                    <button class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập để tham gia trò chuyện</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- TRANG 1: KHÁM PHÁ -->
     <div id="homeView" class="page-view">
@@ -1140,9 +1220,10 @@
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         const KLIPY_API_KEY = "u5fpMSE07ITa9E5Nxh9meqnGez7Km7PCC2mj3V6NviVocR7nBEThpAZQEFOn4S1S";
         
-        let attachedGifUrls = { proj: null, prof: null }; // Biến nhớ GIF đang chọn
+        let attachedGifUrls = { proj: null, prof: null, chat: null }; // Biến nhớ GIF đang chọn (Hỗ trợ cả Chat)
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
+        let chatInterval = null; // Vòng lặp tải chat tự động
         
         // --- Smart Caching & Lazy Load cho Profile ---
         let profileCache = {}; // Lưu trữ profile để load 0 giây
@@ -1162,9 +1243,9 @@
         let currentAssetSearchQuery = "";
         // ----------------------------
 
-        let replyState = { proj: { parentId: null, user: null }, prof: { parentId: null, user: null } };
+        let replyState = { proj: { parentId: null, user: null }, prof: { parentId: null, user: null }, chat: { parentId: null, user: null } };
         let expandedThreads = { proj: {}, prof: {} };
-        let isPosting = { proj: false, prof: false };
+        let isPosting = { proj: false, prof: false, chat: false };
         let reportTarget = { type: null, id: null };
         let commentLimits = { proj: 10, prof: 10 }; // Giới hạn hiển thị 10 bình luận ban đầu
 
@@ -1371,7 +1452,6 @@
             if (loader) {
                 loader.style.display = 'flex';
                 loader.style.opacity = '1';
-                // Đổi chữ loading cho phù hợp
                 const loaderText = document.getElementById('loaderText');
                 if (loaderText) loaderText.innerText = "Đang tải dữ liệu...";
             }
@@ -1380,19 +1460,28 @@
             const [hash, queryStr] = fullHash.split('?');
             const urlParams = new URLSearchParams(queryStr || '');
 
+            // Dừng vòng lặp Chat nếu rời khỏi trang Chat
+            if (hash !== '#chat' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+
+            // 🎯 XỬ LÝ HIGHLIGHT TAB TRÊN CẢ DESKTOP VÀ MOBILE
+            document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active'));
+            if (hash === '#home' || hash === '') { document.querySelectorAll('.nav-home').forEach(el => el.classList.add('active')); }
+            else if (hash === '#chat') { document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); }
+            else if (hash === '#create') { document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); }
+            else if (hash.startsWith('#assets')) { document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); }
+            else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
+
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
             document.getElementById('playerContainer').innerHTML = ''; 
             
             if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
-                // Nếu đã có data thì không fetch lại từ đầu để tránh lag
                 if (allProjects.length === 0) await loadProjects(); 
             }
-            // tải dữ liệu tài nguyên khi vào trang assets
             if (hash.startsWith('#assets')) {
                 if (allAssets.length === 0) await fetchAssetsList();
             }
 
-            // Chạy hàm mở trang và ĐỢI nó hoàn tất (thêm await để đồng bộ)
+            // Chạy hàm mở trang tương ứng
             if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
             else if (hash.startsWith('#profile/')) await openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#upload') openUploadPage();
@@ -1400,10 +1489,11 @@
             else if (hash === '#notifications') await openNotificationsPage();
             else if (hash === '#create') openCreatePage();
             else if (hash === '#admin') await openAdminPage();
+            else if (hash === '#chat') openChatPage();
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
             else openHomePage();
 
-            // 2. Tắt màn hình Loading khi mọi thứ đã sẵn sàng
+            // 2. Tắt màn hình Loading khi xong
             if (loader) {
                 loader.style.opacity = '0';
                 setTimeout(() => loader.style.display = 'none', 300);
@@ -1412,6 +1502,8 @@
 
         function updateNav() {
             const nav = document.getElementById('navActions');
+            const mobileUserNav = document.getElementById('mobileUserNav');
+
             if (currentUser) {
                 const adminIcon = currentUser.role === 'admin' ? `<a href="#admin" style="color:#f5b041; margin-right:15px; font-weight:bold; text-decoration:none; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="nav_admin">Admin Panel</span></a>` : '';
                 nav.innerHTML = `
@@ -1426,8 +1518,28 @@
                     <a href="#settings" class="btn" style="padding:8px; border-radius:50%;" title="${t('settings_options')}"><i class="fa-solid fa-gear"></i></a>
                     <a href="#profile/${currentUser.username}" class="nav-user-pill"><img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" onerror="this.src='${DEFAULT_AVATAR}'"><span>${escapeHtml(currentUser.username)}</span></a>
                 `;
+                
+                // Đồng bộ Profile Icon lên thanh Mobile Nav
+                if (mobileUserNav) {
+                    mobileUserNav.innerHTML = `
+                        <a href="#profile/${currentUser.username}" class="mobile-nav-link nav-profile">
+                            <img src="${getAvtUrl(currentUser.avt)}" class="mobile-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <span>Hồ sơ</span>
+                        </a>
+                    `;
+                }
                 fetchNotifications();
-            } else { nav.innerHTML = `<button class="btn btn-primary" onclick="openModal('loginModal')"><i class="fa-solid fa-user"></i> ${t('nav_login')}</button>`; }
+            } else { 
+                nav.innerHTML = `<button class="btn btn-primary" onclick="openModal('loginModal')"><i class="fa-solid fa-user"></i> ${t('nav_login')}</button>`; 
+                if (mobileUserNav) {
+                    mobileUserNav.innerHTML = `
+                        <a href="javascript:void(0)" onclick="openModal('loginModal')" class="mobile-nav-link">
+                            <i class="fa-solid fa-circle-user"></i>
+                            <span>Đăng nhập</span>
+                        </a>
+                    `;
+                }
+            }
         }
 
         // 🔄 Hàm loadProjects được nâng cấp hỗ trợ tìm kiếm và phân trang
@@ -1854,22 +1966,43 @@
 
         function startReply(type, parentId, user) {
             replyState[type].parentId = parentId; replyState[type].user = user;
-            document.getElementById(type === 'proj' ? 'replyUserLabelProj' : 'replyUserLabelProf').innerText = `@${user}`;
-            document.getElementById(type === 'proj' ? 'replyBannerProj' : 'replyBannerProf').style.display = 'block';
-            document.getElementById(type === 'proj' ? 'commentTextProj' : 'commentTextProf').focus();
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+            const userLabel = document.getElementById('replyUserLabel' + suffix);
+            const banner = document.getElementById('replyBanner' + suffix);
+            const input = document.getElementById('commentText' + suffix);
+            if (userLabel) userLabel.innerText = `@${user}`;
+            if (banner) banner.style.display = 'block';
+            if (input) input.focus();
         }
 
-        function cancelReply(type) { replyState[type].parentId = null; replyState[type].user = null; document.getElementById(type === 'proj' ? 'replyBannerProj' : 'replyBannerProf').style.display = 'none'; }
+        function cancelReply(type) { 
+            replyState[type].parentId = null; replyState[type].user = null; 
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+            const banner = document.getElementById('replyBanner' + suffix);
+            if (banner) banner.style.display = 'none'; 
+        }
         
         function handleCommentImagePreview(input, type) { 
-            attachedGifUrls[type] = null; // Xóa URL Klipy nếu chọn ảnh tải lên
-            if (input.files && input.files[0]) { const r = new FileReader(); r.onload = function(e) { document.getElementById(type === 'proj' ? 'commentImgPreviewSrcProj' : 'commentImgPreviewSrcProf').src = e.target.result; document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'flex'; }; r.readAsDataURL(input.files[0]); } 
+            attachedGifUrls[type] = null;
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+            if (input.files && input.files[0]) { 
+                const r = new FileReader(); 
+                r.onload = function(e) { 
+                    document.getElementById('commentImgPreviewSrc' + suffix).src = e.target.result; 
+                    document.getElementById('commentImgPreview' + suffix).style.display = 'flex'; 
+                }; 
+                r.readAsDataURL(input.files[0]); 
+            } 
         }
         function removeCommentImage(type) { 
-            document.getElementById(type === 'proj' ? 'commentImgUploadProj' : 'commentImgUploadProf').value = ''; 
-            document.getElementById(type === 'proj' ? 'commentImgPreviewSrcProj' : 'commentImgPreviewSrcProf').src = ''; 
-            document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'none'; 
-            attachedGifUrls[type] = null; // Xóa dữ liệu GIF
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+            const uploadEl = document.getElementById('commentImgUpload' + suffix);
+            const previewSrc = document.getElementById('commentImgPreviewSrc' + suffix);
+            const previewBox = document.getElementById('commentImgPreview' + suffix);
+            if (uploadEl) uploadEl.value = ''; 
+            if (previewSrc) previewSrc.src = ''; 
+            if (previewBox) previewBox.style.display = 'none'; 
+            attachedGifUrls[type] = null;
         }
 
         // ================= KLIPY GIF API (NATIVE & TRACKING) =================
@@ -3608,6 +3741,109 @@ function reopenEditor() {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('danv_theme', theme);
             showToast(`Đã chuyển sang chế độ ${theme === 'dark' ? 'Tối' : 'Sáng'}`, "success");
+        }
+
+        // ================= HỆ THỐNG GLOBAL CHAT =================
+        let lastChatJSONStr = "";
+
+        function openChatPage() {
+            document.getElementById('chatView').style.display = 'flex';
+            
+            if (currentUser) {
+                document.getElementById('chatForm').style.display = 'block';
+                document.getElementById('chatLoginPrompt').style.display = 'none';
+            } else {
+                document.getElementById('chatForm').style.display = 'none';
+                document.getElementById('chatLoginPrompt').style.display = 'block';
+            }
+            
+            loadGlobalChat(true);
+            if (!chatInterval) chatInterval = setInterval(() => loadGlobalChat(false), 3500); // Polling mỗi 3.5 giây
+        }
+
+        async function loadGlobalChat(forceScroll = false) {
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/chat`)).json();
+                const resStr = JSON.stringify(res);
+                if (resStr === lastChatJSONStr) return; // Không vẽ lại nếu không có tin mới
+                lastChatJSONStr = resStr;
+
+                const list = document.getElementById('chatMessageList');
+                if (!res || res.length === 0) {
+                    list.innerHTML = `<div style="text-align:center; color:#888; padding:30px;">Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
+                    return;
+                }
+
+                const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 120;
+
+                list.innerHTML = res.map(c => {
+                    const isMine = currentUser && c.author.toLowerCase() === currentUser.username.toLowerCase();
+                    return `
+                    <div class="chat-msg-row ${isMine ? 'mine' : ''}">
+                        ${!isMine ? `<a href="#profile/${c.author}"><img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:36px; height:36px;" onerror="this.src='${DEFAULT_AVATAR}'"></a>` : ''}
+                        <div style="display:flex; flex-direction:column; ${isMine ? 'align-items:flex-end;' : 'align-items:flex-start;'} max-width:85%;">
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; display:flex; gap:8px;">
+                                ${!isMine ? `<a href="#profile/${c.author}" style="color:var(--text-title); font-weight:bold; text-decoration:none;">${escapeHtml(c.author)}</a>` : ''}
+                                <span>${timeAgo(c.time)}</span>
+                            </div>
+                            <div class="chat-bubble">
+                                ${c.replyTo ? `<div style="font-size:0.75rem; background:rgba(0,0,0,0.06); padding:3px 8px; border-radius:4px; margin-bottom:5px; color:var(--text-muted);">Đang trả lời <b>@${escapeHtml(c.replyTo)}</b></div>` : ''}
+                                ${escapeHtml(c.text)}
+                                ${c.imageId ? `<br><img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" style="max-width:200px; max-height:200px; border-radius:8px; margin-top:6px; object-fit:contain; display:block;">` : ''}
+                            </div>
+                            <div style="margin-top:2px;">
+                                ${currentUser && !isMine ? `<button class="btn-action-cmt reply" onclick="startReply('chat', '${c.msgId}', '${c.author}')">Trả lời</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                if (forceScroll || isNearBottom) {
+                    setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+                }
+            } catch(e) {}
+        }
+
+        async function handlePostChat(e) {
+            e.preventDefault();
+            if (isPosting.chat || !currentUser) return;
+            
+            const textInput = document.getElementById('commentTextChat');
+            const text = textInput.value.trim();
+            const imgFile = document.getElementById('commentImgUploadChat').files[0];
+            const gifUrl = attachedGifUrls.chat;
+            
+            if (!text && !imgFile && !gifUrl) return;
+
+            isPosting.chat = true;
+            const submitBtn = document.getElementById('btnSubmitChat');
+            const origHtml = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            submitBtn.disabled = true;
+
+            let imgId = gifUrl || null;
+            if (imgFile) { 
+                const fd = new FormData(); fd.append("file", imgFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
+                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
+                if (upRes.success) imgId = upRes.file_id; 
+            }
+
+            const payload = { text, replyTo: replyState.chat.user, imageId: imgId };
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+            
+            if (res && res.success) {
+                textInput.value = ''; 
+                removeCommentImage('chat'); 
+                cancelReply('chat');
+                loadGlobalChat(true);
+            } else {
+                showToast("Lỗi gửi tin nhắn", "error");
+            }
+            
+            isPosting.chat = false;
+            submitBtn.innerHTML = origHtml;
+            submitBtn.disabled = false;
         }
     </script>
 </body>
