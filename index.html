@@ -484,6 +484,112 @@
         .chat-act-btn.delete:hover { background: #fee2e2; border-color: #fca5a5; }
         .chat-act-btn.report { color: #f59e0b; }
         .chat-act-btn.report:hover { background: #fef3c7; border-color: #fcd34d; }
+
+        /* THẺ CARD DỰ ÁN TRONG GLOBAL CHAT */
+        .chat-project-card {
+            margin-top: 6px;
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            width: 270px;
+            max-width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .chat-proj-thumb-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #111;
+            overflow: hidden;
+        }
+        .chat-proj-thumb-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .chat-proj-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.75);
+            color: #fff !important;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 7px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chat-proj-body {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--bg-panel);
+        }
+        .chat-proj-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-title) !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-proj-author {
+            font-size: 0.8rem;
+            color: var(--text-muted) !important;
+        }
+        .chat-proj-author b {
+            color: var(--primary) !important;
+        }
+        .chat-proj-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted) !important;
+            padding: 6px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin: 2px 0 4px 0;
+        }
+        .chat-proj-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+        .chat-proj-play-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        /* Ngăn ngừa nền xanh của tin nhắn của tôi (.mine) làm lỗi màu chữ card */
+        .chat-msg-row.mine .chat-project-card {
+            background: var(--bg-panel) !important;
+        }
+        .chat-msg-row.mine .chat-project-card * {
+            color: initial;
+        }
+        .chat-msg-row.mine .chat-proj-title {
+            color: var(--text-title) !important;
+        }
+        .chat-msg-row.mine .chat-proj-author, .chat-msg-row.mine .chat-proj-stats {
+            color: var(--text-muted) !important;
+        }
+        .chat-msg-row.mine .chat-proj-play-btn {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
@@ -1652,7 +1758,7 @@
             document.getElementById('playerContainer').innerHTML = '';
             window.scrollTo(0, 0); // Đảm bảo cuộn lại lên đầu
             
-            if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
+            if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/') || hash === '#chat') {
                 if (allProjects.length === 0) await loadProjects(); 
             }
             if (hash.startsWith('#assets')) {
@@ -2992,10 +3098,11 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
             btn.disabled = true;
 
-            const projLink = window.location.origin + window.location.pathname + `#project/${currentProj.projectId || currentProj.fileId}`;
-            const text = `🎮 Mọi người ơi, hãy xem thử dự án "${currentProj.title}" của mình nhé!\nLink: ${projLink}`;
+            const projId = currentProj.projectId || currentProj.fileId;
+            // Gửi mã định dạng thẻ Card để Global Chat tự động render
+            const text = `[DANV_PROJECT_SHARE:${projId}:${encodeURIComponent(currentProj.title)}]`;
             
-            const payload = { text, replyTo: null, imageId: currentProj.thumbId || null };
+            const payload = { text, replyTo: null, imageId: null };
             const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
             
             if (res && res.success) {
@@ -3521,6 +3628,54 @@
         }
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
+
+        // 🎴 HÀM RENDER NỘI DUNG CHAT (TỰ ĐỘNG BIẾN LINK DỰ ÁN THÀNH THẺ GIAO DIỆN RIÊNG)
+        function renderChatContent(rawText) {
+            if (!rawText) return '';
+            
+            // Nhận diện mã chia sẻ dự án [DANV_PROJECT_SHARE:id] hoặc link #project/id
+            const shareMatch = rawText.match(/\[DANV_PROJECT_SHARE:([a-zA-Z0-9_\-]+)(?::([^\]]*))?\]/) || rawText.match(/(?:^|\s)#project\/([a-zA-Z0-9_\-]+)/);
+            
+            if (shareMatch) {
+                const projId = shareMatch[1];
+                const userMsg = rawText.replace(shareMatch[0], '').trim();
+                
+                // Tìm thông tin dự án trong bộ nhớ
+                const p = allProjects.find(item => item.projectId === projId || item.fileId === projId);
+                
+                const title = p ? p.title : (shareMatch[2] ? decodeURIComponent(shareMatch[2]) : "Tác phẩm DANV");
+                const author = p ? p.author : "Tác giả";
+                const thumbSrc = (p && p.thumbId) ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const views = (p && p.views !== undefined) ? p.views : 0;
+                const likes = (p && p.likes) ? p.likes.length : 0;
+                const stars = (p && p.stars) ? p.stars.length : 0;
+
+                const cardHtml = `
+                    <div class="chat-project-card">
+                        <div class="chat-proj-thumb-wrap">
+                            <img src="${thumbSrc}" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
+                            <span class="chat-proj-badge"><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> Dự án</span>
+                        </div>
+                        <div class="chat-proj-body">
+                            <div class="chat-proj-title" title="${escapeHtml(title)}">${escapeHtml(title)}</div>
+                            <div class="chat-proj-author">Bởi <b>@${escapeHtml(author)}</b></div>
+                            <div class="chat-proj-stats">
+                                <span title="Lượt chơi"><i class="fa-solid fa-play" style="color:#3b82f6;"></i> ${views}</span>
+                                <span title="Lượt thích"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${likes}</span>
+                                <span title="Yêu thích"><i class="fa-solid fa-star" style="color:#f5b041;"></i> ${stars}</span>
+                            </div>
+                            <a href="#project/${projId}" class="btn btn-primary chat-proj-play-btn">
+                                <i class="fa-solid fa-play"></i> Trải nghiệm
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                return (userMsg ? `<div class="chat-text">${formatCommentText(userMsg)}</div>` : '') + cardHtml;
+            }
+
+            return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
+        }
 
         // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO URL SCRATCH & DANVWORKSHOP
         function formatCommentText(text) {
@@ -4050,7 +4205,7 @@ function reopenEditor() {
                                 <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
 
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}<div class="chat-text">${formatCommentText(c.text || '')}</div>${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}</div>
                             
                             <!-- THANH CÔNG CỤ TIN NHẮN (TỐI GIẢN - HIỆN KHI RÊ CHUỘT) -->
                             <div class="chat-actions">
