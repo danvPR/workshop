@@ -651,29 +651,36 @@
         <div class="ccw-layout">
             <div class="ccw-main">
                 <div class="player-container" id="playerContainer"></div>
-                <div class="action-bar" style="align-items: flex-start; padding: 20px;">
-                    <!-- Thông tin tác giả & Tiêu đề -->
-                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <a href="#" id="projPageAuthorLinkAvt" title="Xem trang cá nhân">
-                            <img id="projPageAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                        </a>
-                        <div>
-                            <h2 id="projPageTitle" style="color: var(--text-title); margin-bottom: 6px; font-size: 1.4rem; line-height: 1.2;">Tên dự án</h2>
-                            <div style="color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                <span>Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></span>
-                                <span id="projPageDate" style="cursor: help;" title="Thời gian đăng"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
-                            </div>
-                        </div>
+                <div class="action-bar" style="display: flex; flex-direction: column; gap: 15px; padding: 20px; align-items: stretch;">
+                    <!-- Tiêu đề dự án -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                        <h2 id="projPageTitle" style="color: var(--text-title); margin: 0; font-size: 1.6rem; line-height: 1.3; word-break: break-word;">Tên dự án</h2>
                     </div>
                     
-                    <!-- Các nút chức năng -->
-                    <div class="action-btns" style="flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
-                        <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
-                        <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
-                        <a id="btnSeeInside" href="#" target="_blank" class="btn" style="border-radius: 20px; padding: 8px 18px;"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
-                        <button class="btn btn-danger" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="openReportModal('project')" title="Báo cáo vi phạm"><i class="fa-solid fa-flag"></i></button>
-                        <button class="btn" id="btnProjSettings" style="display:none; background:#334155; color:#fff; border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="openModal('projSettingsModal')" title="Cài đặt dự án"><i class="fa-solid fa-gear"></i></button>
-                        <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none; border-radius: 20px; padding: 8px 15px;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> Gỡ</button>
+                    <!-- Thông tin tác giả & Nút chức năng -->
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <a href="#" id="projPageAuthorLinkAvt" title="Xem trang cá nhân">
+                                <img id="projPageAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            </a>
+                            <div>
+                                <div style="color: var(--text-muted); font-size: 0.95rem;">Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></div>
+                                <div id="projPageDate" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px; cursor: help;" title="Thời gian đăng"><i class="fa-regular fa-clock"></i> Đang cập nhật...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Các nút chức năng -->
+                        <div class="action-btns" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; align-items: center;">
+                            <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
+                            <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
+                            
+                            <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openShareModal()"><i class="fa-solid fa-share"></i> Chia sẻ</button>
+                            <a id="btnSeeInside" href="#" target="_blank" class="btn" style="border-radius: 20px; padding: 8px 18px;"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
+                            
+                            <button class="btn btn-danger" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openReportModal('project')" title="Báo cáo vi phạm"><i class="fa-solid fa-flag"></i></button>
+                            <button class="btn" id="btnProjSettings" style="display:none; background:#334155; color:#fff; border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openModal('projSettingsModal')" title="Cài đặt dự án"><i class="fa-solid fa-gear"></i></button>
+                            <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none; border-radius: 20px; padding: 8px 15px;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> Gỡ</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1154,6 +1161,33 @@
             </div>
         </div>
     </div>
+    <!-- MODAL CHIA SẺ -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-share-nodes"></i> Chia sẻ dự án</span>
+                <button class="btn-close" onclick="closeModal('shareModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn" style="justify-content: flex-start; padding: 12px; font-size: 0.95rem; background: #1877F2; color: #fff;" onclick="shareToPlatform('facebook')">
+                    <i class="fa-brands fa-facebook" style="font-size: 1.2rem; width: 25px;"></i> Lên Facebook
+                </button>
+                <button class="btn" style="justify-content: flex-start; padding: 12px; font-size: 0.95rem; background: #00B2FF; color: #fff;" onclick="shareToPlatform('messenger')">
+                    <i class="fa-brands fa-facebook-messenger" style="font-size: 1.2rem; width: 25px;"></i> Qua Messenger
+                </button>
+                <a href="https://scratch.mit.edu/studios/33509364/comments" target="_blank" class="btn" style="justify-content: flex-start; padding: 12px; font-size: 0.95rem; background: #F6AB3F; color: #fff; text-decoration: none;">
+                    <img src="https://scratch.mit.edu/favicon.ico" style="width: 20px; margin-right: 5px;"> Studio Scratch
+                </a>
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 5px 0;">
+                <button id="btnShareGlobalChat" class="btn btn-primary" style="justify-content: flex-start; padding: 12px; font-size: 0.95rem;" onclick="shareToGlobalChat()">
+                    <i class="fa-solid fa-earth-americas" style="font-size: 1.2rem; width: 25px;"></i> Kênh Giao lưu (Global Chat)
+                </button>
+                <button class="btn" style="justify-content: center; padding: 12px; margin-top: 5px;" onclick="copyProjLink()">
+                    <i class="fa-solid fa-link"></i> Sao chép liên kết
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL TỐ CÁO -->
     <div class="modal-overlay" id="reportModal">
@@ -1195,6 +1229,11 @@
                     <h4 style="margin-bottom: 15px; color: #1e293b; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
                         <i class="fa-solid fa-pen-to-square" style="color: var(--primary);"></i> Thông tin & Ảnh bìa
                     </h4>
+                    
+                    <div class="form-group">
+                        <label>Tên dự án *:</label>
+                        <input type="text" id="editProjTitleInput" class="form-control" style="background: #f8fafc;" required>
+                    </div>
                     
                     <div class="form-group">
                         <label>Ảnh bìa dự án (Thumbnail hiện tại):</label>
@@ -1578,7 +1617,7 @@
             }
             else if (hash === '#chat') { 
                 document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); 
-                document.title = "Global chat channel on DANVworkshop";
+                document.title = "Global Channel on DANVworkshop";
             }
             else if (hash === '#create') { 
                 document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); 
@@ -2923,6 +2962,48 @@
         }
 
         // ================= REPORT & ADMIN =================
+        function openShareModal() {
+            openModal('shareModal');
+        }
+
+        function copyProjLink() {
+            const link = window.location.origin + window.location.pathname + `#project/${currentProj.projectId || currentProj.fileId}`;
+            navigator.clipboard.writeText(link).then(() => showToast("Đã chép link dự án!", "success"));
+        }
+
+        function shareToPlatform(platform) {
+            const url = encodeURIComponent(window.location.origin + window.location.pathname + `#project/${currentProj.projectId || currentProj.fileId}`);
+            let shareUrl = "";
+            if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if (platform === 'messenger') shareUrl = `fb-messenger://share/?link=${url}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        async function shareToGlobalChat() {
+            if (!currentUser) { closeModal('shareModal'); return openModal('loginModal'); }
+            
+            const btn = document.getElementById('btnShareGlobalChat');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+            btn.disabled = true;
+
+            const projLink = window.location.origin + window.location.pathname + `#project/${currentProj.projectId || currentProj.fileId}`;
+            const text = `🎮 Mọi người ơi, hãy xem thử dự án "${currentProj.title}" của mình nhé!\nLink: ${projLink}`;
+            
+            const payload = { text, replyTo: null, imageId: currentProj.thumbId || null };
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+            
+            if (res && res.success) {
+                showToast("Đã gửi dự án vào Kênh Giao lưu!", "success");
+                closeModal('shareModal');
+                location.hash = '#chat'; // Tự động chuyển qua tab Chat để xem luôn
+            } else {
+                showToast("Lỗi gửi tin nhắn", "error");
+            }
+            btn.innerHTML = '<i class="fa-solid fa-earth-americas" style="font-size: 1.2rem; width: 25px;"></i> Kênh Giao lưu (Global Chat)';
+            btn.disabled = false;
+        }
+
+        
         function openReportModal(type, id = null, contextType = null) {
             if(!currentUser) return openModal('loginModal');
             reportTarget.type = type;
@@ -3455,6 +3536,7 @@
 
             // Điền text
             document.getElementById('editProjVisibility').value = currentProj.visibility || 'public';
+            document.getElementById('editProjTitleInput').value = currentProj.title || '';
             document.getElementById('editDescInput').value = currentProj.description || '';
             document.getElementById('editCreditsInput').value = currentProj.credits || '';
 
@@ -3526,6 +3608,9 @@
             const btn = document.getElementById('btnSaveProjInfo');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...'; btn.disabled = true;
 
+            const newTitle = document.getElementById('editProjTitleInput').value.trim();
+            if (!newTitle) { showToast("Tên dự án không được để trống!", "error"); btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi'; btn.disabled = false; return; }
+            
             const vis = document.getElementById('editProjVisibility').value;
             const desc = document.getElementById('editDescInput').value;
             const cred = document.getElementById('editCreditsInput').value;
@@ -3542,13 +3627,13 @@
                 }
             }
 
-            const payload = { description: desc, credits: cred, visibility: vis };
+            const payload = { title: newTitle, description: desc, credits: cred, visibility: vis };
             if (newThumbId) payload.thumbId = newThumbId;
 
             const res = await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: "update_info", payload }) });
 
             if (res && res.success) {
-                currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
+                currentProj.title = newTitle; currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
                 if (newThumbId) currentProj.thumbId = newThumbId;
 
                 document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn.";
