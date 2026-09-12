@@ -1470,29 +1470,29 @@
         </div>
     </div>
     <!-- MODAL QUẢN LÝ DỰ ÁN DÀNH CHO CHỦ SỞ HỮU -->
-    <!-- MODAL QUẢN LÝ DỰ ÁN DÀNH CHO CHỦ SỞ HỮU -->
+    <!-- MODAL QUẢN LÝ DỰ ÁN DÀNH CHO CHỦ SỞ HỮU (ĐÃ TỐI ƯU DARK MODE) -->
     <div class="modal-overlay" id="projSettingsModal">
         <div class="modal" style="max-width: 650px; max-height: 90vh; display: flex; flex-direction: column;">
             <div class="modal-header">
                 <span><i class="fa-solid fa-sliders" style="color:var(--primary);"></i> <span data-i18n="proj_manage_title">Quản lý Dự án</span></span>
                 <button class="btn-close" onclick="closeModal('projSettingsModal')">&times;</button>
             </div>
-            <div class="modal-body" style="overflow-y: auto; padding: 25px; background: #f8fafc;">
+            <div class="modal-body" style="overflow-y: auto; padding: 25px; background: var(--bg-body);">
                 
                 <!-- PHẦN 1: THÔNG TIN & ẢNH BÌA -->
-                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                    <h4 style="margin-bottom: 15px; color: #1e293b; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                    <h4 style="margin-bottom: 15px; color: var(--text-title); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                         <i class="fa-solid fa-pen-to-square" style="color: var(--primary);"></i> Thông tin & Ảnh bìa
                     </h4>
                     
                     <div class="form-group">
                         <label>Tên dự án *:</label>
-                        <input type="text" id="editProjTitleInput" class="form-control" style="background: #f8fafc;" required>
+                        <input type="text" id="editProjTitleInput" class="form-control" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Ảnh bìa dự án (Thumbnail hiện tại):</label>
-                        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 15px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 15px; background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color);">
                             <div style="width: 160px; height: 90px; border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0;">
                                 <img id="editThumbPreview" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
@@ -1501,14 +1501,14 @@
                                     <i class="fa-solid fa-camera"></i> Đổi ảnh bìa mới
                                 </label>
                                 <input type="file" id="editThumbFile" accept="image/*" style="display: none;" onchange="handlePreviewNewThumb(this)">
-                                <div style="font-size: 0.8rem; color: #64748b; margin-top: 8px;"><span data-i18n="proj_manage_thumb_hint">Hỗ trợ JPG, PNG (Tỉ lệ 16:9).</span></div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;"><span data-i18n="proj_manage_thumb_hint">Hỗ trợ JPG, PNG (Tỉ lệ 16:9).</span></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="upload_vis_label">Quyền hiển thị:</label>
-                        <select id="editProjVisibility" class="form-control" style="background: #f8fafc;">
+                        <select id="editProjVisibility" class="form-control">
                             <option value="public">Công khai (Mọi người đều thấy)</option>
                             <option value="private">Riêng tư (Chỉ mình bạn thấy)</option>
                         </select>
@@ -1516,12 +1516,12 @@
 
                     <div class="form-group">
                         <label data-i18n="proj_instructions">Hướng dẫn vận hành:</label>
-                        <textarea id="editDescInput" class="form-control" rows="4" style="background: #f8fafc;"></textarea>
+                        <textarea id="editDescInput" class="form-control" rows="4"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="proj_credits">Đội ngũ sáng tạo:</label>
-                        <textarea id="editCreditsInput" class="form-control" rows="2" style="background: #f8fafc;"></textarea>
+                        <textarea id="editCreditsInput" class="form-control" rows="2"></textarea>
                     </div>
 
                     <button type="button" onclick="saveProjectInfoBtn()" class="btn btn-primary" id="btnSaveProjInfo" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
@@ -1530,26 +1530,26 @@
                 </div>
 
                 <!-- PHẦN 2: CẬP NHẬT FILE GAME MỚI (.SB3) -->
-                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                    <h4 style="margin-bottom: 10px; color: #c2410c; display: flex; align-items: center; gap: 8px;">
+                <div style="background: rgba(234, 88, 12, 0.08); border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <h4 style="margin-bottom: 10px; color: #ea580c; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Cập nhật bản Game mới (.sb3)
                     </h4>
-                    <p style="font-size: 0.9rem; color: #9a3412; margin-bottom: 15px;"><span data-i18n="proj_manage_update_hint">Tải lên tệp .sb3 mới. Phiên bản hiện tại sẽ tự động lưu vào lịch sử.</span></p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;"><span data-i18n="proj_manage_update_hint">Tải lên tệp .sb3 mới. Phiên bản hiện tại sẽ tự động lưu vào lịch sử.</span></p>
                     <div class="form-group">
-                        <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 10px; background: #fff;">
+                        <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 10px;">
                     </div>
-                    <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content: center; background: #ea580c; color: #fff; padding: 12px; font-size: 1rem;">
+                    <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content: center; background: #ea580c; color: #fff; padding: 12px; font-size: 1rem; border: none;">
                         <i class="fa-solid fa-rocket"></i> Tải bản cập nhật lên
                     </button>
                 </div>
 
                 <!-- PHẦN 3: LỊCH SỬ CÁC PHIÊN BẢN CŨ -->
-                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                    <h4 style="margin-bottom: 15px; color: #334155; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px;">
+                    <h4 style="margin-bottom: 15px; color: var(--text-title); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                         <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử các phiên bản cũ
                     </h4>
                     <div id="projectVersionList" style="max-height: 200px; overflow-y: auto; padding-right: 5px;">
-                        <p style="color: #94a3b8; font-size: 0.9rem;">Đang tải danh sách...</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Đang tải danh sách...</p>
                     </div>
                 </div>
 
@@ -3967,22 +3967,21 @@
             const versions = currentProj.versions || [];
             
             if (!versions.length) {
-                listEl.innerHTML = '<div style="padding: 15px; background: #f1f5f9; border-radius: 8px; color: #64748b; font-size: 0.9rem; text-align: center;"><i class="fa-solid fa-seedling"></i> Dự án đang ở phiên bản gốc đầu tiên, chưa có bản cập nhật nào.</div>';
+                listEl.innerHTML = '<div style="padding: 15px; background: var(--bg-secondary); border-radius: 8px; color: var(--text-muted); font-size: 0.9rem; text-align: center; border: 1px solid var(--border-color);"><i class="fa-solid fa-seedling"></i> Dự án đang ở phiên bản gốc đầu tiên, chưa có bản cập nhật nào.</div>';
                 return;
             }
 
             listEl.innerHTML = versions.map((v, idx) => {
-                // Xử lý tương thích: Nếu v chỉ là chuỗi string (data cũ) hoặc là object (data mới)
                 const fid = typeof v === 'string' ? v : v.fileId;
-                const timeStr = typeof v === 'string' ? 'Phiên bản cũ (Trước bản cập nhật V9)' : (v.time || 'Không rõ ngày');
+                const timeStr = typeof v === 'string' ? 'Phiên bản gốc' : (v.time || 'Không rõ ngày');
                 
                 return `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:10px; transition:0.2s;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius:8px; margin-bottom:10px; transition:0.2s;">
                     <div style="flex:1;">
-                        <div style="font-weight:bold; color:#1e293b; font-size:0.95rem;">Bản lưu #${idx + 1}</div>
-                        <div style="color:#64748b; font-size:0.8rem; margin-top:4px;"><i class="fa-regular fa-calendar-check"></i> ${timeStr}</div>
+                        <div style="font-weight:bold; color: var(--text-title); font-size:0.95rem;">Bản lưu #${idx + 1}</div>
+                        <div style="color: var(--text-muted); font-size:0.8rem; margin-top:4px;"><i class="fa-regular fa-calendar-check"></i> ${timeStr}</div>
                     </div>
-                    <a href="https://turbowarp.org/editor?project_url=${encodeURIComponent(`${WORKER_URL}/api/project/${fid}`)}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.85rem; background:#e2e8f0; color:#334155; white-space:nowrap;">
+                    <a href="https://turbowarp.org/editor?project_url=${encodeURIComponent(`${WORKER_URL}/api/project/${fid}`)}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.85rem; white-space:nowrap;">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở xem lại
                     </a>
                 </div>
@@ -4356,10 +4355,17 @@ function reopenEditor() {
 
         // ================= HỆ THỐNG GLOBAL CHAT (ĐÃ TỐI ƯU & SỬA LỖI XÓA) =================
         let lastChatJSONStr = "";
+        let chatDisplayLimit = 20; // Giới hạn 20 tin ban đầu
+        let chatHasMore = false;
+        let isChatLoadingMore = false;
 
         function openChatPage() {
             document.getElementById('chatView').style.display = 'block';
             
+            // Reset về 20 tin nhắn mỗi lần vào trang
+            chatDisplayLimit = 20;
+            lastChatJSONStr = "";
+
             if (currentUser) {
                 document.getElementById('chatForm').style.display = 'block';
                 document.getElementById('chatLoginPrompt').style.display = 'none';
@@ -4372,29 +4378,41 @@ function reopenEditor() {
             if (!chatInterval) chatInterval = setInterval(() => loadGlobalChat(false), 3500);
         }
 
-        async function loadGlobalChat(forceScroll = false) {
+        async function loadGlobalChat(forceScroll = false, isLoadMore = false) {
             try {
-                // Thêm timestamp để chống bộ nhớ đệm (Cache) của trình duyệt/Cloudflare
-                const res = await (await fetch(`${WORKER_URL}/api/chat?_t=${Date.now()}`, { cache: 'no-store' })).json();
-                const resStr = JSON.stringify(res);
-                if (resStr === lastChatJSONStr && !forceScroll) return;
+                // Tải theo số lượng chatDisplayLimit (khởi đầu là 20)
+                const res = await (await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' })).json();
+                
+                const messages = Array.isArray(res) ? res : (res.messages || []);
+                chatHasMore = res.hasMore !== undefined ? res.hasMore : false;
+
+                const resStr = JSON.stringify(messages);
+                if (resStr === lastChatJSONStr && !forceScroll && !isLoadMore) return;
                 lastChatJSONStr = resStr;
 
                 const list = document.getElementById('chatMessageList');
-                if (!res || !Array.isArray(res) || res.length === 0) {
+                if (!messages || messages.length === 0) {
                     list.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
                     return;
                 }
 
+                // Lưu lại chiều cao cuộn cũ để không bị giật màn hình khi bấm tải thêm
+                const oldScrollHeight = list.scrollHeight;
                 const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 140;
 
-                list.innerHTML = res.map(c => {
-                    // Nhận diện ID linh hoạt: hỗ trợ cả msgId, id, chatId
+                // Nút Load More ở đầu tin nhắn
+                const loadMoreBtnHtml = chatHasMore ? `
+                    <div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0;">
+                        <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm tin nhắn cũ
+                        </button>
+                    </div>
+                ` : '';
+
+                const messagesHtml = messages.map(c => {
                     const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
                     const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
                     const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
-                    
-                    // Kiểm tra ảnh đính kèm hợp lệ, loại trừ chuỗi rác "null" / "undefined"
                     const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
 
                     return `
@@ -4412,7 +4430,6 @@ function reopenEditor() {
 
                             <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}</div>
                             
-                            <!-- THANH CÔNG CỤ TIN NHẮN (TỐI GIẢN - HIỆN KHI RÊ CHUỘT) -->
                             <div class="chat-actions">
                                 ${currentUser && !isMine ? `
                                     <button class="chat-act-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')">
@@ -4435,23 +4452,42 @@ function reopenEditor() {
                     `;
                 }).join('');
 
-                // Cuộn tới tin nhắn chỉ định qua link #chat?m=id
-                const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-                const targetMsgId = urlParams.get('m');
-                if (targetMsgId) {
-                    setTimeout(() => {
-                        const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
-                        if (targetEl) {
-                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            targetEl.classList.add('highlight-permanent');
-                        }
-                    }, 300);
-                } else if (forceScroll || isNearBottom) {
-                    setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+                list.innerHTML = loadMoreBtnHtml + messagesHtml;
+
+                // Xử lý giữ vị trí cuộn
+                if (isLoadMore) {
+                    list.scrollTop = list.scrollHeight - oldScrollHeight;
+                } else {
+                    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                    const targetMsgId = urlParams.get('m');
+                    if (targetMsgId) {
+                        setTimeout(() => {
+                            const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
+                            if (targetEl) {
+                                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                targetEl.classList.add('highlight-permanent');
+                            }
+                        }, 300);
+                    } else if (forceScroll || isNearBottom) {
+                        setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+                    }
                 }
             } catch(e) {
                 console.error("Lỗi đồng bộ chat:", e);
             }
+        }
+
+        // 🔄 HÀM BẤM NÚT TẢI THÊM TIN NHẮN CŨ (CỘNG THÊM 20 TIN)
+        async function loadMoreChatMessages() {
+            if (isChatLoadingMore || !chatHasMore) return;
+            isChatLoadingMore = true;
+            chatDisplayLimit += 20;
+
+            const btn = document.getElementById('btnLoadMoreChat');
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+
+            await loadGlobalChat(false, true);
+            isChatLoadingMore = false;
         }
 
         async function handlePostChat(e) {
