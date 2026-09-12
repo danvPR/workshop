@@ -371,11 +371,11 @@
             body { padding-bottom: 65px; } /* Đẩy trang lên chống bị thanh bar che */
         }
 
-        /* 💬 GIAO DIỆN GLOBAL CHAT */
-        .chat-msg-row { display: flex; gap: 12px; margin-bottom: 14px; }
+        /* 💬 GIAO DIỆN GLOBAL CHAT (BONG BÓNG RỘNG RÃI & THOÁNG) */
+        .chat-msg-row { display: flex; gap: 12px; margin-bottom: 16px; width: 100%; }
         .chat-msg-row.mine { flex-direction: row-reverse; }
-        .chat-bubble { max-width: 78%; background: var(--bg-secondary); padding: 10px 14px; border-radius: 0 14px 14px 14px; border: 1px solid var(--border-color); font-size: 0.95rem; word-break: break-word; }
-        .chat-msg-row.mine .chat-bubble { background: #e6f4ea; border-color: #bbf7d0; border-radius: 14px 0 14px 14px; color: #0a8260; }
+        .chat-bubble { min-width: 100px; max-width: 92%; background: var(--bg-secondary); padding: 12px 18px; border-radius: 0 16px 16px 16px; border: 1px solid var(--border-color); font-size: 1rem; line-height: 1.5; word-break: break-word; white-space: pre-wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .chat-msg-row.mine .chat-bubble { background: #e6f4ea; border-color: #bbf7d0; border-radius: 16px 0 16px 16px; color: #0a8260; }
         [data-theme="dark"] .chat-msg-row.mine .chat-bubble { background: #064e3b; border-color: #065f46; color: #fff; }
     </style>
 </head>
@@ -1463,16 +1463,42 @@
             // Dừng vòng lặp Chat nếu rời khỏi trang Chat
             if (hash !== '#chat' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
 
-            // 🎯 XỬ LÝ HIGHLIGHT TAB TRÊN CẢ DESKTOP VÀ MOBILE
+            // 🎯 XỬ LÝ HIGHLIGHT TAB & TITLE ĐỘNG CHO TỪNG TRANG (SEO TITLE FORMAT)
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active'));
-            if (hash === '#home' || hash === '') { document.querySelectorAll('.nav-home').forEach(el => el.classList.add('active')); }
-            else if (hash === '#chat') { document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); }
-            else if (hash === '#create') { document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); }
-            else if (hash.startsWith('#assets')) { document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); }
-            else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
+            if (hash === '#home' || hash === '') { 
+                document.querySelectorAll('.nav-home').forEach(el => el.classList.add('active')); 
+                document.title = "[Khám phá Tác phẩm trên DANVworkshop]";
+            }
+            else if (hash === '#chat') { 
+                document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); 
+                document.title = "[Kênh Giao lưu Toàn cầu trên DANVworkshop]";
+            }
+            else if (hash === '#create') { 
+                document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); 
+                document.title = "[Trình Sáng tạo Trực tuyến trên DANVworkshop]";
+            }
+            else if (hash.startsWith('#assets')) { 
+                document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); 
+                document.title = "[Cửa hàng Tài nguyên Cộng đồng trên DANVworkshop]";
+            }
+            else if (hash === '#upload') {
+                document.title = "[Xuất bản Tác phẩm mới trên DANVworkshop]";
+            }
+            else if (hash === '#settings') {
+                document.title = "[Cài đặt Tài khoản trên DANVworkshop]";
+            }
+            else if (hash === '#notifications') {
+                document.title = "[Tin nhắn & Thông báo trên DANVworkshop]";
+            }
+            else if (hash === '#admin') {
+                document.title = "[Bảng Quản trị Hệ thống trên DANVworkshop]";
+            }
+            else if (hash.startsWith('#profile/')) { 
+                document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); 
+            }
 
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
-            document.getElementById('playerContainer').innerHTML = ''; 
+            document.getElementById('playerContainer').innerHTML = '';
             
             if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
                 if (allProjects.length === 0) await loadProjects(); 
@@ -1716,6 +1742,7 @@
                 document.getElementById('loginPromptProj').style.display = 'block'; 
             }
 
+            document.title = `[${proj.title} trên DANVworkshop]`; // SEO TITLE
             document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
@@ -2252,7 +2279,8 @@
             
             document.getElementById('profileContent').style.display = 'block';
             
-            // 3. Đổ nhanh thông tin chữ cơ bản
+            // 3. Đổ nhanh thông tin chữ cơ bản & Cập nhật SEO Title
+            document.title = `[Hồ sơ ${viewingProfileData.display_name || username} (@${username}) trên DANVworkshop]`;
             const elName = document.getElementById('profDisplayName'); if(elName) elName.innerText = viewingProfileData.display_name || username;
             const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || username;
             const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
@@ -2871,6 +2899,9 @@
 
         // Hàm hỗ trợ tự động tìm vị trí của Báo cáo 
         function resolveReportTargetLink(r) {
+            if (r.targetType === 'chat') {
+                return { url: `#chat?m=${r.targetId}`, label: 'Xem tin nhắn Chat', valid: true };
+            }
             if (r.targetType === 'asset') {
                 return { url: `#assets?search=${r.targetId}`, label: 'Xem tài nguyên', valid: true };
             }
@@ -2955,6 +2986,7 @@
                         }
                         ${r.targetType === 'project' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="currentProj={fileId:'${r.targetId}', author:''}; openAdminPrivateModal();"><i class="fa-solid fa-shield-halved"></i> Gỡ dự án</button>` : ''}
                         ${r.targetType === 'asset' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="adminHideAsset('${r.targetId}')"><i class="fa-solid fa-eye-slash"></i> Gỡ Asset</button>` : ''}
+                        ${r.targetType === 'chat' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="adminDeleteChat('${escapeHtml(r.targetId)}')"><i class="fa-solid fa-trash"></i> Xóa tin nhắn Chat</button>` : ''}
                         ${r.targetType === 'user' || r.targetType === 'profile' ? `<button class="btn btn-danger" style="font-size:0.85rem; padding:6px 12px;" onclick="viewingProfileUser='${r.targetId}'; openAdminWarnModal();"><i class="fa-solid fa-triangle-exclamation"></i> Cảnh cáo</button>` : ''}
                         <button class="btn" style="font-size:0.85rem; padding:6px 12px;" onclick="openResolveAdminModal(${r.rowIndex}, '${escapeHtml(r.reporter)}')"><i class="fa-solid fa-check"></i> Đánh dấu xong</button>
                     </div>
@@ -3686,6 +3718,7 @@ function reopenEditor() {
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `asset_part_${i}.${fileExt}`);
+                    chunkForm.append("uploadType", "asset"); // 🎯 GẮN NHÃN ĐỂ BACKEND BIẾT ĐÂY LÀ ASSET
                     chunkForm.append("username", currentUser.username);
                     chunkForm.append("sessionToken", currentUser.sessionToken);
 
@@ -3693,7 +3726,7 @@ function reopenEditor() {
                     
                     // 🔒 Kiểm tra nếu không có mã file_id thì báo lỗi ngay lập tức
                     if (!res || !res.success || !res.file_id) {
-                        throw new Error(res?.error || "Không thể tải lên phần này của tệp âm thanh!");
+                        throw new Error(res?.error || "Không thể tải lên phần này của tệp tin!");
                     }
                     uploadedIds.push(res.file_id);
                 }
@@ -3781,8 +3814,8 @@ function reopenEditor() {
                     const isMine = currentUser && c.author.toLowerCase() === currentUser.username.toLowerCase();
                     return `
                     <div class="chat-msg-row ${isMine ? 'mine' : ''}">
-                        ${!isMine ? `<a href="#profile/${c.author}"><img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:36px; height:36px;" onerror="this.src='${DEFAULT_AVATAR}'"></a>` : ''}
-                        <div style="display:flex; flex-direction:column; ${isMine ? 'align-items:flex-end;' : 'align-items:flex-start;'} max-width:85%;">
+                        ${!isMine ? `<a href="#profile/${c.author}"><img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:38px; height:38px; flex-shrink:0;" onerror="this.src='${DEFAULT_AVATAR}'"></a>` : ''}
+                        <div style="display:flex; flex-direction:column; ${isMine ? 'align-items:flex-end;' : 'align-items:flex-start;'} max-width:92%; min-width:120px;">
                             <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; display:flex; gap:8px;">
                                 ${!isMine ? `<a href="#profile/${c.author}" style="color:var(--text-title); font-weight:bold; text-decoration:none;">${escapeHtml(c.author)}</a>` : ''}
                                 <span>${timeAgo(c.time)}</span>
@@ -3790,17 +3823,33 @@ function reopenEditor() {
                             <div class="chat-bubble">
                                 ${c.replyTo ? `<div style="font-size:0.75rem; background:rgba(0,0,0,0.06); padding:3px 8px; border-radius:4px; margin-bottom:5px; color:var(--text-muted);">Đang trả lời <b>@${escapeHtml(c.replyTo)}</b></div>` : ''}
                                 ${escapeHtml(c.text)}
-                                ${c.imageId ? `<br><img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" style="max-width:200px; max-height:200px; border-radius:8px; margin-top:6px; object-fit:contain; display:block;">` : ''}
+                                ${c.imageId ? `<br><img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" style="max-width:220px; max-height:220px; border-radius:8px; margin-top:6px; object-fit:contain; display:block;">` : ''}
                             </div>
-                            <div style="margin-top:2px;">
-                                ${currentUser && !isMine ? `<button class="btn-action-cmt reply" onclick="startReply('chat', '${c.msgId}', '${c.author}')">Trả lời</button>` : ''}
+                            
+                            <!-- THANH CHỨC NĂNG TIN NHẮN: TRẢ LỜI, COPY LINK, BÁO CÁO & XÓA (CHO ADMIN) -->
+                            <div style="margin-top:4px; display:flex; gap:12px; align-items:center;">
+                                ${currentUser && !isMine ? `<button class="btn-action-cmt reply" onclick="startReply('chat', '${c.msgId}', '${c.author}')"><i class="fa-solid fa-reply"></i> Trả lời</button>` : ''}
+                                <button class="btn-action-cmt" style="color:var(--text-muted);" onclick="copyChatLink('${c.msgId}')" title="Sao chép link dẫn tới tin nhắn này"><i class="fa-solid fa-link"></i> Sao chép link</button>
+                                ${currentUser && !isMine ? `<button class="btn-action-cmt report" onclick="openReportModal('chat', '${c.msgId}')" title="Tố cáo tin nhắn này"><i class="fa-solid fa-flag"></i> Báo cáo</button>` : ''}
+                                ${currentUser && currentUser.role === 'admin' ? `<button class="btn-action-cmt delete" onclick="adminDeleteChat('${c.msgId}')" title="Quản trị viên xóa tin nhắn"><i class="fa-solid fa-trash"></i> Xóa</button>` : ''}
                             </div>
                         </div>
                     </div>
                     `;
                 }).join('');
 
-                if (forceScroll || isNearBottom) {
+                // Tự động cuộn đến tin nhắn nếu truy cập qua link sao chép (#chat?m=id)
+                const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                const targetMsgId = urlParams.get('m');
+                if (targetMsgId) {
+                    setTimeout(() => {
+                        const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
+                        if (targetEl) {
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            targetEl.style.animation = "pulse 1.5s 2";
+                        }
+                    }, 200);
+                } else if (forceScroll || isNearBottom) {
                     setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
                 }
             } catch(e) {}
@@ -3845,6 +3894,38 @@ function reopenEditor() {
             isPosting.chat = false;
             submitBtn.innerHTML = origHtml;
             submitBtn.disabled = false;
+        }
+
+        // 📋 SAO CHÉP LIÊN KẾT ĐẾN TIN NHẮN
+        function copyChatLink(msgId) {
+            const cleanUrl = window.location.origin + window.location.pathname + `#chat?m=${msgId}`;
+            navigator.clipboard.writeText(cleanUrl).then(() => {
+                showToast("Đã sao chép liên kết tin nhắn vào khay nhớ tạm!", "success");
+            }).catch(() => {
+                showToast("Không thể sao chép liên kết", "error");
+            });
+        }
+
+        // REMOVE
+        async function adminDeleteChat(msgId) {
+            if (!currentUser || currentUser.role !== 'admin') return;
+            if (!confirm("Bạn có chắc chắn muốn xóa vĩnh viễn tin nhắn chat này?")) return;
+
+            const res = await apiFetch(`/api/admin/action`, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: "delete_chat", 
+                    payload: { msgId } 
+                }) 
+            });
+
+            if (res && res.success) {
+                showToast("Đã xóa tin nhắn thành công!", "success");
+                loadGlobalChat(false); // Làm mới khung chat ngay lập tức
+                if (location.hash === '#admin') loadAdminReports(); // Nếu đang ở admin thì load lại danh sách tố cáo
+            } else {
+                showToast("Không thể xóa tin nhắn. Vui lòng thử lại!", "error");
+            }
         }
     </script>
 </body>
