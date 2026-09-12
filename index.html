@@ -371,12 +371,117 @@
             body { padding-bottom: 65px; } /* Đẩy trang lên chống bị thanh bar che */
         }
 
-        /* 💬 GIAO DIỆN GLOBAL CHAT (BONG BÓNG RỘNG RÃI & THOÁNG) */
-        .chat-msg-row { display: flex; gap: 12px; margin-bottom: 16px; width: 100%; }
+        /* 💬 GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI & TINH TẾ */
+        .chat-msg-row { display: flex; gap: 10px; margin-bottom: 14px; width: 100%; align-items: flex-end; }
         .chat-msg-row.mine { flex-direction: row-reverse; }
-        .chat-bubble { min-width: 100px; max-width: 92%; background: var(--bg-secondary); padding: 12px 18px; border-radius: 0 16px 16px 16px; border: 1px solid var(--border-color); font-size: 1rem; line-height: 1.5; word-break: break-word; white-space: pre-wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .chat-msg-row.mine .chat-bubble { background: #e6f4ea; border-color: #bbf7d0; border-radius: 16px 0 16px 16px; color: #0a8260; }
-        [data-theme="dark"] .chat-msg-row.mine .chat-bubble { background: #064e3b; border-color: #065f46; color: #fff; }
+        .chat-msg-wrapper { display: flex; flex-direction: column; max-width: 78%; min-width: 60px; }
+        .chat-msg-row.mine .chat-msg-wrapper { align-items: flex-end; }
+        .chat-msg-row:not(.mine) .chat-msg-wrapper { align-items: flex-start; }
+
+        .chat-meta-header { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
+        .chat-author-name { color: var(--text-title); font-weight: bold; text-decoration: none; }
+        .chat-author-name:hover { color: var(--primary); }
+        .chat-time { font-size: 0.72rem; opacity: 0.85; }
+
+        .chat-bubble { 
+            width: fit-content; 
+            max-width: 100%; 
+            background: var(--bg-secondary); 
+            color: var(--text-main); 
+            padding: 9px 15px; 
+            border-radius: 18px 18px 18px 4px; 
+            border: 1px solid var(--border-color); 
+            font-size: 0.95rem; 
+            line-height: 1.45; 
+            word-break: break-word; 
+            white-space: pre-wrap; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03); 
+            transition: background-color 0.2s;
+        }
+        .chat-msg-row.mine .chat-bubble { 
+            background: var(--primary); 
+            border-color: var(--primary-dark); 
+            border-radius: 18px 18px 4px 18px; 
+            color: #ffffff !important; 
+            box-shadow: 0 2px 8px rgba(13,165,122,0.25);
+        }
+        .chat-msg-row.mine .chat-bubble * { color: #ffffff !important; }
+        [data-theme="dark"] .chat-msg-row.mine .chat-bubble { 
+            background: #0a8260; 
+            border-color: #0da57a; 
+            color: #ffffff !important; 
+        }
+
+        .chat-reply-quote { 
+            font-size: 0.75rem; 
+            background: rgba(0,0,0,0.06); 
+            border-left: 3px solid var(--primary); 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            margin-bottom: 6px; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+        .chat-msg-row.mine .chat-reply-quote { 
+            background: rgba(255,255,255,0.2); 
+            border-left-color: #ffffff; 
+            color: #ffffff !important; 
+        }
+
+        .chat-img-attachment { 
+            max-width: 250px; 
+            max-height: 200px; 
+            border-radius: 8px; 
+            margin-top: 6px; 
+            object-fit: contain; 
+            display: block; 
+            border: 1px solid rgba(0,0,0,0.08); 
+            background: rgba(0,0,0,0.02);
+        }
+
+        /* Thanh nút thao tác mini hiện khi Hover */
+        .chat-actions { 
+            display: flex; 
+            gap: 5px; 
+            margin-top: 4px; 
+            opacity: 0; 
+            transition: opacity 0.2s ease, transform 0.2s ease; 
+            transform: translateY(3px); 
+            align-items: center; 
+        }
+        .chat-msg-row:hover .chat-actions { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        @media (max-width: 768px) { 
+            .chat-actions { opacity: 0.85; transform: none; } 
+            .chat-msg-wrapper { max-width: 88%; }
+        }
+
+        .chat-act-btn { 
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-muted); 
+            font-size: 0.72rem; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px; 
+            font-weight: 600; 
+            transition: 0.15s; 
+        }
+        .chat-act-btn:hover { 
+            background: var(--bg-secondary); 
+            color: var(--text-title); 
+            border-color: var(--primary); 
+        }
+        .chat-act-btn.delete { color: #ef4444; }
+        .chat-act-btn.delete:hover { background: #fee2e2; border-color: #fca5a5; }
+        .chat-act-btn.report { color: #f59e0b; }
+        .chat-act-btn.report:hover { background: #fef3c7; border-color: #fcd34d; }
     </style>
 </head>
 <body>
@@ -1467,31 +1572,31 @@
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active'));
             if (hash === '#home' || hash === '') { 
                 document.querySelectorAll('.nav-home').forEach(el => el.classList.add('active')); 
-                document.title = "[Khám phá Tác phẩm trên DANVworkshop]";
+                document.title = "Explore on DANVworkshop";
             }
             else if (hash === '#chat') { 
                 document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); 
-                document.title = "[Kênh Giao lưu Toàn cầu trên DANVworkshop]";
+                document.title = "Global chat channel on DANVworkshop";
             }
             else if (hash === '#create') { 
                 document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); 
-                document.title = "[Trình Sáng tạo Trực tuyến trên DANVworkshop]";
+                document.title = "Online Editor on DANVworkshop";
             }
             else if (hash.startsWith('#assets')) { 
                 document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); 
-                document.title = "[Cửa hàng Tài nguyên Cộng đồng trên DANVworkshop]";
+                document.title = "Community Resource Repository on DANVworkshop";
             }
             else if (hash === '#upload') {
-                document.title = "[Xuất bản Tác phẩm mới trên DANVworkshop]";
+                document.title = "Publication of new works on DANVworkshop";
             }
             else if (hash === '#settings') {
-                document.title = "[Cài đặt Tài khoản trên DANVworkshop]";
+                document.title = "Settings on DANVworkshop";
             }
             else if (hash === '#notifications') {
-                document.title = "[Tin nhắn & Thông báo trên DANVworkshop]";
+                document.title = "[Messages on DANVworkshop";
             }
             else if (hash === '#admin') {
-                document.title = "[Bảng Quản trị Hệ thống trên DANVworkshop]";
+                document.title = "[System on DANVworkshop";
             }
             else if (hash.startsWith('#profile/')) { 
                 document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); 
@@ -1742,7 +1847,7 @@
                 document.getElementById('loginPromptProj').style.display = 'block'; 
             }
 
-            document.title = `[${proj.title} trên DANVworkshop]`; // SEO TITLE
+            document.title = `${proj.title} on DANVworkshop`; // SEO TITLE
             document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
@@ -2280,7 +2385,7 @@
             document.getElementById('profileContent').style.display = 'block';
             
             // 3. Đổ nhanh thông tin chữ cơ bản & Cập nhật SEO Title
-            document.title = `[Hồ sơ ${viewingProfileData.display_name || username} (@${username}) trên DANVworkshop]`;
+            document.title = `Hồ sơ ${viewingProfileData.display_name || username} (@${username}) trên DANVworkshop`;
             const elName = document.getElementById('profDisplayName'); if(elName) elName.innerText = viewingProfileData.display_name || username;
             const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || username;
             const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
