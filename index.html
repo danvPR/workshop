@@ -2771,19 +2771,22 @@
             document.getElementById('profLoadMore-likes').style.display = 'none'; 
             document.getElementById('profLoadMore-activities').style.display = 'none';
 
-            // Xử lý Tab bình luận (nếu truy cập qua đường link thông báo)
+            // Xử lý Tab bình luận & Tự động Cuộn/Highlight
             commentLimits.prof = 10;
+            // Dựng danh sách bình luận ngay lập tức từ dữ liệu đã nạp
+            renderCommentList('prof', viewingProfileData.comments || []);
+            removeCommentImage('prof');
+            cancelReply('prof');
+
             if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
                 switchProfTab('comments');
-                setTimeout(() => highlightAndScrollComment('prof', urlParams.get('c')), 500);
+                const targetCmtId = urlParams.get('c');
+                if (targetCmtId) {
+                    // Đợi 250ms để tab Bình luận hiển thị hoàn tất rồi cuộn đến vị trí và bôi vàng
+                    setTimeout(() => highlightAndScrollComment('prof', targetCmtId), 250);
+                }
             } else {
                 switchProfTab('projects'); // Mặc định mở Tab Tác phẩm đầu tiên
-            }
-
-            const profCmtEl = document.getElementById('profCommentList');
-            if (profCmtEl && !profCmtEl.innerHTML.includes('highlight-permanent')) {
-                profCmtEl.innerHTML = '<div style="text-align:center; padding: 30px;"><div class="skeleton skeleton-text" style="width:100%; height:80px; border-radius:12px;"></div></div>';
-                setTimeout(() => { renderCommentList('prof', viewingProfileData.comments || []); removeCommentImage('prof'); cancelReply('prof'); }, 300);
             }
         }
 
