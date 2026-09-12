@@ -3881,11 +3881,10 @@ function reopenEditor() {
             showToast(`Đã chuyển sang chế độ ${theme === 'dark' ? 'Tối' : 'Sáng'}`, "success");
         }
 
-        // ================= HỆ THỐNG GLOBAL CHAT =================
+        // ================= HỆ THỐNG GLOBAL CHAT (ĐÃ TỐI ƯU & SỬA LỖI XÓA) =================
         let lastChatJSONStr = "";
 
         function openChatPage() {
-            // Đổi sang 'block' để bung rộng toàn bộ màn hình chuẩn desktop
             document.getElementById('chatView').style.display = 'block';
             
             if (currentUser) {
@@ -3897,53 +3896,87 @@ function reopenEditor() {
             }
             
             loadGlobalChat(true);
-            if (!chatInterval) chatInterval = setInterval(() => loadGlobalChat(false), 3500); // Polling mỗi 3.5 giây
+            if (!chatInterval) chatInterval = setInterval(() => loadGlobalChat(false), 3500);
         }
 
         async function loadGlobalChat(forceScroll = false) {
             try {
-                const res = await (await fetch(`${WORKER_URL}/api/chat`)).json();
+                // Thêm timestamp để chống bộ nhớ đệm (Cache) của trình duyệt/Cloudflare
+                const res = await (await fetch(`${WORKER_URL}/api/chat?_t=${Date.now()}`, { cache: 'no-store' })).json();
                 const resStr = JSON.stringify(res);
-                if (resStr === lastChatJSONStr) return; // Không vẽ lại nếu không có tin mới
+                if (resStr === lastChatJSONStr && !forceScroll) return;
                 lastChatJSONStr = resStr;
 
                 const list = document.getElementById('chatMessageList');
-                if (!res || res.length === 0) {
-                    list.innerHTML = `<div style="text-align:center; color:#888; padding:30px;">Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
+                if (!res || !Array.isArray(res) || res.length === 0) {
+                    list.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
                     return;
                 }
 
-                const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 120;
+                const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 140;
 
                 list.innerHTML = res.map(c => {
-                    const isMine = currentUser && c.author.toLowerCase() === currentUser.username.toLowerCase();
+                    // Nhận diện ID linh hoạt: hỗ trợ cả msgId, id, chatId
+                    const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
+                    const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
+                    const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
+                    
+                    // Kiểm tra ảnh đính kèm hợp lệ, loại trừ chuỗi rác "null" / "undefined"
+                    const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
+
                     return `
-                    <div class="chat-msg-row ${isMine ? 'mine' : ''}">
-                        ${!isMine ? `<a href="#profile/${c.author}"><img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:38px; height:38px; flex-shrink:0;" onerror="this.src='${DEFAULT_AVATAR}'"></a>` : ''}
-                        <div style="display:flex; flex-direction:column; ${isMine ? 'align-items:flex-end;' : 'align-items:flex-start;'} max-width:92%; min-width:120px;">
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; display:flex; gap:8px;">
-                                ${!isMine ? `<a href="#profile/${c.author}" style="color:var(--text-title); font-weight:bold; text-decoration:none;">${escapeHtml(c.author)}</a>` : ''}
-                                <span>${timeAgo(c.time)}</span>
+                    <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}">
+                        ${!isMine ? `
+                        <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}">
+                            <img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:36px; height:36px; flex-shrink:0; border: 1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'">
+                        </a>` : ''}
+                        
+                        <div class="chat-msg-wrapper">
+                            <div class="chat-meta-header">
+                                ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>` : ''}
+                                <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
+
                             <div class="chat-bubble">
-                                ${c.replyTo ? `<div style="font-size:0.75rem; background:rgba(0,0,0,0.06); padding:3px 8px; border-radius:4px; margin-bottom:5px; color:var(--text-muted);">Đang trả lời <b>@${escapeHtml(c.replyTo)}</b></div>` : ''}
-                                ${escapeHtml(c.text)}
-                                ${c.imageId ? `<br><img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" style="max-width:220px; max-height:220px; border-radius:8px; margin-top:6px; object-fit:contain; display:block;">` : ''}
+                                ${c.replyTo ? `
+                                <div class="chat-reply-quote">
+                                    <i class="fa-solid fa-reply"></i>
+                                    <span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span>
+                                </div>` : ''}
+                                
+                                <div>${escapeHtml(c.text || '')}</div>
+
+                                ${hasValidImg ? `
+                                <img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" 
+                                     class="chat-img-attachment" 
+                                     loading="lazy" 
+                                     onerror="this.remove()">` : ''}
                             </div>
                             
-                            <!-- THANH CHỨC NĂNG TIN NHẮN: TRẢ LỜI, COPY LINK, BÁO CÁO & XÓA (CHO ADMIN) -->
-                            <div style="margin-top:4px; display:flex; gap:12px; align-items:center;">
-                                ${currentUser && !isMine ? `<button class="btn-action-cmt reply" onclick="startReply('chat', '${c.msgId}', '${c.author}')"><i class="fa-solid fa-reply"></i> Trả lời</button>` : ''}
-                                <button class="btn-action-cmt" style="color:var(--text-muted);" onclick="copyChatLink('${c.msgId}')" title="Sao chép link dẫn tới tin nhắn này"><i class="fa-solid fa-link"></i> Sao chép link</button>
-                                ${currentUser && !isMine ? `<button class="btn-action-cmt report" onclick="openReportModal('chat', '${c.msgId}')" title="Tố cáo tin nhắn này"><i class="fa-solid fa-flag"></i> Báo cáo</button>` : ''}
-                                ${currentUser && currentUser.role === 'admin' ? `<button class="btn-action-cmt delete" onclick="adminDeleteChat('${c.msgId}')" title="Quản trị viên xóa tin nhắn"><i class="fa-solid fa-trash"></i> Xóa</button>` : ''}
+                            <!-- THANH CÔNG CỤ TIN NHẮN (TỐI GIẢN - HIỆN KHI RÊ CHUỘT) -->
+                            <div class="chat-actions">
+                                ${currentUser && !isMine ? `
+                                    <button class="chat-act-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')">
+                                        <i class="fa-solid fa-reply"></i> Trả lời
+                                    </button>` : ''}
+                                <button class="chat-act-btn" onclick="copyChatLink('${messageId}')" title="Sao chép link tin nhắn">
+                                    <i class="fa-solid fa-link"></i> Link
+                                </button>
+                                ${currentUser && !isMine ? `
+                                    <button class="chat-act-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo">
+                                        <i class="fa-solid fa-flag"></i>
+                                    </button>` : ''}
+                                ${canDelete ? `
+                                    <button class="chat-act-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
+                                        <i class="fa-solid fa-trash-can"></i> Xóa
+                                    </button>` : ''}
                             </div>
                         </div>
                     </div>
                     `;
                 }).join('');
 
-                // Tự động cuộn đến tin nhắn nếu truy cập qua link sao chép (#chat?m=id)
+                // Cuộn tới tin nhắn chỉ định qua link #chat?m=id
                 const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
                 const targetMsgId = urlParams.get('m');
                 if (targetMsgId) {
@@ -3951,13 +3984,15 @@ function reopenEditor() {
                         const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
                         if (targetEl) {
                             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            targetEl.style.animation = "pulse 1.5s 2";
+                            targetEl.classList.add('highlight-permanent');
                         }
-                    }, 200);
+                    }, 300);
                 } else if (forceScroll || isNearBottom) {
                     setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
                 }
-            } catch(e) {}
+            } catch(e) {
+                console.error("Lỗi đồng bộ chat:", e);
+            }
         }
 
         async function handlePostChat(e) {
@@ -3991,7 +4026,8 @@ function reopenEditor() {
                 textInput.value = ''; 
                 removeCommentImage('chat'); 
                 cancelReply('chat');
-                loadGlobalChat(true);
+                lastChatJSONStr = ""; // Xóa bộ nhớ đệm để ép nạp lại ngay
+                await loadGlobalChat(true);
             } else {
                 showToast("Lỗi gửi tin nhắn", "error");
             }
@@ -4003,33 +4039,55 @@ function reopenEditor() {
 
         // 📋 SAO CHÉP LIÊN KẾT ĐẾN TIN NHẮN
         function copyChatLink(msgId) {
+            if (!msgId || msgId === 'undefined') return showToast("Không tìm thấy mã tin nhắn!", "error");
             const cleanUrl = window.location.origin + window.location.pathname + `#chat?m=${msgId}`;
             navigator.clipboard.writeText(cleanUrl).then(() => {
-                showToast("Đã sao chép liên kết tin nhắn vào khay nhớ tạm!", "success");
+                showToast("Đã sao chép liên kết tin nhắn!", "success");
             }).catch(() => {
                 showToast("Không thể sao chép liên kết", "error");
             });
         }
 
-        // REMOVE
+        // 🗑️ XÓA TIN NHẮN (ĐÃ FIX TRIỆT ĐỂ LỖI KHÔNG XÓA ĐƯỢC)
         async function adminDeleteChat(msgId) {
-            if (!currentUser || currentUser.role !== 'admin') return;
-            if (!confirm("Bạn có chắc chắn muốn xóa vĩnh viễn tin nhắn chat này?")) return;
+            if (!currentUser) return openModal('loginModal');
+            if (!msgId || msgId === 'undefined') {
+                showToast("Lỗi: Mã tin nhắn không hợp lệ!", "error");
+                return;
+            }
+            if (!confirm("Bạn có chắc chắn muốn xóa tin nhắn này?")) return;
 
-            const res = await apiFetch(`/api/admin/action`, { 
+            // 1. Thử gửi qua Admin Action trước (truyền đầy đủ các định dạng tên biến)
+            let res = await apiFetch(`/api/admin/action`, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: "delete_chat", 
-                    payload: { msgId } 
+                    payload: { msgId: msgId, id: msgId, targetId: msgId, chatId: msgId },
+                    msgId: msgId,
+                    id: msgId
                 }) 
             });
 
+            // 2. Fallback: Nếu Worker tiếp nhận lệnh xóa trực tiếp tại /api/chat
+            if (!res || !res.success) {
+                res = await apiFetch(`/api/chat`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: "delete",
+                        actionType: "delete_chat",
+                        msgId: msgId,
+                        id: msgId
+                    })
+                });
+            }
+
             if (res && res.success) {
                 showToast("Đã xóa tin nhắn thành công!", "success");
-                loadGlobalChat(false); // Làm mới khung chat ngay lập tức
-                if (location.hash === '#admin') loadAdminReports(); // Nếu đang ở admin thì load lại danh sách tố cáo
+                lastChatJSONStr = ""; // Reset biến cờ để load lại danh sách mới ngay lập tức
+                await loadGlobalChat(false);
+                if (location.hash === '#admin') loadAdminReports();
             } else {
-                showToast("Không thể xóa tin nhắn. Vui lòng thử lại!", "error");
+                showToast((res && res.error) ? res.error : "Không thể xóa tin nhắn. Vui lòng thử lại!", "error");
             }
         }
     </script>
