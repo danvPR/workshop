@@ -2046,11 +2046,24 @@
                 dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> Đang cập nhật...`;
             }
             
-            // 👁️ [MỚI] Tự động cộng 1 lượt xem ngầm khi mở dự án
-            if (currentUser) {
-                apiFetch(`/api/project/action`, { 
+            //  TỰ ĐỘNG CỘNG LƯỢT XEM CHUẨN XÁC
+            const viewSessionKey = `danv_viewed_${currentProj.projectId || currentProj.fileId}`;
+            if (!sessionStorage.getItem(viewSessionKey)) {
+                sessionStorage.setItem(viewSessionKey, "true");
+                
+                fetch(`${WORKER_URL}/api/project/action`, { 
                     method: 'POST', 
-                    body: JSON.stringify({ fileId: currentProj.fileId, action: "add_view" }) 
+                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
+                    body: JSON.stringify({ 
+                        fileId: currentProj.fileId, 
+                        action: "add_view",
+                        username: currentUser ? currentUser.username : "",
+                        sessionToken: currentUser ? currentUser.sessionToken : ""
+                    }) 
+                }).then(r => r.json()).then(res => {
+                    if (res && res.success && res.views !== undefined) {
+                        currentProj.views = res.views;
+                    }
                 }).catch(e => {});
             }
 
