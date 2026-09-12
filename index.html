@@ -3645,6 +3645,13 @@
                 const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
                 
                 if (projRegex.test(actionHtml)) {
+                    actionHtml = actionHtml.replace(projRegex, `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;$1&quot;</a>`);
+                } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
+                    actionHtml += ` <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
+                }
+            }
+            return { actionHtml, bubbleHtml };
+        }
 
         // HÀM CLICK ĐÁNH DẤU ĐỌC TẤT CẢ
         async function markAllNotifsRead(event) {
