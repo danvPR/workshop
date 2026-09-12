@@ -743,6 +743,20 @@
 
     <div id="toastContainer"></div>
 
+    <!-- BANNER GLOBAL PING TỪ ADMIN -->
+    <div id="globalPingBanner" style="display:none; position: fixed; top: 62px; left: 0; width: 100%; background: linear-gradient(90deg, #ea580c, #f97316); color: white; z-index: 998; padding: 12px 20px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; font-weight: bold; font-size: 0.95rem; flex: 1;">
+                <i class="fa-solid fa-bullhorn fa-shake" style="font-size: 1.3rem;"></i>
+                <span id="pingMessageText" style="line-height: 1.4;">Thông báo từ hệ thống...</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <a id="pingCustomBtn" href="#" target="_blank" class="btn" style="background: white; color: #ea580c; padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; text-decoration: none; display:none; font-weight: 800;">Nút tùy chỉnh</a>
+                <button class="btn" style="background: rgba(0,0,0,0.25); color: white; padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; border: none; font-weight: bold;" onclick="dismissGlobalPing()"><i class="fa-solid fa-check"></i> Đã rõ</button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-left">
             <a href="#home" class="navbar-brand">
@@ -1305,6 +1319,33 @@
                 <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> Danh sách Tố cáo chờ xử lý</h3>
                 <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> Làm mới</button>
             </div>
+
+            <!-- KHỐI PHÁT THANH GLOBAL PING -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #855cd6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-tower-broadcast" style="color: #855cd6;"></i> Phát thanh Server (Global Ping)
+                </h4>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Treo một thông báo khẩn cấp trên cùng màn hình của mọi người dùng. Bỏ trống nội dung và bấm nút để gỡ thông báo xuống.</p>
+                
+                <div class="form-group">
+                    <label>Nội dung thông báo (Bắt buộc):</label>
+                    <textarea id="adminPingMessage" class="form-control" rows="2" placeholder="Ví dụ: Nền tảng vừa cập nhật Chính sách Bảo mật..."></textarea>
+                </div>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
+                        <label>Tên nút hành động (Tùy chọn):</label>
+                        <input type="text" id="adminPingBtnText" class="form-control" placeholder="Ví dụ: Xem chi tiết">
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
+                        <label>Link đính kèm (Tùy chọn):</label>
+                        <input type="text" id="adminPingBtnLink" class="form-control" placeholder="https://...">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="submitGlobalPing()" style="background: #855cd6; border: none; margin-top: 10px;">
+                    <i class="fa-solid fa-paper-plane"></i> Gắn thông báo toàn Server
+                </button>
+            </div>
+
             <div id="adminReportsList">Đang tải dữ liệu an toàn từ máy chủ...</div>
         </div>
     </div>
@@ -1785,6 +1826,7 @@
                 }
 
                 await loadProjects(); updateNav(); handleRouting();
+                checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
                 setInterval(autoFetchData, 35000);
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
@@ -2392,10 +2434,18 @@
         }
 
         async function deleteComment(type, commentId) {
-            if(!confirm("Xác nhận xóa bình luận này?")) return;
+            let reason = "";
+            if (currentUser && currentUser.role === 'admin') {
+                reason = prompt("[Quản trị viên] Xác nhận XÓA?\nVui lòng nhập lý do để hệ thống gửi thông báo cho người dùng:", "Vi phạm tiêu chuẩn cộng đồng");
+                if (reason === null) return; // Hủy thao tác
+            } else {
+                if(!confirm("Xác nhận xóa bình luận này?")) return;
+            }
+
             const endpoint = type === 'proj' ? `/api/project/action` : `/api/user/comment`;
-            const payload = type === 'proj' ? { fileId: currentProj.fileId, action: "delete_comment", payload: { commentId } }
-            : { targetUser: viewingProfileUser, action: "delete", commentId };
+            const payload = type === 'proj' 
+                ? { fileId: currentProj.fileId, action: "delete_comment", payload: { commentId, reason } }
+                : { targetUser: viewingProfileUser, action: "delete", commentId, reason };
             
             const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
             if(res && res.success) {
@@ -4559,20 +4609,28 @@ function reopenEditor() {
         }
 
         // 🗑️ XÓA TIN NHẮN (ĐÃ FIX TRIỆT ĐỂ LỖI KHÔNG XÓA ĐƯỢC)
+        // 🗑️ XÓA TIN NHẮN (ĐÃ FIX TRIỆT ĐỂ LỖI KHÔNG XÓA ĐƯỢC VÀ KÈM LÝ DO)
         async function adminDeleteChat(msgId) {
             if (!currentUser) return openModal('loginModal');
             if (!msgId || msgId === 'undefined') {
                 showToast("Lỗi: Mã tin nhắn không hợp lệ!", "error");
                 return;
             }
-            if (!confirm("Bạn có chắc chắn muốn xóa tin nhắn này?")) return;
+            
+            let reason = "";
+            if (currentUser.role === 'admin') {
+                reason = prompt("[Quản trị viên] XÓA CHAT. Nhập lý do để gửi vào hộp thư người dùng:", "Vi phạm quy định Kênh giao lưu");
+                if (reason === null) return; // Hủy
+            } else {
+                if (!confirm("Bạn có chắc chắn muốn xóa tin nhắn này?")) return;
+            }
 
             // 1. Thử gửi qua Admin Action trước (truyền đầy đủ các định dạng tên biến)
             let res = await apiFetch(`/api/admin/action`, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: "delete_chat", 
-                    payload: { msgId: msgId, id: msgId, targetId: msgId, chatId: msgId },
+                    payload: { msgId: msgId, id: msgId, targetId: msgId, chatId: msgId, reason: reason },
                     msgId: msgId,
                     id: msgId
                 }) 
@@ -4586,7 +4644,8 @@ function reopenEditor() {
                         action: "delete",
                         actionType: "delete_chat",
                         msgId: msgId,
-                        id: msgId
+                        id: msgId,
+                        reason: reason
                     })
                 });
             }
@@ -4599,6 +4658,73 @@ function reopenEditor() {
             } else {
                 showToast((res && res.error) ? res.error : "Không thể xóa tin nhắn. Vui lòng thử lại!", "error");
             }
+        }
+
+        // ================= GLOBAL PING LOGIC =================
+        let currentPingData = null;
+
+        async function checkGlobalPing() {
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/announcement`)).json();
+                if (res && res.announcement) {
+                    const ann = res.announcement;
+                    const dismissedStamp = localStorage.getItem('danv_dismissed_ping');
+                    
+                    // Nếu thời gian Ping mới hơn thời gian người dùng ấn "Đã rõ"
+                    if (dismissedStamp != ann.timestamp) {
+                        currentPingData = ann;
+                        document.getElementById('pingMessageText').innerText = ann.message;
+                        
+                        const customBtn = document.getElementById('pingCustomBtn');
+                        if (ann.btnText && ann.btnLink) {
+                            customBtn.innerText = ann.btnText;
+                            customBtn.href = ann.btnLink;
+                            customBtn.style.display = 'inline-block';
+                        } else {
+                            customBtn.style.display = 'none';
+                        }
+                        document.getElementById('globalPingBanner').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('globalPingBanner').style.display = 'none';
+                }
+            } catch(e) {}
+        }
+
+        function dismissGlobalPing() {
+            if (currentPingData) {
+                localStorage.setItem('danv_dismissed_ping', currentPingData.timestamp);
+            }
+            document.getElementById('globalPingBanner').style.display = 'none';
+        }
+
+        async function submitGlobalPing() {
+            const btn = event.currentTarget;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát thanh...';
+            btn.disabled = true;
+
+            const message = document.getElementById('adminPingMessage').value.trim();
+            const btnText = document.getElementById('adminPingBtnText').value.trim();
+            const btnLink = document.getElementById('adminPingBtnLink').value.trim();
+
+            const res = await apiFetch(`/api/admin/announcement`, { 
+                method: 'POST', 
+                body: JSON.stringify({ message, btnText, btnLink }) 
+            });
+
+            if (res && res.success) {
+                if (message) showToast("Đã treo thông báo toàn Server!", "success");
+                else showToast("Đã gỡ thông báo hiện tại xuống!", "info");
+                
+                // Tự động test luôn trên máy Admin
+                setTimeout(checkGlobalPing, 1000); 
+            } else {
+                showToast("Lỗi kết nối", "error");
+            }
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
         }
     </script>
 </body>
