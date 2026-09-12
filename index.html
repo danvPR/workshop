@@ -147,6 +147,57 @@
         .profile-info-body { margin-top: 10px; }
         .profile-username-title { font-size: 1.8rem; font-weight: 800; color: #111; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
         .profile-location, .profile-status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; margin-top: 8px;}
+
+        /* TOOLTIP TÙY CHỈNH CHO HUY HIỆU XÁC THỰC */
+        .verified-badge-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .custom-badge-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: #0f172a;
+            color: #ffffff !important;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.12);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .custom-badge-tooltip b {
+            color: #38bdf8 !important;
+            font-weight: 700;
+        }
+        .custom-badge-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #0f172a transparent transparent transparent;
+        }
+        .verified-badge-wrap:hover .custom-badge-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
         .profile-location { color: #64748b; margin-right: 15px; }
         .profile-status-badge { background: #e6f4ea; color: #0a8260; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
         
@@ -485,25 +536,31 @@
         .chat-act-btn.report { color: #f59e0b; }
         .chat-act-btn.report:hover { background: #fef3c7; border-color: #fcd34d; }
 
-        /* THẺ CARD DỰ ÁN TRONG GLOBAL CHAT */
+        /* GIAO DIỆN THẺ DỰ ÁN GLOBAL CHAT */
         .chat-project-card {
-            margin-top: 6px;
+            margin-top: 8px;
             background: var(--bg-panel) !important;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px;
             overflow: hidden;
-            width: 270px;
+            width: 290px;
             max-width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
             display: flex;
             flex-direction: column;
             text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .chat-project-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(13,165,122,0.2);
+            border-color: var(--primary) !important;
         }
         .chat-proj-thumb-wrap {
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
-            background: #111;
+            background: #0f172a;
             overflow: hidden;
         }
         .chat-proj-thumb-wrap img {
@@ -511,83 +568,137 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.3s ease;
+        }
+        .chat-project-card:hover .chat-proj-thumb-wrap img {
+            transform: scale(1.05);
         }
         .chat-proj-badge {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(0,0,0,0.75);
-            color: #fff !important;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 2px 7px;
-            border-radius: 6px;
+            top: 10px;
+            left: 10px;
+            background: rgba(15, 23, 42, 0.8) !important;
+            backdrop-filter: blur(6px);
+            color: #10b981 !important;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            border: 1px solid rgba(255,255,255,0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .chat-proj-body {
-            padding: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            background: var(--bg-panel);
+            gap: 8px;
+            background: var(--bg-panel) !important;
         }
         .chat-proj-title {
-            font-weight: bold;
-            font-size: 0.95rem;
+            font-weight: 800;
+            font-size: 1.05rem;
             color: var(--text-title) !important;
+            line-height: 1.35;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .chat-proj-author {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted) !important;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         .chat-proj-author b {
             color: var(--primary) !important;
+            font-weight: 700;
         }
-        .chat-proj-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--text-muted) !important;
-            padding: 6px 0;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            margin: 2px 0 4px 0;
+        
+        /* HÀNG STATS Ô VUÔNG CHIP ĐỒ HỌA */
+        .vip-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin: 4px 0 6px 0;
         }
-        .chat-proj-stats span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-weight: 600;
-        }
-        .chat-proj-play-btn {
-            width: 100%;
-            justify-content: center;
-            padding: 7px 12px;
+        .vip-stat-pill {
+            background: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
             border-radius: 8px;
-            font-size: 0.88rem;
-            font-weight: bold;
-            text-decoration: none;
+            padding: 6px 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: var(--text-main) !important;
         }
-        /* Ngăn ngừa nền xanh của tin nhắn của tôi (.mine) làm lỗi màu chữ card */
-        .chat-msg-row.mine .chat-project-card {
+        .vip-stat-pill span {
+            color: var(--text-main) !important;
+            font-size: 0.82rem;
+        }
+
+        /* NÚT TRẢI NGHIỆM PHÁT SÁNG VIP */
+        .vip-play-btn {
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-decoration: none !important;
+            color: #ffffff !important;
+            background: linear-gradient(135deg, #0da57a 0%, #0a8260 100%) !important;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.4);
+            border: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .vip-play-btn:hover {
+            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
+            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.55);
+            transform: translateY(-1px);
+            color: #ffffff !important;
+        }
+
+        .chat-msg-row.mine .chat-bubble {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+        .chat-msg-row.mine .chat-bubble .chat-text {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+            padding: 9px 15px;
+            border-radius: 18px 18px 4px 18px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(13,165,122,0.25);
+            margin-bottom: 4px;
+        }
+        .chat-msg-row.mine .chat-bubble .chat-project-card {
             background: var(--bg-panel) !important;
         }
-        .chat-msg-row.mine .chat-project-card * {
-            color: initial;
+        .chat-msg-row.mine .chat-bubble .chat-project-card * {
+            color: var(--text-main) !important;
         }
-        .chat-msg-row.mine .chat-proj-title {
+        .chat-msg-row.mine .chat-bubble .chat-project-card .chat-proj-title {
             color: var(--text-title) !important;
         }
-        .chat-msg-row.mine .chat-proj-author, .chat-msg-row.mine .chat-proj-stats {
-            color: var(--text-muted) !important;
+        .chat-msg-row.mine .chat-bubble .chat-project-card .chat-proj-author b {
+            color: var(--primary) !important;
         }
-        .chat-msg-row.mine .chat-proj-play-btn {
+        .chat-msg-row.mine .chat-bubble .chat-project-card .vip-play-btn,
+        .chat-msg-row.mine .chat-bubble .chat-project-card .vip-play-btn * {
             color: #ffffff !important;
         }
     </style>
@@ -882,7 +993,13 @@
                     <div class="profile-info-body">
                         <div class="profile-username-title">
                             <span id="profDisplayName">Display Name</span>
-                            <span id="profScratchBadge" style="display:none;" title="Tài khoản Scratch đã xác thực"><i class="fa-solid fa-circle-check" style="color:#3b82f6; font-size:1.3rem;"></i></span>
+                            <div id="profScratchBadge" class="verified-badge-wrap" style="display:none;">
+                                <i class="fa-solid fa-circle-check" style="color:#3b82f6; font-size:1.3rem;"></i>
+                                <div class="custom-badge-tooltip">
+                                    <img src="https://scratch.mit.edu/favicon.ico" style="width:14px; height:14px; border-radius: 2px;">
+                                    <span>Xác thực: <b id="profScratchUsername">@username</b></span>
+                                </div>
+                            </div>
                         </div>
                         <div style="color:var(--text-muted); font-size:1rem; margin-bottom: 12px; font-weight: 500;">@<span id="profUsername">username</span></div>
                         
@@ -2560,9 +2677,15 @@
             const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || t('prof_no_status'))}`;
             
             const badge = document.getElementById('profScratchBadge');
+            const scratchUserEl = document.getElementById('profScratchUsername');
             if(badge) {
-                if(viewingProfileData.scratch_linked) { badge.style.display = 'inline-block'; badge.title = `Xác thực: @${viewingProfileData.scratch_linked}`; } 
-                else { badge.style.display = 'none'; }
+                if(viewingProfileData.scratch_linked) { 
+                    badge.style.display = 'inline-flex'; 
+                    badge.removeAttribute('title'); // Xóa bỏ thuộc tính mặc định của trình duyệt
+                    if(scratchUserEl) scratchUserEl.innerText = `@${viewingProfileData.scratch_linked}`;
+                } else { 
+                    badge.style.display = 'none'; 
+                }
             }
 
             // Xử lý Banner nổi bật
@@ -3112,8 +3235,15 @@
             btn.disabled = true;
 
             const projId = currentProj.projectId || currentProj.fileId;
-            // Gửi mã định dạng thẻ Card để Global Chat tự động render
-            const text = `[DANV_PROJECT_SHARE:${projId}:${encodeURIComponent(currentProj.title)}]`;
+            // Đóng gói: ID, Tiêu đề, Tác giả, Ảnh bìa, Lượt xem, Lượt thích, Sao
+            const pTitle = encodeURIComponent(currentProj.title || "Tác phẩm Scratch");
+            const pAuthor = encodeURIComponent(currentProj.author || currentUser.username);
+            const pThumb = currentProj.thumbId || "";
+            const pViews = currentProj.views || 0;
+            const pLikes = (currentProj.likes || []).length;
+            const pStars = (currentProj.stars || []).length;
+
+            const text = `[DANV_PROJECT_SHARE:${projId}:${pTitle}:${pAuthor}:${pThumb}:${pViews}:${pLikes}:${pStars}]`;
             
             const payload = { text, replyTo: null, imageId: null };
             const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
@@ -3642,43 +3772,73 @@
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        // 🎴 HÀM RENDER NỘI DUNG CHAT (TỰ ĐỘNG BIẾN LINK DỰ ÁN THÀNH THẺ GIAO DIỆN RIÊNG)
+        // 🎴 HÀM RENDER NỘI DUNG CHAT
         function renderChatContent(rawText) {
             if (!rawText) return '';
             
-            // Nhận diện mã chia sẻ dự án [DANV_PROJECT_SHARE:id] hoặc link #project/id
-            const shareMatch = rawText.match(/\[DANV_PROJECT_SHARE:([a-zA-Z0-9_\-]+)(?::([^\]]*))?\]/) || rawText.match(/(?:^|\s)#project\/([a-zA-Z0-9_\-]+)/);
+            // Nhận diện tag đóng gói [DANV_PROJECT_SHARE:id:title:author:thumb:views:likes:stars] hoặc link #project/id
+            const shareMatch = rawText.match(/\[DANV_PROJECT_SHARE:([^\]]+)\]/) || rawText.match(/(?:^|\s)#project\/([a-zA-Z0-9_\-]+)/);
             
             if (shareMatch) {
-                const projId = shareMatch[1];
-                const userMsg = rawText.replace(shareMatch[0], '').trim();
+                const rawTag = shareMatch[0];
+                const userMsg = rawText.replace(rawTag, '').trim();
                 
-                // Tìm thông tin dự án trong bộ nhớ
-                const p = allProjects.find(item => item.projectId === projId || item.fileId === projId);
+                let projId = '', tagTitle = '', tagAuthor = '', tagThumb = '', tagViews = 0, tagLikes = 0, tagStars = 0;
                 
-                const title = p ? p.title : (shareMatch[2] ? decodeURIComponent(shareMatch[2]) : "Tác phẩm DANV");
-                const author = p ? p.author : "Tác giả";
-                const thumbSrc = (p && p.thumbId) ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
-                const views = (p && p.views !== undefined) ? p.views : 0;
-                const likes = (p && p.likes) ? p.likes.length : 0;
-                const stars = (p && p.stars) ? p.stars.length : 0;
+                if (rawTag.startsWith('[DANV_PROJECT_SHARE:')) {
+                    const parts = shareMatch[1].split(':');
+                    projId = parts[0] || '';
+                    tagTitle = parts[1] ? decodeURIComponent(parts[1]) : '';
+                    tagAuthor = parts[2] ? decodeURIComponent(parts[2]) : '';
+                    tagThumb = parts[3] || '';
+                    tagViews = parseInt(parts[4]) || 0;
+                    tagLikes = parseInt(parts[5]) || 0;
+                    tagStars = parseInt(parts[6]) || 0;
+                } else {
+                    projId = shareMatch[1];
+                }
+                
+                // Đồng bộ với danh sách live (nếu đã tải) hoặc lấy từ dữ liệu đóng gói trong tag
+                const p = (typeof allProjects !== 'undefined') ? allProjects.find(item => item.projectId === projId || item.fileId === projId) : null;
+                
+                const title = p ? p.title : (tagTitle || "Tác phẩm Scratch");
+                const author = p ? p.author : (tagAuthor || "Cộng đồng");
+                const thumbId = p ? p.thumbId : tagThumb;
+                const thumbSrc = thumbId ? `${WORKER_URL}/api/project/${thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const views = p && p.views !== undefined ? p.views : tagViews;
+                const likes = p && p.likes ? p.likes.length : tagLikes;
+                const stars = p && p.stars ? p.stars.length : tagStars;
 
                 const cardHtml = `
                     <div class="chat-project-card">
                         <div class="chat-proj-thumb-wrap">
                             <img src="${thumbSrc}" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
-                            <span class="chat-proj-badge"><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> Dự án</span>
+                            <span class="chat-proj-badge"><i class="fa-solid fa-gamepad"></i> Game</span>
                         </div>
                         <div class="chat-proj-body">
                             <div class="chat-proj-title" title="${escapeHtml(title)}">${escapeHtml(title)}</div>
-                            <div class="chat-proj-author">Bởi <b>@${escapeHtml(author)}</b></div>
-                            <div class="chat-proj-stats">
-                                <span title="Lượt chơi"><i class="fa-solid fa-play" style="color:#3b82f6;"></i> ${views}</span>
-                                <span title="Lượt thích"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${likes}</span>
-                                <span title="Yêu thích"><i class="fa-solid fa-star" style="color:#f5b041;"></i> ${stars}</span>
+                            <div class="chat-proj-author">
+                                <i class="fa-solid fa-circle-user" style="color:var(--primary);"></i>
+                                Bởi <a href="#profile/${encodeURIComponent(author)}" style="text-decoration:none;"><b>@${escapeHtml(author)}</b></a>
                             </div>
-                            <a href="#project/${projId}" class="btn btn-primary chat-proj-play-btn">
-                                <i class="fa-solid fa-play"></i> Trải nghiệm
+                            
+                            <div class="vip-stats-grid">
+                                <div class="vip-stat-pill" title="Lượt chơi">
+                                    <i class="fa-solid fa-play" style="color:#3b82f6 !important;"></i>
+                                    <span>${views}</span>
+                                </div>
+                                <div class="vip-stat-pill" title="Lượt thích">
+                                    <i class="fa-solid fa-heart" style="color:#ef4444 !important;"></i>
+                                    <span>${likes}</span>
+                                </div>
+                                <div class="vip-stat-pill" title="Yêu thích">
+                                    <i class="fa-solid fa-star" style="color:#f5b041 !important;"></i>
+                                    <span>${stars}</span>
+                                </div>
+                            </div>
+
+                            <a href="#project/${projId}" class="vip-play-btn">
+                                <i class="fa-solid fa-play"></i> Trải nghiệm ngay
                             </a>
                         </div>
                     </div>
