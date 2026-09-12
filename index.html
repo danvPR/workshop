@@ -1593,6 +1593,11 @@
 
         window.addEventListener('hashchange', handleRouting);
         async function handleRouting() {
+            // ⚡ TỰ ĐỘNG ĐƯA THANH CUỘN LÊN ĐẦU TRANG (CHỐNG LỖI MÀN HÌNH TRẮNG)
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+
             // 1. Bật màn hình Loading ngay khi bắt đầu chuyển trang
             const loader = document.getElementById('globalLoader');
             if (loader) {
@@ -1645,6 +1650,7 @@
 
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
             document.getElementById('playerContainer').innerHTML = '';
+            window.scrollTo(0, 0); // Đảm bảo cuộn lại lên đầu
             
             if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/')) {
                 if (allProjects.length === 0) await loadProjects(); 
@@ -2009,7 +2015,7 @@
                                     <span class="comment-time" title="${root.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(root.time)}</span>
                                 </div>
                                 <div class="comment-text-bubble">
-                                    ${escapeHtml(root.text)}
+                                    ${formatCommentText(root.text)}
                                     ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render">` : ''}
                                 </div>
                                 <div style="margin-top:4px;">
@@ -2032,7 +2038,7 @@
                                             </div>
                                             <div class="comment-text-bubble">
                                                 ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
-                                                ${escapeHtml(rep.text)}
+                                                ${formatCommentText(rep.text)}
                                                 ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render">` : ''}
                                             </div>
                                             <div style="margin-top:2px;">
@@ -3003,7 +3009,7 @@
             btn.disabled = false;
         }
 
-        
+
         function openReportModal(type, id = null, contextType = null) {
             if(!currentUser) return openModal('loginModal');
             reportTarget.type = type;
@@ -3516,6 +3522,26 @@
         function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
+        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO URL SCRATCH & DANVWORKSHOP
+        function formatCommentText(text) {
+            if (!text) return '';
+            let safeText = escapeHtml(text);
+            const linkRegex = /(https?:\/\/(?:scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)|((?:^|\s)(?:scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
+            return safeText.replace(linkRegex, (match, p1, p2) => {
+                let raw = p1 || (p2 ? p2.trim() : '');
+                let prefix = (p2 && p2.startsWith(' ')) ? ' ' : '';
+                let cleanUrl = raw;
+                let trailing = '';
+                const matchTrailing = cleanUrl.match(/[.,!?;:]+$/);
+                if (matchTrailing) {
+                    trailing = matchTrailing[0];
+                    cleanUrl = cleanUrl.slice(0, -trailing.length);
+                }
+                const fullHref = cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`;
+                return `${prefix}<a href="${fullHref}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: bold; text-decoration: underline; word-break: break-all;">${cleanUrl}</a>${trailing}`;
+            });
+        }
+
         // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
         const originalOpenProjectPage = openProjectPage;
         openProjectPage = function(idParam, urlParams = null) {
@@ -4024,7 +4050,7 @@ function reopenEditor() {
                                 <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
 
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}<div class="chat-text">${escapeHtml(c.text || '')}</div>${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}<div class="chat-text">${formatCommentText(c.text || '')}</div>${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}</div>
                             
                             <!-- THANH CÔNG CỤ TIN NHẮN (TỐI GIẢN - HIỆN KHI RÊ CHUỘT) -->
                             <div class="chat-actions">
