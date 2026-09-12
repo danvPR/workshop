@@ -465,21 +465,53 @@
             color: #ffffff !important; 
         }
 
+        /* 💬 KHỐI TRÍCH DẪN TRẢ LỜI TIN NHẮN (REPLY QUOTE) */
         .chat-reply-quote { 
-            font-size: 0.75rem; 
-            background: rgba(0,0,0,0.06); 
+            font-size: 0.78rem; 
+            background: rgba(0, 0, 0, 0.07); 
             border-left: 3px solid var(--primary); 
-            padding: 3px 8px; 
+            padding: 4px 10px; 
             border-radius: 4px; 
             margin-bottom: 6px; 
             display: flex; 
             align-items: center; 
             gap: 6px; 
+            line-height: 1.35;
         }
+        .chat-reply-quote i {
+            color: var(--primary) !important;
+            font-size: 0.75rem;
+        }
+        .chat-reply-quote span {
+            color: #475569 !important; /* Màu chữ xám đậm rõ nét trong nền sáng */
+        }
+        .chat-reply-quote b {
+            color: #0f172a !important; /* Tên người được trả lời đậm rõ */
+            font-weight: 700;
+        }
+
+        /* Khi ở Dark Mode */
+        [data-theme="dark"] .chat-reply-quote {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        [data-theme="dark"] .chat-reply-quote span {
+            color: #cbd5e1 !important;
+        }
+        [data-theme="dark"] .chat-reply-quote b {
+            color: #f8fafc !important;
+        }
+
+        /* Khi là tin nhắn của chính mình (Bong bóng nền xanh lá) */
         .chat-msg-row.mine .chat-reply-quote { 
-            background: rgba(255,255,255,0.2); 
-            border-left-color: #ffffff; 
-            color: #ffffff !important; 
+            background: rgba(0, 0, 0, 0.2) !important; 
+            border-left-color: #ffffff !important; 
+        }
+        .chat-msg-row.mine .chat-reply-quote i,
+        .chat-msg-row.mine .chat-reply-quote b {
+            color: #ffffff !important;
+        }
+        .chat-msg-row.mine .chat-reply-quote span {
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
         .chat-img-attachment { 
@@ -670,23 +702,23 @@
             color: #ffffff !important;
         }
 
+        /* 🛡️ CÂN BẰNG MÀU SẮC CHO BONG BÓNG CHAT VÀ THẺ DỰ ÁN */
         .chat-msg-row.mine .chat-bubble {
+            background: var(--primary) !important;
+            border-color: var(--primary-dark) !important;
+            padding: 9px 15px !important;
+            box-shadow: 0 2px 8px rgba(13,165,122,0.25) !important;
+        }
+        .chat-msg-row.mine .chat-bubble:has(.chat-project-card:only-child),
+        .chat-msg-row:not(.mine) .chat-bubble:has(.chat-project-card:only-child) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
         }
-        .chat-msg-row.mine .chat-bubble .chat-text {
-            background: var(--primary) !important;
-            color: #ffffff !important;
-            padding: 9px 15px;
-            border-radius: 18px 18px 4px 18px;
-            display: inline-block;
-            box-shadow: 0 2px 8px rgba(13,165,122,0.25);
-            margin-bottom: 4px;
-        }
         .chat-msg-row.mine .chat-bubble .chat-project-card {
             background: var(--bg-panel) !important;
+            margin-top: 6px;
         }
         .chat-msg-row.mine .chat-bubble .chat-project-card * {
             color: var(--text-main) !important;
