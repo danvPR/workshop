@@ -1894,10 +1894,10 @@
                 document.title = "Settings on DANVworkshop";
             }
             else if (hash === '#notifications') {
-                document.title = "[Messages on DANVworkshop";
+                document.title = "Messages on DANVworkshop";
             }
             else if (hash === '#admin') {
-                document.title = "[System on DANVworkshop";
+                document.title = "System on DANVworkshop";
             }
             else if (hash.startsWith('#profile/')) { 
                 document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); 
@@ -3588,7 +3588,8 @@
             let mainText = escapeHtml(n.text || "");
             let actionHtml = ''; let bubbleHtml = '';
 
-            if (sender === "HỆ THỐNG" || mainText.includes("Cảnh cáo") || mainText.includes("bị gỡ")) {
+            // FIX 2: Bỏ việc check text "Cảnh cáo", "bị gỡ" vì user có thể cố tình chat chữ đó. Chỉ xét Admin/Hệ Thống.
+            if (sender === "HỆ THỐNG") {
                 actionHtml = `<div style="background: #ef4444; color: #fff; padding: 15px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(239,68,68,0.2); border: 2px solid #b91c1c;">
                     <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px; font-size:1.2rem;"></i> ${mainText}
                 </div>`;
@@ -3603,22 +3604,33 @@
                 }
             }
 
-            let quoteMatch = mainText.match(/&quot;(.*?)&quot;/); 
+            // FIX 1: Tách riêng phần thông báo và phần nội dung comment dựa vào dấu `: "` do backend trả về
+            let parts = mainText.split(': &quot;'); 
 
-            if (quoteMatch && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
-                let textBeforeQuote = mainText.split(':')[0] || mainText.split('&quot;')[0]; 
+            if (parts.length > 1 && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
+                // Toàn bộ phần text đằng trước dấu hai chấm
+                let textBeforeQuote = parts.slice(0, -1).join(': &quot;'); 
                 textBeforeQuote = textBeforeQuote.replace(sender, senderLink);
-                let targetText = linkWithTab.includes('profile') ? (t('notif_profile') || 'thông tin cá nhân') : (t('notif_project') || 'dự án');
                 
-                actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">${targetText}</a>`;
+                // Nội dung comment thực sự
+                let commentSnippet = parts[parts.length - 1].replace(/&quot;$/, ''); 
+                
+                // Regex tìm đúng tên dự án (để in đậm/đóng link) nếu có
+                const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
+                if (projRegex.test(textBeforeQuote)) {
+                    actionHtml = textBeforeQuote.replace(projRegex, `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;$1&quot;</a>`);
+                } else {
+                    let targetText = linkWithTab.includes('profile') ? (t('notif_profile') || 'hồ sơ') : (t('notif_project') || 'dự án');
+                    actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(${targetText})</a>`;
+                }
 
                 bubbleHtml = `
                     <div style="display:flex; align-items:flex-start; gap:15px; padding-left: 28px; margin-top: 10px;">
-                        <a href="#profile/${sender}"><img src="${getAvtUrl(n.senderAvt)}" style="width:48px; height:48px; border-radius:4px; border:1px solid #d9d9d9; object-fit:cover;"></a>
+                        <a href="#profile/${sender}"><img src="${getAvtUrl(n.senderAvt)}" style="width:48px; height:48px; border-radius:4px; border:1px solid #d9d9d9; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'"></a>
                         <div style="flex:1; max-width: 600px;">
                             <div style="background:#fff; border:1px solid #d9d9d9; border-radius:6px; padding:12px 18px; position:relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                                 <div style="position:absolute; left:-6px; top:15px; width:10px; height:10px; background:#fff; border-left:1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; transform:rotate(45deg);"></div>
-                                <span style="color:#575e75; font-size:0.95rem;">${quoteMatch[1]}</span>
+                                <span style="color:#575e75; font-size:0.95rem;">${commentSnippet}</span>
                             </div>
                             
                             <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
@@ -3633,13 +3645,6 @@
                 const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
                 
                 if (projRegex.test(actionHtml)) {
-                    actionHtml = actionHtml.replace(projRegex, `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">"$1"</a>`);
-                } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
-                    actionHtml += ` <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
-                }
-            }
-            return { actionHtml, bubbleHtml };
-        }
 
         // HÀM CLICK ĐÁNH DẤU ĐỌC TẤT CẢ
         async function markAllNotifsRead(event) {
