@@ -4577,12 +4577,49 @@ function reopenEditor() {
         let chatHasMore = false;
         let isChatLoadingMore = false;
 
+        let isUserAFK = false;
+        let afkTimer = null;
+
+        function startChatPolling() {
+            if (chatInterval) clearInterval(chatInterval);
+            // Giãn từ 3.5s lên 7s (tiết kiệm gấp đôi request)
+            chatInterval = setInterval(() => {
+                // Nếu tab bị ẩn hoặc người dùng không hoạt động (AFK) thì ngưng gửi request
+                if (!document.hidden && !isUserAFK && window.location.hash.split('?')[0] === '#chat') {
+                    loadGlobalChat(false);
+                }
+            }, 7000);
+        }
+
+        function resetAFKTimer() {
+            isUserAFK = false;
+            clearTimeout(afkTimer);
+            // Sau 3 phút không rê chuột hay gõ phím -> Coi như AFK, dừng quét ngầm
+            afkTimer = setTimeout(() => { isUserAFK = true; }, 180000);
+        }
+
+        // Bắt sự kiện người dùng hoạt động để đánh thức chế độ quét
+        ['mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, resetAFKTimer, { passive: true });
+        });
+
+        // Bắt sự kiện khi người dùng ẩn tab / đổi tab khác
+        document.addEventListener('visibilitychange', () => {
+            if (window.location.hash.split('?')[0] === '#chat') {
+                if (!document.hidden) {
+                    resetAFKTimer();
+                    loadGlobalChat(false); // Quét ngay 1 lần khi vừa quay lại tab
+                }
+            }
+        });
+
         function openChatPage() {
             document.getElementById('chatView').style.display = 'block';
             
             // Reset về 20 tin nhắn mỗi lần vào trang
             chatDisplayLimit = 20;
             lastChatJSONStr = "";
+            resetAFKTimer();
 
             if (currentUser) {
                 document.getElementById('chatForm').style.display = 'block';
@@ -4599,7 +4636,7 @@ function reopenEditor() {
             }
 
             loadGlobalChat(true);
-            if (!chatInterval) chatInterval = setInterval(() => loadGlobalChat(false), 3500);
+            startChatPolling();
         }
 
         async function loadGlobalChat(forceScroll = false, isLoadMore = false) {
