@@ -24,7 +24,9 @@
             setMeta('ogDescription', desc);
             setMeta('ogImage', imageUrl || "https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png");
             setMeta('ogUrl', url || window.location.href);
-            injectStructuredData(proj);
+            if (typeof currentProj !== 'undefined' && currentProj) {
+                injectStructuredData(currentProj);
+            }
         }
 
 
