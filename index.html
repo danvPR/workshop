@@ -2089,7 +2089,33 @@
             if (currentUser) fetchNotifications(true);
         }
 
-        let previousHash = window.location.hash; // Lưu vết trang trước đó
+        let previousHash = window.location.pathname + window.location.hash; // Lưu vết trang trước đó
+
+        // HÀM MỚI ĐỂ ĐIỀU HƯỚNG BẰNG HISTORY API (Không load lại trang)
+        window.navigateTo = function(url) {
+            if (url.startsWith('#')) {
+                window.location.hash = url;
+            } else {
+                history.pushState(null, '', url);
+                handleRouting();
+            }
+        };
+
+        // BỘ ĐÁNH CHẶN (INTERCEPTOR): Tự động biến mọi link cũ thẻ <a> thành URL chuẩn mới
+        document.addEventListener('click', function(e) {
+            const a = e.target.closest('a');
+            if (a && a.getAttribute('href')) {
+                let href = a.getAttribute('href');
+                if (href.startsWith('#project/')) href = href.replace('#project/', '/projects/');
+                if (href.startsWith('#profile/')) href = href.replace('#profile/', '/users/');
+                
+                // Nếu click vào thẻ a có href là /projects/ hoặc /users/, chặn reload và dùng pushState
+                if ((href.startsWith('/projects/') || href.startsWith('/users/')) && !a.getAttribute('target')) {
+                    e.preventDefault();
+                    navigateTo(href);
+                }
+            }
+        });
 
         // Cảnh báo nếu người dùng F5 hoặc tắt tab khi đang nhập dở ở Upload
         window.addEventListener('beforeunload', (e) => {
@@ -2099,14 +2125,30 @@
             }
         });
 
+        window.addEventListener('popstate', handleRouting); // Lắng nghe nút Back/Forward
         window.addEventListener('hashchange', handleRouting);
+
         async function handleRouting() {
-            const fullHash = window.location.hash || '#home'; 
-            const [hash, queryStr] = fullHash.split('?');
-            const urlParams = new URLSearchParams(queryStr || '');
+            const path = window.location.pathname;
+            const hashOnly = window.location.hash;
+            
+            // Chuyển URL thật về Hash ảo nội bộ để tái sử dụng toàn bộ logic code hiển thị bên dưới
+            let virtualHash = hashOnly || (path === '/' || path.endsWith('index.html') ? '#home' : '');
+            let queryStr = window.location.search.replace('?', '') || hashOnly.split('?')[1] || '';
+
+            if (path.includes('/projects/')) {
+                virtualHash = '#project/' + path.split('/projects/')[1];
+            } else if (path.includes('/users/')) {
+                virtualHash = '#profile/' + path.split('/users/')[1];
+            }
+
+            if (!virtualHash) virtualHash = '#home';
+
+            const [hash, ...rest] = virtualHash.split('?');
+            const urlParams = new URLSearchParams(queryStr);
 
             // Nếu đang ở Upload mà bấm chuyển sang trang khác VÀ có dữ liệu dở dang -> Hỏi ngay
-            if (previousHash === '#upload' && hash !== '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
+            if (previousHash.includes('#upload') && hash !== '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
                 const answer = confirm("Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?");
                 if (!answer) {
                     // Người dùng chọn HỦY (ở lại): giữ nguyên ở #upload và dừng lại
@@ -2260,7 +2302,7 @@
             }
 
             const html = allProjects.map(p => `
-                <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
+                <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
                     ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
                     <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}</div>
                     <div class="card-body">
@@ -3138,7 +3180,7 @@
                         html = `<p style="color:#888; grid-column:1/-1; text-align:center;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
                     } else {
                         html = items.map(p => `
-                            <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
+                            <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
                                 ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
                                 <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
                                 <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
@@ -3363,7 +3405,7 @@
         // Hàm xử lý việc Click chọn dự án để Update
         window.handleSelectProjectToUpdate = function(id) {
             showToast("Đang chuyển đến bảng quản lý dự án...", "info");
-            location.hash = '#project/' + id; // 1. Chuyển sang trang dự án đó
+            navigateTo('/projects/' + id); // 1. Chuyển sang trang dự án đó
             
             // 2. Đợi trang load xong (800ms) rồi bật bảng Cài đặt
             setTimeout(() => {
@@ -3596,7 +3638,7 @@
                     showToast("Xuất bản thành công!", "success"); 
                     clearUploadDraft(); // Xóa sạch dữ liệu tạm sau khi tải lên thành công
                     await loadProjects(); 
-                    location.hash = `#project/${finalRes.file_id}`; 
+                    navigateTo(`/projects/${finalRes.file_id}`); 
                 } else {
                     showToast(finalRes.error || "Lỗi tải lên", "error");
                 }
@@ -3612,12 +3654,17 @@
         }
 
         function copyProjLink() {
-            const link = window.location.origin + window.location.pathname + `#project/${currentProj.projectId || currentProj.fileId}`;
+            // Lấy pathname gốc thư mục dự án để làm base (tránh bị nối URL sai khi đang ở sẵn /projects/)
+            let basePath = window.location.pathname.split('/projects/')[0].split('/users/')[0];
+            if (basePath.endsWith('/')) basePath = basePath.slice(0, -1);
+            const link = window.location.origin + basePath + `/projects/${currentProj.projectId || currentProj.fileId}`;
             navigator.clipboard.writeText(link).then(() => showToast("Đã chép liên kết dự án.", "success"));
         }
 
         function shareToPlatform(platform) {
-            const url = encodeURIComponent(window.location.origin + window.location.pathname + `#project/${currentProj.projectId || currentProj.fileId}`);
+            let basePath = window.location.pathname.split('/projects/')[0].split('/users/')[0];
+            if (basePath.endsWith('/')) basePath = basePath.slice(0, -1);
+            const url = encodeURIComponent(window.location.origin + basePath + `/projects/${currentProj.projectId || currentProj.fileId}`);
             let shareUrl = "";
             if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             if (platform === 'messenger') shareUrl = `fb-messenger://share/?link=${url}`;
@@ -3959,7 +4006,7 @@
             }
 
             // 🛡️ Đảm bảo link luôn là chuỗi, không bao giờ bị undefined
-            let linkWithTab = n.link || "#home";
+            let linkWithTab = (n.link || "#home").replace('#project/', '/projects/').replace('#profile/', '/users/');
             if (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn")) {
                 if (!linkWithTab.includes('tab=comments')) {
                     linkWithTab += linkWithTab.includes('?') ? '&tab=comments' : '?tab=comments';
