@@ -5351,11 +5351,26 @@ function reopenEditor() {
             startChatPolling();
         }
 
+
+
+
+
+        // BỘ BIẾN HỖ TRỢ TÌM KIẾM TIN NHẮN DEEP LINKING
+        let isAutoFindingMessage = false;
+        let autoFindDepth = 0;
+
         async function loadGlobalChat(forceScroll = false, isLoadMore = false) {
             try {
-                // Tải theo số lượng chatDisplayLimit (khởi đầu là 20)
-                const res = await (await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' })).json();
+                // Tải theo số lượng chatDisplayLimit
+                const response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' });
+                const res = await response.json();
                 
+                // 🛡️ BẢO VỆ DOM KHI SERVER LỖI HOẶC BỊ CHẶN D1 (CHỐNG CHỚP TRẮNG MÀN HÌNH)
+                if (!response.ok || res.error) {
+                    console.warn("Lỗi/Rate Limit D1: Hệ thống tự động bảo lưu giao diện hiện tại.", res.error);
+                    return; // Bỏ qua, giữ nguyên giao diện tin nhắn cũ đang hiển thị
+                }
+
                 const messages = Array.isArray(res) ? res : (res.messages || []);
                 chatHasMore = res.hasMore !== undefined ? res.hasMore : false;
 
@@ -5364,8 +5379,12 @@ function reopenEditor() {
                 lastChatJSONStr = resStr;
 
                 const list = document.getElementById('chatMessageList');
+                
+                // 🛡️ BẢO VỆ NẾU MẢNG RỖNG NHƯNG DOM ĐANG CÓ DATA (Tránh chớp trắng)
                 if (!messages || messages.length === 0) {
-                    list.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
+                    if (list.children.length === 0 || list.innerHTML.includes('fa-spinner') || list.innerHTML.includes('Đang tải')) {
+                        list.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
+                    }
                     return;
                 }
 
@@ -5388,7 +5407,6 @@ function reopenEditor() {
                     const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
                     const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
 
-                    // 🛡️ BẢO TỒN BẢN DỊCH KHÔNG BỊ MẤT KHI RE-RENDER
                     const savedTrans = chatTranslations[messageId];
                     const transBoxHtml = savedTrans ? `
                         <div class="trans-result-box">
@@ -5445,69 +5463,93 @@ function reopenEditor() {
 
                 list.innerHTML = loadMoreBtnHtml + messagesHtml;
 
-                // Xử lý giữ vị trí cuộn
-                if (isLoadMore) {
+                // 🎯 TỰ ĐỘNG ĐÀO TÌM TIN NHẮN TỪ LINK
+                if (isLoadMore && !isAutoFindingMessage) {
                     list.scrollTop = list.scrollHeight - oldScrollHeight;
                 } else {
                     const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
                     const targetMsgId = urlParams.get('m');
+                    
                     if (targetMsgId) {
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
                             if (targetEl) {
+                                // TÌM THẤY -> Cuộn tới và nháy vàng
                                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 targetEl.classList.add('highlight-permanent');
+                                isAutoFindingMessage = false;
+                                autoFindDepth = 0;
+                            } else {
+                                // CHƯA THẤY MÀ VẪN CÒN TIN CŨ -> Tự động kích hoạt nút tải thêm
+                                if (chatHasMore || (typeof isFetchingArchive !== 'undefined' && isFetchingArchive)) {
+                                    if (!isAutoFindingMessage) {
+                                        isAutoFindingMessage = true;
+                                        autoFindDepth = 0;
+                                    }
+                                    await loadMoreChatMessages(true); // Truyền cờ tự động tìm
+                                } else {
+                                    showToast("Tin nhắn này quá cũ hoặc đã bị xóa", "info");
+                                    isAutoFindingMessage = false;
+                                }
                             }
-                        }, 300);
+                        }, 200);
                     } else if (forceScroll || isNearBottom) {
                         setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
                     }
                 }
             } catch(e) {
-                console.error("Lỗi đồng bộ chat:", e);
+                console.error("Lỗi mạng, bảo lưu giao diện cũ:", e);
+                // KHÔNG LÀM GÌ CẢ -> GIỮ NGUYÊN DOM ĐỂ KHÔNG BỊ TRẮNG MÀN HÌNH
             }
         }
 
-        // 🔄 HÀM BẤM NÚT TẢI THÊM TIN NHẮN CŨ)
         let archiveChatPage = 1;
         let isFetchingArchive = false;
 
-        async function loadMoreChatMessages() {
+        async function loadMoreChatMessages(isAutoFind = false) {
             if (isChatLoadingMore) return;
-            isChatLoadingMore = true;
+            
+            // Giới hạn số lần tự đào sâu tối đa 5 lần (100 tin) để không bị treo máy
+            if (isAutoFind) {
+                autoFindDepth++;
+                if (autoFindDepth > 5) {
+                    showToast("Tin nhắn này ở quá xa (cần cuộn tay) hoặc đã bị xóa!", "info");
+                    isAutoFindingMessage = false;
+                    autoFindDepth = 0;
+                    return;
+                }
+            } else {
+                autoFindDepth = 0;
+            }
 
+            isChatLoadingMore = true;
             const btn = document.getElementById('btnLoadMoreChat');
-            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tìm...';
 
             if (chatHasMore) {
-                // Nếu D1 vẫn còn tin nhắn, tiếp tục tải từ D1
                 chatDisplayLimit += 20;
                 await loadGlobalChat(false, true);
             } else {
-                // Đã hết tin ở D1 -> Bắt đầu đào dữ liệu cũ 
                 isFetchingArchive = true;
-                await loadArchivedChat();
+                await loadArchivedChat(isAutoFind);
             }
             
             isChatLoadingMore = false;
         }
 
-        // HÀM ĐỌC TIN NHẮN TỪ KHO LƯU TRỮ GOOGLE SHEETS
-        async function loadArchivedChat() {
+        async function loadArchivedChat(isAutoFind = false) {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/chat_archive?page=${archiveChatPage}`)).json();
-                
                 if (res.error) throw new Error(res.error);
                 
                 const messages = res.messages || [];
-                
                 if (messages.length === 0) {
                     const btnArea = document.getElementById('chatLoadMoreArea');
                     if(btnArea) btnArea.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
+                    isAutoFindingMessage = false;
                     return;
                 }
 
-                // Render dữ liệu Archive thành HTML
                 const messagesHtml = messages.map(c => {
                     const messageId = String(c.msgId || '');
                     const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
@@ -5530,7 +5572,6 @@ function reopenEditor() {
                 const list = document.getElementById('chatMessageList');
                 const oldScrollHeight = list.scrollHeight;
                 
-                // Chèn tin cũ lên trên cùng
                 const loadMoreBtnHtml = res.hasMore ? `
                     <div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0;">
                         <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
@@ -5539,24 +5580,44 @@ function reopenEditor() {
                     </div>
                 ` : '<div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0; color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
 
-                // Xóa nút Load More cũ
                 const oldBtn = document.getElementById('chatLoadMoreArea');
                 if (oldBtn) oldBtn.remove();
 
                 list.insertAdjacentHTML('afterbegin', messagesHtml);
                 list.insertAdjacentHTML('afterbegin', loadMoreBtnHtml);
 
-                // Giữ nguyên vị trí cuộn
-                list.scrollTop = list.scrollHeight - oldScrollHeight;
-                
+                if (!isAutoFind) {
+                    list.scrollTop = list.scrollHeight - oldScrollHeight;
+                }
+
                 if (res.hasMore) archiveChatPage++;
+
+                // Tiếp tục đào tìm ở nhánh Archive Sheet
+                if (isAutoFind) {
+                    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                    const targetMsgId = urlParams.get('m');
+                    const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
+                    
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetEl.classList.add('highlight-permanent');
+                        isAutoFindingMessage = false;
+                        autoFindDepth = 0;
+                    } else if (res.hasMore) {
+                        isChatLoadingMore = false; 
+                        await loadMoreChatMessages(true);
+                    }
+                }
 
             } catch (e) {
                 showToast("Lỗi tải lịch sử trò chuyện", "error");
                 const btn = document.getElementById('btnLoadMoreChat');
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ';
+                isAutoFindingMessage = false;
             }
         }
+
+
 
         async function handlePostChat(e) {
             e.preventDefault();
