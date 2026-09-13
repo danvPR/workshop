@@ -2026,7 +2026,36 @@
                 
                 const res = await fetch(noCacheUrl);
                 if (!res.ok) throw new Error("Language file not found");
-                langData = await res.json();
+                const rawLang = await res.json();
+                
+                // Tự động bổ sung bản dịch dự phòng cho các mục báo cáo, GIF và tải xuống
+                const i18nFallback = {
+                    en: {
+                        report_reason_spam: "Spam / Commercial advertising",
+                        report_reason_hate: "Hate speech / Harassment",
+                        report_reason_copyright: "Copyright infringement (Uncredited)",
+                        report_reason_nsfw: "Inappropriate / NSFW content",
+                        report_reason_other: "Other reason...",
+                        report_detail: "Detailed description of violation *:",
+                        report_detail_ph: "Detailed description is required for moderators to review...",
+                        klipy_title: "Choose GIF",
+                        klipy_search_ph: "Search GIF...",
+                        action_download: "Download"
+                    },
+                    vi: {
+                        report_reason_spam: "Spam / Quảng cáo rác",
+                        report_reason_hate: "Ngôn từ đả kích, xúc phạm",
+                        report_reason_copyright: "Vi phạm bản quyền (Không ghi nguồn)",
+                        report_reason_nsfw: "Nội dung đồi trụy / Không phù hợp",
+                        report_reason_other: "Lý do khác...",
+                        report_detail: "Mô tả chi tiết vi phạm *:",
+                        report_detail_ph: "Bắt buộc nhập chi tiết để Quản trị viên xử lý...",
+                        klipy_title: "Chọn GIF",
+                        klipy_search_ph: "Tìm kiếm GIF...",
+                        action_download: "Tải"
+                    }
+                };
+                langData = Object.assign({}, i18nFallback[lang] || {}, rawLang);
                 
                 currentLang = lang;
                 localStorage.setItem('lang', lang);
@@ -3883,7 +3912,7 @@
             }
 
             // Đặt lại mặc định form
-            document.getElementById('reportReason').value = "Spam / Quảng cáo rác";
+            document.getElementById('reportReason').selectedIndex = 0;
             document.getElementById('reportReasonOther').value = "";
 
             openModal('reportModal');
