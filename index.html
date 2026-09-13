@@ -784,6 +784,66 @@
             z-index: 10;
             position: relative;
         }
+
+        /* 📊 GIAO DIỆN BÌNH CHỌN (POLL) TRONG CHAT */
+        .chat-poll-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            width: 320px;
+            max-width: 100%;
+            margin-top: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .chat-poll-question {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--text-title);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .chat-poll-opt {
+            position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1;
+            transition: border-color 0.2s;
+        }
+        .chat-poll-opt:hover { border-color: var(--primary); }
+        .chat-poll-opt.voted { border-color: var(--primary); font-weight: bold; }
+        .chat-poll-opt.voted::before {
+            content: '\f00c';
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--primary);
+            margin-right: 8px;
+        }
+        .poll-opt-bg {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            background: rgba(13, 165, 122, 0.15);
+            z-index: -1;
+            transition: width 0.4s ease-out;
+        }
+        .poll-opt-text { font-size: 0.95rem; color: var(--text-main); z-index: 2; flex: 1; }
+        .poll-opt-percent { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); z-index: 2; margin-left: 10px; }
+        .chat-poll-footer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
     </style>
 </head>
 <body>
@@ -889,6 +949,8 @@
                     <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" title="Gỡ ảnh">&times;</button>
                 </div>
                 
+                
+
                 <form onsubmit="handlePostChat(event)" id="chatForm" style="display:none;">
                     <div class="comment-input-wrapper" style="padding: 8px 16px;">
                         <input type="text" id="commentTextChat" data-i18n-ph="chat_input_ph" placeholder="Nhập tin nhắn giao lưu..." autocomplete="off" style="font-size: 1rem;">
@@ -896,6 +958,9 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
                         </label>
                         <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
+                        <button type="button" id="btnCreatePollChat" class="action-icon-btn" style="display:none; background:none; border:none; margin-left:10px; cursor:pointer;" onclick="openCreatePollModal()" title="Tạo bình chọn (Admin)">
+                            <i class="fa-solid fa-square-poll-vertical" style="font-size: 1.35rem; color: #ea580c;"></i>
+                        </button>
                         <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:10px; cursor:pointer;" onclick="openKlipyModal('chat')" title="Chèn GIF">
                             <i class="fa-solid fa-gift" style="font-size: 1.35rem; color: #855cd6;"></i>
                         </button>
@@ -1423,7 +1488,33 @@
 
     <!-- ================= MODALS HỆ THỐNG ================= -->
 
-    <!-- ================= MODALS HỆ THỐNG ================= -->
+    <!-- MODAL TẠO BÌNH CHỌN (POLL) -->
+    <div class="modal-overlay" id="pollModal">
+        <div class="modal" style="max-width:450px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-square-poll-vertical" style="color:#ea580c;"></i> Tạo Bình Chọn</span>
+                <button class="btn-close" onclick="closeModal('pollModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Câu hỏi bình chọn:</label>
+                    <input type="text" id="pollQuestion" class="form-control" placeholder="Ví dụ: Bạn thích thể loại game gì nhất?" required>
+                </div>
+                <label>Các lựa chọn:</label>
+                <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
+                    <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 1..." required>
+                    <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 2..." required>
+                </div>
+                <button class="btn" type="button" style="width:100%; border:1px dashed var(--border-color); background:transparent; margin-bottom: 20px;" onclick="addPollOptionUI()">
+                    <i class="fa-solid fa-plus"></i> Thêm lựa chọn
+                </button>
+                <button class="btn btn-primary" type="button" style="width:100%; justify-content:center; background:#ea580c;" onclick="submitPollChat()">
+                    <i class="fa-solid fa-paper-plane"></i> Gửi Bình Chọn
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL KLIPY GIF PICKER -->
     <div class="modal-overlay" id="klipyGifModal">
         <div class="modal" style="max-width:500px; display: flex; flex-direction: column; max-height: 85vh;">
@@ -4054,6 +4145,42 @@
         // 🎴 HÀM RENDER NỘI DUNG CHAT
         function renderChatContent(rawText) {
             if (!rawText) return '';
+
+            // 📊 1. KIỂM TRA NẾU ĐÂY LÀ TIN NHẮN BÌNH CHỌN (POLL)
+            if (rawText.startsWith("[DANV_POLL]")) {
+                try {
+                    const pollData = JSON.parse(rawText.replace("[DANV_POLL]", ""));
+                    
+                    let totalVotes = 0;
+                    pollData.options.forEach(opt => totalVotes += (opt.votes ? opt.votes.length : 0));
+
+                    const optsHtml = pollData.options.map(opt => {
+                        const vCount = opt.votes ? opt.votes.length : 0;
+                        const percent = totalVotes === 0 ? 0 : Math.round((vCount / totalVotes) * 100);
+                        const isVoted = currentUser && opt.votes && opt.votes.includes(currentUser.username);
+                        
+                        return `
+                        <div class="chat-poll-opt ${isVoted ? 'voted' : ''}" onclick="castPollVote(this, '${opt.id}')">
+                            <div class="poll-opt-bg" style="width: ${percent}%;"></div>
+                            <span class="poll-opt-text">${escapeHtml(opt.text)}</span>
+                            <span class="poll-opt-percent">${percent}%</span>
+                        </div>
+                        `;
+                    }).join('');
+
+                    return `
+                        <div class="chat-poll-card">
+                            <div class="chat-poll-question">${escapeHtml(pollData.question)}</div>
+                            <div class="chat-poll-opts-wrapper">${optsHtml}</div>
+                            <div class="chat-poll-footer">
+                                <i class="fa-solid fa-chart-simple"></i> Tổng: <b class="poll-total-votes">${totalVotes}</b> lượt bình chọn
+                            </div>
+                        </div>
+                    `;
+                } catch(e) {
+                    console.error("Lỗi Render Poll:", e);
+                }
+            }
             
             // Nhận diện tag đóng gói [DANV_PROJECT_SHARE:id:title:author:thumb:views:likes:stars] hoặc link #project/id
             const shareMatch = rawText.match(/\[DANV_PROJECT_SHARE:([^\]]+)\]/) || rawText.match(/(?:^|\s)#project\/([a-zA-Z0-9_\-]+)/);
@@ -4646,6 +4773,12 @@ function reopenEditor() {
             if (currentUser) {
                 document.getElementById('chatForm').style.display = 'block';
                 document.getElementById('chatLoginPrompt').style.display = 'none';
+                
+                // Nếu là Admin thì mở khóa nút tạo Poll, người thường thì ẩn
+                const btnPoll = document.getElementById('btnCreatePollChat');
+                if (btnPoll) {
+                    btnPoll.style.display = (currentUser.role === 'admin') ? 'inline-block' : 'none';
+                }
             } else {
                 document.getElementById('chatForm').style.display = 'none';
                 document.getElementById('chatLoginPrompt').style.display = 'block';
@@ -4943,6 +5076,77 @@ function reopenEditor() {
 
             btn.innerHTML = origHtml;
             btn.disabled = false;
+        }
+
+        // ================= HỆ THỐNG BÌNH CHỌN (POLL) =================
+        function openCreatePollModal() {
+            document.getElementById('pollQuestion').value = "";
+            document.getElementById('pollOptionsContainer').innerHTML = `
+                <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 1..." required>
+                <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 2..." required>
+            `;
+            openModal('pollModal');
+        }
+
+        function addPollOptionUI() {
+            const container = document.getElementById('pollOptionsContainer');
+            if (container.children.length >= 6) return showToast("Tối đa 6 lựa chọn!", "error");
+            const input = document.createElement('input');
+            input.type = "text"; 
+            input.className = "form-control poll-opt-input";
+            input.placeholder = `Lựa chọn ${container.children.length + 1}...`;
+            container.appendChild(input);
+        }
+
+        async function submitPollChat() {
+            const question = document.getElementById('pollQuestion').value.trim();
+            if (!question) return showToast("Vui lòng nhập câu hỏi!", "error");
+            
+            const inputs = document.querySelectorAll('.poll-opt-input');
+            const options = [];
+            inputs.forEach((inp, idx) => {
+                const val = inp.value.trim();
+                if (val) options.push({ id: `opt_${idx+1}`, text: val, votes: [] });
+            });
+
+            if (options.length < 2) return showToast("Cần ít nhất 2 lựa chọn!", "error");
+
+            const pollData = { question, options };
+            const text = "[DANV_POLL]" + JSON.stringify(pollData);
+
+            const payload = { text, replyTo: null, imageId: null };
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+            
+            if (res && res.success) {
+                showToast("Đã gửi Bình chọn!", "success");
+                closeModal('pollModal');
+                lastChatJSONStr = ""; 
+                await loadGlobalChat(true);
+            }
+        }
+
+        async function castPollVote(el, optionId) {
+            if (!currentUser) return openModal('loginModal');
+            
+            const msgRow = el.closest('.chat-msg-row');
+            if (!msgRow) return;
+            const msgId = msgRow.id.replace('chat-msg-', '');
+
+            if (el.style.opacity === '0.5') return;
+            el.closest('.chat-poll-opts-wrapper').style.opacity = '0.5';
+
+            const res = await apiFetch(`/api/chat/vote`, { 
+                method: 'POST', 
+                body: JSON.stringify({ msgId, optionId }) 
+            });
+
+            if (res && res.success) {
+                lastChatJSONStr = ""; 
+                await loadGlobalChat(false);
+            } else {
+                showToast(res ? res.error : "Lỗi bình chọn", "error");
+                el.closest('.chat-poll-opts-wrapper').style.opacity = '1';
+            }
         }
     </script>
 </body>
