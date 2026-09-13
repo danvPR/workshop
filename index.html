@@ -2138,16 +2138,20 @@
                 return;
             }
 
-            // 3. SỬA LỖI NAVBAR: Khi đang ở /projects/... hoặc /users/..., click vào link hash (#home, #chat...)
+            // 3. Xử lý các menu Hash (#home, #chat, #assets,...) mượt mà không bị nhảy trang
             if (href.startsWith('#')) {
+                e.preventDefault();
                 const currentPath = window.location.pathname;
+                const targetBasePath = BASE_PATH ? BASE_PATH + '/' : '/';
+                
+                // Nếu đang ở trong dự án/hồ sơ, phải lùi ra trang gốc rồi mới gán Hash
                 if (currentPath.includes('/projects/') || currentPath.includes('/users/')) {
-                    e.preventDefault();
-                    // Đưa pathname về trang gốc và gán hash để không bị dính URL rác
-                    const targetBasePath = BASE_PATH ? BASE_PATH + '/' : '/';
                     history.pushState(null, '', targetBasePath + href);
-                    handleRouting();
+                } else {
+                    // Nếu đã ở trang gốc, chỉ thay đổi Hash trên thanh địa chỉ
+                    history.pushState(null, '', href);
                 }
+                handleRouting(); // Kích hoạt chuyển trang
             }
         });
 
@@ -2198,8 +2202,11 @@
                 if (window.location.hash) history.replaceState(null, '', path + queryStr);
             }
 
-            if (!virtualHash || virtualHash === '#' || path === BASE_PATH || path === BASE_PATH + '/' || path.endsWith('index.html')) {
-                virtualHash = '#home'; 
+            // SỬA LỖI: Chỉ tự động chuyển về #home nếu thực sự không có hash hoặc route cụ thể nào
+            if (!virtualHash || virtualHash === '#') {
+                if (path === BASE_PATH || path === BASE_PATH + '/' || path.endsWith('index.html')) {
+                    virtualHash = '#home'; 
+                }
             }
 
             const [hash, ...rest] = virtualHash.split('?');
