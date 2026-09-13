@@ -2104,13 +2104,91 @@
             });
         }
 
-        // TOAST
+        // BẢN ĐỒ ÁNH XẠ CÂU NÓI TRONG JS SANG KEY CỦA FILE JSON (I18N BRIDGE)
+        const msgToKeyMap = {
+            "Lỗi kết nối máy chủ": "toast_server_error",
+            "Phiên làm việc hết hạn hoặc bị chặn.": "toast_session_expired",
+            "Đăng nhập tạm thời thành công!": "toast_login_temp_success",
+            "Cập nhật bảo mật thành công!": "toast_sec_update_success",
+            "Đã liên kết Scratch thành công!": "toast_scratch_linked",
+            "Đã gửi mã xác nhận đến Email của bạn": "toast_otp_sent",
+            "Đăng ký thành công!": "toast_reg_success",
+            "Đăng nhập thành công": "toast_login_success",
+            "Vui lòng đăng nhập!": "toast_login_required",
+            "Đã cập nhật cài đặt!": "toast_settings_saved",
+            "Lỗi tải ảnh bìa": "toast_thumb_error",
+            "Điền đủ trường bắt buộc": "toast_fill_required",
+            "Lỗi: Chỉ cho phép tải lên file .sb3!": "toast_only_sb3",
+            "Kích thước tải lên tối đa là 200MB.": "toast_max_upload_size",
+            "Xuất bản thành công!": "toast_publish_success",
+            "Đã chép liên kết dự án.": "toast_proj_link_copied",
+            "Đã gửi dự án vào Kênh Giao lưu!": "toast_share_chat_success",
+            "Cảm ơn bạn đã báo cáo. Quản trị viên sẽ xem xét.": "toast_report_sent",
+            "Đã gỡ dự án về Riêng tư!": "toast_force_private_success",
+            "Đã gửi cảnh cáo!": "toast_warn_sent",
+            "Đã xóa bình luận": "toast_comment_deleted",
+            "Đã xóa tin nhắn thành công!": "toast_chat_deleted",
+            "Đã gửi Bình chọn!": "toast_poll_sent",
+            "Vui lòng chọn file .sb3": "toast_select_sb3",
+            "File quá lớn! Tối đa 200MB.": "toast_file_too_large",
+            "Cập nhật bản mới thành công!": "toast_update_success",
+            "Không thể xóa tin nhắn. Vui lòng thử lại!": "toast_delete_msg_error",
+            "Thời gian chờ quá lâu. Bạn có thể tự chọn file thủ công.": "toast_timeout_manual",
+            "Đã nhận dữ liệu từ Trình chỉnh sửa! Vui lòng chọn Đăng mới hoặc Cập nhật.": "toast_editor_data_received",
+            "Đã tự động điền file game mới. Hãy bấm Tải lên!": "toast_autofill_game",
+            "Dung lượng tối đa là 50MB!": "toast_asset_max_size",
+            "Đã chia sẻ Tài nguyên thành công!": "toast_asset_shared",
+            "Đã ẩn tài nguyên khỏi Cửa hàng thành công!": "toast_asset_hidden",
+            "Đã chép Email": "contact_email_copied",
+            "Đã theo dõi": "toast_follow_success",
+            "Đã hủy theo dõi": "toast_unfollow_success",
+            "Đã gửi!": "toast_sent",
+            "Đã đóng đơn tố cáo thành công!": "toast_resolve_report_success",
+            "Đã đánh dấu đọc tất cả": "notif_mark_read",
+            "Không tìm thấy dự án hoặc bạn không có quyền": "toast_proj_not_found",
+            "Đã sao chép liên kết tin nhắn!": "toast_chat_link_copied",
+            "Trình duyệt đã chặn mở tab mới. Vui lòng cho phép Pop-up hoặc bấm nút 'Mở lại tab'!": "toast_popup_blocked",
+            "Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?": "upload_warn_leave",
+            "Xác nhận xóa bình luận này?": "confirm_delete_comment",
+            "Bạn có chắc chắn muốn xóa tin nhắn này?": "confirm_delete_chat"
+        };
+
+        // Hàm tự động tìm và dịch thông qua file JSON đang kích hoạt (langData)
+        function autoTranslateJS(text) {
+            if (!text || typeof langData === 'undefined') return text;
+            
+            // 1. Nếu truyền thẳng Key JSON (VD: showToast("toast_sent"))
+            if (langData[text]) return langData[text];
+            
+            // 2. Nếu truyền câu Tiếng Việt -> Tra Key rồi lấy bản dịch từ file JSON hiện tại (en.json, vi.json, v.v.)
+            if (msgToKeyMap[text] && langData[msgToKeyMap[text]]) {
+                return langData[msgToKeyMap[text]];
+            }
+            
+            // 3. Khớp tương đối cho các câu ghép biến (VD: "Đã theo dõi " + user)
+            for (let vnText in msgToKeyMap) {
+                if (text.includes(vnText)) {
+                    const key = msgToKeyMap[vnText];
+                    if (langData[key]) {
+                        return text.replace(vnText, langData[key]);
+                    }
+                }
+            }
+            return text;
+        }
+
+        // TOAST (Đã liên kết trực tiếp với file JSON)
         function showToast(msg, type = 'info') {
+            msg = autoTranslateJS(msg); // Tự động lấy câu dịch từ file JSON
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div'); toast.className = `toast ${type === 'error' ? 'error' : ''}`;
             toast.innerHTML = `${type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#ff4c4c"></i>' : '<i class="fa-solid fa-circle-check" style="color:var(--primary)"></i>'} <span>${msg}</span>`;
             container.appendChild(toast); setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
+
+        // Ghi đè hộp thoại Confirm của trình duyệt (Lấy text từ JSON)
+        const originalConfirm = window.confirm;
+        window.confirm = function(msg) { return originalConfirm(autoTranslateJS(msg)); };
 
         // FETCH BẢO MẬT
         async function apiFetch(endpoint, options = {}) {
