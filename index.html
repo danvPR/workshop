@@ -2308,7 +2308,8 @@
             }
             const urlParams = combinedParams;
 
-            if (previousHash.includes('#upload') && hash !== '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
+            // Thêm điều kiện !window.isNavigatingToUpdate để cho phép chuyển trang khi đang ấn cập nhật
+            if (previousHash.includes('#upload') && hash !== '#upload' && !window.isNavigatingToUpdate && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
                 const answer = confirm(t('upload_warn_leave') || "Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?");
                 if (!answer) {
                     window.removeEventListener('hashchange', handleRouting);
@@ -3561,10 +3562,13 @@
 
         // Hàm xử lý việc Click chọn dự án để Update
         window.handleSelectProjectToUpdate = function(id) {
+            window.isNavigatingToUpdate = true; // Bật cờ miễn cảnh báo rời trang
+            
             showToast("Đang chuyển đến bảng quản lý dự án...", "info");
             navigateTo('/projects/' + id); // 1. Chuyển sang trang dự án đó
             
             // 2. Đợi trang load xong (800ms) rồi bật bảng Cài đặt
+            setTimeout(() => { window.isNavigatingToUpdate = false; }, 1000); // Tắt cờ sau khi chuyển xong
             setTimeout(() => {
                 openProjSettingsModal();
                 
