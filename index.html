@@ -2999,31 +2999,64 @@
         }
 
         async function openSettingsPage() {
-            if(!currentUser) return location.hash='#home';
             document.getElementById('settingsView').style.display = 'block';
+            
+            // 1. Luôn đồng bộ Engine và Ngôn ngữ kể cả khi chưa đăng nhập
+            const currentEngine = localStorage.getItem('engine') || 'aftercode';
+            updateEngineUI(currentEngine);
+            const langEl = document.getElementById('langSelect');
+            if (langEl) langEl.value = localStorage.getItem('lang') || 'vi';
+
+            // 2. Nếu chưa đăng nhập: tự động chuyển sang tab Tùy chọn (Theme / Ngôn ngữ / Engine) mà không đá về Home
+            if (!currentUser) {
+                switchSettingsTab('pref');
+                const scratchStatus = document.getElementById('scratchLinkStatus');
+                if (scratchStatus) {
+                    scratchStatus.innerHTML = `<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">Vui lòng đăng nhập để xem thông tin liên kết tài khoản.</p><button type="button" class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập ngay</button>`;
+                }
+                return;
+            }
+
+            // 3. Nếu đã đăng nhập: nạp dữ liệu hồ sơ an toàn, không lo sập script nếu mạng lag
             try {
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
-                const pData = await res.json();
-                document.getElementById('editDisplayNameInput').value = pData.display_name;
-                document.getElementById('editLocationInput').value = pData.location !== 'Chưa rõ' ? pData.location : '';
-                document.getElementById('editStatusInput').value = pData.status;
-                document.getElementById('editBioInput').value = pData.bio;
+                const pData = (await res.json()) || {};
                 
-                // Kéo danh sách toàn bộ dự án của tác giả trực tiếp từ máy chủ để tránh thiếu cache
+                const nameInput = document.getElementById('editDisplayNameInput');
+                if (nameInput) nameInput.value = pData.display_name || '';
+                
+                const locInput = document.getElementById('editLocationInput');
+                if (locInput) locInput.value = (pData.location && pData.location !== 'Chưa rõ') ? pData.location : '';
+                
+                const statusInput = document.getElementById('editStatusInput');
+                if (statusInput) statusInput.value = pData.status || '';
+                
+                const bioInput = document.getElementById('editBioInput');
+                if (bioInput) bioInput.value = pData.bio || '';
+                
+                // Kéo danh sách dự án của tác giả trực tiếp từ máy chủ để làm banner
                 let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
-                const projRes = await (await fetch(projUrl)).json();
-                const myProjs = projRes.projects || [];
+                const projFetch = await fetch(projUrl);
+                const projRes = await projFetch.json();
+                const myProjs = (projRes && projRes.projects) ? projRes.projects : (Array.isArray(projRes) ? projRes : []);
                 
                 const select = document.getElementById('editFeaturedProjSelect');
-                select.innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.projectId || p.fileId}">${escapeHtml(p.title)}</option>`).join('');
-                select.value = pData.featuredProject;
-
-                if(pData.scratch_linked) {
-                    document.getElementById('scratchLinkStatus').innerHTML = `<div style="padding:10px; background:#e6f4ea; color:#0a8260; border-radius:8px; border:1px solid #bbf7d0; font-weight:bold; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check"></i> Đã liên kết: @${pData.scratch_linked}</div>`;
-                } else {
-                    document.getElementById('scratchLinkStatus').innerHTML = `<p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Lấy thẻ huy hiệu chính chủ bằng cách liên kết tài khoản Scratch.</p><button type="button" class="btn btn-primary" onclick="linkScratchAuth()"><img src="https://scratch.mit.edu/favicon.ico" width="16"> Liên kết ngay</button>`;
+                if (select) {
+                    select.innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.projectId || p.fileId}">${escapeHtml(p.title)}</option>`).join('');
+                    select.value = pData.featuredProject || '';
                 }
-            } catch(e){}
+
+                const scratchStatus = document.getElementById('scratchLinkStatus');
+                if (scratchStatus) {
+                    if (pData.scratch_linked) {
+                        scratchStatus.innerHTML = `<div style="padding:10px; background:#e6f4ea; color:#0a8260; border-radius:8px; border:1px solid #bbf7d0; font-weight:bold; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check"></i> Đã liên kết: @${pData.scratch_linked}</div>`;
+                    } else {
+                        scratchStatus.innerHTML = `<p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Lấy thẻ huy hiệu chính chủ bằng cách liên kết tài khoản Scratch.</p><button type="button" class="btn btn-primary" onclick="linkScratchAuth()"><img src="https://scratch.mit.edu/favicon.ico" width="16"> Liên kết ngay</button>`;
+                    }
+                }
+            } catch(e) {
+                console.error("Lỗi nạp dữ liệu cài đặt:", e);
+            }
         }
 
         async function saveProfileInfoBtn() {
@@ -4173,13 +4206,6 @@
                 }
             }
         }
-
-        // Tích hợp load giao diện Engine vào hàm mở trang cài đặt
-        const originalOpenSettings = openSettingsPage;
-        openSettingsPage = async function() {
-            await originalOpenSettings();
-            updateEngineUI(localStorage.getItem('engine') || 'aftercode');
-        };
 
         // Hàm mở trang Sáng tạo editor
         function openCreatePage() {
