@@ -748,11 +748,11 @@
         <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 12px; font-weight: bold; font-size: 0.95rem; flex: 1;">
                 <i class="fa-solid fa-bullhorn fa-shake" style="font-size: 1.3rem;"></i>
-                <span id="pingMessageText" style="line-height: 1.4;">Thông báo từ hệ thống...</span>
+                <span id="pingMessageText" style="line-height: 1.4;" data-i18n="ping_default">Thông báo từ hệ thống...</span>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <a id="pingCustomBtn" href="#" target="_blank" class="btn" style="background: white; color: #ea580c; padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; text-decoration: none; display:none; font-weight: 800;">Nút tùy chỉnh</a>
-                <button class="btn" style="background: rgba(0,0,0,0.25); color: white; padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; border: none; font-weight: bold;" onclick="dismissGlobalPing()"><i class="fa-solid fa-check"></i> Đã rõ</button>
+                <a id="pingCustomBtn" href="#" target="_blank" class="btn" style="background: white; color: #ea580c; padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; text-decoration: none; display:none; font-weight: 800;" data-i18n="ping_btn_custom">Nút tùy chỉnh</a>
+                <button class="btn" style="background: rgba(0,0,0,0.25); color: white; padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; border: none; font-weight: bold;" onclick="dismissGlobalPing()"><i class="fa-solid fa-check"></i> <span data-i18n="ping_btn_ok">Đã rõ</span></button>
             </div>
         </div>
     </div>
@@ -763,7 +763,7 @@
                 <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
             <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
-            <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span>Giao lưu</span></a>
+            <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
             <a href="#create" class="nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
         </div>
@@ -772,10 +772,10 @@
 
     <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE -->
     <nav class="mobile-bottom-nav">
-        <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
-        <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span>Giao lưu</span></a>
-        <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Sáng tạo</span></a>
-        <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span>Tài nguyên</span></a>
+        <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
+        <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
+        <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="nav_create">Sáng tạo</span></a>
+        <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
         <div id="mobileUserNav"></div>
     </nav>
 
@@ -819,28 +819,28 @@
     <div id="chatView" class="page-view" style="max-width: 1150px; width: 100%; margin: 0 auto; padding: 25px 20px;">
         <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; display: flex; flex-direction: column; width: 100%; height: 82vh; box-shadow: 0 10px 30px rgba(0,0,0,0.06); overflow: hidden;">
             <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary);">
-                <h3 style="margin:0; font-size:1.25rem; display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-earth-americas" style="color: #3b82f6;"></i> Kênh Giao Lưu Toàn Cầu</h3>
-                <span style="font-size:0.85rem; color:var(--text-muted); background: var(--bg-panel); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);"><i class="fa-solid fa-circle fa-fade" style="color:#10b981; font-size:0.6rem; margin-right: 4px;"></i> Trực tuyến</span>
+                <h3 style="margin:0; font-size:1.25rem; display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-earth-americas" style="color: #3b82f6;"></i> <span data-i18n="chat_title">Kênh Giao Lưu Toàn Cầu</span></h3>
+                <span style="font-size:0.85rem; color:var(--text-muted); background: var(--bg-panel); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);"><i class="fa-solid fa-circle fa-fade" style="color:#10b981; font-size:0.6rem; margin-right: 4px;"></i> <span data-i18n="chat_online">Trực tuyến</span></span>
             </div>
             
             <div id="chatMessageList" style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column;">
-                <div style="text-align:center; color:#888; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu chat...</div>
+                <div style="text-align:center; color:#888; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_loading">Đang tải dữ liệu chat...</span></div>
             </div>
 
             <!-- Khung nhập Chat -->
             <div class="comment-input-area" style="padding: 16px 24px; background: var(--bg-panel); border-top: 1px solid var(--border-color);">
                 <div id="replyBannerChat" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
-                    Đang trả lời <span id="replyUserLabelChat"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('chat')"></i>
+                    <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelChat"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('chat')"></i>
                 </div>
                 <div id="commentImgPreviewChat" class="comment-img-preview-box">
                     <img id="commentImgPreviewSrcChat" src="" alt="preview">
-                    <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
+                    <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
                     <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" title="Gỡ ảnh">&times;</button>
                 </div>
                 
                 <form onsubmit="handlePostChat(event)" id="chatForm" style="display:none;">
                     <div class="comment-input-wrapper" style="padding: 8px 16px;">
-                        <input type="text" id="commentTextChat" placeholder="Nhập tin nhắn giao lưu..." autocomplete="off" style="font-size: 1rem;">
+                        <input type="text" id="commentTextChat" data-i18n-ph="chat_input_ph" placeholder="Nhập tin nhắn giao lưu..." autocomplete="off" style="font-size: 1rem;">
                         <label for="commentImgUploadChat" style="margin:0; display:flex;">
                             <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
                         </label>
@@ -854,7 +854,7 @@
                     </div>
                 </form>
                 <div id="chatLoginPrompt" style="text-align:center; color:#888; font-size:0.95rem;">
-                    <button class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập để tham gia trò chuyện</button>
+                    <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="chat_login_prompt">Đăng nhập để tham gia trò chuyện</button>
                 </div>
             </div>
         </div>
@@ -866,7 +866,7 @@
         
         <!-- BỘ SƯU TẬP (STUDIOS / PLAYLISTS) -->
         <div style="margin-bottom: 30px;">
-            <h2 style="margin-bottom: 15px; font-size: 1.4rem;"><i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> Bộ sưu tập & Sự kiện</h2>
+            <h2 style="margin-bottom: 15px; font-size: 1.4rem;"><i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> <span data-i18n="home_collections">Bộ sưu tập & Sự kiện</span></h2>
             <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
                 <!-- Mẫu Studio (Admin có thể hardcode hoặc load từ API sau này) -->
                 <div style="min-width: 250px; height: 120px; border-radius: 12px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://i.ibb.co/QFg1cVVD/image.png') center/cover; padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; color: white; cursor: pointer; transition: 0.2s;" onclick="applySearchTag('#gamejam2026')">
@@ -884,27 +884,27 @@
         <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-panel); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
             <div class="asset-search-bar" style="flex: 1; min-width: 280px; max-width: 100%; margin: 0; background: var(--bg-input);">
                 <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); padding-left: 10px;"></i>
-                <input type="text" id="homeSearchInput" placeholder="Tìm kiếm dự án, tác giả, tag..." onkeyup="if(event.key==='Enter') execHomeSearch()" oninput="toggleClearSearchBtn()">
+                <input type="text" id="homeSearchInput" data-i18n-ph="home_search_ph" placeholder="Tìm kiếm dự án, tác giả, tag..." onkeyup="if(event.key==='Enter') execHomeSearch()" oninput="toggleClearSearchBtn()">
                 
                 <!-- Nút Xóa (X) ẩn mặc định -->
                 <button id="homeSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding: 0 10px; font-size: 1.2rem;" onclick="clearHomeSearch()" title="Xóa tìm kiếm">&times;</button>
                 
-                <button class="btn btn-primary" style="padding: 6px 15px; border-radius: 20px; margin-right: 2px;" onclick="execHomeSearch()">Tìm</button>
+                <button class="btn btn-primary" style="padding: 6px 15px; border-radius: 20px; margin-right: 2px;" onclick="execHomeSearch()"><span data-i18n="home_btn_search">Tìm</span></button>
             </div>
 
             <div style="display: flex; gap: 10px; overflow-x: auto;">
-                <button class="btn home-filter-btn active" data-sort="recent" onclick="changeHomeSort('recent')"><i class="fa-regular fa-clock"></i> Mới nhất</button>
-                <button class="btn home-filter-btn" data-sort="trending" onclick="changeHomeSort('trending')"><i class="fa-solid fa-fire" style="color:#ff4c4c;"></i> Thịnh hành</button>
-                <button class="btn home-filter-btn" data-sort="popular" onclick="changeHomeSort('popular')"><i class="fa-solid fa-gamepad" style="color:#3b82f6;"></i> Chơi nhiều</button>
+                <button class="btn home-filter-btn active" data-sort="recent" onclick="changeHomeSort('recent')"><i class="fa-regular fa-clock"></i> <span data-i18n="home_filter_recent">Mới nhất</span></button>
+                <button class="btn home-filter-btn" data-sort="trending" onclick="changeHomeSort('trending')"><i class="fa-solid fa-fire" style="color:#ff4c4c;"></i> <span data-i18n="home_filter_trending">Thịnh hành</span></button>
+                <button class="btn home-filter-btn" data-sort="popular" onclick="changeHomeSort('popular')"><i class="fa-solid fa-gamepad" style="color:#3b82f6;"></i> <span data-i18n="home_filter_popular">Chơi nhiều</span></button>
             </div>
         </div>
         
         <!-- DANH SÁCH DỰ ÁN & NÚT LOAD MORE -->
-        <div class="project-grid" id="projectList" style="margin-bottom: 30px;">Đang tải dữ liệu...</div>
+        <div class="project-grid" id="projectList" style="margin-bottom: 30px;" data-i18n="chat_loading">Đang tải dữ liệu...</div>
         
         <div style="text-align: center; padding-bottom: 40px; display: none;" id="homeLoadMoreArea">
             <button class="btn" style="padding: 12px 35px; border-radius: 25px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadMoreProjects()">
-                <i class="fa-solid fa-angle-down"></i> Xem thêm tác phẩm
+                <i class="fa-solid fa-angle-down"></i> <span data-i18n="home_load_more">Xem thêm tác phẩm</span>
             </button>
         </div>
     </div>
@@ -937,12 +937,12 @@
                             <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                             <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
                             
-                            <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openShareModal()"><i class="fa-solid fa-share"></i> Chia sẻ</button>
+                            <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openShareModal()"><i class="fa-solid fa-share"></i> <span data-i18n="action_share">Chia sẻ</span></button>
                             <a id="btnSeeInside" href="#" target="_blank" class="btn" style="border-radius: 20px; padding: 8px 18px;"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
                             
-                            <button class="btn btn-danger" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openReportModal('project')" title="Báo cáo vi phạm"><i class="fa-solid fa-flag"></i></button>
+                            <button class="btn btn-danger" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openReportModal('project')" title="Báo cáo"><i class="fa-solid fa-flag"></i></button>
                             <button class="btn" id="btnProjSettings" style="display:none; background:#334155; color:#fff; border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openModal('projSettingsModal')" title="Cài đặt dự án"><i class="fa-solid fa-gear"></i></button>
-                            <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none; border-radius: 20px; padding: 8px 15px;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> Gỡ</button>
+                            <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none; border-radius: 20px; padding: 8px 15px;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="action_remove">Gỡ</span></button>
                         </div>
                     </div>
                 </div>
@@ -956,11 +956,11 @@
                 
                 <div id="tabContent-info" class="tab-content active">
                     <div class="info-card">
-                        <div class="info-header"><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn vận hành</span></div>
+                        <div class="info-header"><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn</span></div>
                         <div class="info-body" id="projDesc">Chưa có hướng dẫn.</div>
                     </div>
                     <div class="info-card">
-                        <div class="info-header"><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Đội ngũ / Credits</span></div>
+                        <div class="info-header"><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Ghi nhận & Nguồn</span></div>
                         <div class="info-body" id="projCredits">Tác giả gốc.</div>
                     </div>
                 </div>
@@ -1043,7 +1043,7 @@
                                 <i class="fa-solid fa-circle-check" style="color:#3b82f6; font-size:1.3rem;"></i>
                                 <div class="custom-badge-tooltip">
                                     <img src="https://scratch.mit.edu/favicon.ico" style="width:14px; height:14px; border-radius: 2px;">
-                                    <span>Xác thực: <b id="profScratchUsername">@username</b></span>
+                                    <span><span data-i18n="prof_verified">Xác thực:</span> <b id="profScratchUsername">@username</b></span>
                                 </div>
                             </div>
                         </div>
@@ -1136,21 +1136,26 @@
     <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
         
+
+
+
+
+
         <!-- BƯỚC 1: MENU CHỌN HÀNH ĐỘNG -->
         <div id="uploadChoiceStep" class="upload-card-wrapper" style="text-align: center;">
-            <h2 style="color:var(--text-title); margin-bottom: 30px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> Bạn muốn làm gì?</h2>
+            <h2 style="color:var(--text-title); margin-bottom: 30px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_step1_title">Bạn muốn làm gì?</span></h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 750px; margin: 0 auto;">
                 <!-- Nút Đăng mới -->
                 <div onclick="showUploadNew()" style="background: var(--bg-secondary); border: 2px solid var(--border-color); padding: 40px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='none';">
                     <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 15px;"></i>
-                    <h3 style="margin-bottom: 10px; color: var(--text-title);">Đăng tác phẩm mới</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Xuất bản một dự án Scratch (.sb3) hoàn toàn mới lên nền tảng.</p>
+                    <h3 style="margin-bottom: 10px; color: var(--text-title);" data-i18n="upload_step1_new_title">Đăng tác phẩm mới</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;" data-i18n="upload_step1_new_desc">Xuất bản một dự án Scratch (.sb3) hoàn toàn mới lên nền tảng.</p>
                 </div>
                 <!-- Nút Cập nhật -->
                 <div onclick="showUploadUpdate()" style="background: var(--bg-secondary); border: 2px solid var(--border-color); padding: 40px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='none';">
                     <i class="fa-solid fa-clock-rotate-left" style="font-size: 3.5rem; color: #ea580c; margin-bottom: 15px;"></i>
-                    <h3 style="margin-bottom: 10px; color: var(--text-title);">Cập nhật bản mới</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Tải lên file (.sb3) mới cho dự án đã đăng. Giữ nguyên lượt thích và bình luận.</p>
+                    <h3 style="margin-bottom: 10px; color: var(--text-title);" data-i18n="upload_step1_update_title">Cập nhật bản mới</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;" data-i18n="upload_step1_update_desc">Tải lên file (.sb3) mới cho dự án đã đăng. Giữ nguyên lượt thích và bình luận.</p>
                 </div>
             </div>
         </div>
@@ -1199,15 +1204,11 @@
         <div id="uploadUpdateStep" class="upload-card-wrapper" style="display: none;">
             <div style="display: flex; align-items: center; gap: 15px; border-bottom:1px solid var(--border-color); padding-bottom:15px; margin-bottom: 20px;">
                 <button class="btn" onclick="resetUploadView()" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-clock-rotate-left" style="color:#ea580c;"></i> Chọn dự án cần cập nhật</h2>
+                <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-clock-rotate-left" style="color:#ea580c;"></i> <span data-i18n="upload_step2b_title">Chọn dự án cần cập nhật</span></h2>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 15px;">Chọn dự án bên dưới. Hệ thống sẽ mở bảng quản lý dự án để bạn tiến hành nạp file game (.sb3) mới nhất.</p>
+            <p style="color: var(--text-muted); margin-bottom: 15px;" data-i18n="upload_step2b_desc">Chọn dự án bên dưới. Hệ thống sẽ mở bảng quản lý dự án để bạn tiến hành nạp file game (.sb3) mới nhất.</p>
             <div class="project-grid" id="uploadUpdateProjectList">
-                <!-- Danh sách dự án đổ bằng JS -->
-            </div>
-        </div>
-    </div>
-
+    
     <!-- TRANG 5: CÀI ĐẶT TÀI KHOẢN (SETTINGS) - REDESIGN TABS -->
     <div id="settingsView" class="page-view" style="max-width: 800px;">
         <div class="upload-card-wrapper">
@@ -1233,7 +1234,7 @@
                         <div class="form-group"><label data-i18n="settings_location">Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" data-i18n-ph="settings_location_ph" placeholder="Ví dụ: Hà Nội, VN"></div>
                         <div class="form-group"><label data-i18n="settings_status">Mô tả trạng thái:</label><input type="text" id="editStatusInput" class="form-control" data-i18n-ph="settings_status_ph" placeholder="Đang làm game..."></div>
                         <div class="form-group"><label data-i18n="settings_bio">Giới thiệu:</label><textarea id="editBioInput" class="form-control" rows="3"></textarea></div>
-                        <div class="form-group"><label data-i18n="settings_banner_proj">Dự án làm Banner nổi bật:</label><select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select></div>
+                        <div class="form-group"><label data-i18n="settings_banner_proj">Dự án đặt làm banner:</label><select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select></div>
                         <button type="button" onclick="saveProfileInfoBtn()" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center; margin-top: 10px;" data-i18n="settings_save">Lưu thông tin</button>
                     </form>
                 </div>
@@ -1488,7 +1489,7 @@
     <!-- MODAL TỐ CÁO -->
     <div class="modal-overlay" id="reportModal">
         <div class="modal" style="max-width:420px;">
-            <div class="modal-header"><span><i class="fa-solid fa-flag"></i> Tố cáo Vi phạm</span><button class="btn-close" onclick="closeModal('reportModal')">&times;</button></div>
+            <div class="modal-header"><span><i class="fa-solid fa-flag"></i>Báo cáo vi phạm</span><button class="btn-close" onclick="closeModal('reportModal')">&times;</button></div>
             <div class="modal-body">
                 <form onsubmit="handleReportSubmit(event)">
                     <div class="form-group">
@@ -1999,7 +2000,7 @@
                     mobileUserNav.innerHTML = `
                         <a href="#profile/${currentUser.username}" class="mobile-nav-link nav-profile">
                             <img src="${getAvtUrl(currentUser.avt)}" class="mobile-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
-                            <span>Hồ sơ</span>
+                            <span data-i18n="nav_profile">${t('nav_profile') || 'Hồ sơ'}</span>
                         </a>
                     `;
                 }
@@ -2010,7 +2011,7 @@
                     mobileUserNav.innerHTML = `
                         <a href="javascript:void(0)" onclick="openModal('loginModal')" class="mobile-nav-link">
                             <i class="fa-solid fa-circle-user"></i>
-                            <span>Đăng nhập</span>
+                            <span data-i18n="nav_login">${t('nav_login') || 'Đăng nhập'}</span>
                         </a>
                     `;
                 }
@@ -2439,7 +2440,7 @@
                 reason = prompt("[Quản trị viên] Xác nhận XÓA?\nVui lòng nhập lý do để hệ thống gửi thông báo cho người dùng:", "Vi phạm tiêu chuẩn cộng đồng");
                 if (reason === null) return; // Hủy thao tác
             } else {
-                if(!confirm("Xác nhận xóa bình luận này?")) return;
+                if(!confirm(t('confirm_delete') || "Xác nhận xóa bình luận này?")) return;
             }
 
             const endpoint = type === 'proj' ? `/api/project/action` : `/api/user/comment`;
