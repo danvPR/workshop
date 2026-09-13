@@ -637,6 +637,53 @@
         .chat-act-btn.report { color: #f59e0b; }
         .chat-act-btn.report:hover { background: #fef3c7; border-color: #fcd34d; }
 
+        /* NÚT VÀ KHUNG HIỂN THỊ DỊCH THUẬT */
+        .btn-translate-icon {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 6px;
+            padding: 2px 7px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+        }
+        .btn-translate-icon:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+        }
+        .trans-result-box {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.88rem;
+            line-height: 1.45;
+            animation: fadeIn 0.2s ease;
+        }
+        .trans-header {
+            font-size: 0.73rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .chat-msg-row.mine .trans-result-box {
+            border-top-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        .chat-msg-row.mine .trans-header {
+            color: #ffffff !important;
+        }
+        .chat-msg-row.mine .trans-content {
+            color: #ffffff !important;
+        }
+
         /* GIAO DIỆN THẺ DỰ ÁN GLOBAL CHAT */
         .chat-project-card {
             margin-top: 8px;
@@ -1180,11 +1227,17 @@
                 
                 <div id="tabContent-info" class="tab-content active">
                     <div class="info-card">
-                        <div class="info-header"><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn</span></div>
+                        <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn</span></span>
+                            <button type="button" class="btn-translate-icon" onclick="toggleTranslateBlock('projDesc', this)" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                        </div>
                         <div class="info-body" id="projDesc">Chưa có hướng dẫn.</div>
                     </div>
                     <div class="info-card">
-                        <div class="info-header"><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Ghi nhận & Nguồn</span></div>
+                        <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Ghi nhận & Nguồn</span></span>
+                            <button type="button" class="btn-translate-icon" onclick="toggleTranslateBlock('projCredits', this)" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                        </div>
                         <div class="info-body" id="projCredits">Tác giả gốc.</div>
                     </div>
                 </div>
@@ -2828,12 +2881,13 @@
                                     <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
                                     <span class="comment-time" title="${root.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(root.time)}</span>
                                 </div>
-                                <div class="comment-text-bubble">
+                                <div class="comment-text-bubble" data-raw-text="${encodeURIComponent(root.text || '')}">
                                     ${formatCommentText(root.text)}
                                     ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render">` : ''}
                                 </div>
-                                <div style="margin-top:4px;">
+                                <div style="margin-top:4px; display:flex; align-items:center; gap:8px;">
                                     ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${root.author}')">${t('proj_reply')}</button>` : ''}
+                                    ${root.text ? `<button type="button" class="btn-action-cmt" onclick="toggleTranslateComment(this)" title="Dịch"><i class="fa-solid fa-language"></i></button>` : ''}
                                     ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${root.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
                                     ${canDelete(root) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${root.id}')">${t('proj_delete')}</button>` : ''}
                                 </div>
@@ -2850,13 +2904,14 @@
                                                 <a href="#profile/${rep.author}" class="comment-author-name">${rep.author}</a> 
                                                 <span class="comment-time" title="${rep.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(rep.time)}</span>
                                             </div>
-                                            <div class="comment-text-bubble">
+                                            <div class="comment-text-bubble" data-raw-text="${encodeURIComponent(rep.text || '')}">
                                                 ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
                                                 ${formatCommentText(rep.text)}
                                                 ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render">` : ''}
                                             </div>
-                                            <div style="margin-top:2px;">
+                                            <div style="margin-top:2px; display:flex; align-items:center; gap:8px;">
                                                 ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">${t('proj_reply')}</button>` : ''}
+                                                ${rep.text ? `<button type="button" class="btn-action-cmt" onclick="toggleTranslateComment(this)" title="Dịch"><i class="fa-solid fa-language"></i></button>` : ''}
                                                 ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${rep.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
                                                 ${canDelete(rep) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${rep.id}')">${t('proj_delete')}</button>` : ''}
                                             </div>
@@ -5209,6 +5264,10 @@ function reopenEditor() {
                                     <button class="chat-act-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')">
                                         <i class="fa-solid fa-reply"></i> Trả lời
                                     </button>` : ''}
+                                ${c.text && !c.text.startsWith('[DANV_POLL]') ? `
+                                    <button class="chat-act-btn" onclick="toggleTranslateChat(this, '${messageId}')" title="Dịch">
+                                        <i class="fa-solid fa-language"></i>
+                                    </button>` : ''}
                                 <button class="chat-act-btn" onclick="copyChatLink('${messageId}')" title="Sao chép link tin nhắn">
                                     <i class="fa-solid fa-link"></i> Link
                                 </button>
@@ -5504,6 +5563,134 @@ function reopenEditor() {
             } else {
                 showToast(res ? res.error : "Lỗi bình chọn", "error");
                 el.closest('.chat-poll-opts-wrapper').style.opacity = '1';
+            }
+        }
+
+        // ================= XỬ LÝ DỊCH THUẬT GOOGLE FREE TRÊN GIAO DIỆN =================
+        async function fetchGoogleTranslation(text) {
+            const targetLang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'vi';
+            try {
+                const res = await fetch(`${WORKER_URL}/api/translate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Client-Type': 'StudioDANV-Web'
+                    },
+                    body: JSON.stringify({ text, target: targetLang })
+                });
+                return await res.json();
+            } catch (e) {
+                return { error: e.message };
+            }
+        }
+
+        // 1. Dịch khối Hướng dẫn & Credits
+        async function toggleTranslateBlock(elementId, btn) {
+            const targetEl = document.getElementById(elementId);
+            if (!targetEl) return;
+
+            const existingBox = targetEl.querySelector('.trans-result-box');
+            if (existingBox) {
+                existingBox.remove();
+                return;
+            }
+
+            const rawText = targetEl.innerText.trim();
+            if (!rawText || rawText === "Chưa có hướng dẫn." || rawText === "Tác giả gốc.") return;
+
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            btn.disabled = true;
+
+            const res = await fetchGoogleTranslation(rawText);
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
+
+            if (res && res.success && res.translatedText) {
+                const label = res.targetLang === 'vi' ? 'Dịch sang Tiếng Việt' : 'Translate to English';
+                const box = document.createElement('div');
+                box.className = 'trans-result-box';
+                box.innerHTML = `
+                    <div class="trans-header"><i class="fa-solid fa-language"></i> ${label}:</div>
+                    <div class="trans-content" style="white-space:pre-line;">${escapeHtml(res.translatedText)}</div>
+                `;
+                targetEl.appendChild(box);
+            } else {
+                showToast("Không thể dịch nội dung này", "error");
+            }
+        }
+
+        // 2. Dịch Bình luận (Comments)
+        async function toggleTranslateComment(btn) {
+            const contentArea = btn.closest('.comment-content-area');
+            if (!contentArea) return;
+            const bubble = contentArea.querySelector('.comment-text-bubble');
+            if (!bubble) return;
+
+            const existingBox = bubble.querySelector('.trans-result-box');
+            if (existingBox) {
+                existingBox.remove();
+                return;
+            }
+
+            const rawText = decodeURIComponent(bubble.getAttribute('data-raw-text') || '');
+            if (!rawText) return;
+
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+            const res = await fetchGoogleTranslation(rawText);
+            btn.innerHTML = origHtml;
+
+            if (res && res.success && res.translatedText) {
+                const label = res.targetLang === 'vi' ? 'Dịch sang Tiếng Việt' : 'Translate to English';
+                const box = document.createElement('div');
+                box.className = 'trans-result-box';
+                box.innerHTML = `
+                    <div class="trans-header"><i class="fa-solid fa-language"></i> ${label}:</div>
+                    <div class="trans-content">${formatCommentText(res.translatedText)}</div>
+                `;
+                bubble.appendChild(box);
+            } else {
+                showToast("Không thể dịch bình luận này", "error");
+            }
+        }
+
+        // 3. Dịch Tin nhắn Global Chat
+        async function toggleTranslateChat(btn, msgId) {
+            const row = document.getElementById(`chat-msg-${msgId}`);
+            if (!row) return;
+            const bubble = row.querySelector('.chat-bubble');
+            if (!bubble) return;
+
+            const existingBox = bubble.querySelector('.trans-result-box');
+            if (existingBox) {
+                existingBox.remove();
+                return;
+            }
+
+            // Trích xuất văn bản từ thẻ chat
+            const chatTextEl = bubble.querySelector('.chat-text');
+            const rawText = chatTextEl ? chatTextEl.innerText.trim() : bubble.innerText.trim();
+            if (!rawText) return;
+
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+            const res = await fetchGoogleTranslation(rawText);
+            btn.innerHTML = origHtml;
+
+            if (res && res.success && res.translatedText) {
+                const label = res.targetLang === 'vi' ? 'Dịch sang Tiếng Việt' : 'Translate to English';
+                const box = document.createElement('div');
+                box.className = 'trans-result-box';
+                box.innerHTML = `
+                    <div class="trans-header"><i class="fa-solid fa-language"></i> ${label}:</div>
+                    <div class="trans-content">${formatCommentText(res.translatedText)}</div>
+                `;
+                bubble.appendChild(box);
+            } else {
+                showToast("Không thể dịch tin nhắn này", "error");
             }
         }
     </script>
