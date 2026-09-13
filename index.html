@@ -2846,10 +2846,26 @@
                 }
             }
 
-            // Xử lý Banner nổi bật
-            const bannerArea = document.getElementById('profileBannerArea'); if(bannerArea) bannerArea.style.display = 'none';
+            // Xử lý Banner nổi bật 
+            const bannerArea = document.getElementById('profileBannerArea'); 
+            if (bannerArea) bannerArea.style.display = 'none';
+            
             if (viewingProfileData.featuredProject) {
-                const featProj = allProjects.find(p => p.fileId === viewingProfileData.featuredProject || p.projectId === viewingProfileData.featuredProject);
+                let featProj = allProjects.find(p => p.fileId === viewingProfileData.featuredProject || p.projectId === viewingProfileData.featuredProject);
+                
+                // Nếu dự án không nằm trong top Trang chủ -> Tự động nạp trực tiếp qua ID
+                if (!featProj) {
+                    try {
+                        let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(viewingProfileData.featuredProject)}&limit=1`;
+                        if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                        const res = await (await fetch(fetchUrl)).json();
+                        if (res.projects && res.projects.length > 0) {
+                            featProj = res.projects[0];
+                            allProjects.push(featProj); // Lưu vào bộ nhớ tạm
+                        }
+                    } catch(e) {}
+                }
+
                 if (featProj && bannerArea) { 
                     document.getElementById('profBannerTitle').innerText = featProj.title; 
                     document.getElementById('profBannerDesc').innerText = featProj.description ? featProj.description.substring(0, 120) + "..." : "Tác phẩm tâm huyết của tác giả"; 
@@ -3156,7 +3172,13 @@
             }
             const payload = { avtId: newAvtId, display_name: document.getElementById('editDisplayNameInput').value, location: document.getElementById('editLocationInput').value, bio: document.getElementById('editBioInput').value, status: document.getElementById('editStatusInput').value, featuredProject: document.getElementById('editFeaturedProjSelect').value };
             const res = await apiFetch(`/api/user/update`, { method: 'POST', body: JSON.stringify(payload) });
-            if (res && res.success) { showToast("Đã cập nhật cài đặt!", "success"); }
+            if (res && res.success) { 
+                showToast("Đã cập nhật cài đặt!", "success"); 
+                // Xóa Cache để khi quay lại xem Profile sẽ nạp Banner mới ngay lập tức
+                if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                    delete profileCache[currentUser.username];
+                }
+            }
             btn.innerText = "Lưu thông tin"; btn.disabled = false;
         }
 
