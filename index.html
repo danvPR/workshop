@@ -785,28 +785,29 @@
             position: relative;
         }
 
-        /* 📊 GIAO DIỆN BÌNH CHỌN (POLL) TRONG CHAT */
+        /* 📊 GIAO DIỆN BÌNH CHỌN (POLL) TRONG CHAT - ĐÃ FIX MÀU CHỮ LIGHT/DARK */
         .chat-poll-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 14px;
+            padding: 16px;
             width: 320px;
             max-width: 100%;
-            margin-top: 5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-top: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            text-align: left;
         }
         .chat-poll-question {
             font-weight: 800;
             font-size: 1.05rem;
-            color: var(--text-title);
+            color: var(--text-title) !important;
             margin-bottom: 12px;
             line-height: 1.4;
         }
         .chat-poll-opt {
             position: relative;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            background: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
             border-radius: 8px;
             padding: 10px 12px;
             margin-bottom: 8px;
@@ -818,31 +819,69 @@
             z-index: 1;
             transition: border-color 0.2s;
         }
-        .chat-poll-opt:hover { border-color: var(--primary); }
-        .chat-poll-opt.voted { border-color: var(--primary); font-weight: bold; }
+        .chat-poll-opt:hover { border-color: var(--primary) !important; }
+        .chat-poll-opt.voted { border-color: var(--primary) !important; font-weight: bold; }
         .chat-poll-opt.voted::before {
             content: '\f00c';
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            color: var(--primary);
+            color: var(--primary) !important;
             margin-right: 8px;
         }
         .poll-opt-bg {
             position: absolute;
             left: 0; top: 0; bottom: 0;
-            background: rgba(13, 165, 122, 0.15);
+            background: rgba(13, 165, 122, 0.2);
             z-index: -1;
             transition: width 0.4s ease-out;
         }
-        .poll-opt-text { font-size: 0.95rem; color: var(--text-main); z-index: 2; flex: 1; }
-        .poll-opt-percent { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); z-index: 2; margin-left: 10px; }
+        .poll-opt-text { 
+            font-size: 0.95rem; 
+            color: var(--text-main) !important; 
+            z-index: 2; 
+            flex: 1; 
+        }
+        .poll-opt-percent { 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            color: var(--text-muted) !important; 
+            z-index: 2; 
+            margin-left: 10px; 
+        }
         .chat-poll-footer {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--text-muted) !important;
             margin-top: 10px;
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+        .chat-poll-footer * {
+            color: var(--text-muted) !important;
+        }
+
+        /* 🛡️ LOẠI BỎ KHUNG VIỀN XANH CỦA CHÍNH MÌNH KHI GỬI POLL */
+        .chat-msg-row.mine .chat-bubble:has(.chat-poll-card:only-child),
+        .chat-msg-row:not(.mine) .chat-bubble:has(.chat-poll-card:only-child) {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+        /* Chống tin nhắn của chính mình ép chữ thành màu trắng */
+        .chat-msg-row.mine .chat-bubble .chat-poll-card * {
+            color: var(--text-main) !important;
+        }
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-question {
+            color: var(--text-title) !important;
+        }
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .poll-opt-percent,
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-footer,
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-footer * {
+            color: var(--text-muted) !important;
+        }
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-opt.voted::before {
+            color: var(--primary) !important;
         }
     </style>
 </head>
@@ -958,7 +997,7 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
                         </label>
                         <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
-                        <button type="button" id="btnCreatePollChat" class="action-icon-btn" style="display:none; background:none; border:none; margin-left:10px; cursor:pointer;" onclick="openCreatePollModal()" title="Tạo bình chọn (Admin)">
+                        <button type="button" id="btnCreatePollChat" class="action-icon-btn" style="display:none; background:none; border:none; margin-left:10px; cursor:pointer;" onclick="openCreatePollModal()" title="Tạo bình chọn">
                             <i class="fa-solid fa-square-poll-vertical" style="font-size: 1.35rem; color: #ea580c;"></i>
                         </button>
                         <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:10px; cursor:pointer;" onclick="openKlipyModal('chat')" title="Chèn GIF">
@@ -4774,14 +4813,15 @@ function reopenEditor() {
                 document.getElementById('chatForm').style.display = 'block';
                 document.getElementById('chatLoginPrompt').style.display = 'none';
                 
-                // Nếu là Admin thì mở khóa nút tạo Poll, người thường thì ẩn
+                // Mở khóa nút tạo Poll cho toàn bộ thành viên đã đăng nhập
                 const btnPoll = document.getElementById('btnCreatePollChat');
-                if (btnPoll) {
-                    btnPoll.style.display = (currentUser.role === 'admin') ? 'inline-block' : 'none';
-                }
+                if (btnPoll) btnPoll.style.display = 'inline-block';
             } else {
                 document.getElementById('chatForm').style.display = 'none';
                 document.getElementById('chatLoginPrompt').style.display = 'block';
+
+                const btnPoll = document.getElementById('btnCreatePollChat');
+                if (btnPoll) btnPoll.style.display = 'none';
             }
             
             // Hiển thị Skeleton Chat trước khi lấy dữ liệu
