@@ -2103,19 +2103,17 @@
             if (currentUser) fetchNotifications(true);
         }
 
-        let previousHash = window.location.pathname + window.location.hash; // Lưu vết trang trước đó
+        const BASE_PATH = window.location.pathname.includes('/workshop') ? '/workshop' : '';
+        let previousHash = window.location.pathname + window.location.hash; 
 
-        // HÀM MỚI ĐỂ ĐIỀU HƯỚNG BẰNG HISTORY API (Không load lại trang)
         window.navigateTo = function(url) {
-            if (url.startsWith('#')) {
-                window.location.hash = url;
-            } else {
-                history.pushState(null, '', url);
-                handleRouting();
-            }
+            // Tự động chèn /workshop nếu chưa có
+            if (url.startsWith('/') && !url.startsWith(BASE_PATH)) url = BASE_PATH + url;
+            history.pushState(null, '', url);
+            handleRouting();
         };
 
-        // BỘ ĐÁNH CHẶN (INTERCEPTOR): Tự động biến mọi link cũ thẻ <a> thành URL chuẩn mới
+        // BỘ ĐÁNH CHẶN (INTERCEPTOR): Bắt click vào thẻ a
         document.addEventListener('click', function(e) {
             const a = e.target.closest('a');
             if (a && a.getAttribute('href')) {
@@ -2123,7 +2121,6 @@
                 if (href.startsWith('#project/')) href = href.replace('#project/', '/projects/');
                 if (href.startsWith('#profile/')) href = href.replace('#profile/', '/users/');
                 
-                // Nếu click vào thẻ a có href là /projects/ hoặc /users/, chặn reload và dùng pushState
                 if ((href.startsWith('/projects/') || href.startsWith('/users/')) && !a.getAttribute('target')) {
                     e.preventDefault();
                     navigateTo(href);
@@ -2131,53 +2128,63 @@
             }
         });
 
-        // Cảnh báo nếu người dùng F5 hoặc tắt tab khi đang nhập dở ở Upload
+        window.addEventListener('popstate', handleRouting);
+        window.addEventListener('hashchange', handleRouting);
         window.addEventListener('beforeunload', (e) => {
             if (window.location.hash === '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
-                e.preventDefault();
-                e.returnValue = '';
+                e.preventDefault(); e.returnValue = '';
             }
         });
 
-        window.addEventListener('popstate', handleRouting); // Lắng nghe nút Back/Forward
-        window.addEventListener('hashchange', handleRouting);
-
         async function handleRouting() {
-            const path = window.location.pathname;
-            const hashOnly = window.location.hash;
-            
-            // Chuyển URL thật về Hash ảo nội bộ để tái sử dụng toàn bộ logic code hiển thị bên dưới
-            let virtualHash = hashOnly || (path === '/' || path.endsWith('index.html') ? '#home' : '');
-            let queryStr = window.location.search.replace('?', '') || hashOnly.split('?')[1] || '';
+            let path = window.location.pathname;
+            let currentHash = window.location.hash;
+            let queryStr = window.location.search;
 
-            if (path.includes('/projects/')) {
-                virtualHash = '#project/' + path.split('/projects/')[1];
-            } else if (path.includes('/users/')) {
-                virtualHash = '#profile/' + path.split('/users/')[1];
+            // 1. TỰ ĐỘNG ÉP URL CHUẨN: Xóa Hash, Đẩy vào Pathname (Giữ đúng Base Path)
+            if (currentHash.startsWith('#project/')) {
+                const id = currentHash.replace('#project/', '').split('?')[0];
+                const params = currentHash.includes('?') ? '?' + currentHash.split('?')[1] : '';
+                history.replaceState(null, '', BASE_PATH + '/projects/' + id + params);
+                currentHash = ''; path = BASE_PATH + '/projects/' + id; queryStr = params;
+            } else if (currentHash.startsWith('#profile/')) {
+                const user = currentHash.replace('#profile/', '').split('?')[0];
+                const params = currentHash.includes('?') ? '?' + currentHash.split('?')[1] : '';
+                history.replaceState(null, '', BASE_PATH + '/users/' + user + params);
+                currentHash = ''; path = BASE_PATH + '/users/' + user; queryStr = params;
             }
 
-            if (!virtualHash) virtualHash = '#home';
+            // 2. DỊCH TỪ URL THỰC TẾ SANG HASH ẢO CHO JS XỬ LÝ BÊN DƯỚI
+            let virtualHash = currentHash; 
+
+            if (path.includes('/projects/')) {
+                virtualHash = '#project/' + path.split('/projects/')[1].replace(/\/$/, '');
+                // Dọn dẹp "#home" rác nếu bị dính trên thanh địa chỉ
+                if (window.location.hash) history.replaceState(null, '', path + queryStr);
+            } else if (path.includes('/users/')) {
+                virtualHash = '#profile/' + path.split('/users/')[1].replace(/\/$/, '');
+                // Dọn dẹp "#home" rác nếu bị dính trên thanh địa chỉ
+                if (window.location.hash) history.replaceState(null, '', path + queryStr);
+            }
+
+            if (!virtualHash && (path === BASE_PATH || path === BASE_PATH + '/' || path.endsWith('index.html'))) {
+                virtualHash = '#home'; 
+            }
 
             const [hash, ...rest] = virtualHash.split('?');
-            const urlParams = new URLSearchParams(queryStr);
+            const urlParams = new URLSearchParams(queryStr.replace('?', '') || virtualHash.split('?')[1] || '');
 
-            // Nếu đang ở Upload mà bấm chuyển sang trang khác VÀ có dữ liệu dở dang -> Hỏi ngay
             if (previousHash.includes('#upload') && hash !== '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
                 const answer = confirm("Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?");
                 if (!answer) {
-                    // Người dùng chọn HỦY (ở lại): giữ nguyên ở #upload và dừng lại
                     window.removeEventListener('hashchange', handleRouting);
                     window.location.hash = '#upload';
                     setTimeout(() => window.addEventListener('hashchange', handleRouting), 10);
                     return;
-                } else {
-                    // Người dùng chọn OK (rời đi): dọn sạch dữ liệu nháp
-                    clearUploadDraft();
-                }
+                } else { clearUploadDraft(); }
             }
-            previousHash = hash; // Cập nhật trang hiện tại
+            previousHash = path + currentHash;
 
-            // Dừng vòng lặp Chat nếu rời khỏi trang Chat
             if (hash !== '#chat' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
 
             // 🎯 XỬ LÝ HIGHLIGHT TAB & TITLE ĐỘNG CHO TỪNG TRANG (SEO TITLE FORMAT)
@@ -2404,20 +2411,6 @@
             }
         }
         
-        function openHomePage() {
-            document.getElementById('homeView').style.display = 'block';
-            document.getElementById('projectList').innerHTML = allProjects.map(p => `
-                <div class="card" onclick="location.hash='#project/${p.projectId || p.fileId}'">
-                    ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
-                    <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}</div>
-                    <div class="card-body">
-                        <div class="card-title">${escapeHtml(p.title)}</div>
-                        <div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div>
-                        <div style="margin-top: 10px; font-size: 0.85rem; color:var(--text-muted); display:flex; gap:15px;"><span><i class="fa-solid fa-heart" style="color:#ff4c4c"></i> ${p.likes ? p.likes.length : 0}</span><span><i class="fa-solid fa-star" style="color:#f5b041"></i> ${p.stars ? p.stars.length : 0}</span></div>
-                    </div>
-                </div>
-            `).join('');
-        }
 
         // ================= DỰ ÁN & BÌNH LUẬN =================
         async function openProjectPage(idParam, urlParams = null) {
@@ -3668,17 +3661,14 @@
         }
 
         function copyProjLink() {
-            // Lấy pathname gốc thư mục dự án để làm base (tránh bị nối URL sai khi đang ở sẵn /projects/)
-            let basePath = window.location.pathname.split('/projects/')[0].split('/users/')[0];
-            if (basePath.endsWith('/')) basePath = basePath.slice(0, -1);
-            const link = window.location.origin + basePath + `/projects/${currentProj.projectId || currentProj.fileId}`;
+            const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
+            const link = window.location.origin + bp + `/projects/${currentProj.projectId || currentProj.fileId}`;
             navigator.clipboard.writeText(link).then(() => showToast("Đã chép liên kết dự án.", "success"));
         }
 
         function shareToPlatform(platform) {
-            let basePath = window.location.pathname.split('/projects/')[0].split('/users/')[0];
-            if (basePath.endsWith('/')) basePath = basePath.slice(0, -1);
-            const url = encodeURIComponent(window.location.origin + basePath + `/projects/${currentProj.projectId || currentProj.fileId}`);
+            const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
+            const url = encodeURIComponent(window.location.origin + bp + `/projects/${currentProj.projectId || currentProj.fileId}`);
             let shareUrl = "";
             if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             if (platform === 'messenger') shareUrl = `fb-messenger://share/?link=${url}`;
