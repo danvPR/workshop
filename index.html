@@ -1959,25 +1959,37 @@
             if (currentUser) fetchNotifications(true);
         }
 
+        let previousHash = window.location.hash; // Lưu vết trang trước đó
+
+        // Cảnh báo nếu người dùng F5 hoặc tắt tab khi đang nhập dở ở Upload
+        window.addEventListener('beforeunload', (e) => {
+            if (window.location.hash === '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
         window.addEventListener('hashchange', handleRouting);
         async function handleRouting() {
-            // ⚡ TỰ ĐỘNG ĐƯA THANH CUỘN LÊN ĐẦU TRANG (CHỐNG LỖI MÀN HÌNH TRẮNG)
-            window.scrollTo(0, 0);
-            document.documentElement.scrollTop = 0;
-            document.body.scrollTop = 0;
-
-            // 1. Bật màn hình Loading ngay khi bắt đầu chuyển trang
-            const loader = document.getElementById('globalLoader');
-            if (loader) {
-                loader.style.display = 'flex';
-                loader.style.opacity = '1';
-                const loaderText = document.getElementById('loaderText');
-                if (loaderText) loaderText.innerText = "Đang tải dữ liệu...";
-            }
-
             const fullHash = window.location.hash || '#home'; 
             const [hash, queryStr] = fullHash.split('?');
             const urlParams = new URLSearchParams(queryStr || '');
+
+            // Nếu đang ở Upload mà bấm chuyển sang trang khác VÀ có dữ liệu dở dang -> Hỏi ngay
+            if (previousHash === '#upload' && hash !== '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
+                const answer = confirm("Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?");
+                if (!answer) {
+                    // Người dùng chọn HỦY (ở lại): giữ nguyên ở #upload và dừng lại
+                    window.removeEventListener('hashchange', handleRouting);
+                    window.location.hash = '#upload';
+                    setTimeout(() => window.addEventListener('hashchange', handleRouting), 10);
+                    return;
+                } else {
+                    // Người dùng chọn OK (rời đi): dọn sạch dữ liệu nháp
+                    clearUploadDraft();
+                }
+            }
+            previousHash = hash; // Cập nhật trang hiện tại
 
             // Dừng vòng lặp Chat nếu rời khỏi trang Chat
             if (hash !== '#chat' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
@@ -1986,40 +1998,31 @@
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active'));
             if (hash === '#home' || hash === '') { 
                 document.querySelectorAll('.nav-home').forEach(el => el.classList.add('active')); 
-                document.title = "Explore on DANVworkshop";
+                document.title = t('nav_explore') + " | DANVworkshop";
             }
             else if (hash === '#chat') { 
                 document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); 
-                document.title = "Global Channel on DANVworkshop";
+                document.title = t('nav_chat') + " | DANVworkshop";
             }
             else if (hash === '#create') { 
                 document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); 
-                document.title = "Online Editor on DANVworkshop";
+                document.title = t('nav_create') + " | DANVworkshop";
             }
             else if (hash.startsWith('#assets')) { 
                 document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); 
-                document.title = "Community Resource Repository on DANVworkshop";
+                document.title = t('nav_assets') + " | DANVworkshop";
             }
-            else if (hash === '#upload') {
-                document.title = "Publication of new works on DANVworkshop";
-            }
-            else if (hash === '#settings') {
-                document.title = "Settings on DANVworkshop";
-            }
-            else if (hash === '#notifications') {
-                document.title = "Messages on DANVworkshop";
-            }
-            else if (hash === '#admin') {
-                document.title = "System on DANVworkshop";
-            }
-            else if (hash.startsWith('#profile/')) { 
-                document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); 
-            }
+            else if (hash === '#upload') document.title = t('nav_upload') + " | DANVworkshop";
+            else if (hash === '#settings') document.title = t('settings_title') + " | DANVworkshop";
+            else if (hash === '#notifications') document.title = t('notif_title') + " | DANVworkshop";
+            else if (hash === '#admin') document.title = "Admin Panel | DANVworkshop";
+            else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
 
+            // Ẩn tất cả các trang
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
             document.getElementById('playerContainer').innerHTML = '';
-            window.scrollTo(0, 0); // Đảm bảo cuộn lại lên đầu
             
+            // Tải dữ liệu trước nếu cần
             if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/') || hash === '#chat') {
                 if (allProjects.length === 0) await loadProjects(); 
             }
@@ -2027,7 +2030,7 @@
                 if (allAssets.length === 0) await fetchAssetsList();
             }
 
-            // Chạy hàm mở trang tương ứng
+            // Chạy hàm mở trang tương ứng (Display: block được gọi bên trong các hàm này)
             if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
             else if (hash.startsWith('#profile/')) await openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#upload') openUploadPage();
@@ -2039,11 +2042,13 @@
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
             else openHomePage();
 
-            // 2. Tắt màn hình Loading khi xong
-            if (loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 300);
-            }
+            // ⚡ FIX TRIỆT ĐỂ LỖI KHOẢNG TRẮNG SCROLL:
+            // Đợi 10ms để trình duyệt render xong CSS display: block của trang mới rồi mới ép cuộn lên đầu và tính toán lại Layout
+            setTimeout(() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 10);
         }
 
         function updateNav() {
@@ -2092,7 +2097,7 @@
         async function loadProjects(isLoadMore = false) { 
             if (!isLoadMore) {
                 homeCurrentPage = 1;
-                document.getElementById('projectList').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+                document.getElementById('projectList').innerHTML = getSkeletonHTML('card');
             }
 
             try { 
@@ -2927,7 +2932,7 @@
         // HÀM TẠO KHỐI KHUNG XƯƠNG (SKELETON) TRONG KHI CHỜ DỮ LIỆU
         function getSkeletonHTML(type) {
             if (type === 'card') {
-                return Array(4).fill(0).map(() => `
+                return Array(8).fill(0).map(() => `
                     <div class="card skeleton-card" style="border-color:transparent; box-shadow:none; pointer-events:none;">
                         <div class="card-thumb skeleton"></div>
                         <div class="card-body"><div class="skeleton skeleton-text" style="width: 80%;"></div><div class="skeleton skeleton-text" style="width: 50%;"></div></div>
@@ -2935,7 +2940,18 @@
                 `).join('');
             }
             if (type === 'activity') {
-                return Array(3).fill(0).map(() => `<div class="timeline-item skeleton" style="height: 55px; margin-bottom: 10px; background:transparent;"></div>`).join('');
+                return Array(4).fill(0).map(() => `<div class="timeline-item skeleton" style="height: 55px; margin-bottom: 10px; background:transparent;"></div>`).join('');
+            }
+            if (type === 'chat') {
+                return Array(6).fill(0).map(() => `
+                    <div class="chat-msg-row" style="opacity: 0.6; pointer-events: none;">
+                        <div class="avt-circle skeleton" style="width:36px; height:36px; flex-shrink:0;"></div>
+                        <div class="chat-msg-wrapper" style="width: 100%;">
+                            <div class="skeleton skeleton-text" style="width: 120px; margin-bottom: 8px;"></div>
+                            <div class="chat-bubble skeleton" style="width: 280px; max-width: 80%; height: 60px; border: none;"></div>
+                        </div>
+                    </div>
+                `).join('');
             }
             return '';
         }
@@ -3323,6 +3339,30 @@
 
         let pendingImportedData = null; // Biến lưu tạm dữ liệu từ Extension
 
+        // Kiểm tra xem có dữ liệu đang dở dang không
+        function hasUnsavedUploadData() {
+            if (pendingImportedData !== null) return true;
+            const upFile = document.getElementById('upFile');
+            const upTitle = document.getElementById('upTitle');
+            if (upFile && upFile.files.length > 0) return true;
+            if (upTitle && upTitle.value.trim() !== '') return true;
+            return false;
+        }
+
+        // Xóa sạch toàn bộ dữ liệu tạm ở trang Upload
+        function clearUploadDraft() {
+            pendingImportedData = null;
+            const formDOM = document.getElementById('uploadFormDOM');
+            if (formDOM) formDOM.reset();
+            const thumbPreview = document.getElementById('thumbPreviewBig');
+            const thumbPlaceholder = document.getElementById('thumbPlaceholder');
+            if (thumbPreview && thumbPlaceholder) {
+                thumbPreview.src = '';
+                thumbPreview.style.display = 'none';
+                thumbPlaceholder.style.display = 'block';
+            }
+            resetUploadView();
+        }
 
         // LẮNG NGHE FILE VÀ ẢNH TRUYỀN TỪ EXTENSION TURBOWARP
         window.addEventListener('message', async (event) => {
@@ -3402,6 +3442,7 @@
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
                     showToast("Xuất bản thành công!", "success"); 
+                    clearUploadDraft(); // Xóa sạch dữ liệu tạm sau khi tải lên thành công
                     await loadProjects(); 
                     location.hash = `#project/${finalRes.file_id}`; 
                 } else {
@@ -4551,6 +4592,12 @@ function reopenEditor() {
                 document.getElementById('chatLoginPrompt').style.display = 'block';
             }
             
+            // Hiển thị Skeleton Chat trước khi lấy dữ liệu
+            const list = document.getElementById('chatMessageList');
+            if (list.innerHTML.trim() === '' || list.innerHTML.includes('fa-spinner') || list.innerHTML.includes('Đang tải')) {
+                list.innerHTML = getSkeletonHTML('chat');
+            }
+
             loadGlobalChat(true);
             if (!chatInterval) chatInterval = setInterval(() => loadGlobalChat(false), 3500);
         }
