@@ -4509,10 +4509,14 @@
 
         // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
         const originalOpenProjectPage = openProjectPage;
-        openProjectPage = function(idParam, urlParams = null) {
-            originalOpenProjectPage(idParam, urlParams);
+        openProjectPage = async function(idParam, urlParams = null) {
+            await originalOpenProjectPage(idParam, urlParams);
             if(currentProj) {
-                document.getElementById('projPageDate').innerText = currentProj.date || 'Đang cập nhật...';
+                const dateSpan = document.getElementById('projPageDate');
+                if (currentProj.date) {
+                    dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(currentProj.date)}`;
+                    dateSpan.title = currentProj.date;
+                }
                 const btnSettings = document.getElementById('btnProjSettings');
                 if(btnSettings) btnSettings.onclick = openProjSettingsModal;
             }
