@@ -4,10 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DANVworkshop - Coding community, Beyond the Blocks</title>
+    <meta name="description" content="DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN." id="metaDesc" />
+    <meta property="og:title" content="DANVworkshop - Coding community" id="ogTitle" />
+    <meta property="og:description" content="Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu." id="ogDesc" />
+    <meta property="og:image" content="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" id="ogImage" />
+    <meta property="og:url" content="https://danvpr.github.io/" id="ogUrl" />
     <link rel="icon" type="image/png" href="https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="description" content="DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN. Nhà phát triển trẻ tự do kết nối khối lệnh nâng cao, tạo ra câu chuyện của riêng mình." />
     <script>
+
+        // CẬP NHẬT SEO & OPEN GRAPH ĐỘNG
+        function updateSEO(title, desc, imageUrl, url) {
+            document.title = title;
+            const setMeta = (id, content) => { if (document.getElementById(id)) document.getElementById(id).content = content; };
+            
+            setMeta('metaDesc', desc);
+            setMeta('ogTitle', title);
+            setMeta('ogDescription', desc);
+            setMeta('ogImage', imageUrl || "https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png");
+            setMeta('ogUrl', url || window.location.href);
+            injectStructuredData(proj);
+        }
+
+
+        function injectStructuredData(project) {
+            let script = document.getElementById('seo-json-ld');
+            if (script) script.remove(); // Xóa cái cũ
+
+            script = document.createElement('script');
+            script.id = 'seo-json-ld';
+            script.type = 'application/ld+json';
+            
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": project.title,
+                "operatingSystem": "Web Browser",
+                "applicationCategory": "GameApplication",
+                "author": {
+                    "@type": "Person",
+                    "name": project.author
+                },
+                "image": project.thumbId ? `${WORKER_URL}/api/project/${project.thumbId}` : "https://i.ibb.co/QFg1cVVD/image.png",
+                "description": project.description || `Dự án game/hoạt hình được tạo bởi ${project.author}`,
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5", // Có thể tính bằng thuật toán riêng
+                    "ratingCount": (project.likes ? project.likes.length : 0) + 1 // Giả lập số lượt vote
+                }
+            };
+            
+            script.text = JSON.stringify(schema);
+            document.head.appendChild(script);
+        }
+
+
+
         // Khôi phục URL sạch (/projects/... hoặc /users/...) từ 404.html chuyển về
         (function() {
             var redirect = window.location.search.match(/[?&]p=([^&]+)/);
@@ -2369,11 +2422,11 @@
             }
 
             const html = allProjects.map(p => `
-                <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
+                <a href="${BASE_PATH}/projects/${p.projectId || p.fileId}" class="card" style="text-decoration:none; display:flex; flex-direction:column; color:inherit;">
                     ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
-                    <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}</div>
+                    <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}" alt="${escapeHtml(p.title)}">` : `<i class="fa-solid fa-image" style="font-size:3rem; color:#ccc;"></i>`}</div>
                     <div class="card-body">
-                        <div class="card-title">${escapeHtml(p.title)}</div>
+                        <h3 class="card-title" style="margin:0; font-size:1.05rem;">${escapeHtml(p.title)}</h3>
                         <div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div>
                         <div style="margin-top: 10px; font-size: 0.85rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; gap:12px;">
@@ -2383,7 +2436,7 @@
                             <span style="opacity:0.8;" title="Lượt chơi"><i class="fa-solid fa-play"></i> ${p.views || 0}</span>
                         </div>
                     </div>
-                </div>
+                </a>
             `).join('');
 
             if (isAppend) {
@@ -2492,7 +2545,12 @@
                 document.getElementById('loginPromptProj').style.display = 'block'; 
             }
 
-            document.title = `${proj.title} on DANVworkshop`; // SEO TITLE
+            // Cập nhật SEO cho trang dự án
+            const pageTitle = `${proj.title} - Tác phẩm bởi ${proj.author} | DANVworkshop`;
+            const pageDesc = proj.description ? proj.description.substring(0, 150) : `Chơi và trải nghiệm dự án ${proj.title} được tạo bởi ${proj.author} trên DANVworkshop.`;
+            const pageThumb = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+            updateSEO(pageTitle, pageDesc, pageThumb, window.location.href);
+
             document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
             
