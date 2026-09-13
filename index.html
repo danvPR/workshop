@@ -1654,11 +1654,11 @@
     <div class="modal-overlay" id="klipyGifModal">
         <div class="modal" style="max-width:500px; display: flex; flex-direction: column; max-height: 85vh;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-gift" style="color:#855cd6;"></i> Chọn GIF</span>
+                <span><i class="fa-solid fa-gift" style="color:#855cd6;"></i> <span data-i18n="klipy_title">Chọn GIF</span></span>
                 <button class="btn-close" onclick="closeModal('klipyGifModal')">&times;</button>
             </div>
             <div class="modal-body" style="overflow-y: auto; padding: 15px; background: var(--bg-panel); display:flex; flex-direction:column; gap:12px; height: 520px;">
-                <input type="text" id="klipySearchInput" class="form-control" placeholder="Tìm kiếm GIF..." onkeyup="if(event.key==='Enter') searchKlipyGifs()">
+                <input type="text" id="klipySearchInput" class="form-control" data-i18n-ph="klipy_search_ph" placeholder="Tìm kiếm GIF..." onkeyup="if(event.key==='Enter') searchKlipyGifs()">
                 <div id="klipyGifGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; overflow-y: auto; flex: 1;">
                     <!-- Render GIFs -->
                 </div>
@@ -1791,16 +1791,16 @@
                     <div class="form-group">
                         <label data-i18n="report_reason">Lý do báo cáo:</label>
                         <select id="reportReason" class="form-control">
-                            <option value="Spam / Quảng cáo rác">Spam / Quảng cáo rác</option>
-                            <option value="Ngôn từ đả kích, xúc phạm">Ngôn từ đả kích, xúc phạm</option>
-                            <option value="Vi phạm bản quyền">Vi phạm bản quyền (Không ghi nguồn)</option>
-                            <option value="Nội dung không phù hợp">Nội dung đồi trụy / Không phù hợp</option>
-                            <option value="Khác">Lý do khác...</option>
+                            <option value="Spam / Quảng cáo rác" data-i18n="report_reason_spam">Spam / Quảng cáo rác</option>
+                            <option value="Ngôn từ đả kích, xúc phạm" data-i18n="report_reason_hate">Ngôn từ đả kích, xúc phạm</option>
+                            <option value="Vi phạm bản quyền" data-i18n="report_reason_copyright">Vi phạm bản quyền (Không ghi nguồn)</option>
+                            <option value="Nội dung không phù hợp" data-i18n="report_reason_nsfw">Nội dung đồi trụy / Không phù hợp</option>
+                            <option value="Khác" data-i18n="report_reason_other">Lý do khác...</option>
                         </select>
                     </div>
                     <div class="form-group" id="reportOtherGroup">
-                        <label>Mô tả chi tiết vi phạm *:</label>
-                        <textarea id="reportReasonOther" class="form-control" rows="3" placeholder="Bắt buộc nhập chi tiết để Quản trị viên xử lý..." required></textarea>
+                        <label data-i18n="report_detail">Mô tả chi tiết vi phạm *:</label>
+                        <textarea id="reportReasonOther" class="form-control" rows="3" data-i18n-ph="report_detail_ph" placeholder="Bắt buộc nhập chi tiết để Quản trị viên xử lý..." required></textarea>
                     </div>
                     <button type="submit" class="btn btn-danger" style="width:100%; justify-content:center; margin-top:10px;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="report_btn">Gửi báo cáo</span></button>
                 </form>
@@ -3052,10 +3052,19 @@
         }
         
         function attachKlipyGif(url, type, slug = "") {
-            document.getElementById(type === 'proj' ? 'commentImgUploadProj' : 'commentImgUploadProf').value = '';
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1); // Tự động thành Proj, Prof, hoặc Chat
+            
+            const uploadEl = document.getElementById('commentImgUpload' + suffix);
+            if (uploadEl) uploadEl.value = '';
+            
             attachedGifUrls[type] = url;
-            document.getElementById(type === 'proj' ? 'commentImgPreviewSrcProj' : 'commentImgPreviewSrcProf').src = url;
-            document.getElementById(type === 'proj' ? 'commentImgPreviewProj' : 'commentImgPreviewProf').style.display = 'flex';
+            
+            const previewSrc = document.getElementById('commentImgPreviewSrc' + suffix);
+            if (previewSrc) previewSrc.src = url;
+            
+            const previewBox = document.getElementById('commentImgPreview' + suffix);
+            if (previewBox) previewBox.style.display = 'flex';
+            
             closeModal('klipyGifModal');
 
             // 📊 GHI NHẬN HÀNH ĐỘNG CHIA SẺ (Bọc try-catch chống chặn lỗi)
@@ -4188,8 +4197,8 @@
                             </div>
                             
                             <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                                <input type="text" data-i18n-ph="proj_comment_ph" placeholder="${t('proj_comment_ph') || 'Viết bình luận...'}" style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="location.hash='${linkWithTab}'">
-                                <button class="btn btn-primary" onclick="location.hash='${linkWithTab}'" style="border-radius: 20px; padding: 9px 20px;">${t('proj_reply') || 'Trả lời'}</button>
+                                <input type="text" data-i18n-ph="proj_comment_ph" placeholder="${t('proj_comment_ph') || 'Viết bình luận...'}" style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="navigateTo('${linkWithTab}')">
+                                <button class="btn btn-primary" onclick="navigateTo('${linkWithTab}')" style="border-radius: 20px; padding: 9px 20px;">${t('proj_reply') || 'Trả lời'}</button>
                             </div>
                         </div>
                     </div>
@@ -4850,52 +4859,7 @@ function reopenEditor() {
                 </div>`;
             }).join('');
 
-            container.innerHTML = visibleAssets.map(a => {
-                const fileExt = a.fileType.toLowerCase();
-                // Bổ sung ?ext= vào URL để Backend nhận diện định dạng chuẩn
-                const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
-                
-                let previewHtml = `<i class="fa-solid fa-file" style="font-size:4rem; color:#cbd5e1;"></i>`;
-                if (['png','jpg','jpeg','gif','webp','svg'].includes(fileExt)) {
-                    // 🛡️ AN TOÀN
-                    previewHtml = `<img src="${fileUrl}" loading="lazy" style="padding: 10px;" onerror="this.outerHTML='<i class=\\\'fa-solid fa-bezier-curve\\\' style=\\\'font-size:3.5rem; color:var(--primary);\\\'></i>'">`;
-                } else if (['mp3','wav','ogg'].includes(fileExt)) {
-                    // ⚡ TỐI ƯU DATA: Thêm preload="none" để KHÔNG tải trước nhạc khi chưa bấm Play
-                    previewHtml = `<i class="fa-solid fa-music" style="font-size:3.5rem; color:#855cd6;"></i><audio controls preload="none" style="position:absolute; bottom:5px; width:90%; height:30px;"><source src="${fileUrl}"></audio>`;
-                }
 
-                // Logic Vote
-                const upvotes = a.upvotes || []; const downvotes = a.downvotes || [];
-                const upActive = currentUser && upvotes.includes(currentUser.username) ? 'active' : '';
-                const downActive = currentUser && downvotes.includes(currentUser.username) ? 'active' : '';
-                const netScore = upvotes.length - downvotes.length;
-
-                return `
-                <div class="asset-card">
-                    <div class="asset-preview">
-                        <div class="asset-badge">${fileExt}</div>
-                        ${previewHtml}
-                    </div>
-                    <div class="asset-info">
-                        <div class="asset-title" title="${escapeHtml(a.title)}">${escapeHtml(a.title)}</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-user-pen"></i> <a href="#profile/${a.author}" style="color:var(--text-muted); text-decoration:none;">${escapeHtml(a.author)}</a> • ${a.size}MB</div>
-                        <div class="asset-tags">${escapeHtml(a.keywords).split(',').map(k => `#${k.trim()}`).join(' ')}</div>
-                        
-                        <div class="asset-footer">
-                            <div class="asset-vote-group">
-                                <button class="vote-btn up ${upActive}" onclick="toggleAssetVote('${a.assetId}', 'upvote')"><i class="fa-solid fa-caret-up"></i></button>
-                                <span style="font-weight:bold; font-size:0.9rem; min-width:15px; text-align:center; color:var(--text-title);">${netScore}</span>
-                                <button class="vote-btn down ${downActive}" onclick="toggleAssetVote('${a.assetId}', 'downvote')"><i class="fa-solid fa-caret-down"></i></button>
-                            </div>
-                            
-                            <div style="display:flex; gap:8px;">
-                                <button class="vote-btn" style="color:#f5b041;" onclick="openReportModal('asset', '${a.assetId}')" title="Báo cáo"><i class="fa-solid fa-flag"></i></button>
-                                <a href="${fileUrl}" target="_blank" download class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> Tải</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
 
             loadMoreBtn.style.display = displayedAssetsCount >= filtered.length ? 'none' : 'block';
         }
