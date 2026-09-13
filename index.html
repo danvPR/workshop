@@ -1579,20 +1579,47 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-left">
-                <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="Logo" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+                <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="Logo" class="footer-logo-img" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
                 <p data-i18n="footer_desc" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 5px;">Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu.</p>
-                <div style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;">&copy; 2026 DANVworkshop. All rights reserved.</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;" data-i18n="footer_copyright">&copy; 2026 DANVworkshop. All rights reserved.</div>
             </div>
             <div class="footer-links">
                 <a href="#home" data-i18n="nav_explore">Khám phá</a>
                 <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" data-i18n="settings_tos">Điều khoản sử dụng</a>
                 <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" data-i18n="settings_privacy">Chính sách bảo mật</a>
-                <a href="mailto:studiodanv@gmail.com" data-i18n="settings_support">Hỗ trợ</a>
+                <a href="javascript:void(0)" onclick="openModal('contactModal')" data-i18n="settings_support">Hỗ trợ</a>
             </div>
         </div>
     </footer>
 
     <!-- ================= MODALS HỆ THỐNG ================= -->
+
+    <!-- MODAL LIÊN HỆ HỖ TRỢ -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-envelope" style="color:var(--primary);"></i> <span data-i18n="contact_title">Liên hệ Hỗ trợ</span></span>
+                <button class="btn-close" onclick="closeModal('contactModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <i class="fa-solid fa-headset" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5;" data-i18n="contact_desc">Nếu bạn gặp vấn đề về tài khoản, phát hiện lỗi hệ thống, hoặc muốn hợp tác, vui lòng gửi email cho chúng tôi qua địa chỉ bên dưới.</p>
+                
+                <div style="background: var(--bg-secondary); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <b style="font-size: 1.2rem; color: var(--text-title); letter-spacing: 0.5px;">studiodanv@gmail.com</b>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn btn-primary" onclick="navigator.clipboard.writeText('studiodanv@gmail.com').then(() => showToast(t('contact_email_copied') || 'Đã chép Email!', 'success'))" style="flex: 1; justify-content: center;">
+                        <i class="fa-solid fa-copy"></i> <span data-i18n="action_copy">Sao chép</span>
+                    </button>
+                    <a href="mailto:studiodanv@gmail.com" class="btn" style="flex: 1; justify-content: center; text-decoration: none; background: #e2e8f0; color: #111;">
+                        <i class="fa-solid fa-paper-plane"></i> <span data-i18n="action_send_mail">Gửi thư</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL TẠO BÌNH CHỌN (POLL) -->
     <div class="modal-overlay" id="pollModal">
@@ -1648,19 +1675,19 @@
     <!-- MODAL UPLOAD TÀI NGUYÊN -->
     <div class="modal-overlay" id="uploadAssetModal">
         <div class="modal" style="max-width:500px;">
-            <div class="modal-header"><span><i class="fa-solid fa-cloud-arrow-up"></i> Chia sẻ Tài nguyên</span><button class="btn-close" onclick="closeModal('uploadAssetModal')">&times;</button></div>
+            <div class="modal-header"><span><i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_title">Chia sẻ Tài nguyên</span></span><button class="btn-close" onclick="closeModal('uploadAssetModal')">&times;</button></div>
             <div class="modal-body">
                 <form onsubmit="handleUploadAssetSubmit(event)">
                     <div class="form-group">
-                        <label>Chọn File (Tối đa 50MB) *:</label>
+                        <label data-i18n="asset_upload_file">Chọn File (Tối đa 50MB) *:</label>
                         <input type="file" id="assetUpFile" class="form-control" required style="padding: 8px;" accept="image/*, audio/*, video/*, .svg">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">Hỗ trợ: PNG, JPG, GIF, SVG, MP3, WAV... File lớn hơn 18MB sẽ tự động chia nhỏ.</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;" data-i18n="asset_upload_file_hint">Hỗ trợ: PNG, JPG, GIF, SVG, MP3, WAV... File lớn hơn 18MB sẽ tự động chia nhỏ.</div>
                     </div>
-                    <div class="form-group"><label>Tên tài nguyên *:</label><input type="text" id="assetUpTitle" class="form-control" required placeholder="Ví dụ: Nút bấm Pixel 2D"></div>
-                    <div class="form-group"><label>Từ khóa (Tags) *:</label><input type="text" id="assetUpKeywords" class="form-control" required placeholder="Ví dụ: ui, button, pixel, gui (cách nhau dấu phẩy)"></div>
+                    <div class="form-group"><label data-i18n="asset_upload_name">Tên tài nguyên *:</label><input type="text" id="assetUpTitle" class="form-control" required data-i18n-ph="asset_upload_name_ph" placeholder="Ví dụ: Nút bấm Pixel 2D"></div>
+                    <div class="form-group"><label data-i18n="asset_upload_tags">Từ khóa (Tags) *:</label><input type="text" id="assetUpKeywords" class="form-control" required data-i18n-ph="asset_upload_tags_ph" placeholder="Ví dụ: ui, button, pixel, gui (cách nhau dấu phẩy)"></div>
                     
                     <button type="submit" class="btn btn-primary" id="btnSubmitUploadAsset" style="width:100%; justify-content:center; margin-top: 15px; padding: 12px;">
-                        <i class="fa-solid fa-upload"></i> Đăng Tài nguyên
+                        <i class="fa-solid fa-upload"></i> <span data-i18n="asset_upload_btn">Đăng Tài nguyên</span>
                     </button>
                 </form>
             </div>
@@ -2007,8 +2034,14 @@
                 if(selectEl) selectEl.value = lang;
 
                 if (langData['brand_title']) document.title = langData['brand_title'];
-                const logoImg = document.querySelector('.nav-logo-img');
-                if(logoImg && langData['brand_logo']) logoImg.src = langData['brand_logo'];
+                
+                // Đổi logo ở cả Navbar và Footer
+                const navLogoImg = document.querySelector('.nav-logo-img');
+                const footerLogoImg = document.querySelector('.footer-logo-img');
+                if(langData['brand_logo']) {
+                    if (navLogoImg) navLogoImg.src = langData['brand_logo'];
+                    if (footerLogoImg) footerLogoImg.src = langData['brand_logo'];
+                }
 
                 updateStaticDOM();
                 
@@ -2287,27 +2320,29 @@
             if (hash !== '#chat' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
 
             // 🎯 XỬ LÝ HIGHLIGHT TAB & TITLE ĐỘNG CHO TỪNG TRANG (SEO TITLE FORMAT)
+            const brandName = langData['brand_name'] || "DANVworkshop";
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(el => el.classList.remove('active'));
+            
             if (hash === '#home' || hash === '') { 
                 document.querySelectorAll('.nav-home').forEach(el => el.classList.add('active')); 
-                document.title = t('nav_explore') + " | DANVworkshop";
+                document.title = t('nav_explore') + " | " + brandName;
             }
             else if (hash === '#chat') { 
                 document.querySelectorAll('.nav-chat').forEach(el => el.classList.add('active')); 
-                document.title = t('nav_chat') + " | DANVworkshop";
+                document.title = t('nav_chat') + " | " + brandName;
             }
             else if (hash === '#create') { 
                 document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); 
-                document.title = t('nav_create') + " | DANVworkshop";
+                document.title = t('nav_create') + " | " + brandName;
             }
             else if (hash.startsWith('#assets')) { 
                 document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); 
-                document.title = t('nav_assets') + " | DANVworkshop";
+                document.title = t('nav_assets') + " | " + brandName;
             }
-            else if (hash === '#upload') document.title = t('nav_upload') + " | DANVworkshop";
-            else if (hash === '#settings') document.title = t('settings_title') + " | DANVworkshop";
-            else if (hash === '#notifications') document.title = t('notif_title') + " | DANVworkshop";
-            else if (hash === '#admin') document.title = "Admin Panel | DANVworkshop";
+            else if (hash === '#upload') document.title = t('nav_upload') + " | " + brandName;
+            else if (hash === '#settings') document.title = t('settings_title') + " | " + brandName;
+            else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
+            else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
             else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
 
             // Ẩn tất cả các trang
@@ -4757,10 +4792,57 @@ function reopenEditor() {
             const visibleAssets = filtered.slice(0, displayedAssetsCount);
             
             if (visibleAssets.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-ghost" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i><br>Không tìm thấy tài nguyên nào.</div>`;
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-ghost" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i><br>${t('assets_not_found') || 'Không tìm thấy tài nguyên nào.'}</div>`;
                 loadMoreBtn.style.display = 'none';
                 return;
             }
+
+            container.innerHTML = visibleAssets.map(a => {
+                const fileExt = a.fileType.toLowerCase();
+                // Bổ sung ?ext= vào URL để Backend nhận diện định dạng chuẩn
+                const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
+                
+                let previewHtml = `<i class="fa-solid fa-file" style="font-size:4rem; color:#cbd5e1;"></i>`;
+                if (['png','jpg','jpeg','gif','webp','svg'].includes(fileExt)) {
+                    // 🛡️ AN TOÀN
+                    previewHtml = `<img src="${fileUrl}" loading="lazy" style="padding: 10px;" onerror="this.outerHTML='<i class=\\\'fa-solid fa-bezier-curve\\\' style=\\\'font-size:3.5rem; color:var(--primary);\\\'></i>'">`;
+                } else if (['mp3','wav','ogg'].includes(fileExt)) {
+                    // ⚡ TỐI ƯU DATA: Thêm preload="none" để KHÔNG tải trước nhạc khi chưa bấm Play
+                    previewHtml = `<i class="fa-solid fa-music" style="font-size:3.5rem; color:#855cd6;"></i><audio controls preload="none" style="position:absolute; bottom:5px; width:90%; height:30px;"><source src="${fileUrl}"></audio>`;
+                }
+
+                // Logic Vote
+                const upvotes = a.upvotes || []; const downvotes = a.downvotes || [];
+                const upActive = currentUser && upvotes.includes(currentUser.username) ? 'active' : '';
+                const downActive = currentUser && downvotes.includes(currentUser.username) ? 'active' : '';
+                const netScore = upvotes.length - downvotes.length;
+
+                return `
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <div class="asset-badge">${fileExt}</div>
+                        ${previewHtml}
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title" title="${escapeHtml(a.title)}">${escapeHtml(a.title)}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-user-pen"></i> <a href="#profile/${a.author}" style="color:var(--text-muted); text-decoration:none;">${escapeHtml(a.author)}</a> • ${a.size}MB</div>
+                        <div class="asset-tags">${escapeHtml(a.keywords).split(',').map(k => `#${k.trim()}`).join(' ')}</div>
+                        
+                        <div class="asset-footer">
+                            <div class="asset-vote-group">
+                                <button class="vote-btn up ${upActive}" onclick="toggleAssetVote('${a.assetId}', 'upvote')"><i class="fa-solid fa-caret-up"></i></button>
+                                <span style="font-weight:bold; font-size:0.9rem; min-width:15px; text-align:center; color:var(--text-title);">${netScore}</span>
+                                <button class="vote-btn down ${downActive}" onclick="toggleAssetVote('${a.assetId}', 'downvote')"><i class="fa-solid fa-caret-down"></i></button>
+                            </div>
+                            
+                            <div style="display:flex; gap:8px;">
+                                <button class="vote-btn" style="color:#f5b041;" onclick="openReportModal('asset', '${a.assetId}')" title="${t('action_report') || 'Báo cáo'}"><i class="fa-solid fa-flag"></i></button>
+                                <a href="${fileUrl}" target="_blank" download class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> ${t('action_download') || 'Tải'}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
 
             container.innerHTML = visibleAssets.map(a => {
                 const fileExt = a.fileType.toLowerCase();
