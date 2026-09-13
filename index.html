@@ -1737,6 +1737,17 @@
                 </button>
             </div>
 
+            <!-- BẢNG ĐIỀU KHIỂN DATABASE CHAT -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-database" style="color: #10b981;"></i> Quản lý Database D1
+                </h4>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Dọn dẹp tin nhắn D1 và đóng gói 100 tin nhắn cũ nhất lưu trữ vào Google Sheets. Tính năng này giúp giảm tải Database khi bị đầy.</p>
+                <button class="btn" onclick="forceArchiveChat(this)" style="border: 1px solid #10b981; color: #10b981; font-weight: bold;">
+                    <i class="fa-solid fa-box-archive"></i> Đóng gói & Dọn dẹp Chat ngay
+                </button>
+            </div>
+
             <div id="adminReportsList">Đang tải dữ liệu an toàn từ máy chủ...</div>
         </div>
     </div>
@@ -2118,6 +2129,21 @@
     </div>
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
+        // Lệnh kích hoạt dọn dẹp Database cho Admin
+        async function forceArchiveChat(btn) {
+            if(!confirm("Bạn có muốn xóa 100 tin cũ nhất khỏi D1 và lưu trữ vào Sheets không?")) return;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang đóng gói...'; btn.disabled = true;
+            
+            const res = await apiFetch(`/api/admin/archive_chat_now`, { method: 'POST', body: JSON.stringify({}) });
+            if (res && res.success) {
+                showToast(`Đã đóng gói thành công ${res.archived_count || 0} tin nhắn!`, "success");
+            } else {
+                showToast(res ? res.error : "Lỗi đóng gói", "error");
+            }
+            btn.innerHTML = orig; btn.disabled = false;
+        }
+
         const WIKI_CLIENT_ID = "70970406"; 
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
@@ -5442,17 +5468,94 @@ function reopenEditor() {
             }
         }
 
-        // 🔄 HÀM BẤM NÚT TẢI THÊM TIN NHẮN CŨ (CỘNG THÊM 20 TIN)
+        // 🔄 HÀM BẤM NÚT TẢI THÊM TIN NHẮN CŨ)
+        let archiveChatPage = 1;
+        let isFetchingArchive = false;
+
         async function loadMoreChatMessages() {
-            if (isChatLoadingMore || !chatHasMore) return;
+            if (isChatLoadingMore) return;
             isChatLoadingMore = true;
-            chatDisplayLimit += 20;
 
             const btn = document.getElementById('btnLoadMoreChat');
             if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
 
-            await loadGlobalChat(false, true);
+            if (chatHasMore) {
+                // Nếu D1 vẫn còn tin nhắn, tiếp tục tải từ D1
+                chatDisplayLimit += 20;
+                await loadGlobalChat(false, true);
+            } else {
+                // Đã hết tin ở D1 -> Bắt đầu đào dữ liệu cũ 
+                isFetchingArchive = true;
+                await loadArchivedChat();
+            }
+            
             isChatLoadingMore = false;
+        }
+
+        // HÀM ĐỌC TIN NHẮN TỪ KHO LƯU TRỮ GOOGLE SHEETS
+        async function loadArchivedChat() {
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/chat_archive?page=${archiveChatPage}`)).json();
+                
+                if (res.error) throw new Error(res.error);
+                
+                const messages = res.messages || [];
+                
+                if (messages.length === 0) {
+                    const btnArea = document.getElementById('chatLoadMoreArea');
+                    if(btnArea) btnArea.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
+                    return;
+                }
+
+                // Render dữ liệu Archive thành HTML
+                const messagesHtml = messages.map(c => {
+                    const messageId = String(c.msgId || '');
+                    const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
+                    const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
+
+                    return `
+                    <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" style="opacity: 0.85;">
+                        ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}"><img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:36px; height:36px; border: 1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'"></a>` : ''}
+                        <div class="chat-msg-wrapper">
+                            <div class="chat-meta-header">
+                                ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>` : ''}
+                                <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
+                            </div>
+                            <div class="chat-bubble" style="border: 1px dashed var(--border-color);">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                const list = document.getElementById('chatMessageList');
+                const oldScrollHeight = list.scrollHeight;
+                
+                // Chèn tin cũ lên trên cùng
+                const loadMoreBtnHtml = res.hasMore ? `
+                    <div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0;">
+                        <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
+                            <i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ
+                        </button>
+                    </div>
+                ` : '<div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0; color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
+
+                // Xóa nút Load More cũ
+                const oldBtn = document.getElementById('chatLoadMoreArea');
+                if (oldBtn) oldBtn.remove();
+
+                list.insertAdjacentHTML('afterbegin', messagesHtml);
+                list.insertAdjacentHTML('afterbegin', loadMoreBtnHtml);
+
+                // Giữ nguyên vị trí cuộn
+                list.scrollTop = list.scrollHeight - oldScrollHeight;
+                
+                if (res.hasMore) archiveChatPage++;
+
+            } catch (e) {
+                showToast("Lỗi tải lịch sử trò chuyện", "error");
+                const btn = document.getElementById('btnLoadMoreChat');
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ';
+            }
         }
 
         async function handlePostChat(e) {
