@@ -733,6 +733,57 @@
         .chat-msg-row.mine .chat-bubble .chat-project-card .vip-play-btn * {
             color: #ffffff !important;
         }
+        
+        /* FOOTER */
+        .site-footer {
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 30px;
+            margin-top: auto; 
+            width: 100%;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 768px) {
+            .footer-content { flex-direction: column; text-align: center; }
+            .footer-links { justify-content: center; }
+            .site-footer { padding-bottom: 80px; } 
+        }
+
+        /* HIỆU ỨNG CHÚ Ý CHO KHU VỰC CẬP NHẬT DỰ ÁN */
+        @keyframes highlightAttention {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); transform: scale(1); }
+            50% { box-shadow: 0 0 25px 8px rgba(234, 88, 12, 0.6); transform: scale(1.03); border-color: #ea580c; }
+        }
+        .highlight-attention {
+            animation: highlightAttention 1.5s ease-in-out 3; /* Chớp 3 lần */
+            background: rgba(234, 88, 12, 0.15) !important;
+            border: 2px solid #ea580c !important;
+            z-index: 10;
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -783,7 +834,7 @@
     <div id="createView" class="page-view" style="text-align:center; padding: 120px 20px;">
         <i class="fa-solid fa-wand-magic-sparkles fa-bounce" style="font-size: 5rem; color: var(--primary); margin-bottom: 25px;"></i>
         <h2 style="color: #111; margin-bottom: 12px; font-size: 2rem;" data-i18n="create_title">Đã mở Trình chỉnh sửa!</h2>
-        <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">Chúng tôi đã mở <b id="createEngineName" style="color:var(--primary);">Aftercode</b> trong một tab mới để bạn thỏa sức sáng tạo.</p>
+        <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;"><span data-i18n="create_desc_start">Chúng tôi đã mở</span> <b id="createEngineName" style="color:var(--primary);">Aftercode</b> <span data-i18n="create_desc_end">trong một tab mới để bạn thỏa sức sáng tạo.</span></p>
         <button class="btn btn-primary" onclick="reopenEditor()" style="padding: 12px 30px; font-size: 1.05rem; border-radius: 25px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="create_btn_reopen">Mở lại tab</span></button>
         <button class="btn" onclick="location.hash='#home'" style="margin-left: 15px; padding: 12px 30px; font-size: 1.05rem; border-radius: 25px;"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
     </div>
@@ -1088,19 +1139,19 @@
             <div id="profTab-projects" class="prof-tab-content active">
                 <div class="project-grid" id="userProjectList"></div>
                 <div id="profLoadMore-projects" style="text-align: center; padding: 20px 0; display: none;">
-                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('projects', true)"><i class="fa-solid fa-angle-down"></i> Xem thêm tác phẩm</button>
+                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('projects', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_projects">Xem thêm tác phẩm</span></button>
                 </div>
             </div>
             <div id="profTab-likes" class="prof-tab-content">
                 <div class="project-grid" id="userLikedList"></div>
                 <div id="profLoadMore-likes" style="text-align: center; padding: 20px 0; display: none;">
-                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('likes', true)"><i class="fa-solid fa-angle-down"></i> Xem thêm lượt thích</button>
+                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('likes', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_likes">Xem thêm lượt thích</span></button>
                 </div>
             </div>
             <div id="profTab-activities" class="prof-tab-content">
                 <div id="userActivityList" style="max-width:750px;"></div>
                 <div id="profLoadMore-activities" style="text-align: center; padding: 20px 0; display: none;">
-                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('activities', true)"><i class="fa-solid fa-angle-down"></i> Xem thêm hoạt động</button>
+                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('activities', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_activities">Xem thêm hoạt động</span></button>
                 </div>
             </div>
             <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
@@ -1353,9 +1404,26 @@
         </div>
     </div>
 
+    <!-- CHÂN TRANG (FOOTER) -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="Logo" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+                <p data-i18n="footer_desc" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 5px;">Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu.</p>
+                <div style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;">&copy; 2026 DANVworkshop. All rights reserved.</div>
+            </div>
+            <div class="footer-links">
+                <a href="#home" data-i18n="nav_explore">Khám phá</a>
+                <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" data-i18n="settings_tos">Điều khoản sử dụng</a>
+                <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" data-i18n="settings_privacy">Chính sách bảo mật</a>
+                <a href="mailto:studiodanv@gmail.com" data-i18n="settings_support">Hỗ trợ</a>
+            </div>
+        </div>
+    </footer>
+
     <!-- ================= MODALS HỆ THỐNG ================= -->
 
-    <!-- MODAL KLIPY GIF PICKER -->
+    <!-- ================= MODALS HỆ THỐNG ================= -->
     <!-- MODAL KLIPY GIF PICKER -->
     <div class="modal-overlay" id="klipyGifModal">
         <div class="modal" style="max-width:500px; display: flex; flex-direction: column; max-height: 85vh;">
@@ -1574,7 +1642,7 @@
                 </div>
 
                 <!-- PHẦN 2: CẬP NHẬT FILE GAME MỚI (.SB3) -->
-                <div style="background: rgba(234, 88, 12, 0.08); border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div id="updateSectionContainer" style="background: rgba(234, 88, 12, 0.08); border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 12px; padding: 20px; margin-bottom: 25px; transition: all 0.3s ease;">
                     <h4 style="margin-bottom: 10px; color: #ea580c; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Cập nhật bản Game mới (.sb3)
                     </h4>
@@ -3126,25 +3194,40 @@
 
         // Hàm xử lý việc Click chọn dự án để Update
         window.handleSelectProjectToUpdate = function(id) {
+            showToast("Đang chuyển đến bảng quản lý dự án...", "info");
             location.hash = '#project/' + id; // 1. Chuyển sang trang dự án đó
             
             // 2. Đợi trang load xong (800ms) rồi bật bảng Cài đặt
             setTimeout(() => {
                 openProjSettingsModal();
                 
-                // 3. Đợi bảng cài đặt bật lên xong (200ms) mới dán File vào để tránh bị ghi đè xóa mất
+                // 3. Đợi bảng cài đặt bật lên xong (200ms) mới xử lý giao diện
                 setTimeout(() => {
+                    const updateContainer = document.getElementById('updateSectionContainer');
                     const updateSection = document.getElementById('updateProjFile');
-                    if (updateSection) {
-                        updateSection.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    
+                    if (updateContainer && updateSection) {
+                        // Thêm class tạo hiệu ứng nhấp nháy phát sáng cam để thu hút sự chú ý
+                        updateContainer.classList.add('highlight-attention');
+                        
+                        // Cuộn mượt mà đến đúng khu vực đó
+                        updateContainer.scrollIntoView({behavior: 'smooth', block: 'center'});
                         
                         // Tự động dán file .sb3 từ Extension vào khu vực cập nhật (nếu có)
                         if (pendingImportedData && pendingImportedData.sb3File) {
                             const dt = new DataTransfer();
                             dt.items.add(pendingImportedData.sb3File);
                             updateSection.files = dt.files;
-                            showToast("Đã tự động dán file game mới vào ô!", "success");
+                            showToast("Đã tự động điền file game mới. Hãy bấm Tải lên!", "success");
+                        } else {
+                            // Nhắc người dùng tự chọn file nếu không nạp từ Editor
+                            showToast("Vui lòng tải file mới lên tại khu vực đang phát sáng", "info");
                         }
+                        
+                        // Gỡ bỏ class hiệu ứng sau khi hoàn tất (4.5 giây = 3 nhịp chớp)
+                        setTimeout(() => {
+                            updateContainer.classList.remove('highlight-attention');
+                        }, 4500);
                     }
                 }, 200);
             }, 800);
