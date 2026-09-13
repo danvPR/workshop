@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>DANVworkshop - Redirecting...</title>
+    <script>
+        // Tự động nhận diện nếu đang chạy trên GitHub Pages (danvpr.github.io/workshop/) thì giữ lại thư mục gốc /workshop/
+        var pathSegmentsToKeep = window.location.hostname.endsWith('github.io') ? 1 : 0;
+        var l = window.location;
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/') +
+            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
+    </script>
+</head>
+<body>
+</body>
+</html>
