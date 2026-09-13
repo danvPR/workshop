@@ -637,64 +637,78 @@
         .chat-act-btn.report { color: #f59e0b; }
         .chat-act-btn.report:hover { background: #fef3c7; border-color: #fcd34d; }
 
-        /* NÚT VÀ MENU CHỌN NGÔN NGỮ DỊCH THUẬT */
+        /* NÚT VÀ MENU CHỌN NGÔN NGỮ DỊCH THUẬT (PORTAL FIXED TỐI ƯU) */
         .btn-translate-icon {
             background: none;
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             border-radius: 6px;
-            padding: 2px 7px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            font-size: 0.82rem;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-left: 6px;
         }
-        .btn-translate-icon:hover, .btn-action-cmt.btn-trans-active {
+        .btn-translate-icon:hover, .btn-translate-icon.trans-active,
+        .btn-action-cmt.trans-active, .chat-act-btn.trans-active {
             color: var(--primary) !important;
             border-color: var(--primary) !important;
-            background: var(--bg-secondary);
+            background: rgba(13, 165, 122, 0.12) !important;
         }
         
-        /* MENU POPUP CHỌN NGÔN NGỮ */
         .trans-menu-wrapper {
-            position: relative;
             display: inline-flex;
             align-items: center;
+            position: relative;
         }
-        .trans-dropdown-menu {
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 0;
+
+        /* MENU NỔI PORTAL TRÊN TOÀN MÀN HÌNH - KHÔNG BỊ OVERFLOW CẮT */
+        .trans-portal-menu {
+            position: fixed;
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-            min-width: 175px;
-            z-index: 3000;
-            padding: 6px 0;
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.24);
+            width: 210px;
+            max-height: 290px;
+            z-index: 100000;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.15s ease;
+            animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
         }
-        .trans-dropdown-menu.align-right {
-            left: auto;
-            right: 0;
-        }
-        .trans-menu-title {
+        .trans-portal-header {
             font-size: 0.72rem;
             font-weight: 700;
             text-transform: uppercase;
             color: var(--text-muted);
-            padding: 6px 12px 4px 12px;
+            padding: 9px 14px;
             border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
             letter-spacing: 0.5px;
         }
+        .trans-portal-list {
+            overflow-y: auto;
+            max-height: 240px;
+            padding: 4px 0;
+        }
+        .trans-portal-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .trans-portal-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
         .trans-menu-item {
-            padding: 7px 12px;
-            font-size: 0.85rem;
+            padding: 8px 14px;
+            font-size: 0.88rem;
             color: var(--text-main);
             cursor: pointer;
             display: flex;
@@ -709,33 +723,35 @@
         .trans-menu-item.default-lang {
             font-weight: 700;
             color: var(--primary);
-            background: rgba(13, 165, 122, 0.06);
+            background: rgba(13, 165, 122, 0.08);
         }
         .trans-badge-def {
-            font-size: 0.68rem;
-            background: rgba(13, 165, 122, 0.2);
+            font-size: 0.65rem;
+            background: rgba(13, 165, 122, 0.22);
             color: var(--primary);
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
         /* KHUNG HIỂN THỊ KẾT QUẢ BẢN DỊCH */
         .trans-result-box {
             margin-top: 8px;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 9px 13px;
+            border-radius: 10px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             font-size: 0.88rem;
             line-height: 1.45;
             animation: fadeIn 0.2s ease;
+            position: relative;
         }
         .trans-header {
             font-size: 0.74rem;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -743,16 +759,17 @@
         .trans-btn-close {
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: 1.1rem;
             line-height: 1;
             color: var(--text-muted);
             cursor: pointer;
             padding: 0 4px;
+            transition: 0.15s;
         }
         .trans-btn-close:hover { color: #ef4444; }
 
         .chat-msg-row.mine .trans-result-box {
-            background: rgba(0,0,0,0.2) !important;
+            background: rgba(0,0,0,0.22) !important;
             border-color: rgba(255,255,255,0.25) !important;
         }
         .chat-msg-row.mine .trans-header {
@@ -1620,6 +1637,14 @@
                             <option value="vi">Tiếng Việt</option>
                             <option value="en">English</option>
                         </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 25px;">
+                        <label data-i18n="settings_trans_target">Ngôn ngữ dịch thuật mặc định:</label>
+                        <select id="defaultTransLangSelect" class="form-control" onchange="changeDefaultTranslateLang(this.value)">
+                            <!-- Danh sách ngôn ngữ gốc nạp bằng JS -->
+                        </select>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_trans_target_hint">Hệ thống sẽ ưu tiên dịch các bình luận và tin nhắn sang ngôn ngữ này.</div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px;">
@@ -3000,7 +3025,10 @@
                                             </div>
                                             <div style="margin-top:2px; display:flex; align-items:center; gap:8px;">
                                                 ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">${t('proj_reply')}</button>` : ''}
-                                                ${rep.text ? `<button type="button" class="btn-action-cmt" onclick="toggleTranslateComment(this)" title="Dịch"><i class="fa-solid fa-language"></i></button>` : ''}
+                                                ${rep.text ? `
+                                                <div class="trans-menu-wrapper">
+                                                    <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${rep.id}')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                                </div>` : ''}
                                                 ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${rep.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
                                                 ${canDelete(rep) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${rep.id}')">${t('proj_delete')}</button>` : ''}
                                             </div>
@@ -3689,6 +3717,7 @@
             updateEngineUI(currentEngine);
             const langEl = document.getElementById('langSelect');
             if (langEl) langEl.value = localStorage.getItem('lang') || 'vi';
+            renderDefaultTransLangSelect();
 
             // 2. Nếu chưa đăng nhập: tự động chuyển sang tab Tùy chọn (Theme / Ngôn ngữ / Engine) mà không đá về Home
             if (!currentUser) {
@@ -5333,6 +5362,18 @@ function reopenEditor() {
                     const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
                     const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
 
+                    // 🛡️ BẢO TỒN BẢN DỊCH KHÔNG BỊ MẤT KHI RE-RENDER
+                    const savedTrans = chatTranslations[messageId];
+                    const transBoxHtml = savedTrans ? `
+                        <div class="trans-result-box">
+                            <div class="trans-header">
+                                <span><i class="fa-solid fa-language"></i> ${escapeHtml(savedTrans.langName)}</span>
+                                <button type="button" class="trans-btn-close" onclick="closeChatTranslation('${messageId}')" title="Đóng">&times;</button>
+                            </div>
+                            <div class="trans-content" style="white-space:pre-line;">${escapeHtml(savedTrans.translatedText)}</div>
+                        </div>
+                    ` : '';
+
                     return `
                     <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}">
                         ${!isMine ? `
@@ -5346,7 +5387,7 @@ function reopenEditor() {
                                 <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
 
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}${transBoxHtml}</div>
                             
                             <div class="chat-actions">
                                 ${currentUser && !isMine ? `
@@ -5355,7 +5396,7 @@ function reopenEditor() {
                                     </button>` : ''}
                                 ${c.text && !c.text.startsWith('[DANV_POLL]') ? `
                                     <div class="trans-menu-wrapper">
-                                        <button type="button" class="chat-act-btn" onclick="openTranslateMenu(this, 'chat', '${messageId}')" title="Dịch">
+                                        <button type="button" class="chat-act-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}')" title="Dịch">
                                             <i class="fa-solid fa-language"></i>
                                         </button>
                                     </div>` : ''}
@@ -5656,88 +5697,159 @@ function reopenEditor() {
                 el.closest('.chat-poll-opts-wrapper').style.opacity = '1';
             }
         }
-
-        // ================= XỬ LÝ DỊCH THUẬT & MENU CHỌN NGÔN NGỮ =================
-        const TRANSLATE_LANG_OPTIONS = [
-            { code: 'vi', label: '🇻🇳 Tiếng Việt', name: 'Tiếng Việt' },
-            { code: 'en', label: '🇬🇧 English', name: 'English' },
-            { code: 'ja', label: '🇯🇵 日本語 (Tiếng Nhật)', name: 'Tiếng Nhật' },
-            { code: 'zh-CN', label: '🇨🇳 中文 (Tiếng Trung)', name: 'Tiếng Trung' },
-            { code: 'ko', label: '🇰🇷 한국어 (Tiếng Hàn)', name: 'Tiếng Hàn' }
+// ================= XỬ LÝ DỊCH THUẬT & MENU CHỌN NGÔN NGỮ (TỐI ƯU TOÀN DIỆN) =================
+        // DANH SÁCH TÊN BẢN XỨ THUẦN TÚY (ENDONYM) - TUYỆT ĐỐI KHÔNG GHÉP TÊN TIẾNG KHÁC
+        const TRANSLATE_LANGUAGES = [
+            { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' },
+            { code: 'en', name: 'English', flag: '🇬🇧' },
+            { code: 'ja', name: '日本語', flag: '🇯🇵' },
+            { code: 'zh-CN', name: '简体中文', flag: '🇨🇳' },
+            { code: 'zh-TW', name: '繁體中文', flag: '🇹🇼' },
+            { code: 'ko', name: '한국어', flag: '🇰🇷' },
+            { code: 'fr', name: 'Français', flag: '🇫🇷' },
+            { code: 'es', name: 'Español', flag: '🇪🇸' },
+            { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+            { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+            { code: 'th', name: 'ไทย', flag: '🇹🇭' },
+            { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' }
         ];
 
-        // Đóng menu khi click ra ngoài
+        // LƯU TRỮ TRẠNG THÁI BẢN DỊCH GLOBAL CHAT (CHỐNG MẤT KHI CÓ TIN NHẮN MỚI)
+        const chatTranslations = {};
+
+        // Lấy ngôn ngữ dịch mặc định đã chọn
+        function getDefaultTranslateLang() {
+            return localStorage.getItem('danv_default_trans_lang') || (currentLang === 'en' ? 'en' : 'vi');
+        }
+
+        // Thay đổi ngôn ngữ dịch mặc định trong Cài đặt
+        function changeDefaultTranslateLang(val) {
+            localStorage.setItem('danv_default_trans_lang', val);
+            const found = TRANSLATE_LANGUAGES.find(l => l.code === val);
+            showToast(`Ngôn ngữ dịch mặc định: ${found ? found.name : val}`, 'success');
+        }
+
+        // Render danh sách trong trang Cài đặt
+        function renderDefaultTransLangSelect() {
+            const selectEl = document.getElementById('defaultTransLangSelect');
+            if (!selectEl) return;
+            const currentDef = getDefaultTranslateLang();
+            selectEl.innerHTML = TRANSLATE_LANGUAGES.map(l => `
+                <option value="${l.code}" ${l.code === currentDef ? 'selected' : ''}>${l.flag} ${l.name}</option>
+            `).join('');
+        }
+
+        // Đóng bản dịch trong Global Chat và xóa cache
+        window.closeChatTranslation = function(msgId) {
+            delete chatTranslations[msgId];
+            const msgEl = document.getElementById(`chat-msg-${msgId}`);
+            if (msgEl) {
+                const box = msgEl.querySelector('.trans-result-box');
+                if (box) box.remove();
+                const btn = msgEl.querySelector('.chat-act-btn.trans-active');
+                if (btn) btn.classList.remove('trans-active');
+            }
+        };
+
+        // Đóng menu Portal khi click ra ngoài hoặc scroll màn hình
+        function closeAllTranslatePortals() {
+            document.querySelectorAll('.trans-portal-menu').forEach(m => m.remove());
+        }
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.trans-menu-wrapper')) {
-                document.querySelectorAll('.trans-dropdown-menu').forEach(m => m.remove());
+            if (!e.target.closest('.trans-portal-menu') && !e.target.closest('.btn-translate-icon') && !e.target.closest('.chat-act-btn') && !e.target.closest('.btn-action-cmt')) {
+                closeAllTranslatePortals();
             }
         });
+        window.addEventListener('resize', closeAllTranslatePortals);
 
-        // Hàm mở menu chọn ngôn ngữ
+        // HÀM MỞ MENU DỊCH NỔI PORTAL (TUYỆT ĐỐI KHÔNG BỊ KHUNG CUỘN CHE)
         function openTranslateMenu(btn, contextType, targetId) {
-            const wrapper = btn.closest('.trans-menu-wrapper');
-            const existingMenu = wrapper.querySelector('.trans-dropdown-menu');
-            if (existingMenu) {
-                existingMenu.remove();
+            const existingPortal = document.querySelector(`.trans-portal-menu[data-target-id="${targetId}"]`);
+            if (existingPortal) {
+                existingPortal.remove();
                 return;
             }
 
-            // Đóng các menu khác đang mở
-            document.querySelectorAll('.trans-dropdown-menu').forEach(m => m.remove());
+            closeAllTranslatePortals();
 
-            // Ngôn ngữ giao diện hiện tại của user sẽ là MẶC ĐỊNH
-            const activeLang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'vi';
-
-            // Sắp xếp đưa ngôn ngữ mặc định lên đầu danh sách
-            const sortedLangs = [...TRANSLATE_LANG_OPTIONS].sort((a, b) => {
-                if (a.code === activeLang) return -1;
-                if (b.code === activeLang) return 1;
+            const defLangCode = getDefaultTranslateLang();
+            
+            // Đưa ngôn ngữ mặc định lên đầu tiên
+            const sorted = [...TRANSLATE_LANGUAGES].sort((a, b) => {
+                if (a.code === defLangCode) return -1;
+                if (b.code === defLangCode) return 1;
                 return 0;
             });
 
-            const isMineChat = btn.closest('.chat-msg-row.mine');
-            const menu = document.createElement('div');
-            menu.className = `trans-dropdown-menu ${isMineChat ? 'align-right' : ''}`;
+            const portal = document.createElement('div');
+            portal.className = 'trans-portal-menu';
+            portal.setAttribute('data-target-id', targetId);
 
-            const titleText = activeLang === 'vi' ? 'Dịch sang:' : 'Translate to:';
-            let menuHtml = `<div class="trans-menu-title"><i class="fa-solid fa-language"></i> ${titleText}</div>`;
+            const isVi = (typeof currentLang !== 'undefined' && currentLang === 'vi');
+            const headerTitle = isVi ? 'Dịch sang' : 'Translate to';
+            const defBadgeText = isVi ? 'Mặc định' : 'Default';
 
-            sortedLangs.forEach(item => {
-                const isDefault = item.code === activeLang;
-                const defBadge = isDefault ? `<span class="trans-badge-def">${activeLang === 'vi' ? 'Mặc định' : 'Default'}</span>` : '';
-                menuHtml += `
-                    <div class="trans-menu-item ${isDefault ? 'default-lang' : ''}" onclick="executeTranslation(this, '${contextType}', '${targetId}', '${item.code}', '${item.name}')">
-                        <span>${item.label}</span>
-                        ${defBadge}
+            let itemsHtml = sorted.map(l => {
+                const isDef = l.code === defLangCode;
+                return `
+                    <div class="trans-menu-item ${isDef ? 'default-lang' : ''}" onclick="executeTranslation('${contextType}', '${targetId}', '${l.code}', '${l.name}')">
+                        <span>${l.flag} ${escapeHtml(l.name)}</span>
+                        ${isDef ? `<span class="trans-badge-def">${defBadgeText}</span>` : ''}
                     </div>
                 `;
-            });
+            }).join('');
 
-            menu.innerHTML = menuHtml;
-            wrapper.appendChild(menu);
+            portal.innerHTML = `
+                <div class="trans-portal-header"><i class="fa-solid fa-language"></i> ${headerTitle}</div>
+                <div class="trans-portal-list">${itemsHtml}</div>
+            `;
+
+            document.body.appendChild(portal);
+
+            // Tính toán vị trí hiển thị thông minh theo tọa độ nút bấm
+            const rect = btn.getBoundingClientRect();
+            const portalWidth = 210;
+            const portalHeight = Math.min(290, portal.offsetHeight || 260);
+
+            // Xử lý trục Y (tránh tràn đáy màn hình)
+            let top = rect.bottom + 6;
+            if (window.innerHeight - rect.bottom < portalHeight && rect.top > portalHeight) {
+                top = rect.top - portalHeight - 6;
+            }
+
+            // Xử lý trục X (tránh tràn mép phải màn hình)
+            let left = rect.left;
+            if (left + portalWidth > window.innerWidth - 10) {
+                left = window.innerWidth - portalWidth - 12;
+            }
+            if (left < 10) left = 10;
+
+            portal.style.top = `${Math.max(10, top)}px`;
+            portal.style.left = `${left}px`;
         }
 
-        // Hàm thực thi dịch
-        async function executeTranslation(menuItem, contextType, targetId, targetLangCode, langName) {
-            const wrapper = menuItem.closest('.trans-menu-wrapper');
-            const btn = wrapper.querySelector('button');
-            const menu = wrapper.querySelector('.trans-dropdown-menu');
-            if (menu) menu.remove();
+        // THỰC THI DỊCH THUẬT
+        async function executeTranslation(contextType, targetId, targetLangCode, langName) {
+            closeAllTranslatePortals();
 
             let targetContainer = null;
             let rawText = '';
+            let btn = null;
 
             if (contextType === 'block') {
                 targetContainer = document.getElementById(targetId);
+                const blockCard = targetContainer ? targetContainer.closest('.info-card') : null;
+                btn = blockCard ? blockCard.querySelector('.btn-translate-icon') : null;
                 if (targetContainer) {
                     const clone = targetContainer.cloneNode(true);
                     clone.querySelectorAll('.trans-result-box').forEach(el => el.remove());
                     rawText = clone.innerText.trim();
                 }
             } else if (contextType === 'comment') {
-                const thread = document.getElementById(`comment-box-${targetId}`);
-                if (thread) {
-                    targetContainer = thread.querySelector('.comment-text-bubble');
+                const boxEl = document.getElementById(`comment-box-${targetId}`);
+                if (boxEl) {
+                    btn = boxEl.querySelector(`button[onclick*="'${targetId}'"]`);
+                    targetContainer = boxEl.querySelector('.comment-text-bubble');
                     if (targetContainer) {
                         const rawAttr = targetContainer.getAttribute('data-raw-text');
                         if (rawAttr) rawText = decodeURIComponent(rawAttr);
@@ -5751,6 +5863,7 @@ function reopenEditor() {
             } else if (contextType === 'chat') {
                 const row = document.getElementById(`chat-msg-${targetId}`);
                 if (row) {
+                    btn = row.querySelector(`button[onclick*="'${targetId}'"]`);
                     targetContainer = row.querySelector('.chat-bubble');
                     if (targetContainer) {
                         const chatTextEl = targetContainer.querySelector('.chat-text');
@@ -5767,14 +5880,15 @@ function reopenEditor() {
 
             if (!rawText || !targetContainer) return;
 
-            // Xóa hộp dịch cũ nếu đã có
+            // Xóa hộp dịch cũ nếu đã có trước đó
             const oldBox = targetContainer.querySelector('.trans-result-box');
             if (oldBox) oldBox.remove();
 
-            // Hiển thị trạng thái đang dịch
-            const origBtnHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-            btn.disabled = true;
+            const origBtnHtml = btn ? btn.innerHTML : null;
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+                btn.disabled = true;
+            }
 
             try {
                 const res = await fetch(`${WORKER_URL}/api/translate`, {
@@ -5787,19 +5901,29 @@ function reopenEditor() {
                 });
                 const data = await res.json();
 
-                btn.innerHTML = origBtnHtml;
-                btn.disabled = false;
+                if (btn) {
+                    btn.innerHTML = origBtnHtml;
+                    btn.disabled = false;
+                }
 
                 if (data && data.success && data.translatedText) {
-                    const isVi = (typeof currentLang !== 'undefined' && currentLang === 'vi');
-                    const label = isVi ? `Dịch sang ${langName}` : `Translated to ${langName}`;
+                    if (btn) btn.classList.add('trans-active');
+
+                    // LƯU CACHE NẾU LÀ GLOBAL CHAT ĐỂ BẢO VỆ DỮ LIỆU
+                    if (contextType === 'chat') {
+                        chatTranslations[targetId] = {
+                            targetLang: targetLangCode,
+                            translatedText: data.translatedText,
+                            langName: langName
+                        };
+                    }
 
                     const box = document.createElement('div');
                     box.className = 'trans-result-box';
                     box.innerHTML = `
                         <div class="trans-header">
-                            <span><i class="fa-solid fa-language"></i> ${label}:</span>
-                            <button type="button" class="trans-btn-close" onclick="this.closest('.trans-result-box').remove()" title="Đóng">&times;</button>
+                            <span><i class="fa-solid fa-language"></i> ${escapeHtml(langName)}</span>
+                            <button type="button" class="trans-btn-close" onclick="${contextType === 'chat' ? `closeChatTranslation('${targetId}')` : `this.closest('.trans-result-box').remove()`}" title="Đóng">&times;</button>
                         </div>
                         <div class="trans-content" style="white-space:pre-line;">${escapeHtml(data.translatedText)}</div>
                     `;
@@ -5808,8 +5932,10 @@ function reopenEditor() {
                     showToast(data.error || "Không thể dịch nội dung này", "error");
                 }
             } catch (err) {
-                btn.innerHTML = origBtnHtml;
-                btn.disabled = false;
+                if (btn) {
+                    btn.innerHTML = origBtnHtml;
+                    btn.disabled = false;
+                }
                 showToast("Lỗi kết nối máy chủ dịch thuật", "error");
             }
         }
