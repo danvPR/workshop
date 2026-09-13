@@ -2107,23 +2107,46 @@
         let previousHash = window.location.pathname + window.location.hash; 
 
         window.navigateTo = function(url) {
-            // Tự động chèn /workshop nếu chưa có
             if (url.startsWith('/') && !url.startsWith(BASE_PATH)) url = BASE_PATH + url;
             history.pushState(null, '', url);
             handleRouting();
         };
 
-        // BỘ ĐÁNH CHẶN (INTERCEPTOR): Bắt click vào thẻ a
+        // BỘ ĐÁNH CHẶN (INTERCEPTOR): Đảm bảo điều hướng luôn thông suốt từ mọi trang
         document.addEventListener('click', function(e) {
             const a = e.target.closest('a');
-            if (a && a.getAttribute('href')) {
-                let href = a.getAttribute('href');
-                if (href.startsWith('#project/')) href = href.replace('#project/', '/projects/');
-                if (href.startsWith('#profile/')) href = href.replace('#profile/', '/users/');
-                
-                if ((href.startsWith('/projects/') || href.startsWith('/users/')) && !a.getAttribute('target')) {
+            if (!a) return;
+            const href = a.getAttribute('href');
+            if (!href || a.getAttribute('target') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
+
+            // 1. Chuyển đổi các link hash dự án/user sang URL sạch
+            if (href.startsWith('#project/')) {
+                e.preventDefault();
+                navigateTo(href.replace('#project/', '/projects/'));
+                return;
+            }
+            if (href.startsWith('#profile/')) {
+                e.preventDefault();
+                navigateTo(href.replace('#profile/', '/users/'));
+                return;
+            }
+
+            // 2. Bắt link URL sạch trực tiếp (/projects/... hoặc /users/...)
+            if (href.startsWith('/projects/') || href.startsWith('/users/')) {
+                e.preventDefault();
+                navigateTo(href);
+                return;
+            }
+
+            // 3. SỬA LỖI NAVBAR: Khi đang ở /projects/... hoặc /users/..., click vào link hash (#home, #chat...)
+            if (href.startsWith('#')) {
+                const currentPath = window.location.pathname;
+                if (currentPath.includes('/projects/') || currentPath.includes('/users/')) {
                     e.preventDefault();
-                    navigateTo(href);
+                    // Đưa pathname về trang gốc và gán hash để không bị dính URL rác
+                    const targetBasePath = BASE_PATH ? BASE_PATH + '/' : '/';
+                    history.pushState(null, '', targetBasePath + href);
+                    handleRouting();
                 }
             }
         });
@@ -2157,22 +2180,35 @@
             // 2. DỊCH TỪ URL THỰC TẾ SANG HASH ẢO CHO JS XỬ LÝ BÊN DƯỚI
             let virtualHash = currentHash; 
 
-            if (path.includes('/projects/')) {
-                virtualHash = '#project/' + path.split('/projects/')[1].replace(/\/$/, '');
-                // Dọn dẹp "#home" rác nếu bị dính trên thanh địa chỉ
+            // Ưu tiên: Nếu URL có Hash chuyển trang (VD: #home, #chat...) thì reset path để thoát khỏi trang dự án/hồ sơ
+            if (currentHash && !currentHash.startsWith('#project/') && !currentHash.startsWith('#profile/')) {
+                if (path.includes('/projects/') || path.includes('/users/')) {
+                    const cleanBase = BASE_PATH ? BASE_PATH + '/' : '/';
+                    history.replaceState(null, '', cleanBase + currentHash);
+                    path = BASE_PATH || '/';
+                }
+                virtualHash = currentHash;
+            } else if (path.includes('/projects/')) {
+                const subPart = path.split('/projects/')[1].replace(/\/$/, '');
+                virtualHash = '#project/' + subPart.split('?')[0];
                 if (window.location.hash) history.replaceState(null, '', path + queryStr);
             } else if (path.includes('/users/')) {
-                virtualHash = '#profile/' + path.split('/users/')[1].replace(/\/$/, '');
-                // Dọn dẹp "#home" rác nếu bị dính trên thanh địa chỉ
+                const subPart = path.split('/users/')[1].replace(/\/$/, '');
+                virtualHash = '#profile/' + subPart.split('?')[0];
                 if (window.location.hash) history.replaceState(null, '', path + queryStr);
             }
 
-            if (!virtualHash && (path === BASE_PATH || path === BASE_PATH + '/' || path.endsWith('index.html'))) {
+            if (!virtualHash || virtualHash === '#' || path === BASE_PATH || path === BASE_PATH + '/' || path.endsWith('index.html')) {
                 virtualHash = '#home'; 
             }
 
             const [hash, ...rest] = virtualHash.split('?');
-            const urlParams = new URLSearchParams(queryStr.replace('?', '') || virtualHash.split('?')[1] || '');
+            // Gộp cả query string của URL và hash parameters để không bao giờ bị mất ?c= hoặc ?tab=
+            const combinedParams = new URLSearchParams(window.location.search);
+            if (virtualHash.includes('?')) {
+                new URLSearchParams(virtualHash.split('?')[1]).forEach((v, k) => combinedParams.set(k, v));
+            }
+            const urlParams = combinedParams;
 
             if (previousHash.includes('#upload') && hash !== '#upload' && typeof hasUnsavedUploadData === 'function' && hasUnsavedUploadData()) {
                 const answer = confirm("Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?");
@@ -3801,7 +3837,7 @@
                 return { url: `#project/${r.targetId}`, label: 'Kiểm tra dự án', valid: true };
             }
             if (r.targetType === 'user' || r.targetType === 'profile') {
-                return { url: `https://danvpr.github.io/workshop/#profile/${encodeURIComponent(r.targetId)}`, label: 'Xem trang cá nhân', valid: true };
+                return { url: `/users/${encodeURIComponent(r.targetId)}`, label: 'Xem trang cá nhân', valid: true };
             }
             if (r.targetType === 'comment') {
                 const targetStr = String(r.targetId);
@@ -3809,12 +3845,12 @@
                 // Dữ liệu mới dạng proj:projectId:commentId
                 if (targetStr.startsWith('proj:')) {
                     const parts = targetStr.split(':');
-                    return { url: `#project/${parts[1]}?c=${parts[2]}`, label: 'Đến vị trí bình luận', valid: true };
+                    return { url: `/projects/${parts[1]}?tab=comments&c=${parts[2]}`, label: 'Đến vị trí bình luận', valid: true };
                 }
                 // Dữ liệu mới dạng prof:username:commentId
                 if (targetStr.startsWith('prof:')) {
                     const parts = targetStr.split(':');
-                    return { url: `https://danvpr.github.io/workshop/#profile/${parts[1]}?c=${parts[2]}`, label: 'Đến bình luận trên hồ sơ', valid: true };
+                    return { url: `/users/${parts[1]}?tab=comments&c=${parts[2]}`, label: 'Đến bình luận trên hồ sơ', valid: true };
                 }
 
                 // TỰ ĐỘNG DÒ TÌM CHO CÁC MÃ CŨ (Ví dụ: 1788844522284 trong Sheet)
