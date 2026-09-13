@@ -1,0 +1,41 @@
+name: Deploy Clean HTML to Pages
+
+on:
+  push:
+    branches: ["main"] # Nếu branch chính của bạn tên là master thì đổi thành "master"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clean HTML Comments
+        run: |
+          # Tìm tất cả file .html và sử dụng sed để xóa bỏ các đoạn <!-- comment -->
+          find . -name "*.html" -type f -exec sed -i ':a;N;$!ba;s/<!--[^>]*-->//g' {} +
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
