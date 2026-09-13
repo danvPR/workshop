@@ -1936,8 +1936,11 @@
 
         async function setLanguage(lang) {
             try {
-                // Thêm ?v=... để chống trình duyệt lưu Cache file cũ
-                const noCacheUrl = `./locales/${lang}.json?v=` + new Date().getTime();
+                // SỬA LỖI ĐƯỜNG DẪN TRÊN GITHUB PAGES KHI RELOAD Ở SUB-ROUTE
+                const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
+                
+                // Thay vì dùng './' sẽ bị sai khi reload ở /projects/..., ta dùng đường dẫn tuyệt đối
+                const noCacheUrl = `${bp}/locales/${lang}.json?v=` + new Date().getTime();
                 
                 const res = await fetch(noCacheUrl);
                 if (!res.ok) throw new Error("Language file not found");
