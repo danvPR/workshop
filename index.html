@@ -5033,7 +5033,7 @@ function reopenEditor() {
         : 'https://aftercode-web-wheat.vercel.app/editor.html';
     
     // 3. Mở trong Tab mới
-    const newWindow = window.open(editorUrl, '_blank');
+    window.location.href = editorUrl;
     
     // 4. (Tùy chọn) Báo lỗi nếu trình duyệt chặn Pop-up
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
