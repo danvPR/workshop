@@ -1118,6 +1118,201 @@
         .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-opt.voted::before {
             color: var(--primary) !important;
         }
+
+        /* ================================================= */
+        /* ✨ GIAO DIỆN MỚI: ĐIỂM DANH & NĂNG LƯỢNG OMG CAO CẤP */
+        /* ================================================= */
+        .daily-modal-box {
+            position: relative;
+            background: radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.12) 0%, var(--bg-panel) 70%);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(234, 88, 12, 0.25);
+        }
+        .daily-streak-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin: 25px 0 20px 0;
+            padding: 0 10px;
+        }
+        .daily-streak-track::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 6px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 4px;
+        }
+        .daily-progress-bar-fill {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            height: 6px;
+            background: linear-gradient(90deg, #f59e0b, #ea580c);
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 12px rgba(234, 88, 12, 0.6);
+        }
+        .daily-card-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        .daily-card-slot {
+            background: var(--bg-panel);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .daily-card-slot.claimed {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.08);
+            transform: translateY(2px);
+        }
+        .daily-card-slot.active {
+            border-color: #f97316;
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.15) 0%, var(--bg-panel) 100%);
+            transform: translateY(-6px) scale(1.06);
+            box-shadow: 0 10px 25px -3px rgba(234, 88, 12, 0.35);
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            50% { box-shadow: 0 0 20px 6px rgba(249, 115, 22, 0.3); }
+        }
+        .daily-card-slot.day-7 {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.15), rgba(168, 85, 247, 0.15));
+            border-color: #a855f7;
+        }
+        .daily-card-slot.day-7.active {
+            border-color: #f59e0b;
+            box-shadow: 0 10px 25px -3px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Nút Tặng OMG Trong Chi Tiết Tác Phẩm */
+        .btn-tip-omg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 20px;
+            padding: 8px 18px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-tip-omg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
+            color: #fff !important;
+        }
+
+        /* Lựa chọn điểm OMG */
+        .tip-chip-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .tip-chip {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 5px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            color: var(--text-title);
+        }
+        .tip-chip:hover { border-color: #ea580c; color: #ea580c; }
+        .tip-chip.active {
+            background: rgba(234, 88, 12, 0.12);
+            border-color: #ea580c;
+            color: #ea580c;
+            transform: scale(1.04);
+        }
+
+        /* ================================================= */
+        /* 🎁 BÌNH LUẬN VINH DANH NGƯỜI TẶNG OMG THEO CẤP BẬC */
+        /* ================================================= */
+        .comment-box.tip-comment {
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        /* Cấp 1: 10 - 49 OMG (Đồng Năng Lượng) */
+        .comment-box.tip-tier-1 {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.06), rgba(245, 158, 11, 0.03));
+            border: 1.5px solid rgba(234, 88, 12, 0.35);
+        }
+        /* Cấp 2: 50 - 199 OMG (Ánh Bạc Huyền Ảo) */
+        .comment-box.tip-tier-2 {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(59, 130, 246, 0.04));
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.15);
+        }
+        /* Cấp 3: 200+ OMG (Hoàng Kim Tối Thượng) */
+        .comment-box.tip-tier-3 {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(234, 88, 12, 0.08));
+            border: 2px solid #f59e0b;
+            box-shadow: 0 6px 25px rgba(245, 158, 11, 0.28);
+            animation: pulseGlow 3s infinite;
+        }
+
+        .tip-badge-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tip-tier-1 .tip-badge-banner { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+        .tip-tier-2 .tip-badge-banner { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+        .tip-tier-3 .tip-badge-banner { background: linear-gradient(90deg, #f59e0b, #ea580c); color: #ffffff; box-shadow: 0 2px 8px rgba(234,88,12,0.4); }
+
+        /* Hộp thư quà tặng OMG đặc biệt */
+        .notif-tip-gift-box {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border: 2px solid #f97316;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+        [data-theme="dark"] .notif-tip-gift-box {
+            background: linear-gradient(135deg, #431407 0%, #2a0b02 100%);
+            border-color: #ea580c;
+        }
     </style>
 </head>
 <body>
@@ -1327,6 +1522,10 @@
                             <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                             <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
                             
+                            <button class="btn-tip-omg" onclick="openTipModal()" title="Ủng hộ tác giả bằng điểm OMG">
+                                <i class="fa-solid fa-bolt fa-bounce"></i> <span>Tặng OMG</span>
+                            </button>
+
                             <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openShareModal()"><i class="fa-solid fa-share"></i> <span data-i18n="action_share">Chia sẻ</span></button>
                             <a id="btnSeeInside" href="#" target="_blank" class="btn" style="border-radius: 20px; padding: 8px 18px;"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
                             
@@ -1972,23 +2171,112 @@
         </div>
     </div>
 
-    <!-- MODAL ĐIỂM DANH HÀNG NGÀY (DAILY REWARD) -->
+    <!-- MODAL ĐIỂM DANH HÀNG NGÀY (DAILY REWARD - THIẾT KẾ MỚI) -->
     <div class="modal-overlay" id="dailyRewardModal">
-        <div class="modal" style="max-width: 550px; text-align: center;">
-            <div class="modal-header">
-                <span><i class="fa-solid fa-gift" style="color:#ea580c;"></i> Điểm danh nhận OMG</span>
-                <button class="btn-close" onclick="closeModal('dailyRewardModal')">&times;</button>
+        <div class="modal daily-modal-box" style="max-width: 580px; text-align: center;">
+            <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 16px 24px;">
+                <span style="font-size: 1.1rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-bolt" style="color:#f97316;"></i> Trạm Nạp Năng Lượng OMG
+                </span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <button class="btn" style="padding: 4px 10px; font-size: 0.8rem; border-radius: 20px;" onclick="openAboutOmgModal()">
+                        <i class="fa-solid fa-circle-question" style="color:#f97316;"></i> OMG là gì?
+                    </button>
+                    <button class="btn-close" onclick="closeModal('dailyRewardModal')">&times;</button>
+                </div>
             </div>
-            <div class="modal-body" style="padding: 30px 20px;">
-                <h3 style="margin-bottom: 10px; color: var(--text-title);">Chuỗi đăng nhập 7 ngày</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Đăng nhập mỗi ngày để nhận tiền tệ OMG miễn phí. Dùng OMG để mua Khung Avatar độc quyền!</p>
-                
-                <div class="daily-reward-grid" id="dailyRewardGrid">
-                    <!-- Render by JS -->
+            
+            <div class="modal-body" style="padding: 24px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 5px;">
+                    <div style="text-align:left;">
+                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Chuỗi chuyên cần</span>
+                        <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> Ngày liên tiếp 🔥</h3>
+                    </div>
+                    <div style="background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.3); padding: 6px 14px; border-radius: 20px; font-weight: 800; color:#ea580c; font-size: 0.95rem;">
+                        <i class="fa-solid fa-bolt"></i> <span id="dailyCurrentOmgVal">0</span> OMG
+                    </div>
+                </div>
+
+                <div class="daily-streak-track">
+                    <div class="daily-progress-bar-fill" id="dailyProgressBar"></div>
+                </div>
+
+                <div class="daily-card-grid" id="dailyRewardGrid">
+                    <!-- Render bằng JS -->
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;">
+                    💡 <b>Mẹo:</b> Tích lũy điểm OMG đều đặn để quy đổi Khung Avatar độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng!
+                </p>
+
+                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; background: linear-gradient(135deg, #f59e0b, #ea580c); border: none; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 15px rgba(234,88,12,0.35);">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Nhận năng lượng hôm nay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GIỚI THIỆU: OMG LÀ GÌ? -->
+    <div class="modal-overlay" id="aboutOmgModal">
+        <div class="modal" style="max-width: 460px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-bolt" style="color:#f97316;"></i> Giới thiệu về OMG</span>
+                <button class="btn-close" onclick="closeModal('aboutOmgModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px; line-height: 1.6;">
+                <div style="text-align:center; margin-bottom: 18px;">
+                    <div style="width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:inline-flex; align-items:center; justify-content:center; box-shadow:0 8px 25px rgba(234, 88, 12, 0.4); margin-bottom: 10px;">
+                        <i class="fa-solid fa-bolt" style="color:#fff; font-size: 2rem;"></i>
+                    </div>
+                    <h3 style="margin:0; font-size:1.3rem;">Điểm Sáng Tạo & Danh Dự</h3>
                 </div>
                 
-                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.1rem; background: linear-gradient(135deg, #f5b041, #ea580c); border: none; box-shadow: 0 4px 15px rgba(234,88,12,0.3);">
-                    <i class="fa-solid fa-hand-holding-dollar"></i> Nhận thưởng ngay
+                <p style="color:var(--text-main); font-size:0.95rem; margin-bottom: 12px;">
+                    <b>OMG</b> là điểm năng lượng vinh danh nội bộ dành riêng cho các lập trình viên và nhà sáng tạo trên <b>DANVworkshop</b>.
+                </p>
+                <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; margin-bottom: 15px; font-size: 0.9rem;">
+                    <div style="margin-bottom: 8px;">🔥 <b>Cách kiếm OMG:</b> Điểm danh chuyên cần mỗi ngày tại trang chủ hoặc nhận ủng hộ từ người hâm mộ.</div>
+                    <div style="margin-bottom: 8px;">🎨 <b>Trang bị phong cách:</b> Mở khóa các Khung Avatar phiên bản giới hạn tại Cài đặt.</div>
+                    <div>💖 <b>Lan tỏa giá trị:</b> Trực tiếp gửi tặng OMG cho các tác phẩm xuất sắc để tri ân người sáng tạo.</div>
+                </div>
+                <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 10px;" onclick="closeModal('aboutOmgModal')">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẶNG ĐIỂM OMG CHO TÁC GIẢ -->
+    <div class="modal-overlay" id="tipOmgModal">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-gift" style="color:#ea580c;"></i> Tặng Điểm OMG Cho Tác Phẩm</span>
+                <button class="btn-close" onclick="closeModal('tipOmgModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; background:var(--bg-secondary); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                    <span style="font-size:0.9rem; color:var(--text-muted);">Năng lượng của bạn:</span>
+                    <b style="color:#ea580c; font-size: 1.1rem;"><i class="fa-solid fa-bolt"></i> <span id="tipModalMyBalance">0</span> OMG</b>
+                </div>
+
+                <label style="font-weight: bold; font-size: 0.9rem; display: block; margin-top: 15px;">Chọn mức ủng hộ:</label>
+                <div class="tip-chip-group">
+                    <div class="tip-chip active" onclick="selectTipChip(10, this)">10 ⚡</div>
+                    <div class="tip-chip" onclick="selectTipChip(50, this)">50 ⚡</div>
+                    <div class="tip-chip" onclick="selectTipChip(100, this)">100 ⚡</div>
+                    <div class="tip-chip" onclick="selectTipChip(200, this)">200 👑</div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="font-size:0.85rem;">Hoặc nhập số điểm tùy ý:</label>
+                    <input type="number" id="tipCustomAmount" class="form-control" value="10" min="1" max="10000" oninput="clearTipChipActive()">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label style="font-size:0.85rem;">Lời nhắn gửi tác giả (tùy chọn):</label>
+                    <textarea id="tipCustomMessage" class="form-control" rows="2" placeholder="Ví dụ: Tác phẩm rất đỉnh! Cố gắng phát huy nhé..."></textarea>
+                </div>
+
+                <button class="btn btn-primary" id="btnSubmitTip" onclick="submitTipOmg()" style="width:100%; justify-content:center; padding: 12px; font-weight:800; background:linear-gradient(135deg, #f59e0b, #ea580c); border:none;">
+                    <i class="fa-solid fa-paper-plane"></i> Xác nhận gửi tặng
                 </button>
             </div>
         </div>
@@ -3068,17 +3356,28 @@
                 const replies = repliesMap[root.id] || []; const isExpanded = expandedThreads[type][root.id] || false;
                 const visibleReplies = isExpanded ? replies : replies.slice(0, 3); const hasMore = replies.length > 3;
 
+                const isTipRoot = !!root.isTip;
+                let tipTierClass = "";
+                if (isTipRoot) {
+                    const amt = root.tipAmount || 0;
+                    tipTierClass = amt >= 200 ? 'tip-comment tip-tier-3' : (amt >= 50 ? 'tip-comment tip-tier-2' : 'tip-comment tip-tier-1');
+                }
+
                 return `
                     <div class="comment-thread" id="${type}-thread-${root.id}">
-                        <div class="comment-box" id="comment-box-${root.id}">
+                        <div class="comment-box ${tipTierClass}" id="comment-box-${root.id}">
                             ${renderAvtWithFrame(root.avt, root.frame, 'avt-circle')}
                             <div class="comment-content-area">
                                 <div class="comment-header">
                                     <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
                                     <span class="comment-time" title="${root.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(root.time)}</span>
                                 </div>
+                                ${root.isTip ? `
+                                <div class="tip-badge-banner">
+                                    <i class="fa-solid ${root.tipAmount >= 200 ? 'fa-crown' : 'fa-bolt'}"></i> Đã tặng ${root.tipAmount} OMG
+                                </div>` : ''}
                                 <div class="comment-text-bubble" data-raw-text="${encodeURIComponent(root.text || '')}">
-                                    ${formatCommentText(root.text)}
+                                    ${root.text ? formatCommentText(root.text) : (root.isTip ? `<i style="opacity:0.85;">Đã gửi tặng ${root.tipAmount} điểm năng lượng OMG ủng hộ tác giả!</i>` : '')}
                                     ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render">` : ''}
                                 </div>
                                 <div style="margin-top:4px; display:flex; align-items:center; gap:8px;">
@@ -4519,6 +4818,32 @@
             let senderLink = `<a href="#profile/${sender}" style="font-weight:bold; color:#575e75; text-decoration:none;">${sender}</a>`;
             let mainText = escapeHtml(n.text || "");
             let actionHtml = ''; let bubbleHtml = '';
+
+            // NHẬN QUÀ TẶNG NĂNG LƯỢNG OMG (GIAO DIỆN HOÀNG KIM)
+            if (mainText.startsWith("[OMG_TIP:")) {
+                const tipMatch = mainText.match(/\[OMG_TIP:(\d+):(.*?)\\]:\s*&quot;(.*?)&quot;/);
+                const tipAmount = tipMatch ? tipMatch[1] : "nhiều";
+                const projTitle = tipMatch ? tipMatch[2] : "tác phẩm của bạn";
+                const tipMsg = tipMatch ? tipMatch[3] : "";
+
+                actionHtml = `
+                    <div class="notif-tip-gift-box">
+                        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(234,88,12,0.4);">
+                            <i class="fa-solid fa-gift" style="color:#fff; font-size:1.4rem;"></i>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size:1.05rem; font-weight:800; color:#ea580c;">
+                                Nhận được +${tipAmount} OMG từ ${senderLink}!
+                            </div>
+                            <div style="font-size:0.9rem; color:var(--text-main); margin-top:2px;">
+                                Dành tặng cho tác phẩm <a href="${n.link || '#home'}" style="font-weight:bold; color:var(--primary); text-decoration:none;">&quot;${projTitle}&quot;</a>
+                            </div>
+                            ${tipMsg ? `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-style:italic;">&ldquo;${tipMsg}&rdquo;</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                return { actionHtml, bubbleHtml: '' };
+            }
 
             // FIX 2: Bỏ việc check text "Cảnh cáo", "bị gỡ" vì user có thể cố tình chat chữ đó. Chỉ xét Admin/Hệ Thống.
             if (sender === "HỆ THỐNG") {
@@ -6090,13 +6415,14 @@ function reopenEditor() {
             openModal('dailyRewardModal');
             
             const grid = document.getElementById('dailyRewardGrid');
-            grid.innerHTML = '<div style="grid-column:1/-1;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
             
             const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
             const pData = await res.json();
             
-            currentUser.omg = pData.omg;
+            currentUser.omg = pData.omg || 0;
             document.getElementById('navOmgBalance').innerText = currentUser.omg;
+            document.getElementById('dailyCurrentOmgVal').innerText = currentUser.omg;
             if(document.getElementById('settingsOmgBalance')) document.getElementById('settingsOmgBalance').innerText = currentUser.omg;
 
             const dailyInfo = pData.dailyLogin || {};
@@ -6106,13 +6432,16 @@ function reopenEditor() {
             let streak = dailyInfo.streak || 0;
             const isClaimedToday = dailyInfo.lastClaim === todayStr;
 
-            // Kiểm tra đứt chuỗi hiển thị
             if (dailyInfo.lastClaim && !isClaimedToday) {
                 const [ld, lm, ly] = dailyInfo.lastClaim.split('/');
                 const [td, tm, ty] = todayStr.split('/');
                 const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24)); 
                 if (diffDays > 1) streak = 0;
             }
+
+            document.getElementById('dailyStreakDisplay').innerText = streak;
+            const progressPercent = Math.min(100, Math.round((streak / 7) * 100));
+            document.getElementById('dailyProgressBar').style.width = `${progressPercent}%`;
 
             const rewards = [10, 20, 30, 40, 50, 60, 150];
             let html = '';
@@ -6121,12 +6450,13 @@ function reopenEditor() {
                 if (i < streak) statusClass = 'claimed';
                 else if (i === streak && !isClaimedToday) statusClass = 'active';
 
+                const isFinalDay = (i === 6);
                 html += `
-                <div class="daily-day-box ${statusClass}">
-                    <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted); margin-bottom: 5px;">Ngày ${i+1}</div>
-                    <i class="fa-solid ${i===6 ? 'fa-gem' : 'fa-bolt'}" style="font-size: 1.5rem; color: ${statusClass==='claimed' ? '#10b981' : (i===6 ? '#a855f7' : '#ea580c')};"></i>
-                    <div style="font-weight: bold; margin-top: 5px;">+${rewards[i]}</div>
-                    ${statusClass === 'claimed' ? '<div style="font-size:0.7rem; color:#10b981; margin-top:4px;"><i class="fa-solid fa-check"></i> Đã nhận</div>' : ''}
+                <div class="daily-card-slot ${statusClass} ${isFinalDay ? 'day-7' : ''}">
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">N.${i+1}</span>
+                    <i class="fa-solid ${isFinalDay ? 'fa-crown' : 'fa-bolt'}" style="font-size: 1.4rem; color: ${statusClass==='claimed' ? '#10b981' : (isFinalDay ? '#f59e0b' : '#ea580c')};"></i>
+                    <b style="font-size: 0.85rem; color: var(--text-title);">+${rewards[i]}</b>
+                    ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:#10b981; font-weight:800;"><i class="fa-solid fa-check"></i> Xong</span>' : ''}
                 </div>`;
             }
             grid.innerHTML = html;
@@ -6134,16 +6464,91 @@ function reopenEditor() {
             const btn = document.getElementById('btnClaimDaily');
             if (isClaimedToday) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-clock"></i> Hãy quay lại vào ngày mai';
+                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nạp năng lượng hôm nay';
                 btn.style.background = 'var(--bg-secondary)';
                 btn.style.color = 'var(--text-muted)';
                 btn.style.boxShadow = 'none';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-hand-holding-dollar"></i> Nhận thưởng ngay';
-                btn.style.background = 'linear-gradient(135deg, #f5b041, #ea580c)';
+                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Nhận năng lượng hôm nay';
+                btn.style.background = 'linear-gradient(135deg, #f59e0b, #ea580c)';
                 btn.style.color = '#fff';
+                btn.style.boxShadow = '0 4px 15px rgba(234,88,12,0.35)';
             }
+        }
+
+        function openAboutOmgModal() { openModal('aboutOmgModal'); }
+
+        // ================= XỬ LÝ TẶNG OMG TRONG DỰ ÁN =================
+        function openTipModal() {
+            if (!currentUser) return openModal('loginModal');
+            if (!currentProj) return;
+
+            if (currentProj.author.toLowerCase() === currentUser.username.toLowerCase()) {
+                return showToast("Bạn không thể tự gửi tặng OMG cho chính mình!", "error");
+            }
+
+            document.getElementById('tipModalMyBalance').innerText = currentUser.omg || 0;
+            document.getElementById('tipCustomAmount').value = "10";
+            document.getElementById('tipCustomMessage').value = "";
+            
+            // Đặt chip 10 làm active
+            const chips = document.querySelectorAll('.tip-chip');
+            chips.forEach((c, idx) => c.classList.toggle('active', idx === 0));
+
+            openModal('tipOmgModal');
+        }
+
+        function selectTipChip(val, el) {
+            document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('tipCustomAmount').value = val;
+        }
+
+        function clearTipChipActive() {
+            document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
+        }
+
+        async function submitTipOmg() {
+            const amount = parseInt(document.getElementById('tipCustomAmount').value);
+            const message = document.getElementById('tipCustomMessage').value.trim();
+
+            if (isNaN(amount) || amount <= 0) return showToast("Vui lòng nhập số điểm hợp lệ!", "error");
+            if (amount > (currentUser.omg || 0)) return showToast("Bạn không đủ điểm OMG!", "error");
+
+            const btn = document.getElementById('btnSubmitTip');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+            btn.disabled = true;
+
+            const res = await apiFetch(`/api/project/tip`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fileId: currentProj.fileId,
+                    amount: amount,
+                    message: message
+                })
+            });
+
+            if (res && res.success) {
+                showToast(`Tuyệt vời! Bạn đã ủng hộ ${amount} OMG cho tác giả!`, 'success');
+                currentUser.omg = res.newBalance;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                document.getElementById('navOmgBalance').innerText = currentUser.omg;
+
+                // Nạp bình luận mới vào danh sách
+                if (!currentProj.comments) currentProj.comments = [];
+                currentProj.comments.push(res.comment);
+                renderCommentList('proj', currentProj.comments);
+                switchProjTab('comments');
+
+                closeModal('tipOmgModal');
+            } else {
+                showToast(res ? res.error : "Không thể gửi tặng điểm OMG", "error");
+            }
+
+            btn.innerHTML = orig;
+            btn.disabled = false;
         }
 
         async function claimDailyReward() {
