@@ -534,6 +534,26 @@
             color: #ffffff !important; 
         }
 
+        /* AVATAR FRAME & OMG SHOP CSS */
+        .avt-wrapper { position: relative; display: inline-block; flex-shrink: 0; }
+        .avt-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; }
+        
+        .omg-balance-pill { background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.3); cursor: pointer; transition: 0.2s; border: none; }
+        .omg-balance-pill:hover { transform: scale(1.05); }
+
+        .frame-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 15px; }
+        .frame-item-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 10px; text-align: center; transition: 0.2s; position: relative;}
+        .frame-item-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .frame-preview-box { position: relative; width: 64px; height: 64px; margin: 0 auto 10px auto; }
+        .frame-preview-box img.base-avt { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .frame-preview-box img.frame-overlay { position: absolute; top: 50%; left: 50%; width: 135%; height: 135%; transform: translate(-50%, -50%); pointer-events: none; }
+        
+        .daily-reward-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin: 20px 0; }
+        .daily-day-box { background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 10px; padding: 15px 5px; text-align: center; opacity: 0.6; transition: 0.3s; }
+        .daily-day-box.active { border-color: #ea580c; opacity: 1; background: #fff7ed; box-shadow: 0 4px 15px rgba(234,88,12,0.15); transform: scale(1.05); }
+        .daily-day-box.claimed { border-color: #10b981; opacity: 1; background: #ecfdf5; }
+        @media (max-width: 600px) { .daily-reward-grid { grid-template-columns: repeat(4, 1fr); } }
+
         /* 💬 KHỐI TRÍCH DẪN TRẢ LỜI TIN NHẮN (REPLY QUOTE) */
         .chat-reply-quote { 
             font-size: 0.78rem; 
@@ -1612,6 +1632,15 @@
                             <input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;">
                             <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hình ảnh sẽ hiển thị trên hồ sơ và bình luận.</div>
                         </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="margin:0;"><i class="fa-solid fa-bolt" style="color:#ea580c;"></i> Cửa hàng Khung Avatar</label>
+                                <span style="font-weight:bold; color:#ea580c;">Số dư: <span id="settingsOmgBalance">0</span> OMG</span>
+                            </div>
+                            <div class="frame-shop-grid" id="frameShopContainer">
+                                <div style="grid-column: 1/-1; text-align:center; color:#888;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải cửa hàng...</div>
+                            </div>
+                        </div>
                         <div class="form-group"><label data-i18n="settings_display_name">Tên hiển thị:</label><input type="text" id="editDisplayNameInput" class="form-control" data-i18n-ph="settings_display_name_ph" placeholder="Tên hiển thị tự do..."></div>
                         <div class="form-group"><label data-i18n="settings_location">Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" data-i18n-ph="settings_location_ph" placeholder="Ví dụ: Hà Nội, VN"></div>
                         <div class="form-group"><label data-i18n="settings_status">Mô tả trạng thái:</label><input type="text" id="editStatusInput" class="form-control" data-i18n-ph="settings_status_ph" placeholder="Đang làm game..."></div>
@@ -1709,6 +1738,30 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
                 <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> Danh sách Tố cáo chờ xử lý</h3>
                 <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> Làm mới</button>
+            </div>
+
+            <!-- KHỐI QUẢN LÝ KHUNG AVATAR -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-crop-simple" style="color: #3b82f6;"></i> Thêm Khung Avatar Mới (Cửa hàng OMG)
+                </h4>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label>Tên Khung:</label>
+                        <input type="text" id="adminFrameName" class="form-control" placeholder="VD: Rồng Lửa">
+                    </div>
+                    <div class="form-group" style="flex: 2; min-width: 200px;">
+                        <label>URL Hình Ảnh (Khuyên dùng ImgBB PNG trong suốt):</label>
+                        <input type="text" id="adminFrameUrl" class="form-control" placeholder="https://i.ibb.co/...">
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 100px;">
+                        <label>Giá OMG:</label>
+                        <input type="number" id="adminFramePrice" class="form-control" placeholder="100">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="adminAddFrame()" style="background: #3b82f6; border: none; margin-top: 5px;">
+                    <i class="fa-solid fa-plus"></i> Phát hành Khung mới
+                </button>
             </div>
 
             <!-- KHỐI PHÁT THANH GLOBAL PING -->
@@ -1918,6 +1971,29 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL ĐIỂM DANH HÀNG NGÀY (DAILY REWARD) -->
+    <div class="modal-overlay" id="dailyRewardModal">
+        <div class="modal" style="max-width: 550px; text-align: center;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-gift" style="color:#ea580c;"></i> Điểm danh nhận OMG</span>
+                <button class="btn-close" onclick="closeModal('dailyRewardModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 30px 20px;">
+                <h3 style="margin-bottom: 10px; color: var(--text-title);">Chuỗi đăng nhập 7 ngày</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Đăng nhập mỗi ngày để nhận tiền tệ OMG miễn phí. Dùng OMG để mua Khung Avatar độc quyền!</p>
+                
+                <div class="daily-reward-grid" id="dailyRewardGrid">
+                    <!-- Render by JS -->
+                </div>
+                
+                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.1rem; background: linear-gradient(135deg, #f5b041, #ea580c); border: none; box-shadow: 0 4px 15px rgba(234,88,12,0.3);">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Nhận thưởng ngay
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL CHIA SẺ -->
     <div class="modal-overlay" id="shareModal">
         <div class="modal" style="max-width:400px;">
@@ -2661,6 +2737,9 @@
                 nav.innerHTML = `
                     <div style="display:flex; align-items:center; gap:15px;">
                         ${adminIcon}
+                        <button class="omg-balance-pill" onclick="openDailyRewardModal()" title="Nhận OMG hàng ngày">
+                            <i class="fa-solid fa-bolt"></i> <span id="navOmgBalance">${currentUser.omg || 0}</span>
+                        </button>
                         <a href="#notifications" style="position:relative; display:inline-flex; align-items:center; justify-content:center; padding: 6px; border-radius: 8px; transition: 0.2s; text-decoration:none;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">
                             <img src="https://scratch.mit.edu/images/nav-notifications.png" style="height: 22px; opacity: 0.9;">
                             <span class="notif-badge" id="notifBadge" style="display:none; right: -6px; top: -4px; z-index: 10; min-width: 18px; text-align: center;">0</span>
@@ -2668,7 +2747,13 @@
                     </div>
                     <a href="#upload" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> ${t('nav_upload')}</a>
                     <a href="#settings" class="btn" style="padding:8px; border-radius:50%;" title="${t('settings_options')}"><i class="fa-solid fa-gear"></i></a>
-                    <a href="#profile/${currentUser.username}" class="nav-user-pill"><img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" onerror="this.src='${DEFAULT_AVATAR}'"><span>${escapeHtml(currentUser.username)}</span></a>
+                    <a href="#profile/${currentUser.username}" class="nav-user-pill">
+                        <div class="avt-wrapper" style="width: 24px; height: 24px;">
+                            <img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" style="width:100%; height:100%;" onerror="this.src='${DEFAULT_AVATAR}'">
+                            ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
+                        </div>
+                        <span>${escapeHtml(currentUser.username)}</span>
+                    </a>
                 `;
                 
                 // Đồng bộ Profile Icon lên thanh Mobile Nav
@@ -2986,7 +3071,7 @@
                 return `
                     <div class="comment-thread" id="${type}-thread-${root.id}">
                         <div class="comment-box" id="comment-box-${root.id}">
-                            <img src="${getAvtUrl(root.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
+                            ${renderAvtWithFrame(root.avt, root.frame, 'avt-circle')}
                             <div class="comment-content-area">
                                 <div class="comment-header">
                                     <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
@@ -4663,7 +4748,12 @@
 
             openModal('followListModal');
         }
-        function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
+        function getAvtUrl(id) { 
+            if (!id) return DEFAULT_AVATAR;
+            // Bóc tách nếu có chứa khung (dùng cho hệ thống Chat)
+            let realId = id.split('|||')[0]; 
+            return realId ? `${WORKER_URL}/api/project/${realId}` : DEFAULT_AVATAR; 
+        }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
         // 🎴 HÀM RENDER NỘI DUNG CHAT
@@ -5368,6 +5458,12 @@ function reopenEditor() {
                 const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 140;
 
                 const messagesHtml = messages.map(c => {
+                    // Tự động tách frame từ avatar nếu có
+                    if (c.avt && c.avt.includes('|||')) {
+                        let parts = c.avt.split('|||');
+                        c.avt = parts[0];
+                        c.frame = parts[1];
+                    }
                     const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
                     const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
                     const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
@@ -5387,8 +5483,8 @@ function reopenEditor() {
                     return `
                     <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}">
                         ${!isMine ? `
-                        <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}">
-                            <img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:36px; height:36px; flex-shrink:0; border: 1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'">
+                        <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}" style="display:flex;">
+                            ${renderAvtWithFrame(c.avt, c.frame, 'avt-circle')}
                         </a>` : ''}
                         
                         <div class="chat-msg-wrapper">
@@ -5973,6 +6069,236 @@ function reopenEditor() {
             portal.style.top = `${Math.max(10, top)}px`;
             portal.style.left = `${left}px`;
         }
+
+        // ================= HỆ THỐNG OMG & KHUNG AVATAR =================
+        let availableFrames = [];
+        let myOwnedFrames = [];
+
+        // Hàm hỗ trợ Render Avatar có Khung trên toàn Website
+        function renderAvtWithFrame(avtUrl, frameUrl, sizeClass) {
+            const hasFrame = frameUrl && frameUrl !== 'null' && frameUrl !== 'undefined';
+            return `
+                <div class="avt-wrapper">
+                    <img src="${getAvtUrl(avtUrl)}" class="${sizeClass}" onerror="this.src='${DEFAULT_AVATAR}'">
+                    ${hasFrame ? `<img src="${frameUrl}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
+                </div>
+            `;
+        }
+
+        async function openDailyRewardModal() {
+            if (!currentUser) return openModal('loginModal');
+            openModal('dailyRewardModal');
+            
+            const grid = document.getElementById('dailyRewardGrid');
+            grid.innerHTML = '<div style="grid-column:1/-1;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
+            
+            const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
+            const pData = await res.json();
+            
+            currentUser.omg = pData.omg;
+            document.getElementById('navOmgBalance').innerText = currentUser.omg;
+            if(document.getElementById('settingsOmgBalance')) document.getElementById('settingsOmgBalance').innerText = currentUser.omg;
+
+            const dailyInfo = pData.dailyLogin || {};
+            const todayStr = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }).split(' ')[1];
+            
+            let streak = dailyInfo.streak || 0;
+            const isClaimedToday = dailyInfo.lastClaim === todayStr;
+
+            // Kiểm tra đứt chuỗi hiển thị
+            if (dailyInfo.lastClaim && !isClaimedToday) {
+                const [ld, lm, ly] = dailyInfo.lastClaim.split('/');
+                const [td, tm, ty] = todayStr.split('/');
+                const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24)); 
+                if (diffDays > 1) streak = 0;
+            }
+
+            const rewards = [10, 20, 30, 40, 50, 60, 150];
+            let html = '';
+            for (let i = 0; i < 7; i++) {
+                let statusClass = '';
+                if (i < streak) statusClass = 'claimed';
+                else if (i === streak && !isClaimedToday) statusClass = 'active';
+
+                html += `
+                <div class="daily-day-box ${statusClass}">
+                    <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted); margin-bottom: 5px;">Ngày ${i+1}</div>
+                    <i class="fa-solid ${i===6 ? 'fa-gem' : 'fa-bolt'}" style="font-size: 1.5rem; color: ${statusClass==='claimed' ? '#10b981' : (i===6 ? '#a855f7' : '#ea580c')};"></i>
+                    <div style="font-weight: bold; margin-top: 5px;">+${rewards[i]}</div>
+                    ${statusClass === 'claimed' ? '<div style="font-size:0.7rem; color:#10b981; margin-top:4px;"><i class="fa-solid fa-check"></i> Đã nhận</div>' : ''}
+                </div>`;
+            }
+            grid.innerHTML = html;
+
+            const btn = document.getElementById('btnClaimDaily');
+            if (isClaimedToday) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-clock"></i> Hãy quay lại vào ngày mai';
+                btn.style.background = 'var(--bg-secondary)';
+                btn.style.color = 'var(--text-muted)';
+                btn.style.boxShadow = 'none';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-hand-holding-dollar"></i> Nhận thưởng ngay';
+                btn.style.background = 'linear-gradient(135deg, #f5b041, #ea580c)';
+                btn.style.color = '#fff';
+            }
+        }
+
+        async function claimDailyReward() {
+            const btn = document.getElementById('btnClaimDaily');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang nhận...'; btn.disabled = true;
+            
+            const res = await apiFetch(`/api/store/daily`, { method: 'POST', body: JSON.stringify({}) });
+            if (res && res.success) {
+                showToast(`Tuyệt vời! Bạn nhận được ${res.reward} OMG`, 'success');
+                currentUser.omg = res.newBalance;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                openDailyRewardModal(); // Refresh Modal
+            } else {
+                showToast(res ? res.error : "Lỗi hệ thống", 'error');
+                btn.innerHTML = '<i class="fa-solid fa-hand-holding-dollar"></i> Nhận thưởng ngay'; btn.disabled = false;
+            }
+        }
+
+        // Tích hợp Load Cửa hàng vào hàm openSettingsPage
+        const originalOpenSettings = openSettingsPage;
+        openSettingsPage = async function() {
+            await originalOpenSettings();
+            if (currentUser) {
+                loadAvatarFramesShop();
+            }
+        };
+
+        async function loadAvatarFramesShop() {
+            const container = document.getElementById('frameShopContainer');
+            try {
+                // Fetch Frames
+                const framesRes = await fetch(`${WORKER_URL}/api/frames`);
+                availableFrames = await framesRes.json();
+                
+                // Fetch User's Data
+                const userRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
+                const pData = await userRes.json();
+                myOwnedFrames = pData.ownedFrames || [];
+                currentUser.omg = pData.omg || 0;
+                currentUser.frame = pData.frame; // Frame URL đang dùng
+                
+                document.getElementById('settingsOmgBalance').innerText = currentUser.omg;
+
+                let html = `
+                <div class="frame-item-card">
+                    <div class="frame-preview-box">
+                        <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                    </div>
+                    <div style="font-weight:bold; font-size:0.9rem; margin-bottom:5px;">Mặc định</div>
+                    <button class="btn ${!currentUser.frame ? 'btn-primary' : ''}" style="width:100%; font-size:0.8rem;" onclick="equipFrame('none')" ${!currentUser.frame ? 'disabled' : ''}>
+                        ${!currentUser.frame ? '<i class="fa-solid fa-check"></i> Đang dùng' : 'Trang bị'}
+                    </button>
+                </div>
+                `;
+
+                availableFrames.forEach(f => {
+                    const isOwned = myOwnedFrames.includes(f.id);
+                    const isEquipped = currentUser.frame === f.url;
+                    
+                    let actionHtml = '';
+                    if (isEquipped) {
+                        actionHtml = `<button class="btn btn-primary" style="width:100%; font-size:0.8rem;" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>`;
+                    } else if (isOwned) {
+                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; border: 1px solid var(--primary); color: var(--primary);" onclick="equipFrame('${f.id}')">Trang bị</button>`;
+                    } else {
+                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; background:#ea580c; color:#fff;" onclick="buyFrame('${f.id}', ${f.price})"><i class="fa-solid fa-bolt"></i> Mua ${f.price}</button>`;
+                    }
+
+                    html += `
+                    <div class="frame-item-card">
+                        <div class="frame-preview-box">
+                            <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <img src="${f.url}" class="frame-overlay">
+                        </div>
+                        <div style="font-weight:bold; font-size:0.9rem; margin-bottom:5px;" title="${f.name}">${f.name.substring(0,10)}</div>
+                        ${actionHtml}
+                    </div>`;
+                });
+
+                container.innerHTML = html;
+            } catch(e) {
+                container.innerHTML = '<div style="grid-column: 1/-1; color:#ef4444;">Lỗi tải cửa hàng.</div>';
+            }
+        }
+
+        async function buyFrame(frameId, price) {
+            if (!confirm(`Bạn muốn mua khung này với giá ${price} OMG?`)) return;
+            const res = await apiFetch(`/api/store/buy`, { method: 'POST', body: JSON.stringify({ frameId }) });
+            if (res && res.success) {
+                showToast("Đã mua thành công! Hãy trang bị ngay.", "success");
+                loadAvatarFramesShop(); // Tải lại shop
+            } else {
+                showToast(res ? res.error : "Lỗi mua hàng", "error");
+            }
+        }
+
+        async function equipFrame(frameId) {
+            const res = await apiFetch(`/api/store/equip`, { method: 'POST', body: JSON.stringify({ frameId }) });
+            if (res && res.success) {
+                showToast("Đã trang bị khung!", "success");
+                currentUser.frame = res.frameUrl;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                updateNav(); // Đổi khung trên Navbar
+                loadAvatarFramesShop(); // Tải lại shop
+            }
+        }
+
+        async function adminAddFrame() {
+            const name = document.getElementById('adminFrameName').value;
+            const imgUrl = document.getElementById('adminFrameUrl').value;
+            const price = document.getElementById('adminFramePrice').value;
+
+            if(!name || !imgUrl || !price) return showToast("Vui lòng điền đủ thông tin", "error");
+            
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang thêm...'; btn.disabled = true;
+
+            const res = await apiFetch(`/api/admin/add_frame`, { method: 'POST', body: JSON.stringify({ name, imgUrl, price: parseInt(price) }) });
+            if(res && res.success) {
+                showToast("Đã phát hành Khung mới!", "success");
+                document.getElementById('adminFrameName').value = "";
+                document.getElementById('adminFrameUrl').value = "";
+                document.getElementById('adminFramePrice').value = "";
+            }
+            btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung mới'; btn.disabled = false;
+        }
+
+        // CẬP NHẬT ẢNH AVATAR PROFILE ĐỂ HIỆN KHUNG (GHI ĐÈ LOGIC CŨ)
+        const originalOpenProfilePage = openProfilePage;
+        openProfilePage = async function(username, urlParams = null) {
+            await originalOpenProfilePage(username, urlParams);
+            
+            // Xử lý chèn Frame vào Profile Avatar to
+            const avtWrapper = document.querySelector('.profile-avt-wrapper');
+            if (avtWrapper && viewingProfileData) {
+                avtWrapper.innerHTML = `
+                    <img id="profAvt" src="${getAvtUrl(viewingProfileData.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
+                    ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none;">` : ''}
+                `;
+            }
+        };
+
+        // Ghi đè hàm gửi Chat/Comment để lưu cả frame đang dùng vào dữ liệu mới
+        const originalApiFetch = apiFetch;
+        apiFetch = async function(endpoint, options = {}) {
+            if(options.method === 'POST' && typeof options.body === 'string' && currentUser) {
+                try {
+                    let bodyObj = JSON.parse(options.body);
+                    if (endpoint.includes("/api/chat") || endpoint.includes("/api/comment") || endpoint.includes("/api/user/comment")) {
+                        bodyObj.frame = currentUser.frame || null; // Nạp frame vào tin nhắn
+                        options.body = JSON.stringify(bodyObj);
+                    }
+                } catch(e){}
+            }
+            return await originalApiFetch(endpoint, options);
+        };
 
         // THỰC THI DỊCH THUẬT
         async function executeTranslation(contextType, targetId, targetLangCode, langName) {
