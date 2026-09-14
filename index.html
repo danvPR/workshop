@@ -1737,17 +1737,6 @@
                 </button>
             </div>
 
-            <!-- BẢNG ĐIỀU KHIỂN DATABASE CHAT -->
-            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-database" style="color: #10b981;"></i> Quản lý Database D1
-                </h4>
-                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Dọn dẹp tin nhắn D1 và đóng gói 100 tin nhắn cũ nhất lưu trữ vào Google Sheets. Tính năng này giúp giảm tải Database khi bị đầy.</p>
-                <button class="btn" onclick="forceArchiveChat(this)" style="border: 1px solid #10b981; color: #10b981; font-weight: bold;">
-                    <i class="fa-solid fa-box-archive"></i> Đóng gói & Dọn dẹp Chat ngay
-                </button>
-            </div>
-
             <div id="adminReportsList">Đang tải dữ liệu an toàn từ máy chủ...</div>
         </div>
     </div>
@@ -2129,21 +2118,6 @@
     </div>
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
-        // Lệnh kích hoạt dọn dẹp Database cho Admin
-        async function forceArchiveChat(btn) {
-            if(!confirm("Bạn có muốn xóa 100 tin cũ nhất khỏi D1 và lưu trữ vào Sheets không?")) return;
-            const orig = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang đóng gói...'; btn.disabled = true;
-            
-            const res = await apiFetch(`/api/admin/archive_chat_now`, { method: 'POST', body: JSON.stringify({}) });
-            if (res && res.success) {
-                showToast(`Đã đóng gói thành công ${res.archived_count || 0} tin nhắn!`, "success");
-            } else {
-                showToast(res ? res.error : "Lỗi đóng gói", "error");
-            }
-            btn.innerHTML = orig; btn.disabled = false;
-        }
-
         const WIKI_CLIENT_ID = "70970406"; 
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
@@ -5324,6 +5298,8 @@ function reopenEditor() {
             // Reset về 20 tin nhắn mỗi lần vào trang
             chatDisplayLimit = 20;
             lastChatJSONStr = "";
+            archiveChatPage = 1;
+            isFetchingArchive = false;
             resetAFKTimer();
 
             if (currentUser) {
@@ -5341,11 +5317,13 @@ function reopenEditor() {
                 if (btnPoll) btnPoll.style.display = 'none';
             }
             
-            // Hiển thị Skeleton Chat trước khi lấy dữ liệu
             const list = document.getElementById('chatMessageList');
-            if (list.innerHTML.trim() === '' || list.innerHTML.includes('fa-spinner') || list.innerHTML.includes('Đang tải')) {
-                list.innerHTML = getSkeletonHTML('chat');
-            }
+            // TẠO CÁC VÙNG CHỨA TÁCH BIỆT: KHUNG TIN CŨ VÀ KHUNG LIVE
+            list.innerHTML = `
+                <div id="chatLoadMoreTopArea"></div>
+                <div id="chatArchiveWrapper"></div>
+                <div id="chatLiveWrapper">${getSkeletonHTML('chat')}</div>
+            `;
 
             loadGlobalChat(true);
             startChatPolling();
@@ -5361,15 +5339,10 @@ function reopenEditor() {
 
         async function loadGlobalChat(forceScroll = false, isLoadMore = false) {
             try {
-                // Tải theo số lượng chatDisplayLimit
                 const response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' });
                 const res = await response.json();
                 
-                // 🛡️ BẢO VỆ DOM KHI SERVER LỖI HOẶC BỊ CHẶN D1 (CHỐNG CHỚP TRẮNG MÀN HÌNH)
-                if (!response.ok || res.error) {
-                    console.warn("Lỗi/Rate Limit D1: Hệ thống tự động bảo lưu giao diện hiện tại.", res.error);
-                    return; // Bỏ qua, giữ nguyên giao diện tin nhắn cũ đang hiển thị
-                }
+                if (!response.ok || res.error) return;
 
                 const messages = Array.isArray(res) ? res : (res.messages || []);
                 chatHasMore = res.hasMore !== undefined ? res.hasMore : false;
@@ -5378,28 +5351,21 @@ function reopenEditor() {
                 if (resStr === lastChatJSONStr && !forceScroll && !isLoadMore) return;
                 lastChatJSONStr = resStr;
 
+                const liveWrapper = document.getElementById('chatLiveWrapper');
+                const topArea = document.getElementById('chatLoadMoreTopArea');
                 const list = document.getElementById('chatMessageList');
                 
-                // 🛡️ BẢO VỆ NẾU MẢNG RỖNG NHƯNG DOM ĐANG CÓ DATA (Tránh chớp trắng)
+                if (!liveWrapper || !topArea) return;
+
                 if (!messages || messages.length === 0) {
-                    if (list.children.length === 0 || list.innerHTML.includes('fa-spinner') || list.innerHTML.includes('Đang tải')) {
-                        list.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
+                    if (liveWrapper.innerHTML === '') {
+                        liveWrapper.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
                     }
                     return;
                 }
 
-                // Lưu lại chiều cao cuộn cũ để không bị giật màn hình khi bấm tải thêm
                 const oldScrollHeight = list.scrollHeight;
                 const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 140;
-
-                // Nút Load More ở đầu tin nhắn
-                const loadMoreBtnHtml = chatHasMore ? `
-                    <div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0;">
-                        <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
-                            <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm tin nhắn cũ
-                        </button>
-                    </div>
-                ` : '';
 
                 const messagesHtml = messages.map(c => {
                     const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
@@ -5461,9 +5427,29 @@ function reopenEditor() {
                     `;
                 }).join('');
 
-                list.innerHTML = loadMoreBtnHtml + messagesHtml;
+                // CHỈ GHI ĐÈ KHUNG LIVE, GIỮ NGUYÊN KHUNG TIN CŨ TỪ SHEETS
+                liveWrapper.innerHTML = messagesHtml;
 
-                // 🎯 TỰ ĐỘNG ĐÀO TÌM TIN NHẮN TỪ LINK
+                // NÚT LOAD MORE ĐẶT Ở VÙNG RIÊNG TRÊN CÙNG
+                if (chatHasMore && !isFetchingArchive) {
+                    topArea.innerHTML = `
+                        <div style="text-align:center; padding: 0 0 15px 0;">
+                            <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm tin nhắn cũ
+                            </button>
+                        </div>
+                    `;
+                } else if (!isFetchingArchive && topArea.innerHTML === '') {
+                    topArea.innerHTML = `
+                        <div style="text-align:center; padding: 0 0 15px 0;">
+                            <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
+                                <i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // CUỘN TRANG THÔNG MINH
                 if (isLoadMore && !isAutoFindingMessage) {
                     list.scrollTop = list.scrollHeight - oldScrollHeight;
                 } else {
@@ -5474,19 +5460,17 @@ function reopenEditor() {
                         setTimeout(async () => {
                             const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
                             if (targetEl) {
-                                // TÌM THẤY -> Cuộn tới và nháy vàng
                                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 targetEl.classList.add('highlight-permanent');
                                 isAutoFindingMessage = false;
                                 autoFindDepth = 0;
                             } else {
-                                // CHƯA THẤY MÀ VẪN CÒN TIN CŨ -> Tự động kích hoạt nút tải thêm
                                 if (chatHasMore || (typeof isFetchingArchive !== 'undefined' && isFetchingArchive)) {
                                     if (!isAutoFindingMessage) {
                                         isAutoFindingMessage = true;
                                         autoFindDepth = 0;
                                     }
-                                    await loadMoreChatMessages(true); // Truyền cờ tự động tìm
+                                    await loadMoreChatMessages(true);
                                 } else {
                                     showToast("Tin nhắn này quá cũ hoặc đã bị xóa", "info");
                                     isAutoFindingMessage = false;
@@ -5497,10 +5481,7 @@ function reopenEditor() {
                         setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
                     }
                 }
-            } catch(e) {
-                console.error("Lỗi mạng, bảo lưu giao diện cũ:", e);
-                // KHÔNG LÀM GÌ CẢ -> GIỮ NGUYÊN DOM ĐỂ KHÔNG BỊ TRẮNG MÀN HÌNH
-            }
+            } catch(e) {}
         }
 
         let archiveChatPage = 1;
@@ -5509,7 +5490,6 @@ function reopenEditor() {
         async function loadMoreChatMessages(isAutoFind = false) {
             if (isChatLoadingMore) return;
             
-            // Giới hạn số lần tự đào sâu tối đa 5 lần (100 tin) để không bị treo máy
             if (isAutoFind) {
                 autoFindDepth++;
                 if (autoFindDepth > 5) {
@@ -5543,9 +5523,10 @@ function reopenEditor() {
                 if (res.error) throw new Error(res.error);
                 
                 const messages = res.messages || [];
+                const topArea = document.getElementById('chatLoadMoreTopArea');
+
                 if (messages.length === 0) {
-                    const btnArea = document.getElementById('chatLoadMoreArea');
-                    if(btnArea) btnArea.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
+                    if (topArea) topArea.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding-bottom: 10px;">Đã tải hết lịch sử trò chuyện.</div>';
                     isAutoFindingMessage = false;
                     return;
                 }
@@ -5570,29 +5551,30 @@ function reopenEditor() {
                 }).join('');
 
                 const list = document.getElementById('chatMessageList');
+                const archiveWrapper = document.getElementById('chatArchiveWrapper');
                 const oldScrollHeight = list.scrollHeight;
-                
-                const loadMoreBtnHtml = res.hasMore ? `
-                    <div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0;">
-                        <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
-                            <i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ
-                        </button>
-                    </div>
-                ` : '<div id="chatLoadMoreArea" style="text-align:center; padding: 0 0 15px 0; color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
 
-                const oldBtn = document.getElementById('chatLoadMoreArea');
-                if (oldBtn) oldBtn.remove();
+                // NẠP VÀO KHUNG LƯU TRỮ (KHÔNG ĐỤNG ĐẾN KHUNG LIVE)
+                archiveWrapper.insertAdjacentHTML('afterbegin', messagesHtml);
 
-                list.insertAdjacentHTML('afterbegin', messagesHtml);
-                list.insertAdjacentHTML('afterbegin', loadMoreBtnHtml);
+                if (res.hasMore) {
+                    topArea.innerHTML = `
+                        <div style="text-align:center; padding: 0 0 15px 0;">
+                            <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
+                                <i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ
+                            </button>
+                        </div>
+                    `;
+                    archiveChatPage++;
+                } else {
+                    topArea.innerHTML = '<div style="text-align:center; padding: 0 0 15px 0; color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
+                }
 
                 if (!isAutoFind) {
                     list.scrollTop = list.scrollHeight - oldScrollHeight;
                 }
 
-                if (res.hasMore) archiveChatPage++;
-
-                // Tiếp tục đào tìm ở nhánh Archive Sheet
+                // Tiếp tục tìm tin theo ID nếu có cờ tìm kiếm
                 if (isAutoFind) {
                     const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
                     const targetMsgId = urlParams.get('m');
