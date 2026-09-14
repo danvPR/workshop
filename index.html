@@ -1118,6 +1118,77 @@
         .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-opt.voted::before {
             color: var(--primary) !important;
         }
+        .side-marquee-column {
+            position: fixed;
+            top: 62px;
+            bottom: 0;
+            width: 70px;
+            overflow: hidden;
+            z-index: -10;
+            pointer-events: none;
+            opacity: 0.6; /* Tăng độ rõ nét hơn (đã chỉnh từ 0.2 lên 0.4) */
+            display: flex;
+            justify-content: center;
+        }
+        
+        .side-marquee-column.left {
+            left: 5px;
+        }
+        
+        .side-marquee-column.right {
+            right: 5px;
+        }
+
+        .marquee-track {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            width: 100%;
+            align-items: center;
+        }
+
+        /* Cột trái: Cuộn ngược lên trên (Tăng thời gian lên 35s để chạy chậm lại) */
+        .side-marquee-column.left .marquee-track {
+            animation: scrollUp 35s linear infinite;
+        }
+
+        /* Cột phải: Cuộn xuống dưới (Tăng thời gian lên 35s để chạy chậm lại) */
+        .side-marquee-column.right .marquee-track {
+            animation: scrollDown 35s linear infinite;
+        }
+
+        .marquee-item {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            padding: 25px 0;
+            letter-spacing: 5px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .side-marquee-column.left .marquee-item {
+            color: #ffff00;
+        }
+
+        .side-marquee-column.right .marquee-item {
+            color: #ff0000;
+        }
+
+        @keyframes scrollDown {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0%); }
+        }
+
+        @keyframes scrollUp {
+            0% { transform: translateY(0%); }
+            100% { transform: translateY(-50%); }
+        }
+
+        @media (max-width: 1200px) {
+            .side-marquee-column { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -2190,6 +2261,33 @@
             <div class="modal-body" style="overflow-y: auto; padding: 10px; background: #fff;" id="followListContainer">
                 <!-- Data đổ vào đây -->
             </div>
+        </div>
+    </div>
+   <div class="side-marquee-column left">
+        <div class="marquee-track">
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+            <div class="marquee-item">KATBOIZZ</div>
+        </div>
+    </div>
+
+    <div class="side-marquee-column right">
+        <div class="marquee-track">
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
+            <div class="marquee-item">DANV</div>
         </div>
     </div>
     <!-- ================= JAVASCRIPT CORE ================= -->
@@ -5123,7 +5221,7 @@ function reopenEditor() {
         : 'https://aftercode-web-wheat.vercel.app/editor.html';
     
     // 3. Mở trong Tab mới
-    const newWindow = window.open(editorUrl, '_blank');
+    window.location.href = editorUrl;
     
     // 4. (Tùy chọn) Báo lỗi nếu trình duyệt chặn Pop-up
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
