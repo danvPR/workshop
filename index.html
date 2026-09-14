@@ -4748,7 +4748,12 @@
 
             openModal('followListModal');
         }
-        function getAvtUrl(id) { return id ? `${WORKER_URL}/api/project/${id}` : DEFAULT_AVATAR; }
+        function getAvtUrl(id) { 
+            if (!id) return DEFAULT_AVATAR;
+            // Bóc tách nếu có chứa khung (dùng cho hệ thống Chat)
+            let realId = id.split('|||')[0]; 
+            return realId ? `${WORKER_URL}/api/project/${realId}` : DEFAULT_AVATAR; 
+        }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
         // 🎴 HÀM RENDER NỘI DUNG CHAT
@@ -5453,6 +5458,12 @@ function reopenEditor() {
                 const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 140;
 
                 const messagesHtml = messages.map(c => {
+                    // Tự động tách frame từ avatar nếu có
+                    if (c.avt && c.avt.includes('|||')) {
+                        let parts = c.avt.split('|||');
+                        c.avt = parts[0];
+                        c.frame = parts[1];
+                    }
                     const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
                     const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
                     const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
