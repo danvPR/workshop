@@ -6100,7 +6100,8 @@ function reopenEditor() {
             if(document.getElementById('settingsOmgBalance')) document.getElementById('settingsOmgBalance').innerText = currentUser.omg;
 
             const dailyInfo = pData.dailyLogin || {};
-            const todayStr = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }).split(' ')[1];
+            const vnTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}));
+            const todayStr = `${String(vnTime.getDate()).padStart(2, '0')}/${String(vnTime.getMonth() + 1).padStart(2, '0')}/${vnTime.getFullYear()}`;
             
             let streak = dailyInfo.streak || 0;
             const isClaimedToday = dailyInfo.lastClaim === todayStr;
