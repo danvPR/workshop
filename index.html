@@ -2777,7 +2777,13 @@
             if(!currentUser) return;
             const res = await apiFetch(`/api/user/${encodeURIComponent(currentUser.username)}`, { method:'GET' });
             if(res && res.needs_update) { openModal('legacyUpdateModal'); } 
-            else if(res) { currentUser.role = res.role; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
+            else if(res) { 
+                currentUser.role = res.role; 
+                currentUser.omg = res.omg !== undefined ? res.omg : (currentUser.omg || 0);
+                currentUser.frame = res.frame || null;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
+                updateNav(); 
+            }
         }
         async function handleLegacyUpdate(e) {
             e.preventDefault();
@@ -2812,7 +2818,20 @@
             const loginId = document.getElementById('loginId').value; const pw = document.getElementById('loginPw').value;
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { method: 'POST', headers:{"Content-Type":"application/json", "X-Client-Type":"StudioDANV-Web"}, body: JSON.stringify({ loginId, password: pw }) })).json();
-                if(res.success) { currentUser = { username: res.username, sessionToken: res.sessionToken, avt: res.avt, role: res.role }; localStorage.setItem('danv_user', JSON.stringify(currentUser)); closeModal('loginModal'); showToast("Đăng nhập thành công", "success"); location.reload(); }
+                if(res.success) { 
+                    currentUser = { 
+                        username: res.username, 
+                        sessionToken: res.sessionToken, 
+                        avt: res.avt, 
+                        role: res.role,
+                        omg: res.omg || 0,
+                        frame: res.frame || null
+                    }; 
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
+                    closeModal('loginModal'); 
+                    showToast("Đăng nhập thành công", "success"); 
+                    location.reload(); 
+                }
                 else showToast(res.error, "error");
             } catch(err){}
         }
