@@ -1120,14 +1120,18 @@
         }
 
         /* ================================================= */
-        /* ✨ GIAO DIỆN MỚI: ĐIỂM DANH & NĂNG LƯỢNG OMG CAO CẤP */
+        /* ✨ GIAO DIỆN MỚI: ĐIỂM DANH & NĂNG LƯỢNG WOW SÁNG RÕ */
         /* ================================================= */
         .daily-modal-box {
             position: relative;
-            background: radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.12) 0%, var(--bg-panel) 70%);
+            background: #ffffff !important;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(234, 88, 12, 0.25);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border: 1px solid var(--border-color);
+        }
+        [data-theme="dark"] .daily-modal-box {
+            background: #1e293b !important;
         }
         .daily-streak-track {
             display: flex;
@@ -1154,12 +1158,12 @@
             top: 50%;
             left: 20px;
             height: 6px;
-            background: linear-gradient(90deg, #f59e0b, #ea580c);
+            background: var(--primary);
             transform: translateY(-50%);
             z-index: 1;
             border-radius: 4px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 12px rgba(234, 88, 12, 0.6);
+            box-shadow: 0 0 10px rgba(13, 165, 122, 0.4);
         }
         .daily-card-grid {
             display: grid;
@@ -1169,7 +1173,7 @@
             z-index: 2;
         }
         .daily-card-slot {
-            background: var(--bg-panel);
+            background: #f8fafc;
             border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: 12px 4px;
@@ -1179,36 +1183,41 @@
             gap: 6px;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        [data-theme="dark"] .daily-card-slot {
+            background: #0f172a;
         }
         .daily-card-slot.claimed {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.08);
-            transform: translateY(2px);
+            border-color: #cbd5e1;
+            background: #ffffff;
+            opacity: 0.65;
+        }
+        [data-theme="dark"] .daily-card-slot.claimed {
+            background: #1e293b;
         }
         .daily-card-slot.active {
-            border-color: #f97316;
-            background: linear-gradient(180deg, rgba(249, 115, 22, 0.15) 0%, var(--bg-panel) 100%);
+            border-color: var(--primary);
+            background: rgba(13, 165, 122, 0.08);
             transform: translateY(-6px) scale(1.06);
-            box-shadow: 0 10px 25px -3px rgba(234, 88, 12, 0.35);
+            box-shadow: 0 10px 25px -3px rgba(13, 165, 122, 0.25);
             animation: pulseGlow 2s infinite;
         }
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
-            50% { box-shadow: 0 0 20px 6px rgba(249, 115, 22, 0.3); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(13, 165, 122, 0.4); }
+            50% { box-shadow: 0 0 20px 6px rgba(13, 165, 122, 0.2); }
         }
         .daily-card-slot.day-7 {
-            background: linear-gradient(135deg, rgba(234, 88, 12, 0.15), rgba(168, 85, 247, 0.15));
-            border-color: #a855f7;
+            background: linear-gradient(135deg, rgba(245, 176, 65, 0.15), rgba(245, 176, 65, 0.25));
+            border-color: #f5b041;
         }
         .daily-card-slot.day-7.active {
-            border-color: #f59e0b;
-            box-shadow: 0 10px 25px -3px rgba(245, 158, 11, 0.5);
+            border-color: #f5b041;
+            box-shadow: 0 10px 25px -3px rgba(245, 176, 65, 0.4);
         }
 
-        /* Nút Tặng OMG Trong Chi Tiết Tác Phẩm */
+        /* Nút Tặng WOW Trong Chi Tiết Tác Phẩm */
         .btn-tip-omg {
-            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
+            background: linear-gradient(135deg, #f5b041 0%, #ea580c 100%) !important;
             color: #ffffff !important;
             border: none !important;
             border-radius: 20px;
@@ -1217,32 +1226,17 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
             transition: all 0.2s ease;
             cursor: pointer;
         }
         .btn-tip-omg:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.45);
             color: #fff !important;
         }
 
-        /* HỆ THỐNG WOW BADGE & UI MỚI */
-        .wow-icon {
-            display: inline-block;
-            width: 1.15em;
-            height: 1.15em;
-            vertical-align: -0.2em;
-            background-image: url('https://github.com/danvPR/workshop/blob/main/Assets/WOW%20Badge.png?raw=true');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-        
-        .omg-balance-pill { background: var(--bg-secondary); color: var(--text-title); padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; border: 1px solid var(--border-color); }
-        .omg-balance-pill:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(13,165,122,0.15); }
-
-        /* Lựa chọn điểm OMG */
+        /* Lựa chọn điểm WOW */
         .tip-chip-group {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1260,11 +1254,11 @@
             transition: all 0.2s;
             color: var(--text-title);
         }
-        .tip-chip:hover { border-color: #ea580c; color: #ea580c; }
+        .tip-chip:hover { border-color: var(--primary); color: var(--primary); }
         .tip-chip.active {
-            background: rgba(234, 88, 12, 0.12);
-            border-color: #ea580c;
-            color: #ea580c;
+            background: rgba(13, 165, 122, 0.12);
+            border-color: var(--primary);
+            color: var(--primary);
             transform: scale(1.04);
         }
 
