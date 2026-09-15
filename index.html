@@ -5549,6 +5549,12 @@
                 }
             }
             
+            // 🤖 HIỆU ỨNG TYPING CỦA AI BEABEA
+            if (rawText.startsWith("[TYPING]")) {
+                const typingText = rawText.replace("[TYPING]", "").trim();
+                return `<div class="chat-text" style="color: #ec4899; font-weight: 600; font-style: italic;"><i class="fa-solid fa-ellipsis fa-fade" style="font-size: 1.2rem; margin-right: 5px;"></i> ${escapeHtml(typingText)}</div>`;
+            }
+
             // Nhận diện tag đóng gói [DANV_PROJECT_SHARE:id:title:author:thumb:views:likes:stars] hoặc link #project/id
             const shareMatch = rawText.match(/\[DANV_PROJECT_SHARE:([^\]]+)\]/) || rawText.match(/(?:^|\s)#project\/([a-zA-Z0-9_\-]+)/);
             
@@ -6604,10 +6610,12 @@ function reopenEditor() {
                 lastChatJSONStr = "";
                 await loadGlobalChat(true);
 
-                // ⚡ NẾU CÓ GỌI BEABEA: Tự động quét lại sau 2.5s và 4.5s để hiện câu trả lời ngay không cần chờ 7s
+                // ⚡ NẾU GỌI BEABEA: Tự động quét liên tục để lấy trạng thái Typing và Cập nhật câu trả lời
                 if (/@beabea/i.test(text)) {
-                    setTimeout(() => loadGlobalChat(true), 2500);
-                    setTimeout(() => loadGlobalChat(true), 4500);
+                    setTimeout(() => loadGlobalChat(true), 800);  // 0.8s: Lấy hiệu ứng Đang gõ...
+                    setTimeout(() => loadGlobalChat(true), 3000); // 3s: Check câu trả lời (lần 1)
+                    setTimeout(() => loadGlobalChat(true), 6000); // 6s: Check câu trả lời (lần 2)
+                    setTimeout(() => loadGlobalChat(true), 9000); // 9s: Check dự phòng mạng chậm
                 }
             } else {
                 showToast("Lỗi gửi tin nhắn", "error");
