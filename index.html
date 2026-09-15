@@ -209,8 +209,8 @@
         
         .profile-main-content { padding: 0 30px 25px; position: relative; }
         .profile-top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: -60px; margin-bottom: 15px; }
-        .profile-avt-wrapper { position: relative; }
-        .profile-avt-lg { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #fff;}
+        .profile-avt-wrapper { position: relative; width: 130px; height: 130px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .profile-avt-lg { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #fff; box-sizing: border-box; }
         .profile-actions { display: flex; gap: 10px; margin-bottom: 15px; }
 
         .profile-info-body { margin-top: 10px; }
@@ -7160,7 +7160,7 @@ function reopenEditor() {
             if (avtWrapper && viewingProfileData) {
                 avtWrapper.innerHTML = `
                     <img id="profAvt" src="${getAvtUrl(viewingProfileData.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
-                    ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none;">` : ''}
+                    ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none; object-fit:contain; aspect-ratio:1/1;">` : ''}
                 `;
             }
         };
