@@ -5603,12 +5603,14 @@
             return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
         }
 
-        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO URL SCRATCH & DANVWORKSHOP
+        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO URL SCRATCH & DANVWORKSHOP VÀ @USERNAME
         function formatCommentText(text) {
             if (!text) return '';
             let safeText = escapeHtml(text);
+            
+            // 1. Highlight link trang web
             const linkRegex = /(https?:\/\/(?:scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)|((?:^|\s)(?:scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
-            return safeText.replace(linkRegex, (match, p1, p2) => {
+            safeText = safeText.replace(linkRegex, (match, p1, p2) => {
                 let raw = p1 || (p2 ? p2.trim() : '');
                 let prefix = (p2 && p2.startsWith(' ')) ? ' ' : '';
                 let cleanUrl = raw;
@@ -5621,6 +5623,19 @@
                 const fullHref = cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`;
                 return `${prefix}<a href="${fullHref}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: bold; text-decoration: underline; word-break: break-all;">${cleanUrl}</a>${trailing}`;
             });
+
+            // 2. Highlight đặc biệt cho BeaBea (AI)
+            safeText = safeText.replace(/(^|\s)@BeaBea\s*\(AI\)/gi, '$1<span style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
+            safeText = safeText.replace(/(^|\s)@BeaBea(?!\s*\(AI\))/gi, '$1<span style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
+
+            // 3. Highlight hyperlink cho tất cả @username của người dùng
+            const mentionRegex = /(^|\s)@([a-zA-Z0-9_\-]{3,25})/g;
+            safeText = safeText.replace(mentionRegex, (match, prefix, uname) => {
+                if (uname.toLowerCase() === 'beabea') return match;
+                return `${prefix}<a href="#profile/${encodeURIComponent(uname)}" style="color:var(--primary); font-weight:700; text-decoration:none; padding:1px 4px; border-radius:4px; background:rgba(13,165,122,0.1);">@${uname}</a>`;
+            });
+
+            return safeText;
         }
 
         // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
@@ -6248,7 +6263,9 @@ function reopenEditor() {
                         
                         <div class="chat-msg-wrapper">
                             <div class="chat-meta-header">
-                                ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>` : ''}
+                                ${!isMine ? (c.author === 'BeaBea (AI)' 
+                                    ? `<span class="chat-author-name" style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> BeaBea (AI) <span style="font-size:0.68rem; background:#fce7f3; color:#ec4899; padding:2px 6px; border-radius:10px; margin-left:4px; border:1px solid #fbcfe8;">BOT</span></span>` 
+                                    : `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>`) : ''}
                                 <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
 
