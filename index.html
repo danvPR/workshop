@@ -535,8 +535,8 @@
         }
 
         /* AVATAR FRAME & WOW SHOP CSS */
-        .avt-wrapper { position: relative; display: inline-block; flex-shrink: 0; }
-        .avt-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; }
+        .avt-wrapper { position: relative; display: inline-flex; flex-shrink: 0; align-self: flex-start; }
+        .avt-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; object-fit: contain; }
         
         .WOW-balance-pill { background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.3); cursor: pointer; transition: 0.2s; border: none; }
         .WOW-balance-pill:hover { transform: scale(1.05); }
@@ -5114,11 +5114,21 @@
             let actionHtml = ''; let bubbleHtml = '';
 
             // NHẬN QUÀ TẶNG NĂNG LƯỢNG WOW (GIAO DIỆN HOÀNG KIM)
-            if (mainText.startsWith("[WOW_TIP:")) {
-                const tipMatch = mainText.match(/\[WOW_TIP:(\d+):(.*?)\\]:\s*&quot;(.*?)&quot;/);
-                const tipAmount = tipMatch ? tipMatch[1] : "nhiều";
-                const projTitle = tipMatch ? tipMatch[2] : "tác phẩm của bạn";
-                const tipMsg = tipMatch ? tipMatch[3] : "";
+            if (mainText.startsWith("[WOW_TIP:") || mainText.startsWith("[OMG_TIP:")) {
+                const splitParts = mainText.split(/\]:\s*(?:&quot;|")/);
+                let tipAmount = "nhiều";
+                let projTitle = "tác phẩm của bạn";
+                let tipMsg = "";
+
+                if (splitParts.length > 1) {
+                    const tagHeader = splitParts[0]; 
+                    const prefixMatch = tagHeader.match(/^\[(?:WOW|OMG)_TIP:(\d+):([\s\S]+)$/);
+                    if (prefixMatch) {
+                        tipAmount = prefixMatch[1];
+                        projTitle = prefixMatch[2];
+                    }
+                    tipMsg = splitParts.slice(1).join(']: &quot;').replace(/(?:&quot;|")$/, '');
+                }
 
                 actionHtml = `
                     <div class="notif-tip-gift-box">
