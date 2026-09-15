@@ -1703,6 +1703,7 @@
                 <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
             <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
+            <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-layer-group"></i> <span>Studios</span></a>
             <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
             <a href="#create" class="nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
@@ -1713,6 +1714,7 @@
     <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE -->
     <nav class="mobile-bottom-nav">
         <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
+        <a href="#studios" class="mobile-nav-link nav-studios"><i class="fa-solid fa-layer-group"></i><span>Studios</span></a>
         <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
         <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="nav_create">Sáng tạo</span></a>
         <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
@@ -1808,6 +1810,60 @@
         </div>
     </div>
 
+
+    <!-- TRANG STUDIOS LIST -->
+    <div id="studiosListView" class="page-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="font-size: 1.8rem;"><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> Cộng đồng Studios</h2>
+            <button class="btn btn-primary" onclick="openCreateStudioModal()"><i class="fa-solid fa-plus"></i> Tạo Studio</button>
+        </div>
+        <div class="project-grid" id="studiosGridList">Đang tải danh sách Studio...</div>
+    </div>
+
+    <!-- TRANG STUDIO DETAIL -->
+    <div id="studioDetailView" class="page-view">
+        <div class="profile-hero" style="margin-bottom: 20px;">
+            <div class="profile-cover-bg" style="height: 120px; background: linear-gradient(135deg, #1e293b, #334155);"></div>
+            <div class="profile-main-content" style="padding-top: 15px; margin-top: 0; display:flex; gap: 20px; align-items:flex-start;">
+                <div style="width: 120px; height: 120px; background: #fff; border-radius: 12px; margin-top: -60px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow:hidden; border: 4px solid var(--bg-panel); flex-shrink: 0;">
+                    <img id="stdDetailThumb" src="https://i.ibb.co/QFg1cVVD/image.png" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h2 id="stdDetailTitle" style="font-size: 1.8rem; font-weight: 800; margin-bottom: 5px;">Tên Studio</h2>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Bởi <a id="stdDetailCreator" href="#" style="color:var(--primary); font-weight:bold;">@creator</a> • <span id="stdFollowersCount">0</span> Người theo dõi</div>
+                        </div>
+                        <div style="display:flex; gap: 10px;">
+                            <button id="btnFollowStudio" class="btn btn-primary" onclick="toggleFollowStudio()"><i class="fa-solid fa-plus"></i> Theo dõi</button>
+                            <button id="btnStdAcceptInvite" class="btn btn-primary" style="display:none; background:#10b981;" onclick="acceptStudioInvite()"><i class="fa-solid fa-check"></i> Chấp nhận Lời mời</button>
+                            <button id="btnStdSettings" class="btn" style="display:none;" onclick="openStudioSettings()"><i class="fa-solid fa-gear"></i> Cài đặt</button>
+                        </div>
+                    </div>
+                    <p id="stdDetailDesc" style="margin-top: 15px; font-size: 0.95rem; color: var(--text-main); white-space: pre-line;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-nav-tabs">
+            <button class="prof-tab-btn active" id="tabBtnStd-projects" onclick="switchStdTab('projects')"><i class="fa-solid fa-folder-open"></i> Dự án (<span id="stdProjCount">0</span>)</button>
+            <button class="prof-tab-btn" id="tabBtnStd-members" onclick="switchStdTab('members')"><i class="fa-solid fa-users"></i> Thành viên (<span id="stdMemberCount">0</span>)</button>
+        </div>
+
+        <div id="stdTab-projects" class="prof-tab-content active">
+            <div style="margin-bottom: 20px; display:flex; justify-content:flex-end;">
+                <button id="btnAddProjToStudio" class="btn btn-primary" style="display:none;" onclick="openAddProjectToStudioModal()"><i class="fa-solid fa-plus"></i> Thêm Dự án</button>
+            </div>
+            <div class="project-grid" id="stdProjectList">Chưa có dự án nào trong Studio.</div>
+        </div>
+
+        <div id="stdTab-members" class="prof-tab-content">
+            <div style="margin-bottom: 20px; display:flex; justify-content:flex-end;">
+                <button id="btnInviteMemberToStudio" class="btn btn-primary" style="display:none;" onclick="openInviteStudioModal()"><i class="fa-solid fa-user-plus"></i> Mời Thành viên</button>
+            </div>
+            <div id="stdCuratorsList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;"></div>
+        </div>
+    </div>
 
     <!-- TRANG 1: KHÁM PHÁ -->
     <div id="homeView" class="page-view">
@@ -2372,6 +2428,56 @@
     </footer>
 
     <!-- ================= MODALS HỆ THỐNG ================= -->
+
+    <!-- MODAL TẠO STUDIO -->
+    <div class="modal-overlay" id="createStudioModal">
+        <div class="modal" style="max-width:450px;">
+            <div class="modal-header"><span><i class="fa-solid fa-layer-group"></i> Tạo Studio Mới</span><button class="btn-close" onclick="closeModal('createStudioModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tên Studio *:</label>
+                    <input type="text" id="newStdTitle" class="form-control" required placeholder="Nhập tên Studio...">
+                </div>
+                <div class="form-group">
+                    <label>Ảnh đại diện (Thumbnail):</label>
+                    <input type="file" id="newStdThumb" accept="image/*" class="form-control" style="padding: 8px;">
+                </div>
+                <div class="form-group">
+                    <label>Mô tả:</label>
+                    <textarea id="newStdDesc" class="form-control" rows="3" placeholder="Giới thiệu về Studio của bạn..."></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center;">Tạo Studio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL THÊM DỰ ÁN VÀO STUDIO -->
+    <div class="modal-overlay" id="addProjStudioModal">
+        <div class="modal" style="max-width:500px;">
+            <div class="modal-header"><span><i class="fa-solid fa-folder-plus"></i> Thêm Dự án vào Studio</span><button class="btn-close" onclick="closeModal('addProjStudioModal')">&times;</button></div>
+            <div class="modal-body">
+                <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom: 10px;">Nhập ID dự án hoặc dán link dự án để thêm vào Studio.</p>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <input type="text" id="stdProjIdInput" class="form-control" placeholder="Ví dụ: 1024 hoặc link dự án..." style="flex:1;">
+                    <button type="button" class="btn btn-primary" onclick="submitAddProjectToStudio()">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL MỜI THÀNH VIÊN VÀO STUDIO -->
+    <div class="modal-overlay" id="inviteStudioModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span><i class="fa-solid fa-user-plus"></i> Mời Thành viên</span><button class="btn-close" onclick="closeModal('inviteStudioModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <input type="text" id="stdInviteUsername" class="form-control" placeholder="Nhập username..." style="flex:1;">
+                    <button type="button" class="btn btn-primary" onclick="submitInviteToStudio()">Mời</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- MODAL LIÊN HỆ HỖ TRỢ -->
     <div class="modal-overlay" id="contactModal">
@@ -3295,7 +3401,7 @@
             }
 
             // 2. Bắt link URL sạch trực tiếp (/projects/... hoặc /users/...)
-            if (href.startsWith('/projects/') || href.startsWith('/users/')) {
+            if (href.startsWith('/projects/') || href.startsWith('/users/') || href.startsWith('/studio/') || href.startsWith('/studios')) {
                 e.preventDefault();
                 navigateTo(href);
                 return;
@@ -3347,9 +3453,9 @@
             // 2. DỊCH TỪ URL THỰC TẾ SANG HASH ẢO CHO JS XỬ LÝ BÊN DƯỚI
             let virtualHash = currentHash; 
 
-            // Ưu tiên: Nếu URL có Hash chuyển trang (VD: #home, #chat...) thì reset path để thoát khỏi trang dự án/hồ sơ
-            if (currentHash && !currentHash.startsWith('#project/') && !currentHash.startsWith('#profile/')) {
-                if (path.includes('/projects/') || path.includes('/users/')) {
+            // Ưu tiên: Nếu URL có Hash chuyển trang (VD: #home, #chat...) thì reset path để thoát khỏi trang dự án/hồ sơ/studio
+            if (currentHash && !currentHash.startsWith('#project/') && !currentHash.startsWith('#profile/') && !currentHash.startsWith('#studio/')) {
+                if (path.includes('/projects/') || path.includes('/users/') || path.includes('/studio/') || path.includes('/studios')) {
                     const cleanBase = BASE_PATH ? BASE_PATH + '/' : '/';
                     history.replaceState(null, '', cleanBase + currentHash);
                     path = BASE_PATH || '/';
@@ -3362,6 +3468,13 @@
             } else if (path.includes('/users/')) {
                 const subPart = path.split('/users/')[1].replace(/\/$/, '');
                 virtualHash = '#profile/' + subPart.split('?')[0];
+                if (window.location.hash) history.replaceState(null, '', path + queryStr);
+            } else if (path.includes('/studio/')) {
+                const subPart = path.split('/studio/')[1].replace(/\/$/, '');
+                virtualHash = '#studio/' + subPart.split('?')[0];
+                if (window.location.hash) history.replaceState(null, '', path + queryStr);
+            } else if (path.includes('/studios')) {
+                virtualHash = '#studios';
                 if (window.location.hash) history.replaceState(null, '', path + queryStr);
             }
 
@@ -3415,6 +3528,8 @@
                 document.title = t('nav_assets') + " | " + brandName;
             }
             else if (hash === '#upload') document.title = t('nav_upload') + " | " + brandName;
+            else if (hash === '#studios') document.title = "Studios | " + brandName;
+            else if (hash.startsWith('#studio/')) document.title = "Studio | " + brandName;
             else if (hash === '#settings') document.title = t('settings_title') + " | " + brandName;
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
             else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
@@ -3439,6 +3554,8 @@
             else if (hash === '#settings') await openSettingsPage();
             else if (hash === '#notifications') await openNotificationsPage();
             else if (hash === '#create') openCreatePage();
+            else if (hash === '#studios') openStudiosPage();
+            else if (hash.startsWith('#studio/')) await openStudioDetailPage(hash.replace('#studio/', ''), urlParams);
             else if (hash === '#admin') await openAdminPage();
             else if (hash === '#chat') openChatPage();
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
@@ -4241,7 +4358,266 @@
 
         // ================= PROFILE & SETTINGS =================
         
-        
+        // ================= STUDIOS SYSTEM =================
+        let currentStudio = null;
+        let allStudios = [];
+
+        function openStudiosPage() {
+            document.getElementById('studiosListView').style.display = 'block';
+            loadStudiosList();
+        }
+
+        async function loadStudiosList() {
+            const grid = document.getElementById('studiosGridList');
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studios`);
+                allStudios = await res.json();
+                
+                if(allStudios.length === 0) {
+                    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted);">Chưa có Studio nào.</div>';
+                    return;
+                }
+
+                grid.innerHTML = allStudios.map(s => `
+                    <div class="card" onclick="navigateTo('/studio/${s.id}')">
+                        <div class="card-thumb" style="height: 120px;">${s.thumbId ? `<img src="${WORKER_URL}/api/project/${s.thumbId}">` : `<i class="fa-solid fa-layer-group" style="font-size:2.5rem; color:#ccc;"></i>`}</div>
+                        <div class="card-body">
+                            <h3 class="card-title">${escapeHtml(s.title)}</h3>
+                            <div class="card-author">Bởi @${escapeHtml(s.creator)}</div>
+                            <div style="margin-top: 8px; font-size: 0.8rem; color:var(--text-muted);"><i class="fa-solid fa-users"></i> ${s.members ? s.members.length : 1} thành viên</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch(e) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:red;">Lỗi tải dữ liệu</div>';
+            }
+        }
+
+        async function openStudioDetailPage(id, urlParams) {
+            document.getElementById('studioDetailView').style.display = 'block';
+            
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/${id}`);
+                if (!res.ok) throw new Error();
+                currentStudio = await res.json();
+                
+                document.getElementById('stdDetailTitle').innerText = currentStudio.title;
+                document.getElementById('stdDetailCreator').innerText = '@' + currentStudio.creator;
+                document.getElementById('stdDetailCreator').href = `#profile/${currentStudio.creator}`;
+                document.getElementById('stdDetailDesc').innerText = currentStudio.description || 'Chưa có mô tả.';
+                document.getElementById('stdFollowersCount').innerText = (currentStudio.followers || []).length;
+                document.getElementById('stdDetailThumb').src = currentStudio.thumbId ? `${WORKER_URL}/api/project/${currentStudio.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+
+                document.getElementById('stdProjCount').innerText = (currentStudio.projects || []).length;
+                document.getElementById('stdMemberCount').innerText = (currentStudio.members || []).length;
+
+                // Controls
+                const btnFollow = document.getElementById('btnFollowStudio');
+                const btnSettings = document.getElementById('btnStdSettings');
+                const btnAddProj = document.getElementById('btnAddProjToStudio');
+                const btnInvite = document.getElementById('btnInviteMemberToStudio');
+                const btnAcceptInvite = document.getElementById('btnStdAcceptInvite');
+                
+                if(currentUser) {
+                    const isManager = currentStudio.managers.map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || currentUser.role === 'admin';
+                    const isMember = currentStudio.members.map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || isManager;
+                    const isFollowing = (currentStudio.followers || []).includes(currentUser.username);
+                    const isInvited = (currentStudio.invites || []).includes(currentUser.username);
+
+                    btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> Đang theo dõi` : `<i class="fa-solid fa-plus"></i> Theo dõi`;
+                    btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary';
+
+                    if (isInvited && !isMember) btnAcceptInvite.style.display = 'inline-flex'; else btnAcceptInvite.style.display = 'none';
+                    if (isManager) btnSettings.style.display = 'inline-flex'; else btnSettings.style.display = 'none';
+                    if (isMember) btnAddProj.style.display = 'inline-flex'; else btnAddProj.style.display = 'none';
+                    if (isManager) btnInvite.style.display = 'inline-flex'; else btnInvite.style.display = 'none';
+                }
+
+                switchStdTab('projects');
+                renderStudioProjects();
+                renderStudioMembers();
+            } catch(e) {
+                showToast("Không tìm thấy Studio", "error");
+                location.hash = "#studios";
+            }
+        }
+
+        function switchStdTab(tab) {
+            document.getElementById('tabBtnStd-projects').classList.toggle('active', tab === 'projects');
+            document.getElementById('tabBtnStd-members').classList.toggle('active', tab === 'members');
+            document.getElementById('stdTab-projects').style.display = tab === 'projects' ? 'block' : 'none';
+            document.getElementById('stdTab-members').style.display = tab === 'members' ? 'block' : 'none';
+        }
+
+        async function renderStudioProjects() {
+            const grid = document.getElementById('stdProjectList');
+            const projs = currentStudio.projects || [];
+            if(projs.length === 0) { grid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1;">Chưa có dự án nào.</div>'; return; }
+            
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dự án...</div>';
+            let html = '';
+            
+            for(const pid of projs) {
+                let p = allProjects.find(x => x.projectId === pid || x.fileId === pid);
+                if(!p) {
+                    try {
+                        const res = await fetch(`${WORKER_URL}/api/projects?id=${encodeURIComponent(pid)}&limit=1`);
+                        const data = await res.json();
+                        if(data.projects && data.projects.length>0) p = data.projects[0];
+                    } catch(e){}
+                }
+                if(p) {
+                    html += `
+                    <div class="card">
+                        <div class="card-thumb" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
+                        <div class="card-body">
+                            <div class="card-title" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">${escapeHtml(p.title)}</div>
+                            <div class="card-author">@${escapeHtml(p.author)}</div>
+                            ${currentUser && (currentStudio.managers.includes(currentUser.username) || p.author === currentUser.username) ? `<button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem; margin-top:8px;" onclick="removeProjectFromStudio('${pid}')">Xóa khỏi Studio</button>` : ''}
+                        </div>
+                    </div>`;
+                }
+            }
+            grid.innerHTML = html || 'Không có dự án khả dụng.';
+        }
+
+        function renderStudioMembers() {
+            const list = document.getElementById('stdCuratorsList');
+            const members = currentStudio.members || [];
+            const managers = currentStudio.managers || [];
+            
+            list.innerHTML = members.map(m => `
+                <div style="background:var(--bg-secondary); border:1px solid var(--border-color); padding: 10px; border-radius: 8px; display:flex; align-items:center; justify-content:space-between;">
+                    <a href="#profile/${encodeURIComponent(m)}" style="text-decoration:none; color:var(--text-title); font-weight:bold; display:flex; align-items:center; gap:8px;">
+                        <img src="${DEFAULT_AVATAR}" style="width:30px; height:30px; border-radius:50%;" id="std-avt-${m}">
+                        ${escapeHtml(m)}
+                    </a>
+                    ${managers.includes(m) ? `<span style="font-size:0.7rem; background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px;">Quản lý</span>` : ''}
+                    ${currentUser && currentStudio.creator === currentUser.username && m !== currentUser.username ? `
+                        <div style="display:flex; gap:5px; flex-direction:column;">
+                            ${!managers.includes(m) ? `<button class="btn" style="font-size:0.7rem; padding:2px 4px;" onclick="promoteStudioMember('${m}')">Thăng cấp</button>` : ''}
+                            <button class="btn btn-danger" style="font-size:0.7rem; padding:2px 4px;" onclick="removeStudioMember('${m}')">Xóa</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            // Load avatars
+            members.forEach(m => {
+                fetch(`${WORKER_URL}/api/user/${encodeURIComponent(m)}`).then(r=>r.json()).then(d=>{
+                    if(d.avt) document.getElementById(`std-avt-${m}`).src = getAvtUrl(d.avt);
+                }).catch(()=>{});
+            });
+        }
+
+        function openCreateStudioModal() {
+            if(!currentUser) return openModal('loginModal');
+            document.getElementById('newStdTitle').value = "";
+            document.getElementById('newStdDesc').value = "";
+            document.getElementById('newStdThumb').value = "";
+            openModal('createStudioModal');
+        }
+
+        async function submitCreateStudio() {
+            const title = document.getElementById('newStdTitle').value.trim();
+            const desc = document.getElementById('newStdDesc').value.trim();
+            const thumbFile = document.getElementById('newStdThumb').files[0];
+            if(!title) return showToast("Nhập tên Studio", "error");
+
+            let thumbId = "";
+            if (thumbFile) {
+                const fd = new FormData(); fd.append("file", thumbFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
+                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
+                if (upRes.success) thumbId = upRes.file_id;
+            }
+
+            const res = await apiFetch('/api/studio/create', { method: 'POST', body: JSON.stringify({ title, description: desc, thumbId }) });
+            if(res && res.success) {
+                closeModal('createStudioModal');
+                showToast("Tạo Studio thành công!", "success");
+                navigateTo('/studio/' + res.id);
+            }
+        }
+
+        async function toggleFollowStudio() {
+            if(!currentUser) return openModal('loginModal');
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'toggle_follow' }) });
+            if(res && res.success) {
+                if(currentStudio.followers.includes(currentUser.username)) currentStudio.followers = currentStudio.followers.filter(u=>u!==currentUser.username);
+                else currentStudio.followers.push(currentUser.username);
+                openStudioDetailPage(currentStudio.id, null);
+            }
+        }
+
+        function openAddProjectToStudioModal() { openModal('addProjStudioModal'); }
+        async function submitAddProjectToStudio() {
+            let input = document.getElementById('stdProjIdInput').value.trim();
+            if(!input) return;
+            let pid = input;
+            if(input.includes('/projects/')) pid = input.split('/projects/')[1].split('?')[0].replace(/\/$/, '');
+            else if(input.includes('#project/')) pid = input.split('#project/')[1].split('?')[0];
+
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'add_project', targetProject: pid }) });
+            if(res && res.success) {
+                if(!currentStudio.projects.includes(pid)) currentStudio.projects.push(pid);
+                closeModal('addProjStudioModal');
+                showToast("Đã thêm dự án", "success");
+                renderStudioProjects();
+                document.getElementById('stdProjCount').innerText = currentStudio.projects.length;
+            }
+        }
+
+        async function removeProjectFromStudio(pid) {
+            if(!confirm("Xóa dự án khỏi Studio?")) return;
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'remove_project', targetProject: pid }) });
+            if(res && res.success) {
+                currentStudio.projects = currentStudio.projects.filter(p=>p!==pid);
+                renderStudioProjects();
+                document.getElementById('stdProjCount').innerText = currentStudio.projects.length;
+            }
+        }
+
+        function openInviteStudioModal() { openModal('inviteStudioModal'); }
+        async function submitInviteToStudio() {
+            const user = document.getElementById('stdInviteUsername').value.trim();
+            if(!user) return;
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'invite', targetUser: user }) });
+            if(res && res.success) {
+                showToast("Đã gửi lời mời!", "success");
+                closeModal('inviteStudioModal');
+            } else if (res) showToast(res.error || "Không thể mời", "error");
+        }
+
+        async function acceptStudioInvite() {
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'accept_invite' }) });
+            if(res && res.success) {
+                showToast("Đã tham gia Studio!", "success");
+                openStudioDetailPage(currentStudio.id, null);
+            }
+        }
+
+        async function promoteStudioMember(user) {
+            if(!confirm(`Thăng cấp ${user} lên Quản lý?`)) return;
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'promote', targetUser: user }) });
+            if(res && res.success) {
+                currentStudio.managers.push(user);
+                renderStudioMembers();
+            }
+        }
+
+        async function removeStudioMember(user) {
+            if(!confirm(`Xóa ${user} khỏi Studio?`)) return;
+            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'remove_member', targetUser: user }) });
+            if(res && res.success) {
+                currentStudio.members = currentStudio.members.filter(u=>u!==user);
+                currentStudio.managers = currentStudio.managers.filter(u=>u!==user);
+                renderStudioMembers();
+                document.getElementById('stdMemberCount').innerText = currentStudio.members.length;
+            } else if (res) showToast(res.error, "error");
+        }
+
+        // ================= END STUDIOS SYSTEM =================
         
         
         
