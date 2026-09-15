@@ -1227,6 +1227,21 @@
             color: #fff !important;
         }
 
+        /* HỆ THỐNG WOW BADGE & UI MỚI */
+        .wow-icon {
+            display: inline-block;
+            width: 1.15em;
+            height: 1.15em;
+            vertical-align: -0.2em;
+            background-image: url('https://github.com/danvPR/workshop/blob/main/Assets/WOW%20Badge.png?raw=true');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .omg-balance-pill { background: var(--bg-secondary); color: var(--text-title); padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; border: 1px solid var(--border-color); }
+        .omg-balance-pill:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(13,165,122,0.15); }
+
         /* Lựa chọn điểm OMG */
         .tip-chip-group {
             display: grid;
@@ -1522,8 +1537,8 @@
                             <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                             <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
                             
-                            <button class="btn-tip-omg" onclick="openTipModal()" title="Ủng hộ tác giả bằng điểm OMG">
-                                <i class="fa-solid fa-bolt fa-bounce"></i> <span>Tặng OMG</span>
+                            <button class="btn-tip-omg" onclick="openTipModal()" title="Ủng hộ tác giả bằng điểm WOW">
+                                <span class="wow-icon fa-bounce"></span> <span>Tặng WOW</span>
                             </button>
 
                             <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openShareModal()"><i class="fa-solid fa-share"></i> <span data-i18n="action_share">Chia sẻ</span></button>
@@ -2176,11 +2191,11 @@
         <div class="modal daily-modal-box" style="max-width: 580px; text-align: center;">
             <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 16px 24px;">
                 <span style="font-size: 1.1rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-bolt" style="color:#f97316;"></i> Trạm Nạp Năng Lượng OMG
+                    <span class="wow-icon"></span> Phần thưởng Điểm danh
                 </span>
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <button class="btn" style="padding: 4px 10px; font-size: 0.8rem; border-radius: 20px;" onclick="openAboutOmgModal()">
-                        <i class="fa-solid fa-circle-question" style="color:#f97316;"></i> OMG là gì?
+                    <button class="btn" style="padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; font-weight: bold;" onclick="openAboutOmgModal()">
+                        <i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> WOW là gì?
                     </button>
                     <button class="btn-close" onclick="closeModal('dailyRewardModal')">&times;</button>
                 </div>
@@ -2190,15 +2205,15 @@
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 5px;">
                     <div style="text-align:left;">
                         <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Chuỗi chuyên cần</span>
-                        <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> Ngày liên tiếp 🔥</h3>
+                        <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> Ngày liên tiếp</h3>
                     </div>
-                    <div style="background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.3); padding: 6px 14px; border-radius: 20px; font-weight: 800; color:#ea580c; font-size: 0.95rem;">
-                        <i class="fa-solid fa-bolt"></i> <span id="dailyCurrentOmgVal">0</span> OMG
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-weight: 800; color:var(--text-title); font-size: 0.95rem;">
+                        <span class="wow-icon"></span> <span id="dailyCurrentOmgVal">0</span>
                     </div>
                 </div>
 
                 <div class="daily-streak-track">
-                    <div class="daily-progress-bar-fill" id="dailyProgressBar"></div>
+                    <div class="daily-progress-bar-fill" id="dailyProgressBar" style="background: var(--primary); box-shadow: 0 0 10px rgba(13,165,122,0.4);"></div>
                 </div>
 
                 <div class="daily-card-grid" id="dailyRewardGrid">
@@ -2206,63 +2221,63 @@
                 </div>
 
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;">
-                    💡 <b>Mẹo:</b> Tích lũy điểm OMG đều đặn để quy đổi Khung Avatar độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng!
+                    Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.
                 </p>
 
-                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; background: linear-gradient(135deg, #f59e0b, #ea580c); border: none; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 15px rgba(234,88,12,0.35);">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Nhận năng lượng hôm nay
+                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
+                    Nhận thưởng hôm nay
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL GIỚI THIỆU: OMG LÀ GÌ? -->
+    <!-- MODAL GIỚI THIỆU: WOW LÀ GÌ? -->
     <div class="modal-overlay" id="aboutOmgModal">
         <div class="modal" style="max-width: 460px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-bolt" style="color:#f97316;"></i> Giới thiệu về OMG</span>
+                <span><span class="wow-icon"></span> Giới thiệu về hệ thống WOW</span>
                 <button class="btn-close" onclick="closeModal('aboutOmgModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 22px; line-height: 1.6;">
                 <div style="text-align:center; margin-bottom: 18px;">
-                    <div style="width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:inline-flex; align-items:center; justify-content:center; box-shadow:0 8px 25px rgba(234, 88, 12, 0.4); margin-bottom: 10px;">
-                        <i class="fa-solid fa-bolt" style="color:#fff; font-size: 2rem;"></i>
+                    <div style="width:68px; height:68px; display:inline-flex; align-items:center; justify-content:center; margin-bottom: 10px;">
+                        <span class="wow-icon" style="font-size: 4rem;"></span>
                     </div>
                     <h3 style="margin:0; font-size:1.3rem;">Điểm Sáng Tạo & Danh Dự</h3>
                 </div>
                 
                 <p style="color:var(--text-main); font-size:0.95rem; margin-bottom: 12px;">
-                    <b>OMG</b> là điểm năng lượng vinh danh nội bộ dành riêng cho các lập trình viên và nhà sáng tạo trên <b>DANVworkshop</b>.
+                    <b>WOW</b> là điểm năng lượng vinh danh nội bộ dành riêng cho các lập trình viên và nhà sáng tạo trên <b>DANVworkshop</b>.
                 </p>
                 <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; margin-bottom: 15px; font-size: 0.9rem;">
-                    <div style="margin-bottom: 8px;">🔥 <b>Cách kiếm OMG:</b> Điểm danh chuyên cần mỗi ngày tại trang chủ hoặc nhận ủng hộ từ người hâm mộ.</div>
-                    <div style="margin-bottom: 8px;">🎨 <b>Trang bị phong cách:</b> Mở khóa các Khung Avatar phiên bản giới hạn tại Cài đặt.</div>
-                    <div>💖 <b>Lan tỏa giá trị:</b> Trực tiếp gửi tặng OMG cho các tác phẩm xuất sắc để tri ân người sáng tạo.</div>
+                    <div style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Cách nhận:</b> Điểm danh chuyên cần mỗi ngày tại trang chủ hoặc nhận ủng hộ từ người dùng khác.</div>
+                    <div style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Cửa hàng:</b> Dùng WOW để đổi các Khung đại diện phiên bản giới hạn tại mục Cài đặt.</div>
+                    <div><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Lan tỏa:</b> Trực tiếp gửi tặng WOW cho các tác phẩm xuất sắc để tri ân người sáng tạo.</div>
                 </div>
                 <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 10px;" onclick="closeModal('aboutOmgModal')">Đã hiểu</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL TẶNG ĐIỂM OMG CHO TÁC GIẢ -->
+    <!-- MODAL TẶNG ĐIỂM WOW CHO TÁC GIẢ -->
     <div class="modal-overlay" id="tipOmgModal">
         <div class="modal" style="max-width: 440px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-gift" style="color:#ea580c;"></i> Tặng Điểm OMG Cho Tác Phẩm</span>
+                <span><span class="wow-icon"></span> Ủng hộ WOW cho tác giả</span>
                 <button class="btn-close" onclick="closeModal('tipOmgModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 22px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; background:var(--bg-secondary); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color);">
-                    <span style="font-size:0.9rem; color:var(--text-muted);">Năng lượng của bạn:</span>
-                    <b style="color:#ea580c; font-size: 1.1rem;"><i class="fa-solid fa-bolt"></i> <span id="tipModalMyBalance">0</span> OMG</b>
+                    <span style="font-size:0.9rem; color:var(--text-muted);">Số dư hiện tại của bạn:</span>
+                    <b style="color:var(--text-title); font-size: 1.1rem;"><span class="wow-icon"></span> <span id="tipModalMyBalance">0</span></b>
                 </div>
 
                 <label style="font-weight: bold; font-size: 0.9rem; display: block; margin-top: 15px;">Chọn mức ủng hộ:</label>
                 <div class="tip-chip-group">
-                    <div class="tip-chip active" onclick="selectTipChip(10, this)">10 ⚡</div>
-                    <div class="tip-chip" onclick="selectTipChip(50, this)">50 ⚡</div>
-                    <div class="tip-chip" onclick="selectTipChip(100, this)">100 ⚡</div>
-                    <div class="tip-chip" onclick="selectTipChip(200, this)">200 👑</div>
+                    <div class="tip-chip active" onclick="selectTipChip(10, this)">10</div>
+                    <div class="tip-chip" onclick="selectTipChip(50, this)">50</div>
+                    <div class="tip-chip" onclick="selectTipChip(100, this)">100</div>
+                    <div class="tip-chip" onclick="selectTipChip(200, this)">200</div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 12px;">
@@ -2275,7 +2290,7 @@
                     <textarea id="tipCustomMessage" class="form-control" rows="2" placeholder="Ví dụ: Tác phẩm rất đỉnh! Cố gắng phát huy nhé..."></textarea>
                 </div>
 
-                <button class="btn btn-primary" id="btnSubmitTip" onclick="submitTipOmg()" style="width:100%; justify-content:center; padding: 12px; font-weight:800; background:linear-gradient(135deg, #f59e0b, #ea580c); border:none;">
+                <button class="btn btn-primary" id="btnSubmitTip" onclick="submitTipOmg()" style="width:100%; justify-content:center; padding: 12px; font-weight:800; border:none;">
                     <i class="fa-solid fa-paper-plane"></i> Xác nhận gửi tặng
                 </button>
             </div>
@@ -3044,8 +3059,8 @@
                 nav.innerHTML = `
                     <div style="display:flex; align-items:center; gap:15px;">
                         ${adminIcon}
-                        <button class="omg-balance-pill" onclick="openDailyRewardModal()" title="Nhận OMG hàng ngày">
-                            <i class="fa-solid fa-bolt"></i> <span id="navOmgBalance">${currentUser.omg || 0}</span>
+                        <button class="omg-balance-pill" onclick="openDailyRewardModal()" title="Phần thưởng điểm danh">
+                            <span class="wow-icon"></span> <span id="navOmgBalance">${currentUser.omg || 0}</span>
                         </button>
                         <a href="#notifications" style="position:relative; display:inline-flex; align-items:center; justify-content:center; padding: 6px; border-radius: 8px; transition: 0.2s; text-decoration:none;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">
                             <img src="https://scratch.mit.edu/images/nav-notifications.png" style="height: 22px; opacity: 0.9;">
@@ -6436,31 +6451,49 @@ function reopenEditor() {
             const grid = document.getElementById('dailyRewardGrid');
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
             
-            const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
+            // Chống Cache để luôn lấy số dư và dữ liệu điểm danh mới nhất
+            const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
             const pData = await res.json();
             
             currentUser.omg = pData.omg || 0;
-            document.getElementById('navOmgBalance').innerText = currentUser.omg;
-            document.getElementById('dailyCurrentOmgVal').innerText = currentUser.omg;
-            if(document.getElementById('settingsOmgBalance')) document.getElementById('settingsOmgBalance').innerText = currentUser.omg;
+            localStorage.setItem('danv_user', JSON.stringify(currentUser));
+            
+            // Cập nhật ngay các vị trí hiển thị số dư
+            const navOmg = document.getElementById('navOmgBalance');
+            if (navOmg) navOmg.innerText = currentUser.omg;
+            const modalOmg = document.getElementById('dailyCurrentOmgVal');
+            if (modalOmg) modalOmg.innerText = currentUser.omg;
+            const setOmg = document.getElementById('settingsOmgBalance');
+            if (setOmg) setOmg.innerText = currentUser.omg;
 
-            const dailyInfo = pData.dailyLogin || {};
+            // Xử lý dữ liệu chuỗi ngày an toàn (chống lỗi trả về mảng rỗng)
+            let dailyInfo = pData.dailyLogin || {};
+            if (Array.isArray(dailyInfo)) dailyInfo = {}; 
+            
             const vnTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}));
             const todayStr = `${String(vnTime.getDate()).padStart(2, '0')}/${String(vnTime.getMonth() + 1).padStart(2, '0')}/${vnTime.getFullYear()}`;
             
-            let streak = dailyInfo.streak || 0;
+            let streak = parseInt(dailyInfo.streak) || 0;
             const isClaimedToday = dailyInfo.lastClaim === todayStr;
 
+            // Kiểm tra xem chuỗi có bị đứt quãng không
             if (dailyInfo.lastClaim && !isClaimedToday) {
-                const [ld, lm, ly] = dailyInfo.lastClaim.split('/');
-                const [td, tm, ty] = todayStr.split('/');
-                const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24)); 
-                if (diffDays > 1) streak = 0;
+                try {
+                    const [ld, lm, ly] = String(dailyInfo.lastClaim).split('/');
+                    const [td, tm, ty] = todayStr.split('/');
+                    const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24)); 
+                    if (diffDays > 1 || isNaN(diffDays)) streak = 0;
+                } catch(e) {
+                    streak = 0;
+                }
             }
 
-            document.getElementById('dailyStreakDisplay').innerText = streak;
+            const streakEl = document.getElementById('dailyStreakDisplay');
+            if (streakEl) streakEl.innerText = streak;
+            
             const progressPercent = Math.min(100, Math.round((streak / 7) * 100));
-            document.getElementById('dailyProgressBar').style.width = `${progressPercent}%`;
+            const progBar = document.getElementById('dailyProgressBar');
+            if (progBar) progBar.style.width = `${progressPercent}%`;
 
             const rewards = [10, 20, 30, 40, 50, 60, 150];
             let html = '';
@@ -6471,47 +6504,44 @@ function reopenEditor() {
 
                 const isFinalDay = (i === 6);
                 html += `
-                <div class="daily-card-slot ${statusClass} ${isFinalDay ? 'day-7' : ''}">
-                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">N.${i+1}</span>
-                    <i class="fa-solid ${isFinalDay ? 'fa-crown' : 'fa-bolt'}" style="font-size: 1.4rem; color: ${statusClass==='claimed' ? '#10b981' : (isFinalDay ? '#f59e0b' : '#ea580c')};"></i>
+                <div class="daily-card-slot ${statusClass} ${isFinalDay ? 'day-7' : ''}" style="border-color: ${statusClass==='active' ? 'var(--primary)' : ''};">
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">Ngày ${i+1}</span>
+                    <span class="wow-icon" style="font-size: 1.4rem; filter: ${statusClass==='claimed' ? 'grayscale(100%) opacity(0.5)' : 'none'};"></span>
                     <b style="font-size: 0.85rem; color: var(--text-title);">+${rewards[i]}</b>
-                    ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:#10b981; font-weight:800;"><i class="fa-solid fa-check"></i> Xong</span>' : ''}
+                    ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-check"></i> Đã nhận</span>' : ''}
                 </div>`;
             }
             grid.innerHTML = html;
 
             const btn = document.getElementById('btnClaimDaily');
-            if (isClaimedToday) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nạp năng lượng hôm nay';
-                btn.style.background = 'var(--bg-secondary)';
-                btn.style.color = 'var(--text-muted)';
-                btn.style.boxShadow = 'none';
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Nhận năng lượng hôm nay';
-                btn.style.background = 'linear-gradient(135deg, #f59e0b, #ea580c)';
-                btn.style.color = '#fff';
-                btn.style.boxShadow = '0 4px 15px rgba(234,88,12,0.35)';
+            if (btn) {
+                if (isClaimedToday) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận thưởng hôm nay';
+                    btn.className = 'btn';
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Nhận thưởng hôm nay';
+                    btn.className = 'btn btn-primary';
+                }
             }
         }
 
         function openAboutOmgModal() { openModal('aboutOmgModal'); }
 
-        // ================= XỬ LÝ TẶNG OMG TRONG DỰ ÁN =================
+        // ================= XỬ LÝ TẶNG WOW TRONG DỰ ÁN =================
         function openTipModal() {
             if (!currentUser) return openModal('loginModal');
             if (!currentProj) return;
 
             if (currentProj.author.toLowerCase() === currentUser.username.toLowerCase()) {
-                return showToast("Bạn không thể tự gửi tặng OMG cho chính mình!", "error");
+                return showToast("Bạn không thể tự gửi tặng điểm cho chính tác phẩm của mình!", "error");
             }
 
             document.getElementById('tipModalMyBalance').innerText = currentUser.omg || 0;
             document.getElementById('tipCustomAmount').value = "10";
             document.getElementById('tipCustomMessage').value = "";
             
-            // Đặt chip 10 làm active
             const chips = document.querySelectorAll('.tip-chip');
             chips.forEach((c, idx) => c.classList.toggle('active', idx === 0));
 
@@ -6533,7 +6563,7 @@ function reopenEditor() {
             const message = document.getElementById('tipCustomMessage').value.trim();
 
             if (isNaN(amount) || amount <= 0) return showToast("Vui lòng nhập số điểm hợp lệ!", "error");
-            if (amount > (currentUser.omg || 0)) return showToast("Bạn không đủ điểm OMG!", "error");
+            if (amount > (currentUser.omg || 0)) return showToast("Số dư WOW không đủ!", "error");
 
             const btn = document.getElementById('btnSubmitTip');
             const orig = btn.innerHTML;
@@ -6550,12 +6580,16 @@ function reopenEditor() {
             });
 
             if (res && res.success) {
-                showToast(`Tuyệt vời! Bạn đã ủng hộ ${amount} OMG cho tác giả!`, 'success');
+                showToast(`Đã gửi tặng thành công ${amount} WOW cho tác giả!`, 'success');
+                
+                // Đồng bộ số dư lập tức lên giao diện
                 currentUser.omg = res.newBalance;
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                document.getElementById('navOmgBalance').innerText = currentUser.omg;
+                const navOmg = document.getElementById('navOmgBalance');
+                if (navOmg) navOmg.innerText = currentUser.omg;
+                const setOmg = document.getElementById('settingsOmgBalance');
+                if (setOmg) setOmg.innerText = currentUser.omg;
 
-                // Nạp bình luận mới vào danh sách
                 if (!currentProj.comments) currentProj.comments = [];
                 currentProj.comments.push(res.comment);
                 renderCommentList('proj', currentProj.comments);
@@ -6563,7 +6597,7 @@ function reopenEditor() {
 
                 closeModal('tipOmgModal');
             } else {
-                showToast(res ? res.error : "Không thể gửi tặng điểm OMG", "error");
+                showToast(res ? res.error : "Không thể gửi tặng điểm", "error");
             }
 
             btn.innerHTML = orig;
@@ -6572,21 +6606,30 @@ function reopenEditor() {
 
         async function claimDailyReward() {
             const btn = document.getElementById('btnClaimDaily');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang nhận...'; btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...'; 
+            btn.disabled = true;
             
             const res = await apiFetch(`/api/store/daily`, { method: 'POST', body: JSON.stringify({}) });
             if (res && res.success) {
-                showToast(`Tuyệt vời! Bạn nhận được ${res.reward} OMG`, 'success');
+                showToast(`Bạn đã nhận được ${res.reward} WOW!`, 'success');
+                
+                // Cập nhật số dư Real-time
                 currentUser.omg = res.newBalance;
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                openDailyRewardModal(); // Refresh Modal
+                const navOmg = document.getElementById('navOmgBalance');
+                if (navOmg) navOmg.innerText = currentUser.omg;
+                const setOmg = document.getElementById('settingsOmgBalance');
+                if (setOmg) setOmg.innerText = currentUser.omg;
+                
+                openDailyRewardModal(); // Tải lại giao diện modal
             } else {
                 showToast(res ? res.error : "Lỗi hệ thống", 'error');
-                btn.innerHTML = '<i class="fa-solid fa-hand-holding-dollar"></i> Nhận thưởng ngay'; btn.disabled = false;
+                btn.innerHTML = 'Nhận thưởng hôm nay'; 
+                btn.disabled = false;
             }
         }
 
-        // Tích hợp Load Cửa hàng vào hàm openSettingsPage
+        // Tích hợp mở Cửa hàng Khung đại diện vào trang Cài đặt
         const originalOpenSettings = openSettingsPage;
         openSettingsPage = async function() {
             await originalOpenSettings();
@@ -6597,28 +6640,40 @@ function reopenEditor() {
 
         async function loadAvatarFramesShop() {
             const container = document.getElementById('frameShopContainer');
+            if (!container) return;
+
+            // Đổi tiêu đề thành Cửa hàng Khung đại diện
+            const shopLabel = document.querySelector('label i.fa-bolt')?.parentElement || document.querySelector('#setTab-profile label');
+            if (shopLabel && shopLabel.innerHTML.includes('Khung')) {
+                shopLabel.innerHTML = '<span class="wow-icon"></span> <span style="font-weight:800; font-size:1.05rem;">Cửa hàng Khung đại diện</span>';
+            }
+
             try {
-                // Fetch Frames
                 const framesRes = await fetch(`${WORKER_URL}/api/frames`);
                 availableFrames = await framesRes.json();
                 
-                // Fetch User's Data
-                const userRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
+                // Chống Cache để lấy chính xác số dư và khung đang sở hữu
+                const userRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
                 const pData = await userRes.json();
+                
                 myOwnedFrames = pData.ownedFrames || [];
                 currentUser.omg = pData.omg || 0;
-                currentUser.frame = pData.frame; // Frame URL đang dùng
+                currentUser.frame = pData.frame; 
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 
-                document.getElementById('settingsOmgBalance').innerText = currentUser.omg;
+                const setOmg = document.getElementById('settingsOmgBalance');
+                if (setOmg) setOmg.innerText = currentUser.omg;
+                const navOmg = document.getElementById('navOmgBalance');
+                if (navOmg) navOmg.innerText = currentUser.omg;
 
                 let html = `
-                <div class="frame-item-card">
-                    <div class="frame-preview-box">
-                        <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                <div class="frame-item-card" style="border-radius:12px; padding:15px; text-align:center; background:var(--bg-secondary); border:1px solid var(--border-color);">
+                    <div class="frame-preview-box" style="position:relative; width:64px; height:64px; margin:0 auto 10px auto;">
+                        <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'">
                     </div>
-                    <div style="font-weight:bold; font-size:0.9rem; margin-bottom:5px;">Mặc định</div>
-                    <button class="btn ${!currentUser.frame ? 'btn-primary' : ''}" style="width:100%; font-size:0.8rem;" onclick="equipFrame('none')" ${!currentUser.frame ? 'disabled' : ''}>
-                        ${!currentUser.frame ? '<i class="fa-solid fa-check"></i> Đang dùng' : 'Trang bị'}
+                    <div style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;">Mặc định</div>
+                    <button class="btn ${!currentUser.frame ? 'btn-primary' : ''}" style="width:100%; font-size:0.8rem; justify-content:center;" onclick="equipFrame('none')" ${!currentUser.frame ? 'disabled' : ''}>
+                        ${!currentUser.frame ? '<i class="fa-solid fa-check"></i> Đang dùng' : 'Gỡ khung'}
                     </button>
                 </div>
                 `;
@@ -6629,38 +6684,47 @@ function reopenEditor() {
                     
                     let actionHtml = '';
                     if (isEquipped) {
-                        actionHtml = `<button class="btn btn-primary" style="width:100%; font-size:0.8rem;" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>`;
+                        actionHtml = `<button class="btn btn-primary" style="width:100%; font-size:0.8rem; justify-content:center;" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>`;
                     } else if (isOwned) {
-                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; border: 1px solid var(--primary); color: var(--primary);" onclick="equipFrame('${f.id}')">Trang bị</button>`;
+                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; border: 1px solid var(--primary); color: var(--primary);" onclick="equipFrame('${f.id}')">Trang bị</button>`;
                     } else {
-                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; background:#ea580c; color:#fff;" onclick="buyFrame('${f.id}', ${f.price})"><i class="fa-solid fa-bolt"></i> Mua ${f.price}</button>`;
+                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-title); font-weight: bold;" onclick="buyFrame('${f.id}', ${f.price})"><span class="wow-icon"></span> ${f.price}</button>`;
                     }
 
                     html += `
-                    <div class="frame-item-card">
-                        <div class="frame-preview-box">
-                            <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
-                            <img src="${f.url}" class="frame-overlay">
+                    <div class="frame-item-card" style="border-radius:12px; padding:15px; text-align:center; background:var(--bg-secondary); border:1px solid var(--border-color);">
+                        <div class="frame-preview-box" style="position:relative; width:64px; height:64px; margin:0 auto 10px auto;">
+                            <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <img src="${f.url}" class="frame-overlay" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none;">
                         </div>
-                        <div style="font-weight:bold; font-size:0.9rem; margin-bottom:5px;" title="${f.name}">${f.name.substring(0,10)}</div>
+                        <div style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;" title="${f.name}">${f.name.substring(0,12)}</div>
                         ${actionHtml}
                     </div>`;
                 });
 
                 container.innerHTML = html;
             } catch(e) {
-                container.innerHTML = '<div style="grid-column: 1/-1; color:#ef4444;">Lỗi tải cửa hàng.</div>';
+                container.innerHTML = '<div style="grid-column: 1/-1; color:#ef4444; padding:10px; text-align:center;">Lỗi nạp dữ liệu cửa hàng.</div>';
             }
         }
 
         async function buyFrame(frameId, price) {
-            if (!confirm(`Bạn muốn mua khung này với giá ${price} OMG?`)) return;
+            if (!confirm(`Bạn có chắc chắn muốn mở khóa khung này với giá ${price} WOW?`)) return;
             const res = await apiFetch(`/api/store/buy`, { method: 'POST', body: JSON.stringify({ frameId }) });
             if (res && res.success) {
-                showToast("Đã mua thành công! Hãy trang bị ngay.", "success");
-                loadAvatarFramesShop(); // Tải lại shop
+                showToast("Đã mở khóa khung thành công!", "success");
+                
+                // Trừ tiền và cập nhật ngay lập tức
+                currentUser.omg = res.newBalance;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                const setOmg = document.getElementById('settingsOmgBalance');
+                if (setOmg) setOmg.innerText = currentUser.omg;
+                const navOmg = document.getElementById('navOmgBalance');
+                if (navOmg) navOmg.innerText = currentUser.omg;
+                
+                loadAvatarFramesShop(); // Nạp lại cửa hàng
             } else {
-                showToast(res ? res.error : "Lỗi mua hàng", "error");
+                showToast(res ? res.error : "Không thể thực hiện giao dịch", "error");
             }
         }
 
