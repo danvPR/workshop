@@ -1118,25 +1118,33 @@
         .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-opt.voted::before {
             color: var(--primary) !important;
         }
-        .side-marquee-column {
+    /* Thêm khoảng đệm an toàn cho toàn bộ trang web trên mobile để không bị chữ đè vào nội dung */
+    body {
+        padding-left: 28px !important;
+        padding-right: 28px !important;
+        overflow-x: hidden;
+    }
+
+    /* --- CỘT CHỮ DỌC HAI BÊN MÉP --- */
+    .side-marquee-column {
         position: fixed;
         top: 62px;
         bottom: 0;
-        width: 40px; /* Thu hẹp lại để vừa sát mép điện thoại */
+        width: 25px; /* Thu hẹp tối đa để ôm sát mép màn hình điện thoại */
         overflow: hidden;
-        z-index: -10;
+        z-index: 1; /* Nằm dưới các popup/thanh tìm kiếm nhưng vẫn nhìn thấy */
         pointer-events: none;
-        opacity: 0.6;
+        opacity: 0.5;
         display: flex;
         justify-content: center;
     }
     
     .side-marquee-column.left {
-        left: 2px;
+        left: 0px;
     }
     
     .side-marquee-column.right {
-        right: 2px;
+        right: 0px;
     }
 
     .marquee-track {
@@ -1147,23 +1155,23 @@
         align-items: center;
     }
 
-    /* Tốc độ chạy chậm (35s) */
+    /* Tốc độ chạy chậm (40s cho mượt) */
     .side-marquee-column.left .marquee-track {
-        animation: scrollUp 35s linear infinite;
+        animation: scrollUp 40s linear infinite;
     }
 
     .side-marquee-column.right .marquee-track {
-        animation: scrollDown 35s linear infinite;
+        animation: scrollDown 40s linear infinite;
     }
 
-    /* --- MẶC ĐỊNH CHO ĐIỆN THOẠI (MOBILE): Chữ xếp dọc từng ký tự từ trên xuống --- */
+    /* --- TRÊN ĐIỆN THOẠI (MOBILE): Chữ nhỏ gọn, xếp dọc từng ký tự sát mép --- */
     .marquee-item {
-        font-size: 1.2rem;
+        font-size: 0.9rem; /* Thu nhỏ chữ lại cho vừa mép điện thoại */
         font-weight: 900;
         text-transform: uppercase;
         text-align: center;
-        line-height: 1.1;
-        padding: 8px 0;
+        line-height: 1;
+        padding: 6px 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         display: flex;
         flex-direction: column; /* Xếp từng chữ cái dọc xuống */
@@ -1171,11 +1179,11 @@
     }
 
     .side-marquee-column.left .marquee-item {
-        color: #ffff00;
+        color: #ffff00; /* Vàng cho katboizz */
     }
 
     .side-marquee-column.right .marquee-item {
-        color: #ff0000;
+        color: #ff0000; /* Đỏ cho DANV */
     }
 
     @keyframes scrollDown {
@@ -1188,8 +1196,12 @@
         100% { transform: translateY(-50%); }
     }
 
-    /* --- DÀNH CHO MÁY TÍNH (DESKTOP): Giữ kiểu xoay ngang nếu màn hình lớn --- */
+    /* --- TRÊN MÁY TÍNH (DESKTOP): Phóng to và xoay dọc 90 độ --- */
     @media (min-width: 768px) {
+        body {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
         .side-marquee-column {
             width: 70px;
         }
@@ -1203,7 +1215,7 @@
             font-size: 1.5rem;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            display: block; /* Trở lại dạng khối bình thường trên PC */
+            display: block;
             padding: 15px 0;
             letter-spacing: 3px;
         }
