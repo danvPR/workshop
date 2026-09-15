@@ -2070,14 +2070,12 @@
                             <input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;">
                             <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hình ảnh sẽ hiển thị trên hồ sơ và bình luận.</div>
                         </div>
-                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label style="margin:0;"><i class="fa-solid fa-bolt" style="color:#ea580c;"></i> Cửa hàng Khung Avatar</label>
-                                <span style="font-weight:bold; color:#ea580c;">Số dư: <span id="settingsWOWBalance">0</span> WOW</span>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <label style="margin:0;"><span class="wow-icon"></span> Cửa hàng Khung Avatar</label>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Số dư: <b id="settingsWOWBalance" style="color:#ea580c;">0</b> WOW</div>
                             </div>
-                            <div class="frame-shop-grid" id="frameShopContainer">
-                                <div style="grid-column: 1/-1; text-align:center; color:#888;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải cửa hàng...</div>
-                            </div>
+                            <button type="button" class="btn btn-primary" onclick="openFrameShopModal()" style="border-radius: 20px; padding: 8px 16px;"><i class="fa-solid fa-store"></i> Xem & Mua</button>
                         </div>
                         <div class="form-group"><label data-i18n="settings_display_name">Tên hiển thị:</label><input type="text" id="editDisplayNameInput" class="form-control" data-i18n-ph="settings_display_name_ph" placeholder="Tên hiển thị tự do..."></div>
                         <div class="form-group"><label data-i18n="settings_location">Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" data-i18n-ph="settings_location_ph" placeholder="Ví dụ: Hà Nội, VN"></div>
@@ -2743,6 +2741,9 @@
             </div>
         </div>
     </div>
+
+
+
     <!-- MODAL DANH SÁCH FOLLOW -->
     <div class="modal-overlay" id="followListModal">
         <div class="modal" style="max-width:400px; display: flex; flex-direction: column; max-height: 80vh;">
@@ -2752,6 +2753,24 @@
             </div>
             <div class="modal-body" style="overflow-y: auto; padding: 10px; background: #fff;" id="followListContainer">
                 <!-- Data đổ vào đây -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CỬA HÀNG KHUNG AVATAR -->
+    <div class="modal-overlay" id="frameShopModal">
+        <div class="modal" style="max-width: 650px; max-height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <span><span class="wow-icon"></span> Cửa hàng Khung đại diện</span>
+                <button class="btn-close" onclick="closeModal('frameShopModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; padding: 20px; background: var(--bg-body);">
+                <div style="text-align: right; margin-bottom: 10px; font-weight: bold; color: #ea580c;">
+                    Số dư ví: <span class="wow-icon"></span> <span id="shopModalWOWBalance" style="font-size:1.2rem;">0</span>
+                </div>
+                <div class="frame-shop-grid" id="frameShopContainer">
+                    <!-- Khung sẽ được render tại đây -->
+                </div>
             </div>
         </div>
     </div>
@@ -4387,6 +4406,11 @@
             btnF.disabled = false;
         }
 
+        
+        
+        
+        
+        
         async function openSettingsPage() {
             document.getElementById('settingsView').style.display = 'block';
             
@@ -4520,46 +4544,12 @@
 
         // Hàm xử lý việc Click chọn dự án để Update
         window.handleSelectProjectToUpdate = function(id) {
-            window.isNavigatingToUpdate = true; // Bật cờ miễn cảnh báo rời trang
+            window.isNavigatingToUpdate = true;
+            window.autoOpenSettingsForUpdate = true; // Cờ hiệu chờ tải xong
             
-            showToast("Đang chuyển đến bảng quản lý dự án...", "info");
-            navigateTo('/projects/' + id); // 1. Chuyển sang trang dự án đó
-            
-            // 2. Đợi trang load xong (800ms) rồi bật bảng Cài đặt
-            setTimeout(() => { window.isNavigatingToUpdate = false; }, 1000); // Tắt cờ sau khi chuyển xong
-            setTimeout(() => {
-                openProjSettingsModal();
-                
-                // 3. Đợi bảng cài đặt bật lên xong (200ms) mới xử lý giao diện
-                setTimeout(() => {
-                    const updateContainer = document.getElementById('updateSectionContainer');
-                    const updateSection = document.getElementById('updateProjFile');
-                    
-                    if (updateContainer && updateSection) {
-                        // Thêm class tạo hiệu ứng nhấp nháy phát sáng cam để thu hút sự chú ý
-                        updateContainer.classList.add('highlight-attention');
-                        
-                        // Cuộn mượt mà đến đúng khu vực đó
-                        updateContainer.scrollIntoView({behavior: 'smooth', block: 'center'});
-                        
-                        // Tự động dán file .sb3 từ Extension vào khu vực cập nhật (nếu có)
-                        if (pendingImportedData && pendingImportedData.sb3File) {
-                            const dt = new DataTransfer();
-                            dt.items.add(pendingImportedData.sb3File);
-                            updateSection.files = dt.files;
-                            showToast("Đã tự động điền file game mới. Hãy bấm Tải lên!", "success");
-                        } else {
-                            // Nhắc người dùng tự chọn file nếu không nạp từ Editor
-                            showToast("Vui lòng tải file mới lên tại khu vực đang phát sáng", "info");
-                        }
-                        
-                        // Gỡ bỏ class hiệu ứng sau khi hoàn tất (4.5 giây = 3 nhịp chớp)
-                        setTimeout(() => {
-                            updateContainer.classList.remove('highlight-attention');
-                        }, 4500);
-                    }
-                }, 200);
-            }, 800);
+            showToast("Đang tải dữ liệu dự án...", "info");
+            navigateTo('/projects/' + id); 
+            setTimeout(() => { window.isNavigatingToUpdate = false; }, 1500); 
         };
 
         async function showUploadUpdate() {
@@ -5531,6 +5521,32 @@
                 }
                 const btnSettings = document.getElementById('btnProjSettings');
                 if(btnSettings) btnSettings.onclick = openProjSettingsModal;
+
+                // Mở tự động Bảng cập nhật sau khi đã load 100% xong dự án
+                if (window.autoOpenSettingsForUpdate) {
+                    window.autoOpenSettingsForUpdate = false;
+                    openProjSettingsModal();
+                    
+                    setTimeout(() => {
+                        const updateContainer = document.getElementById('updateSectionContainer');
+                        const updateSection = document.getElementById('updateProjFile');
+                        
+                        if (updateContainer && updateSection) {
+                            updateContainer.classList.add('highlight-attention');
+                            updateContainer.scrollIntoView({behavior: 'smooth', block: 'center'});
+                            
+                            if (pendingImportedData && pendingImportedData.sb3File) {
+                                const dt = new DataTransfer();
+                                dt.items.add(pendingImportedData.sb3File);
+                                updateSection.files = dt.files;
+                                showToast("Đã tự động điền file game mới. Hãy bấm Tải lên!", "success");
+                            } else {
+                                showToast("Vui lòng tải file mới lên tại khu vực đang phát sáng", "info");
+                            }
+                            setTimeout(() => updateContainer.classList.remove('highlight-attention'), 4500);
+                        }
+                    }, 250); 
+                }
             }
         };
 
@@ -7020,24 +7036,24 @@ function reopenEditor() {
             }
         }
 
-        // Tích hợp mở Cửa hàng Khung đại diện vào trang Cài đặt
+        // Tách cửa hàng khung ra khỏi trang cài đặt để tối ưu tốc độ
         const originalOpenSettings = openSettingsPage;
         openSettingsPage = async function() {
             await originalOpenSettings();
-            if (currentUser) {
-                loadAvatarFramesShop();
-            }
         };
+
+        // Hàm mở Cửa sổ Modal Shop Khung Avatar
+        function openFrameShopModal() {
+            openModal('frameShopModal');
+            const shopWOW = document.getElementById('shopModalWOWBalance');
+            if (shopWOW) shopWOW.innerText = currentUser ? (currentUser.WOW || 0) : 0;
+            loadAvatarFramesShop();
+        }
 
         async function loadAvatarFramesShop() {
             const container = document.getElementById('frameShopContainer');
             if (!container) return;
-
-            // Đổi tiêu đề thành Cửa hàng Khung đại diện
-            const shopLabel = document.querySelector('label i.fa-bolt')?.parentElement || document.querySelector('#setTab-profile label');
-            if (shopLabel && shopLabel.innerHTML.includes('Khung')) {
-                shopLabel.innerHTML = '<span class="wow-icon"></span> <span style="font-weight:800; font-size:1.05rem;">Cửa hàng Khung đại diện</span>';
-            }
+            container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
 
             try {
                 const framesRes = await fetch(`${WORKER_URL}/api/frames`);
@@ -7052,18 +7068,21 @@ function reopenEditor() {
                 currentUser.frame = pData.frame; 
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 
+                // Cập nhật số dư ở mọi nơi
                 const setWOW = document.getElementById('settingsWOWBalance');
                 if (setWOW) setWOW.innerText = currentUser.WOW;
                 const navWOW = document.getElementById('navWOWBalance');
                 if (navWOW) navWOW.innerText = currentUser.WOW;
+                const shopWOW = document.getElementById('shopModalWOWBalance');
+                if (shopWOW) shopWOW.innerText = currentUser.WOW;
 
                 let html = `
-                <div class="frame-item-card" style="border-radius:12px; padding:15px; text-align:center; background:var(--bg-secondary); border:1px solid var(--border-color);">
-                    <div class="frame-preview-box" style="position:relative; width:64px; height:64px; margin:0 auto 10px auto;">
-                        <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'">
+                <div class="frame-item-card">
+                    <div class="frame-preview-box">
+                        <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
                     </div>
                     <div style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;">Mặc định</div>
-                    <button class="btn ${!currentUser.frame ? 'btn-primary' : ''}" style="width:100%; font-size:0.8rem; justify-content:center;" onclick="equipFrame('none')" ${!currentUser.frame ? 'disabled' : ''}>
+                    <button class="btn ${!currentUser.frame ? 'btn-primary' : ''}" style="width:100%; font-size:0.8rem; justify-content:center;" onclick="equipFrame(event, 'none')" ${!currentUser.frame ? 'disabled' : ''}>
                         ${!currentUser.frame ? '<i class="fa-solid fa-check"></i> Đang dùng' : 'Gỡ khung'}
                     </button>
                 </div>
@@ -7077,16 +7096,16 @@ function reopenEditor() {
                     if (isEquipped) {
                         actionHtml = `<button class="btn btn-primary" style="width:100%; font-size:0.8rem; justify-content:center;" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>`;
                     } else if (isOwned) {
-                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; border: 1px solid var(--primary); color: var(--primary);" onclick="equipFrame('${f.id}')">Trang bị</button>`;
+                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; border: 1px solid var(--primary); color: var(--primary);" onclick="equipFrame(event, '${f.id}')">Trang bị</button>`;
                     } else {
-                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-title); font-weight: bold;" onclick="buyFrame('${f.id}', ${f.price})"><span class="wow-icon"></span> ${f.price}</button>`;
+                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-title); font-weight: bold;" onclick="buyFrame(event, '${f.id}', ${f.price})"><span class="wow-icon"></span> ${f.price}</button>`;
                     }
 
                     html += `
-                    <div class="frame-item-card" style="border-radius:12px; padding:15px; text-align:center; background:var(--bg-secondary); border:1px solid var(--border-color);">
-                        <div class="frame-preview-box" style="position:relative; width:64px; height:64px; margin:0 auto 10px auto;">
-                            <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'">
-                            <img src="${f.url}" class="frame-overlay" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none;">
+                    <div class="frame-item-card">
+                        <div class="frame-preview-box">
+                            <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <img src="${f.url}" class="frame-overlay">
                         </div>
                         <div style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;" title="${f.name}">${f.name.substring(0,12)}</div>
                         ${actionHtml}
@@ -7099,34 +7118,41 @@ function reopenEditor() {
             }
         }
 
-        async function buyFrame(frameId, price) {
+        async function buyFrame(event, frameId, price) {
             if (!confirm(`Bạn có chắc chắn muốn mở khóa khung này với giá ${price} WOW?`)) return;
+            
+            const btn = event.currentTarget;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
             const res = await apiFetch(`/api/store/buy`, { method: 'POST', body: JSON.stringify({ frameId }) });
             if (res && res.success) {
                 showToast("Đã mở khóa khung thành công!", "success");
-                
-                // Trừ tiền và cập nhật ngay lập tức
-                currentUser.WOW = res.newBalance;
-                localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                const setWOW = document.getElementById('settingsWOWBalance');
-                if (setWOW) setWOW.innerText = currentUser.WOW;
-                const navWOW = document.getElementById('navWOWBalance');
-                if (navWOW) navWOW.innerText = currentUser.WOW;
-                
-                loadAvatarFramesShop(); // Nạp lại cửa hàng
+                loadAvatarFramesShop(); // Tải lại trực tiếp trong popup mượt mà
             } else {
                 showToast(res ? res.error : "Không thể thực hiện giao dịch", "error");
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
             }
         }
 
-        async function equipFrame(frameId) {
+        async function equipFrame(event, frameId) {
+            const btn = event.currentTarget;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
             const res = await apiFetch(`/api/store/equip`, { method: 'POST', body: JSON.stringify({ frameId }) });
             if (res && res.success) {
                 showToast("Đã trang bị khung!", "success");
                 currentUser.frame = res.frameUrl;
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                updateNav(); // Đổi khung trên Navbar
-                loadAvatarFramesShop(); // Tải lại shop
+                updateNav(); // Cập nhật ngay avatar và khung trên thanh Navbar
+                loadAvatarFramesShop(); 
+            } else {
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
             }
         }
 
