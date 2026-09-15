@@ -1119,76 +1119,95 @@
             color: var(--primary) !important;
         }
         .side-marquee-column {
-            position: fixed;
-            top: 62px;
-            bottom: 0;
+        position: fixed;
+        top: 62px;
+        bottom: 0;
+        width: 40px; /* Thu hẹp lại để vừa sát mép điện thoại */
+        overflow: hidden;
+        z-index: -10;
+        pointer-events: none;
+        opacity: 0.6;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .side-marquee-column.left {
+        left: 2px;
+    }
+    
+    .side-marquee-column.right {
+        right: 2px;
+    }
+
+    .marquee-track {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        width: 100%;
+        align-items: center;
+    }
+
+    /* Tốc độ chạy chậm (35s) */
+    .side-marquee-column.left .marquee-track {
+        animation: scrollUp 35s linear infinite;
+    }
+
+    .side-marquee-column.right .marquee-track {
+        animation: scrollDown 35s linear infinite;
+    }
+
+    /* --- MẶC ĐỊNH CHO ĐIỆN THOẠI (MOBILE): Chữ xếp dọc từng ký tự từ trên xuống --- */
+    .marquee-item {
+        font-size: 1.2rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 1.1;
+        padding: 8px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column; /* Xếp từng chữ cái dọc xuống */
+        align-items: center;
+    }
+
+    .side-marquee-column.left .marquee-item {
+        color: #ffff00;
+    }
+
+    .side-marquee-column.right .marquee-item {
+        color: #ff0000;
+    }
+
+    @keyframes scrollDown {
+        0% { transform: translateY(-50%); }
+        100% { transform: translateY(0%); }
+    }
+
+    @keyframes scrollUp {
+        0% { transform: translateY(0%); }
+        100% { transform: translateY(-50%); }
+    }
+
+    /* --- DÀNH CHO MÁY TÍNH (DESKTOP): Giữ kiểu xoay ngang nếu màn hình lớn --- */
+    @media (min-width: 768px) {
+        .side-marquee-column {
             width: 70px;
-            overflow: hidden;
-            z-index: -10;
-            pointer-events: none;
-            opacity: 0.6; /* Tăng độ rõ nét hơn (đã chỉnh từ 0.2 lên 0.4) */
-            display: flex;
-            justify-content: center;
         }
-        
         .side-marquee-column.left {
             left: 5px;
         }
-        
         .side-marquee-column.right {
             right: 5px;
         }
-
-        .marquee-track {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            width: 100%;
-            align-items: center;
-        }
-
-        /* Cột trái: Cuộn ngược lên trên (Tăng thời gian lên 35s để chạy chậm lại) */
-        .side-marquee-column.left .marquee-track {
-            animation: scrollUp 35s linear infinite;
-        }
-
-        /* Cột phải: Cuộn xuống dưới (Tăng thời gian lên 35s để chạy chậm lại) */
-        .side-marquee-column.right .marquee-track {
-            animation: scrollDown 35s linear infinite;
-        }
-
         .marquee-item {
-            font-size: 3rem;
-            font-weight: 900;
-            text-transform: uppercase;
+            font-size: 1.5rem;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            padding: 25px 0;
-            letter-spacing: 5px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: block; /* Trở lại dạng khối bình thường trên PC */
+            padding: 15px 0;
+            letter-spacing: 3px;
         }
-
-        .side-marquee-column.left .marquee-item {
-            color: #ffff00;
-        }
-
-        .side-marquee-column.right .marquee-item {
-            color: #ff0000;
-        }
-
-        @keyframes scrollDown {
-            0% { transform: translateY(-50%); }
-            100% { transform: translateY(0%); }
-        }
-
-        @keyframes scrollUp {
-            0% { transform: translateY(0%); }
-            100% { transform: translateY(-50%); }
-        }
-
-        @media (max-width: 1200px) {
-            .side-marquee-column { display: none; }
-        }
+    }
     </style>
 </head>
 <body>
