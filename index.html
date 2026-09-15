@@ -1120,7 +1120,7 @@
         }
 
         /* ================================================= */
-        /* ✨ GIAO DIỆN MỚI: ĐIỂM DANH & NĂNG LƯỢNG WOW SÁNG RÕ */
+        /* ✨ GIAO DIỆN MỚI: ĐIỂM DANH & NĂNG LƯỢNG WOW CỰC SÁNG & RỰC RỠ */
         /* ================================================= */
         .wow-icon {
             display: inline-block;
@@ -1133,25 +1133,29 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
+            filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.65));
         }
 
+        /* KHUNG ĐIỂM DANH SIÊU SÁNG & HIỆN ĐẠI */
         .daily-modal-box {
             position: relative;
-            background: #ffffff !important;
-            border-radius: 20px;
+            background: radial-gradient(circle at top, #ffffff 0%, #f1f5f9 100%) !important;
+            border-radius: 26px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 60px rgba(13, 165, 122, 0.25), 0 0 40px rgba(245, 158, 11, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.85);
         }
         [data-theme="dark"] .daily-modal-box {
-            background: #1e293b !important;
+            background: radial-gradient(circle at top, #1e293b 0%, #0b1329 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(13, 165, 122, 0.25);
         }
         .daily-streak-track {
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: relative;
-            margin: 25px 0 20px 0;
+            margin: 28px 0 24px 0;
             padding: 0 10px;
         }
         .daily-streak-track::before {
@@ -1160,75 +1164,95 @@
             top: 50%;
             left: 20px;
             right: 20px;
-            height: 6px;
-            background: var(--border-color);
+            height: 8px;
+            background: rgba(203, 213, 225, 0.4);
             transform: translateY(-50%);
             z-index: 1;
-            border-radius: 4px;
+            border-radius: 20px;
+        }
+        [data-theme="dark"] .daily-streak-track::before {
+            background: rgba(51, 65, 85, 0.6);
         }
         .daily-progress-bar-fill {
             position: absolute;
             top: 50%;
             left: 20px;
-            height: 6px;
-            background: var(--primary);
+            height: 8px;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #f59e0b);
             transform: translateY(-50%);
             z-index: 1;
-            border-radius: 4px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 10px rgba(13, 165, 122, 0.4);
+            border-radius: 20px;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.8);
         }
         .daily-card-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 10px;
             position: relative;
             z-index: 2;
         }
         .daily-card-slot {
-            background: #f8fafc;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 4px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            gap: 7px;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         [data-theme="dark"] .daily-card-slot {
-            background: #0f172a;
+            background: #111e36;
+            border-color: #1e293b;
         }
         .daily-card-slot.claimed {
             border-color: #cbd5e1;
-            background: #ffffff;
-            opacity: 0.65;
+            background: rgba(248, 250, 252, 0.8);
+            opacity: 0.7;
+            transform: scale(0.96);
         }
         [data-theme="dark"] .daily-card-slot.claimed {
-            background: #1e293b;
+            background: #0f172a;
+            border-color: #1e293b;
+            opacity: 0.55;
         }
         .daily-card-slot.active {
-            border-color: var(--primary);
-            background: rgba(13, 165, 122, 0.08);
-            transform: translateY(-6px) scale(1.06);
-            box-shadow: 0 10px 25px -3px rgba(13, 165, 122, 0.25);
-            animation: pulseGlow 2s infinite;
+            border-color: #10b981 !important;
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%) !important;
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 0 14px 28px rgba(16, 185, 129, 0.35), 0 0 18px rgba(16, 185, 129, 0.4);
+            animation: pulseActiveSlot 1.8s infinite ease-in-out;
         }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(13, 165, 122, 0.4); }
-            50% { box-shadow: 0 0 20px 6px rgba(13, 165, 122, 0.2); }
+        [data-theme="dark"] .daily-card-slot.active {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.25) 0%, #1e293b 100%) !important;
+        }
+        @keyframes pulseActiveSlot {
+            0%, 100% { box-shadow: 0 10px 24px rgba(16, 185, 129, 0.35), 0 0 10px rgba(16, 185, 129, 0.4); transform: translateY(-8px) scale(1.08); }
+            50% { box-shadow: 0 16px 35px rgba(16, 185, 129, 0.55), 0 0 25px rgba(16, 185, 129, 0.7); transform: translateY(-10px) scale(1.12); }
         }
         .daily-card-slot.day-7 {
-            background: linear-gradient(135deg, rgba(245, 176, 65, 0.15), rgba(245, 176, 65, 0.25));
-            border-color: #f5b041;
+            background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+            border-color: #f59e0b;
+        }
+        [data-theme="dark"] .daily-card-slot.day-7 {
+            background: linear-gradient(145deg, #2d2006 0%, #1c1917 100%);
+            border-color: #b45309;
         }
         .daily-card-slot.day-7.active {
-            border-color: #f5b041;
-            box-shadow: 0 10px 25px -3px rgba(245, 176, 65, 0.4);
+            border-color: #f59e0b !important;
+            background: linear-gradient(180deg, rgba(245, 158, 11, 0.25) 0%, #ffffff 100%) !important;
+            animation: pulseGoldDay 1.6s infinite ease-in-out;
+        }
+        @keyframes pulseGoldDay {
+            0%, 100% { box-shadow: 0 12px 28px rgba(245, 158, 11, 0.45), 0 0 15px rgba(245, 158, 11, 0.5); transform: translateY(-8px) scale(1.1); }
+            50% { box-shadow: 0 18px 40px rgba(245, 158, 11, 0.7), 0 0 30px rgba(245, 158, 11, 0.9); transform: translateY(-11px) scale(1.15); }
         }
 
-        /* Nút Tặng WOW Trong Chi Tiết Tác Phẩm */
+        /* NÚT MỞ MODAL TẶNG WOW */
         .btn-tip-WOW {
             background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
             color: #ffffff !important;
@@ -1239,40 +1263,233 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.4);
+            transition: all 0.25s ease;
             cursor: pointer;
         }
         .btn-tip-WOW:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.45);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 24px rgba(234, 88, 12, 0.6);
             color: #fff !important;
         }
 
-        /* Lựa chọn điểm WOW */
+        /* ================================================= */
+        /* 🔥 CỬA SỔ TẶNG WOW CỰC NGẦU & HIỆU ỨNG RUNG LẮC SIÊU CẤP */
+        /* ================================================= */
+        .tip-modal-box {
+            position: relative;
+            background: radial-gradient(circle at top, var(--bg-panel) 0%, var(--bg-body) 100%) !important;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            transition: transform 0.05s ease;
+        }
+
+        /* Ô SỐ DƯ HIỆN TẠI SIÊU CHẤT (NEON ENERGY HUD) */
+        .tip-balance-hud {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.06) 100%);
+            border: 2px solid rgba(245, 158, 11, 0.35);
+            border-radius: 16px;
+            box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.08), 0 6px 20px rgba(245, 158, 11, 0.15);
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+        .tip-balance-hud::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+            animation: rotateHUDLight 8s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotateHUDLight { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .tip-balance-val-wrap {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: #ea580c !important;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+        [data-theme="dark"] .tip-balance-val-wrap {
+            color: #fbbf24 !important;
+        }
+
+        /* LỰA CHỌN CÁC THẺ MỨC ĐIỂM (TIER CHIPS CỰC NGẦU) */
         .tip-chip-group {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin: 15px 0;
+            margin: 12px 0 18px 0;
         }
         .tip-chip {
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 5px;
+            border-radius: 14px;
+            padding: 12px 6px;
             font-weight: 800;
+            font-size: 1rem;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             color: var(--text-title);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            user-select: none;
         }
-        .tip-chip:hover { border-color: var(--primary); color: var(--primary); }
-        .tip-chip.active {
-            background: rgba(13, 165, 122, 0.12);
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: scale(1.04);
+        .tip-chip:hover {
+            transform: translateY(-4px) scale(1.05);
+            border-color: #f59e0b;
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.25);
+        }
+        .tip-chip .chip-label { font-size: 0.72rem; text-transform: uppercase; opacity: 0.75; font-weight: 700; }
+        .tip-chip .chip-val { display: flex; align-items: center; gap: 4px; font-size: 1.15rem; }
+
+        /* ACTIVE THEO TỪNG CẤP ĐỘ */
+        .tip-chip.active.tier-1 {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.2), rgba(245, 158, 11, 0.1)) !important;
+            border-color: #ea580c !important;
+            color: #ea580c !important;
+            box-shadow: 0 0 16px rgba(234, 88, 12, 0.4);
+            transform: scale(1.06);
+        }
+        .tip-chip.active.tier-2 {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(59, 130, 246, 0.15)) !important;
+            border-color: #a855f7 !important;
+            color: #a855f7 !important;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            transform: scale(1.06);
+        }
+        .tip-chip.active.tier-3 {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(16, 185, 129, 0.15)) !important;
+            border-color: #3b82f6 !important;
+            color: #3b82f6 !important;
+            box-shadow: 0 0 22px rgba(59, 130, 246, 0.5);
+            transform: scale(1.06);
+        }
+        .tip-chip.active.tier-4 {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(234, 88, 12, 0.25)) !important;
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+            box-shadow: 0 0 26px rgba(245, 158, 11, 0.8);
+            transform: scale(1.08);
+            animation: pulseTier4 1.5s infinite;
+        }
+        @keyframes pulseTier4 {
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); }
+            50% { box-shadow: 0 0 35px rgba(234, 88, 12, 0.9); }
+        }
+
+        /* CÁC CẤP ĐỘ RUNG LẮC KHI SỐ ĐIỂM CÀNG LỚN */
+        .shake-gentle {
+            animation: shakeGentle 0.4s ease-in-out;
+        }
+        @keyframes shakeGentle {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-3px, 2px); }
+            40% { transform: translate(3px, -2px); }
+            60% { transform: translate(-2px, -1px); }
+            80% { transform: translate(2px, 1px); }
+        }
+        .shake-wild {
+            animation: shakeWild 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shakeWild {
+            10%, 90% { transform: translate3d(-3px, 0, 0) rotate(-1deg); }
+            20%, 80% { transform: translate3d(4px, 0, 0) rotate(1.5deg); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0) rotate(-2deg); }
+            40%, 60% { transform: translate3d(6px, 0, 0) rotate(2deg); }
+        }
+        .shake-hyper {
+            animation: shakeHyper 0.6s infinite;
+        }
+        @keyframes shakeHyper {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-2deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* NÚT NHẤN GIỮ ĐỂ GỬI TẶNG WOW (HOLD TO CONFIRM) */
+        .btn-hold-send-wow {
+            position: relative;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            color: #ffffff !important;
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            box-shadow: 0 8px 25px rgba(234, 88, 12, 0.45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .btn-hold-send-wow:active {
+            transform: scale(0.98);
+        }
+        .btn-hold-send-wow .hold-progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #e11d48, #9333ea);
+            z-index: 1;
+            transition: width 0.05s linear;
+            box-shadow: 0 0 20px #f59e0b;
+        }
+        .btn-hold-send-wow .btn-inner-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        /* HIỆU ỨNG TIA SÁNG VĂNG RỰC RỠ KHI TẶNG THÀNH CÔNG */
+        .wow-burst-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100000;
+            border-radius: 50%;
+            animation: burstFly 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes burstFly {
+            0% { transform: translate(0, 0) scale(1.2); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
 
         /* ================================================= */
@@ -2266,40 +2483,76 @@
         </div>
     </div>
 
-    <!-- MODAL TẶNG ĐIỂM WOW CHO TÁC GIẢ -->
+    <!-- MODAL TẶNG ĐIỂM WOW CHO TÁC GIẢ (PHIÊN BẢN CHIẾN BINH NĂNG LƯỢNG) -->
     <div class="modal-overlay" id="tipWOWModal">
-        <div class="modal" style="max-width: 440px;">
-            <div class="modal-header">
-                <span><span class="wow-icon"></span> Ủng hộ WOW cho tác giả</span>
+        <div class="modal tip-modal-box" id="tipModalCardBox" style="max-width: 460px;">
+            <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
+                <span style="font-size: 1.15rem; font-weight: 900; display: flex; align-items: center; gap: 8px;">
+                    <span class="wow-icon fa-beat"></span> <span>Tiếp Năng Lượng Cho Tác Giả</span>
+                </span>
                 <button class="btn-close" onclick="closeModal('tipWOWModal')">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 22px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; background:var(--bg-secondary); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color);">
-                    <span style="font-size:0.9rem; color:var(--text-muted);">Số dư hiện tại của bạn:</span>
-                    <b style="color:var(--text-title); font-size: 1.1rem;"><span class="wow-icon"></span> <span id="tipModalMyBalance">0</span></b>
+            
+            <div class="modal-body" style="padding: 24px;">
+                <!-- KHỐI HUD SỐ DƯ SIÊU CHẤT -->
+                <div class="tip-balance-hud">
+                    <div style="position: relative; z-index: 2;">
+                        <span style="font-size: 0.78rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; display:block;">Nguồn năng lượng sẵn có</span>
+                        <span style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Số dư ví của bạn:</span>
+                    </div>
+                    <div class="tip-balance-val-wrap">
+                        <span class="wow-icon" style="font-size: 1.8rem;"></span>
+                        <span id="tipModalMyBalance">0</span>
+                    </div>
                 </div>
 
-                <label style="font-weight: bold; font-size: 0.9rem; display: block; margin-top: 15px;">Chọn mức ủng hộ:</label>
+                <label style="font-weight: 800; font-size: 0.9rem; display: block; margin-top: 5px; color: var(--text-title);">
+                    <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 5px;"></i> Chọn mốc kích hoạt năng lượng:
+                </label>
+                
                 <div class="tip-chip-group">
-                    <div class="tip-chip active" onclick="selectTipChip(10, this)">10</div>
-                    <div class="tip-chip" onclick="selectTipChip(50, this)">50</div>
-                    <div class="tip-chip" onclick="selectTipChip(100, this)">100</div>
-                    <div class="tip-chip" onclick="selectTipChip(200, this)">200</div>
+                    <div class="tip-chip active tier-1" onclick="selectTipChip(10, this, 'tier-1')">
+                        <span class="chip-label">Đồng</span>
+                        <div class="chip-val"><span class="wow-icon"></span> 10</div>
+                    </div>
+                    <div class="tip-chip tier-2" onclick="selectTipChip(50, this, 'tier-2')">
+                        <span class="chip-label">Bạc</span>
+                        <div class="chip-val"><span class="wow-icon"></span> 50</div>
+                    </div>
+                    <div class="tip-chip tier-3" onclick="selectTipChip(100, this, 'tier-3')">
+                        <span class="chip-label">Vàng</span>
+                        <div class="chip-val"><span class="wow-icon"></span> 100</div>
+                    </div>
+                    <div class="tip-chip tier-4" onclick="selectTipChip(200, this, 'tier-4')">
+                        <span class="chip-label">Kim Cương</span>
+                        <div class="chip-val"><span class="wow-icon"></span> 200</div>
+                    </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 12px;">
-                    <label style="font-size:0.85rem;">Hoặc nhập số điểm tùy ý:</label>
-                    <input type="number" id="tipCustomAmount" class="form-control" value="10" min="1" max="10000" oninput="clearTipChipActive()">
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label style="font-size:0.85rem; font-weight: 700;">Hoặc nhập số điểm tùy biến:</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <span class="wow-icon" style="position: absolute; left: 14px; font-size: 1.3rem; z-index: 2;"></span>
+                        <input type="number" id="tipCustomAmount" class="form-control" value="10" min="1" max="10000" style="padding-left: 45px; font-weight: 800; font-size: 1.1rem; color: #ea580c;" oninput="handleCustomTipInput(this.value)">
+                    </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 18px;">
-                    <label style="font-size:0.85rem;">Lời nhắn gửi tác giả (tùy chọn):</label>
-                    <textarea id="tipCustomMessage" class="form-control" rows="2" placeholder="Ví dụ: Tác phẩm rất đỉnh! Cố gắng phát huy nhé..."></textarea>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-size:0.85rem; font-weight: 700;">Lời nhắn gửi tác giả (tùy chọn):</label>
+                    <textarea id="tipCustomMessage" class="form-control" rows="2" placeholder="Ví dụ: Đỉnh nóc kịch trần! Tặng bạn năng lượng sáng tạo..."></textarea>
                 </div>
 
-                <button class="btn btn-primary" id="btnSubmitTip" onclick="submitTipWOW()" style="width:100%; justify-content:center; padding: 12px; font-weight:800; border:none;">
-                    <i class="fa-solid fa-paper-plane"></i> Xác nhận gửi tặng
+                <!-- NÚT NHẤN GIỮ NĂNG LƯỢNG RỰC RỠ -->
+                <button type="button" class="btn-hold-send-wow" id="btnHoldSendTip">
+                    <div class="hold-progress-fill" id="holdProgressFill"></div>
+                    <div class="btn-inner-content" id="holdBtnTextContent">
+                        <i class="fa-solid fa-fire fa-bounce"></i>
+                        <span>NHẤN GIỮ ĐỂ TRUYỀN WOW</span>
+                    </div>
                 </button>
+                <div style="text-align: center; font-size: 0.76rem; color: var(--text-muted); margin-top: 8px;">
+                    <i class="fa-solid fa-fingerprint"></i> Giữ chuột hoặc ngón tay khoảng 1.2 giây để phóng năng lượng
+                </div>
             </div>
         </div>
     </div>
@@ -6536,7 +6789,30 @@ function reopenEditor() {
 
         function openAboutWOWModal() { openModal('aboutWOWModal'); }
 
-        // ================= XỬ LÝ TẶNG WOW TRONG DỰ ÁN =================
+        // ================= XỬ LÝ TẶNG WOW TRONG DỰ ÁN (HIỆU ỨNG RUNG LẮC & NHẤN GIỮ) =================
+        let holdTimer = null;
+        let holdProgress = 0;
+        let holdInterval = null;
+        let isTipSubmitting = false;
+
+        function triggerBoxShake(amount) {
+            const cardBox = document.getElementById('tipModalCardBox');
+            if (!cardBox) return;
+            cardBox.classList.remove('shake-gentle', 'shake-wild', 'shake-hyper');
+            void cardBox.offsetWidth; // Trigger reflow để kích hoạt lại animation
+
+            if (amount >= 200) {
+                cardBox.classList.add('shake-hyper');
+                setTimeout(() => cardBox.classList.remove('shake-hyper'), 650);
+            } else if (amount >= 100) {
+                cardBox.classList.add('shake-wild');
+                setTimeout(() => cardBox.classList.remove('shake-wild'), 550);
+            } else if (amount >= 50) {
+                cardBox.classList.add('shake-gentle');
+                setTimeout(() => cardBox.classList.remove('shake-gentle'), 450);
+            }
+        }
+
         function openTipModal() {
             if (!currentUser) return openModal('loginModal');
             if (!currentProj) return;
@@ -6552,30 +6828,121 @@ function reopenEditor() {
             const chips = document.querySelectorAll('.tip-chip');
             chips.forEach((c, idx) => c.classList.toggle('active', idx === 0));
 
+            resetHoldButtonUI();
+            setupHoldButtonListeners();
             openModal('tipWOWModal');
         }
 
-        function selectTipChip(val, el) {
+        function selectTipChip(val, el, tierClass) {
             document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             document.getElementById('tipCustomAmount').value = val;
+            triggerBoxShake(val);
+        }
+
+        function handleCustomTipInput(val) {
+            document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
+            const num = parseInt(val) || 0;
+            if (num > 0) triggerBoxShake(num);
         }
 
         function clearTipChipActive() {
             document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
         }
 
-        async function submitTipWOW() {
+        // BẮT SỰ KIỆN NHẤN GIỮ (HOLD TO TRANSMIT ENERGY)
+        function setupHoldButtonListeners() {
+            const btn = document.getElementById('btnHoldSendTip');
+            if (!btn || btn.dataset.bound === 'true') return;
+            btn.dataset.bound = 'true';
+
+            const startHold = (e) => {
+                if (isTipSubmitting) return;
+                const amt = parseInt(document.getElementById('tipCustomAmount').value);
+                if (isNaN(amt) || amt <= 0) return showToast("Vui lòng nhập số điểm hợp lệ!", "error");
+                if (amt > (currentUser.WOW || 0)) return showToast("Số dư WOW không đủ!", "error");
+
+                holdProgress = 0;
+                const fillEl = document.getElementById('holdProgressFill');
+                const textEl = document.getElementById('holdBtnTextContent');
+                const cardBox = document.getElementById('tipModalCardBox');
+
+                if (cardBox) cardBox.classList.add('shake-hyper');
+                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-atom fa-spin"></i> <span>ĐANG TÍCH TỤ NĂNG LƯỢNG...</span>';
+
+                clearInterval(holdInterval);
+                holdInterval = setInterval(() => {
+                    holdProgress += 4; // Tăng dần theo mỗi 40ms (~1 giây đầy)
+                    if (fillEl) fillEl.style.width = `${Math.min(100, holdProgress)}%`;
+
+                    if (holdProgress >= 100) {
+                        clearInterval(holdInterval);
+                        if (cardBox) cardBox.classList.remove('shake-hyper');
+                        executeTipDispatch();
+                    }
+                }, 40);
+            };
+
+            const stopHold = () => {
+                if (isTipSubmitting) return;
+                clearInterval(holdInterval);
+                const cardBox = document.getElementById('tipModalCardBox');
+                if (cardBox) cardBox.classList.remove('shake-hyper');
+
+                if (holdProgress < 100) {
+                    resetHoldButtonUI();
+                }
+            };
+
+            // Sự kiện Chuột
+            btn.addEventListener('mousedown', startHold);
+            window.addEventListener('mouseup', stopHold);
+
+            // Sự kiện Màn hình cảm ứng điện thoại
+            btn.addEventListener('touchstart', startHold, { passive: true });
+            window.addEventListener('touchend', stopHold);
+            window.addEventListener('touchcancel', stopHold);
+        }
+
+        function resetHoldButtonUI() {
+            holdProgress = 0;
+            const fillEl = document.getElementById('holdProgressFill');
+            const textEl = document.getElementById('holdBtnTextContent');
+            if (fillEl) fillEl.style.width = '0%';
+            if (textEl) textEl.innerHTML = '<i class="fa-solid fa-fire fa-bounce"></i> <span>NHẤN GIỮ ĐỂ TRUYỀN WOW</span>';
+        }
+
+        // PHÓNG TIA SÁNG BÙNG NỔ NĂNG LƯỢNG WOW (CONFETTI / PARTICLE BURST)
+        function spawnWOWEnergyBurst(originX, originY) {
+            const colors = ['#f59e0b', '#ea580c', '#10b981', '#3b82f6', '#ec4899', '#fbbf24'];
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'wow-burst-particle';
+                const size = Math.random() * 12 + 6;
+                p.style.width = `${size}px`;
+                p.style.height = `${size}px`;
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.boxShadow = `0 0 12px ${p.style.background}`;
+                p.style.left = `${originX}px`;
+                p.style.top = `${originY}px`;
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 260 + 80;
+                p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 1100);
+            }
+        }
+
+        async function executeTipDispatch() {
+            isTipSubmitting = true;
             const amount = parseInt(document.getElementById('tipCustomAmount').value);
             const message = document.getElementById('tipCustomMessage').value.trim();
 
-            if (isNaN(amount) || amount <= 0) return showToast("Vui lòng nhập số điểm hợp lệ!", "error");
-            if (amount > (currentUser.WOW || 0)) return showToast("Số dư WOW không đủ!", "error");
-
-            const btn = document.getElementById('btnSubmitTip');
-            const orig = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
-            btn.disabled = true;
+            const textEl = document.getElementById('holdBtnTextContent');
+            if (textEl) textEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>ĐANG PHÓNG NĂNG LƯỢNG...</span>';
 
             const res = await apiFetch(`/api/project/tip`, {
                 method: 'POST',
@@ -6587,9 +6954,13 @@ function reopenEditor() {
             });
 
             if (res && res.success) {
-                showToast(`Đã gửi tặng thành công ${amount} WOW cho tác giả!`, 'success');
-                
-                // Đồng bộ số dư lập tức lên giao diện
+                // Tọa độ nút bấm để phát nổ hiệu ứng
+                const btn = document.getElementById('btnHoldSendTip');
+                const rect = btn.getBoundingClientRect();
+                spawnWOWEnergyBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+                showToast(`Đã gửi tặng ${amount} WOW!`, 'success');
+
                 currentUser.WOW = res.newBalance;
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 const navWOW = document.getElementById('navWOWBalance');
@@ -6602,13 +6973,16 @@ function reopenEditor() {
                 renderCommentList('proj', currentProj.comments);
                 switchProjTab('comments');
 
-                closeModal('tipWOWModal');
+                setTimeout(() => {
+                    closeModal('tipWOWModal');
+                    resetHoldButtonUI();
+                    isTipSubmitting = false;
+                }, 700);
             } else {
                 showToast(res ? res.error : "Không thể gửi tặng điểm", "error");
+                resetHoldButtonUI();
+                isTipSubmitting = false;
             }
-
-            btn.innerHTML = orig;
-            btn.disabled = false;
         }
 
         async function claimDailyReward() {
