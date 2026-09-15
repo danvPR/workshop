@@ -1673,6 +1673,207 @@
             background: linear-gradient(135deg, #431407 0%, #2a0b02 100%);
             border-color: #ea580c;
         }
+
+        /* ================= GIAO DIỆN STATIONS MỚI ================= */
+        .station-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        .station-search-filter-wrap {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 22px;
+            background: var(--bg-panel);
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 22px;
+        }
+        .station-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .station-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+        }
+        .station-card-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #0f172a;
+            position: relative;
+            overflow: hidden;
+        }
+        .station-card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .station-card:hover .station-card-thumb img {
+            transform: scale(1.04);
+        }
+        .station-badge-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .station-card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .station-card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-title);
+            margin-bottom: 6px;
+            line-height: 1.35;
+        }
+        .station-card-desc {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+        .station-card-footer {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* Chi tiết Station */
+        .station-detail-banner {
+            border-radius: 18px;
+            overflow: hidden;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+        }
+        .station-banner-cover {
+            height: 160px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%);
+            position: relative;
+        }
+        .station-banner-content {
+            padding: 0 26px 22px 26px;
+            display: flex;
+            gap: 22px;
+            align-items: flex-start;
+            margin-top: -65px;
+            flex-wrap: wrap;
+        }
+        .station-banner-thumb {
+            width: 250px;
+            aspect-ratio: 16 / 9;
+            border-radius: 14px;
+            background: #000;
+            border: 4px solid var(--bg-panel);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+        .station-banner-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .station-banner-info {
+            flex: 1;
+            min-width: 280px;
+            padding-top: 70px;
+        }
+        .station-action-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+        .station-member-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .station-member-card .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-title);
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+        .station-member-card .user-meta img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+        @media (max-width: 768px) {
+            .station-banner-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin-top: -50px;
+                padding: 0 16px 18px 16px;
+            }
+            .station-banner-thumb {
+                width: 200px;
+            }
+            .station-banner-info {
+                padding-top: 12px;
+                width: 100%;
+            }
+            .station-action-bar {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1703,10 +1904,10 @@
                 <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
             <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
-            <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span>Stations</span></a>
             <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
             <a href="#create" class="nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
+            <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span>Stations</span></a>
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
@@ -1714,10 +1915,10 @@
     <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE -->
     <nav class="mobile-bottom-nav">
         <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
-        <a href="#studios" class="mobile-nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i><span>Stations</span></a>
         <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
         <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="nav_create">Sáng tạo</span></a>
         <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
+        <a href="#studios" class="mobile-nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i><span>Stations</span></a>
         <div id="mobileUserNav"></div>
     </nav>
 
@@ -1813,56 +2014,118 @@
 
     <!-- TRANG STATIONS LIST -->
     <div id="studiosListView" class="page-view">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="font-size: 1.8rem;"><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> Cộng đồng Stations</h2>
-            <button class="btn btn-primary" onclick="openCreateStudioModal()"><i class="fa-solid fa-plus"></i> Tạo Station</button>
+        <div class="station-header-bar">
+            <div>
+                <h2 style="font-size: 1.75rem; margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-satellite-dish" style="color: var(--primary);"></i> Không gian Stations
+                </h2>
+                <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0;">Các trạm tập hợp dự án, nhóm lập trình và cộng đồng sáng tạo.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openCreateStudioModal()" style="border-radius: 20px; padding: 9px 18px;">
+                <i class="fa-solid fa-plus"></i> Tạo Station
+            </button>
         </div>
-        <div class="project-grid" id="studiosGridList">Đang tải danh sách Station...</div>
+
+        <!-- Bộ lọc & Thanh tìm kiếm -->
+        <div class="station-search-filter-wrap">
+            <div class="asset-search-bar" style="flex: 1; min-width: 260px; margin: 0;">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+                <input type="text" id="stationSearchInput" placeholder="Tìm tên Station, tác giả..." oninput="handleStationSearch(this.value)">
+            </div>
+            <div style="display: flex; gap: 8px; overflow-x: auto;">
+                <button class="btn std-filter-pill active" onclick="filterStations('all', this)">Tất cả</button>
+                <button class="btn std-filter-pill" onclick="filterStations('mine', this)">Của tôi</button>
+                <button class="btn std-filter-pill" onclick="filterStations('following', this)">Đang theo dõi</button>
+            </div>
+        </div>
+
+        <div class="station-grid" id="studiosGridList">Đang tải danh sách Station...</div>
     </div>
 
     <!-- TRANG STATION DETAIL -->
     <div id="studioDetailView" class="page-view">
-        <div class="profile-hero" style="margin-bottom: 20px;">
-            <div class="profile-cover-bg" style="height: 180px; background: linear-gradient(135deg, #1e293b, #334155);"></div>
-            <div class="profile-main-content" style="padding-top: 15px; margin-top: 0; display:flex; gap: 24px; align-items:flex-start; flex-wrap: wrap;">
-                <!-- Thumbnail 16:9 chữ nhật ngang lớn -->
-                <div style="width: 320px; height: 180px; background: #000; border-radius: 14px; margin-top: -90px; box-shadow: 0 10px 25px rgba(0,0,0,0.18); overflow:hidden; border: 4px solid var(--bg-panel); flex-shrink: 0;">
-                    <img id="stdDetailThumb" src="https://i.ibb.co/QFg1cVVD/image.png" style="width:100%; height:100%; object-fit:cover;">
+        <div class="station-detail-banner">
+            <div class="station-banner-cover"></div>
+            <div class="station-banner-content">
+                <div class="station-banner-thumb">
+                    <img id="stdDetailThumb" src="https://i.ibb.co/QFg1cVVD/image.png" alt="Station Thumbnail">
                 </div>
-                <div style="flex:1; min-width: 280px;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap: wrap; gap: 15px;">
-                        <div>
-                            <h2 id="stdDetailTitle" style="font-size: 1.85rem; font-weight: 800; margin-bottom: 6px; color: var(--text-title);">Tên Station</h2>
-                            <div style="font-size: 0.9rem; color: var(--text-muted);">Bởi <a id="stdDetailCreator" href="#" style="color:var(--primary); font-weight:bold; text-decoration:none;">@creator</a> • <span id="stdFollowersCount" style="font-weight:700; color:var(--text-title);">0</span> Người theo dõi</div>
-                        </div>
-                        <div style="display:flex; gap: 10px; flex-wrap: wrap;">
-                            <button id="btnFollowStudio" class="btn btn-primary" onclick="toggleFollowStudio()"><i class="fa-solid fa-plus"></i> Theo dõi</button>
-                            <button id="btnStdAcceptInvite" class="btn btn-primary" style="display:none; background:#10b981;" onclick="acceptStudioInvite()"><i class="fa-solid fa-check"></i> Chấp nhận Lời mời</button>
-                            <button id="btnStdSettings" class="btn" style="display:none;" onclick="openStudioSettings()"><i class="fa-solid fa-gear"></i> Cài đặt</button>
-                        </div>
+                <div class="station-banner-info">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                        <span class="station-badge-tag" style="position: static;"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">
+                            Trạm trưởng: <a id="stdDetailCreator" href="#" style="color: var(--primary); font-weight: bold; text-decoration: none;">@creator</a>
+                        </span>
                     </div>
-                    <p id="stdDetailDesc" style="margin-top: 15px; font-size: 0.95rem; color: var(--text-main); white-space: pre-line; background: var(--bg-secondary); padding: 16px; border-radius: 10px; border: 1px solid var(--border-color); line-height: 1.6;"></p>
+                    <h2 id="stdDetailTitle" style="font-size: 1.85rem; font-weight: 900; margin-bottom: 8px; color: var(--text-title); line-height: 1.25;">Tên Station</h2>
+                    <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; gap: 14px; align-items: center;">
+                        <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> <b id="stdFollowersCount" style="color:var(--text-title);">0</b> người theo dõi</span>
+                        <span><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> <b id="stdProjCountBadge" style="color:var(--text-title);">0</b> dự án</span>
+                    </div>
+
+                    <div class="station-action-bar">
+                        <button id="btnFollowStudio" class="btn btn-primary" onclick="toggleFollowStudio()" style="border-radius: 20px;">
+                            <i class="fa-solid fa-plus"></i> Theo dõi
+                        </button>
+                        <button id="btnAddProjToStudio" class="btn btn-primary" style="display:none; border-radius: 20px;" onclick="openAddProjectToStudioModal()">
+                            <i class="fa-solid fa-folder-plus"></i> Thêm dự án
+                        </button>
+                        <button id="btnInviteMemberToStudio" class="btn" style="display:none; border-radius: 20px;" onclick="openInviteStudioModal()">
+                            <i class="fa-solid fa-user-plus"></i> Mời thành viên
+                        </button>
+                        <button id="btnStdAcceptInvite" class="btn btn-primary" style="display:none; background:#10b981; border-radius: 20px;" onclick="acceptStudioInvite()">
+                            <i class="fa-solid fa-check"></i> Chấp nhận lời mời
+                        </button>
+                        <button id="btnStdSettings" class="btn" style="display:none; border-radius: 20px;" onclick="openStudioSettings()">
+                            <i class="fa-solid fa-gear"></i> Cài đặt
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="profile-nav-tabs">
-            <button class="prof-tab-btn active" id="tabBtnStd-projects" onclick="switchStdTab('projects')"><i class="fa-solid fa-folder-open"></i> Dự án (<span id="stdProjCount">0</span>)</button>
-            <button class="prof-tab-btn" id="tabBtnStd-members" onclick="switchStdTab('members')"><i class="fa-solid fa-users"></i> Thành viên (<span id="stdMemberCount">0</span>)</button>
+        <div class="profile-nav-tabs" style="margin-bottom: 20px;">
+            <button class="prof-tab-btn active" id="tabBtnStd-projects" onclick="switchStdTab('projects')">
+                <i class="fa-solid fa-folder-open"></i> Kho dự án (<span id="stdProjCount">0</span>)
+            </button>
+            <button class="prof-tab-btn" id="tabBtnStd-members" onclick="switchStdTab('members')">
+                <i class="fa-solid fa-users"></i> Phi hành đoàn (<span id="stdMemberCount">0</span>)
+            </button>
+            <button class="prof-tab-btn" id="tabBtnStd-about" onclick="switchStdTab('about')">
+                <i class="fa-solid fa-circle-info"></i> Giới thiệu & Quy định
+            </button>
         </div>
 
+        <!-- TAB 1: DỰ ÁN -->
         <div id="stdTab-projects" class="prof-tab-content active">
-            <div style="margin-bottom: 20px; display:flex; justify-content:flex-end;">
-                <button id="btnAddProjToStudio" class="btn btn-primary" style="display:none;" onclick="openAddProjectToStudioModal()"><i class="fa-solid fa-plus"></i> Thêm Dự án</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom: 18px; flex-wrap:wrap;">
+                <div class="asset-search-bar" style="max-width: 350px; flex: 1; margin: 0;">
+                    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);"></i>
+                    <input type="text" id="stdInternalProjSearch" placeholder="Lọc dự án trong Station..." oninput="filterStudioInternalProjects(this.value)">
+                </div>
+                <span id="stdProjCountDisplay" style="font-size:0.88rem; color:var(--text-muted);"></span>
             </div>
             <div class="project-grid" id="stdProjectList">Chưa có dự án nào trong Station.</div>
         </div>
 
+        <!-- TAB 2: THÀNH VIÊN -->
         <div id="stdTab-members" class="prof-tab-content">
-            <div style="margin-bottom: 20px; display:flex; justify-content:flex-end;">
-                <button id="btnInviteMemberToStudio" class="btn btn-primary" style="display:none;" onclick="openInviteStudioModal()"><i class="fa-solid fa-user-plus"></i> Mời Thành viên</button>
-            </div>
             <div id="stdCuratorsList"></div>
+        </div>
+
+        <!-- TAB 3: GIỚI THIỆU -->
+        <div id="stdTab-about" class="prof-tab-content" style="max-width: 850px;">
+            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                <h4 style="margin-bottom: 12px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Giới thiệu Station
+                </h4>
+                <p id="stdDetailDesc" style="font-size: 0.96rem; color: var(--text-main); white-space: pre-line; line-height: 1.65; margin: 0;"></p>
+                
+                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Mã định danh: <code id="stdDetailIdCode" style="background:var(--bg-secondary); padding:3px 7px; border-radius:6px;"></code></span>
+                    <button class="btn" style="font-size: 0.85rem; padding: 6px 14px;" onclick="copyCurrentStudioLink()"><i class="fa-solid fa-link"></i> Sao chép link Station</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -3552,9 +3815,11 @@
                 document.querySelectorAll('.nav-assets').forEach(el => el.classList.add('active')); 
                 document.title = t('nav_assets') + " | " + brandName;
             }
+            else if (hash === '#studios' || hash.startsWith('#studio/')) {
+                document.querySelectorAll('.nav-studios').forEach(el => el.classList.add('active'));
+                document.title = "Stations | " + brandName;
+            }
             else if (hash === '#upload') document.title = t('nav_upload') + " | " + brandName;
-            else if (hash === '#studios') document.title = "Studios | " + brandName;
-            else if (hash.startsWith('#studio/')) document.title = "Studio | " + brandName;
             else if (hash === '#settings') document.title = t('settings_title') + " | " + brandName;
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
             else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
@@ -4383,12 +4648,20 @@
 
         // ================= PROFILE & SETTINGS =================
     
+
         // ================= STUDIOS SYSTEM =================
         let currentStudio = null;
         let allStudios = [];
+        let studioFilterMode = 'all';
+        let studioSearchTerm = '';
 
         function openStudiosPage() {
             document.getElementById('studiosListView').style.display = 'block';
+            studioFilterMode = 'all';
+            studioSearchTerm = '';
+            const searchInput = document.getElementById('stationSearchInput');
+            if (searchInput) searchInput.value = '';
+            document.querySelectorAll('.std-filter-pill').forEach((p, idx) => p.classList.toggle('active', idx === 0));
             loadStudiosList();
         }
 
@@ -4398,31 +4671,82 @@
             try {
                 const res = await fetch(`${WORKER_URL}/api/studios`);
                 allStudios = await res.json();
-                
-                if(allStudios.length === 0) {
-                    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding: 50px 20px;"><i class="fa-solid fa-satellite-dish" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có Station nào được tạo.</div>';
-                    return;
-                }
+                renderStudiosGrid();
+            } catch(e) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding: 20px;">Lỗi tải dữ liệu Station. Vui lòng thử lại!</div>';
+            }
+        }
 
-                // Giao diện danh sách: Thumbnail tỷ lệ chữ nhật ngang 16:9 to đẹp
-                grid.innerHTML = allStudios.map(s => `
-                    <div class="card" onclick="navigateTo('/studio/${s.id}')">
-                        <div class="card-thumb" style="height: 160px;">
-                            ${s.thumbId ? `<img src="${WORKER_URL}/api/project/${s.thumbId}">` : `<i class="fa-solid fa-satellite-dish" style="font-size:3rem; color:#cbd5e1;"></i>`}
+        function handleStationSearch(val) {
+            studioSearchTerm = (val || '').toLowerCase().trim();
+            renderStudiosGrid();
+        }
+
+        function filterStations(mode, btnEl) {
+            studioFilterMode = mode;
+            document.querySelectorAll('.std-filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            renderStudiosGrid();
+        }
+
+        function renderStudiosGrid() {
+            const grid = document.getElementById('studiosGridList');
+            if (!allStudios || allStudios.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding: 50px 20px;"><i class="fa-solid fa-satellite-dish" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có Station nào được tạo.</div>';
+                return;
+            }
+
+            let filtered = allStudios.filter(s => {
+                const title = (s.title || '').toLowerCase();
+                const creator = (s.creator || '').toLowerCase();
+                const desc = (s.description || '').toLowerCase();
+                const matchSearch = title.includes(studioSearchTerm) || creator.includes(studioSearchTerm) || desc.includes(studioSearchTerm);
+                if (!matchSearch) return false;
+
+                if (studioFilterMode === 'mine') {
+                    if (!currentUser) return false;
+                    const isCreator = (s.creator || '').toLowerCase() === currentUser.username.toLowerCase();
+                    const isMember = (s.members || []).map(m => m.toLowerCase()).includes(currentUser.username.toLowerCase());
+                    return isCreator || isMember;
+                }
+                if (studioFilterMode === 'following') {
+                    if (!currentUser) return false;
+                    return (s.followers || []).includes(currentUser.username);
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding: 40px;"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:10px; opacity:0.4; display:block;"></i>Không tìm thấy Station phù hợp.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(s => {
+                const thumb = s.thumbId ? `${WORKER_URL}/api/project/${s.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const projCount = (s.projects || []).length;
+                const memCount = (s.members || []).length;
+                const followCount = (s.followers || []).length;
+                return `
+                    <div class="station-card" onclick="navigateTo('/studio/${s.id}')">
+                        <div class="station-card-thumb">
+                            <img src="${thumb}" alt="${escapeHtml(s.title)}" loading="lazy">
+                            <span class="station-badge-tag"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">${escapeHtml(s.title)}</h3>
-                            <div class="card-author">Bởi @${escapeHtml(s.creator)}</div>
-                            <div style="margin-top: 8px; font-size: 0.8rem; color:var(--text-muted); display:flex; justify-content:space-between;">
-                                <span><i class="fa-solid fa-users"></i> ${s.members ? s.members.length : 1} thành viên</span>
-                                <span><i class="fa-solid fa-folder"></i> ${s.projects ? s.projects.length : 0} dự án</span>
+                        <div class="station-card-body">
+                            <div class="station-card-title">${escapeHtml(s.title)}</div>
+                            <div class="station-card-desc">${escapeHtml(s.description || 'Chưa có mô tả cho Station này.')}</div>
+                            <div class="station-card-footer">
+                                <span><i class="fa-solid fa-user-astronaut" style="color:var(--primary);"></i> @${escapeHtml(s.creator)}</span>
+                                <div style="display:flex; gap:10px;">
+                                    <span title="Dự án"><i class="fa-solid fa-folder"></i> ${projCount}</span>
+                                    <span title="Thành viên"><i class="fa-solid fa-users"></i> ${memCount}</span>
+                                    <span title="Theo dõi"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${followCount}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                `).join('');
-            } catch(e) {
-                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444;">Lỗi tải dữ liệu Station</div>';
-            }
+                `;
+            }).join('');
         }
 
         async function openStudioDetailPage(id, urlParams) {
@@ -4436,14 +4760,17 @@
                 document.getElementById('stdDetailTitle').innerText = currentStudio.title;
                 document.getElementById('stdDetailCreator').innerText = '@' + currentStudio.creator;
                 document.getElementById('stdDetailCreator').href = `#profile/${currentStudio.creator}`;
-                document.getElementById('stdDetailDesc').innerText = currentStudio.description || 'Chưa có mô tả.';
+                document.getElementById('stdDetailDesc').innerText = currentStudio.description || 'Station này chưa có phần giới thiệu.';
                 document.getElementById('stdFollowersCount').innerText = (currentStudio.followers || []).length;
+                document.getElementById('stdProjCountBadge').innerText = (currentStudio.projects || []).length;
                 document.getElementById('stdDetailThumb').src = currentStudio.thumbId ? `${WORKER_URL}/api/project/${currentStudio.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const idCode = document.getElementById('stdDetailIdCode');
+                if (idCode) idCode.innerText = currentStudio.id;
 
                 document.getElementById('stdProjCount').innerText = (currentStudio.projects || []).length;
                 document.getElementById('stdMemberCount').innerText = (currentStudio.members || []).length;
 
-                // Controls
+                // Các nút hành động
                 const btnFollow = document.getElementById('btnFollowStudio');
                 const btnSettings = document.getElementById('btnStdSettings');
                 const btnAddProj = document.getElementById('btnAddProjToStudio');
@@ -4454,24 +4781,16 @@
                     const isManager = (currentStudio.managers || []).map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || currentUser.role === 'admin';
                     const isMember = (currentStudio.members || []).map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || isManager;
                     const isFollowing = (currentStudio.followers || []).includes(currentUser.username);
-                    
-                    // FIX: Bỏ phân biệt chữ Hoa/Thường khi check thư mời
                     const isInvited = (currentStudio.invites || []).map(u=>u.toLowerCase()).includes(currentUser.username.toLowerCase());
 
                     btnFollow.style.display = 'inline-flex';
                     btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> Đang theo dõi` : `<i class="fa-solid fa-plus"></i> Theo dõi`;
                     btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary';
 
-                    if (isInvited && !isMember) {
-                        btnAcceptInvite.style.display = 'inline-flex'; 
-                        // Thêm hiệu ứng rung nhẹ để thu hút sự chú ý
-                        btnAcceptInvite.style.animation = 'pulseActiveSlot 2s infinite ease-in-out';
-                    } else {
-                        btnAcceptInvite.style.display = 'none';
-                    }
-                    if (isManager) btnSettings.style.display = 'inline-flex'; else btnSettings.style.display = 'none';
-                    if (isMember) btnAddProj.style.display = 'inline-flex'; else btnAddProj.style.display = 'none';
-                    if (isManager) btnInvite.style.display = 'inline-flex'; else btnInvite.style.display = 'none';
+                    btnAcceptInvite.style.display = (isInvited && !isMember) ? 'inline-flex' : 'none';
+                    btnSettings.style.display = isManager ? 'inline-flex' : 'none';
+                    btnAddProj.style.display = isMember ? 'inline-flex' : 'none';
+                    btnInvite.style.display = isManager ? 'inline-flex' : 'none';
                 } else {
                     btnFollow.style.display = 'inline-flex';
                     btnFollow.innerHTML = `<i class="fa-solid fa-plus"></i> Theo dõi`;
@@ -4492,19 +4811,29 @@
         }
 
         function switchStdTab(tab) {
-            document.getElementById('tabBtnStd-projects').classList.toggle('active', tab === 'projects');
-            document.getElementById('tabBtnStd-members').classList.toggle('active', tab === 'members');
-            document.getElementById('stdTab-projects').style.display = tab === 'projects' ? 'block' : 'none';
-            document.getElementById('stdTab-members').style.display = tab === 'members' ? 'block' : 'none';
+            document.querySelectorAll('#studioDetailView .prof-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#studioDetailView .prof-tab-content').forEach(c => c.classList.remove('active'));
+            
+            const targetBtn = document.getElementById(`tabBtnStd-${tab}`);
+            const targetContent = document.getElementById(`stdTab-${tab}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            if (targetContent) targetContent.classList.add('active');
         }
+
+        let loadedStudioProjects = [];
 
         async function renderStudioProjects() {
             const grid = document.getElementById('stdProjectList');
             const projs = currentStudio.projects || [];
-            if(projs.length === 0) { grid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; padding: 20px 0;">Chưa có dự án nào trong Station.</div>'; return; }
+            document.getElementById('stdProjCountDisplay').innerText = `Tổng số: ${projs.length} tác phẩm`;
             
-            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dự án...</div>';
-            let html = '';
+            if(projs.length === 0) { 
+                grid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 40px 0;"><i class="fa-solid fa-folder-open" style="font-size:2.5rem; opacity:0.3; display:block; margin-bottom:10px;"></i>Chưa có dự án nào trong Station.</div>'; 
+                return; 
+            }
+            
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+            loadedStudioProjects = [];
             
             for(const pid of projs) {
                 let p = allProjects.find(x => x.projectId === pid || x.fileId === pid);
@@ -4512,54 +4841,86 @@
                     try {
                         const res = await fetch(`${WORKER_URL}/api/projects?id=${encodeURIComponent(pid)}&limit=1`);
                         const data = await res.json();
-                        if(data.projects && data.projects.length>0) p = data.projects[0];
+                        if(data.projects && data.projects.length > 0) p = data.projects[0];
                     } catch(e){}
                 }
-                if(p) {
-                    html += `
-                    <div class="card">
-                        <div class="card-thumb" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
-                        <div class="card-body">
-                            <div class="card-title" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">${escapeHtml(p.title)}</div>
-                            <div class="card-author">@${escapeHtml(p.author)}</div>
-                            ${currentUser && (currentStudio.managers.includes(currentUser.username) || p.author.toLowerCase() === currentUser.username.toLowerCase()) ? `<button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem; margin-top:8px; width:100%; justify-content:center;" onclick="removeProjectFromStudio('${pid}')">Xóa khỏi Station</button>` : ''}
-                        </div>
-                    </div>`;
-                }
+                if(p) loadedStudioProjects.push(p);
             }
-            grid.innerHTML = html || 'Không có dự án khả dụng.';
+            displayStudioProjectCards(loadedStudioProjects);
         }
 
-        // TÁCH RÕ RÀNG: BAN ĐIỀU HÀNH & THÀNH VIÊN
+        function filterStudioInternalProjects(val) {
+            const q = (val || '').toLowerCase().trim();
+            const filtered = loadedStudioProjects.filter(p => (p.title || '').toLowerCase().includes(q) || (p.author || '').toLowerCase().includes(q));
+            displayStudioProjectCards(filtered);
+        }
+
+        function displayStudioProjectCards(list) {
+            const grid = document.getElementById('stdProjectList');
+            if(!list || list.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">Không tìm thấy tác phẩm nào khớp với từ khóa.</div>';
+                return;
+            }
+
+            grid.innerHTML = list.map(p => {
+                const canRemove = currentUser && (
+                    currentStudio.managers.map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || 
+                    p.author.toLowerCase() === currentUser.username.toLowerCase() ||
+                    currentUser.role === 'admin'
+                );
+                return `
+                <div class="card">
+                    <div class="card-thumb" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
+                        ${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}" alt="${escapeHtml(p.title)}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">${escapeHtml(p.title)}</div>
+                        <div class="card-author">@${escapeHtml(p.author)}</div>
+                        ${canRemove ? `
+                            <button class="btn btn-danger" style="padding:5px 10px; font-size:0.75rem; margin-top:10px; width:100%; justify-content:center; border-radius:6px;" onclick="removeProjectFromStudio('${p.projectId || p.fileId}')">
+                                <i class="fa-solid fa-xmark"></i> Gỡ khỏi Station
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         function renderStudioMembers() {
             const list = document.getElementById('stdCuratorsList');
             const members = currentStudio.members || [];
             const managers = currentStudio.managers || [];
-            const pureMembers = members.filter(m => !managers.includes(m));
+            const pureMembers = members.filter(m => !managers.map(x=>x.toLowerCase()).includes(m.toLowerCase()));
             
-            let html = `<h4 style="margin-bottom:12px; margin-top:5px; color:var(--text-title); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> Ban điều hành (${managers.length})</h4>`;
-            html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-bottom: 30px;">`;
+            let html = `<h4 style="margin-bottom:14px; color:var(--text-title); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> Ban điều hành trạm (${managers.length})</h4>`;
+            html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 28px;">`;
             html += managers.map(m => `
-                <div style="background:var(--bg-secondary); border:1px solid var(--border-color); padding: 12px; border-radius: 10px; display:flex; align-items:center; justify-content:space-between;">
-                    <a href="#profile/${encodeURIComponent(m)}" style="text-decoration:none; color:var(--text-title); font-weight:bold; display:flex; align-items:center; gap:10px;">
-                        <img src="${DEFAULT_AVATAR}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid var(--border-color);" id="std-avt-${m}">
-                        <span>${escapeHtml(m)}</span>
+                <div class="station-member-card">
+                    <a href="#profile/${encodeURIComponent(m)}" class="user-meta">
+                        <img src="${DEFAULT_AVATAR}" id="std-avt-${m}" alt="${m}">
+                        <div>
+                            <div>${escapeHtml(m)}</div>
+                            <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">${m.toLowerCase() === currentStudio.creator.toLowerCase() ? 'Trạm trưởng' : 'Quản trị viên'}</span>
+                        </div>
                     </a>
                     ${currentUser && currentStudio.creator.toLowerCase() === currentUser.username.toLowerCase() && m.toLowerCase() !== currentUser.username.toLowerCase() ? `
                         <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 8px;" onclick="removeStudioMember('${m}')">Xóa</button>
-                    ` : `<span style="font-size:0.72rem; background:rgba(13,165,122,0.15); color:var(--primary); padding:3px 8px; border-radius:12px; font-weight:700;">Quản lý</span>`}
+                    ` : ''}
                 </div>
             `).join('');
             html += `</div>`;
 
-            html += `<h4 style="margin-bottom:12px; color:var(--text-title); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-users"></i> Thành viên (${pureMembers.length})</h4>`;
+            html += `<h4 style="margin-bottom:14px; color:var(--text-title); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-users"></i> Thành viên (${pureMembers.length})</h4>`;
             if (pureMembers.length > 0) {
-                html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px;">`;
+                html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">`;
                 html += pureMembers.map(m => `
-                    <div style="background:var(--bg-secondary); border:1px solid var(--border-color); padding: 12px; border-radius: 10px; display:flex; align-items:center; justify-content:space-between;">
-                        <a href="#profile/${encodeURIComponent(m)}" style="text-decoration:none; color:var(--text-title); font-weight:bold; display:flex; align-items:center; gap:10px;">
-                            <img src="${DEFAULT_AVATAR}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid var(--border-color);" id="std-avt-${m}">
-                            <span>${escapeHtml(m)}</span>
+                    <div class="station-member-card">
+                        <a href="#profile/${encodeURIComponent(m)}" class="user-meta">
+                            <img src="${DEFAULT_AVATAR}" id="std-avt-${m}" alt="${m}">
+                            <div>
+                                <div>${escapeHtml(m)}</div>
+                                <span style="font-size:0.72rem; color:var(--text-muted);">Thành viên</span>
+                            </div>
                         </a>
                         ${currentUser && (currentStudio.creator.toLowerCase() === currentUser.username.toLowerCase() || managers.map(x=>x.toLowerCase()).includes(currentUser.username.toLowerCase())) ? `
                             <div style="display:flex; gap:6px;">
@@ -4571,12 +4932,11 @@
                 `).join('');
                 html += `</div>`;
             } else {
-                html += `<p style="color:var(--text-muted); font-size: 0.95rem; padding: 10px 0;">Chưa có thành viên nào.</p>`;
+                html += `<p style="color:var(--text-muted); font-size: 0.92rem; padding: 10px 0;">Chưa có thêm thành viên nào.</p>`;
             }
 
             list.innerHTML = html;
 
-            // Nạp Avatar ngầm
             members.forEach(m => {
                 fetch(`${WORKER_URL}/api/user/${encodeURIComponent(m)}`).then(r=>r.json()).then(d=>{
                     if(d.avt) {
@@ -4585,6 +4945,13 @@
                     }
                 }).catch(()=>{});
             });
+        }
+
+        function copyCurrentStudioLink() {
+            if (!currentStudio) return;
+            const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
+            const link = window.location.origin + bp + `/studio/${currentStudio.id}`;
+            navigator.clipboard.writeText(link).then(() => showToast("Đã chép link Station!", "success"));
         }
 
         function openCreateStudioModal() {
@@ -4599,7 +4966,7 @@
             const title = document.getElementById('newStdTitle').value.trim();
             const desc = document.getElementById('newStdDesc').value.trim();
             const thumbFile = document.getElementById('newStdThumb').files[0];
-            if(!title) return showToast("Nhập tên Station", "error");
+            if(!title) return showToast("Vui lòng nhập tên Station", "error");
 
             let thumbId = "";
             if (thumbFile) {
@@ -4611,18 +4978,14 @@
             const res = await apiFetch('/api/studio/create', { method: 'POST', body: JSON.stringify({ title, description: desc, thumbId }) });
             if(res && res.success) {
                 closeModal('createStudioModal');
-                showToast("Tạo Station thành công!", "success");
+                showToast("Đã tạo Station thành công!", "success");
                 navigateTo('/studio/' + res.id);
             }
         }
 
-        // FIX LỖI NÚT THEO DÕI
         async function toggleFollowStudio() {
             if(!currentUser) return openModal('loginModal');
-            
             const btnFollow = document.getElementById('btnFollowStudio');
-            const origHtml = btnFollow.innerHTML;
-            btnFollow.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             btnFollow.disabled = true;
 
             const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'toggle_follow' }) });
@@ -4631,7 +4994,7 @@
                 const idx = currentStudio.followers.indexOf(currentUser.username);
                 if(idx > -1) {
                     currentStudio.followers.splice(idx, 1);
-                    showToast("Đã hủy theo dõi Station", "info");
+                    showToast("Đã hủy theo dõi", "info");
                 } else {
                     currentStudio.followers.push(currentUser.username);
                     showToast("Đã theo dõi Station!", "success");
@@ -4641,13 +5004,10 @@
                 btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> Đang theo dõi` : `<i class="fa-solid fa-plus"></i> Theo dõi`;
                 btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary';
                 document.getElementById('stdFollowersCount').innerText = currentStudio.followers.length;
-            } else {
-                btnFollow.innerHTML = origHtml;
             }
             btnFollow.disabled = false;
         }
 
-        // FIX LỖI NÚT CÀI ĐẶT
         function openStudioSettings() {
             document.getElementById('editStdTitle').value = currentStudio.title || '';
             document.getElementById('editStdDesc').value = currentStudio.description || '';
@@ -4661,7 +5021,7 @@
             const desc = document.getElementById('editStdDesc').value.trim();
             const thumbFile = document.getElementById('editStdThumb').files[0];
             
-            if(!title) return showToast("Nhập tên Station", "error");
+            if(!title) return showToast("Vui lòng nhập tên Station", "error");
 
             const btn = document.getElementById('btnSaveStdSettings');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
@@ -4683,7 +5043,7 @@
                 currentStudio.thumbId = thumbId;
                 
                 document.getElementById('stdDetailTitle').innerText = title;
-                document.getElementById('stdDetailDesc').innerText = desc || 'Chưa có mô tả.';
+                document.getElementById('stdDetailDesc').innerText = desc || 'Station này chưa có phần giới thiệu.';
                 document.getElementById('stdDetailThumb').src = thumbId ? `${WORKER_URL}/api/project/${thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             }
             btn.innerHTML = 'Lưu Cài đặt';
@@ -4703,19 +5063,21 @@
                 if(!currentStudio.projects) currentStudio.projects = [];
                 if(!currentStudio.projects.includes(pid)) currentStudio.projects.push(pid);
                 closeModal('addProjStudioModal');
-                showToast("Đã thêm dự án vào Station", "success");
+                showToast("Đã thêm dự án vào Station!", "success");
                 renderStudioProjects();
                 document.getElementById('stdProjCount').innerText = currentStudio.projects.length;
+                document.getElementById('stdProjCountBadge').innerText = currentStudio.projects.length;
             }
         }
 
         async function removeProjectFromStudio(pid) {
-            if(!confirm("Xác nhận xóa dự án khỏi Station?")) return;
+            if(!confirm("Xác nhận gỡ dự án này khỏi Station?")) return;
             const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'remove_project', targetProject: pid }) });
             if(res && res.success) {
                 currentStudio.projects = currentStudio.projects.filter(p=>p!==pid);
                 renderStudioProjects();
                 document.getElementById('stdProjCount').innerText = currentStudio.projects.length;
+                document.getElementById('stdProjCountBadge').innerText = currentStudio.projects.length;
                 showToast("Đã gỡ dự án khỏi Station", "info");
             }
         }
@@ -4734,18 +5096,18 @@
         async function acceptStudioInvite() {
             const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'accept_invite' }) });
             if(res && res.success) {
-                showToast("Đã tham gia Station!", "success");
+                showToast("Đã gia nhập Station!", "success");
                 openStudioDetailPage(currentStudio.id, null);
             }
         }
 
         async function promoteStudioMember(user) {
-            if(!confirm(`Thăng cấp @${user} lên Quản lý Station?`)) return;
+            if(!confirm(`Thăng cấp @${user} lên Quản trị viên của Station?`)) return;
             const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'promote', targetUser: user }) });
             if(res && res.success) {
                 currentStudio.managers.push(user);
                 renderStudioMembers();
-                showToast(`Đã thăng cấp @${user} làm Quản lý!`, "success");
+                showToast(`Đã thăng cấp @${user}!`, "success");
             }
         }
 
@@ -4760,10 +5122,9 @@
                 showToast(`Đã xóa @${user} khỏi Station`, "info");
             } else if (res) showToast(res.error, "error");
         }
-
         // ================= END STUDIOS SYSTEM =================
         
-        
+
         
         // ================= TRANG PROFILE (ĐÃ TỐI ƯU HÓA HOÀN TOÀN) =================
         async function openProfilePage(username, urlParams = null) {
