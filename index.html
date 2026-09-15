@@ -3976,7 +3976,20 @@
             const input = document.getElementById('commentText' + suffix);
             if (userLabel) userLabel.innerText = `@${user}`;
             if (banner) banner.style.display = 'block';
-            if (input) input.focus();
+            
+            // 🤖 TỰ ĐỘNG CHÈN TAG @BeaBea (AI) KHI BẤM TRẢ LỜI TIN NHẮN CỦA BEABEA
+            if (type === 'chat' && user === 'BeaBea (AI)' && input) {
+                if (!input.value.includes('@BeaBea (AI)')) {
+                    input.value = `@BeaBea (AI) ${input.value}`.trimStart();
+                }
+            }
+
+            if (input) {
+                input.focus();
+                // Đưa con trỏ chuột về cuối dòng để người dùng gõ tiếp ngay
+                const len = input.value.length;
+                input.setSelectionRange(len, len);
+            }
         }
 
         function cancelReply(type) { 
