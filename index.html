@@ -3341,6 +3341,10 @@
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let chatInterval = null; // Vòng lặp tải chat tự động
         
+        // 🚀 BỘ NHỚ ĐỆM FRONTEND (Giảm 99% request khi tải Avatar và Station)
+        let globalUserCache = {}; 
+        let lastStudiosFetchTime = 0;
+        
         // --- Smart Caching & Lazy Load cho Profile ---
         let profileCache = {}; // Lưu trữ profile để load 0 giây
         const PROF_CACHE_TTL = 3 * 60 * 1000; // Giữ Cache 3 phút
@@ -4704,10 +4708,18 @@
 
         async function loadStudiosList() {
             const grid = document.getElementById('studiosGridList');
+            
+            // 🚀 BỘ NHỚ ĐỆM: Nếu đã tải danh sách Studio trong vòng 30 giây qua, KHÔNG GỌI API NỮA, lấy luôn dữ liệu cũ ra vẽ (Siêu mượt)
+            if (allStudios.length > 0 && (Date.now() - lastStudiosFetchTime < 30000)) {
+                renderStudiosGrid();
+                return;
+            }
+
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
             try {
                 const res = await fetch(`${WORKER_URL}/api/studios`);
                 allStudios = await res.json();
+                lastStudiosFetchTime = Date.now(); // Lưu vết thời gian tải
                 renderStudiosGrid();
             } catch(e) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding: 20px;">Lỗi tải dữ liệu Station. Vui lòng thử lại!</div>';
@@ -4872,17 +4884,40 @@
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
             loadedStudioProjects = [];
             
+            // 🚀 BƯỚC 1: Quét xem có bao nhiêu dự án bị thiếu trong bộ nhớ
+            let missingProjs = false;
             for(const pid of projs) {
-                let p = allProjects.find(x => x.projectId === pid || x.fileId === pid);
-                if(!p) {
-                    try {
-                        const res = await fetch(`${WORKER_URL}/api/projects?id=${encodeURIComponent(pid)}&limit=1`);
-                        const data = await res.json();
-                        if(data.projects && data.projects.length > 0) p = data.projects[0];
-                    } catch(e){}
+                let p = allProjects.find(x => String(x.projectId) === String(pid) || String(x.fileId) === String(pid));
+                if(p) {
+                    loadedStudioProjects.push(p);
+                } else {
+                    missingProjs = true;
                 }
-                if(p) loadedStudioProjects.push(p);
             }
+
+            // 🚀 BƯỚC 2: TỐI ƯU CỰC MẠNH -> Thay vì gọi 30 request cho 30 dự án thiếu, ta gọi đúng 1 LẦN lấy danh sách tổng từ Backend (Backend đã cache sẵn nên rất nhanh)
+            if (missingProjs) {
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/projects?limit=150`);
+                    const data = await res.json();
+                    if (data.projects) {
+                        // Trộn danh sách dự án mới vào bộ nhớ tổng
+                        data.projects.forEach(newP => {
+                            if (!allProjects.find(oldP => oldP.projectId === newP.projectId)) {
+                                allProjects.push(newP);
+                            }
+                        });
+                        
+                        // Lọc lại các dự án thuộc Station
+                        loadedStudioProjects = [];
+                        for(const pid of projs) {
+                            let p = allProjects.find(x => String(x.projectId) === String(pid) || String(x.fileId) === String(pid));
+                            if(p) loadedStudioProjects.push(p);
+                        }
+                    }
+                } catch(e){}
+            }
+            
             displayStudioProjectCards(loadedStudioProjects);
         }
 
@@ -4974,13 +5009,23 @@
 
             list.innerHTML = html;
 
+            // 🚀 TỐI ƯU TẢI AVATAR: Chỉ tải những người chưa có trong Cache
             members.forEach(m => {
-                fetch(`${WORKER_URL}/api/user/${encodeURIComponent(m)}`).then(r=>r.json()).then(d=>{
-                    if(d.avt) {
-                        const img = document.getElementById(`std-avt-${m}`);
-                        if(img) img.src = getAvtUrl(d.avt);
-                    }
-                }).catch(()=>{});
+                const img = document.getElementById(`std-avt-${m}`);
+                if (!img) return;
+
+                if (globalUserCache[m]) {
+                    // CÓ TRONG RAM RỒI -> Lấy ra dùng ngay lập tức, 0 tốn request
+                    img.src = getAvtUrl(globalUserCache[m]);
+                } else {
+                    // CHƯA CÓ -> Gọi API, sau đó lưu vào RAM để lần sau không phải gọi nữa
+                    fetch(`${WORKER_URL}/api/user/${encodeURIComponent(m)}`).then(r=>r.json()).then(d=>{
+                        if(d.avt) {
+                            globalUserCache[m] = d.avt; // Lưu vào Cache
+                            img.src = getAvtUrl(d.avt);
+                        }
+                    }).catch(()=>{});
+                }
             });
         }
 
@@ -6611,17 +6656,24 @@
                     </a>
                 `).join('');
 
-                // Gửi Request ngầm để kéo Avatar thật của từng User về thay thế
+                // 🚀 TỐI ƯU TẢI AVATAR FOLLOW (Dùng chung bộ nhớ với Station)
                 list.forEach(username => {
-                    fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            if(data && data.avt) {
-                                const imgEl = document.getElementById(`follow-avt-${username}`);
-                                if(imgEl) imgEl.src = getAvtUrl(data.avt);
-                            }
-                        })
-                        .catch(e => console.log("Lỗi tải avt follow:", e));
+                    const imgEl = document.getElementById(`follow-avt-${username}`);
+                    if (!imgEl) return;
+
+                    if (globalUserCache[username]) {
+                        imgEl.src = getAvtUrl(globalUserCache[username]);
+                    } else {
+                        fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if(data && data.avt) {
+                                    globalUserCache[username] = data.avt; // Lưu vào Cache
+                                    imgEl.src = getAvtUrl(data.avt);
+                                }
+                            })
+                            .catch(e => console.log("Lỗi tải avt follow:", e));
+                    }
                 });
             }
 
