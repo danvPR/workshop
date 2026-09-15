@@ -2499,8 +2499,10 @@
                     <label>Mô tả Station:</label>
                     <textarea id="editStdDesc" class="form-control" rows="4"></textarea>
                 </div>
-                <button type="button" id="btnSaveStdSettings" class="btn btn-primary" onclick="saveStudioSettings()" style="width:100%; justify-content:center; padding: 12px; font-weight: bold;">Lưu Cài
-
+                <button type="button" id="btnSaveStdSettings" class="btn btn-primary" onclick="saveStudioSettings()" style="width:100%; justify-content:center; padding: 12px; font-weight: bold;">Lưu Cài đặt</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL LIÊN HỆ HỖ TRỢ -->
     <div class="modal-overlay" id="contactModal">
@@ -4452,13 +4454,21 @@
                     const isManager = (currentStudio.managers || []).map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || currentUser.role === 'admin';
                     const isMember = (currentStudio.members || []).map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || isManager;
                     const isFollowing = (currentStudio.followers || []).includes(currentUser.username);
-                    const isInvited = (currentStudio.invites || []).includes(currentUser.username);
+                    
+                    // FIX: Bỏ phân biệt chữ Hoa/Thường khi check thư mời
+                    const isInvited = (currentStudio.invites || []).map(u=>u.toLowerCase()).includes(currentUser.username.toLowerCase());
 
                     btnFollow.style.display = 'inline-flex';
                     btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> Đang theo dõi` : `<i class="fa-solid fa-plus"></i> Theo dõi`;
                     btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary';
 
-                    if (isInvited && !isMember) btnAcceptInvite.style.display = 'inline-flex'; else btnAcceptInvite.style.display = 'none';
+                    if (isInvited && !isMember) {
+                        btnAcceptInvite.style.display = 'inline-flex'; 
+                        // Thêm hiệu ứng rung nhẹ để thu hút sự chú ý
+                        btnAcceptInvite.style.animation = 'pulseActiveSlot 2s infinite ease-in-out';
+                    } else {
+                        btnAcceptInvite.style.display = 'none';
+                    }
                     if (isManager) btnSettings.style.display = 'inline-flex'; else btnSettings.style.display = 'none';
                     if (isMember) btnAddProj.style.display = 'inline-flex'; else btnAddProj.style.display = 'none';
                     if (isManager) btnInvite.style.display = 'inline-flex'; else btnInvite.style.display = 'none';
