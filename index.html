@@ -3054,7 +3054,7 @@
             if(res && res.needs_update) { openModal('legacyUpdateModal'); } 
             else if(res) { 
                 currentUser.role = res.role; 
-                currentUser.WOW = res.WOW !== undefined ? res.WOW : (currentUser.WOW || 0);
+                currentUser.WOW = res.WOW !== undefined ? res.WOW : (res.omg !== undefined ? res.omg : (currentUser.WOW || 0));
                 currentUser.frame = res.frame || null;
                 localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
                 updateNav(); 
@@ -3099,9 +3099,9 @@
                         sessionToken: res.sessionToken, 
                         avt: res.avt, 
                         role: res.role,
-                        WOW: res.WOW || 0,
+                        WOW: res.WOW !== undefined ? res.WOW : (res.omg || 0),
                         frame: res.frame || null
-                    }; 
+                    };
                     localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
                     closeModal('loginModal'); 
                     showToast("Đăng nhập thành công", "success"); 
@@ -6715,7 +6715,7 @@ function reopenEditor() {
             const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
             const pData = await res.json();
             
-            currentUser.WOW = pData.WOW || 0;
+            currentUser.WOW = pData.WOW !== undefined ? pData.WOW : (pData.omg || 0);
             localStorage.setItem('danv_user', JSON.stringify(currentUser));
             
             // Cập nhật ngay các vị trí hiển thị số dư
@@ -7038,7 +7038,7 @@ function reopenEditor() {
                 const pData = await userRes.json();
                 
                 myOwnedFrames = pData.ownedFrames || [];
-                currentUser.WOW = pData.WOW || 0;
+                currentUser.WOW = pData.WOW !== undefined ? pData.WOW : (pData.omg || 0);
                 currentUser.frame = pData.frame; 
                 localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 
