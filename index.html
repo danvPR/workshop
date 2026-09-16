@@ -2785,6 +2785,11 @@
                     <input type="text" id="newStdTitle" class="form-control" required placeholder="Nhập tên Station...">
                 </div>
                 <div class="form-group">
+                    <label>Mã định danh (Không bắt buộc):</label>
+                    <input type="text" id="newStdCustomId" class="form-control" placeholder="Để trống hệ thống sẽ tạo tự động. VD: my-station-123">
+                    <div style="font-size:0.8rem; color:#888; margin-top:4px;">Chỉ dùng chữ không dấu, số, gạch ngang và gạch dưới.</div>
+                </div>
+                <div class="form-group">
                     <label>Ảnh bìa Station (Tỉ lệ 16:9):</label>
                     <input type="file" id="newStdThumb" accept="image/*" class="form-control" style="padding: 8px;">
                 </div>
@@ -2792,7 +2797,7 @@
                     <label>Mô tả:</label>
                     <textarea id="newStdDesc" class="form-control" rows="3" placeholder="Giới thiệu về Station của bạn..."></textarea>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center;">Tạo Station</button>
+                <button type="button" id="btnCreateStudioSubmit" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center;">Tạo Station</button>
             </div>
         </div>
     </div>
@@ -5124,9 +5129,15 @@
 
         async function submitCreateStudio() {
             const title = document.getElementById('newStdTitle').value.trim();
+            const customId = document.getElementById('newStdCustomId').value.trim();
             const desc = document.getElementById('newStdDesc').value.trim();
             const thumbFile = document.getElementById('newStdThumb').files[0];
             if(!title) return showToast("Vui lòng nhập tên Station", "error");
+
+            const btn = document.getElementById('btnCreateStudioSubmit');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...';
+            btn.disabled = true;
 
             let thumbId = "";
             if (thumbFile) {
@@ -5135,12 +5146,18 @@
                 if (upRes.success) thumbId = upRes.file_id;
             }
 
-            const res = await apiFetch('/api/studio/create', { method: 'POST', body: JSON.stringify({ title, description: desc, thumbId }) });
+            const res = await apiFetch('/api/studio/create', { method: 'POST', body: JSON.stringify({ title, description: desc, thumbId, customId }) });
             if(res && res.success) {
                 closeModal('createStudioModal');
                 showToast("Đã tạo Station thành công!", "success");
+                document.getElementById('newStdCustomId').value = ""; // Xóa trắng
                 navigateTo('/studio/' + res.id);
+            } else if (res && res.error) {
+                showToast(res.error, "error");
             }
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
         }
 
         async function toggleFollowStudio() {
