@@ -645,12 +645,79 @@
         .WOW-balance-pill { background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.3); cursor: pointer; transition: 0.2s; border: none; }
         .WOW-balance-pill:hover { transform: scale(1.05); }
 
-        .frame-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 15px; }
-        .frame-item-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 10px; text-align: center; transition: 0.2s; position: relative;}
-        .frame-item-card:hover { border-color: var(--primary); transform: translateY(-3px); }
-        .frame-preview-box { position: relative; width: 64px; height: 64px; margin: 0 auto 10px auto; }
-        .frame-preview-box img.base-avt { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .frame-preview-box img.frame-overlay { position: absolute; top: 50%; left: 50%; width: 135%; height: 135%; transform: translate(-50%, -50%); pointer-events: none; }
+        .frame-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; margin-top: 15px; }
+        .frame-item-card { 
+            background: var(--bg-secondary); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 20px 15px; 
+            text-align: center; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .frame-item-card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 24px rgba(13, 165, 122, 0.15);
+        }
+        .frame-preview-box { 
+            position: relative; 
+            width: 76px; 
+            height: 76px; 
+            margin: 0 auto 15px auto; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .frame-preview-box img.base-avt { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .frame-preview-box img.frame-overlay { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 135%; 
+            height: 135%; 
+            transform: translate(-50%, -50%); 
+            pointer-events: none;
+            object-fit: contain;
+            aspect-ratio: 1/1;
+            z-index: 2;
+        }
+        .frame-item-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text-title);
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+            min-height: 2.6em; /* Giữ cho hàng nút bấm luôn đều nhau */
+        }
+        .frame-item-btn {
+            width: 100%;
+            border-radius: 12px;
+            padding: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
         
         .daily-reward-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin: 20px 0; }
         .daily-day-box { background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 10px; padding: 15px 5px; text-align: center; opacity: 0.6; transition: 0.3s; }
@@ -2194,7 +2261,7 @@
             <div id="stdCuratorsList"></div>
         </div>
 
-        <<!-- TAB 3: GIỚI THIỆU -->
+        <!-- TAB 3: GIỚI THIỆU -->
         <div id="stdTab-about" class="prof-tab-content" style="max-width: 850px;">
             <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
                 <h4 style="margin-bottom: 12px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
@@ -5047,12 +5114,18 @@
 
         function switchStdTab(tab) {
             document.querySelectorAll('#studioDetailView .prof-tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('#studioDetailView .prof-tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('#studioDetailView .prof-tab-content').forEach(c => {
+                c.classList.remove('active');
+                c.style.display = 'none'; // Ép reset hiển thị
+            });
             
             const targetBtn = document.getElementById(`tabBtnStd-${tab}`);
             const targetContent = document.getElementById(`stdTab-${tab}`);
             if (targetBtn) targetBtn.classList.add('active');
-            if (targetContent) targetContent.classList.add('active');
+            if (targetContent) {
+                targetContent.classList.add('active');
+                targetContent.style.display = 'block'; // Buộc hiển thị lên
+            }
         }
 
         let loadedStudioProjects = [];
@@ -8723,8 +8796,8 @@ function reopenEditor() {
                     <div class="frame-preview-box">
                         <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
                     </div>
-                    <div style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;">Mặc định</div>
-                    <button class="btn ${!currentUser.frame ? 'btn-primary' : ''}" style="width:100%; font-size:0.8rem; justify-content:center;" onclick="equipFrame(event, 'none')" ${!currentUser.frame ? 'disabled' : ''}>
+                    <div class="frame-item-title">Khung Mặc định</div>
+                    <button class="btn frame-item-btn ${!currentUser.frame ? 'btn-primary' : ''}" onclick="equipFrame(event, 'none')" ${!currentUser.frame ? 'disabled' : ''}>
                         ${!currentUser.frame ? '<i class="fa-solid fa-check"></i> Đang dùng' : 'Gỡ khung'}
                     </button>
                 </div>
@@ -8736,11 +8809,11 @@ function reopenEditor() {
                     
                     let actionHtml = '';
                     if (isEquipped) {
-                        actionHtml = `<button class="btn btn-primary" style="width:100%; font-size:0.8rem; justify-content:center;" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>`;
+                        actionHtml = `<button class="btn btn-primary frame-item-btn" disabled><i class="fa-solid fa-check"></i> Đang dùng</button>`;
                     } else if (isOwned) {
-                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; border: 1px solid var(--primary); color: var(--primary);" onclick="equipFrame(event, '${f.id}')">Trang bị</button>`;
+                        actionHtml = `<button class="btn frame-item-btn" style="border: 2px solid var(--primary); color: var(--primary); background: transparent;" onclick="equipFrame(event, '${f.id}')">Trang bị</button>`;
                     } else {
-                        actionHtml = `<button class="btn" style="width:100%; font-size:0.8rem; justify-content:center; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-title); font-weight: bold;" onclick="buyFrame(event, '${f.id}', ${f.price})"><span class="wow-icon"></span> ${f.price}</button>`;
+                        actionHtml = `<button class="btn frame-item-btn" style="background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; border: none; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);" onclick="buyFrame(event, '${f.id}', ${f.price})"><span class="wow-icon" style="filter: brightness(0) invert(1);"></span> Mua với ${f.price}</button>`;
                     }
 
                     html += `
@@ -8749,7 +8822,7 @@ function reopenEditor() {
                             <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
                             <img src="${f.url}" class="frame-overlay">
                         </div>
-                        <div style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;" title="${f.name}">${f.name.substring(0,12)}</div>
+                        <div class="frame-item-title" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div>
                         ${actionHtml}
                     </div>`;
                 });
