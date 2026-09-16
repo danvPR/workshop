@@ -2170,7 +2170,10 @@
                 <i class="fa-solid fa-users"></i> Phi hành đoàn (<span id="stdMemberCount">0</span>)
             </button>
             <button class="prof-tab-btn" id="tabBtnStd-about" onclick="switchStdTab('about')">
-                <i class="fa-solid fa-circle-info"></i> Giới thiệu & Quy định
+                <i class="fa-solid fa-circle-info"></i> Giới thiệu
+            </button>
+            <button class="prof-tab-btn" id="tabBtnStd-comments" onclick="switchStdTab('comments')">
+                <i class="fa-solid fa-comments"></i> Thảo luận
             </button>
         </div>
 
@@ -2191,7 +2194,7 @@
             <div id="stdCuratorsList"></div>
         </div>
 
-        <!-- TAB 3: GIỚI THIỆU -->
+        <<!-- TAB 3: GIỚI THIỆU -->
         <div id="stdTab-about" class="prof-tab-content" style="max-width: 850px;">
             <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
                 <h4 style="margin-bottom: 12px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
@@ -2204,6 +2207,35 @@
                     <button class="btn" style="font-size: 0.85rem; padding: 6px 14px;" onclick="copyCurrentStudioLink()"><i class="fa-solid fa-link"></i> Sao chép link Station</button>
                 </div>
             </div>
+        </div>
+
+        <!-- TAB 4: THẢO LUẬN (COMMENTS) -->
+        <div id="stdTab-comments" class="prof-tab-content" style="max-width: 850px;">
+            <div style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
+                    Đang trả lời <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')"></i>
+                </div>
+                <div id="commentImgPreviewStd" class="comment-img-preview-box">
+                    <img id="commentImgPreviewSrcStd" src="" alt="preview">
+                    <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
+                    <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" title="Gỡ ảnh">&times;</button>
+                </div>
+                <form onsubmit="handlePostComment(event, 'std')" id="stdCommentForm" style="display:none;">
+                    <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" placeholder="Viết thảo luận trong Station..." autocomplete="off"></textarea></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; gap: 10px;">
+                            <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> Đính kèm ảnh</label>
+                            <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
+                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('std')"><i class="fa-solid fa-gift"></i> GIF</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd"><i class="fa-solid fa-paper-plane"></i> Gửi bình luận</button>
+                    </div>
+                </form>
+                <div id="loginPromptStd" style="text-align:center; color:#888; font-size:0.9rem;">
+                    <button class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập để tham gia thảo luận</button>
+                </div>
+            </div>
+            <div id="stdCommentList">Chưa có thảo luận nào.</div>
         </div>
     </div>
 
@@ -3446,11 +3478,11 @@
         let currentAssetSearchQuery = "";
         // ----------------------------
 
-        let replyState = { proj: { parentId: null, user: null }, prof: { parentId: null, user: null }, chat: { parentId: null, user: null } };
-        let expandedThreads = { proj: {}, prof: {} };
-        let isPosting = { proj: false, prof: false, chat: false };
+        let replyState = { proj: { parentId: null, user: null }, prof: { parentId: null, user: null }, chat: { parentId: null, user: null }, std: { parentId: null, user: null } };
+        let expandedThreads = { proj: {}, prof: {}, std: {} };
+        let isPosting = { proj: false, prof: false, chat: false, std: false };
         let reportTarget = { type: null, id: null };
-        let commentLimits = { proj: 10, prof: 10 }; // Giới hạn hiển thị 10 bình luận ban đầu
+        let commentLimits = { proj: 10, prof: 10, std: 10 };
 
         // ==========================================
         // BỘ MÁY ĐA NGÔN NGỮ (I18N ENGINE)
@@ -4315,7 +4347,11 @@
 
         // BỐ CỤC COMMENT ĐÃ ĐƯỢC SỬA LỖI (CHIA KHỐI HEADER TRÊN, TEXT BUBBLE DƯỚI)
         function renderCommentList(type, list) {
-            const container = document.getElementById(type === 'proj' ? 'commentListProj' : 'profCommentList');
+            let containerId = 'commentListProj';
+            if (type === 'prof') containerId = 'profCommentList';
+            if (type === 'std') containerId = 'stdCommentList';
+            const container = document.getElementById(containerId);
+            
             if (!list || list.length === 0) { container.innerHTML = `<div style="color:#888; text-align:center; padding:20px;">${t('proj_no_comments')}</div>`; return; }
 
             const rootComments = []; const repliesMap = {};
@@ -4327,6 +4363,7 @@
                 if(currentUser.role === 'admin') return true;
                 if(type === 'proj') return currentProj.author.toLowerCase() === currentUser.username.toLowerCase() || c.author.toLowerCase() === currentUser.username.toLowerCase();
                 if(type === 'prof') return viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase() || c.author.toLowerCase() === currentUser.username.toLowerCase();
+                if(type === 'std') return (currentStudio && currentStudio.managers.map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase())) || c.author.toLowerCase() === currentUser.username.toLowerCase();
                 return false;
             };
 
@@ -4423,6 +4460,10 @@
             commentLimits[type] += 10; // Mỗi lần bấm tải thêm 10 bình luận
             if (type === 'proj') {
                 renderCommentList('proj', currentProj.comments || []);
+            } else if (type === 'std') {
+                fetch(`${WORKER_URL}/api/studio/${currentStudio.id}`)
+                    .then(r => r.json())
+                    .then(data => renderCommentList('std', data.comments || []));
             } else {
                 fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`)
                     .then(r => r.json())
@@ -4432,7 +4473,11 @@
 
         // HÀM MỚI: TÌM, MỞ RỘNG VÀ CUỘN ĐẾN BÌNH LUẬN 
         function highlightAndScrollComment(type, commentId) {
-            let list = type === 'proj' ? (currentProj.comments || []) : (viewingProfileData.comments || []);
+            let list = [];
+            if (type === 'proj') list = currentProj.comments || [];
+            else if (type === 'std') list = currentStudio.comments || [];
+            else list = viewingProfileData.comments || [];
+            
             // Đảm bảo so sánh đúng định dạng chuỗi
             let target = list.find(c => String(c.id) === String(commentId));
             if (!target) return;
@@ -4480,15 +4525,22 @@
                 if(!confirm(t('confirm_delete') || "Xác nhận xóa bình luận này?")) return;
             }
 
-            const endpoint = type === 'proj' ? `/api/project/action` : `/api/user/comment`;
-            const payload = type === 'proj' 
-                ? { fileId: currentProj.fileId, action: "delete_comment", payload: { commentId, reason } }
-                : { targetUser: viewingProfileUser, action: "delete", commentId, reason };
+            let endpoint = `/api/user/comment`;
+            let payload = { targetUser: viewingProfileUser, action: "delete", commentId, reason };
+            
+            if (type === 'proj') {
+                endpoint = `/api/project/action`;
+                payload = { fileId: currentProj.fileId, action: "delete_comment", payload: { commentId, reason } };
+            } else if (type === 'std') {
+                endpoint = `/api/studio/action`;
+                payload = { studioId: currentStudio.id, action: "delete_comment", commentId, reason };
+            }
             
             const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
             if(res && res.success) {
                 showToast("Đã xóa bình luận", "success");
                 if(type==='proj') { currentProj.comments = currentProj.comments.filter(c=>c.id!==commentId && c.parentId!==commentId); renderCommentList('proj', currentProj.comments); }
+                else if(type==='std') { currentStudio.comments = currentStudio.comments.filter(c=>c.id!==commentId && c.parentId!==commentId); renderCommentList('std', currentStudio.comments); }
                 else { fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(r=>r.json()).then(data=>{ renderCommentList('prof', data.comments||[]); }); }
             }
         }
@@ -4496,6 +4548,7 @@
         function toggleExpandReplies(type, rootId) {
             expandedThreads[type][rootId] = !expandedThreads[type][rootId];
             if (type === 'proj') renderCommentList('proj', currentProj.comments || []);
+            else if (type === 'std') renderCommentList('std', currentStudio.comments || []);
             else fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(res => res.json()).then(data => { renderCommentList('prof', data.comments || []); });
         }
 
@@ -4740,31 +4793,63 @@
 
         async function handlePostComment(e, type) {
             e.preventDefault(); if (isPosting[type]) return; if (!currentUser) return openModal('loginModal');
-            const textInput = document.getElementById(type === 'proj' ? 'commentTextProj' : 'commentTextProf');
-            const text = textInput.value.trim(); const imgFile = document.getElementById(type === 'proj' ? 'commentImgUploadProj' : 'commentImgUploadProf').files[0];
+            
+            let textInputId = 'commentTextProj';
+            if (type === 'prof') textInputId = 'commentTextProf';
+            if (type === 'std') textInputId = 'commentTextStd';
+            const textInput = document.getElementById(textInputId);
+            
+            let imgUploadId = 'commentImgUploadProj';
+            if (type === 'prof') imgUploadId = 'commentImgUploadProf';
+            if (type === 'std') imgUploadId = 'commentImgUploadStd';
+            
+            const text = textInput.value.trim(); 
+            const imgFile = document.getElementById(imgUploadId).files[0];
             const gifUrl = attachedGifUrls[type];
             
             if (!text && !imgFile && !gifUrl) return;
 
-            isPosting[type] = true; const submitBtn = document.getElementById(type === 'proj' ? 'btnSubmitCommentProj' : 'btnSubmitCommentProf');
+            isPosting[type] = true; 
+            
+            let submitBtnId = 'btnSubmitCommentProj';
+            if (type === 'prof') submitBtnId = 'btnSubmitCommentProf';
+            if (type === 'std') submitBtnId = 'btnSubmitCommentStd';
+            const submitBtn = document.getElementById(submitBtnId);
+            
             submitBtn.disabled = true; const origHtml = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
-            let imgId = gifUrl || null; // Ưu tiên dùng Link GIF từ Klipy
+            let imgId = gifUrl || null; 
             if (imgFile) { 
                 const fd = new FormData(); fd.append("file", imgFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
                 if (upRes.success) imgId = upRes.file_id; 
             }
             
-            const endpoint = type === 'proj' ? `/api/comment` : `/api/user/comment`;
-            const payload = type === 'proj' ? { fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author, text, avt: currentUser.avt, parentId: replyState.proj.parentId, replyToUser: replyState.proj.user, imageId: imgId } 
-            : { targetUser: viewingProfileUser, text, avt: currentUser.avt, parentId: replyState.prof.parentId, replyToUser: replyState.prof.user, imageId: imgId };
+            let endpoint = `/api/user/comment`;
+            let payload = { targetUser: viewingProfileUser, text, avt: currentUser.avt, parentId: replyState.prof.parentId, replyToUser: replyState.prof.user, imageId: imgId };
+            
+            if (type === 'proj') {
+                endpoint = `/api/comment`;
+                payload = { fileId: currentProj.fileId, projTitle: currentProj.title, projAuthor: currentProj.author, text, avt: currentUser.avt, parentId: replyState.proj.parentId, replyToUser: replyState.proj.user, imageId: imgId };
+            } else if (type === 'std') {
+                endpoint = `/api/studio/action`;
+                payload = { studioId: currentStudio.id, action: "add_comment", text, avt: currentUser.avt, parentId: replyState.std.parentId, replyToUser: replyState.std.user, imageId: imgId };
+            }
 
             const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
             if (res && res.success) {
                 textInput.value = ''; removeCommentImage(type); cancelReply(type);
-                if (type === 'proj') { if (!currentProj.comments) currentProj.comments = []; currentProj.comments.push(res.comment); renderCommentList('proj', currentProj.comments); } 
-                else { fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(r => r.json()).then(pData => { renderCommentList('prof', pData.comments || []); }); }
+                if (type === 'proj') { 
+                    if (!currentProj.comments) currentProj.comments = []; 
+                    currentProj.comments.push(res.comment); 
+                    renderCommentList('proj', currentProj.comments); 
+                } else if (type === 'std') {
+                    if (!currentStudio.comments) currentStudio.comments = []; 
+                    currentStudio.comments.push(res.comment); 
+                    renderCommentList('std', currentStudio.comments);
+                } else { 
+                    fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(r => r.json()).then(pData => { renderCommentList('prof', pData.comments || []); }); 
+                }
                 showToast("Đã gửi!", "success");
             }
             isPosting[type] = false; submitBtn.disabled = false; submitBtn.innerHTML = origHtml;
@@ -4933,7 +5018,25 @@
                     btnAcceptInvite.style.display = 'none';
                 }
 
-                switchStdTab('projects');
+                if (currentUser) {
+                    document.getElementById('stdCommentForm').style.display = 'block';
+                    document.getElementById('loginPromptStd').style.display = 'none';
+                } else {
+                    document.getElementById('stdCommentForm').style.display = 'none';
+                    document.getElementById('loginPromptStd').style.display = 'block';
+                }
+                commentLimits.std = 10;
+                renderCommentList('std', currentStudio.comments || []);
+                removeCommentImage('std');
+                cancelReply('std');
+
+                if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
+                    switchStdTab('comments');
+                    if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('std', urlParams.get('c')), 500);
+                } else {
+                    switchStdTab('projects');
+                }
+
                 renderStudioProjects();
                 renderStudioMembers();
             } catch(e) {
@@ -6566,12 +6669,15 @@
                 // Nội dung comment thực sự
                 let commentSnippet = parts[parts.length - 1].replace(/&quot;$/, ''); 
                 
-                // Regex tìm đúng tên dự án (để in đậm/đóng link) nếu có
-                const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
+                // Regex tìm đúng tên dự án HOẶC Station (để in đậm/đóng link) nếu có
+                const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
                 if (projRegex.test(textBeforeQuote)) {
-                    actionHtml = textBeforeQuote.replace(projRegex, `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;$1&quot;</a>`);
+                    actionHtml = textBeforeQuote.replace(projRegex, (match, p1) => {
+                        return match.includes('Station') ? `Station <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
+                        : `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
+                    });
                 } else {
-                    let targetText = linkWithTab.includes('profile') ? (t('notif_profile') || 'hồ sơ') : (t('notif_project') || 'dự án');
+                    let targetText = linkWithTab.includes('profile') ? (t('notif_profile') || 'hồ sơ') : (linkWithTab.includes('studio') ? 'Station' : (t('notif_project') || 'dự án'));
                     actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(${targetText})</a>`;
                 }
 
@@ -6593,10 +6699,13 @@
                 `;
             } else {
                 actionHtml = mainText.replace(sender, senderLink);
-                const projRegex = /dự án\s+&quot;(.*?)&quot;/i;
+                const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
                 
                 if (projRegex.test(actionHtml)) {
-                    actionHtml = actionHtml.replace(projRegex, `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;$1&quot;</a>`);
+                    actionHtml = actionHtml.replace(projRegex, (match, p1) => {
+                        return match.includes('Station') ? `Station <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
+                        : `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
+                    });
                 } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
                     actionHtml += ` <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
                 }
