@@ -4750,19 +4750,17 @@
             ` : '');
         }
 
-        // HÀM XỬ LÝ NÚT XEM THÊM
+        // HÀM XỬ LÝ NÚT XEM THÊM (ĐÃ FIX CHO PROFILE)
         function loadMoreComments(type) {
             commentLimits[type] += 10; // Mỗi lần bấm tải thêm 10 bình luận
             if (type === 'proj') {
                 renderCommentList('proj', currentProj.comments || []);
             } else if (type === 'std') {
-                fetch(`${WORKER_URL}/api/studio/${currentStudio.id}`)
-                    .then(r => r.json())
-                    .then(data => renderCommentList('std', data.comments || []));
+                renderCommentList('std', (currentStudio && currentStudio.comments) ? currentStudio.comments : []);
             } else {
-                fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`)
-                    .then(r => r.json())
-                    .then(data => renderCommentList('prof', data.comments || []));
+                // SỬA TẠI ĐÂY: Render trực tiếp từ RAM, không gọi fetch mạng nữa
+                const comments = (viewingProfileData && viewingProfileData.comments) ? viewingProfileData.comments : [];
+                renderCommentList('prof', comments);
             }
         }
 
@@ -4842,9 +4840,15 @@
 
         function toggleExpandReplies(type, rootId) {
             expandedThreads[type][rootId] = !expandedThreads[type][rootId];
-            if (type === 'proj') renderCommentList('proj', currentProj.comments || []);
-            else if (type === 'std') renderCommentList('std', currentStudio.comments || []);
-            else fetch(`${WORKER_URL}/api/user/${encodeURIComponent(viewingProfileUser)}`).then(res => res.json()).then(data => { renderCommentList('prof', data.comments || []); });
+            if (type === 'proj') {
+                renderCommentList('proj', currentProj.comments || []);
+            } else if (type === 'std') {
+                renderCommentList('std', (currentStudio && currentStudio.comments) ? currentStudio.comments : []);
+            } else {
+                // SỬA TẠI ĐÂY: Mở rộng nhánh phản hồi con tức thì từ RAM
+                const comments = (viewingProfileData && viewingProfileData.comments) ? viewingProfileData.comments : [];
+                renderCommentList('prof', comments);
+            }
         }
 
         function startReply(type, parentId, user) {
