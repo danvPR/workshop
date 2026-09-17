@@ -2451,7 +2451,7 @@
 
         <!-- TAB 4: THẢO LUẬN (COMMENTS) -->
         <div id="stdTab-comments" class="prof-tab-content" style="max-width: 850px;">
-            <div style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+            <div id="comment-area-std" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
                 <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
                     Đang trả lời <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')"></i>
                 </div>
@@ -2600,7 +2600,7 @@
                 <div id="tabContent-comments" class="tab-content" style="display:none; flex-direction:column; padding:0;">
                     <div id="commentListProj" style="flex:1; padding:20px; overflow-y:auto;" data-i18n="proj_no_comments">Chưa có bình luận.</div>
                     
-                    <div class="comment-input-area">
+                    <div id="comment-area-proj" class="comment-input-area" style="transition: all 0.3s ease;">
                         <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.8rem; margin-bottom:8px; font-weight:bold;">
                             Đang trả lời <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('proj')"></i>
                         </div>
@@ -2740,7 +2740,7 @@
             </div>
 
             <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
-                <div style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                <div id="comment-area-prof" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
                     <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
                         Đang trả lời <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')"></i>
                     </div>
@@ -2781,11 +2781,6 @@
     <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
         
-
-
-
-
-
         <!-- BƯỚC 1: MENU CHỌN HÀNH ĐỘNG -->
         <div id="uploadChoiceStep" class="upload-card-wrapper" style="text-align: center;">
             <h2 style="color:var(--text-title); margin-bottom: 30px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_step1_title">Bạn muốn làm gì?</span></h2>
@@ -3017,7 +3012,7 @@
                 <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 20px;">
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <div class="form-group" style="flex: 1; min-width: 200px;">
-                            <label>Tên Sự kiện (VD: GameJam 2026):</label>
+                            <label>Tên Sự kiện:</label>
                             <input type="text" id="adminEvTitle" class="form-control" placeholder="Tên sự kiện...">
                         </div>
                         <div class="form-group" style="flex: 1; min-width: 200px;">
@@ -4859,8 +4854,16 @@
 
             const limit = commentLimits[type];
             const visibleRoots = rootHtmlArray.slice(0, limit);
-            // Thay đổi logic nút Xem thêm để tương thích với dữ liệu Archive
             const hasMoreRoots = rootHtmlArray.length > limit || hasMoreArchiveComments[type];
+
+            // BẢO VỆ KHUNG NHẬP: Rút form về vị trí an toàn trước khi Render lại bằng innerHTML (tránh bị xóa mất form)
+            if (type !== 'chat' && typeof originalPlaceholders !== 'undefined' && originalPlaceholders[type]) {
+                const areaIdMap = { proj: 'comment-area-proj', prof: 'comment-area-prof', std: 'comment-area-std' };
+                const areaEl = document.getElementById(areaIdMap[type]);
+                if (areaEl && areaEl.parentNode !== originalPlaceholders[type].parentNode) {
+                    originalPlaceholders[type].parentNode.insertBefore(areaEl, originalPlaceholders[type]);
+                }
+            }
 
             container.innerHTML = visibleRoots.join('') + (hasMoreRoots ? `
                 <div style="text-align: center; margin-top: 15px; padding-bottom: 10px;">
@@ -4869,6 +4872,22 @@
                     </button>
                 </div>
             ` : '');
+
+            // ĐÍNH KÈM LẠI KHUNG NHẬP: Nối lại Form vào vị trí Inline nếu người dùng đang dở tay trả lời
+            if (type !== 'chat' && replyState[type] && replyState[type].parentId) {
+                const threadEl = document.getElementById(`${type}-thread-${replyState[type].parentId}`);
+                if (threadEl) {
+                    const areaIdMap = { proj: 'comment-area-proj', prof: 'comment-area-prof', std: 'comment-area-std' };
+                    const areaEl = document.getElementById(areaIdMap[type]);
+                    let repliesContainer = threadEl.querySelector('.replies-container');
+                    if (!repliesContainer) {
+                        repliesContainer = document.createElement('div');
+                        repliesContainer.className = 'replies-container';
+                        threadEl.appendChild(repliesContainer);
+                    }
+                    repliesContainer.insertBefore(areaEl, repliesContainer.firstChild);
+                }
+            }
         }
 
         // Hàm tải thêm bình luận được cấp quyền kết nối kho lưu trữ
@@ -4997,35 +5016,91 @@
             else renderCommentList('prof', (viewingProfileData && viewingProfileData.comments) ? viewingProfileData.comments : []);
         }
 
+        let originalPlaceholders = { proj: null, prof: null, std: null };
+
         function startReply(type, parentId, user) {
-            replyState[type].parentId = parentId; replyState[type].user = user;
+            // Hủy trạng thái trả lời cũ để rút form về gốc trước khi xử lý cái mới
+            if (type !== 'chat') cancelReply(type);
+
+            replyState[type].parentId = parentId; 
+            replyState[type].user = user;
             const suffix = type.charAt(0).toUpperCase() + type.slice(1);
             const userLabel = document.getElementById('replyUserLabel' + suffix);
             const banner = document.getElementById('replyBanner' + suffix);
             const input = document.getElementById('commentText' + suffix);
+            
             if (userLabel) userLabel.innerText = `@${user}`;
             if (banner) banner.style.display = 'block';
             
-            // 🤖 TỰ ĐỘNG CHÈN TAG @BeaBea (AI) KHI BẤM TRẢ LỜI TIN NHẮN CỦA BEABEA
-            if (type === 'chat' && user === 'BeaBea (AI)' && input) {
-                if (!input.value.includes('@BeaBea (AI)')) {
-                    input.value = `@BeaBea (AI) ${input.value}`.trimStart();
+            // DI CHUYỂN KHUNG INPUT XUỐNG DƯỚI BÌNH LUẬN
+            if (type !== 'chat') {
+                const areaIdMap = { proj: 'comment-area-proj', prof: 'comment-area-prof', std: 'comment-area-std' };
+                const areaEl = document.getElementById(areaIdMap[type]);
+                
+                if (areaEl) {
+                    // Tạo một "Mỏ neo" tàng hình lưu lại vị trí đầu trang của Form
+                    if (!originalPlaceholders[type]) {
+                        originalPlaceholders[type] = document.createElement('div');
+                        originalPlaceholders[type].id = `placeholder-${type}`;
+                        areaEl.parentNode.insertBefore(originalPlaceholders[type], areaEl);
+                    }
+                    
+                    // Tìm nhánh bình luận và cắm Form vào
+                    const threadEl = document.getElementById(`${type}-thread-${parentId}`);
+                    if (threadEl) {
+                        let repliesContainer = threadEl.querySelector('.replies-container');
+                        if (!repliesContainer) {
+                            repliesContainer = document.createElement('div');
+                            repliesContainer.className = 'replies-container';
+                            threadEl.appendChild(repliesContainer);
+                        }
+                        
+                        // Tinh chỉnh giao diện cho gọn hơn khi nội tuyến
+                        areaEl.style.marginBottom = '15px';
+                        areaEl.style.marginTop = '10px';
+                        areaEl.style.boxShadow = 'none';
+                        areaEl.style.border = '2px dashed var(--primary)';
+                        
+                        // Chèn vào vị trí đầu tiên của các phản hồi con
+                        repliesContainer.insertBefore(areaEl, repliesContainer.firstChild);
+                    }
+                }
+            } else {
+                if (user === 'BeaBea (AI)' && input) {
+                    if (!input.value.includes('@BeaBea (AI)')) {
+                        input.value = `@BeaBea (AI) ${input.value}`.trimStart();
+                    }
                 }
             }
 
             if (input) {
                 input.focus();
-                // Đưa con trỏ chuột về cuối dòng để người dùng gõ tiếp ngay
                 const len = input.value.length;
                 input.setSelectionRange(len, len);
             }
         }
 
         function cancelReply(type) { 
-            replyState[type].parentId = null; replyState[type].user = null; 
+            replyState[type].parentId = null; 
+            replyState[type].user = null; 
             const suffix = type.charAt(0).toUpperCase() + type.slice(1);
             const banner = document.getElementById('replyBanner' + suffix);
             if (banner) banner.style.display = 'none'; 
+            
+            // ĐƯA KHUNG INPUT TRỞ VỀ VỊ TRÍ GỐC BAN ĐẦU
+            if (type !== 'chat') {
+                const areaIdMap = { proj: 'comment-area-proj', prof: 'comment-area-prof', std: 'comment-area-std' };
+                const areaEl = document.getElementById(areaIdMap[type]);
+                if (areaEl && originalPlaceholders[type]) {
+                    originalPlaceholders[type].parentNode.insertBefore(areaEl, originalPlaceholders[type]);
+                    
+                    // Reset lại giao diện chuẩn
+                    areaEl.style.marginTop = '0';
+                    areaEl.style.border = '1px solid var(--border-color)';
+                    areaEl.style.boxShadow = type === 'proj' ? 'none' : '0 2px 10px rgba(0,0,0,0.02)';
+                    areaEl.style.marginBottom = type === 'proj' ? '0' : '25px';
+                }
+            }
         }
         
         function handleCommentImagePreview(input, type) { 
@@ -5285,6 +5360,12 @@
             if (res && res.success) {
                 textInput.value = ''; removeCommentImage(type); cancelReply(type);
                 try {
+                    // TỰ ĐỘNG BẬT MỞ RỘNG NHÁNH NẾU ĐÂY LÀ PHẢN HỒI (Để nhìn thấy được comment vừa gửi)
+                    if (res.comment && res.comment.parentId) {
+                        if(!expandedThreads[type]) expandedThreads[type] = {};
+                        expandedThreads[type][res.comment.parentId] = true;
+                    }
+
                     if (type === 'proj') { 
                         if (!currentProj.comments) currentProj.comments = []; 
                         currentProj.comments.push(res.comment); 
@@ -5299,6 +5380,12 @@
                         renderCommentList('prof', viewingProfileData.comments); 
                     }
                     showToast("Đã gửi!", "success");
+
+                    // TỰ ĐỘNG CUỘN ĐẾN ĐÚNG BÌNH LUẬN VÀ BÔI SÁNG HIGHLIGHT
+                    setTimeout(() => {
+                        highlightAndScrollComment(type, res.comment.id);
+                    }, 100);
+
                 } catch (renderErr) {
                     console.error("Lỗi vẽ giao diện bình luận:", renderErr);
                     showToast("Đã gửi! Vui lòng tải lại trang nếu không thấy.", "success");
