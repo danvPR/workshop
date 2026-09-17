@@ -1017,29 +1017,475 @@
         [data-theme="dark"] .notif-item { background: var(--bg-panel); color: var(--text-main); }
         [data-theme="dark"] .notif-item:hover { background: var(--bg-secondary); }
 
-        /* ASSETS STORE CSS */
-        .assets-header { background: var(--bg-panel); padding: 25px 30px; border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; }
-        .asset-search-bar { flex: 1; min-width: 250px; max-width: 500px; display: flex; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 25px; padding: 5px 15px; align-items: center; }
-        .asset-search-bar input { border: none; background: none; flex: 1; padding: 10px; color: var(--text-main); outline: none; }
-        
-        .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 25px 30px; }
-        .asset-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .asset-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: var(--primary); }
-        .asset-preview { height: 160px; background: repeating-conic-gradient(#e5e7eb 0% 25%, transparent 0% 50%) 50% / 20px 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        [data-theme="dark"] .asset-preview { background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px; }
-        .asset-preview img, .asset-preview video { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .asset-badge { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;}
-        
-        .asset-info { padding: 15px; display: flex; flex-direction: column; flex: 1; }
-        .asset-title { font-weight: bold; font-size: 1rem; margin-bottom: 5px; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .asset-tags { font-size: 0.75rem; color: var(--primary); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        
-        .asset-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 10px;}
-        .asset-vote-group { display: flex; gap: 4px; align-items: center; }
-        .vote-btn { background: none; border: none; font-size: 1rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; transition: 0.2s;}
-        .vote-btn:hover { background: var(--border-color); }
-        .vote-btn.up.active { color: #10b981; background: rgba(16, 185, 129, 0.1); }
-        .vote-btn.down.active { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        /* ================= ASSETS STORE PRO REDESIGN ================= */
+        .assets-hero-container {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 28px 16px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .assets-hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .asset-category-pills {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .asset-category-pills::-webkit-scrollbar { display: none; }
+        .asset-cat-pill {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .asset-cat-pill:hover {
+            border-color: var(--primary);
+            color: var(--text-title);
+            background: var(--bg-panel);
+        }
+        .asset-cat-pill.active {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.3);
+        }
+
+        /* Thanh tìm kiếm & bộ lọc phụ */
+        .assets-filter-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 6px;
+        }
+        .asset-search-bar {
+            flex: 1;
+            min-width: 260px;
+            max-width: 460px;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            border-radius: 24px;
+            padding: 4px 14px;
+            transition: border-color 0.2s;
+        }
+        .asset-search-bar:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.15);
+        }
+        .asset-search-bar input {
+            border: none;
+            background: none;
+            flex: 1;
+            padding: 8px 10px;
+            color: var(--text-main);
+            outline: none;
+            font-size: 0.92rem;
+        }
+        .assets-sub-filters {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .asset-select-filter {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .asset-select-filter:focus {
+            border-color: var(--primary);
+        }
+
+        /* Grid thẻ tài nguyên */
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 22px;
+            padding: 24px 28px 40px 28px;
+        }
+        .asset-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease, border-color 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        .asset-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        /* Khung xem trước hình ảnh / âm thanh */
+        .asset-preview {
+            height: 180px;
+            background: repeating-conic-gradient(rgba(148, 163, 184, 0.15) 0% 25%, transparent 0% 50%) 50% / 18px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+        [data-theme="dark"] .asset-preview {
+            background: repeating-conic-gradient(rgba(51, 65, 85, 0.28) 0% 25%, rgba(15, 23, 42, 0.4) 0% 50%) 50% / 18px 18px;
+        }
+        .asset-preview img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transition: transform 0.25s ease;
+        }
+        .asset-card:hover .asset-preview img {
+            transform: scale(1.05);
+        }
+
+        /* Huy hiệu định dạng nhiều màu */
+        .asset-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 3;
+            color: #ffffff;
+        }
+        .asset-badge.badge-png, .asset-badge.badge-webp, .asset-badge.badge-svg { background: #0284c7; }
+        .asset-badge.badge-gif { background: #9333ea; }
+        .asset-badge.badge-mp3, .asset-badge.badge-wav, .asset-badge.badge-ogg { background: #ea580c; }
+        .asset-badge.badge-default { background: #475569; }
+
+        /* Nút Quick View nổi khi hover */
+        .asset-quick-inspect-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.75);
+            color: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transform: translateY(4px);
+            transition: all 0.2s ease;
+            z-index: 3;
+        }
+        .asset-card:hover .asset-quick-inspect-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .asset-quick-inspect-btn:hover {
+            background: var(--primary);
+        }
+
+        /* ================= TRÌNH PHÁT ÂM THANH MINI ĐỘC QUYỀN ================= */
+        .audio-player-booth {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.12) 0%, transparent 70%);
+            position: relative;
+        }
+        .audio-play-round-btn {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+        .audio-play-round-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 24px rgba(234, 88, 12, 0.55);
+        }
+        /* Sóng âm giả lập động (Animated Waveform Bars) */
+        .audio-wave-bars {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 22px;
+        }
+        .audio-bar {
+            width: 3.5px;
+            height: 6px;
+            background: #cbd5e1;
+            border-radius: 2px;
+            transition: height 0.2s ease, background-color 0.2s;
+        }
+        .audio-player-booth.is-playing .audio-bar {
+            background: #ea580c;
+            animation: audioWaveMotion 1s infinite ease-in-out;
+        }
+        .audio-player-booth.is-playing .audio-bar:nth-child(1) { animation-delay: 0.1s; }
+        .audio-player-booth.is-playing .audio-bar:nth-child(2) { animation-delay: 0.3s; }
+        .audio-player-booth.is-playing .audio-bar:nth-child(3) { animation-delay: 0.5s; }
+        .audio-player-booth.is-playing .audio-bar:nth-child(4) { animation-delay: 0.2s; }
+        .audio-player-booth.is-playing .audio-bar:nth-child(5) { animation-delay: 0.4s; }
+        .audio-player-booth.is-playing .audio-bar:nth-child(6) { animation-delay: 0.15s; }
+        .audio-player-booth.is-playing .audio-bar:nth-child(7) { animation-delay: 0.35s; }
+        @keyframes audioWaveMotion {
+            0%, 100% { height: 6px; }
+            50% { height: 22px; }
+        }
+        /* Thanh tiến trình audio chạy ở đáy khung preview */
+        .audio-track-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.08);
+        }
+        .audio-track-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #ea580c);
+            transition: width 0.1s linear;
+        }
+
+        /* Thân thẻ thông tin */
+        .asset-info {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .asset-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .asset-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+        .asset-size-pill {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 2px 7px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .asset-author-row {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .asset-author-row a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .asset-author-row a:hover {
+            color: var(--primary);
+        }
+        .asset-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 12px;
+            max-height: 48px;
+            overflow: hidden;
+        }
+        .asset-tag-chip {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .asset-tag-chip:hover {
+            background: rgba(13, 165, 122, 0.12);
+            border-color: var(--primary);
+        }
+
+        /* Chân thẻ thao tác */
+        .asset-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+        /* Cụm Vote liền khối chuẩn hiện đại */
+        .asset-segmented-vote {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 32px;
+        }
+        .asset-vote-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 9px;
+            height: 100%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.88rem;
+            transition: all 0.15s;
+        }
+        .asset-vote-btn:hover {
+            background: var(--border-color);
+            color: var(--text-title);
+        }
+        .asset-vote-btn.up.active {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.12);
+        }
+        .asset-vote-btn.down.active {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.12);
+        }
+        .asset-vote-score {
+            font-size: 0.82rem;
+            font-weight: 800;
+            min-width: 20px;
+            text-align: center;
+            padding: 0 4px;
+            color: var(--text-title);
+        }
+        .asset-btn-action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+        }
+        .asset-btn-action-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-panel);
+        }
+        .asset-btn-download-main {
+            background: var(--primary);
+            color: #ffffff !important;
+            padding: 6px 13px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none !important;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .asset-btn-download-main:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Modal Xem nhanh (Quick View Lightbox) */
+        .asset-lightbox-modal {
+            max-width: 680px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .asset-lightbox-stage {
+            width: 100%;
+            height: 320px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .asset-lightbox-stage img {
+            max-width: 92%;
+            max-height: 92%;
+            object-fit: contain;
+        }
 
         /* SKELETON LOADING (GIAI ĐOẠN 4) */
         .skeleton { 
@@ -2877,29 +3323,85 @@
         <button class="btn" onclick="location.hash='#home'" style="margin-left: 15px; padding: 12px 30px; font-size: 1.05rem; border-radius: 25px;"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
     </div>
 
-    <!-- TRANG TÀI NGUYÊN (ASSETS STORE) -->
+    <!-- TRANG TÀI NGUYÊN (ASSETS STORE PRO) -->
     <div id="assetsView" class="page-view" style="max-width: 100%; padding: 0;">
-        <div class="assets-header">
-            <div>
-                <h2 style="margin-bottom: 5px;"><i class="fa-solid fa-box-open" style="color:#f5b041;"></i> <span data-i18n="assets_title">Cửa hàng Tài nguyên</span></h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="assets_subtitle">Khu vực chia sẻ đồ họa, âm thanh miễn phí của cộng đồng.</p>
+        <div class="assets-hero-container">
+            <!-- Dòng 1: Tiêu đề, danh mục và nút Đóng góp -->
+            <div class="assets-hero-top">
+                <div>
+                    <h2 style="margin-bottom: 4px; font-size: 1.65rem; display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-box-open" style="color:#f5b041;"></i> <span data-i18n="assets_title">Cửa hàng Tài nguyên</span>
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;" data-i18n="assets_subtitle">Kho đồ họa, âm thanh và hiệu ứng miễn phí dành cho nhà sáng tạo Scratch & ACGN.</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="openUploadAssetModal()" style="border-radius: 20px; padding: 9px 20px; font-weight: 800;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="assets_upload_btn">Đóng góp tài nguyên</span>
+                </button>
             </div>
-            
-            <div class="asset-search-bar">
-                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-                <input type="text" id="assetSearchInput" data-i18n-ph="assets_search_ph" placeholder="Tìm kiếm tên, tag, tác giả..." onkeyup="handleAssetSearch(event)">
-                <button class="btn btn-primary" style="padding: 6px 12px; border-radius: 20px;" onclick="searchAssets()"><span data-i18n="assets_search_btn">Tìm</span></button>
+
+            <!-- Dòng 2: Phân loại theo mục tiêu sử dụng (Category Tabs) -->
+            <div class="asset-category-pills">
+                <button type="button" class="asset-cat-pill active" onclick="setAssetCategory('all', this)">
+                    <i class="fa-solid fa-border-all"></i> Tất cả
+                </button>
+                <button type="button" class="asset-cat-pill" onclick="setAssetCategory('sprite', this)">
+                    <i class="fa-solid fa-person-running"></i> Sprites / Nhân vật
+                </button>
+                <button type="button" class="asset-cat-pill" onclick="setAssetCategory('background', this)">
+                    <i class="fa-solid fa-image"></i> Hình nền (Backgrounds)
+                </button>
+                <button type="button" class="asset-cat-pill" onclick="setAssetCategory('music', this)">
+                    <i class="fa-solid fa-music"></i> Nhạc nền (BGM)
+                </button>
+                <button type="button" class="asset-cat-pill" onclick="setAssetCategory('sfx', this)">
+                    <i class="fa-solid fa-bullhorn"></i> Hiệu ứng âm thanh (SFX)
+                </button>
+                <button type="button" class="asset-cat-pill" onclick="setAssetCategory('ui', this)">
+                    <i class="fa-solid fa-shapes"></i> Giao diện / Nút bấm (UI)
+                </button>
             </div>
-            
-            <button class="btn btn-primary" onclick="openUploadAssetModal()"><i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="assets_upload_btn">Đóng góp</span></button>
+
+            <!-- Dòng 3: Toolbar Tìm kiếm, Định dạng & Sắp xếp -->
+            <div class="assets-filter-toolbar">
+                <div class="asset-search-bar">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+                    <input type="text" id="assetSearchInput" data-i18n-ph="assets_search_ph" placeholder="Tìm tên tài nguyên, tag, tác giả..." onkeyup="handleAssetSearch(event)" oninput="toggleAssetClearSearchBtn()">
+                    <button id="assetSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0 6px; font-size:1.15rem;" onclick="clearAssetSearch()" title="Xóa tìm kiếm">&times;</button>
+                    <button class="btn btn-primary" style="padding: 5px 14px; border-radius: 18px; font-size:0.82rem;" onclick="searchAssets()"><span data-i18n="assets_search_btn">Tìm</span></button>
+                </div>
+
+                <div class="assets-sub-filters">
+                    <!-- Lọc định dạng file -->
+                    <select id="assetFormatFilter" class="asset-select-filter" onchange="changeAssetFormatFilter(this.value)">
+                        <option value="all">Tất cả định dạng</option>
+                        <option value="png">PNG (Trong suốt)</option>
+                        <option value="gif">GIF (Ảnh động)</option>
+                        <option value="svg">SVG (Vector)</option>
+                        <option value="mp3">MP3 (Âm thanh)</option>
+                        <option value="wav">WAV (Chất lượng cao)</option>
+                    </select>
+
+                    <!-- Sắp xếp -->
+                    <select id="assetSortFilter" class="asset-select-filter" onchange="changeAssetSortFilter(this.value)">
+                        <option value="newest">Mới nhất</option>
+                        <option value="top_voted">Bình chọn cao nhất</option>
+                        <option value="smallest">Dung lượng nhẹ nhất</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
+        <!-- Grid hiển thị danh sách tài nguyên -->
         <div class="asset-grid" id="assetGridList">
-            <!-- Render JS -->
+            <!-- Render bằng JavaScript -->
         </div>
 
-        <div style="text-align: center; padding: 20px 0 40px 0;" id="assetLoadMoreArea">
-            <button class="btn" style="padding: 10px 30px; font-weight: bold; border-radius: 20px;" onclick="loadMoreAssets()"><i class="fa-solid fa-angle-down"></i> <span data-i18n="assets_load_more">Xem thêm</span></button>
+        <!-- Nút Xem thêm -->
+        <div style="text-align: center; padding: 10px 0 50px 0; display: none;" id="assetLoadMoreArea">
+            <button class="btn" style="padding: 11px 35px; font-weight: bold; border-radius: 25px; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreAssets()">
+                <i class="fa-solid fa-angle-down"></i> <span data-i18n="assets_load_more">Xem thêm tài nguyên</span>
+            </button>
         </div>
     </div>
 
@@ -4105,6 +4607,48 @@
         </div>
     </div>
 
+    <!-- MODAL XEM NHANH TÀI NGUYÊN (QUICK VIEW LIGHTBOX) -->
+    <div class="modal-overlay" id="quickViewAssetModal">
+        <div class="modal asset-lightbox-modal">
+            <div class="modal-header">
+                <span id="quickViewTitle" style="font-weight:800; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-eye" style="color:var(--primary);"></i> Xem trước tài nguyên
+                </span>
+                <button class="btn-close" onclick="closeQuickViewModal()">&times;</button>
+            </div>
+            
+            <div class="asset-lightbox-stage" id="quickViewStage">
+                <!-- Nội dung ảnh/audio xem thử sẽ đổ vào đây -->
+            </div>
+
+            <div class="modal-body" style="padding: 20px 24px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;">
+                    <div>
+                        <h3 id="quickViewHeading" style="margin:0 0 4px 0; font-size:1.25rem; color:var(--text-title);">Tên tài nguyên</h3>
+                        <div style="font-size:0.85rem; color:var(--text-muted);">
+                            Bởi <a href="#" id="quickViewAuthorLink" style="color:var(--primary); font-weight:700; text-decoration:none;">@author</a> • Định dạng: <b id="quickViewExt">PNG</b> • Dung lượng: <span id="quickViewSize">0 MB</span>
+                        </div>
+                    </div>
+                    <span id="quickViewScoreBadge" style="font-size:0.95rem; font-weight:800; background:var(--bg-secondary); padding:4px 12px; border-radius:12px; border:1px solid var(--border-color);">0 vote</span>
+                </div>
+
+                <div id="quickViewTagsArea" class="asset-tags-wrapper" style="max-height:none; margin-bottom:18px;"></div>
+
+                <div style="display:flex; gap:10px; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;">
+                    <a id="quickViewDownloadBtn" href="#" target="_blank" download class="btn btn-primary" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;">
+                        <i class="fa-solid fa-download"></i> Tải về máy
+                    </a>
+                    <button type="button" class="btn" id="quickViewCopyLinkBtn" style="flex:1; justify-content:center; padding:11px; font-weight:700; border-radius:12px;" onclick="copyCurrentAssetLink()">
+                        <i class="fa-solid fa-link"></i> Chép link
+                    </button>
+                    <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:#f59e0b;" onclick="openReportCurrentAsset()" title="Báo cáo">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal" style="max-width:400px;">
@@ -4843,10 +5387,17 @@
         let homeHasMore = false;
         const HOME_ITEMS_PER_PAGE = 16; // Tải 4 dòng (mỗi dòng 4 dự án tùy màn hình)
 
-        // --- Assets ---
-        let allAssets = []; let displayedAssetsCount = 0; const ASSETS_PER_PAGE = 16; 
+        // --- Assets Store State ---
+        let allAssets = [];
+        let displayedAssetsCount = 0;
+        const ASSETS_PER_PAGE = 16;
         let currentAssetSearchQuery = "";
-        // ----------------------------
+        let currentAssetCategory = "all";
+        let currentAssetFormat = "all";
+        let currentAssetSort = "newest";
+        let activeAudioPlaying = null; // Trình phát âm thanh đang hoạt động
+        let activeQuickViewAsset = null;
+        // --------------------------
 
         let replyState = { proj: { parentId: null, user: null }, prof: { parentId: null, user: null }, chat: { parentId: null, user: null }, std: { parentId: null, user: null } };
         let expandedThreads = { proj: {}, prof: {}, std: {} };
@@ -9611,30 +10162,70 @@ function reopenEditor() {
     }
 }
 
-        // ================= HỆ THỐNG ASSETS STORE =================
+        // ================= HỆ THỐNG ASSETS STORE PRO =================
         async function fetchAssetsList() {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/assets`)).json();
-                if(!res.error) allAssets = res;
-            } catch(e){}
+                if(!res.error) allAssets = Array.isArray(res) ? res : [];
+            } catch(e) {
+                console.error("Lỗi tải tài nguyên:", e);
+            }
         }
 
         function openAssetsPage(urlParams) {
             document.getElementById('assetsView').style.display = 'block';
             
-            // Xử lý tìm kiếm qua URL nếu có (VD: #assets?search=pixel)
-            currentAssetSearchQuery = urlParams ? (urlParams.get('search') || "").toLowerCase() : "";
-            document.getElementById('assetSearchInput').value = currentAssetSearchQuery;
+            // Xử lý query từ URL nếu có (VD: #assets?search=pixel)
+            currentAssetSearchQuery = urlParams ? (urlParams.get('search') || "").toLowerCase().trim() : "";
+            const searchInput = document.getElementById('assetSearchInput');
+            if (searchInput) searchInput.value = currentAssetSearchQuery;
+            toggleAssetClearSearchBtn();
             
             displayedAssetsCount = ASSETS_PER_PAGE;
             renderAssetGrid();
         }
 
-        function handleAssetSearch(e) { if(e.key === 'Enter') searchAssets(); }
+        function toggleAssetClearSearchBtn() {
+            const val = document.getElementById('assetSearchInput').value;
+            const btn = document.getElementById('assetSearchClearBtn');
+            if (btn) btn.style.display = val.length > 0 ? 'block' : 'none';
+        }
+
+        function clearAssetSearch() {
+            document.getElementById('assetSearchInput').value = '';
+            toggleAssetClearSearchBtn();
+            currentAssetSearchQuery = '';
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        function handleAssetSearch(e) {
+            if(e.key === 'Enter') searchAssets();
+        }
         
         function searchAssets() {
             currentAssetSearchQuery = document.getElementById('assetSearchInput').value.toLowerCase().trim();
-            displayedAssetsCount = ASSETS_PER_PAGE; // Reset số lượng hiển thị
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        function setAssetCategory(cat, btnEl) {
+            currentAssetCategory = cat;
+            document.querySelectorAll('.asset-cat-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        function changeAssetFormatFilter(fmt) {
+            currentAssetFormat = fmt;
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        function changeAssetSortFilter(sort) {
+            currentAssetSort = sort;
+            displayedAssetsCount = ASSETS_PER_PAGE;
             renderAssetGrid();
         }
 
@@ -9643,81 +10234,369 @@ function reopenEditor() {
             renderAssetGrid();
         }
 
+        function filterAssetByTag(tag) {
+            const clean = tag.replace(/^#/, '').trim();
+            const input = document.getElementById('assetSearchInput');
+            if (input) {
+                input.value = clean;
+                toggleAssetClearSearchBtn();
+            }
+            currentAssetSearchQuery = clean.toLowerCase();
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Kiểm tra phân loại danh mục thông minh dựa vào tag và định dạng file
+        function matchAssetCategory(asset, cat) {
+            if (cat === 'all') return true;
+            const ext = (asset.fileType || '').toLowerCase();
+            const kw = ((asset.keywords || '') + ' ' + (asset.title || '')).toLowerCase();
+
+            if (cat === 'sprite') {
+                return ['png', 'gif', 'webp', 'svg'].includes(ext) && (kw.includes('sprite') || kw.includes('nhan vat') || kw.includes('char') || kw.includes('player') || kw.includes('enemy') || kw.includes('pixel'));
+            }
+            if (cat === 'background') {
+                return ['png', 'jpg', 'jpeg', 'webp'].includes(ext) && (kw.includes('bg') || kw.includes('background') || kw.includes('nen') || kw.includes('stage') || kw.includes('wallpaper') || kw.includes('canh'));
+            }
+            if (cat === 'music') {
+                return ['mp3', 'wav', 'ogg'].includes(ext) && (kw.includes('music') || kw.includes('bgm') || kw.includes('nhac') || kw.includes('song') || kw.includes('ost') || kw.includes('theme') || (!kw.includes('sfx') && !kw.includes('sound')));
+            }
+            if (cat === 'sfx') {
+                return ['mp3', 'wav', 'ogg'].includes(ext) && (kw.includes('sfx') || kw.includes('sound') || kw.includes('effect') || kw.includes('am thanh') || kw.includes('hit') || kw.includes('jump') || kw.includes('explosion'));
+            }
+            if (cat === 'ui') {
+                return (kw.includes('ui') || kw.includes('gui') || kw.includes('button') || kw.includes('nut') || kw.includes('icon') || kw.includes('menu') || kw.includes('bar'));
+            }
+            return true;
+        }
+
         function renderAssetGrid() {
             const container = document.getElementById('assetGridList');
             const loadMoreBtn = document.getElementById('assetLoadMoreArea');
-            
-            // Lọc theo tìm kiếm
-            let filtered = allAssets;
-            if (currentAssetSearchQuery) {
-                filtered = allAssets.filter(a => 
-                    a.title.toLowerCase().includes(currentAssetSearchQuery) || 
-                    a.keywords.toLowerCase().includes(currentAssetSearchQuery) || 
-                    a.author.toLowerCase().includes(currentAssetSearchQuery) ||
-                    a.assetId === currentAssetSearchQuery
-                );
+            if (!container) return;
+
+            // 1. Lọc theo từ khóa tìm kiếm
+            let filtered = allAssets.filter(a => {
+                const title = (a.title || '').toLowerCase();
+                const kw = (a.keywords || '').toLowerCase();
+                const author = (a.author || '').toLowerCase();
+                const id = String(a.assetId || '');
+                const q = currentAssetSearchQuery;
+                if (!q) return true;
+                return title.includes(q) || kw.includes(q) || author.includes(q) || id === q;
+            });
+
+            // 2. Lọc theo danh mục (Category)
+            filtered = filtered.filter(a => matchAssetCategory(a, currentAssetCategory));
+
+            // 3. Lọc theo định dạng (Format)
+            if (currentAssetFormat !== 'all') {
+                filtered = filtered.filter(a => (a.fileType || '').toLowerCase() === currentAssetFormat);
             }
 
+            // 4. Sắp xếp (Sorting)
+            filtered.sort((a, b) => {
+                if (currentAssetSort === 'top_voted') {
+                    const scoreA = (a.upvotes ? a.upvotes.length : 0) - (a.downvotes ? a.downvotes.length : 0);
+                    const scoreB = (b.upvotes ? b.upvotes.length : 0) - (b.downvotes ? b.downvotes.length : 0);
+                    return scoreB - scoreA;
+                }
+                if (currentAssetSort === 'smallest') {
+                    return (parseFloat(a.size) || 0) - (parseFloat(b.size) || 0);
+                }
+                // Mặc định: Mới nhất
+                return 0;
+            });
+
             const visibleAssets = filtered.slice(0, displayedAssetsCount);
-            
+
             if (visibleAssets.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-ghost" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i><br>${t('assets_not_found') || 'Không tìm thấy tài nguyên nào.'}</div>`;
-                loadMoreBtn.style.display = 'none';
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align:center; padding:60px 20px; color:var(--text-muted);">
+                        <i class="fa-solid fa-box-open" style="font-size:3.5rem; margin-bottom:15px; opacity:0.3; display:block;"></i>
+                        <b style="font-size:1.1rem; color:var(--text-title); display:block; margin-bottom:6px;">Không tìm thấy tài nguyên nào</b>
+                        <span style="font-size:0.9rem;">Hãy thử từ khóa khác hoặc bấm nút bên dưới để xóa toàn bộ bộ lọc.</span>
+                        <div style="margin-top:16px;">
+                            <button class="btn btn-primary" onclick="resetAssetFilters()" style="border-radius:20px; padding:8px 20px;">
+                                <i class="fa-solid fa-rotate-left"></i> Đặt lại bộ lọc
+                            </button>
+                        </div>
+                    </div>
+                `;
+                if (loadMoreBtn) loadMoreBtn.style.display = 'none';
                 return;
             }
 
             container.innerHTML = visibleAssets.map(a => {
-                const fileExt = a.fileType.toLowerCase();
-                // Bổ sung ?ext= vào URL để Backend nhận diện định dạng chuẩn
+                const fileExt = (a.fileType || 'file').toLowerCase();
                 const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
-                
-                let previewHtml = `<i class="fa-solid fa-file" style="font-size:4rem; color:#cbd5e1;"></i>`;
-                if (['png','jpg','jpeg','gif','webp','svg'].includes(fileExt)) {
-                    // 🛡️ AN TOÀN
-                    previewHtml = `<img src="${fileUrl}" loading="lazy" style="padding: 10px;" onerror="this.outerHTML='<i class=\\\'fa-solid fa-bezier-curve\\\' style=\\\'font-size:3.5rem; color:var(--primary);\\\'></i>'">`;
-                } else if (['mp3','wav','ogg'].includes(fileExt)) {
-                    // ⚡ TỐI ƯU DATA: Thêm preload="none" để KHÔNG tải trước nhạc khi chưa bấm Play
-                    previewHtml = `<i class="fa-solid fa-music" style="font-size:3.5rem; color:#855cd6;"></i><audio controls preload="none" style="position:absolute; bottom:5px; width:90%; height:30px;"><source src="${fileUrl}"></audio>`;
+                const isAudio = ['mp3', 'wav', 'ogg'].includes(fileExt);
+
+                // Màu badge
+                let badgeClass = 'badge-default';
+                if (['png', 'webp', 'svg'].includes(fileExt)) badgeClass = 'badge-png';
+                else if (fileExt === 'gif') badgeClass = 'badge-gif';
+                else if (isAudio) badgeClass = 'badge-mp3';
+
+                // Khung preview
+                let previewHtml = '';
+                if (isAudio) {
+                    previewHtml = `
+                        <div class="audio-player-booth" id="audioBooth-${a.assetId}">
+                            <button type="button" class="audio-play-round-btn" onclick="toggleAudioCardPlay('${a.assetId}', '${fileUrl}', event)" title="Nghe thử">
+                                <i class="fa-solid fa-play" id="audioIcon-${a.assetId}"></i>
+                            </button>
+                            <div class="audio-wave-bars">
+                                <span class="audio-bar"></span>
+                                <span class="audio-bar"></span>
+                                <span class="audio-bar"></span>
+                                <span class="audio-bar"></span>
+                                <span class="audio-bar"></span>
+                                <span class="audio-bar"></span>
+                                <span class="audio-bar"></span>
+                            </div>
+                            <div class="audio-track-progress-bar">
+                                <div class="audio-track-fill" id="audioProgress-${a.assetId}"></div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    previewHtml = `
+                        <img src="${fileUrl}" loading="lazy" alt="${escapeHtml(a.title)}" onerror="this.outerHTML='<i class=\\\'fa-solid fa-image\\\' style=\\\'font-size:3.5rem; color:var(--text-muted); opacity:0.3;\\\'></i>'">
+                        <button type="button" class="asset-quick-inspect-btn" onclick="openAssetQuickView('${a.assetId}', event)" title="Xem nhanh chất lượng cao">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    `;
                 }
 
-                // Logic Vote
-                const upvotes = a.upvotes || []; const downvotes = a.downvotes || [];
+                // Tags Chip
+                const tags = (a.keywords || '').split(',').map(k => k.trim()).filter(Boolean);
+                const tagsHtml = tags.map(tag => `
+                    <span class="asset-tag-chip" onclick="filterAssetByTag('${escapeHtml(tag)}')">#${escapeHtml(tag)}</span>
+                `).join('');
+
+                // Vote logic
+                const upvotes = a.upvotes || [];
+                const downvotes = a.downvotes || [];
                 const upActive = currentUser && upvotes.includes(currentUser.username) ? 'active' : '';
                 const downActive = currentUser && downvotes.includes(currentUser.username) ? 'active' : '';
                 const netScore = upvotes.length - downvotes.length;
 
                 return `
                 <div class="asset-card">
-                    <div class="asset-preview">
-                        <div class="asset-badge">${fileExt}</div>
+                    <div class="asset-preview" ${!isAudio ? `onclick="openAssetQuickView('${a.assetId}', event)"` : ''}>
+                        <span class="asset-badge ${badgeClass}">${fileExt}</span>
                         ${previewHtml}
                     </div>
+
                     <div class="asset-info">
-                        <div class="asset-title" title="${escapeHtml(a.title)}">${escapeHtml(a.title)}</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-user-pen"></i> <a href="#profile/${a.author}" style="color:var(--text-muted); text-decoration:none;">${escapeHtml(a.author)}</a> • ${a.size}MB</div>
-                        <div class="asset-tags">${escapeHtml(a.keywords).split(',').map(k => `#${k.trim()}`).join(' ')}</div>
-                        
+                        <div class="asset-title-row">
+                            <div class="asset-title" title="${escapeHtml(a.title)}">${escapeHtml(a.title)}</div>
+                            <span class="asset-size-pill">${a.size || '0'} MB</span>
+                        </div>
+
+                        <div class="asset-author-row">
+                            <i class="fa-solid fa-user-circle" style="color:var(--primary);"></i>
+                            <a href="#profile/${encodeURIComponent(a.author)}">@${escapeHtml(a.author)}</a>
+                        </div>
+
+                        <div class="asset-tags-wrapper">
+                            ${tagsHtml || '<span style="font-size:0.75rem; color:var(--text-muted); opacity:0.6;">Không có tag</span>'}
+                        </div>
+
                         <div class="asset-footer">
-                            <div class="asset-vote-group">
-                                <button class="vote-btn up ${upActive}" onclick="toggleAssetVote('${a.assetId}', 'upvote')"><i class="fa-solid fa-caret-up"></i></button>
-                                <span style="font-weight:bold; font-size:0.9rem; min-width:15px; text-align:center; color:var(--text-title);">${netScore}</span>
-                                <button class="vote-btn down ${downActive}" onclick="toggleAssetVote('${a.assetId}', 'downvote')"><i class="fa-solid fa-caret-down"></i></button>
+                            <div class="asset-segmented-vote">
+                                <button type="button" class="asset-vote-btn up ${upActive}" onclick="toggleAssetVote('${a.assetId}', 'upvote')" title="Hữu ích">
+                                    <i class="fa-solid fa-caret-up"></i>
+                                </button>
+                                <span class="asset-vote-score">${netScore}</span>
+                                <button type="button" class="asset-vote-btn down ${downActive}" onclick="toggleAssetVote('${a.assetId}', 'downvote')" title="Không thích">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </button>
                             </div>
-                            
-                            <div style="display:flex; gap:8px;">
-                                <button class="vote-btn" style="color:#f5b041;" onclick="openReportModal('asset', '${a.assetId}')" title="${t('action_report') || 'Báo cáo'}"><i class="fa-solid fa-flag"></i></button>
-                                <a href="${fileUrl}" target="_blank" download class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> ${t('action_download') || 'Tải'}</a>
+
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <button type="button" class="asset-btn-action-icon" onclick="copyAssetDirectUrl('${fileUrl}')" title="Sao chép link trực tiếp">
+                                    <i class="fa-solid fa-link"></i>
+                                </button>
+                                <button type="button" class="asset-btn-action-icon" style="color:#f59e0b;" onclick="openReportModal('asset', '${a.assetId}')" title="Báo cáo">
+                                    <i class="fa-solid fa-flag"></i>
+                                </button>
+                                <a href="${fileUrl}" target="_blank" download class="asset-btn-download-main" title="Tải về">
+                                    <i class="fa-solid fa-download"></i> <span>Tải</span>
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>`;
+                </div>
+                `;
             }).join('');
 
-
-
-            loadMoreBtn.style.display = displayedAssetsCount >= filtered.length ? 'none' : 'block';
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = displayedAssetsCount >= filtered.length ? 'none' : 'block';
+            }
         }
 
+        function resetAssetFilters() {
+            currentAssetCategory = 'all';
+            currentAssetFormat = 'all';
+            currentAssetSort = 'newest';
+            currentAssetSearchQuery = '';
+            document.getElementById('assetSearchInput').value = '';
+            document.getElementById('assetFormatFilter').value = 'all';
+            document.getElementById('assetSortFilter').value = 'newest';
+            document.querySelectorAll('.asset-cat-pill').forEach((b, idx) => b.classList.toggle('active', idx === 0));
+            toggleAssetClearSearchBtn();
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        // ================= TRÌNH PHÁT AUDIO TOÀN CỤC CHO THẺ =================
+        function toggleAudioCardPlay(assetId, url, e) {
+            if (e) e.stopPropagation();
+
+            const booth = document.getElementById(`audioBooth-${assetId}`);
+            const icon = document.getElementById(`audioIcon-${assetId}`);
+            const progress = document.getElementById(`audioProgress-${assetId}`);
+
+            // Nếu đang phát chính file này -> Bấm để tạm dừng
+            if (activeAudioPlaying && activeAudioPlaying.assetId === assetId) {
+                if (activeAudioPlaying.audio.paused) {
+                    activeAudioPlaying.audio.play();
+                    if (booth) booth.classList.add('is-playing');
+                    if (icon) icon.className = 'fa-solid fa-pause';
+                } else {
+                    activeAudioPlaying.audio.pause();
+                    if (booth) booth.classList.remove('is-playing');
+                    if (icon) icon.className = 'fa-solid fa-play';
+                }
+                return;
+            }
+
+            // Nếu đang có một file khác đang chạy -> Dừng file cũ lại
+            if (activeAudioPlaying) {
+                activeAudioPlaying.audio.pause();
+                const oldBooth = document.getElementById(`audioBooth-${activeAudioPlaying.assetId}`);
+                const oldIcon = document.getElementById(`audioIcon-${activeAudioPlaying.assetId}`);
+                const oldProgress = document.getElementById(`audioProgress-${activeAudioPlaying.assetId}`);
+                if (oldBooth) oldBooth.classList.remove('is-playing');
+                if (oldIcon) oldIcon.className = 'fa-solid fa-play';
+                if (oldProgress) oldProgress.style.width = '0%';
+                activeAudioPlaying = null;
+            }
+
+            // Khởi tạo audio mới
+            const audio = new Audio(url);
+            activeAudioPlaying = { assetId, audio };
+
+            if (booth) booth.classList.add('is-playing');
+            if (icon) icon.className = 'fa-solid fa-pause';
+
+            audio.play().catch(err => {
+                showToast("Trình duyệt chặn tự động phát âm thanh.", "info");
+                if (booth) booth.classList.remove('is-playing');
+                if (icon) icon.className = 'fa-solid fa-play';
+            });
+
+            audio.ontimeupdate = () => {
+                if (audio.duration && progress) {
+                    const pct = (audio.currentTime / audio.duration) * 100;
+                    progress.style.width = `${pct}%`;
+                }
+            };
+
+            audio.onended = () => {
+                if (booth) booth.classList.remove('is-playing');
+                if (icon) icon.className = 'fa-solid fa-play';
+                if (progress) progress.style.width = '0%';
+                activeAudioPlaying = null;
+            };
+        }
+
+        // Sao chép link trực tiếp
+        function copyAssetDirectUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("Đã sao chép link tài nguyên trực tiếp!", "success");
+            }).catch(() => {
+                showToast("Không thể sao chép link", "error");
+            });
+        }
+
+        // ================= XỬ LÝ QUICK VIEW MODAL =================
+        function openAssetQuickView(assetId, e) {
+            if (e) e.stopPropagation();
+            const a = allAssets.find(x => x.assetId === assetId);
+            if (!a) return;
+            activeQuickViewAsset = a;
+
+            const fileExt = (a.fileType || 'file').toLowerCase();
+            const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
+            const isAudio = ['mp3', 'wav', 'ogg'].includes(fileExt);
+
+            document.getElementById('quickViewHeading').innerText = a.title || 'Không có tên';
+            document.getElementById('quickViewAuthorLink').innerText = `@${a.author}`;
+            document.getElementById('quickViewAuthorLink').href = `#profile/${encodeURIComponent(a.author)}`;
+            document.getElementById('quickViewExt').innerText = fileExt.toUpperCase();
+            document.getElementById('quickViewSize').innerText = `${a.size || '0'} MB`;
+
+            const up = a.upvotes ? a.upvotes.length : 0;
+            const down = a.downvotes ? a.downvotes.length : 0;
+            document.getElementById('quickViewScoreBadge').innerText = `${up - down} vote`;
+
+            const dlBtn = document.getElementById('quickViewDownloadBtn');
+            if (dlBtn) dlBtn.href = fileUrl;
+
+            // Tags
+            const tags = (a.keywords || '').split(',').map(k => k.trim()).filter(Boolean);
+            const tagsArea = document.getElementById('quickViewTagsArea');
+            if (tagsArea) {
+                tagsArea.innerHTML = tags.map(t => `<span class="asset-tag-chip" onclick="closeQuickViewModal(); filterAssetByTag('${escapeHtml(t)}')">#${escapeHtml(t)}</span>`).join('');
+            }
+
+            // Stage
+            const stage = document.getElementById('quickViewStage');
+            if (stage) {
+                if (isAudio) {
+                    stage.innerHTML = `
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:80%;">
+                            <i class="fa-solid fa-music" style="font-size:4.5rem; color:#f59e0b;"></i>
+                            <audio controls autoplay style="width:100%;">
+                                <source src="${fileUrl}">
+                            </audio>
+                        </div>
+                    `;
+                } else {
+                    stage.innerHTML = `<img src="${fileUrl}" alt="${escapeHtml(a.title)}">`;
+                }
+            }
+
+            openModal('quickViewAssetModal');
+        }
+
+        function closeQuickViewModal() {
+            const stage = document.getElementById('quickViewStage');
+            if (stage) {
+                const aud = stage.querySelector('audio');
+                if (aud) aud.pause();
+                stage.innerHTML = '';
+            }
+            closeModal('quickViewAssetModal');
+        }
+
+        function copyCurrentAssetLink() {
+            if (!activeQuickViewAsset) return;
+            const fileExt = (activeQuickViewAsset.fileType || 'file').toLowerCase();
+            const fileUrl = `${WORKER_URL}/api/project/${activeQuickViewAsset.fileId}?ext=${fileExt}`;
+            copyAssetDirectUrl(fileUrl);
+        }
+
+        function openReportCurrentAsset() {
+            if (!activeQuickViewAsset) return;
+            openReportModal('asset', activeQuickViewAsset.assetId);
+        }
+
+        // ================= VOTE & UPLOAD ASSET =================
         async function toggleAssetVote(assetId, type) {
             if (!currentUser) return openModal('loginModal');
             const res = await apiFetch(`/api/assets/action`, { method: 'POST', body: JSON.stringify({ assetId, action: `toggle_${type}` }) });
@@ -9751,24 +10630,19 @@ function reopenEditor() {
             const CHUNK_SIZE = 18 * 1024 * 1024;
             const totalChunks = Math.ceil(fileInput.size / CHUNK_SIZE);
             let uploadedIds = [];
-            
-            // Lấy đuôi file
             const fileExt = fileInput.name.split('.').pop();
 
             try {
-                //
                 for (let i = 0; i < totalChunks; i++) {
                     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên: Phần ${i + 1}/${totalChunks}...`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `asset_part_${i}.${fileExt}`);
-                    chunkForm.append("uploadType", "asset"); // 🎯 GẮN NHÃN ĐỂ BACKEND BIẾT ĐÂY LÀ ASSET
+                    chunkForm.append("uploadType", "asset");
                     chunkForm.append("username", currentUser.username);
                     chunkForm.append("sessionToken", currentUser.sessionToken);
 
                     const res = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: chunkForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
-                    
-                    // 🔒 Kiểm tra nếu không có mã file_id thì báo lỗi ngay lập tức
                     if (!res || !res.success || !res.file_id) {
                         throw new Error(res?.error || "Không thể tải lên phần này của tệp tin!");
                     }
@@ -9802,7 +10676,8 @@ function reopenEditor() {
             } catch(err) { 
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
-            btn.innerHTML = `<i class="fa-solid fa-upload"></i> Đăng Tài nguyên`; btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-upload"></i> Đăng Tài nguyên`;
+            btn.disabled = false;
         }
         
         // ================= GIAO DIỆN & TABS CÀI ĐẶT =================
