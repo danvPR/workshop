@@ -3872,6 +3872,7 @@
         let isPosting = { proj: false, prof: false, chat: false, std: false };
         let reportTarget = { type: null, id: null };
         let commentLimits = { proj: 10, prof: 10, std: 10 };
+        let lastCommentTime = 0;
         let archiveCommentPage = { proj: 1, prof: 1, std: 1 };
         let hasMoreArchiveComments = { proj: true, prof: true, std: true };
 
@@ -5317,6 +5318,11 @@
         async function handlePostComment(e, type) {
             e.preventDefault(); if (isPosting[type]) return; if (!currentUser) return openModal('loginModal');
             
+            // Giới hạn 5 giây
+            if (Date.now() - lastCommentTime < 5000) {
+                return showToast("Vui lòng đợi 5 giây giữa các lần bình luận!", "error");
+            }
+
             let textInputId = 'commentTextProj';
             if (type === 'prof') textInputId = 'commentTextProf';
             if (type === 'std') textInputId = 'commentTextStd';
@@ -5331,8 +5337,14 @@
             const gifUrl = attachedGifUrls[type];
             
             if (!text && !imgFile && !gifUrl) return;
+            
+            // Giới hạn dung lượng ảnh 20MB
+            if (imgFile && imgFile.size > 20 * 1024 * 1024) {
+                return showToast("Dung lượng ảnh tối đa là 20MB!", "error");
+            }
 
-            isPosting[type] = true; 
+            lastCommentTime = Date.now();
+            isPosting[type] = true;
             
             let submitBtnId = 'btnSubmitCommentProj';
             if (type === 'prof') submitBtnId = 'btnSubmitCommentProf';
@@ -8770,7 +8782,7 @@ function reopenEditor() {
         async function handlePostChat(e) {
             e.preventDefault();
             if (isPosting.chat || !currentUser) return;
-            
+
             const textInput = document.getElementById('commentTextChat');
             const drop = document.getElementById('chatMentionDropdown');
             if (drop) drop.style.display = 'none';
@@ -8780,6 +8792,11 @@ function reopenEditor() {
             const gifUrl = attachedGifUrls.chat;
             
             if (!text && !imgFile && !gifUrl) return;
+            
+            // Giới hạn dung lượng ảnh 20MB
+            if (imgFile && imgFile.size > 20 * 1024 * 1024) {
+                return showToast("Dung lượng ảnh tối đa là 20MB!", "error");
+            }
 
             isPosting.chat = true;
             const submitBtn = document.getElementById('btnSubmitChat');
