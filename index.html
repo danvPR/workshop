@@ -805,6 +805,128 @@
             text-decoration: none;
         }
 
+        /* ================= GIAO DIỆN BỘ SƯU TẬP (COLLECTIONS) ================= */
+        .collection-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        .collection-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        .col-cover-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #0f172a;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .col-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .collection-card:hover .col-cover-img {
+            transform: scale(1.05);
+        }
+        .col-overlay-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            z-index: 2;
+        }
+        .col-overlay-badge.public {
+            background: rgba(16, 185, 129, 0.85);
+            color: #ffffff;
+        }
+        .col-overlay-badge.private {
+            background: rgba(234, 88, 12, 0.85);
+            color: #ffffff;
+        }
+        .col-count-pill {
+            position: absolute;
+            bottom: 8px;
+            left: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(15, 23, 42, 0.8);
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .col-card-body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .col-card-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--text-title);
+            margin-bottom: 4px;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .col-card-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 8px;
+        }
+        /* Header modal chi tiết bộ sưu tập */
+        .col-detail-hero {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .col-detail-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: border-color 0.2s;
+        }
+        .col-detail-item-row:hover {
+            border-color: var(--primary);
+        }
+
         #globalLoader { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; opacity: 1; transition: opacity 0.5s ease; }
         #globalLoader { position: fixed; inset: 0; background: var(--bg-panel); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         
@@ -3146,7 +3268,7 @@
                             <button class="proj-seg-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích">
                                 <i class="fa-solid fa-star"></i> <span id="starCount">0</span>
                             </button>
-                            <button class="proj-seg-btn" onclick="openSaveToPlaylistModal()" title="Lưu vào danh sách phát">
+                            <button class="proj-seg-btn" onclick="openSaveToPlaylistModal()" title="Lưu vào Bộ sưu tập">
                                 <i class="fa-solid fa-bookmark"></i>
                             </button>
                         </div>
@@ -3436,9 +3558,13 @@
             </div>
 
             <div id="profTab-playlists" class="prof-tab-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h4 style="margin:0;"><i class="fa-solid fa-layer-group"></i> Danh sách phát</h4>
-                    <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 6px 14px;" onclick="openModal('createPlaylistModal')"><i class="fa-solid fa-plus"></i> Tạo mới</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                    <h4 style="margin:0; font-size:1.15rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> <span>Bộ sưu tập</span>
+                    </h4>
+                    <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 7px 16px; font-weight:700;" onclick="openModal('createPlaylistModal')">
+                        <i class="fa-solid fa-plus"></i> <span>Tạo bộ sưu tập</span>
+                    </button>
                 </div>
                 <div class="project-grid" id="userPlaylistsList"></div>
             </div>
@@ -4317,41 +4443,124 @@
         </div>
     </div>
 
-    <!-- MODAL LƯU VÀO PLAYLIST -->
+    <!-- 1. MODAL LƯU TÁC PHẨM VÀO BỘ SƯU TẬP -->
     <div class="modal-overlay" id="saveToPlaylistModal">
-        <div class="modal" style="max-width:420px;">
+        <div class="modal" style="max-width:440px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-bookmark" style="color:var(--primary);"></i> Lưu vào Danh sách phát</span>
+                <span style="font-weight:800; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-bookmark" style="color:var(--primary);"></i> <span>Lưu vào Bộ sưu tập</span>
+                </span>
                 <button class="btn-close" onclick="closeModal('saveToPlaylistModal')">&times;</button>
             </div>
-            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                <div id="playlistOptionsList" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 15px;">
+            <div class="modal-body" style="max-height: 420px; overflow-y: auto;">
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">
+                    Chọn các Bộ sưu tập bạn muốn lưu tác phẩm này vào:
+                </p>
+                <div id="playlistOptionsList" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 16px;">
                     <!-- Render từ JS -->
                 </div>
-                <button class="btn" style="width:100%; border: 1px dashed var(--primary); color: var(--primary); font-weight: bold; background: var(--bg-secondary);" onclick="closeModal('saveToPlaylistModal'); openModal('createPlaylistModal')">
-                    <i class="fa-solid fa-plus"></i> Tạo danh sách phát mới
+                <button class="btn" style="width:100%; border: 1.5px dashed var(--primary); color: var(--primary); font-weight: bold; background: var(--bg-secondary); padding: 10px; border-radius: 12px;" onclick="closeModal('saveToPlaylistModal'); openModal('createPlaylistModal')">
+                    <i class="fa-solid fa-plus"></i> Tạo bộ sưu tập mới
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL TẠO PLAYLIST MỚI -->
+    <!-- 2. MODAL TẠO BỘ SƯU TẬP MỚI -->
     <div class="modal-overlay" id="createPlaylistModal">
-        <div class="modal" style="max-width:400px;">
-            <div class="modal-header"><span>Tạo Danh sách phát</span><button class="btn-close" onclick="closeModal('createPlaylistModal')">&times;</button></div>
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <span style="font-weight:800; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-folder-plus" style="color:var(--primary);"></i> <span>Tạo Bộ sưu tập Mới</span>
+                </span>
+                <button class="btn-close" onclick="closeModal('createPlaylistModal')">&times;</button>
+            </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Tên danh sách:</label>
-                    <input type="text" id="newPlaylistTitle" class="form-control" placeholder="VD: Nhạc nền game hay..." required>
+                    <label style="font-size:0.88rem; font-weight:700;">Tên bộ sưu tập *:</label>
+                    <input type="text" id="newPlaylistTitle" class="form-control" placeholder="VD: Top Game Platformer Hay..." maxlength="60" required>
                 </div>
                 <div class="form-group">
-                    <label>Quyền riêng tư:</label>
+                    <label style="font-size:0.88rem; font-weight:700;">Quyền hiển thị:</label>
                     <select id="newPlaylistVis" class="form-control">
-                        <option value="public">Công khai</option>
-                        <option value="private">Riêng tư</option>
+                        <option value="public">Công khai (Mọi người đều thấy)</option>
+                        <option value="private">Riêng tư (Chỉ mình bạn thấy)</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="createNewPlaylist()">Tạo mới</button>
+                <button type="button" class="btn btn-primary" id="btnSubmitCreateCol" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:12px;" onclick="createNewPlaylist()">
+                    <i class="fa-solid fa-check"></i> Tạo Bộ sưu tập
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MODAL XEM CHI TIẾT BỘ SƯU TẬP (KHẮC PHỤC LỖI LINK TRẮNG BẤY LÂU NAY) -->
+    <div class="modal-overlay" id="collectionDetailModal">
+        <div class="modal" style="max-width: 680px; max-height: 88vh; display: flex; flex-direction: column; border-radius: 20px;">
+            <div class="col-detail-hero">
+                <div>
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                        <span id="colDetailBadge" class="col-overlay-badge public" style="position:static;">Công khai</span>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Bởi <a href="#" id="colDetailAuthorLink" style="color:var(--primary); font-weight:700; text-decoration:none;">@author</a></span>
+                    </div>
+                    <h2 id="colDetailTitle" style="font-size:1.45rem; font-weight:900; margin:0; color:var(--text-title); line-height:1.25;">Tên Bộ sưu tập</h2>
+                    <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">
+                        <span id="colDetailCount">0</span> tác phẩm • Mã: <code id="colDetailIdCode" style="background:var(--border-color); padding:2px 6px; border-radius:4px;"></code>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button class="btn btn-primary" id="btnPlayFirstInCol" style="border-radius:20px; padding:7px 16px; font-weight:700;" onclick="playFirstProjectInCollection()">
+                        <i class="fa-solid fa-play"></i> Bắt đầu chơi
+                    </button>
+                    <button class="btn" style="border-radius:50%; width:38px; height:38px; padding:0; justify-content:center;" onclick="copyCollectionLink()" title="Sao chép liên kết">
+                        <i class="fa-solid fa-link"></i>
+                    </button>
+                    <button class="btn" id="btnEditCollection" style="display:none; border-radius:50%; width:38px; height:38px; padding:0; justify-content:center;" onclick="openEditPlaylistModal()" title="Cài đặt Bộ sưu tập">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                    <button class="btn-close" onclick="closeModal('collectionDetailModal')">&times;</button>
+                </div>
+            </div>
+
+            <div class="modal-body" style="overflow-y: auto; padding: 20px;">
+                <div id="colDetailProjectsList" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- Render danh sách dự án bên trong -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. MODAL CÀI ĐẶT BỘ SƯU TẬP (ĐỔI TÊN, ĐỔI QUYỀN RIÊNG TƯ, XÓA) -->
+    <div class="modal-overlay" id="editPlaylistModal">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <span style="font-weight:800; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-sliders" style="color:var(--primary);"></i> <span>Cài đặt Bộ sưu tập</span>
+                </span>
+                <button class="btn-close" onclick="closeModal('editPlaylistModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label style="font-size:0.88rem; font-weight:700;">Tên bộ sưu tập *:</label>
+                    <input type="text" id="editPlaylistTitle" class="form-control" maxlength="60" required>
+                </div>
+                <div class="form-group">
+                    <label style="font-size:0.88rem; font-weight:700;">Quyền hiển thị:</label>
+                    <select id="editPlaylistVis" class="form-control">
+                        <option value="public">Công khai (Mọi người đều thấy)</option>
+                        <option value="private">Riêng tư (Chỉ mình bạn thấy)</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="button" class="btn btn-primary" id="btnSaveEditCol" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;" onclick="saveEditPlaylist()">
+                        <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                    </button>
+                    <button type="button" class="btn btn-danger" style="flex:1; justify-content:center; padding:11px; font-weight:800; border-radius:12px;" onclick="deleteCurrentPlaylist()">
+                        <i class="fa-solid fa-trash-can"></i> Xóa
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -7279,9 +7488,11 @@
                 switchProfTab('comments');
                 const targetCmtId = urlParams.get('c');
                 if (targetCmtId) {
-                    // Đợi 250ms để tab Bình luận hiển thị hoàn tất rồi cuộn đến vị trí và bôi vàng
                     setTimeout(() => highlightAndScrollComment('prof', targetCmtId), 250);
                 }
+            } else if (urlParams && urlParams.get('collection')) {
+                switchProfTab('playlists');
+                setTimeout(() => openCollectionDetail(urlParams.get('collection')), 350);
             } else {
                 switchProfTab('projects'); // Mặc định mở Tab Tác phẩm đầu tiên
             }
@@ -7389,7 +7600,7 @@
                         `).join('');
                     }
                 } 
-                // 2. XỬ LÝ TAB BỘ SƯU TẬP (PLAYLISTS / BOOKMARKS)
+                // 2. XỬ LÝ TAB BỘ SƯU TẬP (DYNAMIC COVERS & DETAIL MODAL)
                 else if (tab === 'playlists') {
                     const isOwner = currentUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase();
                     const btnCreate = document.getElementById('btnCreatePlaylist');
@@ -7397,30 +7608,51 @@
                     
                     let playlists = viewingProfileData.playlists ? (typeof viewingProfileData.playlists === 'string' ? JSON.parse(viewingProfileData.playlists) : viewingProfileData.playlists) : [];
                     
-                    // Nếu là người khác vào xem -> ẩn các danh sách riêng tư đi
+                    // Nếu là khách xem -> chỉ hiển thị các bộ sưu tập công khai
                     if (!isOwner) {
                         playlists = playlists.filter(pl => pl.isPublic);
                     }
 
                     if (playlists.length === 0) {
-                        html = `<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-muted);"><i class="fa-solid fa-bookmark" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có danh sách phát nào.</div>`;
+                        html = `<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:3rem; margin-bottom:12px; opacity:0.35; display:block;"></i>Chưa có bộ sưu tập nào.</div>`;
                     } else {
-                        html = playlists.map(pl => `
-                            <div class="card" style="padding:22px 15px; text-align:center; cursor:pointer; display:flex; flex-direction:column; align-items:center;" onclick="applySearchTag('#${pl.id}')">
-                                <div style="width:60px; height:60px; border-radius:14px; background:rgba(13,165,122,0.1); display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
-                                    <i class="fa-solid fa-folder-open" style="font-size:1.8rem; color:var(--primary);"></i>
+                        html = playlists.map(pl => {
+                            // Tìm ảnh thumbnail của dự án đầu tiên trong bộ sưu tập (nếu có)
+                            let coverImgSrc = '';
+                            if (pl.projects && pl.projects.length > 0) {
+                                const firstPid = pl.projects[0];
+                                const pObj = allProjects.find(p => (p.projectId || p.fileId) === firstPid);
+                                if (pObj && pObj.thumbId) {
+                                    coverImgSrc = `${WORKER_URL}/api/project/${pObj.thumbId}`;
+                                }
+                            }
+
+                            const isPublic = pl.isPublic !== false;
+                            const badgeHtml = isPublic
+                                ? `<span class="col-overlay-badge public"><i class="fa-solid fa-earth-americas"></i> Công khai</span>`
+                                : `<span class="col-overlay-badge private"><i class="fa-solid fa-lock"></i> Riêng tư</span>`;
+
+                            return `
+                                <div class="collection-card" onclick="openCollectionDetail('${pl.id}')">
+                                    <div class="col-cover-wrap">
+                                        ${coverImgSrc ? `<img src="${coverImgSrc}" class="col-cover-img" alt="${escapeHtml(pl.title)}" loading="lazy">` : `<i class="fa-solid fa-layer-group" style="font-size:2.8rem; color:#64748b; opacity:0.6;"></i>`}
+                                        ${badgeHtml}
+                                        <div class="col-count-pill">
+                                            <i class="fa-solid fa-gamepad"></i> <span>${pl.projects ? pl.projects.length : 0} tác phẩm</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-card-body">
+                                        <div class="col-card-title" title="${escapeHtml(pl.title)}">${escapeHtml(pl.title)}</div>
+                                        <div class="col-card-meta">
+                                            <span><i class="fa-regular fa-clock"></i> ${pl.createdAt || 'Gần đây'}</span>
+                                            <span style="color:var(--primary); font-weight:700;"><i class="fa-solid fa-arrow-right"></i> Xem</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h3 style="margin:0; font-size:1.1rem; color:var(--text-title); line-height:1.3;">${escapeHtml(pl.title)}</h3>
-                                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:6px;">
-                                    ${pl.projects.length} tác phẩm • 
-                                    <span style="color:${pl.isPublic ? 'var(--primary)' : '#ea580c'}; font-weight:700;">
-                                        <i class="${pl.isPublic ? 'fa-solid fa-earth-americas' : 'fa-solid fa-lock'}"></i> ${pl.isPublic ? 'Công khai' : 'Riêng tư'}
-                                    </span>
-                                </p>
-                            </div>
-                        `).join('');
+                            `;
+                        }).join('');
                     }
-                    state.hasMore = false; // Playlist tải 1 lần là đủ
+                    state.hasMore = false;
                 }
                 // 3. XỬ LÝ TAB HOẠT ĐỘNG (ACTIVITIES)
                 else if (tab === 'activities') {
@@ -8285,7 +8517,9 @@
             } catch(e) {}
         }
 
+        // ================= HỆ THỐNG QUẢN LÝ BỘ SƯU TẬP (COLLECTIONS PRO) =================
         let myPlaylists = [];
+        let activeViewingCollection = null;
 
         async function openSaveToPlaylistModal() {
             if (!currentUser) return openModal('loginModal');
@@ -8298,45 +8532,297 @@
                 const uData = await userRes.json();
                 myPlaylists = uData.playlists ? (typeof uData.playlists === 'string' ? JSON.parse(uData.playlists) : uData.playlists) : [];
                 
-                const targetId = currentProj.projectId || currentProj.fileId;
+                const targetId = String(currentProj.projectId || currentProj.fileId);
                 
+                if (myPlaylists.length === 0) {
+                    listEl.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:0.9rem; padding:15px 0;'>Bạn chưa có bộ sưu tập nào.</p>";
+                    return;
+                }
+
                 listEl.innerHTML = myPlaylists.map(pl => {
-                    const isSaved = pl.projects.includes(targetId);
+                    const isSaved = pl.projects && pl.projects.map(String).includes(targetId);
+                    const isPub = pl.isPublic !== false;
                     return `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-secondary); padding:12px 15px; border-radius:10px; border:1px solid var(--border-color);">
-                        <div style="font-weight:bold; color:var(--text-title); display:flex; align-items:center; gap:8px;">
-                            <i class="${pl.isPublic?'fa-solid fa-earth-americas':'fa-solid fa-lock'}" style="color:var(--text-muted);"></i> ${escapeHtml(pl.title)}
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-secondary); padding:12px 14px; border-radius:12px; border:1px solid var(--border-color);">
+                        <div style="font-weight:700; color:var(--text-title); display:flex; align-items:center; gap:10px;">
+                            <i class="${isPub ? 'fa-solid fa-earth-americas' : 'fa-solid fa-lock'}" style="color:${isPub ? 'var(--primary)' : '#ea580c'}; font-size:0.9rem;"></i> 
+                            <span>${escapeHtml(pl.title)}</span>
                         </div>
-                        <input type="checkbox" style="width:20px; height:20px; cursor:pointer; accent-color:var(--primary);" ${isSaved?'checked':''} onchange="toggleProjectInPlaylist('${pl.id}', this.checked)">
+                        <input type="checkbox" style="width:20px; height:20px; cursor:pointer; accent-color:var(--primary);" ${isSaved ? 'checked' : ''} onchange="toggleProjectInPlaylist('${pl.id}', this.checked)">
                     </div>
                     `;
                 }).join('');
-                if(myPlaylists.length === 0) listEl.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:0.9rem;'>Bạn chưa có danh sách phát nào.</p>";
             } catch(e) {
-                listEl.innerHTML = "<p style='color:#ef4444; text-align:center;'>Lỗi kết nối</p>";
+                listEl.innerHTML = "<p style='color:#ef4444; text-align:center;'>Lỗi kết nối máy chủ</p>";
             }
         }
 
         async function createNewPlaylist() {
-            const title = document.getElementById('newPlaylistTitle').value.trim();
+            const titleInput = document.getElementById('newPlaylistTitle');
+            const title = titleInput ? titleInput.value.trim() : "";
             const vis = document.getElementById('newPlaylistVis').value;
-            if(!title) return showToast("Nhập tên danh sách!", "error");
+            if (!title) return showToast("Vui lòng nhập tên Bộ sưu tập!", "error");
 
-            const res = await apiFetch('/api/user/playlist', { method: 'POST', body: JSON.stringify({ action: 'create', title, isPublic: vis==='public' }) });
+            const btn = document.getElementById('btnSubmitCreateCol');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...'; }
+
+            const res = await apiFetch('/api/user/playlist', { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'create', title, isPublic: vis === 'public' }) 
+            });
+
             if (res && res.success) {
-                showToast("Tạo danh sách phát thành công!", "success");
+                showToast("Đã tạo Bộ sưu tập thành công!", "success");
                 closeModal('createPlaylistModal');
-                document.getElementById('newPlaylistTitle').value = ""; // Xóa trắng
+                if (titleInput) titleInput.value = "";
+                
+                // Cập nhật lại danh sách nếu đang mở modal lưu
                 if (document.getElementById('saveToPlaylistModal').style.display === 'flex') {
-                    openSaveToPlaylistModal(); 
+                    openSaveToPlaylistModal();
                 }
+
+                // Cập nhật lại tab profile nếu đang ở profile chính mình
+                if (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
+                    viewingProfileData.playlists = res.playlists;
+                    loadProfTab('playlists', false);
+                }
+            } else {
+                showToast(res ? (res.error || "Không thể tạo bộ sưu tập") : "Lỗi kết nối", "error");
+            }
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Tạo Bộ sưu tập'; }
+        }
+
+        async function toggleProjectInPlaylist(plId, isChecked) {
+            const targetId = String(currentProj.projectId || currentProj.fileId);
+            const res = await apiFetch('/api/user/playlist', { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'toggle_project', playlistId: plId, targetProject: targetId }) 
+            });
+            if (res && res.success) {
+                showToast(isChecked ? "Đã lưu vào bộ sưu tập!" : "Đã gỡ khỏi bộ sưu tập", "info");
             }
         }
 
-        function toggleProjectInPlaylist(plId, isChecked) {
-            const targetId = currentProj.projectId || currentProj.fileId;
-            apiFetch('/api/user/playlist', { method: 'POST', body: JSON.stringify({ action: 'toggle_project', playlistId: plId, targetProject: targetId }) });
-            showToast(isChecked ? "Đã thêm vào danh sách" : "Đã gỡ khỏi danh sách", "info");
+        // ================= XEM CHI TIẾT & QUẢN TRỊ BỘ SƯU TẬP =================
+        async function openCollectionDetail(plId) {
+            let playlists = [];
+            let ownerName = viewingProfileUser || (currentUser ? currentUser.username : "");
+
+            if (viewingProfileData && viewingProfileData.playlists) {
+                playlists = typeof viewingProfileData.playlists === 'string' ? JSON.parse(viewingProfileData.playlists) : viewingProfileData.playlists;
+            } else if (currentUser && currentUser.username) {
+                try {
+                    const uRes = await (await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`)).json();
+                    playlists = uRes.playlists ? (typeof uRes.playlists === 'string' ? JSON.parse(uRes.playlists) : uRes.playlists) : [];
+                    ownerName = currentUser.username;
+                } catch(e){}
+            }
+
+            const col = playlists.find(p => String(p.id) === String(plId));
+            if (!col) return showToast("Không tìm thấy bộ sưu tập này!", "error");
+            activeViewingCollection = { ...col, owner: ownerName };
+
+            // Hiển thị thông tin
+            document.getElementById('colDetailTitle').innerText = col.title;
+            const badge = document.getElementById('colDetailBadge');
+            const isPub = col.isPublic !== false;
+            badge.className = isPub ? 'col-overlay-badge public' : 'col-overlay-badge private';
+            badge.innerHTML = isPub ? '<i class="fa-solid fa-earth-americas"></i> Công khai' : '<i class="fa-solid fa-lock"></i> Riêng tư';
+            
+            const authorLink = document.getElementById('colDetailAuthorLink');
+            authorLink.innerText = `@${ownerName}`;
+            authorLink.href = `#profile/${ownerName}`;
+            
+            document.getElementById('colDetailCount').innerText = col.projects ? col.projects.length : 0;
+            document.getElementById('colDetailIdCode').innerText = col.id;
+
+            // Nút cài đặt (Chỉ chủ sở hữu hoặc admin mới thấy)
+            const isOwner = currentUser && (currentUser.username.toLowerCase() === ownerName.toLowerCase() || currentUser.role === 'admin');
+            const btnEdit = document.getElementById('btnEditCollection');
+            if (btnEdit) btnEdit.style.display = isOwner ? 'inline-flex' : 'none';
+
+            openModal('collectionDetailModal');
+            renderCollectionProjects(col.projects || []);
+        }
+
+        async function renderCollectionProjects(pids) {
+            const listEl = document.getElementById('colDetailProjectsList');
+            if (!pids || pids.length === 0) {
+                listEl.innerHTML = '<div style="text-align:center; padding:30px 10px; color:var(--text-muted);"><i class="fa-solid fa-folder-open" style="font-size:2.5rem; opacity:0.3; margin-bottom:10px; display:block;"></i>Bộ sưu tập này chưa có tác phẩm nào.</div>';
+                return;
+            }
+
+            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang nạp danh sách tác phẩm...</div>';
+
+            const isOwner = currentUser && (activeViewingCollection && (currentUser.username.toLowerCase() === activeViewingCollection.owner.toLowerCase() || currentUser.role === 'admin'));
+
+            // Tìm hoặc tải dự án
+            const resolvedProjects = [];
+            for (const id of pids) {
+                let found = allProjects.find(p => (p.projectId || p.fileId) === String(id));
+                if (!found) {
+                    try {
+                        const r = await (await fetch(`${WORKER_URL}/api/projects?id=${encodeURIComponent(id)}&limit=1`)).json();
+                        if (r.projects && r.projects[0]) {
+                            found = r.projects[0];
+                            allProjects.push(found);
+                        }
+                    } catch(e){}
+                }
+                if (found) resolvedProjects.push(found);
+            }
+
+            if (resolvedProjects.length === 0) {
+                listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Các tác phẩm trong bộ sưu tập này không khả dụng hoặc đã bị xóa.</div>';
+                return;
+            }
+
+            listEl.innerHTML = resolvedProjects.map(p => {
+                const thumb = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const pid = p.projectId || p.fileId;
+                return `
+                <div class="col-detail-item-row">
+                    <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1; cursor:pointer;" onclick="closeModal('collectionDetailModal'); navigateTo('/projects/${pid}')">
+                        <img src="${thumb}" style="width:65px; aspect-ratio:16/9; border-radius:8px; object-fit:cover; background:#000; flex-shrink:0;">
+                        <div style="min-width:0; flex:1;">
+                            <div style="font-weight:800; font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.title)}</div>
+                            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">Bởi @${escapeHtml(p.author)} • <i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes||[]).length} • <i class="fa-solid fa-play"></i> ${p.views||0}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                        <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:20px;" onclick="closeModal('collectionDetailModal'); navigateTo('/projects/${pid}')">
+                            <i class="fa-solid fa-play"></i> Chơi
+                        </button>
+                        ${isOwner ? `
+                        <button class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem; border-radius:20px;" onclick="removeProjectFromInsideCollection('${pid}')" title="Gỡ khỏi bộ sưu tập">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        ` : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function playFirstProjectInCollection() {
+            if (!activeViewingCollection || !activeViewingCollection.projects || activeViewingCollection.projects.length === 0) {
+                return showToast("Bộ sưu tập này chưa có tác phẩm nào để chơi!", "info");
+            }
+            const firstPid = activeViewingCollection.projects[0];
+            closeModal('collectionDetailModal');
+            navigateTo(`/projects/${firstPid}`);
+        }
+
+        function copyCollectionLink() {
+            if (!activeViewingCollection) return;
+            const link = `${window.location.origin}${window.location.pathname}#profile/${encodeURIComponent(activeViewingCollection.owner)}?collection=${activeViewingCollection.id}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast("Đã chép liên kết Bộ sưu tập vào bộ nhớ!", "success");
+            });
+        }
+
+        // Mở modal cài đặt (Sửa / Đổi quyền riêng tư / Xóa)
+        function openEditPlaylistModal() {
+            if (!activeViewingCollection) return;
+            document.getElementById('editPlaylistTitle').value = activeViewingCollection.title || "";
+            document.getElementById('editPlaylistVis').value = activeViewingCollection.isPublic !== false ? "public" : "private";
+            openModal('editPlaylistModal');
+        }
+
+        async function saveEditPlaylist() {
+            if (!activeViewingCollection) return;
+            const newTitle = document.getElementById('editPlaylistTitle').value.trim();
+            const newVis = document.getElementById('editPlaylistVis').value;
+            if (!newTitle) return showToast("Tên bộ sưu tập không được để trống!", "error");
+
+            const btn = document.getElementById('btnSaveEditCol');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...'; }
+
+            const res = await apiFetch('/api/user/playlist', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'update',
+                    playlistId: activeViewingCollection.id,
+                    title: newTitle,
+                    isPublic: newVis === 'public'
+                })
+            });
+
+            if (res && res.success) {
+                showToast("Đã lưu thay đổi Bộ sưu tập!", "success");
+                activeViewingCollection.title = newTitle;
+                activeViewingCollection.isPublic = (newVis === 'public');
+
+                // Cập nhật lại UI modal chi tiết
+                document.getElementById('colDetailTitle').innerText = newTitle;
+                const badge = document.getElementById('colDetailBadge');
+                badge.className = activeViewingCollection.isPublic ? 'col-overlay-badge public' : 'col-overlay-badge private';
+                badge.innerHTML = activeViewingCollection.isPublic ? '<i class="fa-solid fa-earth-americas"></i> Công khai' : '<i class="fa-solid fa-lock"></i> Riêng tư';
+
+                closeModal('editPlaylistModal');
+
+                // Cập nhật lại tab trên profile
+                if (viewingProfileData) {
+                    viewingProfileData.playlists = res.playlists;
+                    loadProfTab('playlists', false);
+                }
+            } else {
+                showToast((res && res.error) ? res.error : "Không thể cập nhật bộ sưu tập", "error");
+            }
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi'; }
+        }
+
+        async function deleteCurrentPlaylist() {
+            if (!activeViewingCollection) return;
+            if (!confirm(`Xác nhận xóa bộ sưu tập "${activeViewingCollection.title}"?\n(Các tác phẩm bên trong vẫn sẽ an toàn, không bị xóa).`)) return;
+
+            const res = await apiFetch('/api/user/playlist', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'delete',
+                    playlistId: activeViewingCollection.id
+                })
+            });
+
+            if (res && res.success) {
+                showToast("Đã xóa Bộ sưu tập thành công!", "success");
+                closeModal('editPlaylistModal');
+                closeModal('collectionDetailModal');
+
+                // Cập nhật lại danh sách trên profile
+                if (viewingProfileData) {
+                    viewingProfileData.playlists = res.playlists;
+                    loadProfTab('playlists', false);
+                }
+            } else {
+                showToast((res && res.error) ? res.error : "Không thể xóa bộ sưu tập", "error");
+            }
+        }
+
+        async function removeProjectFromInsideCollection(projId) {
+            if (!activeViewingCollection) return;
+            if (!confirm("Xác nhận gỡ tác phẩm này khỏi bộ sưu tập?")) return;
+
+            const res = await apiFetch('/api/user/playlist', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'toggle_project',
+                    playlistId: activeViewingCollection.id,
+                    targetProject: String(projId)
+                })
+            });
+
+            if (res && res.success) {
+                showToast("Đã gỡ tác phẩm khỏi bộ sưu tập", "info");
+                activeViewingCollection.projects = activeViewingCollection.projects.filter(id => String(id) !== String(projId));
+                document.getElementById('colDetailCount').innerText = activeViewingCollection.projects.length;
+                renderCollectionProjects(activeViewingCollection.projects);
+
+                if (viewingProfileData) {
+                    viewingProfileData.playlists = res.playlists;
+                    loadProfTab('playlists', false);
+                }
+            }
         }
 
 
