@@ -2617,8 +2617,8 @@
                             <button type="button" class="chat-tool-btn beabea-highlight" onclick="quickMentionBeaBea()" title="Gõ nhanh @BeaBea (AI)">
                                 <i class="fa-solid fa-robot"></i> <span>Hỏi BeaBea</span>
                             </button>
-                            <button type="button" class="chat-tool-btn beabea-highlight" onclick="quickAskBeaBeaFortune()" title="Cầu may xin lộc">
-                                <i class="fa-solid fa-coins"></i> <span>Xin lộc</span>
+                            <button type="button" class="chat-tool-btn beabea-highlight" onclick="quickAskBeaBeaIdea()" title="Gợi ý ý tưởng làm game/cốt truyện">
+                                <i class="fa-solid fa-lightbulb" style="color: #f59e0b;"></i> <span>Ý tưởng game</span>
                             </button>
                             <label for="commentImgUploadChat" class="chat-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
                                 <i class="fa-solid fa-image" style="color: #0284c7;"></i> <span>Ảnh</span>
@@ -2653,7 +2653,7 @@
                 <!-- Thẻ BeaBea AI Companion -->
                 <div class="chat-side-card" style="text-align: center; border-left: 3px solid #ec4899;">
                     <div style="position:relative; width: 68px; height: 68px; margin: 0 auto 10px auto;">
-                        <img src="https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #f472b6;" onerror="this.src='https://ui-avatars.com/api/?background=ec4899&color=fff&name=BeaBea'">
+                        <img src="https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #f472b6;" onerror="this.onerror=null; this.src=DEFAULT_AVATAR">
                     </div>
                     <div style="font-weight: 800; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <span>BeaBea</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 2px 6px; border-radius: 10px; font-weight: bold; border: 1px solid #fbcfe8;">AI BOT</span>
@@ -2661,7 +2661,7 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin: 6px 0 14px 0; line-height: 1.4;">Thực thể AI Toàn Tri của DANVworkshop. Sẵn sàng trò chuyện, cung cấp số liệu và phát lộc WOW!</p>
                     <div style="display: flex; gap: 8px;">
                         <button type="button" class="btn" style="flex:1; font-size:0.8rem; padding:6px 8px; justify-content:center; border-radius:12px;" onclick="quickMentionBeaBea()"><i class="fa-solid fa-comments"></i> Hỏi chuyện</button>
-                        <button type="button" class="btn btn-primary" style="flex:1; font-size:0.8rem; padding:6px 8px; justify-content:center; border-radius:12px; background:linear-gradient(135deg,#f59e0b,#ea580c); border:none;" onclick="quickAskBeaBeaFortune()"><i class="fa-solid fa-hand-holding-dollar"></i> Xin lộc</button>
+                        <button type="button" class="btn btn-primary" style="flex:1; font-size:0.8rem; padding:6px 8px; justify-content:center; border-radius:12px; background:linear-gradient(135deg,#f59e0b,#ea580c); border:none;" onclick="quickAskBeaBeaIdea()"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</button>
                     </div>
                 </div>
 
@@ -8184,16 +8184,12 @@
 
             openModal('followListModal');
         }
-        // 🚀 BỘ TẠO AVATAR TỰ ĐỘNG: HỖ TRỢ LINK TRỰC TIẾP (HTTP/HTTPS) & TỰ TẠO ẢNH CHỮ KHI THIẾU
-        function getAvtUrl(id, fallbackName = 'User') { 
-            if (!id || id === 'null' || id === 'undefined') {
-                return `https://ui-avatars.com/api/?background=0da57a&color=fff&name=${encodeURIComponent(fallbackName)}`;
-            }
-            let realId = id.split('|||')[0];
-            if (!realId) {
-                return `https://ui-avatars.com/api/?background=0da57a&color=fff&name=${encodeURIComponent(fallbackName)}`;
-            }
-            // Nếu là link ảnh trực tiếp (như bot BeaBea hoặc CDN), giữ nguyên link
+        // 🚀 BỘ NẠP AVATAR: TRẢ VỀ ĐÚNG DEFAULT_AVATAR GỐC CỦA APP & HỖ TRỢ LINK NGOÀI (BEABEA)
+        function getAvtUrl(id) { 
+            if (!id || id === 'null' || id === 'undefined') return DEFAULT_AVATAR;
+            let realId = id.split('|||')[0].trim();
+            if (!realId) return DEFAULT_AVATAR;
+            // Nếu là link ảnh trực tiếp (như link CDN của BeaBea), giữ nguyên URL gốc
             if (realId.startsWith('http://') || realId.startsWith('https://')) {
                 return realId;
             }
@@ -8974,12 +8970,14 @@ function reopenEditor() {
             textarea.setSelectionRange(len, len);
         }
 
-        function quickAskBeaBeaFortune() {
+        function quickAskBeaBeaIdea() {
             if (!currentUser) return openModal('loginModal');
             const textarea = document.getElementById('commentTextChat');
             if (!textarea) return;
-            textarea.value = `@BeaBea (AI) Cho mình xin chút lộc WOW đi!`;
+            textarea.value = `@BeaBea (AI) Hãy gợi ý cho mình một ý tưởng cơ chế game hoặc cốt truyện độc lạ để làm trên DANVworkshop đi!`;
             textarea.focus();
+            const len = textarea.value.length;
+            textarea.setSelectionRange(len, len);
         }
 
 
@@ -9733,14 +9731,12 @@ function reopenEditor() {
         let availableFrames = [];
         let myOwnedFrames = [];
 
-        // Hàm hỗ trợ Render Avatar có Khung trên toàn Website (Có tự động bù ảnh nếu lỗi)
-        function renderAvtWithFrame(avtUrl, frameUrl, sizeClass, imgId = '', authorName = 'User') {
+        // Hàm hỗ trợ Render Avatar có Khung trên toàn Website (Dùng DEFAULT_AVATAR gốc của app)
+        function renderAvtWithFrame(avtUrl, frameUrl, sizeClass, imgId = '') {
             const hasFrame = frameUrl && frameUrl !== 'null' && frameUrl !== 'undefined';
-            const fallbackSrc = `https://ui-avatars.com/api/?background=0da57a&color=fff&name=${encodeURIComponent(authorName)}`;
-            const finalSrc = getAvtUrl(avtUrl, authorName);
             return `
                 <div class="avt-wrapper">
-                    <img ${imgId ? `id="${imgId}"` : ''} src="${finalSrc}" class="${sizeClass}" onerror="this.onerror=null; this.src='${fallbackSrc}'" loading="lazy">
+                    <img ${imgId ? `id="${imgId}"` : ''} src="${getAvtUrl(avtUrl)}" class="${sizeClass}" onerror="this.onerror=null; this.src=DEFAULT_AVATAR" loading="lazy">
                     ${hasFrame ? `<img src="${frameUrl}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
                 </div>
             `;
