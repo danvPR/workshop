@@ -3001,6 +3001,54 @@
                 </button>
             </div>
 
+            <!-- KHỐI QUẢN LÝ SỰ KIỆN TRANG CHỦ -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-trophy" style="color: #10b981;"></i> Quản lý Sự kiện / Game Jam (Trang chủ)
+                </h4>
+                
+                <!-- Form thêm sự kiện mới -->
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Tên Sự kiện (VD: GameJam 2026):</label>
+                            <input type="text" id="adminEvTitle" class="form-control" placeholder="Tên sự kiện...">
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Tag tìm kiếm (VD: #gamejam2026):</label>
+                            <input type="text" id="adminEvTag" class="form-control" placeholder="Hệ thống sẽ lọc dự án có tag này">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 2; min-width: 200px;">
+                            <label>Link ảnh nền Banner (16:9):</label>
+                            <input type="text" id="adminEvImg" class="form-control" placeholder="https://i.ibb.co/...">
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 150px;">
+                            <label>Ngày kết thúc (Để đếm ngược):</label>
+                            <input type="date" id="adminEvDate" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả ngắn:</label>
+                        <input type="text" id="adminEvDesc" class="form-control" placeholder="Ví dụ: Tham gia tạo game sinh tồn...">
+                    </div>
+                    <button class="btn btn-primary" onclick="adminAddEventItem()" style="background: #10b981; border: none;">
+                        <i class="fa-solid fa-plus"></i> Thêm vào danh sách chờ
+                    </button>
+                </div>
+
+                <!-- Danh sách sự kiện hiện tại -->
+                <label style="font-weight: bold; color: #475569; margin-bottom: 10px; display: block;">Danh sách đang hiển thị trên Trang chủ:</label>
+                <div id="adminEventsPreviewList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; max-height: 300px; overflow-y: auto;">
+                    <!-- Sẽ render bằng JS -->
+                </div>
+
+                <button class="btn btn-primary" onclick="adminSaveEventsToServer()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.05rem;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Cập nhật lên Trang chủ
+                </button>
+            </div>
+
             <!-- KHỐI PHÁT THANH GLOBAL PING -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #855cd6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
@@ -6853,6 +6901,7 @@
             }
             document.getElementById('adminView').style.display = 'block';
             loadAdminReports();
+            loadAdminEventsManager(); // <-- THÊM DÒNG NÀY VÀO ĐÂY
         }
 
         // Hàm hỗ trợ tự động tìm vị trí của Báo cáo 
@@ -7021,6 +7070,90 @@
             if(!reason) return showToast("Phải nhập lý do cảnh cáo", "error");
             const res = await apiFetch(`/api/admin/action`, { method: 'POST', body: JSON.stringify({ action: "warn_user", payload: { targetUser: viewingProfileUser, reason } }) });
             if(res && res.success) { showToast("Đã gửi cảnh cáo!", "success"); closeModal('adminWarnModal'); }
+        }
+
+        // ================= ADMIN QUẢN LÝ SỰ KIỆN TRANG CHỦ =================
+        let adminCurrentEvents = [];
+
+        async function loadAdminEventsManager() {
+            const listEl = document.getElementById('adminEventsPreviewList');
+            listEl.innerHTML = '<div style="text-align:center; padding:10px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
+            try {
+                const res = await fetch(`${WORKER_URL}/api/events`);
+                adminCurrentEvents = await res.json() || [];
+                renderAdminEventsList();
+            } catch(e) {
+                listEl.innerHTML = '<div style="color:#ef4444;">Lỗi tải danh sách sự kiện</div>';
+            }
+        }
+
+        function renderAdminEventsList() {
+            const listEl = document.getElementById('adminEventsPreviewList');
+            if (adminCurrentEvents.length === 0) {
+                listEl.innerHTML = '<div style="padding:15px; text-align:center; background:#f1f5f9; border-radius:8px; color:#64748b;">Chưa có sự kiện nào. Trang chủ sẽ ẩn mục này.</div>';
+                return;
+            }
+
+            listEl.innerHTML = adminCurrentEvents.map((ev, index) => `
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid #e2e8f0; padding:10px 15px; border-radius:8px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <img src="${ev.bgImage}" style="width:60px; height:34px; object-fit:cover; border-radius:4px; background:#000;">
+                        <div>
+                            <div style="font-weight:bold; color:#1e293b;">${escapeHtml(ev.title)}</div>
+                            <div style="font-size:0.8rem; color:#64748b;">Tag: <b style="color:var(--primary);">${escapeHtml(ev.searchTag)}</b> | Hết hạn: ${ev.endDate || 'Không có'}</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;" onclick="adminRemoveEventItem(${index})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function adminAddEventItem() {
+            const title = document.getElementById('adminEvTitle').value.trim();
+            const tag = document.getElementById('adminEvTag').value.trim();
+            const img = document.getElementById('adminEvImg').value.trim();
+            const desc = document.getElementById('adminEvDesc').value.trim();
+            const date = document.getElementById('adminEvDate').value;
+
+            if (!title || !tag || !img) return showToast("Vui lòng nhập đủ Tiên, Tag và Link ảnh!", "error");
+            if (!tag.startsWith('#')) return showToast("Tag phải bắt đầu bằng dấu # (Ví dụ: #gamejam)", "error");
+
+            adminCurrentEvents.push({ title: title, searchTag: tag, bgImage: img, desc: desc, endDate: date });
+            renderAdminEventsList();
+
+            // Xóa form
+            document.getElementById('adminEvTitle').value = '';
+            document.getElementById('adminEvTag').value = '';
+            document.getElementById('adminEvImg').value = '';
+            document.getElementById('adminEvDesc').value = '';
+            document.getElementById('adminEvDate').value = '';
+        }
+
+        function adminRemoveEventItem(index) {
+            adminCurrentEvents.splice(index, 1);
+            renderAdminEventsList();
+        }
+
+        async function adminSaveEventsToServer() {
+            const btn = event.currentTarget;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+            btn.disabled = true;
+
+            const res = await apiFetch(`/api/admin/events`, { 
+                method: 'POST', 
+                body: JSON.stringify({ events: adminCurrentEvents }) 
+            });
+
+            if (res && res.success) {
+                showToast("Đã cập nhật Sự kiện lên Trang chủ!", "success");
+                loadEvents(); // Tải lại sự kiện trên trang chủ của Admin để xem trước
+            } else {
+                showToast("Lỗi khi lưu sự kiện!", "error");
+            }
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
         }
 
         // ================= SỰ KIỆN & PLAYLISTS =================
