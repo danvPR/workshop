@@ -3778,6 +3778,8 @@
         let isPosting = { proj: false, prof: false, chat: false, std: false };
         let reportTarget = { type: null, id: null };
         let commentLimits = { proj: 10, prof: 10, std: 10 };
+        let archiveCommentPage = { proj: 1, prof: 1, std: 1 };
+        let hasMoreArchiveComments = { proj: true, prof: true, std: true };
 
         // ==========================================
         // BỘ MÁY ĐA NGÔN NGỮ (I18N ENGINE)
@@ -4640,7 +4642,6 @@
             }
         }
 
-        // BỐ CỤC COMMENT ĐÃ ĐƯỢC SỬA LỖI (CHIA KHỐI HEADER TRÊN, TEXT BUBBLE DƯỚI)
         function renderCommentList(type, list) {
             let containerId = 'commentListProj';
             if (type === 'prof') containerId = 'profCommentList';
@@ -4648,6 +4649,24 @@
             const container = document.getElementById(containerId);
             
             if (!list || list.length === 0) { container.innerHTML = `<div style="color:#888; text-align:center; padding:20px;">${t('proj_no_comments')}</div>`; return; }
+
+            // Xử lý nạp Avatar cho bình luận lưu trữ
+            list.forEach(c => {
+                if (c.isArchived && !c.avt) {
+                    if (globalUserCache[c.author]) {
+                        c.avt = globalUserCache[c.author];
+                    } else {
+                        c.avt = DEFAULT_AVATAR; // Mặc định
+                        fetch(`${WORKER_URL}/api/user/${encodeURIComponent(c.author)}`).then(r=>r.json()).then(d=>{
+                            if(d.avt) {
+                                globalUserCache[c.author] = d.avt;
+                                const imgEl = document.getElementById(`avt-cmt-${c.id}`);
+                                if (imgEl) imgEl.src = getAvtUrl(d.avt);
+                            }
+                        }).catch(()=>{});
+                    }
+                }
+            });
 
             const rootComments = []; const repliesMap = {};
             list.forEach(c => { if (c.parentId) { if (!repliesMap[c.parentId]) repliesMap[c.parentId] = []; repliesMap[c.parentId].push(c); } else { rootComments.push(c); } });
@@ -4676,11 +4695,12 @@
                 return `
                     <div class="comment-thread" id="${type}-thread-${root.id}">
                         <div class="comment-box ${tipTierClass}" id="comment-box-${root.id}">
-                            ${renderAvtWithFrame(root.avt, root.frame, 'avt-circle')}
+                            ${renderAvtWithFrame(root.avt, root.frame, 'avt-circle', `avt-cmt-${root.id}`)}
                             <div class="comment-content-area">
                                 <div class="comment-header">
                                     <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
                                     <span class="comment-time" title="${root.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(root.time)}</span>
+                                    ${root.isArchived ? '<span style="font-size:0.65rem; background:#f1f5f9; color:#888; padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i> Cũ</span>' : ''}
                                 </div>
                                 ${root.isTip ? `
                                 <div class="tip-badge-banner">
@@ -4691,7 +4711,7 @@
                                     ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render">` : ''}
                                 </div>
                                 <div style="margin-top:4px; display:flex; align-items:center; gap:8px;">
-                                    ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${root.author}')">${t('proj_reply')}</button>` : ''}
+                                    ${currentUser && !root.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${root.author}')">${t('proj_reply')}</button>` : ''}
                                     ${root.text ? `
                                     <div class="trans-menu-wrapper">
                                         <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${root.id}')" title="Dịch"><i class="fa-solid fa-language"></i></button>
@@ -4706,11 +4726,12 @@
                             <div class="replies-container">
                                 ${visibleReplies.map(rep => `
                                     <div class="comment-box" id="comment-box-${rep.id}">
-                                        <img src="${getAvtUrl(rep.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
+                                        <img id="avt-cmt-${rep.id}" src="${getAvtUrl(rep.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
                                         <div class="comment-content-area">
                                             <div class="comment-header">
                                                 <a href="#profile/${rep.author}" class="comment-author-name">${rep.author}</a> 
                                                 <span class="comment-time" title="${rep.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(rep.time)}</span>
+                                                ${rep.isArchived ? '<span style="font-size:0.65rem; background:#f1f5f9; color:#888; padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i></span>' : ''}
                                             </div>
                                             <div class="comment-text-bubble" data-raw-text="${encodeURIComponent(rep.text || '')}">
                                                 ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
@@ -4718,7 +4739,7 @@
                                                 ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render">` : ''}
                                             </div>
                                             <div style="margin-top:2px; display:flex; align-items:center; gap:8px;">
-                                                ${currentUser ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">${t('proj_reply')}</button>` : ''}
+                                                ${currentUser && !rep.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">${t('proj_reply')}</button>` : ''}
                                                 ${rep.text ? `
                                                 <div class="trans-menu-wrapper">
                                                     <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${rep.id}')" title="Dịch"><i class="fa-solid fa-language"></i></button>
@@ -4736,10 +4757,10 @@
                 `;
             });
 
-            // 🛡️ LỌC SỐ LƯỢNG BÌNH LUẬN HIỂN THỊ
             const limit = commentLimits[type];
             const visibleRoots = rootHtmlArray.slice(0, limit);
-            const hasMoreRoots = rootHtmlArray.length > limit;
+            // Thay đổi logic nút Xem thêm để tương thích với dữ liệu Archive
+            const hasMoreRoots = rootHtmlArray.length > limit || hasMoreArchiveComments[type];
 
             container.innerHTML = visibleRoots.join('') + (hasMoreRoots ? `
                 <div style="text-align: center; margin-top: 15px; padding-bottom: 10px;">
@@ -4750,17 +4771,48 @@
             ` : '');
         }
 
-        // HÀM XỬ LÝ NÚT XEM THÊM
-        function loadMoreComments(type) {
-            commentLimits[type] += 10; // Mỗi lần bấm tải thêm 10 bình luận
-            if (type === 'proj') {
-                renderCommentList('proj', currentProj.comments || []);
-            } else if (type === 'std') {
-                fetch(`${WORKER_URL}/api/studio/${currentStudio.id}`)
-                    .then(r => r.json())
-                    .then(data => renderCommentList('std', data.comments || []));
+        // Hàm tải thêm bình luận được cấp quyền kết nối kho lưu trữ
+        async function loadMoreComments(type) {
+            let list = type === 'proj' ? currentProj.comments : (type === 'std' ? currentStudio.comments : viewingProfileData.comments);
+            if (!list) list = [];
+            
+            const roots = list.filter(c => !c.parentId);
+
+            if (commentLimits[type] < roots.length) {
+                commentLimits[type] += 10;
+                renderCommentList(type, list);
             } else {
-                renderCommentList('prof', (viewingProfileData && viewingProfileData.comments) ? viewingProfileData.comments : []);
+                // Tải từ Kho lưu trữ nếu hết bình luận cục bộ
+                if (!hasMoreArchiveComments[type]) {
+                    showToast("Đã hiển thị tất cả bình luận.", "info");
+                    return;
+                }
+
+                const btn = event.currentTarget;
+                const origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải từ máy chủ...';
+
+                let targetType = type === 'proj' ? 'PROJECT' : (type === 'std' ? 'STUDIO' : 'PROFILE');
+                let targetId = type === 'proj' ? (currentProj.projectId || currentProj.fileId) : (type === 'std' ? currentStudio.id : viewingProfileUser);
+
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/comments_archive?type=${targetType}&id=${encodeURIComponent(targetId)}&page=${archiveCommentPage[type]}`);
+                    const data = await res.json();
+
+                    if (data.comments && data.comments.length > 0) {
+                        data.comments.forEach(c => list.push(c));
+                        archiveCommentPage[type]++;
+                        commentLimits[type] += 10;
+                        hasMoreArchiveComments[type] = data.hasMore;
+                        renderCommentList(type, list);
+                    } else {
+                        hasMoreArchiveComments[type] = false;
+                        renderCommentList(type, list);
+                    }
+                } catch(e) {
+                    showToast("Lỗi tải bình luận cũ", "error");
+                    btn.innerHTML = origHtml;
+                }
             }
         }
         
@@ -5119,7 +5171,7 @@
             }
             
             let endpoint = `/api/user/comment`;
-            let payload = { targetUser: viewingProfileUser, text, avt: currentUser.avt, parentId: replyState.prof.parentId, replyToUser: replyState.prof.user, imageId: imgId };
+            let payload = { targetUser: viewingProfileUser, text, avt: currentUser.avt, parentId: replyState[type].parentId, replyToUser: replyState[type].user, imageId: imgId };
             
             if (type === 'proj') {
                 endpoint = `/api/comment`;
@@ -5132,20 +5184,27 @@
             const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
             if (res && res.success) {
                 textInput.value = ''; removeCommentImage(type); cancelReply(type);
-                if (type === 'proj') { 
-                    if (!currentProj.comments) currentProj.comments = []; 
-                    currentProj.comments.push(res.comment); 
-                    renderCommentList('proj', currentProj.comments); 
-                } else if (type === 'std') {
-                    if (!currentStudio.comments) currentStudio.comments = []; 
-                    currentStudio.comments.push(res.comment); 
-                    renderCommentList('std', currentStudio.comments);
-                } else { 
-                    if (!viewingProfileData.comments) viewingProfileData.comments = []; 
-                    if (res.comment) viewingProfileData.comments.push(res.comment); 
-                    renderCommentList('prof', viewingProfileData.comments); 
+                try {
+                    if (type === 'proj') { 
+                        if (!currentProj.comments) currentProj.comments = []; 
+                        currentProj.comments.push(res.comment); 
+                        renderCommentList('proj', currentProj.comments); 
+                    } else if (type === 'std') {
+                        if (!currentStudio.comments) currentStudio.comments = []; 
+                        currentStudio.comments.push(res.comment); 
+                        renderCommentList('std', currentStudio.comments);
+                    } else { 
+                        if (!viewingProfileData.comments) viewingProfileData.comments = []; 
+                        if (res.comment) viewingProfileData.comments.push(res.comment); 
+                        renderCommentList('prof', viewingProfileData.comments); 
+                    }
+                    showToast("Đã gửi!", "success");
+                } catch (renderErr) {
+                    console.error("Lỗi vẽ giao diện bình luận:", renderErr);
+                    showToast("Đã gửi! Vui lòng tải lại trang nếu không thấy.", "success");
                 }
-                showToast("Đã gửi!", "success");
+            } else {
+                showToast(res ? (res.error || "Lỗi không xác định") : "Không thể gửi bình luận", "error");
             }
             isPosting[type] = false; submitBtn.disabled = false; submitBtn.innerHTML = origHtml;
         }
@@ -8663,11 +8722,11 @@ function reopenEditor() {
         let myOwnedFrames = [];
 
         // Hàm hỗ trợ Render Avatar có Khung trên toàn Website
-        function renderAvtWithFrame(avtUrl, frameUrl, sizeClass) {
+        function renderAvtWithFrame(avtUrl, frameUrl, sizeClass, imgId = '') {
             const hasFrame = frameUrl && frameUrl !== 'null' && frameUrl !== 'undefined';
             return `
                 <div class="avt-wrapper">
-                    <img src="${getAvtUrl(avtUrl)}" class="${sizeClass}" onerror="this.src='${DEFAULT_AVATAR}'">
+                    <img ${imgId ? `id="${imgId}"` : ''} src="${getAvtUrl(avtUrl)}" class="${sizeClass}" onerror="this.src='${DEFAULT_AVATAR}'">
                     ${hasFrame ? `<img src="${frameUrl}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
                 </div>
             `;
@@ -9269,6 +9328,8 @@ function reopenEditor() {
         // CẬP NHẬT ẢNH AVATAR PROFILE ĐỂ HIỆN KHUNG (GHI ĐÈ LOGIC CŨ)
         const originalOpenProfilePage = openProfilePage;
         openProfilePage = async function(username, urlParams = null) {
+            archiveCommentPage.prof = 1;
+            hasMoreArchiveComments.prof = true;
             await originalOpenProfilePage(username, urlParams);
             
             // Xử lý chèn Frame vào Profile Avatar to
