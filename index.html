@@ -225,37 +225,175 @@
         .card-title { font-weight: bold; color: var(--text-main); margin-bottom: 6px; font-size: 1.05rem; }
         .card-author { font-size: 0.85rem; color: var(--text-muted); }
 
-        /* CCW PROJECT VIEW */
-        .ccw-layout { display: flex; gap: 25px; align-items: flex-start; }
-        .ccw-main { flex: 2.5; min-width: 0; }
-        .ccw-sidebar { flex: 1.3; background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; height: 600px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        /* ================= BỐ CỤC MỚI TRANG PROJECT (MODERN HERO LAYOUT) ================= */
+        .proj-page-wrapper { display: flex; flex-direction: column; gap: 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
         
-        .player-container { background: #000; border-radius: 12px; overflow: hidden; width: 100%; aspect-ratio: 16 / 9; max-height: 550px; border: 1px solid var(--border-color); }
+        .player-container { 
+            background: #000; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            width: 100%; 
+            aspect-ratio: 16 / 9; 
+            max-height: 620px; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
         .player-iframe { width: 100%; height: 100%; border: none; }
 
-        @media (max-width: 900px) {
-            .ccw-layout { flex-direction: column; }
-            .ccw-sidebar { width: 100%; height: auto; min-height: 500px; }
-            .action-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
+        /* THANH ĐIỀU KHIỂN & HÀNH ĐỘNG ĐƯỢC QUY HOẠCH GỌN GÀNG */
+        .proj-action-bar { 
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 18px 24px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            box-shadow: 0 4px 18px rgba(0,0,0,0.03); 
         }
- 
-        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; background: var(--bg-panel); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .action-btns { display: flex; gap: 18px; align-items: center;}
-        .act-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-weight: bold;}
-        .act-btn span { font-size: 1.1rem; }
-        .act-btn:hover { color: #111; transform: scale(1.05); }
-        .act-btn.active.like { color: #ff4c4c; }
-        .act-btn.active.star { color: #f5b041; }
+        
+        .proj-title-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+        }
+        
+        .proj-controls-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+            padding-top: 12px; 
+            border-top: 1px solid var(--border-color); 
+        }
+        
+        .proj-btn-cluster { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
 
-        .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border-color); }
-        .tab-btn { flex: 1; background: none; border: none; color: var(--text-muted); padding: 14px 0; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.95rem;}
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .tab-content { padding: 20px; overflow-y: auto; flex: 1; display: none; }
-        .tab-content.active { display: block; }
+        /* 1. Cụm nút cảm xúc liền khối (Segmented Reaction Control) */
+        .proj-segmented-group {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            height: 38px;
+        }
+        .proj-seg-btn {
+            background: none;
+            border: none;
+            border-right: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0 14px;
+            height: 100%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .proj-seg-btn:last-child { border-right: none; }
+        .proj-seg-btn:hover { background: var(--border-color); color: var(--text-title); }
+        .proj-seg-btn.active.like { color: #ff4c4c; background: rgba(255, 76, 76, 0.12); }
+        .proj-seg-btn.active.star { color: #f5b041; background: rgba(245, 176, 65, 0.14); }
 
-        .info-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 18px; }
+        /* 2. Quy chuẩn kích thước nút đồng bộ */
+        .proj-pill-btn {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-title);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .proj-pill-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-panel);
+            transform: translateY(-2px);
+        }
+
+        /* 3. Menu 3 chấm gom gọn các tác vụ quản trị / báo cáo */
+        .proj-more-dropdown-wrap { position: relative; display: inline-flex; }
+        .proj-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            min-width: 210px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 50;
+            animation: fadeIn 0.15s ease;
+        }
+        .proj-dropdown-menu.show { display: flex; }
+        .proj-dropdown-item {
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: left;
+            transition: background 0.15s;
+        }
+        .proj-dropdown-item:hover { background: var(--bg-secondary); color: var(--primary); }
+        .proj-dropdown-item.danger { color: #ef4444; }
+        .proj-dropdown-item.danger:hover { background: #fee2e2; color: #b91c1c; }
+
+        /* BỐ CỤC 2 CỘT NỘI DUNG (CỘT TRÁI 68% - CỘT PHẢI 32%) */
+        .proj-grid-content {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .proj-card-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .info-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
         .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .info-body { font-size: 0.95rem; color: #333; white-space: pre-line; line-height: 1.6; }
+        .info-body { font-size: 0.95rem; color: var(--text-main); white-space: pre-line; line-height: 1.6; }
+
+        @media (max-width: 950px) {
+            .proj-grid-content { grid-template-columns: 1fr; }
+            .proj-controls-row { flex-direction: column; align-items: stretch; }
+            .proj-btn-cluster { justify-content: flex-start; }
+        }
 
         /* SỬA LỖI BỐ CỤC COMMENTS TẠI ĐÂY */
         .highlight-permanent {
@@ -2519,116 +2657,199 @@
         </div>
     </div>
 
-    <!-- TRANG 2: DỰ ÁN -->
+    <!-- TRANG 2: DỰ ÁN (BỐ CỤC MỚI KHÔNG TAB & CỤM NÚT CHUẨN HÓA) -->
     <div id="projectView" class="page-view">
-        <div class="ccw-layout">
-            <div class="ccw-main">
-                <div class="player-container" id="playerContainer"></div>
-                <div class="action-bar" style="display: flex; flex-direction: column; gap: 15px; padding: 20px; align-items: stretch;">
-                    <!-- Tiêu đề dự án -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
-                        <h2 id="projPageTitle" style="color: var(--text-title); margin: 0; font-size: 1.6rem; line-height: 1.3; word-break: break-word;">Tên dự án</h2>
-                    </div>
-                    
-                    <!-- Thông tin tác giả & Nút chức năng -->
-                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
-                        <div style="display: flex; gap: 12px; align-items: center;">
-                            <a href="#" id="projPageAuthorLinkAvt" title="Xem trang cá nhân">
-                                <img id="projPageAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                            </a>
-                            <div>
-                                <div style="color: var(--text-muted); font-size: 0.95rem;">Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></div>
-                                <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
-                                    <span id="projPageDate" style="color: var(--text-muted); font-size: 0.85rem; cursor: help;"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
-                                    <span id="projVersionBadge" style="display:none; font-size: 0.75rem; background: rgba(13,165,122,0.15); color: var(--primary); padding: 2px 8px; border-radius: 12px; font-weight: bold; border: 1px solid rgba(13,165,122,0.3);"><i class="fa-solid fa-code-commit"></i> <span id="projVersionText"></span></span>
-                                </div>
-                            </div>
+        <div class="proj-page-wrapper">
+            
+            <!-- KHU VỰC CHƠI GAME CHÍNH (SÂN KHẤU) -->
+            <div class="player-container" id="playerContainer"></div>
+
+            <!-- THANH THÔNG TIN & CỤM NÚT HÀNH ĐỘNG -->
+            <div class="proj-action-bar">
+                <div class="proj-title-row">
+                    <div>
+                        <h2 id="projPageTitle" style="color: var(--text-title); margin: 0; font-size: 1.7rem; font-weight: 900; line-height: 1.3; word-break: break-word;">Tên dự án</h2>
+                        <div style="display: flex; align-items: center; gap: 14px; margin-top: 6px; flex-wrap: wrap;">
+                            <span id="projPageDate" style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
+                            <span style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-solid fa-play" style="color:var(--primary);"></i> <b id="projViewCountDisplay" style="color:var(--text-title);">0</b> lượt chơi</span>
+                            <span id="projVersionBadge" style="display:none; font-size: 0.75rem; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 12px; font-weight: bold; border: 1px solid rgba(13,165,122,0.25);"><i class="fa-solid fa-code-commit"></i> <span id="projVersionText"></span></span>
                         </div>
+                    </div>
+                </div>
+
+                <div class="proj-controls-row">
+                    <!-- Thông tin tác giả bên trái -->
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <a href="#" id="projPageAuthorLinkAvt" title="Xem trang cá nhân" style="display:flex;">
+                            <img id="projPageAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color);">
+                        </a>
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Nhà phát triển</div>
+                            <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight: 800; font-size: 1.05rem;">Author</a>
+                        </div>
+                    </div>
+
+                    <!-- Cụm nút tương tác bên phải -->
+                    <div class="proj-btn-cluster">
+                        <!-- Nhóm 1: Thích, Sao, Bookmark (Segmented Control liền khối) -->
+                        <div class="proj-segmented-group">
+                            <button class="proj-seg-btn" id="btnLike" onclick="toggleAction('like')" title="Thích tác phẩm">
+                                <i class="fa-solid fa-heart"></i> <span id="likeCount">0</span>
+                            </button>
+                            <button class="proj-seg-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích">
+                                <i class="fa-solid fa-star"></i> <span id="starCount">0</span>
+                            </button>
+                            <button class="proj-seg-btn" onclick="openSaveToPlaylistModal()" title="Lưu vào danh sách phát">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </button>
+                        </div>
+
+                        <!-- Nhóm 2: Nút Tặng WOW (Tâm điểm năng lượng) -->
+                        <button class="btn-tip-WOW" onclick="openTipModal()" title="Ủng hộ tác giả bằng điểm WOW">
+                            <span class="wow-icon fa-bounce"></span> <span>Tặng WOW</span>
+                        </button>
+
+                        <!-- Nhóm 3: Tiện ích & Kết nối -->
+                        <button class="proj-pill-btn" onclick="openAddToStationModal()" title="Thêm vào Station">
+                            <i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span>Station</span>
+                        </button>
                         
-                        <!-- Các nút chức năng -->
-                        <div class="action-btns" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; align-items: center;">
-                            <button class="act-btn" onclick="openSaveToPlaylistModal()" title="Lưu vào danh sách phát"><i class="fa-solid fa-bookmark"></i></button>
-                            <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
-                            <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
-                            
-                            <button class="btn-tip-WOW" onclick="openTipModal()" title="Ủng hộ tác giả bằng điểm WOW">
-                                <span class="wow-icon fa-bounce"></span> <span>Tặng WOW</span>
-                            </button>
+                        <button class="proj-pill-btn" onclick="openShareModal()" title="Chia sẻ tác phẩm">
+                            <i class="fa-solid fa-share-nodes"></i> <span data-i18n="action_share">Chia sẻ</span>
+                        </button>
 
-                            <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openAddToStationModal()" title="Thêm tác phẩm vào Station">
-                                <i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span>Thêm vào Station</span>
-                            </button>
+                        <a id="btnSeeInside" href="#" target="_blank" class="proj-pill-btn" title="Xem mã nguồn khối lệnh">
+                            <i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span>
+                        </a>
 
-                            <button class="btn" style="border-radius: 20px; padding: 8px 18px;" onclick="openShareModal()"><i class="fa-solid fa-share"></i> <span data-i18n="action_share">Chia sẻ</span></button>
-                            <a id="btnSeeInside" href="#" target="_blank" class="btn" style="border-radius: 20px; padding: 8px 18px;"><i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span></a>
-                            
-                            <button class="btn btn-danger" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openReportModal('project')" title="Báo cáo"><i class="fa-solid fa-flag"></i></button>
-                            <button class="btn" id="btnProjSettings" style="display:none; background:#334155; color:#fff; border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; align-items: center; display: flex;" onclick="openModal('projSettingsModal')" title="Cài đặt dự án"><i class="fa-solid fa-gear"></i></button>
-                            <button class="btn btn-danger" id="btnAdminForcePrivate" style="display:none; border-radius: 20px; padding: 8px 15px;" onclick="openAdminPrivateModal()"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="action_remove">Gỡ</span></button>
+                        <!-- Nhóm 4: Menu tác vụ bổ sung (...) -->
+                        <div class="proj-more-dropdown-wrap">
+                            <button class="proj-pill-btn" style="padding: 0 12px;" onclick="toggleProjMoreMenu(event)" title="Thêm tùy chọn">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            <div class="proj-dropdown-menu" id="projMoreDropdown">
+                                <button class="proj-dropdown-item" id="btnProjSettings" style="display:none;" onclick="closeProjMoreMenu(); openModal('projSettingsModal');">
+                                    <i class="fa-solid fa-gear"></i> <span>Quản lý & Sửa dự án</span>
+                                </button>
+                                <button class="proj-dropdown-item" onclick="closeProjMoreMenu(); openReportModal('project');">
+                                    <i class="fa-solid fa-flag" style="color:#f59e0b;"></i> <span>Báo cáo vi phạm</span>
+                                </button>
+                                <button class="proj-dropdown-item danger" id="btnAdminForcePrivate" style="display:none;" onclick="closeProjMoreMenu(); openAdminPrivateModal();">
+                                    <i class="fa-solid fa-shield-halved"></i> <span>Gỡ về riêng tư (Admin)</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="ccw-sidebar">
-                <div class="sidebar-tabs">
-                    <button class="tab-btn active" id="tabBtn-info" onclick="switchProjTab('info')" data-i18n="proj_tab_info">Thông tin</button>
-                    <button class="tab-btn" id="tabBtn-comments" onclick="switchProjTab('comments')" data-i18n="proj_tab_comments">Bình luận</button>
-                </div>
+            <!-- BỐ CỤC NỘI DUNG MỚI (CỘT TRÁI: HƯỚNG DẪN & BÌNH LUẬN | CỘT PHẢI: TÁC GIẢ & THÔNG SỐ) -->
+            <div class="proj-grid-content">
                 
-                <div id="tabContent-info" class="tab-content active">
-                    <div class="info-card">
-                        <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
-                            <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn</span></span>
-                            <div class="trans-menu-wrapper">
-                                <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projDesc')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                <!-- CỘT CHÍNH (TRÁI): HƯỚNG DẪN + KHU VỰC THẢO LUẬN RỘNG RÃI -->
+                <div>
+                    <!-- KHỐI 1: HƯỚNG DẪN & CREDITS -->
+                    <div class="proj-card-box" id="projInfoArea">
+                        <div class="info-card">
+                            <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn vận hành</span></span>
+                                <div class="trans-menu-wrapper">
+                                    <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projDesc')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                </div>
                             </div>
+                            <div class="info-body" id="projDesc">Chưa có hướng dẫn.</div>
                         </div>
-                        <div class="info-body" id="projDesc">Chưa có hướng dẫn.</div>
+
+                        <div class="info-card" style="margin-bottom:0;">
+                            <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Đội ngũ sáng tạo / Credits</span></span>
+                                <div class="trans-menu-wrapper">
+                                    <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projCredits')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                </div>
+                            </div>
+                            <div class="info-body" id="projCredits">Tác giả gốc.</div>
+                        </div>
                     </div>
-                    <div class="info-card">
-                        <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
-                            <span><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Ghi nhận & Nguồn</span></span>
-                            <div class="trans-menu-wrapper">
-                                <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projCredits')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+
+                    <!-- KHỐI 2: KHU VỰC BÌNH LUẬN TRẢI RỘNG (FULL WIDTH THREAD) -->
+                    <div class="proj-card-box" id="projCommentsArea">
+                        <h3 style="margin-bottom:18px; font-size:1.25rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                            <i class="fa-solid fa-comments" style="color:var(--primary);"></i> Thảo luận cộng đồng
+                        </h3>
+
+                        <!-- Khung viết bình luận to rõ phía trên danh sách -->
+                        <div id="comment-area-proj" class="comment-input-area" style="border:1px solid var(--border-color); border-radius:14px; padding:16px; margin-bottom:24px; background:var(--bg-secondary);">
+                            <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
+                                Đang trả lời <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('proj')"></i>
+                            </div>
+                            <div id="commentImgPreviewProj" class="comment-img-preview-box">
+                                <img id="commentImgPreviewSrcProj" src="" alt="preview">
+                                <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
+                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" title="Gỡ ảnh">&times;</button>
+                            </div>
+                            <form onsubmit="handlePostComment(event, 'proj')" id="commentFormProj" style="display:none;">
+                                <div class="comment-input-wrapper" style="padding: 8px 16px;">
+                                    <input type="text" id="commentTextProj" data-i18n-ph="proj_comment_ph" placeholder="Chia sẻ suy nghĩ hoặc phản hồi của bạn..." autocomplete="off">
+                                    <label for="commentImgUploadProj" style="margin:0; display:flex;">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
+                                    </label>
+                                    <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
+                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" title="Chèn GIF">
+                                        <i class="fa-solid fa-gift" style="font-size: 1.3rem; color: #855cd6;"></i>
+                                    </button>
+                                    <button type="submit" id="btnSubmitCommentProj" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.2rem; margin-left: 12px;">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                            <div id="loginPromptProj" style="text-align:center; color:#888; font-size:0.95rem; padding: 6px 0;">
+                                <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login">Đăng nhập để tham gia thảo luận</button>
                             </div>
                         </div>
-                        <div class="info-body" id="projCredits">Tác giả gốc.</div>
+
+                        <!-- Danh sách bình luận -->
+                        <div id="commentListProj" data-i18n="proj_no_comments">Chưa có bình luận.</div>
                     </div>
                 </div>
 
-                <div id="tabContent-comments" class="tab-content" style="display:none; flex-direction:column; padding:0;">
-                    <div id="commentListProj" style="flex:1; padding:20px; overflow-y:auto;" data-i18n="proj_no_comments">Chưa có bình luận.</div>
-                    
-                    <div id="comment-area-proj" class="comment-input-area" style="transition: all 0.3s ease;">
-                        <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.8rem; margin-bottom:8px; font-weight:bold;">
-                            Đang trả lời <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('proj')"></i>
+                <!-- CỘT PHỤ (PHẢI): THẺ TÁC GIẢ & THÔNG SỐ GAME -->
+                <div>
+                    <!-- Mini Creator Card -->
+                    <div class="proj-card-box" style="text-align:center;">
+                        <div style="position:relative; width:84px; height:84px; margin: 0 auto 12px auto;">
+                            <img id="projSidebarAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:3px solid var(--border-color);" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                         </div>
-                        <div id="commentImgPreviewProj" class="comment-img-preview-box">
-                            <img id="commentImgPreviewSrcProj" src="" alt="preview">
-                            <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
-                            <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" title="Gỡ ảnh">&times;</button>
-                        </div>
-                        <form onsubmit="handlePostComment(event, 'proj')" id="commentFormProj" style="display:none;">
-                            <div class="comment-input-wrapper">
-                                <input type="text" id="commentTextProj" data-i18n-ph="proj_comment_ph" placeholder="Viết bình luận..." autocomplete="off">
-                                <label for="commentImgUploadProj" style="margin:0; display:flex;">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
-                                </label>
-                                <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
-                                <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" title="Chèn GIF">
-                                    <i class="fa-solid fa-gift" style="font-size: 1.3rem; color: #855cd6;"></i>
-                                </button>
-                                <button type="submit" id="btnSubmitCommentProj" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.1rem; margin-left: 12px;">
-                                    <i class="fa-solid fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </form>
-                        <div id="loginPromptProj" style="text-align:center; color:#888; font-size:0.9rem;">
-                            <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login">Đăng nhập để bình luận</button>
+                        <h4 id="projSidebarAuthorName" style="font-size:1.15rem; font-weight:800; margin-bottom:4px; color:var(--text-title);">Author</h4>
+                        <div id="projSidebarAuthorUser" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">@author</div>
+                        <p id="projSidebarAuthorBio" style="font-size:0.88rem; color:var(--text-main); line-height:1.5; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Đang tải thông tin tác giả...</p>
+                        <div style="display:flex; gap:8px; justify-content:center;">
+                            <a id="btnVisitAuthorProf" href="#" class="btn" style="flex:1; justify-content:center; border-radius:20px; font-size:0.85rem;"><i class="fa-solid fa-user"></i> Xem hồ sơ</a>
                         </div>
                     </div>
+
+                    <!-- Thẻ Thông số kỹ thuật của Game -->
+                    <div class="proj-card-box">
+                        <h4 style="margin-bottom:14px; font-size:0.95rem; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; display:flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> Thông số tác phẩm
+                        </h4>
+                        <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span style="color:var(--text-muted);">Trình khởi chạy:</span>
+                                <b id="projMetaEngine" style="color:var(--text-title);">Aftercode / SB3</b>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span style="color:var(--text-muted);">Hiển thị:</span>
+                                <b id="projMetaVis" style="color:var(--text-title);">Công khai</b>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span style="color:var(--text-muted);">Ngày phát hành:</span>
+                                <span id="projMetaDate" style="color:var(--text-title); font-weight:600;">Đang cập nhật</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
         </div>
     </div>
@@ -4663,13 +4884,34 @@
                 switchProjTab('info');
             }
 
-            // Cập nhật Avatar tác giả (Fetch ngầm từ API User)
+            // Đồng bộ lượt chơi và các thông số kỹ thuật
+            const viewCountEl = document.getElementById('projViewCountDisplay');
+            if (viewCountEl) viewCountEl.innerText = proj.views || 0;
+            const metaVis = document.getElementById('projMetaVis');
+            if (metaVis) metaVis.innerText = proj.visibility === 'private' ? 'Riêng tư' : 'Công khai';
+            const metaDate = document.getElementById('projMetaDate');
+            if (metaDate) metaDate.innerText = proj.date ? proj.date.split(' ')[0] : 'Không rõ';
+
+            // Cập nhật Mini Creator Card ở cột phải
             document.getElementById('projPageAuthorLinkAvt').href = `#profile/${proj.author}`;
-            document.getElementById('projPageAuthorAvt').src = DEFAULT_AVATAR; // Gán ảnh mặc định trước
+            document.getElementById('projPageAuthorAvt').src = DEFAULT_AVATAR;
+            document.getElementById('projSidebarAuthorAvt').src = DEFAULT_AVATAR;
+            document.getElementById('projSidebarAuthorName').innerText = proj.author;
+            document.getElementById('projSidebarAuthorUser').innerText = `@${proj.author}`;
+            document.getElementById('btnVisitAuthorProf').href = `#profile/${proj.author}`;
+            
             fetch(`${WORKER_URL}/api/user/${encodeURIComponent(proj.author)}`)
                 .then(r => r.json())
                 .then(data => {
-                    if(data && data.avt) document.getElementById('projPageAuthorAvt').src = getAvtUrl(data.avt);
+                    if (data) {
+                        if (data.avt) {
+                            const avtUrl = getAvtUrl(data.avt);
+                            document.getElementById('projPageAuthorAvt').src = avtUrl;
+                            document.getElementById('projSidebarAuthorAvt').src = avtUrl;
+                        }
+                        if (data.display_name) document.getElementById('projSidebarAuthorName').innerText = data.display_name;
+                        document.getElementById('projSidebarAuthorBio').innerText = data.bio || "Thành viên sáng tạo của DANVworkshop.";
+                    }
                 }).catch(e=>{});
 
             // Cập nhật Thời gian tương đối (Hover để xem giờ gốc)
@@ -4716,16 +4958,46 @@
         }
 
         function switchProjTab(tabName) {
-            document.getElementById('tabBtn-info').classList.toggle('active', tabName === 'info'); document.getElementById('tabBtn-comments').classList.toggle('active', tabName === 'comments');
-            document.getElementById('tabContent-info').style.display = tabName === 'info' ? 'block' : 'none'; document.getElementById('tabContent-comments').style.display = tabName === 'comments' ? 'flex' : 'none';
+            if (tabName === 'comments') {
+                const cmtArea = document.getElementById('projCommentsArea');
+                if (cmtArea) cmtArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                const infoArea = document.getElementById('projInfoArea');
+                if (infoArea) infoArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
+
+        function toggleProjMoreMenu(e) {
+            e.stopPropagation();
+            const drop = document.getElementById('projMoreDropdown');
+            if (drop) drop.classList.toggle('show');
+        }
+
+        function closeProjMoreMenu() {
+            const drop = document.getElementById('projMoreDropdown');
+            if (drop) drop.classList.remove('show');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.proj-more-dropdown-wrap')) {
+                closeProjMoreMenu();
+            }
+        });
 
         function updateActionBtns() {
             const likes = currentProj.likes || []; const stars = currentProj.stars || [];
-            document.getElementById('likeCount').innerText = likes.length; document.getElementById('starCount').innerText = stars.length;
-            const btnLike = document.getElementById('btnLike'); const btnStar = document.getElementById('btnStar');
-            if (currentUser && likes.includes(currentUser.username)) btnLike.classList.add('active', 'like'); else btnLike.classList.remove('active', 'like');
-            if (currentUser && stars.includes(currentUser.username)) btnStar.classList.add('active', 'star'); else btnStar.classList.remove('active', 'star');
+            document.getElementById('likeCount').innerText = likes.length; 
+            document.getElementById('starCount').innerText = stars.length;
+            const btnLike = document.getElementById('btnLike'); 
+            const btnStar = document.getElementById('btnStar');
+            if (btnLike) {
+                if (currentUser && likes.includes(currentUser.username)) btnLike.classList.add('active', 'like'); 
+                else btnLike.classList.remove('active', 'like');
+            }
+            if (btnStar) {
+                if (currentUser && stars.includes(currentUser.username)) btnStar.classList.add('active', 'star'); 
+                else btnStar.classList.remove('active', 'star');
+            }
         }
 
         async function toggleAction(type) {
