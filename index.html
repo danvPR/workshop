@@ -2482,19 +2482,11 @@
     <!-- TRANG 1: KHÁM PHÁ -->
     <div id="homeView" class="page-view">
         
-        <!-- BỘ SƯU TẬP (STUDIOS / PLAYLISTS) -->
-        <div style="margin-bottom: 30px;">
-            <h2 style="margin-bottom: 15px; font-size: 1.4rem;"><i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> <span data-i18n="home_collections">Bộ sưu tập & Sự kiện</span></h2>
-            <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
-                <!-- Mẫu Studio (Admin có thể hardcode hoặc load từ API sau này) -->
-                <div style="min-width: 250px; height: 120px; border-radius: 12px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://i.ibb.co/QFg1cVVD/image.png') center/cover; padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; color: white; cursor: pointer; transition: 0.2s;" onclick="applySearchTag('#gamejam2026')">
-                    <h3 style="margin: 0; color: #fff !important; font-size: 1.1rem;">🏆 GameJam 2026</h3>
-                    <span style="font-size: 0.8rem; opacity: 0.8;">Các dự án xuất sắc nhất</span>
-                </div>
-                <div style="min-width: 250px; height: 120px; border-radius: 12px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://cdn.pixabay.com/photo/2017/08/10/01/29/bat-2616853_1280.png') center/cover; padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; color: white; cursor: pointer; transition: 0.2s;" onclick="applySearchTag('#DANVbest')">
-                    <h3 style="margin: 0; color: #fff !important; font-size: 1.1rem;">⭐ Tác phẩm xuất sắc</h3>
-                    <span style="font-size: 0.8rem; opacity: 0.8;">Những dự án được đầu tư cao</span>
-                </div>
+        <!-- BỘ SƯU TẬP & SỰ KIỆN (DYNAMIC) -->
+        <div id="homeEventsArea" style="margin-bottom: 30px; display: none;">
+            <h2 style="margin-bottom: 15px; font-size: 1.4rem;"><i class="fa-solid fa-trophy" style="color: #f5b041;"></i> <span data-i18n="home_events">Sự kiện & Tranh tài</span></h2>
+            <div id="homeEventsList" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory;">
+                <!-- Dữ liệu render từ JS -->
             </div>
         </div>
 
@@ -2546,12 +2538,16 @@
                             </a>
                             <div>
                                 <div style="color: var(--text-muted); font-size: 0.95rem;">Bởi <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight:bold;">Author</a></div>
-                                <div id="projPageDate" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px; cursor: help;" title="Thời gian đăng"><i class="fa-regular fa-clock"></i> Đang cập nhật...</div>
+                                <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                                    <span id="projPageDate" style="color: var(--text-muted); font-size: 0.85rem; cursor: help;"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
+                                    <span id="projVersionBadge" style="display:none; font-size: 0.75rem; background: rgba(13,165,122,0.15); color: var(--primary); padding: 2px 8px; border-radius: 12px; font-weight: bold; border: 1px solid rgba(13,165,122,0.3);"><i class="fa-solid fa-code-commit"></i> <span id="projVersionText"></span></span>
+                                </div>
                             </div>
                         </div>
                         
                         <!-- Các nút chức năng -->
                         <div class="action-btns" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; align-items: center;">
+                            <button class="act-btn" onclick="openSaveToPlaylistModal()" title="Lưu vào danh sách phát"><i class="fa-solid fa-bookmark"></i></button>
                             <button class="act-btn" id="btnLike" onclick="toggleAction('like')" title="Thích"><i class="fa-solid fa-heart"></i> <span id="likeCount">0</span></button>
                             <button class="act-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích"><i class="fa-solid fa-star"></i> <span id="starCount">0</span></button>
                             
@@ -2718,7 +2714,7 @@
                 <button class="prof-tab-btn active" id="tabBtnProf-projects" onclick="switchProfTab('projects')"><i class="fa-solid fa-folder-open"></i> <span data-i18n="prof_projects">Tác phẩm</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-likes" onclick="switchProfTab('likes')"><i class="fa-solid fa-heart"></i> <span data-i18n="prof_liked">Đã thích</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-activities" onclick="switchProfTab('activities')"><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="prof_activities">Hoạt động</span></button>
-                <button class="prof-tab-btn" id="tabBtnProf-comments" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments"></i> <span data-i18n="prof_comments">Lời nhắn</span></button>
+                <button class="prof-tab-btn" id="tabBtnProf-playlists" onclick="switchProfTab('playlists')"><i class="fa-solid fa-bookmark"></i> Bộ sưu tập</button>
             </div>
 
             <div id="profTab-projects" class="prof-tab-content active">
@@ -2767,6 +2763,13 @@
                 <div id="profCommentList" data-i18n="prof_no_comments">Chưa có lời nhắn nào.</div>
             </div>
         </div>
+        <div id="profTab-playlists" class="prof-tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h4 style="margin:0;"><i class="fa-solid fa-layer-group"></i> Danh sách phát</h4>
+                    <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 6px 14px;" onclick="openModal('createPlaylistModal')"><i class="fa-solid fa-plus"></i> Tạo mới</button>
+                </div>
+                <div class="project-grid" id="userPlaylistsList"></div>
+            </div>
     </div>
 
     <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
@@ -3493,6 +3496,45 @@
         </div>
     </div>
 
+    <!-- MODAL LƯU VÀO PLAYLIST -->
+    <div class="modal-overlay" id="saveToPlaylistModal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-bookmark" style="color:var(--primary);"></i> Lưu vào Danh sách phát</span>
+                <button class="btn-close" onclick="closeModal('saveToPlaylistModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <div id="playlistOptionsList" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 15px;">
+                    <!-- Render từ JS -->
+                </div>
+                <button class="btn" style="width:100%; border: 1px dashed var(--primary); color: var(--primary); font-weight: bold; background: var(--bg-secondary);" onclick="closeModal('saveToPlaylistModal'); openModal('createPlaylistModal')">
+                    <i class="fa-solid fa-plus"></i> Tạo danh sách phát mới
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẠO PLAYLIST MỚI -->
+    <div class="modal-overlay" id="createPlaylistModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header"><span>Tạo Danh sách phát</span><button class="btn-close" onclick="closeModal('createPlaylistModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tên danh sách:</label>
+                    <input type="text" id="newPlaylistTitle" class="form-control" placeholder="VD: Nhạc nền game hay..." required>
+                </div>
+                <div class="form-group">
+                    <label>Quyền riêng tư:</label>
+                    <select id="newPlaylistVis" class="form-control">
+                        <option value="public">Công khai</option>
+                        <option value="private">Riêng tư</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="createNewPlaylist()">Tạo mới</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL TỐ CÁO -->
     <div class="modal-overlay" id="reportModal">
         <div class="modal" style="max-width:420px;">
@@ -3584,6 +3626,9 @@
                         <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="proj_manage_update_tab">Cập nhật bản Game mới</span>
                     </h4>
                     <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;"><span data-i18n="proj_manage_update_hint">Tải lên tệp .sb3 mới. Phiên bản hiện tại sẽ tự động lưu vào lịch sử.</span></p>
+                    <div class="form-group">
+                        <input type="text" id="updateProjChangelog" class="form-control" placeholder="Nhật ký cập nhật (VD: v1.2 - Thêm màn chơi Boss...)">
+                    </div>
                     <div class="form-group">
                         <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 10px;">
                     </div>
@@ -4033,6 +4078,7 @@
 
                 await loadProjects(); updateNav(); handleRouting();
                 checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
+                loadEvents(); // Tải Sự kiện Game Jam
                 setInterval(autoFetchData, 35000);
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
@@ -6067,11 +6113,12 @@
             document.getElementById('statFollowersCount').innerText = (viewingProfileData.followers || []).length;
             document.getElementById('statFollowingCount').innerText = (viewingProfileData.following || []).length;
 
-            // Đặt lại trạng thái ban đầu cho các Tab
+            // Đặt lại trạng thái ban đầu cho các Tab (Kèm cả Playlists)
             profTabState = {
                 projects: { page: 1, hasMore: false, loaded: false },
                 likes: { page: 1, hasMore: false, loaded: false },
-                activities: { page: 1, hasMore: false, loaded: false }
+                activities: { page: 1, hasMore: false, loaded: false },
+                playlists: { page: 1, hasMore: false, loaded: false }
             };
 
             // Dọn sạch rác màn hình cũ
@@ -6141,17 +6188,34 @@
             return '';
         }
 
-        // HÀM TẢI DỮ LIỆU & PHÂN TRANG (MỖI LẦN TẢI 12 DỰ ÁN)
+        // HÀM TẢI DỮ LIỆU & PHÂN TRANG (ĐÃ TỐI ƯU CẢ TAB PLAYLISTS)
         async function loadProfTab(tab, isLoadMore = false) {
+            // Tự động khởi tạo trạng thái nếu chưa có (chống lỗi crash)
+            if (!profTabState[tab]) {
+                profTabState[tab] = { page: 1, hasMore: false, loaded: false };
+            }
             const state = profTabState[tab];
             if (isLoadMore) state.page++;
             
-            const container = document.getElementById(tab === 'projects' ? 'userProjectList' : (tab === 'likes' ? 'userLikedList' : 'userActivityList'));
+            // Xác định ID vùng chứa chuẩn xác cho từng Tab
+            let containerId = 'userProjectList';
+            if (tab === 'likes') containerId = 'userLikedList';
+            else if (tab === 'activities') containerId = 'userActivityList';
+            else if (tab === 'playlists') containerId = 'userPlaylistsList';
+            
+            const container = document.getElementById(containerId);
             const loadMoreBtn = document.getElementById(`profLoadMore-${tab}`);
             
-            if (!isLoadMore) {
-                container.innerHTML = getSkeletonHTML(tab === 'activities' ? 'activity' : 'card');
-            } else {
+            // Hiệu ứng chờ tải (Skeleton/Spinner)
+            if (!isLoadMore && container) {
+                if (tab === 'activities') {
+                    container.innerHTML = getSkeletonHTML('activity');
+                } else if (tab === 'playlists') {
+                    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">Đang tải danh sách phát...</span></div>';
+                } else {
+                    container.innerHTML = getSkeletonHTML('card');
+                }
+            } else if (loadMoreBtn) {
                 const btnOrig = loadMoreBtn.innerHTML;
                 loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...';
                 loadMoreBtn.setAttribute('data-orig', btnOrig);
@@ -6159,6 +6223,8 @@
 
             try {
                 let html = '';
+                
+                // 1. XỬ LÝ TAB DỰ ÁN & TAB ĐÃ THÍCH
                 if (tab === 'projects' || tab === 'likes') {
                     let apiUrl = `${WORKER_URL}/api/projects?${tab==='projects' ? 'author' : 'likedBy'}=${encodeURIComponent(viewingProfileUser)}&page=${state.page}&limit=${PROF_ITEMS_PER_PAGE}`;
                     if (currentUser) apiUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
@@ -6167,14 +6233,13 @@
                     const items = res.projects || [];
                     state.hasMore = res.hasMore;
                     
-                    // Cập nhật lại số liệu thống kê chuẩn
                     if (tab === 'projects' && !isLoadMore && res.total !== undefined) {
                         document.getElementById('statProjectCount').innerText = res.total;
                         document.getElementById('statLikeCount').innerText = items.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0) + (res.total > PROF_ITEMS_PER_PAGE ? '+' : '');
                     }
                     
                     if (!isLoadMore && items.length === 0) {
-                        html = `<p style="color:#888; grid-column:1/-1; text-align:center;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
+                        html = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:30px;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
                     } else {
                         html = items.map(p => `
                             <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
@@ -6185,6 +6250,40 @@
                         `).join('');
                     }
                 } 
+                // 2. XỬ LÝ TAB BỘ SƯU TẬP (PLAYLISTS / BOOKMARKS)
+                else if (tab === 'playlists') {
+                    const isOwner = currentUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase();
+                    const btnCreate = document.getElementById('btnCreatePlaylist');
+                    if (btnCreate) btnCreate.style.display = isOwner ? 'inline-flex' : 'none';
+                    
+                    let playlists = viewingProfileData.playlists ? (typeof viewingProfileData.playlists === 'string' ? JSON.parse(viewingProfileData.playlists) : viewingProfileData.playlists) : [];
+                    
+                    // Nếu là người khác vào xem -> ẩn các danh sách riêng tư đi
+                    if (!isOwner) {
+                        playlists = playlists.filter(pl => pl.isPublic);
+                    }
+
+                    if (playlists.length === 0) {
+                        html = `<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-muted);"><i class="fa-solid fa-bookmark" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có danh sách phát nào.</div>`;
+                    } else {
+                        html = playlists.map(pl => `
+                            <div class="card" style="padding:22px 15px; text-align:center; cursor:pointer; display:flex; flex-direction:column; align-items:center;" onclick="applySearchTag('#${pl.id}')">
+                                <div style="width:60px; height:60px; border-radius:14px; background:rgba(13,165,122,0.1); display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
+                                    <i class="fa-solid fa-folder-open" style="font-size:1.8rem; color:var(--primary);"></i>
+                                </div>
+                                <h3 style="margin:0; font-size:1.1rem; color:var(--text-title); line-height:1.3;">${escapeHtml(pl.title)}</h3>
+                                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:6px;">
+                                    ${pl.projects.length} tác phẩm • 
+                                    <span style="color:${pl.isPublic ? 'var(--primary)' : '#ea580c'}; font-weight:700;">
+                                        <i class="${pl.isPublic ? 'fa-solid fa-earth-americas' : 'fa-solid fa-lock'}"></i> ${pl.isPublic ? 'Công khai' : 'Riêng tư'}
+                                    </span>
+                                </p>
+                            </div>
+                        `).join('');
+                    }
+                    state.hasMore = false; // Playlist tải 1 lần là đủ
+                }
+                // 3. XỬ LÝ TAB HOẠT ĐỘNG (ACTIVITIES)
                 else if (tab === 'activities') {
                     const allActivities = viewingProfileData.activities || [];
                     const startIndex = (state.page - 1) * PROF_ITEMS_PER_PAGE;
@@ -6193,36 +6292,38 @@
                     state.hasMore = endIndex < allActivities.length;
 
                     if (!isLoadMore && items.length === 0) {
-                        html = `<p style="color:#888; text-align:center;">Chưa có hoạt động nào.</p>`;
+                        html = `<p style="color:var(--text-muted); text-align:center; padding:30px;">Chưa có hoạt động nào.</p>`;
                     } else {
                         html = items.map(a => `
                             <div class="timeline-item">
                                 <div style="font-size:0.95rem;"><b>${escapeHtml(viewingProfileData.username)}</b> ${a.action} <a href="${a.link}" style="color:var(--primary); font-weight:bold; text-decoration:none;">"${escapeHtml(a.detail)}"</a></div>
-                                <div style="font-size:0.75rem; color:#888; margin-top:4px;">${a.time}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">${a.time}</div>
                             </div>
                         `).join('');
                     }
                 }
 
-                if (isLoadMore) {
-                    container.insertAdjacentHTML('beforeend', html);
-                    loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
-                } else {
-                    container.innerHTML = html;
-                    state.loaded = true;
+                // Render dữ liệu ra màn hình an toàn
+                if (container) {
+                    if (isLoadMore) {
+                        container.insertAdjacentHTML('beforeend', html);
+                    } else {
+                        container.innerHTML = html;
+                        state.loaded = true;
+                    }
                 }
-                
-                loadMoreBtn.style.display = state.hasMore ? 'block' : 'none';
+
+                if (loadMoreBtn) {
+                    if (isLoadMore) loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
+                    loadMoreBtn.style.display = state.hasMore ? 'block' : 'none';
+                }
 
             } catch (e) {
-                if (!isLoadMore) container.innerHTML = '<p style="color:#ef4444; grid-column:1/-1;">Lỗi tải dữ liệu.</p>';
-                if (isLoadMore) loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
+                console.error("Lỗi tab profile:", e);
+                if (!isLoadMore && container) container.innerHTML = '<p style="color:#ef4444; grid-column:1/-1; text-align:center;">Lỗi tải dữ liệu.</p>';
+                if (isLoadMore && loadMoreBtn) loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
             }
         }
-
-
-
-
 
 
         async function toggleFollow() {
@@ -6922,6 +7023,94 @@
             if(res && res.success) { showToast("Đã gửi cảnh cáo!", "success"); closeModal('adminWarnModal'); }
         }
 
+        // ================= SỰ KIỆN & PLAYLISTS =================
+        async function loadEvents() {
+            try {
+                const res = await fetch(`${WORKER_URL}/api/events`);
+                const events = await res.json();
+                const area = document.getElementById('homeEventsArea');
+                const list = document.getElementById('homeEventsList');
+                
+                if (!events || events.length === 0) {
+                    area.style.display = 'none'; return;
+                }
+                area.style.display = 'block';
+
+                list.innerHTML = events.map(ev => {
+                    let timerHtml = '';
+                    if (ev.endDate) {
+                        const daysLeft = Math.ceil((new Date(ev.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+                        timerHtml = daysLeft > 0 
+                            ? `<span style="background:#ef4444; padding:3px 10px; border-radius:12px; font-size:0.75rem;"><i class="fa-regular fa-clock fa-spin"></i> Còn ${daysLeft} ngày</span>` 
+                            : `<span style="background:#888; padding:3px 10px; border-radius:12px; font-size:0.75rem;">Đã kết thúc</span>`;
+                    }
+
+                    return `
+                    <div style="min-width: 290px; height: 150px; border-radius: 14px; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.85)), url('${ev.bgImage}') center/cover; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; color: white; cursor: pointer; transition: 0.2s; scroll-snap-align: start; position: relative;" onclick="applySearchTag('${ev.searchTag}')">
+                        <div style="position:absolute; top:12px; right:12px;">${timerHtml}</div>
+                        <h3 style="margin: 0; color: #fff !important; font-size: 1.25rem; font-weight:900; line-height: 1.2;">${escapeHtml(ev.title)}</h3>
+                        <span style="font-size: 0.85rem; opacity: 0.9; margin-top: 5px;">${escapeHtml(ev.desc)}</span>
+                    </div>
+                    `;
+                }).join('');
+            } catch(e) {}
+        }
+
+        let myPlaylists = [];
+
+        async function openSaveToPlaylistModal() {
+            if (!currentUser) return openModal('loginModal');
+            openModal('saveToPlaylistModal');
+            const listEl = document.getElementById('playlistOptionsList');
+            listEl.innerHTML = '<div style="text-align:center; color:var(--primary); padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...</div>';
+            
+            try {
+                const userRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
+                const uData = await userRes.json();
+                myPlaylists = uData.playlists ? (typeof uData.playlists === 'string' ? JSON.parse(uData.playlists) : uData.playlists) : [];
+                
+                const targetId = currentProj.projectId || currentProj.fileId;
+                
+                listEl.innerHTML = myPlaylists.map(pl => {
+                    const isSaved = pl.projects.includes(targetId);
+                    return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-secondary); padding:12px 15px; border-radius:10px; border:1px solid var(--border-color);">
+                        <div style="font-weight:bold; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                            <i class="${pl.isPublic?'fa-solid fa-earth-americas':'fa-solid fa-lock'}" style="color:var(--text-muted);"></i> ${escapeHtml(pl.title)}
+                        </div>
+                        <input type="checkbox" style="width:20px; height:20px; cursor:pointer; accent-color:var(--primary);" ${isSaved?'checked':''} onchange="toggleProjectInPlaylist('${pl.id}', this.checked)">
+                    </div>
+                    `;
+                }).join('');
+                if(myPlaylists.length === 0) listEl.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:0.9rem;'>Bạn chưa có danh sách phát nào.</p>";
+            } catch(e) {
+                listEl.innerHTML = "<p style='color:#ef4444; text-align:center;'>Lỗi kết nối</p>";
+            }
+        }
+
+        async function createNewPlaylist() {
+            const title = document.getElementById('newPlaylistTitle').value.trim();
+            const vis = document.getElementById('newPlaylistVis').value;
+            if(!title) return showToast("Nhập tên danh sách!", "error");
+
+            const res = await apiFetch('/api/user/playlist', { method: 'POST', body: JSON.stringify({ action: 'create', title, isPublic: vis==='public' }) });
+            if (res && res.success) {
+                showToast("Tạo danh sách phát thành công!", "success");
+                closeModal('createPlaylistModal');
+                document.getElementById('newPlaylistTitle').value = ""; // Xóa trắng
+                if (document.getElementById('saveToPlaylistModal').style.display === 'flex') {
+                    openSaveToPlaylistModal(); 
+                }
+            }
+        }
+
+        function toggleProjectInPlaylist(plId, isChecked) {
+            const targetId = currentProj.projectId || currentProj.fileId;
+            apiFetch('/api/user/playlist', { method: 'POST', body: JSON.stringify({ action: 'toggle_project', playlistId: plId, targetProject: targetId }) });
+            showToast(isChecked ? "Đã thêm vào danh sách" : "Đã gỡ khỏi danh sách", "info");
+        }
+
+
         // ================= TIỆN ÍCH KHÁC =================
         // TÍNH THỜI GIAN TƯƠNG ĐỐI BẰNG API ĐA NGÔN NGỮ CỦA TRÌNH DUYỆT
         function timeAgo(dateString) {
@@ -7434,6 +7623,14 @@
                     dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(currentProj.date)}`;
                     dateSpan.title = currentProj.date;
                 }
+                const badge = document.getElementById('projVersionBadge');
+                const badgeText = document.getElementById('projVersionText');
+                if (currentProj.changelog) {
+                    badge.style.display = 'inline-block';
+                    badgeText.innerText = currentProj.changelog;
+                } else {
+                    badge.style.display = 'none';
+                }
                 const btnSettings = document.getElementById('btnProjSettings');
                 if(btnSettings) btnSettings.onclick = openProjSettingsModal;
 
@@ -7526,12 +7723,14 @@
             listEl.innerHTML = versions.map((v, idx) => {
                 const fid = typeof v === 'string' ? v : v.fileId;
                 const timeStr = typeof v === 'string' ? 'Phiên bản gốc' : (v.time || 'Không rõ ngày');
+                const cLog = v.changelog ? `<div style="font-size:0.85rem; color:var(--primary); font-weight:600; margin-top:4px;">"${escapeHtml(v.changelog)}"</div>` : '';
                 
                 return `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius:8px; margin-bottom:10px; transition:0.2s;">
                     <div style="flex:1;">
                         <div style="font-weight:bold; color: var(--text-title); font-size:0.95rem;">Bản lưu #${idx + 1}</div>
                         <div style="color: var(--text-muted); font-size:0.8rem; margin-top:4px;"><i class="fa-regular fa-calendar-check"></i> ${timeStr}</div>
+                        ${cLog}
                     </div>
                     <a href="https://turbowarp.org/editor?project_url=${encodeURIComponent(`${WORKER_URL}/api/project/${fid}`)}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.85rem; white-space:nowrap;">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở xem lại
@@ -7617,6 +7816,7 @@
                 finalForm.append("preloadedFileId", uploadedIds.join(","));
                 finalForm.append("updateProjectId", currentProj.projectId || currentProj.fileId);
                 finalForm.append("author", currentUser.username); 
+                finalForm.append("changelog", document.getElementById('updateProjChangelog').value.trim());
                 finalForm.append("username", currentUser.username); 
                 finalForm.append("sessionToken", currentUser.sessionToken);
 
