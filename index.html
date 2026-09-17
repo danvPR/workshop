@@ -2997,7 +2997,7 @@
                         <input type="number" id="adminFramePrice" class="form-control" placeholder="100">
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="adminAddFrame()" style="background: #3b82f6; border: none; margin-top: 5px;">
+                <button id="btnAdminAddFrame" class="btn btn-primary" onclick="adminAddFrame()" style="background: #3b82f6; border: none; margin-top: 5px;">
                     <i class="fa-solid fa-plus"></i> Phát hành Khung mới
                 </button>
             </div>
@@ -3045,7 +3045,7 @@
                     <!-- Sẽ render bằng JS -->
                 </div>
 
-                <button class="btn btn-primary" onclick="adminSaveEventsToServer()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.05rem;">
+                <button id="btnAdminSaveEvents" class="btn btn-primary" onclick="adminSaveEventsToServer()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.05rem;">
                     <i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Cập nhật lên Trang chủ
                 </button>
             </div>
@@ -3071,7 +3071,7 @@
                         <input type="text" id="adminPingBtnLink" class="form-control" placeholder="https://...">
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="submitGlobalPing()" style="background: #855cd6; border: none; margin-top: 10px;">
+                <button id="btnSubmitGlobalPing" class="btn btn-primary" onclick="submitGlobalPing()" style="background: #855cd6; border: none; margin-top: 10px;">
                     <i class="fa-solid fa-paper-plane"></i> Gắn thông báo toàn Server
                 </button>
             </div>
@@ -4907,9 +4907,12 @@
                     return;
                 }
 
-                const btn = event.currentTarget;
-                const origHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải từ máy chủ...';
+                const btn = window.event ? window.event.currentTarget || window.event.target : null;
+                let origHtml = "";
+                if (btn) {
+                    origHtml = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải từ máy chủ...';
+                }
 
                 let targetType = type === 'proj' ? 'PROJECT' : (type === 'std' ? 'STUDIO' : 'PROFILE');
                 let targetId = type === 'proj' ? (currentProj.projectId || currentProj.fileId) : (type === 'std' ? currentStudio.id : viewingProfileUser);
@@ -4930,7 +4933,7 @@
                     }
                 } catch(e) {
                     showToast("Lỗi tải bình luận cũ", "error");
-                    btn.innerHTML = origHtml;
+                    if (btn) btn.innerHTML = origHtml;
                 }
             }
         }
@@ -7228,10 +7231,13 @@
         }
 
         async function adminSaveEventsToServer() {
-            const btn = event.currentTarget;
-            const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
-            btn.disabled = true;
+            const btn = document.getElementById('btnAdminSaveEvents') || (window.event && window.event.currentTarget);
+            let origHtml = "";
+            if (btn) {
+                origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+                btn.disabled = true;
+            }
 
             const res = await apiFetch(`/api/admin/events`, { 
                 method: 'POST', 
@@ -7245,8 +7251,10 @@
                 showToast("Lỗi khi lưu sự kiện!", "error");
             }
 
-            btn.innerHTML = origHtml;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
+            }
         }
 
         // ================= SỰ KIỆN & PLAYLISTS =================
@@ -8914,10 +8922,13 @@ function reopenEditor() {
         }
 
         async function submitGlobalPing() {
-            const btn = event.currentTarget;
-            const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát thanh...';
-            btn.disabled = true;
+            const btn = document.getElementById('btnSubmitGlobalPing') || (window.event && window.event.currentTarget);
+            let origHtml = "";
+            if (btn) {
+                origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát thanh...';
+                btn.disabled = true;
+            }
 
             const message = document.getElementById('adminPingMessage').value.trim();
             const btnText = document.getElementById('adminPingBtnText').value.trim();
@@ -8938,8 +8949,10 @@ function reopenEditor() {
                 showToast("Lỗi kết nối", "error");
             }
 
-            btn.innerHTML = origHtml;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
+            }
         }
 
         // ================= HỆ THỐNG BÌNH CHỌN (POLL) =================
@@ -9738,8 +9751,11 @@ function reopenEditor() {
 
             if(!name || !imgUrl || !price) return showToast("Vui lòng điền đủ thông tin", "error");
             
-            const btn = event.currentTarget;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang thêm...'; btn.disabled = true;
+            const btn = document.getElementById('btnAdminAddFrame') || (window.event && window.event.currentTarget);
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang thêm...'; 
+                btn.disabled = true;
+            }
 
             const res = await apiFetch(`/api/admin/add_frame`, { method: 'POST', body: JSON.stringify({ name, imgUrl, price: parseInt(price) }) });
             if(res && res.success) {
@@ -9748,7 +9764,11 @@ function reopenEditor() {
                 document.getElementById('adminFrameUrl').value = "";
                 document.getElementById('adminFramePrice').value = "";
             }
-            btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung mới'; btn.disabled = false;
+            
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung mới'; 
+                btn.disabled = false;
+            }
         }
 
         // CẬP NHẬT ẢNH AVATAR PROFILE ĐỂ HIỆN KHUNG (GHI ĐÈ LOGIC CŨ)
