@@ -2714,6 +2714,7 @@
                 <button class="prof-tab-btn active" id="tabBtnProf-projects" onclick="switchProfTab('projects')"><i class="fa-solid fa-folder-open"></i> <span data-i18n="prof_projects">Tác phẩm</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-likes" onclick="switchProfTab('likes')"><i class="fa-solid fa-heart"></i> <span data-i18n="prof_liked">Đã thích</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-activities" onclick="switchProfTab('activities')"><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="prof_activities">Hoạt động</span></button>
+                <button class="prof-tab-btn" id="tabBtnProf-comments" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments"></i> <span data-i18n="prof_comments">Lời nhắn</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-playlists" onclick="switchProfTab('playlists')"><i class="fa-solid fa-bookmark"></i> Bộ sưu tập</button>
             </div>
 
@@ -2723,18 +2724,21 @@
                     <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('projects', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_projects">Xem thêm tác phẩm</span></button>
                 </div>
             </div>
+
             <div id="profTab-likes" class="prof-tab-content">
                 <div class="project-grid" id="userLikedList"></div>
                 <div id="profLoadMore-likes" style="text-align: center; padding: 20px 0; display: none;">
                     <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('likes', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_likes">Xem thêm lượt thích</span></button>
                 </div>
             </div>
+
             <div id="profTab-activities" class="prof-tab-content">
                 <div id="userActivityList" style="max-width:750px;"></div>
                 <div id="profLoadMore-activities" style="text-align: center; padding: 20px 0; display: none;">
                     <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('activities', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_activities">Xem thêm hoạt động</span></button>
                 </div>
             </div>
+
             <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
                 <div style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
                     <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
@@ -2762,15 +2766,17 @@
                 </div>
                 <div id="profCommentList" data-i18n="prof_no_comments">Chưa có lời nhắn nào.</div>
             </div>
-        </div>
-        <div id="profTab-playlists" class="prof-tab-content">
+
+            <div id="profTab-playlists" class="prof-tab-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h4 style="margin:0;"><i class="fa-solid fa-layer-group"></i> Danh sách phát</h4>
                     <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 6px 14px;" onclick="openModal('createPlaylistModal')"><i class="fa-solid fa-plus"></i> Tạo mới</button>
                 </div>
                 <div class="project-grid" id="userPlaylistsList"></div>
             </div>
-    </div>
+
+        </div> <!-- Hết thẻ profileContent -->
+    </div> <!-- Hết thẻ profileView -->
 
     <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
