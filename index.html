@@ -650,82 +650,208 @@
         .btn-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
         .modal-body { padding: 22px; }
 
-        /* ================= GIAO DIỆN FORM ĐĂNG KÝ HIỆN ĐẠI ================= */
-        .auth-card-modal {
-            max-width: 480px;
-            border-radius: 20px;
+        /* ================= CỬA SỔ ĐĂNG NHẬP & ĐĂNG KÝ CỠ LỚN (STUDIO AUTH MODAL) ================= */
+        .auth-large-modal {
+            max-width: 900px;
+            width: 94%;
+            min-height: 580px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
             border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            position: relative;
         }
-        .auth-header-badge {
+
+        /* Cột trái: Giới thiệu thương hiệu, Logo và Các tính năng nổi bật */
+        .auth-showcase-panel {
+            background: linear-gradient(150deg, #091715 0%, #0d2621 40%, #0f172a 100%);
+            color: #ffffff;
+            padding: 38px 30px;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
         }
-        .auth-header-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(13, 165, 122, 0.12);
+        .auth-showcase-panel::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: -60px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(13, 165, 122, 0.4) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .auth-showcase-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .auth-brand-area {
+            position: relative;
+            z-index: 2;
+        }
+        .auth-brand-logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 14px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .auth-brand-logo {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+        .auth-brand-title {
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: #ffffff !important;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .auth-brand-slogan {
+            font-size: 0.86rem;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        /* Danh sách ưu đãi / tính năng cột trái (Không dùng emoji) */
+        .auth-features-list {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin: auto 0;
+        }
+        .auth-feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.45;
+        }
+        .auth-feature-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
             color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            flex-shrink: 0;
+            font-size: 0.85rem;
         }
-        /* Thanh tiến trình mini 2 bước */
-        .auth-steps-tracker {
+        .auth-feature-icon.sky { color: #38bdf8; background: rgba(56, 189, 248, 0.12); }
+        .auth-feature-icon.amber { color: #f59e0b; background: rgba(245, 158, 11, 0.12); }
+        .auth-feature-icon.pink { color: #f472b6; background: rgba(244, 114, 182, 0.12); }
+        .auth-feature-icon.emerald { color: #10b981; background: rgba(16, 185, 129, 0.12); }
+
+        .auth-showcase-footer {
+            position: relative;
+            z-index: 2;
+            font-size: 0.74rem;
+            color: #64748b;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 22px;
-            padding: 10px 14px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            align-items: center;
         }
-        .auth-step-pill {
+
+        /* Cột phải: Khu vực chứa Form và Tab chuyển đổi */
+        .auth-form-panel {
+            padding: 35px 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 88vh;
+            position: relative;
+            background: var(--bg-panel);
+        }
+        .auth-panel-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        /* Tab Switcher hiện đại chuyển đổi Đăng nhập / Đăng ký */
+        .auth-nav-tabs {
+            display: inline-flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            gap: 4px;
+        }
+        .auth-nav-tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 7px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+        }
+        .auth-nav-tab-btn:hover {
+            color: var(--text-title);
+        }
+        .auth-nav-tab-btn.active {
+            background: var(--bg-panel);
+            color: var(--primary) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Tiêu đề từng form */
+        .auth-form-header {
+            margin-bottom: 20px;
+        }
+        .auth-form-title {
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: var(--text-title);
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
-            font-weight: 700;
+        }
+        .auth-form-subtitle {
+            font-size: 0.86rem;
             color: var(--text-muted);
-            transition: all 0.25s ease;
-        }
-        .auth-step-pill.active {
-            color: var(--primary) !important;
-        }
-        .auth-step-pill.active b {
-            background: var(--primary);
-            color: #fff;
-        }
-        .auth-step-circle {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--border-color);
-            color: var(--text-muted);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 800;
-        }
-        .auth-step-divider {
-            flex: 1;
-            height: 2px;
-            background: var(--border-color);
-            margin: 0 10px;
         }
 
-        /* Khung input với prefix icon & nút con mắt */
+        /* Form Controls chuẩn hóa có Icon tiền tố */
         .auth-input-group {
             position: relative;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
         .auth-input-icon {
             position: absolute;
@@ -766,20 +892,20 @@
             color: var(--primary);
         }
 
-        /* Thẻ nhập Mã Giới Thiệu nổi bật (50 WOW) */
+        /* Thẻ nhập Mã Giới Thiệu (Referral Pass Card - Tinh gọn, không emoji) */
         .auth-referral-banner {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.05) 100%);
-            border: 1.5px dashed #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(234, 88, 12, 0.04) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
             border-radius: 14px;
             padding: 14px;
-            margin: 18px 0 20px 0;
+            margin: 16px 0 18px 0;
             position: relative;
         }
         .auth-referral-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .auth-referral-title {
             font-size: 0.85rem;
@@ -797,7 +923,9 @@
             color: #ffffff;
             padding: 2px 8px;
             border-radius: 12px;
-            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
         .auth-referral-desc {
             font-size: 0.78rem;
@@ -806,7 +934,28 @@
             margin-bottom: 10px;
         }
 
-        /* Ô nhập OTP 6 số phong cách thẻ VIP */
+        /* Nút Submit chính */
+        .auth-submit-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 18px;
+            font-size: 0.98rem;
+            font-weight: 800;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.3);
+            transition: all 0.2s ease;
+        }
+        .auth-submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.45);
+        }
+
+        /* Khung OTP xác minh email */
         .otp-box-container {
             text-align: center;
             padding: 10px 0 5px 0;
@@ -861,6 +1010,21 @@
             color: var(--text-muted);
             cursor: not-allowed;
             text-decoration: none;
+        }
+
+        /* Responsive trên điện thoại: Tự động ẩn cột showcase, mở rộng form */
+        @media (max-width: 820px) {
+            .auth-large-modal {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                min-height: auto;
+            }
+            .auth-showcase-panel {
+                display: none;
+            }
+            .auth-form-panel {
+                padding: 24px 20px;
+            }
         }
 
         /* ================= GIAO DIỆN BỘ SƯU TẬP (COLLECTIONS) ================= */
@@ -4725,104 +4889,176 @@
         </div>
     </div>
 
-    <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal" style="max-width:400px;">
-            <div class="modal-header"><span data-i18n="auth_login_title">Đăng nhập</span><button class="btn-close" onclick="closeModal('loginModal')">&times;</button></div>
-            <div class="modal-body">
-                <form onsubmit="handleLoginNative(event)">
-                    <div class="form-group"><label data-i18n="auth_login_id">Tài khoản / Email:</label><input type="text" id="loginId" class="form-control" required></div>
-                    <div class="form-group"><label data-i18n="auth_login_pw">Mật khẩu:</label><input type="password" id="loginPw" class="form-control" required></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:15px;" data-i18n="auth_login_btn">Đăng nhập</button>
-                    <div style="text-align:center; font-size:0.9rem; color:#666;">
-                        <span data-i18n="auth_login_no_acc">Chưa có tài khoản?</span> <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal')" style="color:var(--primary); font-weight:bold;" data-i18n="auth_login_reg_now">Đăng ký ngay</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL TẠO TÀI KHOẢN (TRỰC TIẾP 1 BƯỚC - AUTO LOGIN) -->
-    <div class="modal-overlay" id="registerModal">
-        <div class="modal auth-card-modal">
-            <div class="modal-header" style="align-items:center;">
-                <div class="auth-header-badge">
-                    <div class="auth-header-icon"><i class="fa-solid fa-user-plus"></i></div>
-                    <div>
-                        <div style="font-size:1.1rem; font-weight:800; color:var(--text-title);">Tạo tài khoản</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Gia nhập cộng đồng sáng tạo ACGN & Scratch</div>
-                    </div>
-                </div>
-                <button class="btn-close" onclick="closeModal('registerModal')">&times;</button>
-            </div>
+    <!-- CỬA SỔ LỚN: ĐĂNG NHẬP & ĐĂNG KÝ HỢP NHẤT (STUDIO AUTH WINDOW) -->
+    <div class="modal-overlay" id="authModal">
+        <div class="auth-large-modal">
             
-            <div class="modal-body">
-                <form onsubmit="handleRegisterDirect(event)" id="regForm">
-                    <!-- Tên đăng nhập -->
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label style="font-size:0.85rem; font-weight:700;">Tên đăng nhập (Username) *:</label>
-                        <div class="auth-input-group">
-                            <i class="fa-solid fa-at auth-input-icon"></i>
-                            <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" placeholder="username" title="3-25 ký tự: chỉ dùng chữ, số, gạch dưới (_) và gạch ngang (-)">
-                        </div>
+            <!-- CỘT TRÁI: SHOWCASE THƯƠNG HIỆU & TÍNH NĂNG (LOGO THÍCH ỨNG THEO NGÔN NGỮ) -->
+            <div class="auth-showcase-panel">
+                <div class="auth-brand-area">
+                    <div class="auth-brand-logo-wrap">
+                        <img id="authBrandLogo" src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="Logo" class="auth-brand-logo">
                     </div>
-
-                    <!-- Tên hiển thị -->
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label style="font-size:0.85rem; font-weight:700;">Tên hiển thị tự do *:</label>
-                        <div class="auth-input-group">
-                            <i class="fa-solid fa-id-card auth-input-icon"></i>
-                            <input type="text" id="regDisplayName" class="auth-control-input" required maxlength="40" placeholder="Tên của bạn">
-                        </div>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label style="font-size:0.85rem; font-weight:700;">Địa chỉ Email *:</label>
-                        <div class="auth-input-group">
-                            <i class="fa-solid fa-envelope auth-input-icon"></i>
-                            <input type="email" id="regEmail" class="auth-control-input" required placeholder="example@gmail.com">
-                        </div>
-                    </div>
-
-                    <!-- Mật khẩu -->
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label style="font-size:0.85rem; font-weight:700;">Mật khẩu *:</label>
-                        <div class="auth-input-group">
-                            <i class="fa-solid fa-lock auth-input-icon"></i>
-                            <input type="password" id="regPw" class="auth-control-input" required minlength="6" placeholder="Tối thiểu 6 ký tự">
-                            <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="Hiện/Ẩn mật khẩu">
-                                <i class="fa-solid fa-eye" id="regEyeIcon"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- MÃ GIỚI THIỆU TÙY CHỌN (+50 WOW) -->
-                    <div class="auth-referral-banner">
-                        <div class="auth-referral-header">
-                            <span class="auth-referral-title">
-                                <span class="wow-icon"></span> Mã Giới Thiệu (Không bắt buộc)
-                            </span>
-                            <span class="auth-referral-badge">+50 WOW Sau Khi Xác Minh</span>
-                        </div>
-                        <div class="auth-referral-desc">
-                            Nhập tên người đã mời bạn. Cả hai sẽ nhận ngay <b>50 WOW</b> sau khi bạn xác minh email thành công!
-                        </div>
-                        <div class="auth-input-group" style="margin-bottom:0;">
-                            <i class="fa-solid fa-gift auth-input-icon" style="color:#ea580c;"></i>
-                            <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username người mời..." style="background:var(--bg-panel); border-color:#f59e0b;">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" id="btnRegisterDirect" style="width:100%; justify-content:center; padding:12px; font-size:1rem; border-radius:12px; font-weight:800;">
-                        <span>Đăng ký & Tham gia ngay</span> <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </form>
-
-                <div style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:16px;">
-                    <span>Đã có tài khoản?</span> 
-                    <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal')" style="color:var(--primary); font-weight:700; text-decoration:none;">Đăng nhập ngay</a>
+                    <h2 class="auth-brand-title" id="authBrandTitleText">DANVworkshop</h2>
+                    <p class="auth-brand-slogan" id="authBrandSloganText">Beyond the Blocks • Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu.</p>
                 </div>
+
+                <!-- Danh sách các điểm nhấn cộng đồng (Sử dụng 100% icon FontAwesome) -->
+                <div class="auth-features-list">
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon sky"><i class="fa-solid fa-gamepad"></i></div>
+                        <div><b>Khám phá tự do:</b> Trải nghiệm hàng ngàn game và hoạt hình Scratch không giới hạn.</div>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon amber"><i class="fa-solid fa-bolt"></i></div>
+                        <div><b>Hệ thống WOW:</b> Tích lũy năng lượng chuyên cần và sở hữu khung Avatar độc quyền.</div>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon pink"><i class="fa-solid fa-robot"></i></div>
+                        <div><b>Trợ lý BeaBea AI:</b> Giao lưu, giải đáp thuật toán và hỗ trợ tạo ý tưởng game độc lạ.</div>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon emerald"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div><b>An toàn & Văn minh:</b> Cộng đồng lập trình viên tôn trọng bản quyền và sẻ chia.</div>
+                    </div>
+                </div>
+
+                <div class="auth-showcase-footer">
+                    <span><i class="fa-solid fa-code"></i> Phiên bản Web Studio 2026</span>
+                    <span><i class="fa-solid fa-lock"></i> SSL Secured</span>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: KHU VỰC THAO TÁC (CHUYỂN ĐỔI TAB ĐĂNG NHẬP / ĐĂNG KÝ) -->
+            <div class="auth-form-panel">
+                <div class="auth-panel-topbar">
+                    <div class="auth-nav-tabs">
+                        <button type="button" class="auth-nav-tab-btn active" id="authTabBtnLogin" onclick="switchAuthTab('login')">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Đăng nhập</span>
+                        </button>
+                        <button type="button" class="auth-nav-tab-btn" id="authTabBtnRegister" onclick="switchAuthTab('register')">
+                            <i class="fa-solid fa-user-plus"></i> <span>Đăng ký</span>
+                        </button>
+                    </div>
+
+                    <button class="btn-close" onclick="closeModal('authModal')" title="Đóng">&times;</button>
+                </div>
+
+                <!-- PANE 1: FORM ĐĂNG NHẬP -->
+                <div id="authPaneLogin">
+                    <div class="auth-form-header">
+                        <div class="auth-form-title">
+                            <i class="fa-solid fa-right-to-bracket" style="color:var(--primary); font-size:1.3rem;"></i>
+                            <span>Chào mừng trở lại!</span>
+                        </div>
+                        <div class="auth-form-subtitle">Đăng nhập tài khoản của bạn để tiếp tục sáng tạo và tương tác.</div>
+                    </div>
+
+                    <form onsubmit="handleLoginNative(event)" id="loginFormDOM">
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:0.85rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tài khoản hoặc Email *:</label>
+                            <div class="auth-input-group">
+                                <i class="fa-solid fa-user auth-input-icon"></i>
+                                <input type="text" id="loginId" class="auth-control-input" required placeholder="Nhập username hoặc email của bạn..." autocomplete="username">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:18px;">
+                            <label style="font-size:0.85rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Mật khẩu *:</label>
+                            <div class="auth-input-group">
+                                <i class="fa-solid fa-lock auth-input-icon"></i>
+                                <input type="password" id="loginPw" class="auth-control-input" required placeholder="Nhập mật khẩu..." autocomplete="current-password">
+                                <button type="button" class="auth-pwd-toggle" onclick="toggleLoginPassword()" title="Hiện/Ẩn mật khẩu">
+                                    <i class="fa-solid fa-eye" id="loginEyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary auth-submit-btn" id="btnLoginSubmit">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Đăng nhập ngay</span>
+                        </button>
+                    </form>
+
+                    <div style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:20px;">
+                        <span>Chưa có tài khoản?</span> 
+                        <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Tạo tài khoản mới</a>
+                    </div>
+                </div>
+
+                <!-- PANE 2: FORM ĐĂNG KÝ -->
+                <div id="authPaneRegister" style="display:none;">
+                    <div class="auth-form-header">
+                        <div class="auth-form-title">
+                            <i class="fa-solid fa-user-plus" style="color:var(--primary); font-size:1.3rem;"></i>
+                            <span>Tạo tài khoản mới</span>
+                        </div>
+                        <div class="auth-form-subtitle">Tham gia cộng đồng lập trình Scratch & ACGN hoàn toàn miễn phí.</div>
+                    </div>
+
+                    <form onsubmit="handleRegisterDirect(event)" id="regForm">
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:0.85rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tên đăng nhập (Username) *:</label>
+                            <div class="auth-input-group">
+                                <i class="fa-solid fa-at auth-input-icon"></i>
+                                <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" placeholder="username" title="3-25 ký tự: chỉ dùng chữ, số, gạch dưới (_) và gạch ngang (-)">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:0.85rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tên hiển thị tự do *:</label>
+                            <div class="auth-input-group">
+                                <i class="fa-solid fa-id-card auth-input-icon"></i>
+                                <input type="text" id="regDisplayName" class="auth-control-input" required maxlength="40" placeholder="Tên hiển thị trên hồ sơ">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:0.85rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Địa chỉ Email *:</label>
+                            <div class="auth-input-group">
+                                <i class="fa-solid fa-envelope auth-input-icon"></i>
+                                <input type="email" id="regEmail" class="auth-control-input" required placeholder="example@gmail.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:0.85rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Mật khẩu *:</label>
+                            <div class="auth-input-group">
+                                <i class="fa-solid fa-lock auth-input-icon"></i>
+                                <input type="password" id="regPw" class="auth-control-input" required minlength="6" placeholder="Tối thiểu 6 ký tự">
+                                <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="Hiện/Ẩn mật khẩu">
+                                    <i class="fa-solid fa-eye" id="regEyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Thẻ Nhập Mã Giới Thiệu (Không dùng Emoji) -->
+                        <div class="auth-referral-banner">
+                            <div class="auth-referral-header">
+                                <span class="auth-referral-title">
+                                    <span class="wow-icon"></span> Mã Giới Thiệu (Tùy chọn)
+                                </span>
+                                <span class="auth-referral-badge"><i class="fa-solid fa-gift"></i> +50 WOW</span>
+                            </div>
+                            <div class="auth-referral-desc">
+                                Nhập tên bạn bè đã giới thiệu bạn. Cả hai sẽ nhận ngay <b>50 WOW</b> sau khi bạn xác minh email!
+                            </div>
+                            <div class="auth-input-group" style="margin-bottom:0;">
+                                <i class="fa-solid fa-ticket auth-input-icon" style="color:#ea580c;"></i>
+                                <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username người mời..." style="background:var(--bg-panel); border-color:#f59e0b;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary auth-submit-btn" id="btnRegisterDirect">
+                            <i class="fa-solid fa-user-plus"></i> <span>Đăng ký & Tham gia ngay</span>
+                        </button>
+                    </form>
+
+                    <div style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:18px;">
+                        <span>Đã có tài khoản?</span> 
+                        <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Đăng nhập ngay</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -6020,9 +6256,23 @@
         }
         async function handleLoginNative(e) {
             e.preventDefault();
-            const loginId = document.getElementById('loginId').value; const pw = document.getElementById('loginPw').value;
+            const btn = document.getElementById('btnLoginSubmit');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang đăng nhập...</span>';
+            }
+
+            const loginId = document.getElementById('loginId').value.trim(); 
+            const pw = document.getElementById('loginPw').value;
+
             try {
-                const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { method: 'POST', headers:{"Content-Type":"application/json", "X-Client-Type":"StudioDANV-Web"}, body: JSON.stringify({ loginId, password: pw }) })).json();
+                const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { 
+                    method: 'POST', 
+                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" }, 
+                    body: JSON.stringify({ loginId, password: pw }) 
+                })).json();
+
                 if(res.success) { 
                     currentUser = { 
                         username: res.username, 
@@ -6035,12 +6285,20 @@
                         frame: res.frame || null
                     };
                     localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
-                    closeModal('loginModal'); 
-                    showToast("Đăng nhập thành công", "success"); 
+                    closeModal('authModal'); 
+                    showToast("Đăng nhập thành công!", "success"); 
                     location.reload(); 
+                } else {
+                    showToast(res.error || "Tài khoản hoặc mật khẩu không chính xác!", "error");
                 }
-                else showToast(res.error, "error");
-            } catch(err){}
+            } catch(err) {
+                showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
+            }
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
         }
         function loginScratch() { const state = Math.random().toString(36).substring(2); localStorage.setItem('oauth_state', state); window.location.href = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&scopes=identify&state=${state}`; }
         function linkScratchAuth() { localStorage.setItem('is_linking_scratch', 'true'); loginScratch(); }
@@ -9803,8 +10061,80 @@
             renderNotifList();
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function openModal(id) { 
+            // Tương thích ngược: nếu gọi loginModal hoặc registerModal thì tự động mở authModal cỡ lớn với đúng tab
+            if (id === 'loginModal') {
+                switchAuthTab('login');
+                id = 'authModal';
+            } else if (id === 'registerModal') {
+                switchAuthTab('register');
+                id = 'authModal';
+            }
+            const modalEl = document.getElementById(id);
+            if (modalEl) modalEl.style.display = 'flex'; 
+        }
+        function closeModal(id) { 
+            if (id === 'loginModal' || id === 'registerModal') id = 'authModal';
+            const modalEl = document.getElementById(id);
+            if (modalEl) modalEl.style.display = 'none'; 
+        }
+
+        // CHUYỂN ĐỔI TAB ĐĂNG NHẬP / ĐĂNG KÝ TRONG CÙNG 1 CỬA SỔ (0 CHỚP MÀN HÌNH)
+        function switchAuthTab(tab) {
+            const btnLogin = document.getElementById('authTabBtnLogin');
+            const btnReg = document.getElementById('authTabBtnRegister');
+            const paneLogin = document.getElementById('authPaneLogin');
+            const paneReg = document.getElementById('authPaneRegister');
+
+            if (!btnLogin || !btnReg || !paneLogin || !paneReg) return;
+
+            if (tab === 'register') {
+                btnLogin.classList.remove('active');
+                btnReg.classList.add('active');
+                paneLogin.style.display = 'none';
+                paneReg.style.display = 'block';
+            } else {
+                btnReg.classList.remove('active');
+                btnLogin.classList.add('active');
+                paneReg.style.display = 'none';
+                paneLogin.style.display = 'block';
+            }
+            updateAuthBrandVisuals();
+        }
+
+        // BẬT / TẮT HIỆN MẬT KHẨU CHO FORM ĐĂNG NHẬP
+        function toggleLoginPassword() {
+            const pwInput = document.getElementById('loginPw');
+            const eyeIcon = document.getElementById('loginEyeIcon');
+            if (!pwInput || !eyeIcon) return;
+            if (pwInput.type === 'password') {
+                pwInput.type = 'text';
+                eyeIcon.className = 'fa-solid fa-eye-slash';
+            } else {
+                pwInput.type = 'password';
+                eyeIcon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        // ĐỒNG BỘ LOGO & TÊN THƯƠNG HIỆU CỬA SỔ AUTH THEO NGÔN NGỮ (DANVWORKSHOP / TURBOWORKSHOP)
+        function updateAuthBrandVisuals() {
+            const logoImg = document.getElementById('authBrandLogo');
+            const titleEl = document.getElementById('authBrandTitleText');
+            const sloganEl = document.getElementById('authBrandSloganText');
+            const activeLang = localStorage.getItem('lang') || 'vi';
+
+            if (activeLang === 'en') {
+                if (logoImg && langData && langData['brand_logo']) {
+                    logoImg.src = langData['brand_logo'];
+                }
+                if (titleEl) titleEl.innerText = (langData && langData['brand_name']) ? langData['brand_name'] : "Turboworkshop";
+                if (sloganEl) sloganEl.innerText = "Beyond the Blocks • Premier community for ACGN & block programming.";
+            } else {
+                if (logoImg) logoImg.src = "https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png";
+                if (titleEl) titleEl.innerText = "DANVworkshop";
+                if (sloganEl) sloganEl.innerText = "Beyond the Blocks • Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu.";
+            }
+        }
         // XỬ LÝ MỞ BẢNG DANH SÁCH FOLLOW
         // XỬ LÝ MỞ BẢNG DANH SÁCH FOLLOW & TẢI AVATAR TỰ ĐỘNG
         function openFollowListModal(type) {
