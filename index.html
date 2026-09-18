@@ -8,7 +8,7 @@
     <meta property="og:title" content="DANVworkshop - Coding community" id="ogTitle" />
     <meta property="og:description" content="Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu." id="ogDesc" />
     <meta property="og:image" content="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" id="ogImage" />
-    <meta property="og:url" content="https://danvpr.github.io/" id="ogUrl" />
+    <meta property="og:url" content="https://turbows.pages.dev/" id="ogUrl" />
     <link rel="icon" type="image/png" href="https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="description" content="DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN. Nhà phát triển trẻ tự do kết nối khối lệnh nâng cao, tạo ra câu chuyện của riêng mình." />
@@ -61,18 +61,76 @@
             document.head.appendChild(script);
         }
 
+        // =====================================================================
+        // 🚀 BỘ CHUYỂN HƯỚNG THÔNG MINH & DI CƯ TỰ ĐỘNG TOKEN SANG TURBOWS.PAGES.DEV
+        // =====================================================================
+        
+        // BƯỚC A: NẾU ĐANG Ở GITHUB PAGES -> ĐÓNG GÓI TOKEN & CHUYỂN HƯỚNG TỨC THÌ
+        if (window.location.hostname.endsWith('github.io')) {
+            var authBundle = {};
+            try {
+                if (localStorage.getItem('danv_user')) authBundle.danv_user = localStorage.getItem('danv_user');
+                if (localStorage.getItem('danv_theme')) authBundle.danv_theme = localStorage.getItem('danv_theme');
+                if (localStorage.getItem('lang')) authBundle.lang = localStorage.getItem('lang');
+                if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
+            } catch(e) {}
 
+            var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
+            var searchParams = new URLSearchParams(window.location.search);
+            
+            // Bắt link 404 cũ nếu có (?p=... hoặc ?q=...)
+            var pMatch = searchParams.get('p');
+            if (pMatch) {
+                cleanPath = decodeURIComponent(pMatch);
+                searchParams.delete('p');
+            }
+            var qMatch = searchParams.get('q');
+            if (qMatch) {
+                var extraQ = decodeURIComponent(qMatch).replace(/~and~/g, '&');
+                extraQ.split('&').forEach(function(pair) {
+                    var parts = pair.split('=');
+                    if (parts[0]) searchParams.set(parts[0], parts[1] || '');
+                });
+                searchParams.delete('q');
+            }
 
-        // Khôi phục URL sạch (/projects/... hoặc /users/...) từ 404.html chuyển về
+            // Gói token an toàn vào URL param tạm thời
+            if (Object.keys(authBundle).length > 0) {
+                try {
+                    searchParams.set('_mig_auth', btoa(unescape(encodeURIComponent(JSON.stringify(authBundle)))));
+                } catch(e) {}
+            }
+
+            var finalQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
+            var targetUrl = 'https://turbows.pages.dev' + cleanPath + finalQuery + window.location.hash;
+            window.location.replace(targetUrl);
+        }
+
+        // BƯỚC B: NẾU ĐANG Ở CLOUDFLARE PAGES -> TIẾP NHẬN TOKEN VÀ LÀM SẠCH THANH ĐỊA CHỈ
         (function() {
-            var redirect = window.location.search.match(/[?&]p=([^&]+)/);
-            if (redirect) {
-                var newPath = decodeURIComponent(redirect[1]);
-                var qMatch = window.location.search.match(/[?&]q=([^&]+)/);
-                var newSearch = qMatch ? '?' + decodeURIComponent(qMatch[1]).replace(/~and~/g, '&') : '';
-                window.history.replaceState(null, null, 
-                    window.location.pathname.replace(/\/$/, '') + newPath + newSearch + window.location.hash
-                );
+            var params = new URLSearchParams(window.location.search);
+            var migAuth = params.get('_mig_auth');
+            if (migAuth) {
+                try {
+                    var authData = JSON.parse(decodeURIComponent(escape(atob(migAuth))));
+                    if (authData.danv_user && !localStorage.getItem('danv_user')) {
+                        localStorage.setItem('danv_user', authData.danv_user);
+                    }
+                    if (authData.danv_theme && !localStorage.getItem('danv_theme')) {
+                        localStorage.setItem('danv_theme', authData.danv_theme);
+                    }
+                    if (authData.lang && !localStorage.getItem('lang')) {
+                        localStorage.setItem('lang', authData.lang);
+                    }
+                    if (authData.engine && !localStorage.getItem('engine')) {
+                        localStorage.setItem('engine', authData.engine);
+                    }
+                } catch(err) {}
+                
+                // Xóa param tạm thời để URL sạch đẹp như chưa từng có gì xảy ra
+                params.delete('_mig_auth');
+                var cleanQuery = params.toString() ? '?' + params.toString() : '';
+                window.history.replaceState(null, null, window.location.pathname + cleanQuery + window.location.hash);
             }
         })();
     </script>
@@ -5438,10 +5496,8 @@
 
         async function setLanguage(lang) {
             try {
-                // SỬA LỖI ĐƯỜNG DẪN TRÊN GITHUB PAGES KHI RELOAD Ở SUB-ROUTE
+                // Tải file ngôn ngữ tương thích cả GitHub cũ và Cloudflare Pages mới
                 const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
-                
-                // Thay vì dùng './' sẽ bị sai khi reload ở /projects/..., ta dùng đường dẫn tuyệt đối
                 const noCacheUrl = `${bp}/locales/${lang}.json?v=` + new Date().getTime();
                 
                 const res = await fetch(noCacheUrl);

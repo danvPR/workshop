@@ -4,18 +4,34 @@
     <meta charset="utf-8">
     <title>DANVworkshop - Redirecting...</title>
     <script>
-        // Tự động nhận diện nếu đang chạy trên GitHub Pages (danvpr.github.io/workshop/) thì giữ lại thư mục gốc /workshop/
-        var pathSegmentsToKeep = window.location.hostname.endsWith('github.io') ? 1 : 0;
-        var l = window.location;
-        l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
-            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/') +
-            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash
-        );
+        // CHỈ CHUYỂN HƯỚNG NẾU ĐANG CHẠY TRÊN GITHUB PAGES
+        if (window.location.hostname.endsWith('github.io')) {
+            var authBundle = {};
+            try {
+                if (localStorage.getItem('danv_user')) authBundle.danv_user = localStorage.getItem('danv_user');
+                if (localStorage.getItem('danv_theme')) authBundle.danv_theme = localStorage.getItem('danv_theme');
+                if (localStorage.getItem('lang')) authBundle.lang = localStorage.getItem('lang');
+                if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
+            } catch(e) {}
+
+            var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
+            var searchParams = new URLSearchParams(window.location.search);
+
+            if (Object.keys(authBundle).length > 0) {
+                try {
+                    searchParams.set('_mig_auth', btoa(unescape(encodeURIComponent(JSON.stringify(authBundle)))));
+                } catch(e) {}
+            }
+
+            var finalQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
+            var targetUrl = 'https://turbows.pages.dev' + cleanPath + finalQuery + window.location.hash;
+            window.location.replace(targetUrl);
+        }
     </script>
 </head>
 <body>
+    <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+        Đang chuyển hướng sang hệ thống mới... <a href="https://turbows.pages.dev">Bấm vào đây nếu trình duyệt không tự chuyển</a>.
+    </p>
 </body>
 </html>
