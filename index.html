@@ -760,40 +760,6 @@
             font-size: 0.7rem;
         }
 
-        /* Thanh đổi ngôn ngữ ở chân form */
-        .auth-lang-footer {
-            margin-top: auto;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.8rem;
-        }
-        .auth-lang-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-        .auth-lang-btn:hover {
-            color: var(--primary);
-            background: var(--bg-secondary);
-        }
-        .auth-lang-btn.active {
-            color: var(--primary);
-            font-weight: 800;
-            background: rgba(13, 165, 122, 0.1);
-        }
 
         /* Cột phải: Khu vực Form thoáng đãng, tinh gọn */
         .auth-form-panel {
@@ -2617,6 +2583,7 @@
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .footer-links a {
             color: var(--text-muted);
@@ -2627,6 +2594,43 @@
         }
         .footer-links a:hover {
             color: var(--primary);
+        }
+
+        /* Thanh đổi ngôn ngữ ở Footer đáy trang */
+        .footer-lang-picker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 5px;
+        }
+        .footer-lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 6px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .footer-lang-btn:hover {
+            color: var(--text-title);
+        }
+        .footer-lang-btn.active {
+            color: var(--primary) !important;
+            font-weight: 800;
+        }
+        .footer-lang-divider {
+            color: var(--border-color);
+            font-size: 0.75rem;
         }
         @media (max-width: 768px) {
             .footer-content { flex-direction: column; text-align: center; }
@@ -4616,6 +4620,17 @@
                 <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" data-i18n="settings_tos">Điều khoản sử dụng</a>
                 <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" data-i18n="settings_privacy">Chính sách bảo mật</a>
                 <a href="javascript:void(0)" onclick="openModal('contactModal')" data-i18n="settings_support">Hỗ trợ</a>
+
+                <!-- Cụm đổi ngôn ngữ dưới đáy trang (Không dùng emoji) -->
+                <div class="footer-lang-picker">
+                    <button type="button" class="footer-lang-btn" id="footerLangVi" onclick="setLanguage('vi')">
+                        <i class="fa-solid fa-earth-asia"></i> <span>Tiếng Việt</span>
+                    </button>
+                    <span class="footer-lang-divider">/</span>
+                    <button type="button" class="footer-lang-btn" id="footerLangEn" onclick="setLanguage('en')">
+                        <i class="fa-solid fa-globe"></i> <span>English</span>
+                    </button>
+                </div>
             </div>
         </div>
     </footer>
@@ -4993,7 +5008,7 @@
                             </div>
                         </div>
 
-                        <!-- Ô Mã Giới Thiệu tinh gọn dạng 1 dòng (Không làm banner to) -->
+                        <!-- Ô Mã Giới Thiệu tinh gọn (Tự động loại bỏ ký tự @) -->
                         <div class="form-group" style="margin-bottom:14px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                                 <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); margin:0;">Mã giới thiệu (Tùy chọn):</label>
@@ -5001,7 +5016,7 @@
                             </div>
                             <div class="auth-input-group" style="margin-bottom:0;">
                                 <i class="fa-solid fa-ticket auth-input-icon"></i>
-                                <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username người mời...">
+                                <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username (không cần dấu @)..." oninput="this.value = this.value.replace(/@/g, '').trim()">
                             </div>
                         </div>
 
@@ -5014,17 +5029,6 @@
                         <span>Đã có tài khoản?</span> 
                         <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Đăng nhập ngay</a>
                     </div>
-                </div>
-
-                <!-- FOOTER ĐỔI NGÔN NGỮ TIẾNG VIỆT / ENGLISH -->
-                <div class="auth-lang-footer">
-                    <button type="button" class="auth-lang-btn" id="authLangBtnVi" onclick="setLanguage('vi')">
-                        <i class="fa-solid fa-earth-asia"></i> <span>Tiếng Việt</span>
-                    </button>
-                    <span class="auth-footer-dot">•</span>
-                    <button type="button" class="auth-lang-btn" id="authLangBtnEn" onclick="setLanguage('en')">
-                        <i class="fa-solid fa-globe"></i> <span>English</span>
-                    </button>
                 </div>
 
             </div>
@@ -5777,6 +5781,9 @@
                     if (footerLogoImg) footerLogoImg.src = langData['brand_logo'];
                 }
 
+                // 🚀 Tự động đồng bộ logo sang cửa sổ Auth và kích hoạt nút ngôn ngữ ở Footer đáy trang
+                updateAuthBrandVisuals();
+
                 updateStaticDOM();
                 
                 // Load lại dữ liệu dự án nếu đang ở trang chủ
@@ -6024,7 +6031,9 @@
             const email = document.getElementById('regEmail').value.trim();
             const displayName = document.getElementById('regDisplayName').value.trim();
             const pw = document.getElementById('regPw').value;
-            const refCode = document.getElementById('regReferralCode') ? document.getElementById('regReferralCode').value.trim() : "";
+            let refCode = document.getElementById('regReferralCode') ? document.getElementById('regReferralCode').value.trim() : "";
+            // Loại bỏ hoàn toàn ký tự @ nếu người dùng cố tình dán vào
+            refCode = refCode.replace(/@/g, '').trim();
 
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/auth/register`, {
@@ -10097,12 +10106,12 @@
                 logoImg.src = liveNavLogo.src;
             }
 
-            // Đồng bộ trạng thái active cho 2 nút ngôn ngữ dưới footer
-            const btnVi = document.getElementById('authLangBtnVi');
-            const btnEn = document.getElementById('authLangBtnEn');
-            if (btnVi && btnEn) {
-                btnVi.classList.toggle('active', activeLang === 'vi');
-                btnEn.classList.toggle('active', activeLang === 'en');
+            // Đồng bộ trạng thái nút đổi ngôn ngữ dưới Footer đáy trang
+            const fLangVi = document.getElementById('footerLangVi');
+            const fLangEn = document.getElementById('footerLangEn');
+            if (fLangVi && fLangEn) {
+                fLangVi.classList.toggle('active', activeLang === 'vi');
+                fLangEn.classList.toggle('active', activeLang === 'en');
             }
 
             if (activeLang === 'en') {
