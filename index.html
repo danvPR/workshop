@@ -3472,14 +3472,34 @@
         }
         [data-theme="dark"] .bb-gift-msg { color: #e2e8f0; border-top-color: rgba(217, 70, 239, 0.4); }
 
-        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố để không bị viền xấu */
+        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube để không bị viền xấu */
         .chat-msg-row .chat-bubble:has(.beabea-gift-card),
         .chat-msg-row .chat-bubble:has(.beabea-blindbag-card),
-        .chat-msg-row .chat-bubble:has(.beabea-quiz-card) {
+        .chat-msg-row .chat-bubble:has(.beabea-quiz-card),
+        .chat-msg-row .chat-bubble:has(.chat-yt-embed-wrap:only-child) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+        }
+
+        /* 🎬 KHUNG NHÚNG VIDEO YOUTUBE TỰ ĐỘNG TRONG CHAT */
+        .chat-yt-embed-wrap {
+            width: 380px;
+            max-width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+            margin-top: 2px;
+        }
+        .chat-yt-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
         }
 
         /* 🎯 THẺ CÂU ĐỐ TRẮC NGHIỆM BEABEA AI */
@@ -10455,10 +10475,31 @@
         }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
+        // 🔍 KIỂM TRA NẾU TIN NHẮN CHỈ CHỨA DUY NHẤT 1 LINK YOUTUBE
+        function getYouTubeIdIfOnly(text) {
+            if (!text) return null;
+            const trimmed = text.trim();
+            // Nếu có khoảng trắng nghĩa là có kèm theo chữ khác -> không embed
+            if (/\s/.test(trimmed)) return null;
+            const ytRegex = /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^&\s]*&)*v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[?&][^\s]*)?$/i;
+            const match = trimmed.match(ytRegex);
+            return match ? match[1] : null;
+        }
+
         // 🎴 HÀM RENDER NỘI DUNG CHAT (CHỈ CHO PHÉP BEABEA FORMAT CÁC THẺ ĐẶC BIỆT CHỐNG GIẢ MẠO)
         function renderChatContent(rawText, author = '') {
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
+
+            // 🎬 EMBED VIDEO YOUTUBE (KHI CHỈ GỬI DUY NHẤT 1 LINK YOUTUBE)
+            const ytVideoId = getYouTubeIdIfOnly(rawText);
+            if (ytVideoId) {
+                return `
+                    <div class="chat-yt-embed-wrap">
+                        <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${ytVideoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                `;
+            }
 
             // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA (ĐÃ FIX TRIỆT ĐỂ LỖI BỊ CẮT VÌ DẤU ])
             if (isBeaBea && rawText.includes("[BEABEA_QUIZ:")) {
@@ -11743,7 +11784,7 @@ function reopenEditor() {
                                     <button class="chat-act-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')">
                                         <i class="fa-solid fa-reply"></i> Trả lời
                                     </button>` : ''}
-                                ${c.text && !c.text.startsWith('[DANV_POLL]') ? `
+                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
                                     <div class="trans-menu-wrapper">
                                         <button type="button" class="chat-act-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}')" title="Dịch">
                                             <i class="fa-solid fa-language"></i>
