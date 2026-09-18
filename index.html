@@ -1689,202 +1689,356 @@
             body { padding-bottom: 65px; } /* Đẩy trang lên chống bị thanh bar che */
         }
 
-        /* ================= GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI (2 CỘT) ================= */
+        /* ================= GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI (STREAM DOCK DESIGN) ================= */
         .chat-layout-grid {
             display: grid;
-            grid-template-columns: 1fr 310px;
-            gap: 20px;
+            grid-template-columns: 1fr 320px;
+            gap: 18px;
             width: 100%;
-            height: calc(100vh - 125px);
+            height: calc(100vh - 120px);
             min-height: 560px;
+            transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .chat-layout-grid.sidebar-collapsed {
+            grid-template-columns: 1fr;
         }
 
         .chat-main-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
             overflow: hidden;
+            position: relative;
+        }
+
+        .chat-header-bar {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+            backdrop-filter: blur(10px);
         }
 
         .chat-sidebar-col {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
             height: 100%;
             overflow-y: auto;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .chat-layout-grid.sidebar-collapsed .chat-sidebar-col {
+            display: none;
         }
 
         .chat-side-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 16px;
             padding: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         .chat-side-title {
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-title);
-            margin-bottom: 12px;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        /* Thanh thông báo ghim đỉnh phòng chat */
+        /* Ticker ghim thông báo gọn gàng */
         .chat-pinned-banner {
-            background: var(--bg-secondary);
+            background: linear-gradient(90deg, rgba(13, 165, 122, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%);
             border-bottom: 1px solid var(--border-color);
             padding: 8px 18px;
             font-size: 0.82rem;
-            color: var(--text-muted);
+            color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 10px;
         }
         .chat-pinned-banner b { color: var(--primary); }
 
-        /* Danh sách tin nhắn */
-        .chat-msg-row { display: flex; gap: 10px; margin-bottom: 12px; width: 100%; align-items: flex-end; }
-        .chat-msg-row.mine { flex-direction: row-reverse; }
-        .chat-msg-wrapper { display: flex; flex-direction: column; max-width: 82%; min-width: 60px; }
-        .chat-msg-row.mine .chat-msg-wrapper { align-items: flex-end; }
-        .chat-msg-row:not(.mine) .chat-msg-wrapper { align-items: flex-start; }
+        /* Stream tin nhắn & Thanh cuộn thanh thoát */
+        #chatMessageList {
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+        #chatMessageList::-webkit-scrollbar { width: 6px; }
+        #chatMessageList::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 6px; }
 
-        .chat-meta-header { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 3px; display: flex; gap: 8px; align-items: center; }
-        .chat-author-name { color: var(--text-title); font-weight: 700; text-decoration: none; }
+        .chat-msg-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            width: 100%;
+            align-items: flex-end;
+            position: relative;
+        }
+        .chat-msg-row.mine {
+            flex-direction: row-reverse;
+        }
+        .chat-msg-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 72%;
+            min-width: 60px;
+            position: relative;
+        }
+        .chat-msg-row.mine .chat-msg-wrapper {
+            align-items: flex-end;
+        }
+        .chat-msg-row:not(.mine) .chat-msg-wrapper {
+            align-items: flex-start;
+        }
+
+        .chat-meta-header {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .chat-author-name {
+            color: var(--text-title);
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.82rem;
+        }
         .chat-author-name:hover { color: var(--primary); }
-        .chat-time { font-size: 0.72rem; opacity: 0.85; }
+        .chat-time {
+            font-size: 0.7rem;
+            opacity: 0.75;
+        }
+
+        /* Container bọc Bubble + Floating Action Bar */
+        .chat-bubble-container {
+            position: relative;
+            display: inline-flex;
+            max-width: 100%;
+        }
 
         .chat-bubble { 
             width: fit-content; 
             max-width: 100%; 
             background: var(--bg-secondary); 
             color: var(--text-main); 
-            padding: 8px 14px; 
-            border-radius: 16px 16px 16px 4px; 
+            padding: 9px 15px; 
+            border-radius: 18px 18px 18px 4px; 
             border: 1px solid var(--border-color); 
-            font-size: 0.94rem; 
-            line-height: 1.45; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02); 
-            transition: background-color 0.2s;
+            font-size: 0.93rem; 
+            line-height: 1.48; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02); 
+            transition: all 0.2s ease;
         }
         .chat-text {
             white-space: pre-wrap;
             word-break: break-word;
         }
         .chat-msg-row.mine .chat-bubble { 
-            background: var(--primary); 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); 
             border-color: var(--primary-dark); 
-            border-radius: 16px 16px 4px 16px; 
+            border-radius: 18px 18px 4px 18px; 
             color: #ffffff !important; 
-            box-shadow: 0 2px 8px rgba(13,165,122,0.22);
+            box-shadow: 0 3px 12px rgba(13,165,122,0.25);
         }
         .chat-msg-row.mine .chat-bubble * { color: #ffffff !important; }
         [data-theme="dark"] .chat-msg-row.mine .chat-bubble { 
-            background: #0a8260; 
+            background: linear-gradient(135deg, #0da57a 0%, #065f46 100%);
             border-color: #0da57a; 
             color: #ffffff !important; 
         }
 
-        /* Thanh công cụ phím tắt & Textarea tự co giãn */
+        /* Floating Action Bar siêu gọn khi Hover chuột vào tin nhắn */
+        .chat-floating-actions {
+            position: absolute;
+            top: -14px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2px 4px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.9);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+        .chat-msg-row:not(.mine) .chat-floating-actions {
+            right: 4px;
+        }
+        .chat-msg-row.mine .chat-floating-actions {
+            left: 4px;
+        }
+        .chat-msg-row:hover .chat-floating-actions {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+        .chat-float-btn {
+            background: none;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .chat-float-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+        .chat-float-btn.delete:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .chat-float-btn.report:hover {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        /* All-In-One Input Dock (Khung gõ hợp nhất hiện đại) */
         .chat-input-box {
-            padding: 12px 18px;
+            padding: 14px 18px;
             background: var(--bg-panel);
             border-top: 1px solid var(--border-color);
         }
-        .chat-quick-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        .chat-tool-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.15s ease;
-        }
-        .chat-tool-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--bg-panel);
-        }
-        .chat-tool-btn.beabea-highlight {
-            border-color: #f472b6;
-            color: #db2777;
-            background: rgba(244, 114, 182, 0.1);
-        }
-        .chat-tool-btn.beabea-highlight:hover {
-            background: rgba(244, 114, 182, 0.2);
-        }
-
-        .chat-textarea-wrapper {
-            display: flex;
-            align-items: flex-end;
-            gap: 10px;
+        .chat-composer-dock {
             background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 8px 12px;
-            transition: border-color 0.2s;
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .chat-textarea-wrapper:focus-within {
+        .chat-composer-dock:focus-within {
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(13,165,122,0.15);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
         }
         .chat-input-textarea {
-            flex: 1;
+            width: 100%;
             background: none;
             border: none;
             outline: none;
             color: var(--text-main);
-            font-size: 0.95rem;
+            font-size: 0.94rem;
             resize: none;
             max-height: 120px;
-            min-height: 24px;
-            line-height: 1.4;
+            min-height: 26px;
+            line-height: 1.45;
             font-family: inherit;
+        }
+        .chat-composer-bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 4px;
+            border-top: 1px solid rgba(0,0,0,0.04);
+        }
+        [data-theme="dark"] .chat-composer-bottom-bar {
+            border-top-color: rgba(255,255,255,0.05);
+        }
+        .chat-composer-tools-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .chat-dock-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            transition: all 0.15s;
+        }
+        .chat-dock-icon-btn:hover {
+            color: var(--primary);
+            background: var(--bg-secondary);
+        }
+        .chat-beabea-dock-pill {
+            background: rgba(244, 114, 182, 0.12);
+            color: #db2777;
+            border: 1px solid rgba(244, 114, 182, 0.3);
+            border-radius: 14px;
+            padding: 4px 10px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .chat-beabea-dock-pill:hover {
+            background: rgba(244, 114, 182, 0.22);
+            transform: translateY(-1px);
+        }
+        .chat-composer-tools-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-kbd-hint {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            opacity: 0.75;
+            user-select: none;
         }
         .chat-btn-send {
             background: var(--primary);
             color: #ffffff;
             border: none;
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             transition: all 0.2s ease;
-            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(13,165,122,0.3);
         }
         .chat-btn-send:hover {
             background: var(--primary-dark);
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         @media (max-width: 960px) {
-            .chat-layout-grid { grid-template-columns: 1fr; }
-            .chat-sidebar-col { display: none; }
+            .chat-layout-grid { grid-template-columns: 1fr !important; }
+            .chat-sidebar-col { display: none !important; }
+            .chat-kbd-hint { display: none; }
         }
 
         /* AVATAR FRAME & WOW SHOP CSS */
@@ -2147,28 +2301,34 @@
         .daily-day-box.claimed { border-color: #10b981; opacity: 1; background: #ecfdf5; }
         @media (max-width: 600px) { .daily-reward-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        /* 💬 KHỐI TRÍCH DẪN TRẢ LỜI TIN NHẮN (REPLY QUOTE) */
+        /* 💬 KHỐI TRÍCH DẪN TRẢ LỜI TIN NHẮN (STREAMLINED REPLY QUOTE) */
         .chat-reply-quote { 
-            font-size: 0.78rem; 
-            background: rgba(0, 0, 0, 0.07); 
-            border-left: 3px solid var(--primary); 
-            padding: 4px 10px; 
+            font-size: 0.74rem; 
+            background: rgba(0, 0, 0, 0.05); 
+            border-left: 2.5px solid var(--primary); 
+            padding: 2px 8px; 
             border-radius: 4px; 
-            margin-bottom: 6px; 
-            display: flex; 
+            margin-bottom: 5px; 
+            display: inline-flex; 
             align-items: center; 
-            gap: 6px; 
-            line-height: 1.35;
+            gap: 5px; 
+            line-height: 1.3;
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .chat-reply-quote i {
             color: var(--primary) !important;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
         .chat-reply-quote span {
-            color: #475569 !important; /* Màu chữ xám đậm rõ nét trong nền sáng */
+            color: var(--text-muted) !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .chat-reply-quote b {
-            color: #0f172a !important; /* Tên người được trả lời đậm rõ */
+            color: var(--text-title) !important;
             font-weight: 700;
         }
 
@@ -2176,79 +2336,28 @@
         [data-theme="dark"] .chat-reply-quote {
             background: rgba(255, 255, 255, 0.08);
         }
-        [data-theme="dark"] .chat-reply-quote span {
-            color: #cbd5e1 !important;
-        }
-        [data-theme="dark"] .chat-reply-quote b {
-            color: #f8fafc !important;
-        }
 
-        /* Khi là tin nhắn của chính mình (Bong bóng nền xanh lá) */
+        /* Khi là tin nhắn của chính mình */
         .chat-msg-row.mine .chat-reply-quote { 
-            background: rgba(0, 0, 0, 0.2) !important; 
+            background: rgba(0, 0, 0, 0.22) !important; 
             border-left-color: #ffffff !important; 
         }
         .chat-msg-row.mine .chat-reply-quote i,
-        .chat-msg-row.mine .chat-reply-quote b {
-            color: #ffffff !important;
-        }
+        .chat-msg-row.mine .chat-reply-quote b,
         .chat-msg-row.mine .chat-reply-quote span {
-            color: rgba(255, 255, 255, 0.9) !important;
+            color: rgba(255, 255, 255, 0.95) !important;
         }
 
         .chat-img-attachment { 
-            max-width: 250px; 
+            max-width: 260px; 
             max-height: 200px; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             margin-top: 6px; 
             object-fit: contain; 
             display: block; 
             border: 1px solid rgba(0,0,0,0.08); 
             background: rgba(0,0,0,0.02);
         }
-
-        /* Thanh nút thao tác mini hiện khi Hover */
-        .chat-actions { 
-            display: flex; 
-            gap: 5px; 
-            margin-top: 4px; 
-            opacity: 0; 
-            transition: opacity 0.2s ease, transform 0.2s ease; 
-            transform: translateY(3px); 
-            align-items: center; 
-        }
-        .chat-msg-row:hover .chat-actions { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-        @media (max-width: 768px) { 
-            .chat-actions { opacity: 0.85; transform: none; } 
-            .chat-msg-wrapper { max-width: 88%; }
-        }
-
-        .chat-act-btn { 
-            background: var(--bg-panel); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-muted); 
-            font-size: 0.72rem; 
-            padding: 2px 8px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 4px; 
-            font-weight: 600; 
-            transition: 0.15s; 
-        }
-        .chat-act-btn:hover { 
-            background: var(--bg-secondary); 
-            color: var(--text-title); 
-            border-color: var(--primary); 
-        }
-        .chat-act-btn.delete { color: #ef4444; }
-        .chat-act-btn.delete:hover { background: #fee2e2; border-color: #fca5a5; }
-        .chat-act-btn.report { color: #f59e0b; }
-        .chat-act-btn.report:hover { background: #fef3c7; border-color: #fcd34d; }
 
         /* NÚT VÀ MENU CHỌN NGÔN NGỮ DỊCH THUẬT (PORTAL FIXED TỐI ƯU) */
         .btn-translate-icon {
@@ -3847,42 +3956,58 @@
     </div>
 
     
-    <!-- TRANG GLOBAL CHAT (BỐ CỤC 2 CỘT MỚI & THANH CÔNG CỤ FONTAWESOME) -->
-    <div id="chatView" class="page-view" style="max-width: 1250px; width: 100%; margin: 0 auto; padding: 20px 20px 30px 20px;">
-        <div class="chat-layout-grid">
+    <!-- TRANG GLOBAL CHAT (BỐ CỤC MODERN COMMUNITY STREAM) -->
+    <div id="chatView" class="page-view" style="max-width: 1220px; width: 100%; margin: 0 auto; padding: 16px 20px 24px 20px;">
+        <div class="chat-layout-grid" id="chatLayoutGrid">
             
             <!-- CỘT CHÍNH: KHUNG TRÒ CHUYỆN -->
             <div class="chat-main-card">
-                <!-- Tiêu đề phòng chat -->
-                <div style="padding: 14px 22px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary);">
-                    <h3 style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:10px;">
-                        <i class="fa-solid fa-earth-americas" style="color: #3b82f6;"></i> <span data-i18n="chat_title">Kênh Giao Lưu Toàn Cầu</span>
-                    </h3>
-                    <span style="font-size:0.82rem; color:var(--text-muted); background: var(--bg-panel); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); font-weight: 600;">
-                        <i class="fa-solid fa-circle fa-fade" style="color:#10b981; font-size:0.55rem; margin-right: 5px;"></i> <span data-i18n="chat_online">Trực tuyến</span>
-                    </span>
+                <!-- Header phòng chat -->
+                <div class="chat-header-bar">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(59, 130, 246, 0.12); display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-earth-americas" style="color: #3b82f6; font-size: 1.05rem;"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin:0; font-size:1.08rem; font-weight:800; color:var(--text-title); line-height:1.2;" data-i18n="chat_title">Kênh Giao Lưu Toàn Cầu</h3>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">Không gian trò chuyện trực tiếp của cộng đồng</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size:0.75rem; color:#10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); padding: 3px 10px; border-radius: 20px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fa-solid fa-circle fa-fade" style="font-size:0.5rem;"></i> Trực tuyến
+                        </span>
+                        <button type="button" class="btn" id="btnToggleChatSidebar" onclick="toggleChatSidebar()" title="Ẩn/Hiện cột tiện ích bên phải" style="padding: 6px 10px; border-radius: 10px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-table-columns"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Thanh thông báo ghim -->
-                <div class="chat-pinned-banner">
-                    <i class="fa-solid fa-bullhorn" style="color:var(--primary);"></i>
-                    <span>Chào mừng bạn đến với <b>DANVworkshop</b>! Hãy giao lưu văn minh và tôn trọng bạn bè lập trình.</span>
+                <!-- Thanh thông báo ghim đỉnh phòng chat -->
+                <div class="chat-pinned-banner" id="chatPinnedBanner">
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                        <i class="fa-solid fa-bullhorn" style="color:var(--primary);"></i>
+                        <span style="font-size: 0.8rem; line-height: 1.35;">Chào mừng bạn đến với <b>DANVworkshop</b>! Hãy giao lưu văn minh và tôn trọng bạn bè lập trình.</span>
+                    </div>
+                    <button type="button" onclick="dismissChatPinnedBanner()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.95rem; padding:0 4px;" title="Đóng thông báo">&times;</button>
                 </div>
                 
-                <!-- Danh sách tin nhắn -->
-                <div id="chatMessageList" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column;">
+                <!-- Danh sách tin nhắn Stream -->
+                <div id="chatMessageList" style="flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column;">
                     <div style="text-align:center; color:#888; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_loading">Đang tải dữ liệu chat...</span></div>
                 </div>
 
-                <!-- Khu vực nhập tin nhắn & Thanh công cụ -->
+                <!-- Khu vực nhập tin nhắn Hợp Nhất (All-In-One Input Dock) -->
                 <div class="chat-input-box">
-                    <div id="replyBannerChat" style="display:none; color:var(--primary); font-size:0.82rem; margin-bottom:8px; font-weight:bold;">
-                        <i class="fa-solid fa-reply"></i> <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelChat"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; margin-left: 10px;" onclick="cancelReply('chat')"></i>
+                    <div id="replyBannerChat" style="display:none; background:rgba(13, 165, 122, 0.08); border-left:3px solid var(--primary); padding:6px 12px; border-radius:6px; font-size:0.78rem; margin-bottom:8px; font-weight:700; color:var(--primary); align-items:center; justify-content:space-between;">
+                        <span><i class="fa-solid fa-reply"></i> Đang trả lời <b id="replyUserLabelChat" style="color:var(--text-title);"></b></span>
+                        <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-muted); padding:2px;" onclick="cancelReply('chat')" title="Hủy trả lời"></i>
                     </div>
 
                     <div id="commentImgPreviewChat" class="comment-img-preview-box">
                         <img id="commentImgPreviewSrcChat" src="" alt="preview">
-                        <span style="font-size:0.8rem; color:var(--text-main);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                        <span style="font-size:0.78rem; color:var(--text-main);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
                         <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" title="Gỡ ảnh">&times;</button>
                     </div>
 
@@ -3890,33 +4015,43 @@
                     <div id="chatMentionDropdown" style="display:none; margin-bottom: 8px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 -8px 25px rgba(0,0,0,0.08); max-height: 200px; overflow-y: auto; padding: 6px;"></div>
 
                     <form onsubmit="handlePostChat(event)" id="chatForm" style="display:none;">
-                        <!-- Thanh nút chức năng nhanh (Toàn bộ bằng FontAwesome) -->
-                        <div class="chat-quick-toolbar">
-                            <button type="button" class="chat-tool-btn beabea-highlight" onclick="quickMentionBeaBea()" title="Gõ nhanh @BeaBea (AI)">
-                                <i class="fa-solid fa-robot"></i> <span>Hỏi BeaBea</span>
-                            </button>
-                            <button type="button" class="chat-tool-btn beabea-highlight" onclick="quickAskBeaBeaIdea()" title="Gợi ý ý tưởng làm game/cốt truyện">
-                                <i class="fa-solid fa-lightbulb" style="color: #f59e0b;"></i> <span>Ý tưởng game</span>
-                            </button>
-                            <label for="commentImgUploadChat" class="chat-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
-                                <i class="fa-solid fa-image" style="color: #0284c7;"></i> <span>Ảnh</span>
-                            </label>
-                            <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
+                        <div class="chat-composer-dock">
+                            <!-- Textarea gõ tin nhắn -->
+                            <textarea id="commentTextChat" class="chat-input-textarea" rows="1" data-i18n-ph="chat_input_ph" placeholder="Nhập tin nhắn giao lưu..." autocomplete="off"></textarea>
                             
-                            <button type="button" class="chat-tool-btn" onclick="openKlipyModal('chat')" title="Chèn ảnh động GIF">
-                                <i class="fa-solid fa-film" style="color: #8b5cf6;"></i> <span>GIF</span>
-                            </button>
-                            <button type="button" id="btnCreatePollChat" class="chat-tool-btn" style="display:none;" onclick="openCreatePollModal()" title="Tạo bình chọn">
-                                <i class="fa-solid fa-square-poll-vertical" style="color: #ea580c;"></i> <span>Bình chọn</span>
-                            </button>
-                        </div>
+                            <!-- Hàng Toolbar tích hợp bên dưới textarea -->
+                            <div class="chat-composer-bottom-bar">
+                                <div class="chat-composer-tools-left">
+                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" title="Đính kèm hình ảnh">
+                                        <i class="fa-solid fa-image" style="color: #0284c7;"></i>
+                                    </label>
+                                    <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
 
-                        <!-- Khung Textarea tự co giãn -->
-                        <div class="chat-textarea-wrapper">
-                            <textarea id="commentTextChat" class="chat-input-textarea" rows="1" data-i18n-ph="chat_input_ph" placeholder="Nhập tin nhắn... (Enter để gửi, Shift + Enter để xuống dòng)" autocomplete="off"></textarea>
-                            <button type="submit" id="btnSubmitChat" class="chat-btn-send" title="Gửi tin nhắn">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
+                                    <button type="button" class="chat-dock-icon-btn" onclick="openKlipyModal('chat')" title="Chèn ảnh động GIF">
+                                        <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
+                                    </button>
+
+                                    <button type="button" id="btnCreatePollChat" class="chat-dock-icon-btn" style="display:none;" onclick="openCreatePollModal()" title="Tạo bình chọn">
+                                        <i class="fa-solid fa-square-poll-vertical" style="color: #ea580c;"></i>
+                                    </button>
+
+                                    <div style="width: 1px; height: 16px; background: var(--border-color); margin: 0 4px;"></div>
+
+                                    <button type="button" class="chat-beabea-dock-pill" onclick="quickMentionBeaBea()" title="Gõ nhanh @BeaBea (AI)">
+                                        <i class="fa-solid fa-robot"></i> <span>Hỏi BeaBea</span>
+                                    </button>
+                                    <button type="button" class="chat-dock-icon-btn" onclick="quickAskBeaBeaIdea()" title="Gợi ý ý tưởng làm game/cốt truyện" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #ea580c;">
+                                        <i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 4px;"></i> Ý tưởng
+                                    </button>
+                                </div>
+
+                                <div class="chat-composer-tools-right">
+                                    <span class="chat-kbd-hint">Enter ↵</span>
+                                    <button type="submit" id="btnSubmitChat" class="chat-btn-send" title="Gửi tin nhắn">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
 
@@ -3926,21 +4061,21 @@
                 </div>
             </div>
 
-            <!-- CỘT PHỤ (SIDEBAR): TIỆN ÍCH CỘNG ĐỒNG -->
+            <!-- CỘT PHỤ (SIDEBAR): TIỆN ÍCH CỘNG ĐỒNG TINH GỌN -->
             <div class="chat-sidebar-col">
                 <!-- Thẻ BeaBea AI Companion -->
-                <div class="chat-side-card" style="text-align: center; border-left: 3px solid #ec4899;">
-                    <div style="position:relative; width: 68px; height: 68px; margin: 0 auto 10px auto;">
+                <div class="chat-side-card" style="text-align: center; border-top: 3px solid #ec4899;">
+                    <div style="position:relative; width: 60px; height: 60px; margin: 0 auto 8px auto;">
                         <img src="https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #f472b6;" onerror="this.onerror=null; this.src=DEFAULT_AVATAR">
+                        <span style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; background: #10b981; border: 2px solid var(--bg-panel);" title="Trực tuyến"></span>
                     </div>
-                    <div style="font-weight: 800; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span>BeaBea</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 2px 6px; border-radius: 10px; font-weight: bold; border: 1px solid #fbcfe8;">AI BOT</span>
+                    <div style="font-weight: 800; font-size: 1rem; color: var(--text-title); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <span>BeaBea</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 6px; border-radius: 8px; font-weight: 800;">BOT AI</span>
                     </div>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 6px 0 14px 0; line-height: 1.4;">Thực thể AI Toàn Tri của DANVworkshop. Sẵn sàng trò chuyện, cung cấp số liệu và phát lộc WOW!</p>
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn" style="flex:1; font-size:0.8rem; padding:6px 8px; justify-content:center; border-radius:12px;" onclick="quickMentionBeaBea()"><i class="fa-solid fa-comments"></i> Hỏi chuyện</button>
-                        <button type="button" class="btn btn-primary" style="flex:1; font-size:0.8rem; padding:6px 8px; justify-content:center; border-radius:12px; background:linear-gradient(135deg,#f59e0b,#ea580c); border:none;" onclick="quickAskBeaBeaIdea()"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</button>
-                    </div>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin: 4px 0 12px 0; line-height: 1.4;">Trợ lý AI toàn tri của DANVworkshop. Gõ <b>@BeaBea</b> trong khung chat để trò chuyện hoặc xin ý tưởng làm game!</p>
+                    <button type="button" class="btn" style="width:100%; font-size:0.8rem; padding:7px; justify-content:center; border-radius:10px; border-color: rgba(236,72,153,0.3); color:#db2777; background:rgba(236,72,153,0.06);" onclick="quickMentionBeaBea()">
+                        <i class="fa-solid fa-comments"></i> Gọi BeaBea trò chuyện
+                    </button>
                 </div>
 
                 <!-- Thẻ Tiêu chuẩn cộng đồng -->
@@ -3948,18 +4083,14 @@
                     <div class="chat-side-title">
                         <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Tiêu chuẩn cộng đồng
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
+                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
                         <div style="display: flex; gap: 8px; align-items: flex-start;">
-                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 3px;"></i>
-                            <span>Tôn trọng mọi thành viên, giữ ngôn từ tích cực.</span>
+                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 2px;"></i>
+                            <span>Tôn trọng mọi thành viên, giữ ngôn từ văn minh.</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: flex-start;">
-                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 3px;"></i>
-                            <span>Không spam link ngoài hoặc nội dung thương mại.</span>
-                        </div>
-                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 3px;"></i>
-                            <span>Gặp vi phạm? Hãy dùng nút <b>Báo cáo</b> để Admin xử lý.</span>
+                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 2px;"></i>
+                            <span>Không spam link quảng cáo thương mại.</span>
                         </div>
                     </div>
                 </div>
@@ -3969,9 +4100,9 @@
                     <div class="chat-side-title">
                         <i class="fa-solid fa-satellite-dish" style="color: #3b82f6;"></i> Không gian Stations
                     </div>
-                    <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">Khám phá các trạm sáng tạo dự án, nhóm lập trình theo chủ đề.</p>
-                    <a href="#studios" class="btn" style="width: 100%; font-size: 0.82rem; justify-content: center; border-radius: 12px; text-decoration: none;">
-                        <i class="fa-solid fa-compass"></i> Khám phá các Station
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.35;">Khám phá các trạm sáng tạo dự án, nhóm lập trình theo chủ đề.</p>
+                    <a href="#studios" class="btn" style="width: 100%; font-size: 0.8rem; justify-content: center; border-radius: 10px; text-decoration: none; padding: 7px;">
+                        <i class="fa-solid fa-compass"></i> Vào xem Stations
                     </a>
                 </div>
             </div>
@@ -11623,8 +11754,26 @@ function reopenEditor() {
             }
         });
 
+        // ================= THAO TÁC TIỆN ÍCH GIAO DIỆN CHAT =================
+        function toggleChatSidebar() {
+            const grid = document.getElementById('chatLayoutGrid');
+            if (!grid) return;
+            const isCollapsed = grid.classList.toggle('sidebar-collapsed');
+            localStorage.setItem('danv_chat_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+        }
+
+        function dismissChatPinnedBanner() {
+            const banner = document.getElementById('chatPinnedBanner');
+            if (banner) banner.style.display = 'none';
+        }
+
         function openChatPage() {
             document.getElementById('chatView').style.display = 'block';
+
+            // Khôi phục trạng thái thu gọn sidebar nếu người dùng đã chỉnh trước đó
+            const isSideCollapsed = localStorage.getItem('danv_chat_sidebar_collapsed') === 'true';
+            const grid = document.getElementById('chatLayoutGrid');
+            if (grid) grid.classList.toggle('sidebar-collapsed', isSideCollapsed);
             
             // Reset về 20 tin nhắn mỗi lần vào trang
             chatDisplayLimit = 20;
@@ -11772,35 +11921,43 @@ function reopenEditor() {
                         <div class="chat-msg-wrapper">
                             <div class="chat-meta-header">
                                 ${!isMine ? (c.author === 'BeaBea (AI)' 
-                                    ? `<span class="chat-author-name" style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> BeaBea (AI) <span style="font-size:0.68rem; background:#fce7f3; color:#ec4899; padding:2px 6px; border-radius:10px; margin-left:4px; border:1px solid #fbcfe8;">BOT</span></span>` 
+                                    ? `<span class="chat-author-name" style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> BeaBea (AI) <span style="font-size:0.65rem; background:#fce7f3; color:#ec4899; padding:1px 5px; border-radius:6px; margin-left:3px; border:1px solid #fbcfe8;">BOT</span></span>` 
                                     : `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>`) : ''}
                                 <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
 
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}${transBoxHtml}</div>
-                            
-                            <div class="chat-actions">
-                                ${currentUser && !isMine ? `
-                                    <button class="chat-act-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')">
-                                        <i class="fa-solid fa-reply"></i> Trả lời
-                                    </button>` : ''}
-                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
-                                    <div class="trans-menu-wrapper">
-                                        <button type="button" class="chat-act-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}')" title="Dịch">
-                                            <i class="fa-solid fa-language"></i>
-                                        </button>
-                                    </div>` : ''}
-                                <button class="chat-act-btn" onclick="copyChatLink('${messageId}')" title="Sao chép link tin nhắn">
-                                    <i class="fa-solid fa-link"></i> Link
-                                </button>
-                                ${currentUser && !isMine ? `
-                                    <button class="chat-act-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo">
-                                        <i class="fa-solid fa-flag"></i>
-                                    </button>` : ''}
-                                ${canDelete ? `
-                                    <button class="chat-act-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
-                                        <i class="fa-solid fa-trash-can"></i> Xóa
-                                    </button>` : ''}
+                            <div class="chat-bubble-container">
+                                <div class="chat-bubble">
+                                    ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
+                                    ${renderChatContent(c.text || '', c.author)}
+                                    ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}
+                                    ${transBoxHtml}
+                                </div>
+
+                                <!-- Floating Quick Actions Bar nổi khi hover -->
+                                <div class="chat-floating-actions">
+                                    ${currentUser && !isMine ? `
+                                        <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
+                                            <i class="fa-solid fa-reply"></i>
+                                        </button>` : ''}
+                                    ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
+                                        <div class="trans-menu-wrapper">
+                                            <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}')" title="Dịch tin nhắn">
+                                                <i class="fa-solid fa-language"></i>
+                                            </button>
+                                        </div>` : ''}
+                                    <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" title="Sao chép liên kết">
+                                        <i class="fa-solid fa-link"></i>
+                                    </button>
+                                    ${currentUser && !isMine ? `
+                                        <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo vi phạm">
+                                            <i class="fa-solid fa-flag"></i>
+                                        </button>` : ''}
+                                    ${canDelete ? `
+                                        <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>` : ''}
+                                </div>
                             </div>
                         </div>
                     </div>
