@@ -3473,11 +3473,100 @@
         [data-theme="dark"] .bb-gift-msg { color: #e2e8f0; border-top-color: rgba(217, 70, 239, 0.4); }
 
         /* Bỏ background của bong bóng chat chứa thẻ quà tặng để không bị viền xấu */
-        .chat-msg-row .chat-bubble:has(.beabea-gift-card) {
+        .chat-msg-row .chat-bubble:has(.beabea-gift-card),
+        .chat-msg-row .chat-bubble:has(.beabea-blindbag-card) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+        }
+
+        /* 🎁 THẺ TÚI MÙ TRONG PHÒNG CHAT */
+        .beabea-blindbag-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
+            border: 2px solid #a855f7;
+            border-radius: 18px;
+            padding: 16px 20px;
+            color: #ffffff;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.35);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .beabea-blindbag-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, transparent 60%);
+            animation: spinGlow 8s linear infinite;
+            pointer-events: none;
+        }
+        .bag-icon-anim {
+            font-size: 3rem;
+            color: #f59e0b;
+            display: inline-block;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.8));
+            animation: bagWiggle 2s infinite ease-in-out;
+        }
+        @keyframes bagWiggle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-10deg) scale(1.08); }
+            40% { transform: rotate(10deg) scale(1.08); }
+            60% { transform: rotate(-6deg) scale(1.04); }
+            80% { transform: rotate(6deg) scale(1.04); }
+        }
+        .btn-open-blindbag {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: #ffffff !important;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.5);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .btn-open-blindbag:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.7);
+        }
+        .blindbag-claimed-box {
+            opacity: 0.8;
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #64748b;
+        }
+
+        /* 🎰 VÒNG QUAY GACHA TRONG MODAL */
+        .gacha-roller-box {
+            background: #0f172a;
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(245, 158, 11, 0.2);
+        }
+        .gacha-number-ticker {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fbbf24;
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -5146,8 +5235,39 @@
         </div>
     </div>
 
-    <!-- MODAL GIỚI THIỆU: WOW LÀ GÌ? -->
-    <div class="modal-overlay" id="aboutWOWModal">
+    <!-- MODAL GACHA BÓC TÚI MÙ VŨ TRỤ -->
+    <div class="modal-overlay" id="blindBagModal">
+        <div class="modal" style="max-width: 420px; border-radius: 24px; text-align: center; background: radial-gradient(circle at top, #1e1b4b 0%, #09061a 100%); color: #fff; border: 2px solid #a855f7; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div class="modal-header" style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); justify-content: center; position: relative;">
+                <span style="font-size: 1.15rem; font-weight: 900; color: #f472b6;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> XÉ TÚI MÙ VŨ TRỤ
+                </span>
+                <button class="btn-close" onclick="closeModal('blindBagModal')" style="position: absolute; right: 15px; color: #fff;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 26px 20px;">
+                <div id="gachaBagIconWrap">
+                    <i class="fa-solid fa-gift bag-icon-anim" style="font-size: 4rem;"></i>
+                </div>
+                <h3 id="gachaStatusTitle" style="color: #fff !important; font-size: 1.25rem; margin: 10px 0 4px 0;">Đang xé túi mù...</h3>
+                <p id="gachaSubText" style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">Sức mạnh năng lượng WOW đang dao động từ 5 - 50</p>
+
+                <div class="gacha-roller-box">
+                    <div class="gacha-number-ticker">
+                        <span class="wow-icon" style="font-size: 2.5rem;"></span>
+                        <span id="gachaCounterValue">--</span>
+                    </div>
+                </div>
+
+                <div id="gachaFinalMsg" style="display: none; font-size: 0.95rem; font-weight: 800; color: #10b981; margin-bottom: 16px;">
+                    🎉 Năng lượng đã được nạp thẳng vào tài khoản của bạn!
+                </div>
+
+                <button type="button" class="btn btn-primary" id="btnGachaDone" onclick="closeModal('blindBagModal')" style="display: none; width: 100%; justify-content: center; padding: 12px; border-radius: 14px; font-weight: 800;">
+                    Tuyệt vời!
+                </button>
+            </div>
+        </div>
+    </div>
         <div class="modal" style="max-width: 460px;">
             <div class="modal-header">
                 <span><span class="wow-icon"></span> Giới thiệu về hệ thống WOW</span>
@@ -10188,9 +10308,49 @@
         }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        // 🎴 HÀM RENDER NỘI DUNG CHAT
+        // 🎴 HÀM RENDER NỘI DUNG CHAT (ĐÃ TÍCH HỢP TÚI MÙ VŨ TRỤ)
         function renderChatContent(rawText) {
             if (!rawText) return '';
+
+            // 🎁 1. TÚI MÙ CHƯA BÓC
+            const bagMatch = rawText.match(/\[BEABEA_BLIND_BAG:([a-zA-Z0-9_\-]+)\]/);
+            if (bagMatch) {
+                const bagId = bagMatch[1];
+                return `
+                    <div class="beabea-blindbag-card">
+                        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#f472b6; margin-bottom:4px;">
+                            <i class="fa-solid fa-sparkles"></i> Lộc Vũ Trụ Xuất Hiện!
+                        </div>
+                        <i class="fa-solid fa-gift bag-icon-anim"></i>
+                        <div style="font-weight:900; font-size:1.15rem; color:#fff;">Túi Mù Năng Lượng</div>
+                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>5 đến 50 WOW</b>. Ai nhanh tay mở trước sẽ nhận được!</div>
+                        <button type="button" class="btn-open-blindbag" onclick="openBlindBagGacha('${bagId}')">
+                            <i class="fa-solid fa-bolt"></i> Bóc Túi Mù Ngay
+                        </button>
+                    </div>
+                `;
+            }
+
+            // 🎁 2. TÚI MÙ ĐÃ CÓ NGƯỜI BÓC
+            const claimedMatch = rawText.match(/\[BEABEA_BLIND_BAG_CLAIMED:([a-zA-Z0-9_\-]+):([a-zA-Z0-9_\-]+):(\d+)\]/);
+            if (claimedMatch) {
+                const [_, bId, claimer, reward] = claimedMatch;
+                const isJackpot = parseInt(reward) >= 50;
+                return `
+                    <div class="beabea-blindbag-card blindbag-claimed-box">
+                        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#94a3b8; margin-bottom:4px;">
+                            <i class="fa-solid fa-lock"></i> Túi Mù Đã Được Mở
+                        </div>
+                        <div style="font-size: 1.5rem; margin: 4px 0;">🎁</div>
+                        <div style="font-size:0.9rem; color:#fff;">
+                            Chúc mừng <b>@${escapeHtml(claimer)}</b> đã nhanh tay bóc trúng:
+                        </div>
+                        <div style="font-size:1.5rem; font-weight:900; color:${isJackpot ? '#f59e0b' : '#38bdf8'}; margin: 6px 0;">
+                            <span class="wow-icon"></span> +${reward} WOW ${isJackpot ? '🔥 NỔ HŨ!' : ''}
+                        </div>
+                    </div>
+                `;
+            }
 
             // 🎁 KIỂM TRA NẾU ĐÂY LÀ QUÀ TẶNG TỪ BEABEA AI
             const giftMatch = rawText.match(/\[BEABEA_GIFT:\s*(\d+)\s*\]([\s\S]*)/i);
@@ -12148,6 +12308,84 @@ function reopenEditor() {
         }
 
         function openAboutWOWModal() { openModal('aboutWOWModal'); }
+
+        // ================= XỬ LÝ BÓC TÚI MÙ VŨ TRỤ (GACHA ROLLER) =================
+        let isOpeningBag = false;
+
+        async function openBlindBagGacha(bagId) {
+            if (!currentUser) return openModal('loginModal');
+            if (isOpeningBag) return;
+
+            if (currentUser.emailVerified === false) {
+                showToast("Vui lòng xác thực Email tài khoản để tham gia bóc túi mù nhé!", "error");
+                openVerifyEmailModal();
+                return;
+            }
+
+            isOpeningBag = true;
+            openModal('blindBagModal');
+
+            // Reset UI Modal
+            document.getElementById('gachaStatusTitle').innerText = "Đang kết nối ngân khố...";
+            document.getElementById('gachaSubText').innerText = "Đang khóa túi mù và chuẩn bị xé...";
+            document.getElementById('gachaCounterValue').innerText = "??";
+            document.getElementById('gachaFinalMsg').style.display = "none";
+            document.getElementById('btnGachaDone').style.display = "none";
+
+            // Bắt đầu hiệu ứng nhảy số quay gacha ngẫu nhiên
+            let rollInterval = setInterval(() => {
+                const fakeRoll = Math.floor(Math.random() * 46) + 5;
+                document.getElementById('gachaCounterValue').innerText = fakeRoll;
+            }, 60);
+
+            try {
+                // Gọi Backend để tranh quyền bóc túi
+                const res = await apiFetch('/api/chat/claim_bag', {
+                    method: 'POST',
+                    body: JSON.stringify({ bagId })
+                });
+
+                if (res && res.success) {
+                    const finalReward = res.reward;
+
+                    // Cho vòng xoay chạy thêm 1.5 giây tạo cảm giác hồi hộp
+                    setTimeout(() => {
+                        clearInterval(rollInterval);
+                        document.getElementById('gachaCounterValue').innerText = finalReward;
+                        document.getElementById('gachaStatusTitle').innerHTML = `🎉 BÓC TRÚNG +${finalReward} WOW!`;
+                        document.getElementById('gachaSubText').innerText = finalReward >= 50 ? "🔥 NỔ HŨ ĐỘC ĐẮC! BẠN QUÁ MAY MẮN!" : "Tuyệt vời! Năng lượng đã được trao cho bạn.";
+                        document.getElementById('gachaFinalMsg').style.display = "block";
+                        document.getElementById('btnGachaDone').style.display = "inline-flex";
+
+                        // Nổ hiệu ứng pháo hoa năng lượng
+                        spawnWOWEnergyBurst(window.innerWidth / 2, window.innerHeight / 2);
+
+                        // Cập nhật số dư Realtime
+                        currentUser.WOW = res.newBalance;
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        syncAllWOWDisplays();
+
+                        // Tải lại khung chat để chuyển túi sang trạng thái ĐÃ MỞ
+                        lastChatJSONStr = "";
+                        loadGlobalChat(false);
+                        isOpeningBag = false;
+                    }, 1500);
+
+                } else {
+                    clearInterval(rollInterval);
+                    closeModal('blindBagModal');
+                    showToast((res && res.error) ? res.error : "Túi mù đã bị mở mất rồi!", "error");
+                    isOpeningBag = false;
+                    lastChatJSONStr = "";
+                    loadGlobalChat(false);
+                }
+            } catch(err) {
+                clearInterval(rollInterval);
+                closeModal('blindBagModal');
+                showToast("Lỗi kết nối bóc túi mù!", "error");
+                isOpeningBag = false;
+            }
+        }
 
         // ================= XỬ LÝ TẶNG WOW TRONG DỰ ÁN (HIỆU ỨNG RUNG LẮC & NHẤN GIỮ) =================
         let holdTimer = null;
