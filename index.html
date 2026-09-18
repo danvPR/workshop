@@ -3686,18 +3686,25 @@
         </div>
     </div>
 
-    <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL -->
-    <div id="emailVerifyBanner" style="display:none; position: sticky; top: 60px; left: 0; width: 100%; background: linear-gradient(90deg, #f59e0b, #ea580c); color: white; z-index: 997; padding: 9px 20px; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);">
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; font-weight: 600; flex: 1;">
-                <i class="fa-solid fa-triangle-exclamation fa-beat" style="font-size: 1.1rem; color: #fef08a;"></i>
-                <span>Email (<b id="bannerUserEmailText">...</b>) chưa được xác thực! Xác minh ngay để bảo vệ tài khoản và nhận <b style="color:#fef08a;">+50 WOW</b>!</span>
+    <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL (NỔI BẬT & RÕ RÀNG HƠN) -->
+    <div id="emailVerifyBanner" style="display:none; position: sticky; top: 60px; left: 0; width: 100%; background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%); color: white; z-index: 997; padding: 12px 24px; box-shadow: 0 4px 18px rgba(220, 38, 38, 0.35); border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; font-weight: 600; flex: 1;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa-solid fa-triangle-exclamation fa-bounce" style="font-size: 1.1rem; color: #fef08a;"></i>
+                </div>
+                <div>
+                    <div><b>Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)</div>
+                    <div style="font-size: 0.8rem; opacity: 0.92; margin-top: 2px;">
+                        ⚠️ Bạn đang bị giới hạn tính năng: Không thể bóc Túi mù, đăng dự án hay gửi tặng WOW. Hãy xác minh ngay để mở khóa toàn bộ và nhận thưởng <b style="color: #fef08a; font-size: 0.88rem;">+50 WOW</b>!
+                    </div>
+                </div>
             </div>
             <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #ea580c; padding: 5px 14px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.82rem; cursor: pointer;">
+                <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #dc2626; padding: 7px 18px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                     <i class="fa-solid fa-circle-check"></i> Xác minh ngay
                 </button>
-                <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.22); color: white; padding: 5px 12px; border-radius: 20px; font-weight: 700; border: none; font-size: 0.82rem; cursor: pointer;">
+                <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.25); color: white; padding: 7px 14px; border-radius: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; cursor: pointer;">
                     <i class="fa-solid fa-rotate-right"></i> Gửi lại mã
                 </button>
             </div>
@@ -4641,6 +4648,16 @@
 
                 <!-- TAB 3: TÀI KHOẢN & BẢO MẬT -->
                 <div id="setTab-account" class="set-tab-content">
+                    <!-- THẺ TRẠNG THÁI XÁC THỰC EMAIL -->
+                    <div id="emailVerifyAccountCard" style="margin-bottom: 20px; padding: 18px 20px; border-radius: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Trạng thái Email</div>
+                            <div id="emailVerifyStatusBadge" style="font-weight: 800; font-size: 1.05rem; margin-top: 4px;">Đang kiểm tra...</div>
+                        </div>
+                        <button type="button" id="btnAccountVerifyAction" class="btn btn-primary" onclick="openVerifyEmailModal()" style="display: none; border-radius: 20px; padding: 8px 18px; font-weight: 700;">
+                            <i class="fa-solid fa-circle-check"></i> Xác thực ngay (+50 WOW)
+                        </button>
+                    </div>
                     <div id="scratchLinkStatus" style="margin-bottom:25px; padding: 20px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
                         <div style="font-size:0.9rem; font-weight:bold; color:var(--text-title); margin-bottom:6px;" data-i18n="settings_scratch_title">Tài khoản Scratch:</div>
                         <!-- Sẽ render bằng JS -->
@@ -6183,7 +6200,7 @@
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
 
-        // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ)
+        // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ) & ĐỒNG BỘ TRẠNG THÁI EMAIL
         async function checkLegacyUser() {
             if(!currentUser) return;
             const res = await apiFetch(`/api/user/${encodeURIComponent(currentUser.username)}`, { method:'GET' });
@@ -6192,8 +6209,15 @@
                 currentUser.role = res.role; 
                 currentUser.WOW = res.WOW !== undefined ? res.WOW : (res.omg !== undefined ? res.omg : (currentUser.WOW || 0));
                 currentUser.frame = res.frame || null;
+                
+                // Đồng bộ chính xác trạng thái xác thực từ CSDL máy chủ
+                if (res.emailVerified !== undefined) {
+                    currentUser.emailVerified = (res.emailVerified === true || res.emailVerified === "true");
+                }
+
                 localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
                 updateNav(); 
+                checkEmailVerificationBanner();
             }
         }
         async function handleLegacyUpdate(e) {
@@ -6225,7 +6249,11 @@
         function checkEmailVerificationBanner() {
             const banner = document.getElementById('emailVerifyBanner');
             if (!banner) return;
-            if (currentUser && currentUser.emailVerified === false) {
+            
+            // Kiểm tra an toàn cả dạng boolean false lẫn chuỗi "false"
+            const isUnverified = currentUser && (currentUser.emailVerified === false || currentUser.emailVerified === "false");
+            
+            if (isUnverified) {
                 const emailText = document.getElementById('bannerUserEmailText');
                 if (emailText) emailText.innerText = currentUser.email || 'Email của bạn';
                 banner.style.display = 'block';
@@ -6233,7 +6261,6 @@
                 banner.style.display = 'none';
             }
         }
-
         // ĐĂNG KÝ TRỰC TIẾP & ĐĂNG NHẬP NGAY LẬP TỨC
         async function handleRegisterDirect(e) {
             e.preventDefault();
@@ -8928,6 +8955,21 @@
             try {
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}`);
                 const pData = (await res.json()) || {};
+                
+                // Cập nhật thẻ trạng thái Email trong Tab Tài khoản
+                const verifyBadge = document.getElementById('emailVerifyStatusBadge');
+                const verifyBtn = document.getElementById('btnAccountVerifyAction');
+                const isAccVerified = (pData.emailVerified === true || pData.emailVerified === "true" || currentUser.emailVerified === true);
+
+                if (verifyBadge && verifyBtn) {
+                    if (isAccVerified) {
+                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Đã xác thực (${escapeHtml(pData.email || currentUser.email)})</span>`;
+                        verifyBtn.style.display = 'none';
+                    } else {
+                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Chưa xác thực (${escapeHtml(pData.email || currentUser.email)})</span>`;
+                        verifyBtn.style.display = 'inline-flex';
+                    }
+                }
                 
                 const nameInput = document.getElementById('editDisplayNameInput');
                 if (nameInput) nameInput.value = pData.display_name || '';
