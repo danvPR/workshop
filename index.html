@@ -5360,7 +5360,7 @@
                     <i class="fa-solid fa-gift bag-icon-anim" style="font-size: 4rem;"></i>
                 </div>
                 <h3 id="gachaStatusTitle" style="color: #fff !important; font-size: 1.25rem; margin: 10px 0 4px 0;">Đang xé túi mù...</h3>
-                <p id="gachaSubText" style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">Sức mạnh năng lượng WOW đang dao động từ 5 - 50</p>
+                <p id="gachaSubText" style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">Sức mạnh năng lượng WOW đang dao động từ 1 - 20</p>
 
                 <div class="gacha-roller-box">
                     <div class="gacha-number-ticker">
@@ -10531,7 +10531,7 @@
                         </div>
                         <i class="fa-solid fa-gift bag-icon-anim"></i>
                         <div style="font-weight:900; font-size:1.15rem; color:#fff;">Túi Mù Năng Lượng</div>
-                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>3 đến 15 WOW</b>. Ai nhanh tay mở trước sẽ nhận được!</div>
+                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>1 đến 20 WOW</b>. Ai nhanh tay mở trước sẽ nhận được!</div>
                         <button type="button" class="btn-open-blindbag" onclick="openBlindBagGacha('${bagId}')">
                             <i class="fa-solid fa-bolt"></i> Bóc Túi Mù Ngay
                         </button>
@@ -12570,9 +12570,9 @@ function reopenEditor() {
             document.getElementById('gachaFinalMsg').style.display = "none";
             document.getElementById('btnGachaDone').style.display = "none";
 
-            // Bắt đầu hiệu ứng nhảy số quay gacha ngẫu nhiên
+            // Bắt đầu hiệu ứng nhảy số quay gacha ngẫu nhiên (1 -> 20)
             let rollInterval = setInterval(() => {
-                const fakeRoll = Math.floor(Math.random() * 46) + 5;
+                const fakeRoll = Math.floor(Math.random() * 20) + 1;
                 document.getElementById('gachaCounterValue').innerText = fakeRoll;
             }, 60);
 
