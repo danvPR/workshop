@@ -2,10 +2,15 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>DANVworkshop - Redirecting...</title>
+    <title>DANVworkshop - Loading...</title>
     <script>
-        // CHỈ CHUYỂN HƯỚNG NẾU ĐANG CHẠY TRÊN GITHUB PAGES
-        if (window.location.hostname.endsWith('github.io')) {
+        var currentHost = window.location.hostname;
+        var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
+        var searchParams = new URLSearchParams(window.location.search);
+        var currentHash = window.location.hash;
+
+        // 1. NẾU Ở GITHUB PAGES -> GÓI TOKEN VÀ CHUYỂN NHÀ SANG CLOUDFLARE
+        if (currentHost.endsWith('github.io')) {
             var authBundle = {};
             try {
                 if (localStorage.getItem('danv_user')) authBundle.danv_user = localStorage.getItem('danv_user');
@@ -14,9 +19,6 @@
                 if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
             } catch(e) {}
 
-            var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
-            var searchParams = new URLSearchParams(window.location.search);
-
             if (Object.keys(authBundle).length > 0) {
                 try {
                     searchParams.set('_mig_auth', btoa(unescape(encodeURIComponent(JSON.stringify(authBundle)))));
@@ -24,14 +26,31 @@
             }
 
             var finalQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
-            var targetUrl = 'https://turbows.pages.dev' + cleanPath + finalQuery + window.location.hash;
+            var targetUrl = 'https://turbows.pages.dev' + cleanPath + finalQuery + currentHash;
             window.location.replace(targetUrl);
+        } 
+        
+        // 2. NẾU Ở CLOUDFLARE (HOẶC LOCALHOST) BỊ RỚT VÀO 404 DO F5 -> NÉM VỀ INDEX.HTML XỬ LÝ
+        else {
+            // Chuyển path đang bị lỗi 404 thành biến ?p= để index.html bắt được và khôi phục lại
+            if (cleanPath !== '/' && cleanPath !== '') {
+                searchParams.set('p', encodeURIComponent(cleanPath));
+            }
+            var fallbackQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
+            var fallbackUrl = window.location.origin + '/' + fallbackQuery + currentHash;
+            window.location.replace(fallbackUrl);
         }
     </script>
 </head>
-<body>
-    <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-        Đang chuyển hướng sang hệ thống mới... <a href="https://turbows.pages.dev">Bấm vào đây nếu trình duyệt không tự chuyển</a>.
-    </p>
+<body style="background: #f4f5f7; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <div style="text-align: center; font-family: sans-serif;">
+        <svg style="animation: spin 1s linear infinite; width: 40px; height: 40px; color: #0da57a; margin-bottom: 15px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style="opacity: 0.75;"></path>
+        </svg>
+        <p style="color: #666;">Đang tải dữ liệu, vui lòng chờ...</p>
+        <a href="/" style="color: #0da57a; text-decoration: none; font-size: 0.9rem; margin-top: 10px; display: inline-block;">Về trang chủ</a>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </body>
 </html>
