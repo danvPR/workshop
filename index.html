@@ -7356,20 +7356,44 @@
         }
 
         // ================= XỬ LÝ RENDER TRANG CHỦ & THẺ DỰ ÁN MỚI =================
-        function parseProjectTitleAndTags(rawTitle) {
-            if (!rawTitle) return { title: 'Không có tiêu đề', tags: [] };
+        // 🏷️ Bóc tách thông minh: Ưu tiên tag tiêu đề, nếu không có sẽ lấy tag từ Cột Tags / Description / Credits
+        function parseProjectTitleAndTags(p) {
+            const rawTitle = (typeof p === 'string' ? p : (p ? p.title : '')) || 'Không có tiêu đề';
             
-            // Tìm tất cả hashtag #tag trong tiêu đề
-            const tagMatches = rawTitle.match(/#[^\s#]+/g) || [];
-            // Làm sạch tiêu đề gốc bằng cách gỡ các hashtag dài ra
+            // 1. Quét tag từ tiêu đề
+            let tagMatches = rawTitle.match(/#[^\s#]+/g) || [];
             let cleanTitle = rawTitle.replace(/#[^\s#]+/g, '').trim();
-            if (!cleanTitle) cleanTitle = rawTitle; // Nếu tiêu đề chỉ toàn hashtag thì giữ nguyên
+            if (!cleanTitle) cleanTitle = rawTitle;
+
+            // 2. Nếu tiêu đề không có tag, tự động quét từ Cột Tags (P), Description hoặc Credits
+            if (tagMatches.length === 0 && typeof p === 'object' && p !== null) {
+                if (p.tags) {
+                    const fromTagsCol = p.tags.match(/#[^\s#,]+/g);
+                    if (fromTagsCol) tagMatches = fromTagsCol;
+                }
+                if (tagMatches.length === 0 && p.description) {
+                    const fromDesc = p.description.match(/#[^\s#]+/g);
+                    if (fromDesc) tagMatches = fromDesc;
+                }
+                if (tagMatches.length === 0 && p.credits) {
+                    const fromCred = p.credits.match(/#[^\s#]+/g);
+                    if (fromCred) tagMatches = fromCred;
+                }
+            }
 
             return {
                 title: cleanTitle,
-                tags: tagMatches.slice(0, 3) // Lấy tối đa 3 hashtag đầu tiên để làm chip
+                tags: tagMatches.slice(0, 3) // Lấy tối đa 3 tag tiêu biểu hiển thị trên Card
             };
         }
+
+        // Điều hướng thông minh: Bấm vào hashtag ở bất kỳ đâu sẽ tự động chuyển về trang chủ và tìm kiếm
+        window.navigateToTagSearch = function(tag) {
+            navigateTo('#home');
+            setTimeout(() => {
+                applySearchTag(tag);
+            }, 120);
+        };
 
         // Render HTML cho danh sách dự án hiện đại (kèm Avatar, Tag chips, Stats)
         function renderHomeProjects(isAppend = false) {
@@ -7389,7 +7413,7 @@
 
             const html = allProjects.map(p => {
                 const pid = p.projectId || p.fileId;
-                const { title: displayTitle, tags } = parseProjectTitleAndTags(p.title);
+                const { title: displayTitle, tags } = parseProjectTitleAndTags(p);
                 const thumbUrl = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : '';
                 const author = p.author || 'Anonymous';
                 const likesCount = p.likes ? p.likes.length : 0;
@@ -7581,7 +7605,17 @@
             const engineChoice = localStorage.getItem('engine') || 'aftercode';
             const editorBaseUrl = engineChoice === 'turbowarp' ? 'https://turbowarp.org/editor?project_url=' : 'https://aftercode-web-wheat.vercel.app/editor.html?project_url=';
             document.getElementById('btnSeeInside').href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
-            document.getElementById('projDesc').innerText = proj.description || "Chưa có hướng dẫn."; document.getElementById('projCredits').innerText = proj.credits || "Tác giả gốc.";
+            // 🔗 Tự động chuyển đổi các #hashtag trong Description & Credits thành đường dẫn tìm kiếm tương tác
+            const linkifyHashtags = (rawText) => {
+                if (!rawText) return '';
+                const safe = escapeHtml(rawText);
+                return safe.replace(/#([^\s#<]+)/g, (match) => {
+                    return `<a href="javascript:void(0)" onclick="navigateToTagSearch('${match}')" style="color:var(--primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:6px; background:rgba(13,165,122,0.12);">${match}</a>`;
+                });
+            };
+
+            document.getElementById('projDesc').innerHTML = proj.description ? linkifyHashtags(proj.description) : "Chưa có hướng dẫn.";
+            document.getElementById('projCredits').innerHTML = proj.credits ? linkifyHashtags(proj.credits) : "Tác giả gốc.";
             
             commentLimits.proj = 10; // Reset số lượng bình luận khi mở dự án mới
             updateActionBtns(); 
