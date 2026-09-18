@@ -10410,28 +10410,64 @@
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
 
-            // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA
-            const quizMatch = isBeaBea ? rawText.match(/\[BEABEA_QUIZ:([\s\S]*?)\]/) : null;
-            if (quizMatch) {
-                try {
-                    const quizData = JSON.parse(quizMatch[1]);
-                    const optionsHtml = (quizData.options || []).map((opt, idx) => `
-                        <button type="button" class="bb-quiz-opt-btn" onclick="handleAnswerBeaBeaQuiz(this, ${idx}, ${quizData.ans})">
-                            <span>${escapeHtml(opt)}</span>
-                            <i class="fa-regular fa-circle" style="font-size:0.75rem; opacity:0.6;"></i>
-                        </button>
-                    `).join('');
-                    const encExplain = encodeURIComponent(quizData.explain || 'Chính xác rồi bạn ơi!');
+            // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA (ĐÃ FIX TRIỆT ĐỂ LỖI BỊ CẮT VÌ DẤU ])
+            if (isBeaBea && rawText.includes("[BEABEA_QUIZ:")) {
+                const startIdx = rawText.indexOf("[BEABEA_QUIZ:");
+                let bracketCount = 0;
+                let endIdx = -1;
 
-                    return `
-                        <div class="beabea-quiz-card" data-explain="${encExplain}">
-                            <div class="bb-quiz-badge"><i class="fa-solid fa-brain"></i> Thử Thách Trí Tuệ</div>
-                            <div class="bb-quiz-question">${escapeHtml(quizData.q)}</div>
-                            <div class="bb-quiz-options">${optionsHtml}</div>
-                            <div class="bb-quiz-feedback"></div>
-                        </div>
-                    `;
-                } catch(e) {}
+                // Thuật toán đếm cặp ngoặc [] để lấy trọn vẹn JSON kể cả khi có mảng options bên trong
+                for (let i = startIdx; i < rawText.length; i++) {
+                    if (rawText[i] === '[') bracketCount++;
+                    else if (rawText[i] === ']') {
+                        bracketCount--;
+                        if (bracketCount === 0) {
+                            endIdx = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (endIdx !== -1) {
+                    const quizRawTag = rawText.substring(startIdx, endIdx + 1);
+                    const jsonStr = rawText.substring(startIdx + 13, endIdx).trim();
+
+                    try {
+                        const quizData = JSON.parse(jsonStr);
+
+                        // Chuẩn hóa chỉ số đáp án đúng (hỗ trợ cả dạng số 0,1,2,3 hoặc chữ A,B,C,D)
+                        let correctAns = quizData.ans;
+                        if (typeof correctAns === 'string') {
+                            const upperAns = correctAns.trim().toUpperCase();
+                            if (upperAns.startsWith('A')) correctAns = 0;
+                            else if (upperAns.startsWith('B')) correctAns = 1;
+                            else if (upperAns.startsWith('C')) correctAns = 2;
+                            else if (upperAns.startsWith('D')) correctAns = 3;
+                            else correctAns = parseInt(upperAns) || 0;
+                        }
+
+                        const optionsHtml = (quizData.options || []).map((opt, idx) => `
+                            <button type="button" class="bb-quiz-opt-btn" onclick="handleAnswerBeaBeaQuiz(this, ${idx}, ${correctAns})">
+                                <span>${escapeHtml(opt)}</span>
+                                <i class="fa-regular fa-circle" style="font-size:0.75rem; opacity:0.6;"></i>
+                            </button>
+                        `).join('');
+
+                        const encExplain = encodeURIComponent(quizData.explain || 'Chính xác rồi bạn ơi!');
+                        const extraMsg = rawText.replace(quizRawTag, '').trim();
+
+                        return (extraMsg ? `<div class="chat-text">${formatCommentText(extraMsg)}</div>` : '') + `
+                            <div class="beabea-quiz-card" data-explain="${encExplain}">
+                                <div class="bb-quiz-badge"><i class="fa-solid fa-brain"></i> Thử Thách Trí Tuệ</div>
+                                <div class="bb-quiz-question">${escapeHtml(quizData.q)}</div>
+                                <div class="bb-quiz-options">${optionsHtml}</div>
+                                <div class="bb-quiz-feedback"></div>
+                            </div>
+                        `;
+                    } catch (e) {
+                        console.error("Lỗi parse Quiz JSON:", e, jsonStr);
+                    }
+                }
             }
 
             // 🎁 1. TÚI MÙ CHƯA BÓC - CHỈ TỪ BEABEA
