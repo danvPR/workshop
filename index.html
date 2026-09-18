@@ -3348,6 +3348,24 @@
         </div>
     </div>
 
+    <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL -->
+    <div id="emailVerifyBanner" style="display:none; position: sticky; top: 60px; left: 0; width: 100%; background: linear-gradient(90deg, #f59e0b, #ea580c); color: white; z-index: 997; padding: 9px 20px; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; font-weight: 600; flex: 1;">
+                <i class="fa-solid fa-triangle-exclamation fa-beat" style="font-size: 1.1rem; color: #fef08a;"></i>
+                <span>Email (<b id="bannerUserEmailText">...</b>) chưa được xác thực! Xác minh ngay để bảo vệ tài khoản và nhận <b style="color:#fef08a;">+50 WOW</b>!</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #ea580c; padding: 5px 14px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.82rem; cursor: pointer;">
+                    <i class="fa-solid fa-circle-check"></i> Xác minh ngay
+                </button>
+                <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.22); color: white; padding: 5px 12px; border-radius: 20px; font-weight: 700; border: none; font-size: 0.82rem; cursor: pointer;">
+                    <i class="fa-solid fa-rotate-right"></i> Gửi lại mã
+                </button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-left">
             <a href="#home" class="navbar-brand">
@@ -4724,132 +4742,137 @@
         </div>
     </div>
 
-    <!-- MODAL TẠO TÀI KHOẢN (BỐ CỤC 2 BƯỚC THỐNG NHẤT) -->
+    <!-- MODAL TẠO TÀI KHOẢN (TRỰC TIẾP 1 BƯỚC - AUTO LOGIN) -->
     <div class="modal-overlay" id="registerModal">
         <div class="modal auth-card-modal">
             <div class="modal-header" style="align-items:center;">
                 <div class="auth-header-badge">
                     <div class="auth-header-icon"><i class="fa-solid fa-user-plus"></i></div>
                     <div>
-                        <div style="font-size:1.1rem; font-weight:800; color:var(--text-title);" id="regModalMainTitle">Tạo tài khoản</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Cộng đồng sáng tạo ACGN & Scratch</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:var(--text-title);">Tạo tài khoản</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">Gia nhập cộng đồng sáng tạo ACGN & Scratch</div>
                     </div>
                 </div>
-                <button class="btn-close" onclick="closeRegisterModal()">&times;</button>
+                <button class="btn-close" onclick="closeModal('registerModal')">&times;</button>
             </div>
             
             <div class="modal-body">
-                <!-- Thanh tiến trình 2 bước -->
-                <div class="auth-steps-tracker">
-                    <div class="auth-step-pill active" id="stepPill1">
-                        <span class="auth-step-circle">1</span>
-                        <span>Điền thông tin</span>
+                <form onsubmit="handleRegisterDirect(event)" id="regForm">
+                    <!-- Tên đăng nhập -->
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:0.85rem; font-weight:700;">Tên đăng nhập (Username) *:</label>
+                        <div class="auth-input-group">
+                            <i class="fa-solid fa-at auth-input-icon"></i>
+                            <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" placeholder="username" title="3-25 ký tự: chỉ dùng chữ, số, gạch dưới (_) và gạch ngang (-)">
+                        </div>
                     </div>
-                    <div class="auth-step-divider"></div>
-                    <div class="auth-step-pill" id="stepPill2">
-                        <span class="auth-step-circle">2</span>
-                        <span>Xác thực OTP</span>
+
+                    <!-- Tên hiển thị -->
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:0.85rem; font-weight:700;">Tên hiển thị tự do *:</label>
+                        <div class="auth-input-group">
+                            <i class="fa-solid fa-id-card auth-input-icon"></i>
+                            <input type="text" id="regDisplayName" class="auth-control-input" required maxlength="40" placeholder="Tên của bạn">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:0.85rem; font-weight:700;">Địa chỉ Email *:</label>
+                        <div class="auth-input-group">
+                            <i class="fa-solid fa-envelope auth-input-icon"></i>
+                            <input type="email" id="regEmail" class="auth-control-input" required placeholder="example@gmail.com">
+                        </div>
+                    </div>
+
+                    <!-- Mật khẩu -->
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:0.85rem; font-weight:700;">Mật khẩu *:</label>
+                        <div class="auth-input-group">
+                            <i class="fa-solid fa-lock auth-input-icon"></i>
+                            <input type="password" id="regPw" class="auth-control-input" required minlength="6" placeholder="Tối thiểu 6 ký tự">
+                            <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="Hiện/Ẩn mật khẩu">
+                                <i class="fa-solid fa-eye" id="regEyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MÃ GIỚI THIỆU TÙY CHỌN (+50 WOW) -->
+                    <div class="auth-referral-banner">
+                        <div class="auth-referral-header">
+                            <span class="auth-referral-title">
+                                <span class="wow-icon"></span> Mã Giới Thiệu (Không bắt buộc)
+                            </span>
+                            <span class="auth-referral-badge">+50 WOW Sau Khi Xác Minh</span>
+                        </div>
+                        <div class="auth-referral-desc">
+                            Nhập tên người đã mời bạn. Cả hai sẽ nhận ngay <b>50 WOW</b> sau khi bạn xác minh email thành công!
+                        </div>
+                        <div class="auth-input-group" style="margin-bottom:0;">
+                            <i class="fa-solid fa-gift auth-input-icon" style="color:#ea580c;"></i>
+                            <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username người mời..." style="background:var(--bg-panel); border-color:#f59e0b;">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="btnRegisterDirect" style="width:100%; justify-content:center; padding:12px; font-size:1rem; border-radius:12px; font-weight:800;">
+                        <span>Đăng ký & Tham gia ngay</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:16px;">
+                    <span>Đã có tài khoản?</span> 
+                    <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal')" style="color:var(--primary); font-weight:700; text-decoration:none;">Đăng nhập ngay</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC MINH EMAIL & ĐỔI EMAIL -->
+    <div class="modal-overlay" id="verifyEmailModal">
+        <div class="modal auth-card-modal" style="max-width: 440px;">
+            <div class="modal-header" style="align-items:center;">
+                <div class="auth-header-badge">
+                    <div class="auth-header-icon" style="color: #ea580c; background: rgba(234, 88, 12, 0.12);"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <div style="font-size:1.1rem; font-weight:800; color:var(--text-title);">Xác thực Email</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">Bảo vệ tài khoản & mở khóa toàn bộ tính năng</div>
                     </div>
                 </div>
+                <button class="btn-close" onclick="closeModal('verifyEmailModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px;">
+                <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.45; text-align:center; margin-bottom:15px;">
+                    Mã xác nhận 6 số đã được gửi tới địa chỉ:<br>
+                    <b id="verifyModalEmailText" style="color:var(--primary); font-size:0.95rem;"></b>
+                </p>
 
-                <!-- BƯỚC 1: ĐIỀN THÔNG TIN CÁ NHÂN & MÃ GIỚI THIỆU -->
-                <div id="regStep1Section">
-                    <form onsubmit="handleRegisterRequest(event)" id="regFormStep1">
-                        <!-- Tên đăng nhập -->
-                        <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.85rem; font-weight:700;">Tên đăng nhập (Username) *:</label>
-                            <div class="auth-input-group">
-                                <i class="fa-solid fa-at auth-input-icon"></i>
-                                <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" placeholder="@BeaBea" title="3-25 ký tự: chỉ dùng chữ, số, gạch dưới (_) và gạch ngang (-)">
-                            </div>
-                        </div>
-
-                        <!-- Tên hiển thị -->
-                        <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.85rem; font-weight:700;">Tên hiển thị tự do *:</label>
-                            <div class="auth-input-group">
-                                <i class="fa-solid fa-id-card auth-input-icon"></i>
-                                <input type="text" id="regDisplayName" class="auth-control-input" required maxlength="40" placeholder="Gấu Gấu">
-                            </div>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.85rem; font-weight:700;">Địa chỉ Email *:</label>
-                            <div class="auth-input-group">
-                                <i class="fa-solid fa-envelope auth-input-icon"></i>
-                                <input type="email" id="regEmail" class="auth-control-input" required placeholder="banbe@gmail.com">
-                            </div>
-                        </div>
-
-                        <!-- Mật khẩu -->
-                        <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.85rem; font-weight:700;">Mật khẩu *:</label>
-                            <div class="auth-input-group">
-                                <i class="fa-solid fa-lock auth-input-icon"></i>
-                                <input type="password" id="regPw" class="auth-control-input" required minlength="6" placeholder="Tối thiểu 6 ký tự">
-                                <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="Hiện/Ẩn mật khẩu">
-                                    <i class="fa-solid fa-eye" id="regEyeIcon"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- MÃ GIỚI THIỆU TÙY CHỌN (+50 WOW) -->
-                        <div class="auth-referral-banner">
-                            <div class="auth-referral-header">
-                                <span class="auth-referral-title">
-                                    <span class="wow-icon"></span> Mã Giới Thiệu (Không bắt buộc)
-                                </span>
-                                <span class="auth-referral-badge">+50 WOW Đôi Bên</span>
-                            </div>
-                            <div class="auth-referral-desc">
-                                Nhập tên đăng nhập của người bạn đã mời bạn. Sau khi kích hoạt thành công, cả bạn và bạn của bạn đều nhận ngay <b>50 WOW</b>!
-                            </div>
-                            <div class="auth-input-group" style="margin-bottom:0;">
-                                <i class="fa-solid fa-gift auth-input-icon" style="color:#ea580c;"></i>
-                                <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username người mời (VD: BeaBea)" style="background:var(--bg-panel); border-color:#f59e0b;">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" id="btnReqReg" style="width:100%; justify-content:center; padding:12px; font-size:1rem; border-radius:12px; font-weight:800;">
-                            <span>Tiếp tục</span> <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </form>
-
-                    <div style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:16px;">
-                        <span>Đã có tài khoản?</span> 
-                        <a href="javascript:void(0)" onclick="closeRegisterModal(); openModal('loginModal')" style="color:var(--primary); font-weight:700; text-decoration:none;">Đăng nhập ngay</a>
-                    </div>
+                <div class="otp-box-container">
+                    <input type="text" id="verifyEmailOtpInput" class="otp-digit-input" placeholder="------" maxlength="6" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
 
-                <!-- BƯỚC 2: XÁC THỰC MÃ OTP 6 CHỮ SỐ -->
-                <div id="regStep2Section" style="display:none; text-align:center;">
-                    <div style="margin-bottom:14px;">
-                        <i class="fa-solid fa-envelope-circle-check fa-bounce" style="font-size:3rem; color:var(--primary);"></i>
-                    </div>
-                    <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:6px; color:var(--text-title);">Kiểm tra Hòm thư của bạn</h3>
-                    <p style="font-size:0.86rem; color:var(--text-muted); line-height:1.45; margin-bottom:15px;">
-                        Mã xác nhận 6 số đã được gửi đến:<br>
-                        <b id="regDisplayTargetEmail" style="color:var(--primary); font-size:0.95rem;"></b>
-                    </p>
-
-                    <div class="otp-box-container">
-                        <input type="text" id="regOtpCode" class="otp-digit-input" placeholder="------" required maxlength="6" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    </div>
-
-                    <div class="otp-sub-actions">
-                        <button type="button" class="btn-link-action" onclick="switchRegisterStep(1)">
-                            <i class="fa-solid fa-pen-to-square"></i> Đổi lại Email khác
-                        </button>
-                        <button type="button" class="btn-link-action" id="btnResendOtpCode" onclick="resendRegisterOtp()">
-                            <i class="fa-solid fa-rotate-right"></i> <span>Gửi lại mã</span> <span id="resendCountdownSpan"></span>
-                        </button>
-                    </div>
-
-                    <button type="button" onclick="handleRegisterConfirm()" class="btn btn-primary" id="btnConfirmReg" style="width:100%; justify-content:center; padding:12px; font-size:1rem; border-radius:12px; font-weight:800; margin-top:18px;">
-                        <i class="fa-solid fa-circle-check"></i> <span>Kích hoạt Tài khoản & Nhận quà</span>
+                <div class="otp-sub-actions" style="margin-top: 15px;">
+                    <button type="button" class="btn-link-action" onclick="toggleChangeEmailForm()">
+                        <i class="fa-solid fa-pen-to-square"></i> <span id="toggleChangeEmailBtnText">Đổi sang email khác</span>
+                    </button>
+                    <button type="button" class="btn-link-action" id="btnModalResendOtp" onclick="resendVerificationOtp(this)">
+                        <i class="fa-solid fa-rotate-right"></i> <span>Gửi lại mã</span> <span id="modalResendCountdown"></span>
                     </button>
                 </div>
+
+                <!-- KHUNG ĐỔI EMAIL PHỤ (ẨN MẶC ĐỊNH) -->
+                <div id="changeEmailSubForm" style="display:none; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-top:14px;">
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Nhập email mới:</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="email" id="newEmailInput" class="form-control" placeholder="newemail@gmail.com" style="font-size:0.88rem; padding:8px 10px;">
+                        <button type="button" class="btn btn-primary" id="btnSubmitChangeEmail" onclick="handleChangeEmailSubmit()" style="font-size:0.82rem; padding:8px 14px; white-space:nowrap;">
+                            Lưu & Gửi mã
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button" onclick="handleVerifyEmailOtp()" class="btn btn-primary" id="btnSubmitVerifyOtp" style="width:100%; justify-content:center; padding:12px; font-size:1rem; border-radius:12px; font-weight:800; margin-top:18px;">
+                    <i class="fa-solid fa-circle-check"></i> <span>Xác nhận & Nhận 50 WOW</span>
+                </button>
             </div>
         </div>
     </div>
@@ -5726,6 +5749,7 @@
 
                 await loadProjects(); updateNav(); handleRouting();
                 checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
+                checkEmailVerificationBanner(); // Kiểm tra banner xác thực email
                 loadEvents(); // Tải Sự kiện Game Jam
                 setInterval(autoFetchData, 35000);
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
@@ -5753,42 +5777,9 @@
             else { btn.disabled = false; btn.innerText = "Cập nhật ngay"; }
         }
 
-        // ================= AUTHENTICATION (NATIVE & MODERN STEP CARD) =================
-        let regResendTimer = null;
-        let regCountdownVal = 0;
-
-        function closeRegisterModal() {
-            closeModal('registerModal');
-            // Reset về bước 1
-            switchRegisterStep(1);
-        }
-
-        function switchRegisterStep(step) {
-            const step1 = document.getElementById('regStep1Section');
-            const step2 = document.getElementById('regStep2Section');
-            const pill1 = document.getElementById('stepPill1');
-            const pill2 = document.getElementById('stepPill2');
-            const title = document.getElementById('regModalMainTitle');
-
-            if (step === 1) {
-                if (step1) step1.style.display = 'block';
-                if (step2) step2.style.display = 'none';
-                if (pill1) pill1.classList.add('active');
-                if (pill2) pill2.classList.remove('active');
-                if (title) title.innerText = "Tạo tài khoản";
-            } else {
-                if (step1) step1.style.display = 'none';
-                if (step2) step2.style.display = 'block';
-                if (pill1) pill1.classList.add('active');
-                if (pill2) pill2.classList.add('active');
-                if (title) title.innerText = "Xác thực Email";
-                const otpInput = document.getElementById('regOtpCode');
-                if (otpInput) {
-                    otpInput.value = '';
-                    setTimeout(() => otpInput.focus(), 150);
-                }
-            }
-        }
+        // ================= AUTHENTICATION & EMAIL VERIFICATION =================
+        let otpCooldownTimer = null;
+        let otpCooldownSeconds = 0;
 
         function toggleRegPassword() {
             const pwInput = document.getElementById('regPw');
@@ -5803,35 +5794,26 @@
             }
         }
 
-        function startResendCooldown(seconds = 60) {
-            const btn = document.getElementById('btnResendOtpCode');
-            const span = document.getElementById('resendCountdownSpan');
-            if (!btn || !span) return;
-
-            clearInterval(regResendTimer);
-            regCountdownVal = seconds;
-            btn.disabled = true;
-            span.innerText = `(${regCountdownVal}s)`;
-
-            regResendTimer = setInterval(() => {
-                regCountdownVal--;
-                if (regCountdownVal <= 0) {
-                    clearInterval(regResendTimer);
-                    btn.disabled = false;
-                    span.innerText = '';
-                } else {
-                    span.innerText = `(${regCountdownVal}s)`;
-                }
-            }, 1000);
+        function checkEmailVerificationBanner() {
+            const banner = document.getElementById('emailVerifyBanner');
+            if (!banner) return;
+            if (currentUser && currentUser.emailVerified === false) {
+                const emailText = document.getElementById('bannerUserEmailText');
+                if (emailText) emailText.innerText = currentUser.email || 'Email của bạn';
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
         }
 
-        async function handleRegisterRequest(e) {
-            if (e) e.preventDefault();
-            const btn = document.getElementById('btnReqReg');
+        // ĐĂNG KÝ TRỰC TIẾP & ĐĂNG NHẬP NGAY LẬP TỨC
+        async function handleRegisterDirect(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnRegisterDirect');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang kiểm tra & gửi mã OTP...</span>';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang khởi tạo tài khoản...</span>';
             }
 
             const username = document.getElementById('regUsername').value.trim();
@@ -5840,87 +5822,201 @@
             const pw = document.getElementById('regPw').value;
             const refCode = document.getElementById('regReferralCode') ? document.getElementById('regReferralCode').value.trim() : "";
 
-            if (!username || !email || !displayName || !pw) {
-                showToast("Vui lòng điền đủ tất cả các trường có dấu *", "error");
-                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
-                return;
-            }
-
             try {
-                const res = await (await fetch(`${WORKER_URL}/api/auth/register_req`, {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ username, email, displayName, referralCode: refCode })
-                })).json();
-
-                if (res.success) {
-                    const emailDisplay = document.getElementById('regDisplayTargetEmail');
-                    if (emailDisplay) emailDisplay.innerText = email;
-                    switchRegisterStep(2);
-                    startResendCooldown(60);
-                    showToast("Mã xác nhận 6 số đã được gửi tới hòm thư của bạn!", "success");
-                } else {
-                    showToast(res.error || "Không thể gửi mã xác nhận", "error");
-                }
-            } catch(err) {
-                showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
-            }
-
-            if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
-        }
-
-        async function resendRegisterOtp() {
-            const email = document.getElementById('regEmail').value.trim();
-            if (!email) return switchRegisterStep(1);
-            await handleRegisterRequest(null);
-        }
-
-        async function handleRegisterConfirm() {
-            const codeInput = document.getElementById('regOtpCode');
-            const code = codeInput ? codeInput.value.trim() : "";
-            const email = document.getElementById('regEmail').value.trim();
-            const pw = document.getElementById('regPw').value;
-
-            if (code.length < 6) return showToast("Vui lòng nhập đủ 6 chữ số xác nhận", "error");
-
-            const btn = document.getElementById('btnConfirmReg');
-            const origHtml = btn ? btn.innerHTML : '';
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang khởi tạo tài khoản...</span>';
-            }
-
-            try {
-                const res = await (await fetch(`${WORKER_URL}/api/auth/register_confirm`, {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ email, code, password: pw, location: "Đang cập nhật" })
+                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode })
                 })).json();
 
                 if (res.success) {
                     currentUser = {
                         username: res.username,
                         sessionToken: res.sessionToken,
+                        displayName: res.displayName,
+                        email: res.email,
+                        emailVerified: false,
                         role: "user",
-                        WOW: res.WOW !== undefined ? res.WOW : 0
+                        WOW: 0
                     };
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
                     closeModal('registerModal');
-
-                    if (res.rewardedReferral) {
-                        showToast("🎉 Đăng ký thành công! Bạn và người mời đã được tặng +50 WOW!", "success");
-                    } else {
-                        showToast("Chào mừng bạn! Đăng ký tài khoản thành công.", "success");
-                    }
-                    setTimeout(() => location.reload(), 1200);
+                    updateNav();
+                    checkEmailVerificationBanner();
+                    showToast("🎉 Chào mừng bạn gia nhập! Vui lòng xác minh email để nhận +50 WOW.", "success");
                 } else {
-                    showToast(res.error || "Mã xác nhận không đúng hoặc đã hết hạn", "error");
+                    showToast(res.error || "Không thể đăng ký tài khoản!", "error");
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
             }
 
             if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+        }
+
+        // MỞ & ĐÓNG MODAL XÁC THỰC EMAIL
+        function openVerifyEmailModal() {
+            if (!currentUser) return openModal('loginModal');
+            const emailText = document.getElementById('verifyModalEmailText');
+            if (emailText) emailText.innerText = currentUser.email || '';
+            const otpInput = document.getElementById('verifyEmailOtpInput');
+            if (otpInput) otpInput.value = '';
+            document.getElementById('changeEmailSubForm').style.display = 'none';
+            document.getElementById('toggleChangeEmailBtnText').innerText = "Đổi sang email khác";
+            openModal('verifyEmailModal');
+        }
+
+        // XÁC NHẬN MÃ OTP EMAIL
+        async function handleVerifyEmailOtp() {
+            if (!currentUser) return;
+            const otpInput = document.getElementById('verifyEmailOtpInput');
+            const code = otpInput ? otpInput.value.trim() : "";
+            if (code.length < 6) return showToast("Vui lòng nhập đủ 6 chữ số xác nhận!", "error");
+
+            const btn = document.getElementById('btnSubmitVerifyOtp');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang xác thực...</span>';
+            }
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/verify_email`, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
+                    body: JSON.stringify({ username: currentUser.username, sessionToken: currentUser.sessionToken, code })
+                })).json();
+
+                if (res.success) {
+                    currentUser.emailVerified = true;
+                    if (res.WOW !== undefined) currentUser.WOW = res.WOW;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+
+                    closeModal('verifyEmailModal');
+                    checkEmailVerificationBanner();
+                    updateNav();
+
+                    if (res.rewardedReferral) {
+                        showToast("🎉 Xác minh thành công! Bạn và người giới thiệu đã nhận +50 WOW!", "success");
+                    } else {
+                        showToast("🎉 Email của bạn đã được xác minh thành công!", "success");
+                    }
+                } else {
+                    showToast(res.error || "Mã xác minh không hợp lệ!", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+
+            if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+        }
+
+        // GỬI LẠI MÃ OTP (CÓ COOLDOWN 60 GIÂY)
+        async function resendVerificationOtp(btnTrigger) {
+            if (!currentUser) return;
+            if (otpCooldownSeconds > 0) return;
+
+            const origHtml = btnTrigger ? btnTrigger.innerHTML : '';
+            if (btnTrigger) {
+                btnTrigger.disabled = true;
+                btnTrigger.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+            }
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/resend_otp`, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
+                    body: JSON.stringify({ username: currentUser.username, sessionToken: currentUser.sessionToken })
+                })).json();
+
+                if (res.success) {
+                    showToast("Đã gửi mã xác nhận mới vào email của bạn!", "success");
+                    startOtpCountdown(60);
+                } else {
+                    showToast(res.error || "Không thể gửi lại mã!", "error");
+                    if (btnTrigger) { btnTrigger.disabled = false; btnTrigger.innerHTML = origHtml; }
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+                if (btnTrigger) { btnTrigger.disabled = false; btnTrigger.innerHTML = origHtml; }
+            }
+        }
+
+        function startOtpCountdown(sec = 60) {
+            clearInterval(otpCooldownTimer);
+            otpCooldownSeconds = sec;
+            const updateTexts = () => {
+                const modalSpan = document.getElementById('modalResendCountdown');
+                const bannerBtn = document.getElementById('btnBannerResendOtp');
+                if (modalSpan) modalSpan.innerText = otpCooldownSeconds > 0 ? `(${otpCooldownSeconds}s)` : '';
+                if (bannerBtn) {
+                    bannerBtn.disabled = otpCooldownSeconds > 0;
+                    bannerBtn.innerHTML = otpCooldownSeconds > 0 
+                        ? `<i class="fa-solid fa-rotate-right"></i> Gửi lại (${otpCooldownSeconds}s)` 
+                        : `<i class="fa-solid fa-rotate-right"></i> Gửi lại mã`;
+                }
+                const modalBtn = document.getElementById('btnModalResendOtp');
+                if (modalBtn) modalBtn.disabled = otpCooldownSeconds > 0;
+            };
+
+            updateTexts();
+            otpCooldownTimer = setInterval(() => {
+                otpCooldownSeconds--;
+                updateTexts();
+                if (otpCooldownSeconds <= 0) clearInterval(otpCooldownTimer);
+            }, 1000);
+        }
+
+        // BẬT/TẮT KHUNG ĐỔI EMAIL
+        function toggleChangeEmailForm() {
+            const form = document.getElementById('changeEmailSubForm');
+            const textBtn = document.getElementById('toggleChangeEmailBtnText');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                textBtn.innerText = "Thu gọn";
+                const inp = document.getElementById('newEmailInput');
+                if (inp) { inp.value = ''; inp.focus(); }
+            } else {
+                form.style.display = 'none';
+                textBtn.innerText = "Đổi sang email khác";
+            }
+        }
+
+        // LƯU EMAIL MỚI VÀ NHẬN OTP MỚI
+        async function handleChangeEmailSubmit() {
+            if (!currentUser) return;
+            const newEmail = (document.getElementById('newEmailInput').value || '').trim();
+            if (!newEmail || !newEmail.includes('@')) return showToast("Vui lòng nhập địa chỉ email hợp lệ!", "error");
+
+            const btn = document.getElementById('btnSubmitChangeEmail');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/change_email`, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
+                    body: JSON.stringify({ username: currentUser.username, sessionToken: currentUser.sessionToken, newEmail })
+                })).json();
+
+                if (res.success) {
+                    currentUser.email = res.email;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    document.getElementById('verifyModalEmailText').innerText = res.email;
+                    document.getElementById('bannerUserEmailText').innerText = res.email;
+                    toggleChangeEmailForm();
+                    startOtpCountdown(60);
+                    showToast("Đã cập nhật email! Mã xác minh mới đã được gửi.", "success");
+                } else {
+                    showToast(res.error || "Không thể đổi email!", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
         }
         async function handleLoginNative(e) {
             e.preventDefault();
@@ -5933,6 +6029,8 @@
                         sessionToken: res.sessionToken, 
                         avt: res.avt, 
                         role: res.role,
+                        email: res.email || "",
+                        emailVerified: res.emailVerified !== undefined ? res.emailVerified : true,
                         WOW: res.WOW !== undefined ? res.WOW : (res.omg || 0),
                         frame: res.frame || null
                     };
@@ -6160,6 +6258,7 @@
         function updateNav() {
             const nav = document.getElementById('navActions');
             const mobileUserNav = document.getElementById('mobileUserNav');
+            checkEmailVerificationBanner();
 
             if (currentUser) {
                 const adminIcon = currentUser.role === 'admin' 
@@ -8537,6 +8636,11 @@
 
         function openUploadPage() {
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
+            if(currentUser.emailVerified === false) {
+                showToast("Vui lòng xác thực email trước khi xuất bản tác phẩm!", "error");
+                openVerifyEmailModal();
+                return;
+            }
             document.getElementById('uploadView').style.display = 'block';
             
             // Luôn đặt lại về màn hình chọn mỗi khi mở trang
@@ -11755,6 +11859,11 @@ function reopenEditor() {
         function openTipModal() {
             if (!currentUser) return openModal('loginModal');
             if (!currentProj) return;
+            if (currentUser.emailVerified === false) {
+                showToast("Vui lòng xác thực email để sử dụng tính năng tặng WOW!", "error");
+                openVerifyEmailModal();
+                return;
+            }
 
             if (currentProj.author.toLowerCase() === currentUser.username.toLowerCase()) {
                 return showToast("Bạn không thể tự gửi tặng điểm cho chính tác phẩm của mình!", "error");
