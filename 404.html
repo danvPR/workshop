@@ -4,18 +4,71 @@
     <meta charset="utf-8">
     <title>DANVworkshop - Redirecting...</title>
     <script>
-        // Tự động nhận diện nếu đang chạy trên GitHub Pages (danvpr.github.io/workshop/) thì giữ lại thư mục gốc /workshop/
-        var pathSegmentsToKeep = window.location.hostname.endsWith('github.io') ? 1 : 0;
-        var l = window.location;
-        l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
-            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/') +
-            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash
-        );
+        var currentHost = window.location.hostname;
+        var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
+        var searchParams = new URLSearchParams(window.location.search);
+        var currentHash = window.location.hash;
+
+        // =====================================================================
+        // TRƯỜNG HỢP 1: ĐANG Ở GITHUB PAGES -> GÓI TOKEN VÀ CHUYỂN SANG CLOUDFLARE
+        // =====================================================================
+        if (currentHost.endsWith('github.io')) {
+            var authBundle = {};
+            try {
+                if (localStorage.getItem('danv_user')) authBundle.danv_user = localStorage.getItem('danv_user');
+                if (localStorage.getItem('danv_theme')) authBundle.danv_theme = localStorage.getItem('danv_theme');
+                if (localStorage.getItem('lang')) authBundle.lang = localStorage.getItem('lang');
+                if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
+            } catch(e) {}
+
+            if (Object.keys(authBundle).length > 0) {
+                try {
+                    searchParams.set('_mig_auth', btoa(unescape(encodeURIComponent(JSON.stringify(authBundle)))));
+                } catch(e) {}
+            }
+
+            var finalQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
+            var targetUrl = 'https://turbows.pages.dev' + cleanPath + finalQuery + currentHash;
+            window.location.replace(targetUrl);
+        } 
+        
+        // =====================================================================
+        // TRƯỜNG HỢP 2: ĐANG Ở CLOUDFLARE PAGES MÀ BỊ 404 DO F5 RELOAD
+        // =====================================================================
+        else {
+            // Khôi phục lại Hash route tương ứng để index.html bắt và vẽ lại trang
+            var targetHash = '';
+            if (cleanPath.includes('/projects/')) {
+                var pid = cleanPath.split('/projects/')[1].replace(/\/$/, '');
+                targetHash = '#project/' + pid;
+            } else if (cleanPath.includes('/users/')) {
+                var uname = cleanPath.split('/users/')[1].replace(/\/$/, '');
+                targetHash = '#profile/' + uname;
+            } else if (cleanPath.includes('/studio/')) {
+                var sid = cleanPath.split('/studio/')[1].replace(/\/$/, '');
+                targetHash = '#studio/' + sid;
+            } else if (cleanPath.includes('/studios')) {
+                targetHash = '#studios';
+            } else if (currentHash) {
+                targetHash = currentHash;
+            } else {
+                targetHash = '#home';
+            }
+
+            var queryStr = searchParams.toString() ? '?' + searchParams.toString() : '';
+            var restoreUrl = window.location.origin + '/' + queryStr + targetHash;
+            window.location.replace(restoreUrl);
+        }
     </script>
 </head>
-<body>
+<body style="background: #0f172a; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; color: #ffffff;">
+    <div style="text-align: center;">
+        <svg style="animation: spin 1s linear infinite; width: 44px; height: 44px; color: #0da57a; margin-bottom: 16px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style="opacity: 0.75;"></path>
+        </svg>
+        <p style="font-size: 1rem; color: #94a3b8; margin: 0;">Đang kết nối lại...</p>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </body>
 </html>
