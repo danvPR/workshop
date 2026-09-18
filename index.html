@@ -11942,7 +11942,7 @@ function reopenEditor() {
                                         </button>` : ''}
                                     ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
                                         <div class="trans-menu-wrapper">
-                                            <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}')" title="Dịch tin nhắn">
+                                            <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
                                                 <i class="fa-solid fa-language"></i>
                                             </button>
                                         </div>` : ''}
@@ -12536,14 +12536,21 @@ function reopenEditor() {
             document.querySelectorAll('.trans-portal-menu').forEach(m => m.remove());
         }
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.trans-portal-menu') && !e.target.closest('.btn-translate-icon') && !e.target.closest('.chat-act-btn') && !e.target.closest('.btn-action-cmt')) {
+            if (!e.target.closest('.trans-portal-menu') && 
+                !e.target.closest('.btn-translate-icon') && 
+                !e.target.closest('.chat-act-btn') && 
+                !e.target.closest('.chat-float-btn') && 
+                !e.target.closest('.btn-action-cmt') &&
+                !e.target.closest('.trans-menu-wrapper')) {
                 closeAllTranslatePortals();
             }
         });
         window.addEventListener('resize', closeAllTranslatePortals);
 
         // HÀM MỞ MENU DỊCH NỔI PORTAL (TUYỆT ĐỐI KHÔNG BỊ KHUNG CUỘN CHE)
-        function openTranslateMenu(btn, contextType, targetId) {
+        function openTranslateMenu(btn, contextType, targetId, e = null) {
+            if (e && e.stopPropagation) e.stopPropagation();
+
             const existingPortal = document.querySelector(`.trans-portal-menu[data-target-id="${targetId}"]`);
             if (existingPortal) {
                 existingPortal.remove();
@@ -13440,7 +13447,7 @@ function reopenEditor() {
             } else if (contextType === 'chat') {
                 const row = document.getElementById(`chat-msg-${targetId}`);
                 if (row) {
-                    btn = row.querySelector(`button[onclick*="'${targetId}'"]`);
+                    btn = row.querySelector(`.chat-float-btn[onclick*="openTranslateMenu"], .chat-act-btn[onclick*="openTranslateMenu"], button[onclick*="openTranslateMenu"]`);
                     targetContainer = row.querySelector('.chat-bubble');
                     if (targetContainer) {
                         const chatTextEl = targetContainer.querySelector('.chat-text');
