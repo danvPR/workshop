@@ -3472,13 +3472,107 @@
         }
         [data-theme="dark"] .bb-gift-msg { color: #e2e8f0; border-top-color: rgba(217, 70, 239, 0.4); }
 
-        /* Bỏ background của bong bóng chat chứa thẻ quà tặng để không bị viền xấu */
+        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố để không bị viền xấu */
         .chat-msg-row .chat-bubble:has(.beabea-gift-card),
-        .chat-msg-row .chat-bubble:has(.beabea-blindbag-card) {
+        .chat-msg-row .chat-bubble:has(.beabea-blindbag-card),
+        .chat-msg-row .chat-bubble:has(.beabea-quiz-card) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+        }
+
+        /* 🎯 THẺ CÂU ĐỐ TRẮC NGHIỆM BEABEA AI */
+        .beabea-quiz-card {
+            background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%);
+            border: 2px solid #818cf8;
+            border-radius: 18px;
+            padding: 16px 18px;
+            color: #ffffff;
+            width: 320px;
+            max-width: 100%;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            animation: giftPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .bb-quiz-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #c7d2fe;
+            background: rgba(99, 102, 241, 0.25);
+            padding: 3px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(129, 140, 248, 0.4);
+        }
+        .bb-quiz-question {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+        .bb-quiz-opt-btn {
+            width: 100%;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .bb-quiz-opt-btn:hover:not(:disabled) {
+            background: rgba(99, 102, 241, 0.28);
+            border-color: #818cf8;
+            transform: translateX(3px);
+            color: #fff;
+        }
+        .bb-quiz-opt-btn.correct {
+            background: rgba(16, 185, 129, 0.3) !important;
+            border-color: #10b981 !important;
+            color: #6ee7b7 !important;
+            font-weight: 800;
+        }
+        .bb-quiz-opt-btn.wrong {
+            background: rgba(239, 68, 68, 0.3) !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+        .bb-quiz-feedback {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .bb-quiz-feedback.show-correct {
+            display: block;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #a7f3d0;
+        }
+        .bb-quiz-feedback.show-wrong {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fecaca;
         }
 
         /* 🎁 THẺ TÚI MÙ TRONG PHÒNG CHAT */
@@ -10311,12 +10405,37 @@
         }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        // 🎴 HÀM RENDER NỘI DUNG CHAT (ĐÃ TÍCH HỢP TÚI MÙ VŨ TRỤ)
-        function renderChatContent(rawText) {
+        // 🎴 HÀM RENDER NỘI DUNG CHAT (CHỈ CHO PHÉP BEABEA FORMAT CÁC THẺ ĐẶC BIỆT CHỐNG GIẢ MẠO)
+        function renderChatContent(rawText, author = '') {
             if (!rawText) return '';
+            const isBeaBea = (author === 'BeaBea (AI)');
 
-            // 🎁 1. TÚI MÙ CHƯA BÓC
-            const bagMatch = rawText.match(/\[BEABEA_BLIND_BAG:([a-zA-Z0-9_\-]+)\]/);
+            // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA
+            const quizMatch = isBeaBea ? rawText.match(/\[BEABEA_QUIZ:([\s\S]*?)\]/) : null;
+            if (quizMatch) {
+                try {
+                    const quizData = JSON.parse(quizMatch[1]);
+                    const optionsHtml = (quizData.options || []).map((opt, idx) => `
+                        <button type="button" class="bb-quiz-opt-btn" onclick="handleAnswerBeaBeaQuiz(this, ${idx}, ${quizData.ans})">
+                            <span>${escapeHtml(opt)}</span>
+                            <i class="fa-regular fa-circle" style="font-size:0.75rem; opacity:0.6;"></i>
+                        </button>
+                    `).join('');
+                    const encExplain = encodeURIComponent(quizData.explain || 'Chính xác rồi bạn ơi!');
+
+                    return `
+                        <div class="beabea-quiz-card" data-explain="${encExplain}">
+                            <div class="bb-quiz-badge"><i class="fa-solid fa-brain"></i> Thử Thách Trí Tuệ</div>
+                            <div class="bb-quiz-question">${escapeHtml(quizData.q)}</div>
+                            <div class="bb-quiz-options">${optionsHtml}</div>
+                            <div class="bb-quiz-feedback"></div>
+                        </div>
+                    `;
+                } catch(e) {}
+            }
+
+            // 🎁 1. TÚI MÙ CHƯA BÓC - CHỈ TỪ BEABEA
+            const bagMatch = isBeaBea ? rawText.match(/\[BEABEA_BLIND_BAG:([a-zA-Z0-9_\-]+)\]/) : null;
             if (bagMatch) {
                 const bagId = bagMatch[1];
                 return `
@@ -10326,7 +10445,7 @@
                         </div>
                         <i class="fa-solid fa-gift bag-icon-anim"></i>
                         <div style="font-weight:900; font-size:1.15rem; color:#fff;">Túi Mù Năng Lượng</div>
-                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>5 đến 50 WOW</b>. Ai nhanh tay mở trước sẽ nhận được!</div>
+                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>3 đến 15 WOW</b>. Ai nhanh tay mở trước sẽ nhận được!</div>
                         <button type="button" class="btn-open-blindbag" onclick="openBlindBagGacha('${bagId}')">
                             <i class="fa-solid fa-bolt"></i> Bóc Túi Mù Ngay
                         </button>
@@ -10334,11 +10453,11 @@
                 `;
             }
 
-            // 🎁 2. TÚI MÙ ĐÃ CÓ NGƯỜI BÓC
-            const claimedMatch = rawText.match(/\[BEABEA_BLIND_BAG_CLAIMED:([a-zA-Z0-9_\-]+):([a-zA-Z0-9_\-]+):(\d+)\]/);
+            // 🎁 2. TÚI MÙ ĐÃ CÓ NGƯỜI BÓC - CHỈ TỪ BEABEA
+            const claimedMatch = isBeaBea ? rawText.match(/\[BEABEA_BLIND_BAG_CLAIMED:([a-zA-Z0-9_\-]+):([a-zA-Z0-9_\-]+):(\d+)\]/) : null;
             if (claimedMatch) {
                 const [_, bId, claimer, reward] = claimedMatch;
-                const isJackpot = parseInt(reward) >= 50;
+                const isJackpot = parseInt(reward) >= 15;
                 return `
                     <div class="beabea-blindbag-card blindbag-claimed-box">
                         <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#94a3b8; margin-bottom:4px;">
@@ -10355,8 +10474,8 @@
                 `;
             }
 
-            // 🎁 KIỂM TRA NẾU ĐÂY LÀ QUÀ TẶNG TỪ BEABEA AI
-            const giftMatch = rawText.match(/\[BEABEA_GIFT:\s*(\d+)\s*\]([\s\S]*)/i);
+            // 🎁 3. QUÀ TẶNG - CHỈ TỪ BEABEA
+            const giftMatch = isBeaBea ? rawText.match(/\[BEABEA_GIFT:\s*(\d+)\s*\]([\s\S]*)/i) : null;
             if (giftMatch) {
                 const amount = giftMatch[1];
                 const msg = giftMatch[2].trim();
@@ -10373,7 +10492,7 @@
                 `;
             }
 
-            // 📊 1. KIỂM TRA NẾU ĐÂY LÀ TIN NHẮN BÌNH CHỌN (POLL)
+            // 📊 4. KIỂM TRA NẾU ĐÂY LÀ TIN NHẮN BÌNH CHỌN (POLL)
             if (rawText.startsWith("[DANV_POLL]")) {
                 try {
                     const pollData = JSON.parse(rawText.replace("[DANV_POLL]", ""));
@@ -11531,7 +11650,7 @@ function reopenEditor() {
                                 <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                             </div>
 
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}${transBoxHtml}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}${transBoxHtml}</div>
                             
                             <div class="chat-actions">
                                 ${currentUser && !isMine ? `
@@ -11678,7 +11797,7 @@ function reopenEditor() {
                                 ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble" style="border: 1px dashed var(--border-color);">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '')}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
+                            <div class="chat-bubble" style="border: 1px dashed var(--border-color);">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
                         </div>
                     </div>
                     `;
@@ -12311,6 +12430,36 @@ function reopenEditor() {
         }
 
         function openAboutWOWModal() { openModal('aboutWOWModal'); }
+
+        // ================= XỬ LÝ TƯƠNG TÁC CÂU ĐỐ BEABEA =================
+        function handleAnswerBeaBeaQuiz(btnEl, selectedIdx, correctIdx) {
+            const card = btnEl.closest('.beabea-quiz-card');
+            if (!card) return;
+
+            const feedbackEl = card.querySelector('.bb-quiz-feedback');
+            const explainText = decodeURIComponent(card.getAttribute('data-explain') || '');
+            const allBtns = card.querySelectorAll('.bb-quiz-opt-btn');
+
+            if (selectedIdx === correctIdx) {
+                // Người dùng trả lời ĐÚNG
+                allBtns.forEach((b, i) => {
+                    b.disabled = true;
+                    if (i === correctIdx) {
+                        b.className = 'bb-quiz-opt-btn correct';
+                        b.querySelector('i').className = 'fa-solid fa-circle-check';
+                    }
+                });
+                feedbackEl.className = 'bb-quiz-feedback show-correct';
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <b>Chính xác!</b> ${escapeHtml(explainText)}`;
+            } else {
+                // Người dùng trả lời CHƯA ĐÚNG
+                btnEl.className = 'bb-quiz-opt-btn wrong';
+                btnEl.querySelector('i').className = 'fa-solid fa-circle-xmark';
+                feedbackEl.className = 'bb-quiz-feedback show-wrong';
+                feedbackEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>Chưa đúng rồi!</b> Hãy suy nghĩ thêm và thử lại đáp án khác xem nhé!`;
+            }
+        }
+
 
         // ================= XỬ LÝ BÓC TÚI MÙ VŨ TRỤ (GACHA ROLLER) =================
         let isOpeningBag = false;
