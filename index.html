@@ -699,19 +699,21 @@
             flex-direction: column;
             align-items: center;
         }
+        /* Khung Logo hình chữ nhật rộng rãi, hiển thị trọn vẹn logo banner */
         .auth-brand-logo-frame {
-            width: 90px;
-            height: 90px;
-            border-radius: 24px;
+            width: 100%;
+            max-width: 240px;
+            height: 68px;
+            border-radius: 18px;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(14px);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-            padding: 12px;
+            padding: 8px 18px;
         }
         .auth-brand-logo {
             width: 100%;
@@ -721,27 +723,76 @@
             filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
         }
         .auth-brand-title {
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             font-weight: 900;
             color: #ffffff !important;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
         }
         .auth-brand-slogan {
             font-size: 0.85rem;
             color: #94a3b8;
             line-height: 1.5;
-            max-width: 220px;
+            max-width: 230px;
         }
         .auth-showcase-footer {
             position: relative;
             z-index: 2;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             color: #64748b;
-            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .auth-footer-link {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .auth-footer-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .auth-footer-dot {
+            color: #475569;
+            font-size: 0.7rem;
+        }
+
+        /* Thanh đổi ngôn ngữ ở chân form */
+        .auth-lang-footer {
+            margin-top: auto;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+        }
+        .auth-lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
             gap: 6px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .auth-lang-btn:hover {
+            color: var(--primary);
+            background: var(--bg-secondary);
+        }
+        .auth-lang-btn.active {
+            color: var(--primary);
+            font-weight: 800;
+            background: rgba(13, 165, 122, 0.1);
         }
 
         /* Cột phải: Khu vực Form thoáng đãng, tinh gọn */
@@ -4840,7 +4891,9 @@
                 </div>
 
                 <div class="auth-showcase-footer">
-                    <i class="fa-solid fa-shield-halved"></i> <span>Bảo mật & Văn minh</span>
+                    <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" class="auth-footer-link">Điều khoản dịch vụ</a>
+                    <span class="auth-footer-dot">•</span>
+                    <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" class="auth-footer-link">Chính sách bảo mật</a>
                 </div>
             </div>
 
@@ -4891,7 +4944,7 @@
                         </button>
                     </form>
 
-                    <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:18px;">
+                    <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:16px;">
                         <span>Chưa có tài khoản?</span> 
                         <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Đăng ký ngay</a>
                     </div>
@@ -4961,6 +5014,17 @@
                         <span>Đã có tài khoản?</span> 
                         <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Đăng nhập ngay</a>
                     </div>
+                </div>
+
+                <!-- FOOTER ĐỔI NGÔN NGỮ TIẾNG VIỆT / ENGLISH -->
+                <div class="auth-lang-footer">
+                    <button type="button" class="auth-lang-btn" id="authLangBtnVi" onclick="setLanguage('vi')">
+                        <i class="fa-solid fa-earth-asia"></i> <span>Tiếng Việt</span>
+                    </button>
+                    <span class="auth-footer-dot">•</span>
+                    <button type="button" class="auth-lang-btn" id="authLangBtnEn" onclick="setLanguage('en')">
+                        <i class="fa-solid fa-globe"></i> <span>English</span>
+                    </button>
                 </div>
 
             </div>
@@ -10031,6 +10095,14 @@
             const liveNavLogo = document.querySelector('.nav-logo-img') || document.querySelector('.footer-logo-img');
             if (logoImg && liveNavLogo && liveNavLogo.src) {
                 logoImg.src = liveNavLogo.src;
+            }
+
+            // Đồng bộ trạng thái active cho 2 nút ngôn ngữ dưới footer
+            const btnVi = document.getElementById('authLangBtnVi');
+            const btnEn = document.getElementById('authLangBtnEn');
+            if (btnVi && btnEn) {
+                btnVi.classList.toggle('active', activeLang === 'vi');
+                btnEn.classList.toggle('active', activeLang === 'en');
             }
 
             if (activeLang === 'en') {
