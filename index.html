@@ -8927,10 +8927,6 @@
         }
 
         
-        
-        
-        
-        
         async function openSettingsPage() {
             document.getElementById('settingsView').style.display = 'block';
             
@@ -8959,7 +8955,19 @@
                 // Cập nhật thẻ trạng thái Email trong Tab Tài khoản
                 const verifyBadge = document.getElementById('emailVerifyStatusBadge');
                 const verifyBtn = document.getElementById('btnAccountVerifyAction');
-                const isAccVerified = (pData.emailVerified === true || pData.emailVerified === "true" || currentUser.emailVerified === true);
+
+                // Lấy pData từ server làm nguồn chân lý, đồng thời tự động tẩy sạch cache bị sai trong localStorage
+                let isAccVerified = false;
+                if (pData && pData.emailVerified !== undefined) {
+                    isAccVerified = (pData.emailVerified === true || pData.emailVerified === "true");
+                    if (currentUser) {
+                        currentUser.emailVerified = isAccVerified;
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        checkEmailVerificationBanner();
+                    }
+                } else if (currentUser) {
+                    isAccVerified = (currentUser.emailVerified === true || currentUser.emailVerified === "true");
+                }
 
                 if (verifyBadge && verifyBtn) {
                     if (isAccVerified) {
