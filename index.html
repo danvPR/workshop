@@ -4650,6 +4650,318 @@
             transform: none !important;
             opacity: 0.75;
         }
+
+        /* ================= GIAO DIỆN TRANG NHÀ SÁNG TẠO (CREATOR STUDIO HUB) ================= */
+        .creator-hero-card {
+            background: linear-gradient(135deg, rgba(13, 165, 122, 0.12) 0%, rgba(59, 130, 246, 0.08) 50%, rgba(245, 158, 11, 0.06) 100%);
+            border: 1.5px solid var(--border-color);
+            border-radius: 20px;
+            padding: 26px 30px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+        .creator-hero-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .creator-hero-title i {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+        }
+        .creator-policy-pill {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #d97706;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        [data-theme="dark"] .creator-policy-pill {
+            color: #fbbf24;
+            background: rgba(245, 158, 11, 0.18);
+        }
+
+        /* 4 Thẻ HUD Chỉ Số Doanh Thu */
+        .creator-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .creator-stat-card {
+            background: var(--bg-panel);
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+        .creator-stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        .creator-stat-icon-wrap {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .creator-stat-icon-wrap.net {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+        }
+        .creator-stat-icon-wrap.gross {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+        .creator-stat-icon-wrap.orders {
+            background: rgba(168, 85, 247, 0.12);
+            color: #a855f7;
+        }
+        .creator-stat-icon-wrap.top-item {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+        .creator-stat-meta-label {
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .creator-stat-val {
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: var(--text-title);
+            line-height: 1.15;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Thanh Toolbar lọc dự án & tìm kiếm TX */
+        .creator-toolbar-wrap {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .creator-search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px 12px;
+            flex: 1;
+            min-width: 250px;
+            transition: border-color 0.2s;
+        }
+        .creator-search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
+        }
+        .creator-search-box input {
+            border: none;
+            background: none;
+            color: var(--text-main);
+            outline: none;
+            padding: 6px 4px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* Danh sách Card Log Giao Dịch */
+        .creator-tx-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .creator-tx-item {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .creator-tx-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.03);
+            transform: translateY(-1px);
+        }
+        .creator-tx-item.highlight-tx {
+            border-color: #f59e0b !important;
+            background: rgba(245, 158, 11, 0.06) !important;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3) !important;
+        }
+        .creator-tx-main {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 260px;
+            flex: 2;
+        }
+        .creator-buyer-avt {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            flex-shrink: 0;
+            background: #0f172a;
+        }
+        .creator-tx-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+        .creator-tx-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .creator-tx-item-name {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--text-title);
+        }
+        .creator-project-tag {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(13, 165, 122, 0.1);
+            border: 1px solid rgba(13, 165, 122, 0.25);
+            padding: 2px 8px;
+            border-radius: 8px;
+            text-decoration: none;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .creator-project-tag:hover {
+            background: rgba(13, 165, 122, 0.18);
+        }
+        .creator-tx-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .creator-tx-code-pill {
+            font-family: monospace;
+            font-size: 0.74rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2px 7px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-title);
+        }
+        .creator-tx-code-pill:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Khối hiển thị tiền thực nhận & phí */
+        .creator-tx-amount-col {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+        }
+        .creator-net-val {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #10b981;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .creator-net-val.zero {
+            color: var(--text-muted);
+        }
+        .creator-breakdown-sub {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .creator-breakdown-sub b {
+            color: var(--text-title);
+        }
+
+        /* Hộp thông báo rỗng (Empty state) */
+        .creator-empty-guide-card {
+            background: var(--bg-panel);
+            border: 2px dashed var(--border-color);
+            border-radius: 20px;
+            padding: 40px 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: var(--text-muted);
+        }
+        .creator-empty-guide-card i.guide-icon {
+            font-size: 3.5rem;
+            color: #f59e0b;
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            .creator-hero-card { padding: 20px 18px; }
+            .creator-tx-item { flex-direction: column; align-items: stretch; gap: 10px; }
+            .creator-tx-amount-col { align-items: flex-start; text-align: left; border-top: 1px solid var(--border-color); padding-top: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -6016,6 +6328,104 @@
 
             <div id="adminReportsList" data-i18n="admin_reports_loading">Đang tải dữ liệu an toàn từ máy chủ...</div>
         </div>
+    </div>
+
+    <!-- ================= TRANG 8: NHÀ SÁNG TẠO & DOANH THU (CREATOR STUDIO HUB) ================= -->
+    <div id="creatorView" class="page-view" style="max-width: 1100px; padding: 20px 20px 50px 20px;">
+        
+        <!-- Banner Hero Trung Tâm Nhà Sáng Tạo -->
+        <div class="creator-hero-card">
+            <div>
+                <div class="creator-hero-title">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Studio Nhà Sáng Tạo</span>
+                </div>
+                <div style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.45;">
+                    Quản lý tài chính, theo dõi đơn mua vật phẩm in-game và phân tích doanh thu từ các tác phẩm của bạn.
+                </div>
+            </div>
+
+            <div class="creator-policy-pill" title="Chính sách ăn chia doanh thu hệ thống">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>Hoa hồng: 70% tác giả • 30% nền tảng (Làm tròn sàn)</span>
+            </div>
+        </div>
+
+        <!-- 4 Khối HUD Chỉ Số Tài Chính -->
+        <div class="creator-stats-grid">
+            <div class="creator-stat-card">
+                <div class="creator-stat-icon-wrap net">
+                    <span class="wow-icon" style="font-size: 1.6rem;"></span>
+                </div>
+                <div>
+                    <div class="creator-stat-meta-label">Thực nhận (70%)</div>
+                    <div class="creator-stat-val" id="creatorMetricNet" style="color: #10b981;">0</div>
+                </div>
+            </div>
+
+            <div class="creator-stat-card">
+                <div class="creator-stat-icon-wrap gross">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+                <div>
+                    <div class="creator-stat-meta-label">Tổng doanh số (100%)</div>
+                    <div class="creator-stat-val" id="creatorMetricGross">0</div>
+                </div>
+            </div>
+
+            <div class="creator-stat-card">
+                <div class="creator-stat-icon-wrap orders">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+                <div>
+                    <div class="creator-stat-meta-label">Lượt giao dịch</div>
+                    <div class="creator-stat-val" id="creatorMetricOrders">0</div>
+                </div>
+            </div>
+
+            <div class="creator-stat-card">
+                <div class="creator-stat-icon-wrap top-item">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <div style="min-width: 0;">
+                    <div class="creator-stat-meta-label">Vật phẩm hot nhất</div>
+                    <div class="creator-stat-val" id="creatorMetricTopItem" style="font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;" title="Chưa có dữ liệu">
+                        --
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thanh Công Cụ Bộ Lọc & Tìm Kiếm -->
+        <div class="creator-toolbar-wrap">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1;">
+                <div class="creator-search-box">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.88rem;"></i>
+                    <input type="text" id="creatorSearchInput" placeholder="Tìm theo Mã GD (TX ID), Tên vật phẩm, Người mua..." onkeyup="handleCreatorSearch(event)">
+                </div>
+
+                <select id="creatorProjectFilter" class="asset-select-filter" onchange="changeCreatorProjectFilter(this.value)" style="padding: 8px 16px;">
+                    <option value="">Tất cả tác phẩm</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn" onclick="refreshCreatorData()" title="Làm mới dữ liệu">
+                <i class="fa-solid fa-rotate-right"></i> Làm mới
+            </button>
+        </div>
+
+        <!-- Khu Vực Hiển Thị Danh Sách Log Giao Dịch -->
+        <div class="creator-tx-list" id="creatorTxList">
+            <!-- Nạp qua JavaScript -->
+        </div>
+
+        <!-- Nút Xem Thêm Phân Trang -->
+        <div style="text-align: center; padding: 10px 0 30px 0; display: none;" id="creatorLoadMoreArea">
+            <button class="btn" style="padding: 10px 32px; border-radius: 20px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreCreatorTransactions()">
+                <i class="fa-solid fa-angle-down"></i> Tải thêm lịch sử cũ
+            </button>
+        </div>
+
     </div>
 
     <!-- CHÂN TRANG (FOOTER) -->
@@ -8109,6 +8519,7 @@
             else if (hash === '#settings') document.title = t('settings_title') + " | " + brandName;
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
             else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
+            else if (hash === '#creator') document.title = "Studio Nhà Sáng Tạo | " + brandName;
             else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
 
             // Ẩn tất cả các trang
@@ -8133,6 +8544,7 @@
             else if (hash === '#studios') openStudiosPage();
             else if (hash.startsWith('#studio/')) await openStudioDetailPage(hash.replace('#studio/', ''), urlParams);
             else if (hash === '#admin') await openAdminPage();
+            else if (hash === '#creator') await openCreatorPage(urlParams);
             else if (hash === '#chat') openChatPage();
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
             else openHomePage();
@@ -8168,6 +8580,10 @@
                         <span class="notif-badge" id="notifBadge" style="display:none; right: -4px; top: -4px; z-index: 10; min-width: 17px; height: 17px; padding: 0 4px; font-size: 0.68rem; line-height: 17px;">0</span>
                     </a>
                     
+                    <a href="#creator" class="nav-icon-btn" title="Trung tâm Nhà sáng tạo & Doanh thu">
+                        <i class="fa-solid fa-chart-line" style="color: #10b981;"></i>
+                    </a>
+
                     <a href="#settings" class="nav-icon-btn" title="${t('settings_options') || 'Cài đặt'}">
                         <i class="fa-solid fa-gear"></i>
                     </a>
@@ -16418,6 +16834,257 @@
                 btnEl.innerHTML = origHtml;
                 btnEl.disabled = false;
             }
+        }
+
+        // =========================================================================
+        // 🚀 BỘ MÁY ĐIỀU HÀNH TRANG NHÀ SÁNG TẠO (CREATOR STUDIO HUB LOGIC)
+        // =========================================================================
+        let creatorCurrentPage = 1;
+        let creatorHasMore = false;
+        let creatorSelectedProjectId = "";
+        let creatorSearchQuery = "";
+        let creatorAllTransactions = [];
+        let creatorTargetHighlightTx = null;
+
+        async function openCreatorPage(urlParams) {
+            if (!currentUser) {
+                showToast("Vui lòng đăng nhập tài khoản để truy cập Studio Nhà sáng tạo!", "error");
+                openModal('loginModal');
+                navigateTo('#home');
+                return;
+            }
+
+            document.getElementById('creatorView').style.display = 'block';
+
+            // Nhận diện mã giao dịch cần tô sáng nếu người dùng bấm từ thông báo hộp thư
+            creatorTargetHighlightTx = urlParams ? urlParams.get('tx') : null;
+
+            creatorCurrentPage = 1;
+            creatorSelectedProjectId = "";
+            creatorSearchQuery = "";
+
+            const searchInp = document.getElementById('creatorSearchInput');
+            if (searchInp) searchInp.value = "";
+
+            // Nạp danh sách dự án của tác giả vào Dropdown lọc
+            loadCreatorProjectsDropdown();
+
+            // Nạp dữ liệu doanh thu và danh sách đơn
+            await fetchCreatorAnalyticsData(false);
+        }
+
+        async function loadCreatorProjectsDropdown() {
+            const selectEl = document.getElementById('creatorProjectFilter');
+            if (!selectEl) return;
+
+            try {
+                let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
+                if (currentUser.sessionToken) projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                
+                const res = await (await fetch(projUrl)).json();
+                const myProjs = (res && res.projects) ? res.projects : (Array.isArray(res) ? res : []);
+
+                let optionsHtml = `<option value="">Tất cả tác phẩm (${myProjs.length})</option>`;
+                optionsHtml += myProjs.map(p => {
+                    const pid = String(p.projectId || p.fileId);
+                    return `<option value="${pid}">${escapeHtml(p.title)}</option>`;
+                }).join('');
+
+                selectEl.innerHTML = optionsHtml;
+            } catch(e) {}
+        }
+
+        async function fetchCreatorAnalyticsData(isLoadMore = false) {
+            const listContainer = document.getElementById('creatorTxList');
+            const loadMoreArea = document.getElementById('creatorLoadMoreArea');
+            if (!listContainer) return;
+
+            if (!isLoadMore) {
+                listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2.2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">Đang kết nối sổ cái giao dịch...</span></div>';
+            }
+
+            try {
+                let apiUrl = `${WORKER_URL}/api/creator/analytics?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&page=${creatorCurrentPage}&limit=20`;
+                if (creatorSelectedProjectId) apiUrl += `&projectId=${encodeURIComponent(creatorSelectedProjectId)}`;
+
+                const res = await (await fetch(apiUrl)).json();
+
+                if (!res || !res.success) {
+                    listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; margin-bottom:8px; display:block;"></i>${escapeHtml(res?.error || "Không thể tải dữ liệu giao dịch")}</div>`;
+                    return;
+                }
+
+                // Cập nhật 4 thẻ HUD chỉ số tài chính
+                const sum = res.summary || {};
+                document.getElementById('creatorMetricNet').innerHTML = `<span class="wow-icon"></span> ${sum.totalNet || 0}`;
+                document.getElementById('creatorMetricGross').innerHTML = `<span class="wow-icon" style="filter:grayscale(1);"></span> ${sum.totalGross || 0}`;
+                document.getElementById('creatorMetricOrders').innerText = sum.totalOrders || 0;
+                
+                const topItemEl = document.getElementById('creatorMetricTopItem');
+                if (sum.topItem && sum.topItem.name) {
+                    topItemEl.innerText = `${sum.topItem.name} (${sum.topItem.count} lượt)`;
+                    topItemEl.title = `${sum.topItem.name} (${sum.topItem.count} lượt)`;
+                } else {
+                    topItemEl.innerText = "--";
+                    topItemEl.title = "Chưa có vật phẩm nào được mua";
+                }
+
+                const newTxs = res.transactions || [];
+                creatorHasMore = !!res.hasMore;
+
+                if (isLoadMore) {
+                    creatorAllTransactions = creatorAllTransactions.concat(newTxs);
+                } else {
+                    creatorAllTransactions = newTxs;
+                }
+
+                renderCreatorTransactionsList();
+
+                if (loadMoreArea) {
+                    loadMoreArea.style.display = creatorHasMore ? 'block' : 'none';
+                }
+
+            } catch (err) {
+                listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;">Lỗi kết nối máy chủ!</div>`;
+            }
+        }
+
+        function renderCreatorTransactionsList() {
+            const listContainer = document.getElementById('creatorTxList');
+            if (!listContainer) return;
+
+            let filtered = creatorAllTransactions;
+
+            // Bộ lọc tìm kiếm trên máy khách theo từ khóa
+            if (creatorSearchQuery) {
+                const q = creatorSearchQuery.toLowerCase();
+                filtered = filtered.filter(tx => {
+                    const txId = (tx.txId || '').toLowerCase();
+                    const buyer = (tx.buyer || '').toLowerCase();
+                    const item = (tx.itemName || '').toLowerCase();
+                    const proj = (tx.projectTitle || '').toLowerCase();
+                    return txId.includes(q) || buyer.includes(q) || item.includes(q) || proj.includes(q);
+                });
+            }
+
+            if (filtered.length === 0) {
+                if (creatorAllTransactions.length === 0) {
+                    // Chưa phát sinh giao dịch nào -> Hiện cẩm nang hướng dẫn
+                    listContainer.innerHTML = `
+                        <div class="creator-empty-guide-card">
+                            <i class="fa-solid fa-cube guide-icon"></i>
+                            <div style="font-size:1.25rem; font-weight:800; color:var(--text-title);">Chưa có giao dịch in-game nào</div>
+                            <div style="max-width:520px; font-size:0.9rem; line-height:1.5;">
+                                Hãy biến dự án game của bạn thành một thế giới sống động! Bạn có thể tạo các shop bán vật phẩm, hồi máu, mở khóa màn chơi bằng cách nhúng khối lệnh <b>WOW Economy Extension</b>.
+                            </div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:6px;">
+                                <a href="https://aftercode-web-wheat.vercel.app/editor.html" class="btn btn-primary" style="border-radius:20px; padding:9px 20px; font-weight:800;">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Aftercode để tích hợp
+                                </a>
+                                <a href="https://github.com/danvPR/workshop/blob/main/WOWtoken-extension.js" target="_blank" class="btn" style="border-radius:20px; padding:9px 18px; font-weight:700;">
+                                    <i class="fa-solid fa-code"></i> Xem mã Extension
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = `<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:8px; opacity:0.4; display:block;"></i>Không tìm thấy giao dịch nào khớp với từ khóa "${escapeHtml(creatorSearchQuery)}".</div>`;
+                }
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(tx => {
+                const isZero = (tx.netAmount <= 0);
+                const isTarget = (creatorTargetHighlightTx && tx.txId === creatorTargetHighlightTx);
+
+                return `
+                    <div class="creator-tx-item ${isTarget ? 'highlight-tx' : ''}" id="creator-tx-${tx.txId}">
+                        <div class="creator-tx-main">
+                            <a href="#profile/${encodeURIComponent(tx.buyer)}" title="Xem hồ sơ người mua: @${escapeHtml(tx.buyer)}">
+                                <img src="${getAvtUrl(tx.buyerAvt)}" class="creator-buyer-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            </a>
+
+                            <div class="creator-tx-info">
+                                <div class="creator-tx-title-row">
+                                    <span class="creator-tx-item-name">${escapeHtml(tx.itemName || "Vật phẩm")}</span>
+                                    <a href="#project/${encodeURIComponent(tx.projectId)}" class="creator-project-tag" title="Mở dự án: ${escapeHtml(tx.projectTitle)}">
+                                        <i class="fa-solid fa-gamepad"></i> ${escapeHtml(tx.projectTitle || "Dự án")}
+                                    </a>
+                                </div>
+
+                                <div class="creator-tx-meta">
+                                    <span>Bởi <a href="#profile/${encodeURIComponent(tx.buyer)}" style="color:var(--text-title); font-weight:700; text-decoration:none;">@${escapeHtml(tx.buyer)}</a></span>
+                                    <span>•</span>
+                                    <span title="${tx.time}"><i class="fa-regular fa-clock"></i> ${timeAgo(tx.time)}</span>
+                                    <span>•</span>
+                                    <span class="creator-tx-code-pill" onclick="copyCreatorTxId('${tx.txId}', this)" title="Bấm để sao chép mã GD">
+                                        <i class="fa-regular fa-copy"></i> <code>${tx.txId}</code>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="creator-tx-amount-col">
+                            <div class="creator-net-val ${isZero ? 'zero' : ''}">
+                                <span class="wow-icon"></span> ${isZero ? '+0 WOW' : `+${tx.netAmount} WOW`}
+                            </div>
+                            <div class="creator-breakdown-sub">
+                                Giá gốc: <b>${tx.grossAmount}</b> WOW • Phí (30%): <span style="color:#ef4444;">-${tx.feeAmount}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Tự động cuộn đến giao dịch được chỉ định trong URL (nếu có)
+            if (creatorTargetHighlightTx) {
+                setTimeout(() => {
+                    const targetEl = document.getElementById(`creator-tx-${creatorTargetHighlightTx}`);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 200);
+            }
+        }
+
+        function copyCreatorTxId(txId, pillEl) {
+            navigator.clipboard.writeText(txId).then(() => {
+                showToast(`Đã sao chép mã giao dịch: ${txId}`, "success");
+                const origHtml = pillEl.innerHTML;
+                pillEl.innerHTML = `<i class="fa-solid fa-check" style="color:#10b981;"></i> Đã chép`;
+                setTimeout(() => { pillEl.innerHTML = origHtml; }, 1800);
+            });
+        }
+
+        function handleCreatorSearch(e) {
+            creatorSearchQuery = (e.target.value || "").trim();
+            renderCreatorTransactionsList();
+        }
+
+        function changeCreatorProjectFilter(projId) {
+            creatorSelectedProjectId = projId;
+            creatorCurrentPage = 1;
+            fetchCreatorAnalyticsData(false);
+        }
+
+        function refreshCreatorData() {
+            creatorCurrentPage = 1;
+            fetchCreatorAnalyticsData(false);
+            showToast("Đã làm mới dữ liệu doanh thu!", "info");
+        }
+
+        async function loadMoreCreatorTransactions() {
+            if (!creatorHasMore) return;
+            creatorCurrentPage++;
+            const btn = document.querySelector('#creatorLoadMoreArea button');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+            btn.disabled = true;
+
+            await fetchCreatorAnalyticsData(true);
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
         }
     </script>
 </body>
