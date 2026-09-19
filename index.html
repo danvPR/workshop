@@ -11545,9 +11545,10 @@
             updateAuthBrandVisuals();
         }
 
-        // ================= XỬ LÝ QUÊN MẬT KHẨU (FORGOT PASSWORD) =================
+        // ================= XỬ LÝ QUÊN MẬT KHẨU (FORGOT PASSWORD PRO) =================
         let forgotTargetUsername = '';
         let forgotTargetEmail = '';
+        let forgotSecureToken = ''; // Token xác thực chống sập RAM máy chủ
         let forgotCooldownTimer = null;
         let forgotCooldownSeconds = 0;
 
@@ -11582,6 +11583,12 @@
                 if (res.success) {
                     forgotTargetUsername = res.targetUser;
                     forgotTargetEmail = res.maskedEmail;
+                    forgotSecureToken = res.token || ''; // Lưu token chữ ký số
+
+                    // Lưu tạm vào Session để lỡ người dùng có đổi tab qua app Gmail trên điện thoại cũng không mất dữ liệu
+                    sessionStorage.setItem('danv_forgot_user', res.targetUser);
+                    sessionStorage.setItem('danv_forgot_token', res.token || '');
+
                     document.getElementById('forgotMaskedEmailText').innerText = res.maskedEmail;
                     document.getElementById('forgotOtpInput').value = '';
                     document.getElementById('forgotNewPw').value = '';
@@ -11591,6 +11598,117 @@
                     showToast("Đã gửi mã xác thực đến email của bạn!", "success");
                 } else {
                     showToast(res.error || "Không tìm thấy tài khoản!", "error");
+                }
+            } catch(err) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+        }
+
+        // GỬI LẠI MÃ CHO QUÊN MẬT KHẨU
+        async function resendForgotOtp() {
+            if (forgotCooldownSeconds > 0) return;
+            const targetUser = forgotTargetUsername || sessionStorage.getItem('danv_forgot_user');
+            if (!targetUser) return showForgotStep(1);
+
+            const btn = document.getElementById('btnForgotResendOtp');
+            btn.disabled = true;
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/forgot_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
+                    body: JSON.stringify({ identifier: targetUser })
+                })).json();
+
+                if (res.success) {
+                    forgotSecureToken = res.token || '';
+                    sessionStorage.setItem('danv_forgot_token', res.token || '');
+                    showToast("Đã gửi lại mã OTP mới!", "success");
+                    startForgotCountdown(60);
+                } else {
+                    showToast(res.error || "Không thể gửi lại mã!", "error");
+                }
+            } catch(err) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+            btn.disabled = false;
+        }
+
+        function startForgotCountdown(sec = 60) {
+            clearInterval(forgotCooldownTimer);
+            forgotCooldownSeconds = sec;
+            const cdSpan = document.getElementById('forgotResendCountdown');
+            const btn = document.getElementById('btnForgotResendOtp');
+            
+            const updateUI = () => {
+                if (cdSpan) cdSpan.innerText = forgotCooldownSeconds > 0 ? `(${forgotCooldownSeconds}s)` : '';
+                if (btn) btn.disabled = forgotCooldownSeconds > 0;
+            };
+
+            updateUI();
+            forgotCooldownTimer = setInterval(() => {
+                forgotCooldownSeconds--;
+                updateUI();
+                if (forgotCooldownSeconds <= 0) clearInterval(forgotCooldownTimer);
+            }, 1000);
+        }
+
+        // BƯỚC 2: XÁC THỰC OTP VÀ ĐẶT LẠI MẬT KHẨU MỚI
+        async function handleForgotResetPassword(e) {
+            e.preventDefault();
+            const code = document.getElementById('forgotOtpInput').value.trim();
+            const newPw = document.getElementById('forgotNewPw').value;
+            const newPwConfirm = document.getElementById('forgotNewPwConfirm').value;
+
+            if (code.length < 6) return showToast("Vui lòng nhập đủ 6 số OTP!", "error");
+            if (newPw.length < 6) return showToast("Mật khẩu mới phải có tối thiểu 6 ký tự!", "error");
+            if (newPw !== newPwConfirm) return showToast("Hai mật khẩu nhập lại không khớp nhau!", "error");
+
+            const targetUser = forgotTargetUsername || sessionStorage.getItem('danv_forgot_user');
+            const token = forgotSecureToken || sessionStorage.getItem('danv_forgot_token');
+
+            const btn = document.getElementById('btnForgotResetSubmit');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang đặt lại mật khẩu...';
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/reset_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
+                    body: JSON.stringify({ 
+                        targetUser: targetUser, 
+                        code: code, 
+                        newPassword: newPw,
+                        token: token 
+                    })
+                })).json();
+
+                if (res.success) {
+                    showToast("🎉 Đổi mật khẩu thành công! Đã tự động đăng nhập.", "success");
+                    
+                    // Tự động lưu phiên đăng nhập và tải lại trang
+                    currentUser = {
+                        username: res.username,
+                        sessionToken: res.sessionToken,
+                        displayName: res.displayName,
+                        avt: res.avt,
+                        role: res.role,
+                        email: res.email,
+                        emailVerified: res.emailVerified,
+                        WOW: res.WOW,
+                        frame: res.frame
+                    };
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    sessionStorage.removeItem('danv_forgot_user');
+                    sessionStorage.removeItem('danv_forgot_token');
+                    closeModal('authModal');
+                    updateNav();
+                    location.reload();
+                } else {
+                    showToast(res.error || "Mã OTP không hợp lệ!", "error");
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ!", "error");
