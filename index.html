@@ -6519,6 +6519,52 @@
         </div>
     </div>
 
+    <!-- MODAL XÁC NHẬN THANH TOÁN TRONG GAME (IN-GAME PAYMENT) -->
+    <div class="modal-overlay" id="gamePayModal" style="z-index: 10001; background: rgba(0,0,0,0.85);">
+        <div class="modal tip-modal-box" style="max-width: 420px; box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);">
+            <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
+                <span style="font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; gap: 8px; color: #a855f7;">
+                    <i class="fa-solid fa-cart-shopping"></i> Xác Nhận Thanh Toán
+                </span>
+            </div>
+            
+            <div class="modal-body" style="padding: 24px;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">
+                    Trò chơi đang yêu cầu trích xuất điểm năng lượng WOW từ ví của bạn để mua vật phẩm:
+                </p>
+
+                <!-- Thẻ Vật Phẩm -->
+                <div style="background: var(--bg-secondary); border: 2px dashed var(--primary); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 20px;">
+                    <div id="gamePayItemReason" style="font-size: 1.25rem; font-weight: 900; color: var(--text-title); margin-bottom: 8px;">Tên Vật Phẩm</div>
+                    <div style="font-size: 1.5rem; font-weight: 900; color: #ea580c; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="wow-icon" style="filter: drop-shadow(0 0 8px rgba(234, 88, 12, 0.6));"></span> <span id="gamePayItemPrice">0</span>
+                    </div>
+                </div>
+
+                <!-- Bảng số dư -->
+                <div style="background: rgba(0,0,0,0.04); border-radius: 10px; padding: 12px 16px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
+                        <span style="color: var(--text-muted);">Số dư ví hiện tại:</span>
+                        <b style="color: var(--text-title);" id="gamePayCurrentBalance">0</b>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; border-top: 1px solid var(--border-color); padding-top: 6px;">
+                        <span style="color: var(--text-muted);">Còn lại sau khi mua:</span>
+                        <b style="color: #10b981;" id="gamePayRemainingBalance">0</b>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" class="btn" style="flex: 1; justify-content: center; padding: 12px; font-weight: 700; border-radius: 12px;" onclick="handleGamePayCancel()">
+                        Hủy bỏ
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnGamePayConfirm" style="flex: 1.5; justify-content: center; padding: 12px; font-weight: 800; border-radius: 12px; background: linear-gradient(135deg, #a855f7, #6366f1); border: none;" onclick="handleGamePayConfirm()">
+                        <i class="fa-solid fa-fingerprint"></i> Thanh toán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL TẶNG ĐIỂM WOW CHO TÁC GIẢ (PHIÊN BẢN CHIẾN BINH NĂNG LƯỢNG) -->
     <div class="modal-overlay" id="tipWOWModal">
         <div class="modal tip-modal-box" id="tipModalCardBox" style="max-width: 460px;">
@@ -10512,6 +10558,152 @@
                 showToast("Đã nhận dữ liệu từ Trình chỉnh sửa! Vui lòng chọn Đăng mới hoặc Cập nhật.", "success");
             }
         });
+
+        // ================= HỆ THỐNG GIAO TIẾP VỚI AFTERCODE (WOW ECONOMY) =================
+        let activeGamePayRequest = null;
+
+        window.addEventListener('message', (event) => {
+            // Danh sách domain được phép giao tiếp
+            const allowedOrigins = [
+                "https://aftercode-web-wheat.vercel.app", 
+                "http://localhost:3000", 
+                "http://127.0.0.1:5500"
+            ];
+            if (!allowedOrigins.includes(event.origin)) return;
+
+            const data = event.data;
+            if (!data || !data.type) return;
+
+            // 1. HANDSHAKE: Trả trạng thái đăng nhập và số dư (Không lộ sessionToken)
+            if (data.type === "DANV_WOW_HANDSHAKE") {
+                event.source.postMessage({
+                    type: "DANV_WOW_INIT",
+                    isLoggedIn: !!currentUser,
+                    username: currentUser ? currentUser.username : "",
+                    balance: currentUser ? (currentUser.WOW || 0) : 0
+                }, event.origin);
+            }
+
+            // 2. PAYMENT PROMPT: Nhận yêu cầu thanh toán từ Aftercode
+            if (data.type === "DANV_WOW_PAY_REQUEST") {
+                const sendReply = (status, extra = {}) => {
+                    event.source.postMessage({
+                        type: "DANV_WOW_PAY_RESPONSE",
+                        requestId: data.requestId,
+                        status: status,
+                        ...extra
+                    }, event.origin);
+                };
+
+                // Kiểm tra đăng nhập
+                if (!currentUser) {
+                    sendReply("NOT_LOGGED_IN");
+                    showToast("Vui lòng đăng nhập DANVworkshop để thanh toán trong game!", "error");
+                    openModal('loginModal');
+                    return;
+                }
+
+                // Kiểm tra xác thực email
+                if (currentUser.emailVerified === false) {
+                    sendReply("EMAIL_UNVERIFIED");
+                    showToast("Vui lòng xác thực email để thực hiện giao dịch!", "error");
+                    openVerifyEmailModal();
+                    return;
+                }
+
+                const cost = parseInt(data.amount);
+                if (isNaN(cost) || cost <= 0) return sendReply("INVALID_AMOUNT");
+
+                const currentBalance = parseInt(currentUser.WOW || 0);
+                if (currentBalance < cost) {
+                    sendReply("INSUFFICIENT");
+                    showToast("Số dư WOW không đủ để mua vật phẩm này!", "error");
+                    return;
+                }
+
+                // Lưu lại request để gửi phản hồi khi bấm nút trên Modal
+                activeGamePayRequest = {
+                    source: event.source,
+                    origin: event.origin,
+                    requestId: data.requestId,
+                    amount: cost,
+                    reason: data.reason || "Vật phẩm trong game",
+                    projectId: (currentProj && (currentProj.projectId || currentProj.fileId)) || data.projectId || ""
+                };
+
+                // Điền dữ liệu vào Modal
+                document.getElementById('gamePayItemReason').innerText = activeGamePayRequest.reason;
+                document.getElementById('gamePayItemPrice').innerText = cost;
+                document.getElementById('gamePayCurrentBalance').innerText = currentBalance;
+                document.getElementById('gamePayRemainingBalance').innerText = currentBalance - cost;
+
+                openModal('gamePayModal');
+            }
+        });
+
+        // Hủy bỏ thanh toán
+        function handleGamePayCancel() {
+            if (activeGamePayRequest && activeGamePayRequest.source) {
+                activeGamePayRequest.source.postMessage({
+                    type: "DANV_WOW_PAY_RESPONSE",
+                    requestId: activeGamePayRequest.requestId,
+                    status: "USER_CANCELLED"
+                }, activeGamePayRequest.origin);
+            }
+            closeModal('gamePayModal');
+            activeGamePayRequest = null;
+        }
+
+        // Xác nhận thanh toán
+        async function handleGamePayConfirm() {
+            if (!activeGamePayRequest || !currentUser) return;
+
+            const btn = document.getElementById('btnGamePayConfirm');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.disabled = true;
+
+            const payload = {
+                fileId: activeGamePayRequest.projectId,
+                amount: activeGamePayRequest.amount,
+                reason: activeGamePayRequest.reason,
+                requestId: activeGamePayRequest.requestId
+            };
+
+            const res = await apiFetch(`/api/project/game_pay`, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (res && res.success) {
+                currentUser.WOW = res.newBalance;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                syncAllWOWDisplays();
+                showToast(`Đã thanh toán ${activeGamePayRequest.amount} WOW thành công!`, "success");
+
+                // Trả kết quả thành công về Aftercode
+                activeGamePayRequest.source.postMessage({
+                    type: "DANV_WOW_PAY_RESPONSE",
+                    requestId: activeGamePayRequest.requestId,
+                    status: "SUCCESS",
+                    txId: res.txId,
+                    newBalance: res.newBalance
+                }, activeGamePayRequest.origin);
+
+                closeModal('gamePayModal');
+            } else {
+                showToast(res ? res.error : "Giao dịch thất bại", "error");
+                activeGamePayRequest.source.postMessage({
+                    type: "DANV_WOW_PAY_RESPONSE",
+                    requestId: activeGamePayRequest.requestId,
+                    status: "FAILED"
+                }, activeGamePayRequest.origin);
+            }
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
+            activeGamePayRequest = null;
+        }
 
         async function handleUploadBtn() {
             const fileInput = document.getElementById('upFile').files[0];
