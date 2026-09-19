@@ -965,6 +965,77 @@
             backdrop-filter: blur(10px);
             max-width: 95vw;
         }
+        .bento-count-pill {
+            font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 20px;
+            background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-title);
+        }
+        .bento-count-pill.full {
+            border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* STYLES CÁC WIDGET MỚI */
+        .widget-user-box { display: flex; align-items: center; gap: 12px; height: 100%; padding: 14px; }
+        .widget-user-box img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); flex-shrink: 0; }
+        .widget-user-rel-tag { font-size: 0.72rem; font-weight: 800; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 6px; width: max-content; }
+        
+        /* STYLES CÁC WIDGET MỚI */
+        .widget-user-box { display: flex; align-items: center; gap: 12px; height: 100%; padding: 14px; }
+        .widget-user-box img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); flex-shrink: 0; }
+        .widget-user-rel-tag { font-size: 0.72rem; font-weight: 800; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 6px; width: max-content; }
+        
+        .widget-mini-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        .widget-mini-card-thumb { width: 100%; height: 55%; background: #000; position: relative; overflow: hidden; }
+        .widget-mini-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .widget-mini-card-body { padding: 10px 14px; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+
+        /* WIDGET TRẠM (STATION BOX) */
+        .widget-station-box { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        .widget-station-thumb { width: 100%; height: 55%; background: #0f172a; position: relative; overflow: hidden; }
+        .widget-station-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* WIDGET BGM ÂM THANH PROFILE */
+        .widget-bgm-box {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; height: 100%; width: 100%;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(234, 88, 12, 0.04) 100%);
+            position: relative; overflow: hidden;
+        }
+        .widget-bgm-info { display: flex; align-items: center; gap: 14px; min-width: 0; flex: 1; }
+        .widget-bgm-btn {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: #fff; border: none; cursor: pointer; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35); transition: 0.2s;
+        }
+        .widget-bgm-btn:hover { transform: scale(1.08); }
+        .widget-bgm-waves { display: flex; align-items: center; gap: 3px; height: 20px; }
+        .widget-bgm-bar { width: 3px; height: 4px; background: var(--text-muted); border-radius: 2px; transition: 0.2s; }
+        .widget-bgm-box.is-playing .widget-bgm-bar { background: #ea580c; animation: audioWaveMotion 0.8s infinite ease-in-out; }
+        .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(1) { animation-delay: 0.1s; }
+        .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(2) { animation-delay: 0.3s; }
+        .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(3) { animation-delay: 0.5s; }
+        .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(4) { animation-delay: 0.2s; }
+        .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        /* WIDGET LIÊN KẾT MẠNG XÃ HỘI */
+        .widget-social-box {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center;
+            padding: 16px; height: 100%; width: 100%;
+        }
+        .social-chip-link {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 8px 14px; border-radius: 12px; font-size: 0.84rem; font-weight: 800;
+            text-decoration: none; color: #fff; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .social-chip-link:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.18); color: #fff; }
+        .social-chip-scratch { background: #f59e0b; }
+        .social-chip-youtube { background: #ef4444; }
+        .social-chip-discord { background: #5865f2; }
+        .social-chip-github { background: #24292e; }
+        .social-chip-facebook { background: #1877f2; }
+        .social-chip-web { background: #0da57a; }
+
         .bento-toolbar.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
         /* NGĂN KÉO CHỌN WIDGET */
@@ -5185,8 +5256,9 @@
                 <div class="project-grid" id="userPlaylistsList"></div>
             </div>
 
-            <!-- TOOLBAR NỔI DƯỚI ĐÁY KHI EDIT BENTO -->
+            <!-- TOOLBAR NỔI DƯỚI ĐÁY KHI EDIT BENTO (KÈM BỘ ĐẾM SỨC CHỨA) -->
             <div id="bentoToolbar" class="bento-toolbar">
+                <span class="bento-count-pill" id="bentoCountBadge" title="Tối đa 25 Widget">0 / 25 Ô</span>
                 <button class="btn btn-primary" style="border-radius:20px; font-weight:bold;" onclick="openBentoDrawer()">
                     <i class="fa-solid fa-plus"></i> Thêm Widget
                 </button>
@@ -5203,18 +5275,20 @@
         </div> <!-- Hết thẻ profileContent -->
     </div> <!-- Hết thẻ profileView -->
 
-    <!-- MODAL NGĂN KÉO WIDGET BENTO -->
+    <!-- MODAL KHO WIDGET BENTO ĐẦY ĐỦ PHÂN MỤC -->
     <div class="modal-overlay" id="bentoWidgetModal">
-        <div class="modal" style="max-width: 500px;">
+        <div class="modal" style="max-width: 540px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-shapes" style="color:var(--primary);"></i> Kho Widget</span>
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-shapes" style="color:var(--primary);"></i> <b>Kho Widget Bento</b>
+                </span>
                 <button class="btn-close" onclick="closeModal('bentoWidgetModal')">&times;</button>
             </div>
             <div class="modal-body bento-drawer">
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_bio')">
                     <i class="fa-solid fa-address-card"></i>
                     <b>Giới thiệu (Bio)</b>
-                    <span>Tiểu sử & Thông tin</span>
+                    <span>Tiểu sử & Vị trí</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_stats')">
                     <i class="fa-solid fa-chart-pie" style="color:#f59e0b;"></i>
@@ -5224,13 +5298,135 @@
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_featured')">
                     <i class="fa-solid fa-star" style="color:#3b82f6;"></i>
                     <b>Tác phẩm tâm huyết</b>
-                    <span>Banner Game lớn</span>
+                    <span>Banner lớn nổi bật</span>
+                </div>
+                <div class="bento-drawer-item" onclick="openBentoPickPlaylistModal()">
+                    <i class="fa-solid fa-layer-group" style="color:#10b981;"></i>
+                    <b>Ghim Bộ sưu tập</b>
+                    <span>Chọn 1 Playlist có sẵn</span>
+                </div>
+                <div class="bento-drawer-item" onclick="openBentoPickProjectModal()">
+                    <i class="fa-solid fa-gamepad" style="color:#8b5cf6;"></i>
+                    <b>Ghim Tác phẩm nhỏ</b>
+                    <span>Thẻ game thu nhỏ</span>
+                </div>
+                <div class="bento-drawer-item" onclick="addBentoUserCardWidget()">
+                    <i class="fa-solid fa-user-tag" style="color:#06b6d4;"></i>
+                    <b>Thẻ Bạn bè / Dev</b>
+                    <span>Ghim hồ sơ người khác</span>
+                </div>
+                <div class="bento-drawer-item" onclick="openBentoPickStationModal()">
+                    <i class="fa-solid fa-satellite-dish" style="color:#0ea5e9;"></i>
+                    <b>Ghim Trạm (Station)</b>
+                    <span>Quảng bá trạm của bạn</span>
+                </div>
+                <div class="bento-drawer-item" onclick="openBentoPickAudioModal()">
+                    <i class="fa-solid fa-music" style="color:#f59e0b;"></i>
+                    <b>Nhạc nền (BGM)</b>
+                    <span>Phát âm thanh hồ sơ</span>
+                </div>
+                <div class="bento-drawer-item" onclick="openBentoConfigSocialModal()">
+                    <i class="fa-solid fa-share-nodes" style="color:#6366f1;"></i>
+                    <b>Mạng xã hội</b>
+                    <span>Scratch, YouTube, Discord...</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_note')">
                     <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i>
                     <b>Ghi chú tự do</b>
-                    <span>Tin nhắn nổi bật</span>
+                    <span>Tin nhắn / Thông báo</span>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỌN STATION ĐỂ GHIM -->
+    <div class="modal-overlay" id="bentoPickStationModal">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> Chọn Station để ghim</span>
+                <button class="btn-close" onclick="closeModal('bentoPickStationModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="bentoPickStationList" style="max-height: 400px; overflow-y: auto; padding: 15px;">
+                <!-- Render bằng JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỌN NHẠC NỀN PROFILE (BGM) -->
+    <div class="modal-overlay" id="bentoPickAudioModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-music" style="color:#f59e0b;"></i> Chọn Nhạc nền từ Cửa hàng Tài nguyên</span>
+                <button class="btn-close" onclick="closeModal('bentoPickAudioModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="bentoPickAudioList" style="max-height: 420px; overflow-y: auto; padding: 15px;">
+                <!-- Render bằng JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CÀI ĐẶT LIÊN KẾT MẠNG XÃ HỘI -->
+    <div class="modal-overlay" id="bentoConfigSocialModal">
+        <div class="modal" style="max-width: 460px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-share-nodes" style="color:var(--primary);"></i> Liên kết Mạng xã hội</span>
+                <button class="btn-close" onclick="closeModal('bentoConfigSocialModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">Nhập link hoặc username (để trống nếu không muốn hiển thị):</p>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-cat" style="color:#f59e0b;"></i> Scratch Username / Link:</label>
+                    <input type="text" id="bentoSocialScratch" class="form-control" placeholder="Ví dụ: griffpatch">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-youtube" style="color:#ef4444;"></i> YouTube Link / Channel:</label>
+                    <input type="text" id="bentoSocialYoutube" class="form-control" placeholder="https://youtube.com/@...">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-discord" style="color:#5865f2;"></i> Discord Server / Tag:</label>
+                    <input type="text" id="bentoSocialDiscord" class="form-control" placeholder="Ví dụ: discord.gg/... hoặc user#1234">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-github" style="color:#333;"></i> GitHub Profile:</label>
+                    <input type="text" id="bentoSocialGithub" class="form-control" placeholder="https://github.com/...">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> Facebook Profile:</label>
+                    <input type="text" id="bentoSocialFacebook" class="form-control" placeholder="https://facebook.com/...">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-globe" style="color:var(--primary);"></i> Website / Blog:</label>
+                    <input type="text" id="bentoSocialWeb" class="form-control" placeholder="https://...">
+                </div>
+                <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px; margin-top:8px;" onclick="saveSocialLinksToBento()">
+                    <i class="fa-solid fa-check"></i> Ghim lên Hồ sơ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỌN 1 BỘ SƯU TẬP CÓ SẴN ĐỂ GHIM -->
+    <div class="modal-overlay" id="bentoPickPlaylistModal">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> Chọn Bộ sưu tập để ghim</span>
+                <button class="btn-close" onclick="closeModal('bentoPickPlaylistModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="bentoPickPlaylistList" style="max-height: 400px; overflow-y: auto; padding: 15px;">
+                <!-- Render bằng JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỌN TÁC PHẨM NHỎ ĐỂ GHIM -->
+    <div class="modal-overlay" id="bentoPickProjectModal">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> Chọn Tác phẩm để ghim</span>
+                <button class="btn-close" onclick="closeModal('bentoPickProjectModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="bentoPickProjectList" style="max-height: 400px; overflow-y: auto; padding: 15px;">
+                <!-- Render bằng JS -->
             </div>
         </div>
     </div>
@@ -14271,18 +14467,56 @@
             }
         }
 
-        // ================= HỆ THỐNG CUSTOMIZED PROFILE (BENTO GRID ENGINE PRO) =================
+        // ================= HỆ THỐNG CUSTOMIZED PROFILE (BENTO GRID ENGINE PRO V2) =================
         let profileGrid = null;
         let isBentoEditMode = false;
         let currentBentoData = null;
+        let initialBentoJSON = ""; // Lưu snapshot để Dirty-Checking khi lưu
+        let activeBentoAudio = null; // Trình phát audio BGM đang chạy
 
-        // Hàm hỗ trợ xuất HTML độc lập cho từng Widget (Đã vá XSS triệt để)
+        // Chuẩn hóa Layout thành chuỗi để so sánh thay đổi chính xác
+        function getNormalizedBentoJSON() {
+            if (!profileGrid) return "[]";
+            const raw = profileGrid.save() || [];
+            const clean = raw.map(n => {
+                let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
+                if (n.id.startsWith('widget_note')) {
+                    const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"] .widget-note-container div`);
+                    if (el) obj.content = el.innerText;
+                }
+                const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"]`);
+                if (el) {
+                    if (el.getAttribute('data-target-id')) obj.targetId = el.getAttribute('data-target-id');
+                    if (el.getAttribute('data-target-user')) obj.targetUser = el.getAttribute('data-target-user');
+                    if (el.getAttribute('data-relation')) obj.relation = el.getAttribute('data-relation');
+                    if (el.getAttribute('data-station-id')) obj.stationId = el.getAttribute('data-station-id');
+                    if (el.getAttribute('data-audio-url')) obj.audioUrl = el.getAttribute('data-audio-url');
+                    if (el.getAttribute('data-audio-title')) obj.audioTitle = el.getAttribute('data-audio-title');
+                    if (el.getAttribute('data-socials')) obj.socials = el.getAttribute('data-socials');
+                }
+                return obj;
+            }).sort((a, b) => a.id.localeCompare(b.id));
+            return JSON.stringify(clean);
+        }
+
+        // Cập nhật nhãn đếm widget x/25
+        function updateBentoCountBadge() {
+            const badge = document.getElementById('bentoCountBadge');
+            if (!badge || !profileGrid) return;
+            const count = (profileGrid.engine && profileGrid.engine.nodes) ? profileGrid.engine.nodes.length : 0;
+            badge.innerText = `${count} / 25 Ô`;
+            badge.classList.toggle('full', count >= 25);
+        }
+
+        // Xuất HTML từng loại Widget (Có cache RAM, không gọi fetch thừa)
         function getBentoWidgetHTML(item, data) {
-            let contentHtml = '';
-            // 🛡️ BẢO MẬT: Khử trùng triệt để ID widget, chỉ cho phép chữ, số và gạch dưới (Chống DOM-based XSS)
             const safeId = String(item.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
             if (!safeId) return '';
-            
+
+            let contentHtml = '';
+            let extraAttrs = `gs-id="${safeId}" gs-x="${item.x}" gs-y="${item.y}" gs-w="${item.w}" gs-h="${item.h}" gs-min-w="${item.minW || 3}" gs-min-h="${item.minH || 2}"`;
+
+            // 1. GIỚI THIỆU
             if (safeId === 'widget_bio') {
                 contentHtml = `
                     <div class="bento-widget-inner widget-bio-container">
@@ -14293,6 +14527,7 @@
                     </div>
                 `;
             } 
+            // 2. CHỈ SỐ THỐNG KÊ
             else if (safeId === 'widget_stats') {
                 contentHtml = `
                     <div class="bento-widget-inner widget-stats-container">
@@ -14303,6 +14538,7 @@
                     </div>
                 `;
             } 
+            // 3. TÁC PHẨM TÂM HUYẾT (BANNER LỚN)
             else if (safeId === 'widget_featured') {
                 const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase());
                 if (data.featuredProject) {
@@ -14325,7 +14561,152 @@
                         </div>
                     `;
                 }
+            } 
+            // 4. GHIM 1 BỘ SƯU TẬP CÓ SẴN (PLAYLIST WIDGET)
+            else if (safeId.startsWith('widget_col_')) {
+                const colId = item.targetId || '';
+                extraAttrs += ` data-target-id="${colId}"`;
+                
+                let playlists = data.playlists ? (typeof data.playlists === 'string' ? JSON.parse(data.playlists) : data.playlists) : [];
+                const col = playlists.find(p => String(p.id) === String(colId));
+                
+                if (col) {
+                    contentHtml = `
+                        <div class="widget-mini-card" onclick="openCollectionDetail('${col.id}')" style="cursor:pointer;">
+                            <div style="background:linear-gradient(135deg, #0da57a, #0f172a); padding:16px; color:#fff; display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; opacity:0.9;">
+                                    <i class="fa-solid fa-layer-group"></i> Bộ sưu tập
+                                </span>
+                                <span style="font-size:0.75rem; background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:10px;">${(col.projects||[]).length} tác phẩm</span>
+                            </div>
+                            <div class="widget-mini-card-body">
+                                <div>
+                                    <h4 style="margin:0 0 6px 0; font-size:1.1rem; color:var(--text-title); line-height:1.3;">${escapeHtml(col.title)}</h4>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-regular fa-clock"></i> ${col.createdAt || 'Gần đây'}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                                    <span style="color:var(--primary); font-size:0.82rem; font-weight:800;"><i class="fa-solid fa-play"></i> Xem bộ sưu tập</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted);">Bộ sưu tập không còn tồn tại hoặc đã bị ẩn.</div>`;
+                }
             }
+            // 5. GHIM 1 DỰ ÁN NHỎ (PROJECT CARD WIDGET)
+            else if (safeId.startsWith('widget_proj_')) {
+                const pid = item.targetId || '';
+                extraAttrs += ` data-target-id="${pid}"`;
+                contentHtml = `
+                    <div class="widget-mini-card" id="bentoMiniProj-${safeId}" onclick="navigateTo('/projects/${pid}')" style="cursor:pointer;">
+                        <div style="text-align:center; padding:35px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                    </div>
+                `;
+            }
+            // 6. THẺ BẠN BÈ / ĐỒNG TÁC GIẢ (USER CARD WIDGET)
+            else if (safeId.startsWith('widget_user_')) {
+                const uName = item.targetUser || '';
+                const rel = item.relation || 'Bạn bè';
+                extraAttrs += ` data-target-user="${escapeHtml(uName)}" data-relation="${escapeHtml(rel)}"`;
+                const avtSrc = globalUserCache[uName] ? getAvtUrl(globalUserCache[uName]) : DEFAULT_AVATAR;
+
+                contentHtml = `
+                    <div class="widget-user-box" onclick="navigateTo('/users/${encodeURIComponent(uName)}')" style="cursor:pointer;">
+                        <img src="${avtSrc}" id="bentoUserAvt-${safeId}" onerror="this.src='${DEFAULT_AVATAR}'">
+                        <div style="flex:1; min-width:0;">
+                            <span class="widget-user-rel-tag">${escapeHtml(rel)}</span>
+                            <div style="font-weight:800; font-size:1.05rem; color:var(--text-title); margin:4px 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@${escapeHtml(uName)}</div>
+                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ghé thăm hồ sơ</span>
+                        </div>
+                    </div>
+                `;
+            }
+            // 7. GHIM TRẠM KHÔNG GIAN (STATION WIDGET)
+            else if (safeId.startsWith('widget_station_')) {
+                const stdId = item.stationId || item.targetId || '';
+                extraAttrs += ` data-station-id="${stdId}"`;
+                contentHtml = `
+                    <div class="widget-station-box" id="bentoStationCard-${safeId}" onclick="navigateTo('/studio/${stdId}')" style="cursor:pointer;">
+                        <div style="text-align:center; padding:35px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                    </div>
+                `;
+            }
+            // 8. BGM / TRÌNH PHÁT ÂM THANH PROFILE (AUDIO PLAYER WIDGET)
+            else if (safeId.startsWith('widget_audio_')) {
+                const songTitle = item.audioTitle || 'Giai điệu hồ sơ';
+                const audioUrl = item.audioUrl || '';
+                extraAttrs += ` data-audio-url="${escapeHtml(audioUrl)}" data-audio-title="${escapeHtml(songTitle)}"`;
+                contentHtml = `
+                    <div class="widget-bgm-box" id="bentoBgmBox-${safeId}">
+                        <div class="widget-bgm-info">
+                            <button type="button" class="widget-bgm-btn" onclick="toggleBentoBGMPlay('${safeId}', '${audioUrl}', event)" title="Phát nhạc">
+                                <i class="fa-solid fa-play" id="bentoBgmIcon-${safeId}"></i>
+                            </button>
+                            <div style="min-width:0; flex:1;">
+                                <span style="font-size:0.7rem; font-weight:800; color:#ea580c; text-transform:uppercase; letter-spacing:0.5px;">PROFILE BGM</span>
+                                <div style="font-weight:800; font-size:1rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(songTitle)}">
+                                    ${escapeHtml(songTitle)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget-bgm-waves">
+                            <span class="widget-bgm-bar"></span>
+                            <span class="widget-bgm-bar"></span>
+                            <span class="widget-bgm-bar"></span>
+                            <span class="widget-bgm-bar"></span>
+                            <span class="widget-bgm-bar"></span>
+                        </div>
+                    </div>
+                `;
+            }
+            // 9. LIÊN KẾT MẠNG XÃ HỘI (SOCIAL LINKS WIDGET)
+            else if (safeId.startsWith('widget_social_')) {
+                let socials = {};
+                try {
+                    socials = typeof item.socials === 'string' ? JSON.parse(item.socials) : (item.socials || {});
+                } catch(e){}
+                extraAttrs += ` data-socials="${escapeHtml(JSON.stringify(socials))}"`;
+
+                let chips = [];
+                if (socials.scratch) {
+                    const scUrl = socials.scratch.startsWith('http') ? socials.scratch : `https://scratch.mit.edu/users/${encodeURIComponent(socials.scratch)}`;
+                    chips.push(`<a href="${scUrl}" target="_blank" class="social-chip-link social-chip-scratch"><i class="fa-solid fa-cat"></i> Scratch</a>`);
+                }
+                if (socials.youtube) {
+                    const ytUrl = socials.youtube.startsWith('http') ? socials.youtube : `https://youtube.com/@${encodeURIComponent(socials.youtube)}`;
+                    chips.push(`<a href="${ytUrl}" target="_blank" class="social-chip-link social-chip-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>`);
+                }
+                if (socials.discord) {
+                    const dcUrl = socials.discord.startsWith('http') ? socials.discord : `https://discord.gg/${encodeURIComponent(socials.discord)}`;
+                    chips.push(`<a href="${dcUrl}" target="_blank" class="social-chip-link social-chip-discord"><i class="fa-brands fa-discord"></i> Discord</a>`);
+                }
+                if (socials.github) {
+                    const ghUrl = socials.github.startsWith('http') ? socials.github : `https://github.com/${encodeURIComponent(socials.github)}`;
+                    chips.push(`<a href="${ghUrl}" target="_blank" class="social-chip-link social-chip-github"><i class="fa-brands fa-github"></i> GitHub</a>`);
+                }
+                if (socials.facebook) {
+                    const fbUrl = socials.facebook.startsWith('http') ? socials.facebook : `https://facebook.com/${encodeURIComponent(socials.facebook)}`;
+                    chips.push(`<a href="${fbUrl}" target="_blank" class="social-chip-link social-chip-facebook"><i class="fa-brands fa-facebook"></i> Facebook</a>`);
+                }
+                if (socials.web) {
+                    const wbUrl = socials.web.startsWith('http') ? socials.web : `https://${socials.web}`;
+                    chips.push(`<a href="${wbUrl}" target="_blank" class="social-chip-link social-chip-web"><i class="fa-solid fa-globe"></i> Website</a>`);
+                }
+
+                if (chips.length === 0) {
+                    chips.push(`<span style="font-size:0.85rem; color:var(--text-muted);"><i class="fa-solid fa-link-slash"></i> Chưa thiết lập liên kết</span>`);
+                }
+
+                contentHtml = `
+                    <div class="bento-widget-inner" style="padding:14px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                        <div class="widget-social-box">
+                            ${chips.join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            // 10. GHI CHÚ TỰ DO
             else if (safeId.startsWith('widget_note')) {
                 const noteText = item.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
                 contentHtml = `
@@ -14338,7 +14719,7 @@
             if (!contentHtml) return '';
 
             return `
-                <div class="grid-stack-item" gs-id="${safeId}" gs-x="${item.x}" gs-y="${item.y}" gs-w="${item.w}" gs-h="${item.h}" gs-min-w="${item.minW || 3}" gs-min-h="${item.minH || 2}">
+                <div class="grid-stack-item" ${extraAttrs}>
                     <div class="grid-stack-item-content">
                         <button class="bento-btn-remove" onclick="removeBentoWidget('${safeId}', this)" title="Xóa Box này"><i class="fa-solid fa-xmark"></i></button>
                         ${contentHtml}
@@ -14347,13 +14728,18 @@
             `;
         }
 
-        // Khởi tạo ban đầu (View Mode hoặc lấy từ DB)
+        // Render toàn bộ lưới từ dữ liệu DB
         function renderBentoGrid(data) {
             currentBentoData = data;
             const gridEl = document.getElementById('profileBentoGrid');
             if (!gridEl) return;
             
-            // Xóa rác Edit mode (nếu có)
+            // Dừng phát BGM cũ nếu đang phát
+            if (activeBentoAudio) {
+                activeBentoAudio.pause();
+                activeBentoAudio = null;
+            }
+
             isBentoEditMode = false;
             gridEl.classList.remove('bento-edit-mode');
             document.getElementById('bentoToolbar').classList.remove('show');
@@ -14362,7 +14748,7 @@
             let layout = [];
             try { if (data.customLayout) layout = JSON.parse(data.customLayout); } catch(e){}
 
-            // LAYOUT MẶC ĐỊNH
+            // LAYOUT MẶC ĐỊNH BAN ĐẦU
             if (layout.length === 0) {
                 if (data.featuredProject) {
                     layout.push({ id: "widget_featured", x: 0, y: 0, w: 12, h: 5, minW: 6, minH: 4 });
@@ -14374,17 +14760,19 @@
                 }
             }
 
-            // Sinh HTML động
+            // Giới hạn an toàn tối đa 25 node khi vẽ
+            layout = layout.slice(0, 25);
+
             let gridHtml = '';
             layout.forEach(item => {
                 gridHtml += getBentoWidgetHTML(item, data);
             });
             gridEl.innerHTML = gridHtml;
 
-            // Khởi tạo Engine (Luôn khóa cứng ở chế độ xem)
+            // Khởi tạo Static View GridStack
             if (profileGrid) profileGrid.destroy(false);
             profileGrid = GridStack.init({
-                staticGrid: true, // Khóa 100%
+                staticGrid: true,
                 margin: 15,
                 cellHeight: 70,
                 column: 12,
@@ -14393,77 +14781,96 @@
                 animate: true
             }, '#profileBentoGrid');
 
-            // Cập nhật Thumbnail cho Featured Project
+            // Nạp tác phẩm tâm huyết nếu có
             if (layout.find(l => l.id === 'widget_featured') && data.featuredProject) {
                 loadBentoFeaturedProject(data.featuredProject);
             }
+
+            // Nạp bất đồng bộ cho các thẻ game nhỏ, bạn bè & station (Chỉ nạp nếu chưa có trong RAM)
+            layout.forEach(item => {
+                if (item.id && item.id.startsWith('widget_proj_') && item.targetId) {
+                    loadBentoMiniProjectCard(item.id, item.targetId);
+                }
+                if (item.id && item.id.startsWith('widget_user_') && item.targetUser) {
+                    loadBentoUserAvatar(item.id, item.targetUser);
+                }
+                if (item.id && item.id.startsWith('widget_station_') && (item.stationId || item.targetId)) {
+                    loadBentoStationCard(item.id, item.stationId || item.targetId);
+                }
+            });
         }
 
-        // ================= GIAI ĐOẠN 3: LOGIC CHỈNH SỬA KÉO THẢ =================
-        
+        // ================= EDIT MODE, DIRTY CHECKING & BẢO VỆ REQUEST =================
         function toggleBentoEditMode() {
             if (!profileGrid) return;
             isBentoEditMode = true;
 
             const gridEl = document.getElementById('profileBentoGrid');
-            gridEl.classList.add('bento-edit-mode'); // Hiển thị lưới nền
+            gridEl.classList.add('bento-edit-mode');
             
-            // Mở khóa GridStack Engine (Cho phép Resize và Drag)
             profileGrid.setStatic(false);
             profileGrid.enableMove(true);
             profileGrid.enableResize(true);
 
-            // Bật Toolbar & Ẩn nút "Tùy biến"
+            // BẬT TOOLBAR, CẬP NHẬT SỐ LƯỢNG & CHỤP SNAPSHOT DIRTY-CHECKING
             document.getElementById('bentoToolbar').classList.add('show');
             document.getElementById('btnCustomizeBento').style.display = 'none';
+            updateBentoCountBadge();
+            initialBentoJSON = getNormalizedBentoJSON(); // Lưu trạng thái ban đầu
         }
 
         function cancelBentoEdit() {
-            // Hủy toàn bộ thay đổi bằng cách nạp lại layout tĩnh từ DB
             renderBentoGrid(currentBentoData);
         }
 
         function resetBentoLayout() {
             if (!confirm("Bạn có chắc muốn khôi phục bố cục về mặc định không? Layout hiện tại sẽ bị xóa.")) return;
-            // Xóa sạch Layout để quay về mặc định
             currentBentoData.customLayout = null; 
             renderBentoGrid(currentBentoData);
-            toggleBentoEditMode(); // Bật lại sửa để người dùng lưu
+            toggleBentoEditMode();
         }
 
         function openBentoDrawer() {
             openModal('bentoWidgetModal');
         }
 
-        function addBentoWidget(widgetId) {
+        // Thêm widget cơ bản vào lưới (Có kiểm tra trần 25 widget)
+        function addBentoWidget(widgetId, customProps = {}) {
             if (!profileGrid || !isBentoEditMode) return;
             
-            // Chống trùng Widget (Trừ cái note được phép có nhiều cái)
-            const currentNodes = profileGrid.engine.nodes;
-            if (!widgetId.startsWith('widget_note') && currentNodes.find(n => n.id === widgetId)) {
-                showToast("Bạn đã thêm Widget này rồi!", "error");
+            // 🛡️ BẢO VỆ 1: GIỚI HẠN TỐI ĐA 25 WIDGET
+            const currentNodes = profileGrid.engine.nodes || [];
+            if (currentNodes.length >= 25) {
+                showToast("Hồ sơ đã đạt giới hạn tối đa 25 Widget! Hãy xóa bớt widget cũ.", "error");
+                closeModal('bentoWidgetModal');
                 return;
             }
 
-            let newItem = { id: widgetId, x: 0, y: 100, content: "" }; // y:100 để rớt xuống cuối tự động pack
+            // Chống trùng Widget độc nhất
+            if (['widget_bio', 'widget_stats', 'widget_featured'].includes(widgetId) && currentNodes.find(n => n.id === widgetId)) {
+                showToast("Bạn đã thêm Widget này trên trang rồi!", "error");
+                return;
+            }
+
+            let newItem = { id: widgetId, x: 0, y: 100, ...customProps };
             
             if (widgetId === 'widget_bio') { newItem.w = 6; newItem.h = 3; newItem.minW = 3; newItem.minH = 2; }
             else if (widgetId === 'widget_stats') { newItem.w = 6; newItem.h = 3; newItem.minW = 4; newItem.minH = 2; }
             else if (widgetId === 'widget_featured') { newItem.w = 12; newItem.h = 5; newItem.minW = 6; newItem.minH = 4; }
             else if (widgetId === 'widget_note') {
-                newItem.id = 'widget_note_' + Date.now(); // Sinh ID độc nhất
+                newItem.id = 'widget_note_' + Date.now();
                 newItem.w = 4; newItem.h = 3; newItem.minW = 3; newItem.minH = 2;
                 const userText = prompt("Nhập nội dung Ghi chú của bạn (Hỗ trợ Emoji):", "Chào mừng ghé thăm hồ sơ!");
-                if (!userText) return; // Hủy
+                if (!userText) return;
                 newItem.content = userText;
             }
 
             const html = getBentoWidgetHTML(newItem, currentBentoData);
-            profileGrid.addWidget(html, { autoPosition: true }); // Tự tìm chỗ trống
+            profileGrid.addWidget(html, { autoPosition: true });
             
             closeModal('bentoWidgetModal');
+            updateBentoCountBadge();
             
-            // Load nội dung nếu là Featured
             if (widgetId === 'widget_featured' && currentBentoData.featuredProject) {
                 loadBentoFeaturedProject(currentBentoData.featuredProject);
             }
@@ -14472,33 +14879,277 @@
         function removeBentoWidget(id, btnEl) {
             if (!profileGrid) return;
             const itemEl = btnEl.closest('.grid-stack-item');
-            if (itemEl) profileGrid.removeWidget(itemEl);
+            if (itemEl) {
+                profileGrid.removeWidget(itemEl);
+                updateBentoCountBadge();
+            }
         }
 
+        // ================= CÁC BỘ CHỌN WIDGET MỚI =================
+        // 1. Thêm Widget Bộ sưu tập
+        function openBentoPickPlaylistModal() {
+            closeModal('bentoWidgetModal');
+            const listEl = document.getElementById('bentoPickPlaylistList');
+            let playlists = currentBentoData ? (typeof currentBentoData.playlists === 'string' ? JSON.parse(currentBentoData.playlists) : currentBentoData.playlists) : [];
+            if (!playlists || playlists.length === 0) {
+                listEl.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:2.5rem; opacity:0.3; margin-bottom:10px; display:block;"></i>Bạn chưa tạo Bộ sưu tập nào. Hãy tạo ở mục "Bộ sưu tập" trước nhé!</div>`;
+            } else {
+                listEl.innerHTML = playlists.map(pl => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-secondary); border:1.5px solid var(--border-color); border-radius:12px; margin-bottom:10px; cursor:pointer;" onclick="selectPlaylistToBento('${pl.id}')">
+                        <div>
+                            <b style="font-size:0.95rem; color:var(--text-title);">${escapeHtml(pl.title)}</b>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${(pl.projects||[]).length} tác phẩm</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:18px;">Ghim</button>
+                    </div>
+                `).join('');
+            }
+            openModal('bentoPickPlaylistModal');
+        }
+
+        function selectPlaylistToBento(playlistId) {
+            closeModal('bentoPickPlaylistModal');
+            addBentoWidget(`widget_col_${Date.now()}`, {
+                targetId: playlistId,
+                w: 6, h: 3, minW: 4, minH: 2
+            });
+        }
+
+        // 2. Thêm Widget Ghim tác phẩm nhỏ
+        function openBentoPickProjectModal() {
+            closeModal('bentoWidgetModal');
+            const listEl = document.getElementById('bentoPickProjectList');
+            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang nạp danh sách...</div>';
+            openModal('bentoPickProjectModal');
+
+            fetch(`${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`)
+                .then(r => r.json())
+                .then(res => {
+                    const myProjs = (res && res.projects) ? res.projects : [];
+                    if (myProjs.length === 0) {
+                        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Bạn chưa có tác phẩm nào để ghim.</div>';
+                        return;
+                    }
+                    listEl.innerHTML = myProjs.map(p => {
+                        const pid = String(p.projectId || p.fileId);
+                        const thumb = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                        return `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:12px; margin-bottom:8px; cursor:pointer;" onclick="selectProjectCardToBento('${pid}')">
+                                <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+                                    <img src="${thumb}" style="width:54px; aspect-ratio:16/9; border-radius:6px; object-fit:cover; background:#000;">
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:0.9rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(p.title)}</b>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views||0} lượt chơi</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="padding:5px 12px; font-size:0.8rem; border-radius:16px;">Ghim</button>
+                            </div>
+                        `;
+                    }).join('');
+                }).catch(() => {
+                    listEl.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">Lỗi tải dự án.</div>';
+                });
+        }
+
+        function selectProjectCardToBento(pid) {
+            closeModal('bentoPickProjectModal');
+            addBentoWidget(`widget_proj_${Date.now()}`, {
+                targetId: pid,
+                w: 4, h: 3, minW: 3, minH: 2
+            });
+            setTimeout(() => loadBentoMiniProjectCard(`widget_proj_${Date.now()}`, pid), 100);
+        }
+
+        // 3. Thêm Widget Thẻ Bạn bè / Dev
+        function addBentoUserCardWidget() {
+            closeModal('bentoWidgetModal');
+            const targetUser = prompt("Nhập Username của người bạn muốn ghim thẻ hồ sơ:");
+            if (!targetUser) return;
+            const cleanUser = targetUser.trim().replace(/@/g, '');
+            const rel = prompt("Nhãn vai trò / quan hệ (Ví dụ: Bạn thân, Đồng tác giả, Dev Team...):", "Bạn bè") || "Bạn bè";
+
+            addBentoWidget(`widget_user_${Date.now()}`, {
+                targetUser: cleanUser,
+                relation: rel.trim(),
+                w: 4, h: 2, minW: 3, minH: 2
+            });
+        }
+
+        // 4. Thêm Widget Ghim Station
+        function openBentoPickStationModal() {
+            closeModal('bentoWidgetModal');
+            const listEl = document.getElementById('bentoPickStationList');
+            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải Station...</div>';
+            openModal('bentoPickStationModal');
+
+            fetch(`${WORKER_URL}/api/studios`)
+                .then(r => r.json())
+                .then(studios => {
+                    allStudios = Array.isArray(studios) ? studios : [];
+                    if (allStudios.length === 0) {
+                        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Chưa có Station nào được tạo.</div>';
+                        return;
+                    }
+                    listEl.innerHTML = allStudios.map(s => {
+                        const thumb = s.thumbId ? `${WORKER_URL}/api/project/${s.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                        return `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:var(--bg-secondary); border:1.5px solid var(--border-color); border-radius:12px; margin-bottom:10px; cursor:pointer;" onclick="selectStationToBento('${s.id}')">
+                                <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                                    <img src="${thumb}" style="width:58px; aspect-ratio:16/9; border-radius:6px; object-fit:cover; background:#000;">
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(s.title)}</b>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);">Trưởng trạm: @${escapeHtml(s.creator)}</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:18px;">Ghim</button>
+                            </div>
+                        `;
+                    }).join('');
+                }).catch(() => {
+                    listEl.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">Lỗi kết nối Station.</div>';
+                });
+        }
+
+        function selectStationToBento(stationId) {
+            closeModal('bentoPickStationModal');
+            addBentoWidget(`widget_station_${Date.now()}`, {
+                stationId: stationId,
+                w: 6, h: 3, minW: 4, minH: 2
+            });
+            setTimeout(() => loadBentoStationCard(`widget_station_${Date.now()}`, stationId), 100);
+        }
+
+        // 5. Thêm Widget BGM / Nhạc nền Profile
+        function openBentoPickAudioModal() {
+            closeModal('bentoWidgetModal');
+            const listEl = document.getElementById('bentoPickAudioList');
+            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải kho âm thanh...</div>';
+            openModal('bentoPickAudioModal');
+
+            fetch(`${WORKER_URL}/api/assets`)
+                .then(r => r.json())
+                .then(assets => {
+                    allAssets = Array.isArray(assets) ? assets : [];
+                    const audioAssets = allAssets.filter(a => ['mp3', 'wav', 'ogg'].includes((a.fileType || '').toLowerCase()));
+
+                    if (audioAssets.length === 0) {
+                        listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--text-muted);">Chưa có tệp âm thanh nào trong Cửa hàng Tài nguyên. Hãy đóng góp 1 file âm thanh nhé!</div>';
+                        return;
+                    }
+
+                    listEl.innerHTML = audioAssets.map(a => {
+                        const fileExt = (a.fileType || 'mp3').toLowerCase();
+                        const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
+                        return `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-secondary); border:1.5px solid var(--border-color); border-radius:12px; margin-bottom:10px;">
+                                <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                                    <div style="width:38px; height:38px; border-radius:50%; background:#ea580c; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <i class="fa-solid fa-music"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(a.title)}</b>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);">Bởi @${escapeHtml(a.author)} • ${a.size || 0} MB</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="padding:6px 16px; font-size:0.8rem; border-radius:18px;" onclick="selectAudioToBento('${a.assetId}', '${escapeHtml(a.title)}', '${fileUrl}')">
+                                    Chọn BGM
+                                </button>
+                            </div>
+                        `;
+                    }).join('');
+                }).catch(() => {
+                    listEl.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">Lỗi tải danh sách âm thanh.</div>';
+                });
+        }
+
+        function selectAudioToBento(assetId, songTitle, audioUrl) {
+            closeModal('bentoPickAudioModal');
+            addBentoWidget(`widget_audio_${Date.now()}`, {
+                audioTitle: songTitle,
+                audioUrl: audioUrl,
+                w: 6, h: 2, minW: 4, minH: 2
+            });
+        }
+
+        // 6. Thêm Widget Mạng xã hội
+        function openBentoConfigSocialModal() {
+            closeModal('bentoWidgetModal');
+            // Nạp dữ liệu cũ nếu đã từng có
+            const scratchLink = viewingProfileData && viewingProfileData.scratch_linked ? viewingProfileData.scratch_linked : '';
+            document.getElementById('bentoSocialScratch').value = scratchLink;
+            document.getElementById('bentoSocialYoutube').value = '';
+            document.getElementById('bentoSocialDiscord').value = '';
+            document.getElementById('bentoSocialGithub').value = '';
+            document.getElementById('bentoSocialFacebook').value = '';
+            document.getElementById('bentoSocialWeb').value = '';
+            openModal('bentoConfigSocialModal');
+        }
+
+        function saveSocialLinksToBento() {
+            const sc = document.getElementById('bentoSocialScratch').value.trim();
+            const yt = document.getElementById('bentoSocialYoutube').value.trim();
+            const dc = document.getElementById('bentoSocialDiscord').value.trim();
+            const gh = document.getElementById('bentoSocialGithub').value.trim();
+            const fb = document.getElementById('bentoSocialFacebook').value.trim();
+            const wb = document.getElementById('bentoSocialWeb').value.trim();
+
+            if (!sc && !yt && !dc && !gh && !fb && !wb) {
+                return showToast("Vui lòng nhập ít nhất một mạng xã hội!", "error");
+            }
+
+            const socialsObj = { scratch: sc, youtube: yt, discord: dc, github: gh, facebook: fb, web: wb };
+            closeModal('bentoConfigSocialModal');
+
+            addBentoWidget(`widget_social_${Date.now()}`, {
+                socials: socialsObj,
+                w: 6, h: 2, minW: 3, minH: 2
+            });
+        }
+
+        // ================= HÀM LƯU BỐ CỤC (ÁP DỤNG DIRTY-CHECKING TUYỆT ĐỐI) =================
         async function saveBentoLayout() {
             if (!profileGrid) return;
+            
+            // 🛡️ BẢO VỆ 2: KIỂM TRA THAY ĐỔI (DIRTY-CHECKING)
+            const currentJSON = getNormalizedBentoJSON();
+            if (currentJSON === initialBentoJSON) {
+                showToast("Bố cục chưa có thay đổi nào mới!", "info");
+                renderBentoGrid(currentBentoData);
+                return; // DỪNG NGAY TẠI ĐÂY, 0 GỬI REQUEST
+            }
+
+            const rawLayout = profileGrid.save() || [];
+            if (rawLayout.length > 25) {
+                return showToast("Vượt quá giới hạn tối đa 25 Widget!", "error");
+            }
+
             const btn = document.getElementById('btnSaveBento');
             const origHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
             btn.disabled = true;
 
-            // Dùng hàm save() cực xịn của GridStack để lấy Tọa độ & Kích thước mới
-            const rawLayout = profileGrid.save();
-            
-            // Lọc bớt rác, chỉ giữ lại các trường cần thiết để nén JSON nhẹ nhất
+            // Nén dữ liệu tối giản nhất trước khi gửi
             const cleanLayout = rawLayout.map(n => {
                 let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
-                // Nhặt lại thuộc tính content nếu là Note
                 if (n.id.startsWith('widget_note')) {
                     const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"] .widget-note-container div`);
                     if (el) obj.content = el.innerText;
+                }
+                const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"]`);
+                if (el) {
+                    if (el.getAttribute('data-target-id')) obj.targetId = el.getAttribute('data-target-id');
+                    if (el.getAttribute('data-target-user')) obj.targetUser = el.getAttribute('data-target-user');
+                    if (el.getAttribute('data-relation')) obj.relation = el.getAttribute('data-relation');
+                    if (el.getAttribute('data-station-id')) obj.stationId = el.getAttribute('data-station-id');
+                    if (el.getAttribute('data-audio-url')) obj.audioUrl = el.getAttribute('data-audio-url');
+                    if (el.getAttribute('data-audio-title')) obj.audioTitle = el.getAttribute('data-audio-title');
+                    if (el.getAttribute('data-socials')) obj.socials = el.getAttribute('data-socials');
                 }
                 return obj;
             });
 
             const jsonStr = JSON.stringify(cleanLayout);
 
-            // Gửi lên Cột AA qua API (Cloudflare Worker đã cấu hình xong ở GĐ 1)
             const res = await apiFetch(`/api/user/layout`, {
                 method: 'POST',
                 body: JSON.stringify({ customLayout: jsonStr })
@@ -14506,30 +15157,168 @@
 
             if (res && res.success) {
                 showToast("Đã lưu Tùy biến trang cá nhân!", "success");
-                currentBentoData.customLayout = jsonStr; // Cập nhật RAM nội bộ
+                currentBentoData.customLayout = jsonStr;
                 
-                // Cập nhật vào Global Cache để reload 0 giây
                 if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
                     profileCache[currentUser.username].data.customLayout = jsonStr;
                 }
 
-                renderBentoGrid(currentBentoData); // Khóa lại chế độ xem
+                renderBentoGrid(currentBentoData);
                 
-                // Đồng bộ lại UI
                 const statProj = document.getElementById('statProjectCount');
                 if (statProj && statProj.innerText === '...') {
-                    // Kích nạp lại Tab 1 để lấy số đếm (vì render lại làm mất giá trị ảo)
                     loadProfTab('projects', false);
                 }
             } else {
-                showToast("Lưu thất bại, máy chủ quá tải!", "error");
+                showToast((res && res.error) ? res.error : "Lưu thất bại!", "error");
             }
             
             btn.innerHTML = origHTML;
             btn.disabled = false;
         }
 
-        // ================= LOADER THUMBNAIL DỰ ÁN TÂM HUYẾT =================
+        // ================= CÁC BỘ NẠP DATA BẤT ĐỒNG BỘ CHO WIDGET CON =================
+        async function loadBentoMiniProjectCard(widgetSafeId, pid) {
+            let p = allProjects.find(x => (x.projectId || x.fileId) === pid);
+            if (!p) {
+                try {
+                    const res = await (await fetch(`${WORKER_URL}/api/projects?id=${encodeURIComponent(pid)}&limit=1`)).json();
+                    if (res.projects && res.projects[0]) {
+                        p = res.projects[0];
+                        allProjects.push(p);
+                    }
+                } catch(e){}
+            }
+
+            const box = document.getElementById(`bentoMiniProj-${widgetSafeId}`);
+            if (box && p) {
+                const thumb = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                box.innerHTML = `
+                    <div class="widget-mini-card-thumb">
+                        <img src="${thumb}">
+                        <span style="position:absolute; bottom:6px; right:6px; background:rgba(0,0,0,0.75); color:#fff; font-size:0.7rem; font-weight:800; padding:2px 6px; border-radius:4px;">GAME</span>
+                    </div>
+                    <div class="widget-mini-card-body">
+                        <div>
+                            <b style="font-size:0.95rem; color:var(--text-title); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(p.title)}</b>
+                            <span style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; display:block;">Bởi @${escapeHtml(p.author)}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+                            <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes||[]).length}</span>
+                            <span><i class="fa-solid fa-play"></i> ${p.views||0}</span>
+                        </div>
+                    </div>
+                `;
+            } else if (box) {
+                box.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">Tác phẩm không khả dụng.</div>`;
+            }
+        }
+
+        async function loadBentoUserAvatar(widgetSafeId, username) {
+            const img = document.getElementById(`bentoUserAvt-${widgetSafeId}`);
+            if (!img) return;
+            if (globalUserCache[username]) {
+                img.src = getAvtUrl(globalUserCache[username]);
+                return;
+            }
+            try {
+                const data = await (await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)).json();
+                if (data && data.avt) {
+                    globalUserCache[username] = data.avt;
+                    img.src = getAvtUrl(data.avt);
+                }
+            } catch(e){}
+        }
+
+        async function loadBentoStationCard(widgetSafeId, stationId) {
+            let s = allStudios.find(x => String(x.id) === String(stationId));
+            if (!s) {
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/studio/${encodeURIComponent(stationId)}`);
+                    if (res.ok) {
+                        s = await res.json();
+                        allStudios.push(s);
+                    }
+                } catch(e){}
+            }
+
+            const box = document.getElementById(`bentoStationCard-${widgetSafeId}`);
+            if (box && s) {
+                const thumb = s.thumbId ? `${WORKER_URL}/api/project/${s.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                box.innerHTML = `
+                    <div class="widget-station-thumb">
+                        <img src="${thumb}">
+                        <span class="station-badge-tag"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
+                    </div>
+                    <div class="widget-mini-card-body">
+                        <div>
+                            <b style="font-size:0.95rem; color:var(--text-title); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(s.title)}</b>
+                            <span style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; display:block;">Trưởng trạm: @${escapeHtml(s.creator)}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+                            <span><i class="fa-solid fa-folder"></i> ${(s.projects||[]).length} tác phẩm</span>
+                            <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(s.followers||[]).length} theo dõi</span>
+                        </div>
+                    </div>
+                `;
+            } else if (box) {
+                box.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">Station không khả dụng.</div>`;
+            }
+        }
+
+        // ================= TRÌNH PHÁT BGM WIDGET (AUDIO PLAYBACK) =================
+        function toggleBentoBGMPlay(safeId, url, e) {
+            if (e) e.stopPropagation();
+            if (!url) return showToast("Không tìm thấy tệp âm thanh!", "error");
+
+            const box = document.getElementById(`bentoBgmBox-${safeId}`);
+            const icon = document.getElementById(`bentoBgmIcon-${safeId}`);
+
+            // Nếu đang phát chính bài này -> Tạm dừng
+            if (activeBentoAudio && activeBentoAudio.datasetSafeId === safeId) {
+                if (activeBentoAudio.paused) {
+                    activeBentoAudio.play();
+                    if (box) box.classList.add('is-playing');
+                    if (icon) icon.className = 'fa-solid fa-pause';
+                } else {
+                    activeBentoAudio.pause();
+                    if (box) box.classList.remove('is-playing');
+                    if (icon) icon.className = 'fa-solid fa-play';
+                }
+                return;
+            }
+
+            // Nếu đang phát bài khác -> Tắt bài cũ
+            if (activeBentoAudio) {
+                activeBentoAudio.pause();
+                const oldBox = document.getElementById(`bentoBgmBox-${activeBentoAudio.datasetSafeId}`);
+                const oldIcon = document.getElementById(`bentoBgmIcon-${activeBentoAudio.datasetSafeId}`);
+                if (oldBox) oldBox.classList.remove('is-playing');
+                if (oldIcon) oldIcon.className = 'fa-solid fa-play';
+                activeBentoAudio = null;
+            }
+
+            // Khởi tạo audio mới
+            const audio = new Audio(url);
+            audio.datasetSafeId = safeId;
+            activeBentoAudio = audio;
+
+            if (box) box.classList.add('is-playing');
+            if (icon) icon.className = 'fa-solid fa-pause';
+
+            audio.play().catch(err => {
+                showToast("Trình duyệt chặn tự động phát âm thanh.", "info");
+                if (box) box.classList.remove('is-playing');
+                if (icon) icon.className = 'fa-solid fa-play';
+            });
+
+            audio.onended = () => {
+                if (box) box.classList.remove('is-playing');
+                if (icon) icon.className = 'fa-solid fa-play';
+                activeBentoAudio = null;
+            };
+        }
+
         async function loadBentoFeaturedProject(pid) {
             let featProj = allProjects.find(p => p.fileId === pid || p.projectId === pid);
             if (!featProj) {
@@ -14572,7 +15361,6 @@
             }
         }
 
-        // ================= POPUP CHỌN TÁC PHẨM TÂM HUYẾT TRỰC TIẾP =================
         async function openSelectFeaturedProjectModal() {
             if (!currentUser) return openModal('loginModal');
             openModal('selectFeaturedProjModal');
@@ -14657,7 +15445,6 @@
                     profileCache[currentUser.username].data.featuredProject = pid;
                 }
 
-                // Cập nhật nội dung Banner ngay lập tức
                 const wrapper = document.getElementById('bentoFeaturedWrapper');
                 if (wrapper) {
                     wrapper.innerHTML = '<div style="text-align:center; padding: 40px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i></div>';
