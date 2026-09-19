@@ -6096,7 +6096,10 @@
                         </div>
 
                         <div class="form-group" style="margin-bottom:16px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_login_pw_label">Mật khẩu *:</label>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); margin:0;" data-i18n="auth_login_pw_label">Mật khẩu *:</label>
+                                <a href="javascript:void(0)" onclick="switchAuthTab('forgot')" style="font-size:0.78rem; color:var(--primary); font-weight:700; text-decoration:none;">Quên mật khẩu?</a>
+                            </div>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-lock auth-input-icon"></i>
                                 <input type="password" id="loginPw" class="auth-control-input" required data-i18n-ph="auth_login_pw_ph" placeholder="Nhập mật khẩu..." autocomplete="current-password">
@@ -6180,6 +6183,80 @@
                     <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:16px;">
                         <span data-i18n="auth_reg_has_acc">Đã có tài khoản?</span> 
                         <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;" data-i18n="auth_reg_login_now">Đăng nhập ngay</a>
+                    </div>
+                </div>
+
+                <!-- PANE 3: FORM QUÊN MẬT KHẨU (2 BƯỚC MƯỢT MÀ) -->
+                <div id="authPaneForgot" style="display:none;">
+                    <div class="auth-form-header">
+                        <div class="auth-form-title">Khôi phục mật khẩu</div>
+                        <div class="auth-form-subtitle">Lấy lại quyền truy cập tài khoản qua email xác nhận OTP.</div>
+                    </div>
+
+                    <!-- BƯỚC 1: NHẬP USERNAME HOẶC EMAIL -->
+                    <div id="forgotStep1">
+                        <form onsubmit="handleForgotSendOtp(event)">
+                            <div class="form-group" style="margin-bottom:16px;">
+                                <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tên tài khoản hoặc Email đã đăng ký *:</label>
+                                <div class="auth-input-group">
+                                    <i class="fa-solid fa-user-shield auth-input-icon"></i>
+                                    <input type="text" id="forgotIdentifierInput" class="auth-control-input" required placeholder="Nhập username hoặc email...">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary auth-submit-btn" id="btnForgotSendOtp">
+                                <i class="fa-solid fa-paper-plane"></i> <span>Gửi mã xác nhận OTP</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- BƯỚC 2: NHẬP MÃ OTP VÀ MẬT KHẨU MỚI -->
+                    <div id="forgotStep2" style="display:none;">
+                        <p style="font-size:0.85rem; color:var(--text-muted); text-align:center; margin-bottom:14px; line-height:1.4;">
+                            Mã OTP 6 số đã được gửi tới địa chỉ:<br>
+                            <b id="forgotMaskedEmailText" style="color:var(--primary); font-size:0.95rem;"></b>
+                        </p>
+
+                        <form onsubmit="handleForgotResetPassword(event)">
+                            <div class="otp-box-container" style="margin-bottom:14px;">
+                                <input type="text" id="forgotOtpInput" class="otp-digit-input" placeholder="------" maxlength="6" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Mật khẩu mới *:</label>
+                                <div class="auth-input-group">
+                                    <i class="fa-solid fa-lock auth-input-icon"></i>
+                                    <input type="password" id="forgotNewPw" class="auth-control-input" required minlength="6" placeholder="Tối thiểu 6 ký tự">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:14px;">
+                                <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Nhập lại mật khẩu mới *:</label>
+                                <div class="auth-input-group">
+                                    <i class="fa-solid fa-circle-check auth-input-icon"></i>
+                                    <input type="password" id="forgotNewPwConfirm" class="auth-control-input" required minlength="6" placeholder="Xác nhận lại mật khẩu">
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-size:0.82rem;">
+                                <button type="button" class="btn-link-action" onclick="showForgotStep(1)">
+                                    <i class="fa-solid fa-arrow-left"></i> Nhập lại email
+                                </button>
+                                <button type="button" class="btn-link-action" id="btnForgotResendOtp" onclick="resendForgotOtp()">
+                                    <i class="fa-solid fa-rotate-right"></i> Gửi lại mã <span id="forgotResendCountdown"></span>
+                                </button>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary auth-submit-btn" id="btnForgotResetSubmit">
+                                <i class="fa-solid fa-check"></i> <span>Đặt lại mật khẩu & Đăng nhập</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:16px;">
+                        <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--text-muted); text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Quay lại Đăng nhập</span>
+                        </a>
                     </div>
                 </div>
 
@@ -11433,12 +11510,13 @@
             if (modalEl) modalEl.style.display = 'none'; 
         }
 
-        // CHUYỂN ĐỔI TAB ĐĂNG NHẬP / ĐĂNG KÝ TRONG CÙNG 1 CỬA SỔ (0 CHỚP MÀN HÌNH)
+        // CHUYỂN ĐỔI TAB ĐĂNG NHẬP / ĐĂNG KÝ / QUÊN MẬT KHẨU
         function switchAuthTab(tab) {
             const btnLogin = document.getElementById('authTabBtnLogin');
             const btnReg = document.getElementById('authTabBtnRegister');
             const paneLogin = document.getElementById('authPaneLogin');
             const paneReg = document.getElementById('authPaneRegister');
+            const paneForgot = document.getElementById('authPaneForgot');
 
             if (!btnLogin || !btnReg || !paneLogin || !paneReg) return;
 
@@ -11447,13 +11525,175 @@
                 btnReg.classList.add('active');
                 paneLogin.style.display = 'none';
                 paneReg.style.display = 'block';
+                if (paneForgot) paneForgot.style.display = 'none';
+            } else if (tab === 'forgot') {
+                btnLogin.classList.remove('active');
+                btnReg.classList.remove('active');
+                paneLogin.style.display = 'none';
+                paneReg.style.display = 'none';
+                if (paneForgot) {
+                    paneForgot.style.display = 'block';
+                    showForgotStep(1);
+                }
             } else {
                 btnReg.classList.remove('active');
                 btnLogin.classList.add('active');
                 paneReg.style.display = 'none';
                 paneLogin.style.display = 'block';
+                if (paneForgot) paneForgot.style.display = 'none';
             }
             updateAuthBrandVisuals();
+        }
+
+        // ================= XỬ LÝ QUÊN MẬT KHẨU (FORGOT PASSWORD) =================
+        let forgotTargetUsername = '';
+        let forgotTargetEmail = '';
+        let forgotCooldownTimer = null;
+        let forgotCooldownSeconds = 0;
+
+        function showForgotStep(step) {
+            const s1 = document.getElementById('forgotStep1');
+            const s2 = document.getElementById('forgotStep2');
+            if (s1 && s2) {
+                s1.style.display = step === 1 ? 'block' : 'none';
+                s2.style.display = step === 2 ? 'block' : 'none';
+            }
+        }
+
+        // BƯỚC 1: GỬI MÃ OTP VÀO EMAIL
+        async function handleForgotSendOtp(e) {
+            e.preventDefault();
+            const input = document.getElementById('forgotIdentifierInput');
+            const identifier = input ? input.value.trim() : '';
+            if (!identifier) return showToast("Vui lòng nhập Username hoặc Email!", "error");
+
+            const btn = document.getElementById('btnForgotSendOtp');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi mã...';
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/forgot_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
+                    body: JSON.stringify({ identifier })
+                })).json();
+
+                if (res.success) {
+                    forgotTargetUsername = res.targetUser;
+                    forgotTargetEmail = res.maskedEmail;
+                    document.getElementById('forgotMaskedEmailText').innerText = res.maskedEmail;
+                    document.getElementById('forgotOtpInput').value = '';
+                    document.getElementById('forgotNewPw').value = '';
+                    document.getElementById('forgotNewPwConfirm').value = '';
+                    showForgotStep(2);
+                    startForgotCountdown(60);
+                    showToast("Đã gửi mã xác thực đến email của bạn!", "success");
+                } else {
+                    showToast(res.error || "Không tìm thấy tài khoản!", "error");
+                }
+            } catch(err) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+        }
+
+        // GỬI LẠI MÃ CHO QUÊN MẬT KHẨU
+        async function resendForgotOtp() {
+            if (forgotCooldownSeconds > 0 || !forgotTargetUsername) return;
+            const btn = document.getElementById('btnForgotResendOtp');
+            btn.disabled = true;
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/forgot_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
+                    body: JSON.stringify({ identifier: forgotTargetUsername })
+                })).json();
+
+                if (res.success) {
+                    showToast("Đã gửi lại mã OTP mới!", "success");
+                    startForgotCountdown(60);
+                } else {
+                    showToast(res.error || "Không thể gửi lại mã!", "error");
+                }
+            } catch(err) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+            btn.disabled = false;
+        }
+
+        function startForgotCountdown(sec = 60) {
+            clearInterval(forgotCooldownTimer);
+            forgotCooldownSeconds = sec;
+            const cdSpan = document.getElementById('forgotResendCountdown');
+            const btn = document.getElementById('btnForgotResendOtp');
+            
+            const updateUI = () => {
+                if (cdSpan) cdSpan.innerText = forgotCooldownSeconds > 0 ? `(${forgotCooldownSeconds}s)` : '';
+                if (btn) btn.disabled = forgotCooldownSeconds > 0;
+            };
+
+            updateUI();
+            forgotCooldownTimer = setInterval(() => {
+                forgotCooldownSeconds--;
+                updateUI();
+                if (forgotCooldownSeconds <= 0) clearInterval(forgotCooldownTimer);
+            }, 1000);
+        }
+
+        // BƯỚC 2: XÁC THỰC OTP VÀ ĐẶT LẠI MẬT KHẨU MỚI
+        async function handleForgotResetPassword(e) {
+            e.preventDefault();
+            const code = document.getElementById('forgotOtpInput').value.trim();
+            const newPw = document.getElementById('forgotNewPw').value;
+            const newPwConfirm = document.getElementById('forgotNewPwConfirm').value;
+
+            if (code.length < 6) return showToast("Vui lòng nhập đủ 6 số OTP!", "error");
+            if (newPw.length < 6) return showToast("Mật khẩu mới phải có tối thiểu 6 ký tự!", "error");
+            if (newPw !== newPwConfirm) return showToast("Hai mật khẩu nhập lại không khớp nhau!", "error");
+
+            const btn = document.getElementById('btnForgotResetSubmit');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang đặt lại mật khẩu...';
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/auth/reset_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
+                    body: JSON.stringify({ targetUser: forgotTargetUsername, code, newPassword: newPw })
+                })).json();
+
+                if (res.success) {
+                    showToast("🎉 Đổi mật khẩu thành công! Đã tự động đăng nhập.", "success");
+                    
+                    // Tự động đăng nhập luôn (không cần bắt người dùng gõ lại)
+                    currentUser = {
+                        username: res.username,
+                        sessionToken: res.sessionToken,
+                        displayName: res.displayName,
+                        avt: res.avt,
+                        role: res.role,
+                        email: res.email,
+                        emailVerified: res.emailVerified,
+                        WOW: res.WOW,
+                        frame: res.frame
+                    };
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    closeModal('authModal');
+                    updateNav();
+                    location.reload();
+                } else {
+                    showToast(res.error || "Mã OTP không hợp lệ!", "error");
+                }
+            } catch(err) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
         }
 
         // BẬT / TẮT HIỆN MẬT KHẨU CHO FORM ĐĂNG NHẬP
