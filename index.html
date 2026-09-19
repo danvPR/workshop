@@ -4443,6 +4443,213 @@
             justify-content: center;
             gap: 10px;
         }
+
+        /* 🛍️ GIAO DIỆN MUA VẬT PHẨM IN-GAME PRO (ROBLOX STYLE) */
+        .gamepay-modal-box {
+            max-width: 440px !important;
+            width: 92% !important;
+            border-radius: 24px !important;
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border-color) !important;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45), 0 0 40px rgba(168, 85, 247, 0.2) !important;
+            overflow: hidden;
+            animation: giftPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .gamepay-header {
+            padding: 18px 22px 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+        }
+        .gamepay-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--text-title);
+        }
+        .gamepay-header-title i {
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.12);
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        .gamepay-body {
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .gamepay-item-card {
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .gamepay-item-card::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 190px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .gamepay-item-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: rgba(168, 85, 247, 0.12);
+            color: #a855f7;
+            padding: 3px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(168, 85, 247, 0.25);
+        }
+        .gamepay-item-name {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-title);
+            margin-bottom: 12px;
+            word-break: break-word;
+            line-height: 1.35;
+        }
+        .gamepay-item-price-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(234, 88, 12, 0.1) 100%);
+            border: 1.5px solid rgba(245, 158, 11, 0.45);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: #ea580c;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.15);
+        }
+        [data-theme="dark"] .gamepay-item-price-pill {
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.6);
+        }
+        .gamepay-balance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .gamepay-balance-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .gamepay-balance-label {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .gamepay-balance-val {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .gamepay-balance-val.remaining {
+            color: #10b981;
+        }
+        .gamepay-notice {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+        .gamepay-notice i {
+            color: #f59e0b;
+            font-size: 0.95rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .gamepay-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 5px;
+        }
+        .btn-gamepay-cancel {
+            flex: 1;
+            padding: 13px 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-gamepay-cancel:hover {
+            background: var(--border-color);
+            color: var(--text-title);
+        }
+        .btn-gamepay-confirm {
+            flex: 1.5;
+            padding: 13px 16px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff !important;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-gamepay-confirm:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+        }
+        .btn-gamepay-confirm:disabled {
+            background: var(--bg-secondary) !important;
+            color: var(--text-muted) !important;
+            border: 1.5px solid var(--border-color) !important;
+            box-shadow: none !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            opacity: 0.75;
+        }
     </style>
 </head>
 <body>
@@ -6519,51 +6726,65 @@
         </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN THANH TOÁN TRONG GAME (IN-GAME PAYMENT) -->
-    <div class="modal-overlay" id="gamePayModal" style="z-index: 10001; background: rgba(0,0,0,0.85);">
-        <div class="modal tip-modal-box" style="max-width: 420px; box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);">
-            <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
-                <span style="font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; gap: 8px; color: #a855f7;">
-                    <i class="fa-solid fa-cart-shopping"></i> Xác Nhận Thanh Toán
-                </span>
+    <!-- MODAL XÁC NHẬN THANH TOÁN TRONG GAME (IN-GAME PAYMENT - ROBLOX PROMPT STYLE) -->
+    <div class="modal-overlay" id="gamePayModal" style="z-index: 10001; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+        <div class="modal gamepay-modal-box">
+            <div class="gamepay-header">
+                <div class="gamepay-header-title">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Mua Vật Phẩm</span>
+                </div>
+                <button class="btn-close" onclick="handleGamePayCancel()" title="Hủy bỏ">&times;</button>
             </div>
             
-            <div class="modal-body" style="padding: 24px;">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">
-                    Trò chơi đang yêu cầu trích xuất điểm năng lượng WOW từ ví của bạn để mua vật phẩm:
-                </p>
+            <div class="gamepay-body">
+                <div style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.45; text-align: center;">
+                    Trò chơi đang yêu cầu trích xuất điểm <b>WOW</b> từ tài khoản của bạn:
+                </div>
 
-                <!-- Thẻ Vật Phẩm Cảnh Báo An Toàn -->
-                <div style="background: var(--bg-secondary); border: 2px dashed var(--primary); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 14px;">
-                    <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.5px;">Vật phẩm yêu cầu:</div>
-                    <div id="gamePayItemReason" style="font-size: 1.2rem; font-weight: 900; color: var(--text-title); margin-bottom: 8px; word-break: break-word;">Tên Vật Phẩm</div>
-                    <div style="font-size: 1.5rem; font-weight: 900; color: #ea580c; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span class="wow-icon" style="filter: drop-shadow(0 0 8px rgba(234, 88, 12, 0.6));"></span> <span id="gamePayItemPrice">0</span>
+                <!-- Thẻ Vật Phẩm Trưng Bày -->
+                <div class="gamepay-item-card">
+                    <div class="gamepay-item-badge">
+                        <i class="fa-solid fa-cube"></i> VẬT PHẨM TRONG GAME
+                    </div>
+                    <div class="gamepay-item-name" id="gamePayItemReason">Tên Vật Phẩm</div>
+                    <div class="gamepay-item-price-pill">
+                        <span class="wow-icon"></span>
+                        <span id="gamePayItemPrice">0</span>
                     </div>
                 </div>
 
-                <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; padding: 8px 12px; border-radius: 6px; font-size: 0.78rem; color: #ef4444; margin-bottom: 16px; line-height: 1.4;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> <b>Lưu ý:</b> Điểm WOW sau khi thanh toán sẽ chuyển cho tác giả game và <b>không thể hoàn lại</b>.
+                <!-- Lưới Hiển Thị Số Dư Trước & Sau -->
+                <div class="gamepay-balance-grid">
+                    <div class="gamepay-balance-box">
+                        <span class="gamepay-balance-label">Ví hiện tại</span>
+                        <div class="gamepay-balance-val">
+                            <span class="wow-icon" style="font-size:1rem;"></span>
+                            <span id="gamePayCurrentBalance">0</span>
+                        </div>
+                    </div>
+                    <div class="gamepay-balance-box">
+                        <span class="gamepay-balance-label">Sau khi mua</span>
+                        <div class="gamepay-balance-val remaining">
+                            <span class="wow-icon" style="font-size:1rem;"></span>
+                            <span id="gamePayRemainingBalance">0</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Bảng số dư -->
-                <div style="background: rgba(0,0,0,0.04); border-radius: 10px; padding: 12px 16px; margin-bottom: 24px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                        <span style="color: var(--text-muted);">Số dư ví hiện tại:</span>
-                        <b style="color: var(--text-title);" id="gamePayCurrentBalance">0</b>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; border-top: 1px solid var(--border-color); padding-top: 6px;">
-                        <span style="color: var(--text-muted);">Còn lại sau khi mua:</span>
-                        <b style="color: #10b981;" id="gamePayRemainingBalance">0</b>
-                    </div>
+                <!-- Ghi Chú An Toàn Nhẹ Nhàng -->
+                <div class="gamepay-notice">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Điểm WOW sau khi thanh toán sẽ chuyển trực tiếp tới tác giả phát triển game và <b>không thể hoàn lại</b>.</span>
                 </div>
 
-                <div style="display: flex; gap: 12px;">
-                    <button type="button" class="btn" style="flex: 1; justify-content: center; padding: 12px; font-weight: 700; border-radius: 12px;" onclick="handleGamePayCancel()">
+                <!-- Cụm Nút Hành Động Kèm Đếm Ngược -->
+                <div class="gamepay-actions">
+                    <button type="button" class="btn-gamepay-cancel" onclick="handleGamePayCancel()">
                         Hủy bỏ
                     </button>
-                    <button type="button" class="btn btn-primary" id="btnGamePayConfirm" style="flex: 1.5; justify-content: center; padding: 12px; font-weight: 800; border-radius: 12px; background: linear-gradient(135deg, #a855f7, #6366f1); border: none;" onclick="handleGamePayConfirm()">
-                        <i class="fa-solid fa-fingerprint"></i> Thanh toán
+                    <button type="button" class="btn-gamepay-confirm" id="btnGamePayConfirm" disabled onclick="handleGamePayConfirm()">
+                        <i class="fa-solid fa-clock"></i> <span>Xác nhận mua (3s)</span>
                     </button>
                 </div>
             </div>
@@ -10660,11 +10881,38 @@
                 document.getElementById('gamePayRemainingBalance').innerText = currentBalance - cost;
 
                 openModal('gamePayModal');
+                startGamePayCountdown();
             }
         });
 
-        // Hủy bỏ thanh toán
+        // ⏱️ ĐẾM NGƯỢC 3 GIÂY GIỐNG ROBLOX TRƯỚC KHI MỞ KHÓA NÚT MUA
+        let gamePayCountdownTimer = null;
+        let gamePayCountdownSec = 3;
+
+        function startGamePayCountdown() {
+            clearInterval(gamePayCountdownTimer);
+            gamePayCountdownSec = 3;
+            const confirmBtn = document.getElementById('btnGamePayConfirm');
+            if (!confirmBtn) return;
+
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Xác nhận mua (${gamePayCountdownSec}s)</span>`;
+
+            gamePayCountdownTimer = setInterval(() => {
+                gamePayCountdownSec--;
+                if (gamePayCountdownSec > 0) {
+                    confirmBtn.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Xác nhận mua (${gamePayCountdownSec}s)</span>`;
+                } else {
+                    clearInterval(gamePayCountdownTimer);
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Mua ngay</span>`;
+                }
+            }, 1000);
+        }
+
+        // Hủy bỏ thanh toán (Xóa timer ngay lập tức)
         function handleGamePayCancel() {
+            clearInterval(gamePayCountdownTimer);
             if (activeGamePayRequest && activeGamePayRequest.source) {
                 activeGamePayRequest.source.postMessage({
                     type: "DANV_WOW_PAY_RESPONSE",
@@ -10679,6 +10927,8 @@
         // Xác nhận thanh toán
         async function handleGamePayConfirm() {
             if (!activeGamePayRequest || !currentUser) return;
+            if (gamePayCountdownSec > 0) return; // Chống gian lận bấm trước khi hết giờ
+            clearInterval(gamePayCountdownTimer);
 
             const btn = document.getElementById('btnGamePayConfirm');
             const origHtml = btn.innerHTML;
