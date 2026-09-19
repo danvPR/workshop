@@ -12,6 +12,8 @@
     <link rel="canonical" href="https://turbows.pages.dev/" />
     <link rel="icon" type="image/png" href="https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
     <script>
 
         // CẬP NHẬT SEO & OPEN GRAPH ĐỘNG
@@ -890,6 +892,112 @@
 
         /* PROFILE */
         /* PROFILE (ĐÃ THIẾT KẾ LẠI BỐ CỤC) */
+        
+        /* BENTO GRID STYLES */
+        .grid-stack-item-content {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s;
+        }
+        .grid-stack-item-content:hover { border-color: var(--primary); }
+        .bento-widget-inner { padding: 22px; width: 100%; height: 100%; overflow-y: auto; scrollbar-width: none; }
+        .bento-widget-inner::-webkit-scrollbar { display: none; }
+        
+        /* Stats Widget */
+        .widget-stats-container { display: flex; gap: 12px; justify-content: space-around; align-items: center; padding: 18px; }
+        .bento-stat-item { flex: 1; text-align: center; background: var(--bg-secondary); padding: 18px 5px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-color); transition: 0.2s; }
+        .bento-stat-item:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.04); }
+        .bento-stat-item b { display: block; font-size: 1.6rem; font-weight: 900; color: var(--text-title); margin-bottom: 6px; }
+        .bento-stat-item span { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        
+        /* Featured Widget */
+        .widget-featured-container { padding: 0 !important; position: relative; }
+        .bento-featured-banner { display: flex; width: 100%; height: 100%; background: #0f172a; color: #fff; }
+        .bento-featured-thumb { width: 45%; background: #000; overflow: hidden; }
+        .bento-featured-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.4s ease; }
+        .grid-stack-item-content:hover .bento-featured-thumb img { transform: scale(1.05); opacity: 1; }
+        .bento-featured-info { padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        
+        @media (max-width: 768px) {
+            .bento-featured-banner { flex-direction: column; }
+            .bento-featured-thumb { width: 100%; height: 180px; flex-shrink: 0; }
+            .bento-featured-info { padding: 20px; }
+            .widget-stats-container { flex-wrap: wrap; gap: 10px; }
+            .bento-stat-item { min-width: 45%; padding: 12px 5px; }
+            .bento-stat-item b { font-size: 1.3rem; }
+        }
+        /* BENTO GRID EDIT MODE & UI */
+        .bento-edit-mode {
+            background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
+            background-size: 30px 30px;
+            border-radius: 16px;
+            min-height: 300px;
+            padding-bottom: 60px;
+        }
+        .bento-edit-mode .grid-stack-item-content {
+            border: 2px dashed var(--primary);
+            cursor: grab;
+        }
+        .bento-edit-mode .grid-stack-item-content:active { cursor: grabbing; }
+        .bento-btn-remove {
+            position: absolute; top: 10px; right: 10px; width: 28px; height: 28px;
+            background: #ef4444; color: white; border: none; border-radius: 50%;
+            cursor: pointer; z-index: 10; display: none; align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        }
+        .bento-edit-mode .bento-btn-remove { display: flex; }
+        
+        /* BENTO TOOLBAR ĐÁY MÀN HÌNH (TỐI ƯU CẢ DESKTOP & MOBILE) */
+        .bento-toolbar {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px);
+            background: var(--bg-panel); border: 1px solid var(--primary);
+            padding: 10px 20px; border-radius: 35px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+            display: flex; gap: 10px; align-items: center; z-index: 9999;
+            opacity: 0; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+            max-width: 95vw;
+        }
+        .bento-toolbar.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        
+        /* NGĂN KÉO CHỌN WIDGET */
+        .bento-drawer {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;
+            max-height: 400px; overflow-y: auto; padding: 10px 5px;
+        }
+        .bento-drawer-item {
+            background: var(--bg-secondary); border: 2px solid var(--border-color);
+            border-radius: 14px; padding: 14px 10px; text-align: center; cursor: pointer; transition: 0.2s;
+        }
+        .bento-drawer-item:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .bento-drawer-item i { font-size: 1.8rem; color: var(--primary); margin-bottom: 8px; }
+        .bento-drawer-item b { display: block; font-size: 0.9rem; color: var(--text-title); margin-bottom: 4px; }
+        .bento-drawer-item span { font-size: 0.72rem; color: var(--text-muted); }
+
+        /* TỐI ƯU ĐIỆN THOẠI: NÂNG TOOLBAR LÊN TRÊN THANH MOBILE NAV VÀ THU NHỎ NÚT */
+        @media (max-width: 768px) {
+            .bento-toolbar {
+                bottom: 72px !important; /* Đẩy lên trên thanh Mobile Bottom Nav */
+                padding: 8px 12px;
+                gap: 6px;
+                width: 94%;
+                justify-content: space-between;
+            }
+            .bento-toolbar .btn {
+                padding: 7px 11px !important;
+                font-size: 0.78rem !important;
+                border-radius: 14px !important;
+            }
+            .bento-toolbar div[style*="width:1px"] {
+                display: none; /* Ẩn vạch kẻ cho đỡ chật */
+            }
+        }
+
+
         .profile-hero { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .profile-cover-bg { height: 180px; background: linear-gradient(135deg, #0da57a 0%, #0f172a 100%); position: relative; }
         
@@ -4960,16 +5068,8 @@
         </div>
 
         <div id="profileContent">
-            <div id="profileBannerArea" style="display:none;" class="profile-featured-banner">
-                <div class="banner-thumb-area"><img id="profBannerThumb" src="" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'"></div>
-                <div class="banner-info-area">
-                    <span style="background:rgba(255,255,255,0.2); color:#fff; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold; width:max-content; margin-bottom:10px;" data-i18n="prof_featured_badge">TÁC PHẨM NỔI BẬT</span>
-                    <h2 id="profBannerTitle" style="font-size:1.8rem; margin-bottom:8px; color: #fff;">Tên dự án nổi bật</h2>
-                    <p id="profBannerDesc" style="color:#cbd5e1; font-size:0.95rem; margin-bottom:15px; line-height:1.5;"></p>
-                    <a id="btnPlayBannerProj" href="#" class="btn btn-primary" style="width:max-content; padding:10px 25px;"><i class="fa-solid fa-play"></i> <span data-i18n="prof_btn_play">Trải nghiệm</span></a>
-                </div>
-            </div>
 
+            <!-- CỐ ĐỊNH: BẢNG IDENTITY BOX (Hình nền, Avatar, Tên, Nút hành động) -->
             <div class="profile-hero">
                 <div class="profile-cover-bg"></div>
                 
@@ -4982,7 +5082,8 @@
                             <button id="btnFollowProf" class="btn btn-primary" style="display:none;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
                             <button id="btnReportProf" class="btn btn-danger" style="display:none;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
                             <button id="btnAdminWarn" class="btn btn-danger" style="display:none;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
-                            <a id="btnEditProfModal" class="btn" href="#settings" style="display:none;"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Chỉnh sửa</span></a>
+                            <button id="btnCustomizeBento" class="btn" style="display:none; background: var(--primary); color: #fff;" onclick="toggleBentoEditMode()"><i class="fa-solid fa-shapes"></i> <span data-i18n="prof_btn_customize">Tùy biến</span></button>
+                            <a id="btnEditProfModal" class="btn" href="#settings" style="display:none;"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Hồ sơ</span></a>
                         </div>
                     </div>
 
@@ -4998,33 +5099,17 @@
                             </div>
                         </div>
                         <div style="color:var(--text-muted); font-size:1rem; margin-bottom: 12px; font-weight: 500;">@<span id="profUsername">username</span></div>
-                        
-                        <div class="profile-bio-box">
-                            <p id="profBio">Đang tải...</p>
-                        </div>
 
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 5px;">
                             <div class="profile-location" id="profLocation"><i class="fa-solid fa-location-dot"></i> Đang cập nhật...</div>
                             <div class="profile-status-badge" id="profStatus"><i class="fa-solid fa-comment-dots"></i> ...</div>
-                        </div>
-                        
-                        <div class="profile-stats-bar">
-                            <div class="stat-badge" title="Số lượng dự án đã đăng">
-                                <b id="statProjectCount">0</b><span data-i18n="prof_projects">Tác phẩm</span>
-                            </div>
-                            <div class="stat-badge" title="Tổng lượt thích nhận được">
-                                <b id="statLikeCount">0</b><span data-i18n="prof_liked">Lượt Thích</span>
-                            </div>
-                            <div class="stat-badge" onclick="openFollowListModal('following')" title="Xem những ai người này đang theo dõi">
-                                <b id="statFollowingCount">0</b><span data-i18n="prof_following">Đang theo dõi</span>
-                            </div>
-                            <div class="stat-badge" onclick="openFollowListModal('followers')" title="Xem ai đang theo dõi người này">
-                                <b id="statFollowersCount">0</b><span data-i18n="prof_followers">Người theo dõi</span>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- CUSTOMIZED PROFILE: KHUNG LƯỚI BENTO GRID ĐỘNG -->
+            <div class="grid-stack" id="profileBentoGrid" style="margin-bottom: 35px; margin-top: 15px;"></div>
 
             <!-- Bỏ style max-width ở các Tab đi để nội dung tràn đều đẹp hơn -->
 
@@ -5097,8 +5182,55 @@
                 <div class="project-grid" id="userPlaylistsList"></div>
             </div>
 
+            <!-- TOOLBAR NỔI DƯỚI ĐÁY KHI EDIT BENTO -->
+            <div id="bentoToolbar" class="bento-toolbar">
+                <button class="btn btn-primary" style="border-radius:20px; font-weight:bold;" onclick="openBentoDrawer()">
+                    <i class="fa-solid fa-plus"></i> Thêm Widget
+                </button>
+                <div style="width:1px; height:20px; background:var(--border-color);"></div>
+                <button class="btn" style="border-radius:20px; color:#ef4444;" onclick="resetBentoLayout()">
+                    <i class="fa-solid fa-rotate-left"></i> Khôi phục
+                </button>
+                <button class="btn" style="border-radius:20px;" onclick="cancelBentoEdit()">Hủy</button>
+                <button class="btn btn-primary" style="border-radius:20px; background:#ea580c; font-weight:bold;" onclick="saveBentoLayout()" id="btnSaveBento">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Bố Cục
+                </button>
+            </div>
+
         </div> <!-- Hết thẻ profileContent -->
     </div> <!-- Hết thẻ profileView -->
+
+    <!-- MODAL NGĂN KÉO WIDGET BENTO -->
+    <div class="modal-overlay" id="bentoWidgetModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-shapes" style="color:var(--primary);"></i> Kho Widget</span>
+                <button class="btn-close" onclick="closeModal('bentoWidgetModal')">&times;</button>
+            </div>
+            <div class="modal-body bento-drawer">
+                <div class="bento-drawer-item" onclick="addBentoWidget('widget_bio')">
+                    <i class="fa-solid fa-address-card"></i>
+                    <b>Giới thiệu (Bio)</b>
+                    <span>Tiểu sử & Thông tin</span>
+                </div>
+                <div class="bento-drawer-item" onclick="addBentoWidget('widget_stats')">
+                    <i class="fa-solid fa-chart-pie" style="color:#f59e0b;"></i>
+                    <b>Chỉ số cá nhân</b>
+                    <span>Lượt thích, Theo dõi...</span>
+                </div>
+                <div class="bento-drawer-item" onclick="addBentoWidget('widget_featured')">
+                    <i class="fa-solid fa-star" style="color:#3b82f6;"></i>
+                    <b>Tác phẩm tâm huyết</b>
+                    <span>Banner Game lớn</span>
+                </div>
+                <div class="bento-drawer-item" onclick="addBentoWidget('widget_note')">
+                    <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i>
+                    <b>Ghi chú tự do</b>
+                    <span>Tin nhắn nổi bật</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
@@ -9332,40 +9464,21 @@
                 }
             }
 
-            // Xử lý Banner nổi bật 
-            const bannerArea = document.getElementById('profileBannerArea'); 
-            if (bannerArea) bannerArea.style.display = 'none';
+            // KHỞI TẠO BENTO GRID (HIỂN THỊ TĨNH - GIAI ĐOẠN 2)
+            renderBentoGrid(viewingProfileData);
+
+            // Xử lý nút Follow / Edit / Customize
+            const btnEdit = document.getElementById('btnEditProfModal'); 
+            const btnFollow = document.getElementById('btnFollowProf');
+            const btnCustomize = document.getElementById('btnCustomizeBento');
             
-            if (viewingProfileData.featuredProject) {
-                let featProj = allProjects.find(p => p.fileId === viewingProfileData.featuredProject || p.projectId === viewingProfileData.featuredProject);
-                
-                // Nếu dự án không nằm trong top Trang chủ -> Tự động nạp trực tiếp qua ID
-                if (!featProj) {
-                    try {
-                        let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(viewingProfileData.featuredProject)}&limit=1`;
-                        if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
-                        const res = await (await fetch(fetchUrl)).json();
-                        if (res.projects && res.projects.length > 0) {
-                            featProj = res.projects[0];
-                            allProjects.push(featProj); // Lưu vào bộ nhớ tạm
-                        }
-                    } catch(e) {}
-                }
-
-                if (featProj && bannerArea) { 
-                    document.getElementById('profBannerTitle').innerText = featProj.title; 
-                    document.getElementById('profBannerDesc').innerText = featProj.description ? featProj.description.substring(0, 120) + "..." : "Tác phẩm tâm huyết của tác giả"; 
-                    document.getElementById('profBannerThumb').src = featProj.thumbId ? `${WORKER_URL}/api/project/${featProj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png'; 
-                    document.getElementById('btnPlayBannerProj').href = `#project/${featProj.projectId || featProj.fileId}`; 
-                    bannerArea.style.display = 'flex'; 
-                }
-            }
-
-            // Xử lý nút Follow / Edit
-            const btnEdit = document.getElementById('btnEditProfModal'); const btnFollow = document.getElementById('btnFollowProf');
             if (isCurrentUser) { 
-                if(btnEdit) btnEdit.style.display = 'inline-flex'; if(btnFollow) btnFollow.style.display = 'none'; 
+                if(btnEdit) btnEdit.style.display = 'inline-flex'; 
+                if(btnCustomize) btnCustomize.style.display = 'inline-flex';
+                if(btnFollow) btnFollow.style.display = 'none'; 
             } else { 
+                if(btnEdit) btnEdit.style.display = 'none'; 
+                if(btnCustomize) btnCustomize.style.display = 'none';
                 if(btnEdit) btnEdit.style.display = 'none'; 
                 if(currentUser && btnFollow) { 
                     const isFollowing = (viewingProfileData.followers || []).includes(currentUser.username); 
@@ -14137,6 +14250,287 @@
                     btn.disabled = false;
                 }
                 showToast("Lỗi kết nối máy chủ dịch thuật", "error");
+            }
+        }
+
+        // ================= HỆ THỐNG CUSTOMIZED PROFILE (BENTO GRID ENGINE PRO) =================
+        let profileGrid = null;
+        let isBentoEditMode = false;
+        let currentBentoData = null;
+
+        // Hàm hỗ trợ xuất HTML độc lập cho từng Widget (Đã vá XSS triệt để)
+        function getBentoWidgetHTML(item, data) {
+            let contentHtml = '';
+            // 🛡️ BẢO MẬT: Khử trùng triệt để ID widget, chỉ cho phép chữ, số và gạch dưới (Chống DOM-based XSS)
+            const safeId = String(item.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
+            if (!safeId) return '';
+            
+            if (safeId === 'widget_bio') {
+                contentHtml = `
+                    <div class="bento-widget-inner widget-bio-container">
+                        <h4 style="font-size: 0.88rem; color: var(--text-muted); text-transform: uppercase; margin: 0 0 10px 0; letter-spacing:0.5px;">
+                            <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Giới thiệu
+                        </h4>
+                        <p style="font-size: 0.98rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${escapeHtml(data.bio || t('prof_no_bio'))}</p>
+                    </div>
+                `;
+            } 
+            else if (safeId === 'widget_stats') {
+                contentHtml = `
+                    <div class="bento-widget-inner widget-stats-container">
+                        <div class="bento-stat-item"><b id="statProjectCount">...</b><span>Tác phẩm</span></div>
+                        <div class="bento-stat-item"><b id="statLikeCount">...</b><span>Lượt thích</span></div>
+                        <div class="bento-stat-item" onclick="openFollowListModal('following')"><b id="statFollowingCount">${(data.following||[]).length}</b><span>Đang theo dõi</span></div>
+                        <div class="bento-stat-item" onclick="openFollowListModal('followers')"><b id="statFollowersCount">${(data.followers||[]).length}</b><span>Người theo dõi</span></div>
+                    </div>
+                `;
+            } 
+            else if (safeId === 'widget_featured') {
+                if (data.featuredProject) {
+                    contentHtml = `
+                        <div class="bento-widget-inner widget-featured-container" id="bentoFeaturedWrapper">
+                            <div style="text-align:center; padding: 40px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i></div>
+                        </div>
+                    `;
+                } else {
+                    contentHtml = `<div class="bento-widget-inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-star" style="font-size:2rem; margin-bottom:10px; opacity:0.5;"></i><br>Bạn chưa cài đặt Tác phẩm tâm huyết.<br>Vào phần "Hồ sơ" để cài nhé!</div>`;
+                }
+            } 
+            else if (safeId.startsWith('widget_note')) {
+                const noteText = item.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
+                contentHtml = `
+                    <div class="bento-widget-inner widget-note-container" style="display:flex; flex-direction:column; justify-content:center; text-align:center; background:var(--bg-secondary);">
+                        <div style="font-size: 1.05rem; font-weight:bold; color:var(--text-title); line-height:1.5; word-wrap:break-word;">${escapeHtml(noteText)}</div>
+                    </div>
+                `;
+            }
+
+            if (!contentHtml) return '';
+
+            return `
+                <div class="grid-stack-item" gs-id="${safeId}" gs-x="${item.x}" gs-y="${item.y}" gs-w="${item.w}" gs-h="${item.h}" gs-min-w="${item.minW || 3}" gs-min-h="${item.minH || 2}">
+                    <div class="grid-stack-item-content">
+                        <button class="bento-btn-remove" onclick="removeBentoWidget('${safeId}', this)" title="Xóa Box này"><i class="fa-solid fa-xmark"></i></button>
+                        ${contentHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Khởi tạo ban đầu (View Mode hoặc lấy từ DB)
+        function renderBentoGrid(data) {
+            currentBentoData = data;
+            const gridEl = document.getElementById('profileBentoGrid');
+            if (!gridEl) return;
+            
+            // Xóa rác Edit mode (nếu có)
+            isBentoEditMode = false;
+            gridEl.classList.remove('bento-edit-mode');
+            document.getElementById('bentoToolbar').classList.remove('show');
+            document.getElementById('btnCustomizeBento').style.display = (currentUser && currentUser.username.toLowerCase() === data.username.toLowerCase()) ? 'inline-flex' : 'none';
+
+            let layout = [];
+            try { if (data.customLayout) layout = JSON.parse(data.customLayout); } catch(e){}
+
+            // LAYOUT MẶC ĐỊNH
+            if (layout.length === 0) {
+                if (data.featuredProject) {
+                    layout.push({ id: "widget_featured", x: 0, y: 0, w: 12, h: 5, minW: 6, minH: 4 });
+                    layout.push({ id: "widget_bio", x: 0, y: 5, w: 6, h: 3, minW: 3, minH: 2 });
+                    layout.push({ id: "widget_stats", x: 6, y: 5, w: 6, h: 3, minW: 4, minH: 2 });
+                } else {
+                    layout.push({ id: "widget_bio", x: 0, y: 0, w: 6, h: 3, minW: 3, minH: 2 });
+                    layout.push({ id: "widget_stats", x: 6, y: 0, w: 6, h: 3, minW: 4, minH: 2 });
+                }
+            }
+
+            // Sinh HTML động
+            let gridHtml = '';
+            layout.forEach(item => {
+                gridHtml += getBentoWidgetHTML(item, data);
+            });
+            gridEl.innerHTML = gridHtml;
+
+            // Khởi tạo Engine (Luôn khóa cứng ở chế độ xem)
+            if (profileGrid) profileGrid.destroy(false);
+            profileGrid = GridStack.init({
+                staticGrid: true, // Khóa 100%
+                margin: 15,
+                cellHeight: 70,
+                column: 12,
+                disableResize: true,
+                disableDrag: true,
+                animate: true
+            }, '#profileBentoGrid');
+
+            // Cập nhật Thumbnail cho Featured Project
+            if (layout.find(l => l.id === 'widget_featured') && data.featuredProject) {
+                loadBentoFeaturedProject(data.featuredProject);
+            }
+        }
+
+        // ================= GIAI ĐOẠN 3: LOGIC CHỈNH SỬA KÉO THẢ =================
+        
+        function toggleBentoEditMode() {
+            if (!profileGrid) return;
+            isBentoEditMode = true;
+
+            const gridEl = document.getElementById('profileBentoGrid');
+            gridEl.classList.add('bento-edit-mode'); // Hiển thị lưới nền
+            
+            // Mở khóa GridStack Engine (Cho phép Resize và Drag)
+            profileGrid.setStatic(false);
+            profileGrid.enableMove(true);
+            profileGrid.enableResize(true);
+
+            // Bật Toolbar & Ẩn nút "Tùy biến"
+            document.getElementById('bentoToolbar').classList.add('show');
+            document.getElementById('btnCustomizeBento').style.display = 'none';
+        }
+
+        function cancelBentoEdit() {
+            // Hủy toàn bộ thay đổi bằng cách nạp lại layout tĩnh từ DB
+            renderBentoGrid(currentBentoData);
+        }
+
+        function resetBentoLayout() {
+            if (!confirm("Bạn có chắc muốn khôi phục bố cục về mặc định không? Layout hiện tại sẽ bị xóa.")) return;
+            // Xóa sạch Layout để quay về mặc định
+            currentBentoData.customLayout = null; 
+            renderBentoGrid(currentBentoData);
+            toggleBentoEditMode(); // Bật lại sửa để người dùng lưu
+        }
+
+        function openBentoDrawer() {
+            openModal('bentoWidgetModal');
+        }
+
+        function addBentoWidget(widgetId) {
+            if (!profileGrid || !isBentoEditMode) return;
+            
+            // Chống trùng Widget (Trừ cái note được phép có nhiều cái)
+            const currentNodes = profileGrid.engine.nodes;
+            if (!widgetId.startsWith('widget_note') && currentNodes.find(n => n.id === widgetId)) {
+                showToast("Bạn đã thêm Widget này rồi!", "error");
+                return;
+            }
+
+            let newItem = { id: widgetId, x: 0, y: 100, content: "" }; // y:100 để rớt xuống cuối tự động pack
+            
+            if (widgetId === 'widget_bio') { newItem.w = 6; newItem.h = 3; newItem.minW = 3; newItem.minH = 2; }
+            else if (widgetId === 'widget_stats') { newItem.w = 6; newItem.h = 3; newItem.minW = 4; newItem.minH = 2; }
+            else if (widgetId === 'widget_featured') { newItem.w = 12; newItem.h = 5; newItem.minW = 6; newItem.minH = 4; }
+            else if (widgetId === 'widget_note') {
+                newItem.id = 'widget_note_' + Date.now(); // Sinh ID độc nhất
+                newItem.w = 4; newItem.h = 3; newItem.minW = 3; newItem.minH = 2;
+                const userText = prompt("Nhập nội dung Ghi chú của bạn (Hỗ trợ Emoji):", "Chào mừng ghé thăm hồ sơ!");
+                if (!userText) return; // Hủy
+                newItem.content = userText;
+            }
+
+            const html = getBentoWidgetHTML(newItem, currentBentoData);
+            profileGrid.addWidget(html, { autoPosition: true }); // Tự tìm chỗ trống
+            
+            closeModal('bentoWidgetModal');
+            
+            // Load nội dung nếu là Featured
+            if (widgetId === 'widget_featured' && currentBentoData.featuredProject) {
+                loadBentoFeaturedProject(currentBentoData.featuredProject);
+            }
+        }
+
+        function removeBentoWidget(id, btnEl) {
+            if (!profileGrid) return;
+            const itemEl = btnEl.closest('.grid-stack-item');
+            if (itemEl) profileGrid.removeWidget(itemEl);
+        }
+
+        async function saveBentoLayout() {
+            if (!profileGrid) return;
+            const btn = document.getElementById('btnSaveBento');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+            btn.disabled = true;
+
+            // Dùng hàm save() cực xịn của GridStack để lấy Tọa độ & Kích thước mới
+            const rawLayout = profileGrid.save();
+            
+            // Lọc bớt rác, chỉ giữ lại các trường cần thiết để nén JSON nhẹ nhất
+            const cleanLayout = rawLayout.map(n => {
+                let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
+                // Nhặt lại thuộc tính content nếu là Note
+                if (n.id.startsWith('widget_note')) {
+                    const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"] .widget-note-container div`);
+                    if (el) obj.content = el.innerText;
+                }
+                return obj;
+            });
+
+            const jsonStr = JSON.stringify(cleanLayout);
+
+            // Gửi lên Cột AA qua API (Cloudflare Worker đã cấu hình xong ở GĐ 1)
+            const res = await apiFetch(`/api/user/layout`, {
+                method: 'POST',
+                body: JSON.stringify({ customLayout: jsonStr })
+            });
+
+            if (res && res.success) {
+                showToast("Đã lưu Tùy biến trang cá nhân!", "success");
+                currentBentoData.customLayout = jsonStr; // Cập nhật RAM nội bộ
+                
+                // Cập nhật vào Global Cache để reload 0 giây
+                if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                    profileCache[currentUser.username].data.customLayout = jsonStr;
+                }
+
+                renderBentoGrid(currentBentoData); // Khóa lại chế độ xem
+                
+                // Đồng bộ lại UI
+                const statProj = document.getElementById('statProjectCount');
+                if (statProj && statProj.innerText === '...') {
+                    // Kích nạp lại Tab 1 để lấy số đếm (vì render lại làm mất giá trị ảo)
+                    loadProfTab('projects', false);
+                }
+            } else {
+                showToast("Lưu thất bại, máy chủ quá tải!", "error");
+            }
+            
+            btn.innerHTML = origHTML;
+            btn.disabled = false;
+        }
+
+        // ================= LOADER THUMBNAIL DỰ ÁN TÂM HUYẾT =================
+        async function loadBentoFeaturedProject(pid) {
+            let featProj = allProjects.find(p => p.fileId === pid || p.projectId === pid);
+            if (!featProj) {
+                try {
+                    let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(pid)}&limit=1`;
+                    if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                    const res = await (await fetch(fetchUrl)).json();
+                    if (res.projects && res.projects.length > 0) {
+                        featProj = res.projects[0];
+                        allProjects.push(featProj);
+                    }
+                } catch(e) {}
+            }
+
+            const wrapper = document.getElementById('bentoFeaturedWrapper');
+            if (wrapper && featProj) {
+                wrapper.innerHTML = `
+                    <div class="bento-featured-banner">
+                        <div class="bento-featured-thumb">
+                            <img src="${featProj.thumbId ? `${WORKER_URL}/api/project/${featProj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png'}">
+                        </div>
+                        <div class="bento-featured-info">
+                            <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#fff; padding:5px 12px; border-radius:8px; font-size:0.75rem; font-weight:800; width:max-content; margin-bottom:12px;">TÁC PHẨM TÂM HUYẾT</span>
+                            <h2 style="font-size:1.75rem; margin:0 0 10px 0; color: #fff; font-weight: 900; line-height: 1.25;">${escapeHtml(featProj.title)}</h2>
+                            <p style="color:#cbd5e1; font-size:0.95rem; margin-bottom:24px; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(featProj.description || 'Chơi và trải nghiệm ngay tác phẩm này!')}</p>
+                            <a href="#project/${featProj.projectId || featProj.fileId}" class="btn btn-primary" style="width:max-content; padding:11px 26px; border-radius: 14px; font-weight: 800; font-size:0.95rem;"><i class="fa-solid fa-play"></i> Trải nghiệm ngay</a>
+                        </div>
+                    </div>
+                `;
+            } else if (wrapper) {
+                wrapper.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted);">Dự án không tồn tại hoặc đã bị ẩn.</div>`;
             }
         }
     </script>
