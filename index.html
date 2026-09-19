@@ -5153,7 +5153,7 @@
                             <button id="btnReportProf" class="btn btn-danger" style="display:none;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
                             <button id="btnAdminWarn" class="btn btn-danger" style="display:none;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
                             <button id="btnCustomizeBento" class="btn" style="display:none; background: var(--primary); color: #fff;" onclick="toggleBentoEditMode()"><i class="fa-solid fa-shapes"></i> <span data-i18n="prof_btn_customize">Tùy biến</span></button>
-                            <a id="btnEditProfModal" class="btn" href="#settings" style="display:none;"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Hồ sơ</span></a>
+                            <button id="btnEditProfModal" class="btn" style="display:none;" onclick="openEditProfileModal()"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Hồ sơ</span></button>
                         </div>
                     </div>
 
@@ -5523,37 +5523,12 @@
             <div class="settings-layout">
                 <!-- Navigation Tabs -->
                 <div class="settings-nav">
-                    <button class="set-tab-btn active" id="setTabBtn-profile" onclick="switchSettingsTab('profile')"><i class="fa-solid fa-user-pen"></i> <span data-i18n="settings_tab_profile">Hồ sơ cá nhân</span></button>
-                    <button class="set-tab-btn" id="setTabBtn-pref" onclick="switchSettingsTab('pref')"><i class="fa-solid fa-sliders"></i> <span data-i18n="settings_tab_pref">Tùy chọn hiển thị</span></button>
+                    <button class="set-tab-btn active" id="setTabBtn-pref" onclick="switchSettingsTab('pref')"><i class="fa-solid fa-sliders"></i> <span data-i18n="settings_tab_pref">Tùy chọn hiển thị</span></button>
                     <button class="set-tab-btn" id="setTabBtn-account" onclick="switchSettingsTab('account')"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="settings_tab_account">Tài khoản & Liên kết</span></button>
                 </div>
 
-                <!-- TAB 1: HỒ SƠ -->
-                <div id="setTab-profile" class="set-tab-content active">
-                    <form id="editProfForm">
-                        <div class="form-group">
-                            <label data-i18n="settings_avatar">Đổi Ảnh đại diện:</label>
-                            <input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;">
-                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hình ảnh sẽ hiển thị trên hồ sơ và bình luận.</div>
-                        </div>
-                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <label style="margin:0;"><span class="wow-icon"></span> <span data-i18n="settings_frame_store">Cửa hàng Khung Avatar</span></label>
-                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;"><span data-i18n="settings_balance_label">Số dư:</span> <b id="settingsWOWBalance" style="color:#ea580c;">0</b> WOW</div>
-                            </div>
-                            <button type="button" class="btn btn-primary" onclick="openFrameShopModal()" style="border-radius: 20px; padding: 8px 16px;"><i class="fa-solid fa-store"></i> <span data-i18n="settings_frame_btn_view">Xem & Mua</span></button>
-                        </div>
-                        <div class="form-group"><label data-i18n="settings_display_name">Tên hiển thị:</label><input type="text" id="editDisplayNameInput" class="form-control" data-i18n-ph="settings_display_name_ph" placeholder="Tên hiển thị tự do..."></div>
-                        <div class="form-group"><label data-i18n="settings_location">Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" data-i18n-ph="settings_location_ph" placeholder="Ví dụ: Hà Nội, VN"></div>
-                        <div class="form-group"><label data-i18n="settings_status">Mô tả trạng thái:</label><input type="text" id="editStatusInput" class="form-control" data-i18n-ph="settings_status_ph" placeholder="Đang làm game..."></div>
-                        <div class="form-group"><label data-i18n="settings_bio">Giới thiệu:</label><textarea id="editBioInput" class="form-control" rows="3"></textarea></div>
-                        <div class="form-group"><label data-i18n="settings_banner_proj">Dự án đặt làm banner:</label><select id="editFeaturedProjSelect" class="form-control"><option value="">-- Không chọn --</option></select></div>
-                        <button type="button" onclick="saveProfileInfoBtn()" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center; margin-top: 10px;" data-i18n="settings_save">Lưu thông tin</button>
-                    </form>
-                </div>
-
-                <!-- TAB 2: TÙY CHỌN & HIỂN THỊ -->
-                <div id="setTab-pref" class="set-tab-content">
+                <!-- TAB: TÙY CHỌN & HIỂN THỊ -->
+                <div id="setTab-pref" class="set-tab-content active">
                     <div class="form-group" style="margin-bottom: 25px;">
                         <label data-i18n="settings_theme">Giao diện (Theme):</label>
                         <div style="display: flex; gap: 10px; margin-top: 8px;">
@@ -5781,6 +5756,36 @@
             </div>
         </div>
     </footer>
+
+    <!-- MODAL CHỈNH SỬA HỒ SƠ CÁ NHÂN -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal" style="max-width: 520px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-user-pen" style="color:var(--primary);"></i> <span data-i18n="settings_tab_profile">Chỉnh sửa Hồ sơ</span></span>
+                <button class="btn-close" onclick="closeModal('editProfileModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; padding: 20px;">
+                <form id="editProfForm">
+                    <div class="form-group">
+                        <label data-i18n="settings_avatar">Đổi Ảnh đại diện:</label>
+                        <input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hình ảnh sẽ hiển thị trên hồ sơ và bình luận.</div>
+                    </div>
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <label style="margin:0;"><span class="wow-icon"></span> <span data-i18n="settings_frame_store">Cửa hàng Khung Avatar</span></label>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="closeModal('editProfileModal'); openFrameShopModal()" style="border-radius: 20px; padding: 8px 16px;"><i class="fa-solid fa-store"></i> <span data-i18n="settings_frame_btn_view">Xem & Mua</span></button>
+                    </div>
+                    <div class="form-group"><label data-i18n="settings_display_name">Tên hiển thị:</label><input type="text" id="editDisplayNameInput" class="form-control" data-i18n-ph="settings_display_name_ph" placeholder="Tên hiển thị tự do..."></div>
+                    <div class="form-group"><label data-i18n="settings_location">Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" data-i18n-ph="settings_location_ph" placeholder="Ví dụ: Hà Nội, VN"></div>
+                    <div class="form-group"><label data-i18n="settings_status">Mô tả trạng thái:</label><input type="text" id="editStatusInput" class="form-control" data-i18n-ph="settings_status_ph" placeholder="Đang làm game..."></div>
+                    <div class="form-group"><label data-i18n="settings_bio">Giới thiệu:</label><textarea id="editBioInput" class="form-control" rows="3"></textarea></div>
+                    <button type="button" onclick="saveProfileInfoBtn()" class="btn btn-primary" id="btnSaveProfSubmit" style="width: 100%; justify-content:center; margin-top: 10px; padding: 12px; font-weight: bold; border-radius: 12px;"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="settings_save">Lưu thay đổi</span></button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- ================= MODALS HỆ THỐNG ================= -->
 
@@ -9838,8 +9843,9 @@
                     if (currentUser) apiUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                     
                     const res = await (await fetch(apiUrl)).json();
-                    const items = res.projects || [];
-                    state.hasMore = res.hasMore;
+                    // 🛡️ SỬA LỖI: Hỗ trợ cả 2 trường hợp API trả về mảng trực tiếp hoặc trả về Object chứa mảng projects
+                    const items = (res && res.projects) ? res.projects : (Array.isArray(res) ? res : []);
+                    state.hasMore = res.hasMore || false;
                     
                     if (tab === 'projects' && !isLoadMore && res.total !== undefined) {
                         document.getElementById('statProjectCount').innerText = res.total;
@@ -10065,16 +10071,6 @@
                 if (bioInput) bioInput.value = pData.bio || '';
                 
                 // Kéo danh sách dự án của tác giả trực tiếp từ máy chủ để làm banner
-                let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
-                const projFetch = await fetch(projUrl);
-                const projRes = await projFetch.json();
-                const myProjs = (projRes && projRes.projects) ? projRes.projects : (Array.isArray(projRes) ? projRes : []);
-                
-                const select = document.getElementById('editFeaturedProjSelect');
-                if (select) {
-                    select.innerHTML = `<option value="">-- Không chọn --</option>` + myProjs.map(p => `<option value="${p.projectId || p.fileId}">${escapeHtml(p.title)}</option>`).join('');
-                    select.value = pData.featuredProject || '';
-                }
 
                 const scratchStatus = document.getElementById('scratchLinkStatus');
                 if (scratchStatus) {
@@ -10089,25 +10085,62 @@
             }
         }
 
+        // Nạp dữ liệu vào Modal khi bấm nút "Hồ sơ"
+        function openEditProfileModal() {
+            if (!currentUser) return;
+            // Lấy dữ liệu từ màn hình Profile hiện tại (hoặc Cache) để không phải fetch lại
+            const pData = (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase() && viewingProfileData) ? viewingProfileData : currentUser;
+            
+            document.getElementById('editDisplayNameInput').value = pData.display_name || pData.displayName || '';
+            document.getElementById('editLocationInput').value = (pData.location && pData.location !== 'Chưa rõ') ? pData.location : '';
+            document.getElementById('editStatusInput').value = pData.status || '';
+            document.getElementById('editBioInput').value = pData.bio || '';
+            document.getElementById('editAvtFile').value = '';
+            
+            openModal('editProfileModal');
+        }
+
         async function saveProfileInfoBtn() {
-            const btn = document.getElementById('btnSaveProfSubmit'); btn.innerText = "Đang lưu..."; btn.disabled = true;
-            const file = document.getElementById('editAvtFile').files[0]; let newAvtId = undefined;
+            const btn = document.getElementById('btnSaveProfSubmit'); 
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...'; 
+            btn.disabled = true;
+            
+            const file = document.getElementById('editAvtFile').files[0]; 
+            let newAvtId = undefined;
             if (file) {
-                if (file.size > 5 * 1024 * 1024) { showToast("Ảnh vượt quá 5MB!", "error"); btn.innerText = "Lưu thông tin"; btn.disabled = false; return; }
+                if (file.size > 5 * 1024 * 1024) { showToast("Ảnh vượt quá 5MB!", "error"); btn.innerHTML = origHtml; btn.disabled = false; return; }
                 const fData = new FormData(); fData.append("file", file); fData.append("username", currentUser.username); fData.append("sessionToken", currentUser.sessionToken);
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fData, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (upRes.success) { newAvtId = upRes.file_id; currentUser.avt = newAvtId; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
             }
-            const payload = { avtId: newAvtId, display_name: document.getElementById('editDisplayNameInput').value, location: document.getElementById('editLocationInput').value, bio: document.getElementById('editBioInput').value, status: document.getElementById('editStatusInput').value, featuredProject: document.getElementById('editFeaturedProjSelect').value };
+            
+            const payload = { 
+                avtId: newAvtId, 
+                display_name: document.getElementById('editDisplayNameInput').value.trim(), 
+                location: document.getElementById('editLocationInput').value.trim(), 
+                bio: document.getElementById('editBioInput').value.trim(), 
+                status: document.getElementById('editStatusInput').value.trim() 
+            };
+            
             const res = await apiFetch(`/api/user/update`, { method: 'POST', body: JSON.stringify(payload) });
             if (res && res.success) { 
-                showToast("Đã cập nhật cài đặt!", "success"); 
-                // Xóa Cache để khi quay lại xem Profile sẽ nạp Banner mới ngay lập tức
+                showToast("Đã cập nhật hồ sơ!", "success"); 
+                closeModal('editProfileModal');
+                
+                // Xóa Cache để khi tải lại sẽ có data mới nhất
                 if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
                     delete profileCache[currentUser.username];
                 }
+
+                // Cập nhật lại giao diện ngay lập tức mà không cần F5
+                if (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
+                    openProfilePage(currentUser.username);
+                }
+            } else {
+                showToast("Lỗi khi lưu thông tin!", "error");
             }
-            btn.innerText = "Lưu thông tin"; btn.disabled = false;
+            btn.innerHTML = origHtml; btn.disabled = false;
         }
 
         function changeLanguage(lang) { localStorage.setItem('lang', lang); showToast("Language changed.", "success"); }
