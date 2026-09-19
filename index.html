@@ -9656,10 +9656,10 @@
 
                 if (verifyBadge && verifyBtn) {
                     if (isAccVerified) {
-                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Đã xác thực (${escapeHtml(pData.email || currentUser.email)})</span>`;
+                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Verified (${escapeHtml(pData.email || currentUser.email)})</span>`;
                         verifyBtn.style.display = 'none';
                     } else {
-                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Chưa xác thực (${escapeHtml(pData.email || currentUser.email)})</span>`;
+                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Unverified (${escapeHtml(pData.email || currentUser.email)})</span>`;
                         verifyBtn.style.display = 'inline-flex';
                     }
                 }
@@ -9691,7 +9691,7 @@
                 const scratchStatus = document.getElementById('scratchLinkStatus');
                 if (scratchStatus) {
                     if (pData.scratch_linked) {
-                        scratchStatus.innerHTML = `<div style="padding:10px; background:#e6f4ea; color:#0a8260; border-radius:8px; border:1px solid #bbf7d0; font-weight:bold; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check"></i> Đã liên kết: @${pData.scratch_linked}</div>`;
+                        scratchStatus.innerHTML = `<div style="padding:10px; background:#e6f4ea; color:#0a8260; border-radius:8px; border:1px solid #bbf7d0; font-weight:bold; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check"></i> Scratch Connected: @${pData.scratch_linked}</div>`;
                     } else {
                         scratchStatus.innerHTML = `<p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Lấy thẻ huy hiệu chính chủ bằng cách liên kết tài khoản Scratch.</p><button type="button" class="btn btn-primary" onclick="linkScratchAuth()"><img src="https://scratch.mit.edu/favicon.ico" width="16"> Liên kết ngay</button>`;
                     }
