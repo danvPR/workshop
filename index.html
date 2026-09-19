@@ -9682,15 +9682,18 @@
             const btnFollow = document.getElementById('btnFollowProf');
             const btnCustomize = document.getElementById('btnCustomizeBento');
             
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            
             if (isCurrentUser) { 
                 if(btnEdit) btnEdit.style.display = 'inline-flex'; 
                 if(btnCustomize) btnCustomize.style.display = 'inline-flex';
                 if(btnFollow) btnFollow.style.display = 'none'; 
             } else { 
                 if(btnEdit) btnEdit.style.display = 'none'; 
-                if(btnCustomize) btnCustomize.style.display = 'none';
-                if(btnEdit) btnEdit.style.display = 'none'; 
-                if(currentUser && btnFollow) { 
+                // Admin được phép thấy nút Tùy biến trên trang người khác
+                if(btnCustomize) btnCustomize.style.display = isAdmin ? 'inline-flex' : 'none';
+                
+                if(currentUser && btnFollow) {
                     const isFollowing = (viewingProfileData.followers || []).includes(currentUser.username); 
                     btnFollow.style.display = 'inline-flex'; 
                     btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`; 
@@ -14536,7 +14539,8 @@
             } 
             // 3. TÁC PHẨM TÂM HUYẾT (BANNER LỚN)
             else if (safeId === 'widget_featured') {
-                const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase());
+                // Cấp quyền cho Chủ sở hữu HOẶC Admin
+                const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase() || currentUser.role === 'admin');
                 if (data.featuredProject) {
                     contentHtml = `
                         <div class="bento-widget-inner widget-featured-container" id="bentoFeaturedWrapper">
@@ -14743,7 +14747,10 @@
             isBentoEditMode = false;
             gridEl.classList.remove('bento-edit-mode');
             document.getElementById('bentoToolbar').classList.remove('show');
-            document.getElementById('btnCustomizeBento').style.display = (currentUser && currentUser.username.toLowerCase() === data.username.toLowerCase()) ? 'inline-flex' : 'none';
+            
+            // Cấp quyền hiển thị nút Tùy biến cho Chủ sở hữu HOẶC Admin sau khi vẽ xong lưới
+            const canEdit = currentUser && (currentUser.username.toLowerCase() === data.username.toLowerCase() || currentUser.role === 'admin');
+            document.getElementById('btnCustomizeBento').style.display = canEdit ? 'inline-flex' : 'none';
 
             let layout = [];
             try { if (data.customLayout) layout = JSON.parse(data.customLayout); } catch(e){}
@@ -15165,15 +15172,18 @@
 
             const res = await apiFetch(`/api/user/layout`, {
                 method: 'POST',
-                body: JSON.stringify({ customLayout: jsonStr })
+                // Truyền thêm targetUser để Backend biết đang lưu cho ai (hỗ trợ Admin)
+                body: JSON.stringify({ customLayout: jsonStr, targetUser: currentBentoData.username })
             });
 
             if (res && res.success) {
                 showToast("Đã lưu Tùy biến trang cá nhân!", "success");
                 currentBentoData.customLayout = jsonStr;
                 
-                if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
-                    profileCache[currentUser.username].data.customLayout = jsonStr;
+                // Cập nhật đúng Cache của người bị sửa (tránh Admin bị cập nhật nhầm cache của chính mình)
+                const targetName = currentBentoData.username;
+                if (typeof profileCache !== 'undefined' && profileCache[targetName]) {
+                    profileCache[targetName].data.customLayout = jsonStr;
                 }
 
                 renderBentoGrid(currentBentoData);
@@ -15348,7 +15358,7 @@
 
             const wrapper = document.getElementById('bentoFeaturedWrapper');
             if (wrapper && featProj) {
-                const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase());
+                const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase() || currentUser.role === 'admin');
                 wrapper.innerHTML = `
                     <div class="bento-featured-banner">
                         <div class="bento-featured-thumb">
