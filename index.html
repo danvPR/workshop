@@ -6533,12 +6533,17 @@
                     Trò chơi đang yêu cầu trích xuất điểm năng lượng WOW từ ví của bạn để mua vật phẩm:
                 </p>
 
-                <!-- Thẻ Vật Phẩm -->
-                <div style="background: var(--bg-secondary); border: 2px dashed var(--primary); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 20px;">
-                    <div id="gamePayItemReason" style="font-size: 1.25rem; font-weight: 900; color: var(--text-title); margin-bottom: 8px;">Tên Vật Phẩm</div>
+                <!-- Thẻ Vật Phẩm Cảnh Báo An Toàn -->
+                <div style="background: var(--bg-secondary); border: 2px dashed var(--primary); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 14px;">
+                    <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.5px;">Vật phẩm yêu cầu:</div>
+                    <div id="gamePayItemReason" style="font-size: 1.2rem; font-weight: 900; color: var(--text-title); margin-bottom: 8px; word-break: break-word;">Tên Vật Phẩm</div>
                     <div style="font-size: 1.5rem; font-weight: 900; color: #ea580c; display: flex; align-items: center; justify-content: center; gap: 8px;">
                         <span class="wow-icon" style="filter: drop-shadow(0 0 8px rgba(234, 88, 12, 0.6));"></span> <span id="gamePayItemPrice">0</span>
                     </div>
+                </div>
+
+                <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; padding: 8px 12px; border-radius: 6px; font-size: 0.78rem; color: #ef4444; margin-bottom: 16px; line-height: 1.4;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <b>Lưu ý:</b> Điểm WOW sau khi thanh toán sẽ chuyển cho tác giả game và <b>không thể hoàn lại</b>.
                 </div>
 
                 <!-- Bảng số dư -->
@@ -10621,14 +10626,31 @@
                     return;
                 }
 
-                // Lưu lại request để gửi phản hồi khi bấm nút trên Modal
+                // 🛡️ CHỐNG SPAM POPUP: Nếu đang mở sẵn một popup chưa đóng, từ chối ngay lập tức
+                const modalEl = document.getElementById('gamePayModal');
+                if (modalEl && modalEl.style.display === 'flex') {
+                    return sendReply("BUSY");
+                }
+
+                // 🛡️ BẢO VỆ COOLDOWN: Người chơi phải nghỉ tối thiểu 3 giây giữa các lần bật popup (chống loop forever)
+                const now = Date.now();
+                if (window.lastGamePayPromptTime && (now - window.lastGamePayPromptTime < 3000)) {
+                    return sendReply("RATE_LIMITED");
+                }
+                window.lastGamePayPromptTime = now;
+
+                // 🛡️ CHỐNG GIẢ MẠO DỰ ÁN: Bắt buộc lấy ID từ trang dự án thực tế đang mở
+                if (!currentProj) {
+                    return sendReply("INVALID_PROJECT");
+                }
+
                 activeGamePayRequest = {
                     source: event.source,
                     origin: event.origin,
                     requestId: data.requestId,
                     amount: cost,
                     reason: data.reason || "Vật phẩm trong game",
-                    projectId: (currentProj && (currentProj.projectId || currentProj.fileId)) || data.projectId || ""
+                    projectId: currentProj.projectId || currentProj.fileId
                 };
 
                 // Điền dữ liệu vào Modal
