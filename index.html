@@ -7604,7 +7604,9 @@
             document.getElementById('playerContainer').innerHTML = `<iframe src="https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
             const engineChoice = localStorage.getItem('engine') || 'aftercode';
             const editorBaseUrl = engineChoice === 'turbowarp' ? 'https://turbowarp.org/editor?project_url=' : 'https://aftercode-web-wheat.vercel.app/editor.html?project_url=';
-            document.getElementById('btnSeeInside').href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
+            const btnSeeInside = document.getElementById('btnSeeInside');
+            btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
+            btnSeeInside.target = (engineChoice === 'aftercode') ? '_self' : '_blank';
             // 🔗 Tự động chuyển đổi các #hashtag trong Description & Credits thành đường dẫn tìm kiếm tương tác
             const linkifyHashtags = (rawText) => {
                 if (!rawText) return '';
@@ -11657,34 +11659,41 @@
 
         // Hàm mở trang Sáng tạo editor
         function openCreatePage() {
-            document.getElementById('createView').style.display = 'block';
-            // Đồng bộ tên Engine hiện tại ra màn hình thông báo
             const engineChoice = localStorage.getItem('engine') || 'aftercode';
+            
+            // 🚀 Nếu là Aftercode: Chuyển hướng trực tiếp trên tab hiện tại (Redirect thẳng)
+            if (engineChoice === 'aftercode') {
+                window.location.href = 'https://aftercode-web-wheat.vercel.app/editor.html';
+                return;
+            }
+
+            // Với TurboWarp: Giữ nguyên giao diện chờ và mở tab mới
+            document.getElementById('createView').style.display = 'block';
             const engineLabel = document.getElementById('createEngineName');
             if (engineLabel) {
-                engineLabel.innerText = engineChoice === 'turbowarp' ? 'TurboWarp' : 'Aftercode';
+                engineLabel.innerText = 'TurboWarp';
             }
             reopenEditor();
         }
 
         // HÀM MỞ TRÌNH CHỈNH SỬA (AFTERCODE / TURBOWARP)
-function reopenEditor() {
-    // 1. Kiểm tra xem người dùng đang chọn Engine nào trong Cài đặt (Mặc định là aftercode)
-    const engineChoice = localStorage.getItem('engine') || 'aftercode';
-    
-    // 2. Xác định URL của Engine tương ứng
-    const editorUrl = engineChoice === 'turbowarp' 
-        ? 'https://turbowarp.org/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ' 
-        : 'https://aftercode-web-wheat.vercel.app/editor.html';
-    
-    // 3. Mở trong Tab mới
-    const newWindow = window.open(editorUrl, '_blank');
-    
-    // 4. (Tùy chọn) Báo lỗi nếu trình duyệt chặn Pop-up
-    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-        showToast("Trình duyệt đã chặn mở tab mới. Vui lòng cho phép Pop-up hoặc bấm nút 'Mở lại tab'!", "error");
-    }
-}
+        function reopenEditor() {
+            const engineChoice = localStorage.getItem('engine') || 'aftercode';
+            
+            // Nếu là Aftercode: Redirect thẳng sang Aftercode trên tab hiện tại
+            if (engineChoice === 'aftercode') {
+                window.location.href = 'https://aftercode-web-wheat.vercel.app/editor.html';
+                return;
+            }
+
+            // Nếu là TurboWarp: Giữ nguyên hành vi mở tab mới
+            const editorUrl = 'https://turbowarp.org/editor?project_url=https://app.studiodanv.workers.dev/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ';
+            const newWindow = window.open(editorUrl, '_blank');
+            
+            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                showToast("Trình duyệt đã chặn mở tab mới. Vui lòng cho phép Pop-up hoặc bấm nút 'Mở lại tab'!", "error");
+            }
+        }
 
         // ================= HỆ THỐNG ASSETS STORE PRO =================
         async function fetchAssetsList() {
