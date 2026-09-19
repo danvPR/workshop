@@ -1749,15 +1749,97 @@
             color: var(--text-main) !important;
         }
 
-        /* 3. Sửa nền của hệ thống Thông báo (Notifications) trong Dark mode */
-        [data-theme="dark"] #notifPageList > div {
-            background-color: var(--bg-panel) !important;
+        /* 3. TỐI ƯU HÓA TOÀN DIỆN GIAO DIỆN TRANG TIN NHẮN (MESSAGES) TRONG DARK MODE */
+        /* Khung ngoài trang tin nhắn */
+        [data-theme="dark"] #notificationsView > div:last-child {
+            background: var(--bg-panel) !important;
             border-color: var(--border-color) !important;
         }
-        [data-theme="dark"] #notifPageList > div > div > div[style*="background:#fff"] {
+        [data-theme="dark"] #notificationsView > div:first-child {
+            background: linear-gradient(135deg, #6b21a8 0%, #4c1d95 100%) !important;
+            border: 1px solid var(--border-color) !important;
+            border-bottom: none !important;
+        }
+
+        /* Phân biệt tin nhắn ĐÃ ĐỌC (nền tối êm dịu) */
+        [data-theme="dark"] #notifPageList > div[style*="background: #ffffff"],
+        [data-theme="dark"] #notifPageList > div[style*="background:#ffffff"] {
+            background-color: var(--bg-panel) !important;
+            border-bottom-color: var(--border-color) !important;
+        }
+
+        /* Phân biệt tin nhắn CHƯA ĐỌC (nổi bật với viền tím sáng và nền ánh tím nhẹ) */
+        [data-theme="dark"] #notifPageList > div[style*="background: #e6f0ff"],
+        [data-theme="dark"] #notifPageList > div[style*="background:#e6f0ff"] {
+            background-color: rgba(133, 92, 214, 0.14) !important;
+            border-bottom-color: var(--border-color) !important;
+            border-left: 4px solid #a78bfa !important;
+        }
+
+        /* Chữ nội dung và tiêu đề trong tin nhắn */
+        [data-theme="dark"] #notifPageList span[style*="color:#575e75"],
+        [data-theme="dark"] #notifPageList span[style*="color: #575e75"] {
+            color: var(--text-main) !important;
+        }
+        [data-theme="dark"] #notifPageList a[style*="color:#575e75"],
+        [data-theme="dark"] #notifPageList a[style*="color: #575e75"] {
+            color: var(--text-title) !important;
+        }
+        [data-theme="dark"] #notifPageList a[style*="color:#855cd6"],
+        [data-theme="dark"] #notifPageList a[style*="color: #855cd6"] {
+            color: #c084fc !important; /* Tím sáng tương phản cao trên nền tối */
+            text-decoration: underline !important;
+        }
+        [data-theme="dark"] #notifPageList span[style*="color:#858585"],
+        [data-theme="dark"] #notifPageList span[style*="color: #858585"] {
+            color: var(--text-muted) !important;
+        }
+
+        /* Bong bóng phản hồi (Bubble) và mũi tên tam giác chỉ sang Avatar */
+        [data-theme="dark"] #notifPageList div[style*="background:#fff"],
+        [data-theme="dark"] #notifPageList div[style*="background: #fff"] {
             background-color: var(--bg-secondary) !important;
             border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
         }
+        [data-theme="dark"] #notifPageList div[style*="transform:rotate(45deg)"] {
+            background-color: var(--bg-secondary) !important;
+            border-left-color: var(--border-color) !important;
+            border-bottom-color: var(--border-color) !important;
+        }
+
+        /* Ô nhập trả lời nhanh dưới bình luận */
+        [data-theme="dark"] #notifPageList input[type="text"] {
+            background-color: var(--bg-input) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
+        }
+        [data-theme="dark"] #notifPageList input[type="text"]::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.75;
+        }
+
+        /* Viền ảnh đại diện trong danh sách thông báo */
+        [data-theme="dark"] #notifPageList img[style*="border:1px solid #d9d9d9"] {
+            border-color: var(--border-color) !important;
+        }
+
+        /* Hộp thư quà tặng WOW khi nhận điểm */
+        [data-theme="dark"] .notif-tip-gift-box {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.22) 0%, rgba(245, 158, 11, 0.1) 100%) !important;
+            border-color: #ea580c !important;
+        }
+        [data-theme="dark"] .notif-tip-gift-box div[style*="color:#ea580c"] {
+            color: #fbbf24 !important;
+        }
+
+        /* Khu vực nút 'Xem thêm' cuối danh sách */
+        [data-theme="dark"] #notifPageList > div:last-child[style*="text-align: center"] {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* Dropdown thông báo trên thanh Navbar */
         [data-theme="dark"] .notif-header { background: var(--bg-panel) !important; }
         [data-theme="dark"] .notif-item { background: var(--bg-panel); color: var(--text-main); }
         [data-theme="dark"] .notif-item:hover { background: var(--bg-secondary); }
