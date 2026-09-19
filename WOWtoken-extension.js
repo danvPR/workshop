@@ -89,7 +89,7 @@
     getInfo() {
       return {
         id: "danvWowEconomy",
-        name: "Ví WOW DANV",
+        name: "WOW Economy"
         color1: "#f59e0b", // Vàng cam năng lượng
         color2: "#d97706",
         color3: "#b45309",
