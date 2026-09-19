@@ -978,15 +978,11 @@
         .widget-user-box img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); flex-shrink: 0; }
         .widget-user-rel-tag { font-size: 0.72rem; font-weight: 800; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 6px; width: max-content; }
         
-        /* STYLES CÁC WIDGET MỚI */
-        .widget-user-box { display: flex; align-items: center; gap: 12px; height: 100%; padding: 14px; }
-        .widget-user-box img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); flex-shrink: 0; }
-        .widget-user-rel-tag { font-size: 0.72rem; font-weight: 800; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 6px; width: max-content; }
-        
         .widget-mini-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
         .widget-mini-card-thumb { width: 100%; height: 55%; background: #000; position: relative; overflow: hidden; }
         .widget-mini-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .widget-mini-card-body { padding: 10px 14px; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+        .bento-toolbar.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
         /* WIDGET TRẠM (STATION BOX) */
         .widget-station-box { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
@@ -14735,8 +14731,12 @@
             if (!gridEl) return;
             
             // Dừng phát BGM cũ nếu đang phát
-            if (activeBentoAudio) {
-                activeBentoAudio.pause();
+            if (activeBentoAudio && activeBentoAudio.audio) {
+                activeBentoAudio.audio.pause();
+                activeBentoAudio = null;
+            } else if (activeBentoAudio) {
+                // Đề phòng trường hợp fallback
+                try { activeBentoAudio.pause(); } catch(e){}
                 activeBentoAudio = null;
             }
 
@@ -15074,14 +15074,27 @@
         // 6. Thêm Widget Mạng xã hội
         function openBentoConfigSocialModal() {
             closeModal('bentoWidgetModal');
-            // Nạp dữ liệu cũ nếu đã từng có
-            const scratchLink = viewingProfileData && viewingProfileData.scratch_linked ? viewingProfileData.scratch_linked : '';
-            document.getElementById('bentoSocialScratch').value = scratchLink;
-            document.getElementById('bentoSocialYoutube').value = '';
-            document.getElementById('bentoSocialDiscord').value = '';
-            document.getElementById('bentoSocialGithub').value = '';
-            document.getElementById('bentoSocialFacebook').value = '';
-            document.getElementById('bentoSocialWeb').value = '';
+            
+            // Cố gắng tìm xem trên Profile đã có Widget Social chưa để điền lại dữ liệu cũ
+            let existingSocials = {};
+            if (currentBentoData && currentBentoData.customLayout) {
+                try {
+                    const layoutArr = JSON.parse(currentBentoData.customLayout);
+                    const socialWidget = layoutArr.find(w => w.id && w.id.startsWith('widget_social_'));
+                    if (socialWidget && socialWidget.socials) {
+                        existingSocials = typeof socialWidget.socials === 'string' ? JSON.parse(socialWidget.socials) : socialWidget.socials;
+                    }
+                } catch(e){}
+            }
+
+            // Nạp dữ liệu cũ (Ưu tiên dữ liệu trong Widget, nếu không có thì lấy link Scratch từ Profile)
+            document.getElementById('bentoSocialScratch').value = existingSocials.scratch || (viewingProfileData && viewingProfileData.scratch_linked ? viewingProfileData.scratch_linked : '');
+            document.getElementById('bentoSocialYoutube').value = existingSocials.youtube || '';
+            document.getElementById('bentoSocialDiscord').value = existingSocials.discord || '';
+            document.getElementById('bentoSocialGithub').value = existingSocials.github || '';
+            document.getElementById('bentoSocialFacebook').value = existingSocials.facebook || '';
+            document.getElementById('bentoSocialWeb').value = existingSocials.web || '';
+            
             openModal('bentoConfigSocialModal');
         }
 
