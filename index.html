@@ -4153,18 +4153,18 @@
                     <i class="fa-solid fa-triangle-exclamation fa-bounce" style="font-size: 1.1rem; color: #fef08a;"></i>
                 </div>
                 <div>
-                    <div><b>Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)</div>
-                    <div style="font-size: 0.8rem; opacity: 0.92; margin-top: 2px;">
+                    <div><b data-i18n="banner_email_unverified">Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)</div>
+                    <div style="font-size: 0.8rem; opacity: 0.92; margin-top: 2px;" data-i18n="banner_email_hint">
                         ⚠️ Bạn đang bị giới hạn tính năng: Không thể bóc Túi mù, đăng dự án hay gửi tặng WOW. Hãy xác minh ngay để mở khóa toàn bộ và nhận thưởng <b style="color: #fef08a; font-size: 0.88rem;">+50 WOW</b>!
                     </div>
                 </div>
             </div>
             <div style="display: flex; gap: 8px; align-items: center;">
                 <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #dc2626; padding: 7px 18px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                    <i class="fa-solid fa-circle-check"></i> Xác minh ngay
+                    <i class="fa-solid fa-circle-check"></i> <span data-i18n="banner_email_btn_verify">Xác minh ngay</span>
                 </button>
                 <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.25); color: white; padding: 7px 14px; border-radius: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; cursor: pointer;">
-                    <i class="fa-solid fa-rotate-right"></i> Gửi lại mã
+                    <i class="fa-solid fa-rotate-right"></i> <span data-i18n="banner_email_btn_resend">Gửi lại mã</span>
                 </button>
             </div>
         </div>
@@ -4179,7 +4179,7 @@
             <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
             <a href="#create" class="nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
-            <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span>Stations</span></a>
+            <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
@@ -4190,7 +4190,7 @@
         <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
         <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="nav_create">Sáng tạo</span></a>
         <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
-        <a href="#studios" class="mobile-nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i><span>Stations</span></a>
+        <a href="#studios" class="mobile-nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i><span data-i18n="nav_studios">Stations</span></a>
         <div id="mobileUserNav"></div>
     </nav>
 
@@ -4223,22 +4223,22 @@
             <!-- Dòng 2: Phân loại theo mục tiêu sử dụng (Category Tabs) -->
             <div class="asset-category-pills">
                 <button type="button" class="asset-cat-pill active" onclick="setAssetCategory('all', this)">
-                    <i class="fa-solid fa-border-all"></i> Tất cả
+                    <i class="fa-solid fa-border-all"></i> <span data-i18n="assets_cat_all">Tất cả</span>
                 </button>
                 <button type="button" class="asset-cat-pill" onclick="setAssetCategory('sprite', this)">
-                    <i class="fa-solid fa-person-running"></i> Sprites / Nhân vật
+                    <i class="fa-solid fa-person-running"></i> <span data-i18n="assets_cat_sprite">Sprites / Nhân vật</span>
                 </button>
                 <button type="button" class="asset-cat-pill" onclick="setAssetCategory('background', this)">
-                    <i class="fa-solid fa-image"></i> Hình nền (Backgrounds)
+                    <i class="fa-solid fa-image"></i> <span data-i18n="assets_cat_background">Hình nền (Backgrounds)</span>
                 </button>
                 <button type="button" class="asset-cat-pill" onclick="setAssetCategory('music', this)">
-                    <i class="fa-solid fa-music"></i> Nhạc nền (BGM)
+                    <i class="fa-solid fa-music"></i> <span data-i18n="assets_cat_music">Nhạc nền (BGM)</span>
                 </button>
                 <button type="button" class="asset-cat-pill" onclick="setAssetCategory('sfx', this)">
-                    <i class="fa-solid fa-bullhorn"></i> Hiệu ứng âm thanh (SFX)
+                    <i class="fa-solid fa-bullhorn"></i> <span data-i18n="assets_cat_sfx">Hiệu ứng âm thanh (SFX)</span>
                 </button>
                 <button type="button" class="asset-cat-pill" onclick="setAssetCategory('ui', this)">
-                    <i class="fa-solid fa-shapes"></i> Giao diện / Nút bấm (UI)
+                    <i class="fa-solid fa-shapes"></i> <span data-i18n="assets_cat_ui">Giao diện / Nút bấm (UI)</span>
                 </button>
             </div>
 
@@ -4254,19 +4254,19 @@
                 <div class="assets-sub-filters">
                     <!-- Lọc định dạng file -->
                     <select id="assetFormatFilter" class="asset-select-filter" onchange="changeAssetFormatFilter(this.value)">
-                        <option value="all">Tất cả định dạng</option>
-                        <option value="png">PNG (Trong suốt)</option>
-                        <option value="gif">GIF (Ảnh động)</option>
-                        <option value="svg">SVG (Vector)</option>
-                        <option value="mp3">MP3 (Âm thanh)</option>
-                        <option value="wav">WAV (Chất lượng cao)</option>
+                        <option value="all" data-i18n="assets_fmt_all">Tất cả định dạng</option>
+                        <option value="png" data-i18n="assets_fmt_png">PNG (Trong suốt)</option>
+                        <option value="gif" data-i18n="assets_fmt_gif">GIF (Ảnh động)</option>
+                        <option value="svg" data-i18n="assets_fmt_svg">SVG (Vector)</option>
+                        <option value="mp3" data-i18n="assets_fmt_mp3">MP3 (Âm thanh)</option>
+                        <option value="wav" data-i18n="assets_fmt_wav">WAV (Chất lượng cao)</option>
                     </select>
 
                     <!-- Sắp xếp -->
                     <select id="assetSortFilter" class="asset-select-filter" onchange="changeAssetSortFilter(this.value)">
-                        <option value="newest">Mới nhất</option>
-                        <option value="top_voted">Bình chọn cao nhất</option>
-                        <option value="smallest">Dung lượng nhẹ nhất</option>
+                        <option value="newest" data-i18n="assets_sort_newest">Mới nhất</option>
+                        <option value="top_voted" data-i18n="assets_sort_top_voted">Bình chọn cao nhất</option>
+                        <option value="smallest" data-i18n="assets_sort_smallest">Dung lượng nhẹ nhất</option>
                     </select>
                 </div>
             </div>
@@ -4300,15 +4300,15 @@
                         </div>
                         <div>
                             <h3 style="margin:0; font-size:1.08rem; font-weight:800; color:var(--text-title); line-height:1.2;" data-i18n="chat_title">Kênh Giao Lưu Toàn Cầu</h3>
-                            <span style="font-size:0.75rem; color:var(--text-muted);">Không gian trò chuyện trực tiếp của cộng đồng</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted);" data-i18n="chat_subtitle">Không gian trò chuyện trực tiếp của cộng đồng</span>
                         </div>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span style="font-size:0.75rem; color:#10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); padding: 3px 10px; border-radius: 20px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                            <i class="fa-solid fa-circle fa-fade" style="font-size:0.5rem;"></i> Trực tuyến
+                            <i class="fa-solid fa-circle fa-fade" style="font-size:0.5rem;"></i> <span data-i18n="chat_online">Trực tuyến</span>
                         </span>
-                        <button type="button" class="btn" id="btnToggleChatSidebar" onclick="toggleChatSidebar()" title="Ẩn/Hiện cột tiện ích bên phải" style="padding: 6px 10px; border-radius: 10px; font-size: 0.85rem;">
+                        <button type="button" class="btn" id="btnToggleChatSidebar" onclick="toggleChatSidebar()" data-i18n-title="chat_toggle_sidebar_title" title="Ẩn/Hiện cột tiện ích bên phải" style="padding: 6px 10px; border-radius: 10px; font-size: 0.85rem;">
                             <i class="fa-solid fa-table-columns"></i>
                         </button>
                     </div>
@@ -4318,9 +4318,9 @@
                 <div class="chat-pinned-banner" id="chatPinnedBanner">
                     <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
                         <i class="fa-solid fa-bullhorn" style="color:var(--primary);"></i>
-                        <span style="font-size: 0.8rem; line-height: 1.35;">Chào mừng bạn đến với <b>DANVworkshop</b>! Hãy giao lưu văn minh và tôn trọng bạn bè lập trình.</span>
+                        <span style="font-size: 0.8rem; line-height: 1.35;" data-i18n="chat_pinned_notice">Chào mừng bạn đến với <b>DANVworkshop</b>! Hãy giao lưu văn minh và tôn trọng bạn bè lập trình.</span>
                     </div>
-                    <button type="button" onclick="dismissChatPinnedBanner()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.95rem; padding:0 4px;" title="Đóng thông báo">&times;</button>
+                    <button type="button" onclick="dismissChatPinnedBanner()" data-i18n-title="chat_dismiss_notice_title" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.95rem; padding:0 4px;" title="Đóng thông báo">&times;</button>
                 </div>
                 
                 <!-- Danh sách tin nhắn Stream -->
@@ -4352,32 +4352,32 @@
                             <!-- Hàng Toolbar tích hợp bên dưới textarea -->
                             <div class="chat-composer-bottom-bar">
                                 <div class="chat-composer-tools-left">
-                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" title="Đính kèm hình ảnh">
+                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" data-i18n-title="chat_attach_img_title" title="Đính kèm hình ảnh">
                                         <i class="fa-solid fa-image" style="color: #0284c7;"></i>
                                     </label>
                                     <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
 
-                                    <button type="button" class="chat-dock-icon-btn" onclick="openKlipyModal('chat')" title="Chèn ảnh động GIF">
+                                    <button type="button" class="chat-dock-icon-btn" onclick="openKlipyModal('chat')" data-i18n-title="chat_attach_gif_title" title="Chèn ảnh động GIF">
                                         <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
                                     </button>
 
-                                    <button type="button" id="btnCreatePollChat" class="chat-dock-icon-btn" style="display:none;" onclick="openCreatePollModal()" title="Tạo bình chọn">
+                                    <button type="button" id="btnCreatePollChat" class="chat-dock-icon-btn" style="display:none;" onclick="openCreatePollModal()" data-i18n-title="chat_create_poll_title" title="Tạo bình chọn">
                                         <i class="fa-solid fa-square-poll-vertical" style="color: #ea580c;"></i>
                                     </button>
 
                                     <div style="width: 1px; height: 16px; background: var(--border-color); margin: 0 4px;"></div>
 
-                                    <button type="button" class="chat-beabea-dock-pill" onclick="quickMentionBeaBea()" title="Gõ nhanh @BeaBea (AI)">
-                                        <i class="fa-solid fa-robot"></i> <span>Hỏi BeaBea</span>
+                                    <button type="button" class="chat-beabea-dock-pill" onclick="quickMentionBeaBea()" data-i18n-title="chat_ask_beabea_title" title="Gõ nhanh @BeaBea (AI)">
+                                        <i class="fa-solid fa-robot"></i> <span data-i18n="chat_btn_beabea">Hỏi BeaBea</span>
                                     </button>
-                                    <button type="button" class="chat-dock-icon-btn" onclick="quickAskBeaBeaIdea()" title="Gợi ý ý tưởng làm game/cốt truyện" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #ea580c;">
-                                        <i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 4px;"></i> Ý tưởng
+                                    <button type="button" class="chat-dock-icon-btn" onclick="quickAskBeaBeaIdea()" data-i18n-title="chat_idea_title" title="Gợi ý ý tưởng làm game/cốt truyện" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #ea580c;">
+                                        <i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 4px;"></i> <span data-i18n="chat_btn_idea">Ý tưởng</span>
                                     </button>
                                 </div>
 
                                 <div class="chat-composer-tools-right">
                                     <span class="chat-kbd-hint">Enter ↵</span>
-                                    <button type="submit" id="btnSubmitChat" class="chat-btn-send" title="Gửi tin nhắn">
+                                    <button type="submit" id="btnSubmitChat" class="chat-btn-send" data-i18n-title="chat_send_title" title="Gửi tin nhắn">
                                         <i class="fa-solid fa-paper-plane"></i>
                                     </button>
                                 </div>
@@ -4400,27 +4400,27 @@
                         <span style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; background: #10b981; border: 2px solid var(--bg-panel);" title="Trực tuyến"></span>
                     </div>
                     <div style="font-weight: 800; font-size: 1rem; color: var(--text-title); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span>BeaBea</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 6px; border-radius: 8px; font-weight: 800;">BOT AI</span>
+                        <span>BeaBea</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 6px; border-radius: 8px; font-weight: 800;" data-i18n="chat_sidebar_bot_badge">BOT AI</span>
                     </div>
-                    <p style="font-size: 0.78rem; color: var(--text-muted); margin: 4px 0 12px 0; line-height: 1.4;">Trợ lý AI toàn tri của DANVworkshop. Gõ <b>@BeaBea</b> trong khung chat để trò chuyện hoặc xin ý tưởng làm game!</p>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin: 4px 0 12px 0; line-height: 1.4;" data-i18n="chat_sidebar_beabea_desc">Trợ lý AI toàn tri của DANVworkshop. Gõ <b>@BeaBea</b> trong khung chat để trò chuyện hoặc xin ý tưởng làm game!</p>
                     <button type="button" class="btn" style="width:100%; font-size:0.8rem; padding:7px; justify-content:center; border-radius:10px; border-color: rgba(236,72,153,0.3); color:#db2777; background:rgba(236,72,153,0.06);" onclick="quickMentionBeaBea()">
-                        <i class="fa-solid fa-comments"></i> Gọi BeaBea trò chuyện
+                        <i class="fa-solid fa-comments"></i> <span data-i18n="chat_sidebar_call_beabea">Gọi BeaBea trò chuyện</span>
                     </button>
                 </div>
 
                 <!-- Thẻ Tiêu chuẩn cộng đồng -->
                 <div class="chat-side-card">
                     <div class="chat-side-title">
-                        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Tiêu chuẩn cộng đồng
+                        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> <span data-i18n="chat_sidebar_rules_title">Tiêu chuẩn cộng đồng</span>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
                         <div style="display: flex; gap: 8px; align-items: flex-start;">
                             <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 2px;"></i>
-                            <span>Tôn trọng mọi thành viên, giữ ngôn từ văn minh.</span>
+                            <span data-i18n="chat_sidebar_rule_1">Tôn trọng mọi thành viên, giữ ngôn từ văn minh.</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: flex-start;">
                             <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 2px;"></i>
-                            <span>Không spam link quảng cáo thương mại.</span>
+                            <span data-i18n="chat_sidebar_rule_2">Không spam link quảng cáo thương mại.</span>
                         </div>
                     </div>
                 </div>
@@ -4428,11 +4428,11 @@
                 <!-- Thẻ Lối tắt Stations -->
                 <div class="chat-side-card">
                     <div class="chat-side-title">
-                        <i class="fa-solid fa-satellite-dish" style="color: #3b82f6;"></i> Không gian Stations
+                        <i class="fa-solid fa-satellite-dish" style="color: #3b82f6;"></i> <span data-i18n="chat_sidebar_stations_title">Không gian Stations</span>
                     </div>
-                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.35;">Khám phá các trạm sáng tạo dự án, nhóm lập trình theo chủ đề.</p>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.35;" data-i18n="chat_sidebar_stations_desc">Khám phá các trạm sáng tạo dự án, nhóm lập trình theo chủ đề.</p>
                     <a href="#studios" class="btn" style="width: 100%; font-size: 0.8rem; justify-content: center; border-radius: 10px; text-decoration: none; padding: 7px;">
-                        <i class="fa-solid fa-compass"></i> Vào xem Stations
+                        <i class="fa-solid fa-compass"></i> <span data-i18n="chat_sidebar_stations_btn">Vào xem Stations</span>
                     </a>
                 </div>
             </div>
@@ -4446,12 +4446,12 @@
         <div class="station-header-bar">
             <div>
                 <h2 style="font-size: 1.75rem; margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-satellite-dish" style="color: var(--primary);"></i> Không gian Stations
+                    <i class="fa-solid fa-satellite-dish" style="color: var(--primary);"></i> <span data-i18n="station_list_title">Không gian Stations</span>
                 </h2>
-                <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0;">Các trạm tập hợp dự án, nhóm lập trình và cộng đồng sáng tạo.</p>
+                <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0;" data-i18n="station_list_desc">Các trạm tập hợp dự án, nhóm lập trình và cộng đồng sáng tạo.</p>
             </div>
             <button class="btn btn-primary" onclick="openCreateStudioModal()" style="border-radius: 20px; padding: 9px 18px;">
-                <i class="fa-solid fa-plus"></i> Tạo Station
+                <i class="fa-solid fa-plus"></i> <span data-i18n="station_btn_create">Tạo Station</span>
             </button>
         </div>
 
@@ -4459,16 +4459,16 @@
         <div class="station-search-filter-wrap">
             <div class="asset-search-bar" style="flex: 1; min-width: 260px; margin: 0;">
                 <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-                <input type="text" id="stationSearchInput" placeholder="Tìm tên Station, tác giả..." oninput="handleStationSearch(this.value)">
+                <input type="text" id="stationSearchInput" data-i18n-ph="station_search_ph" placeholder="Tìm tên Station, tác giả..." oninput="handleStationSearch(this.value)">
             </div>
             <div style="display: flex; gap: 8px; overflow-x: auto;">
-                <button class="btn std-filter-pill active" onclick="filterStations('all', this)">Tất cả</button>
-                <button class="btn std-filter-pill" onclick="filterStations('mine', this)">Của tôi</button>
-                <button class="btn std-filter-pill" onclick="filterStations('following', this)">Đang theo dõi</button>
+                <button class="btn std-filter-pill active" onclick="filterStations('all', this)" data-i18n="station_filter_all">Tất cả</button>
+                <button class="btn std-filter-pill" onclick="filterStations('mine', this)" data-i18n="station_filter_mine">Của tôi</button>
+                <button class="btn std-filter-pill" onclick="filterStations('following', this)" data-i18n="station_filter_following">Đang theo dõi</button>
             </div>
         </div>
 
-        <div class="station-grid" id="studiosGridList">Đang tải danh sách Station...</div>
+        <div class="station-grid" id="studiosGridList" data-i18n="station_loading">Đang tải danh sách Station...</div>
     </div>
 
     <!-- TRANG STATION DETAIL -->
@@ -4483,30 +4483,30 @@
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
                         <span class="station-badge-tag" style="position: static;"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
                         <span style="font-size: 0.85rem; color: var(--text-muted);">
-                            Trạm trưởng: <a id="stdDetailCreator" href="#" style="color: var(--primary); font-weight: bold; text-decoration: none;">@creator</a>
+                            <span data-i18n="station_creator_label">Trạm trưởng:</span> <a id="stdDetailCreator" href="#" style="color: var(--primary); font-weight: bold; text-decoration: none;">@creator</a>
                         </span>
                     </div>
                     <h2 id="stdDetailTitle" style="font-size: 1.85rem; font-weight: 900; margin-bottom: 8px; color: var(--text-title); line-height: 1.25;">Tên Station</h2>
                     <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; gap: 14px; align-items: center;">
-                        <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> <b id="stdFollowersCount" style="color:var(--text-title);">0</b> người theo dõi</span>
-                        <span><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> <b id="stdProjCountBadge" style="color:var(--text-title);">0</b> dự án</span>
+                        <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> <b id="stdFollowersCount" style="color:var(--text-title);">0</b> <span data-i18n="station_followers_label">người theo dõi</span></span>
+                        <span><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> <b id="stdProjCountBadge" style="color:var(--text-title);">0</b> <span data-i18n="station_projects_label">dự án</span></span>
                     </div>
 
                     <div class="station-action-bar">
                         <button id="btnFollowStudio" class="btn btn-primary" onclick="toggleFollowStudio()" style="border-radius: 20px;">
-                            <i class="fa-solid fa-plus"></i> Theo dõi
+                            <i class="fa-solid fa-plus"></i> <span data-i18n="station_btn_follow">Theo dõi</span>
                         </button>
                         <button id="btnAddProjToStudio" class="btn btn-primary" style="display:none; border-radius: 20px;" onclick="openAddProjectToStudioModal()">
-                            <i class="fa-solid fa-folder-plus"></i> Thêm dự án
+                            <i class="fa-solid fa-folder-plus"></i> <span data-i18n="station_btn_add_proj">Thêm dự án</span>
                         </button>
                         <button id="btnInviteMemberToStudio" class="btn" style="display:none; border-radius: 20px;" onclick="openInviteStudioModal()">
-                            <i class="fa-solid fa-user-plus"></i> Mời thành viên
+                            <i class="fa-solid fa-user-plus"></i> <span data-i18n="station_btn_invite">Mời thành viên</span>
                         </button>
                         <button id="btnStdAcceptInvite" class="btn btn-primary" style="display:none; background:#10b981; border-radius: 20px;" onclick="acceptStudioInvite()">
-                            <i class="fa-solid fa-check"></i> Chấp nhận lời mời
+                            <i class="fa-solid fa-check"></i> <span data-i18n="station_btn_accept_invite">Chấp nhận lời mời</span>
                         </button>
                         <button id="btnStdSettings" class="btn" style="display:none; border-radius: 20px;" onclick="openStudioSettings()">
-                            <i class="fa-solid fa-gear"></i> Cài đặt
+                            <i class="fa-solid fa-gear"></i> <span data-i18n="station_btn_settings">Cài đặt</span>
                         </button>
                     </div>
                 </div>
@@ -4515,16 +4515,16 @@
 
         <div class="profile-nav-tabs" style="margin-bottom: 20px;">
             <button class="prof-tab-btn active" id="tabBtnStd-projects" onclick="switchStdTab('projects')">
-                <i class="fa-solid fa-folder-open"></i> Kho dự án (<span id="stdProjCount">0</span>)
+                <i class="fa-solid fa-folder-open"></i> <span data-i18n="station_tab_projects">Kho dự án</span> (<span id="stdProjCount">0</span>)
             </button>
             <button class="prof-tab-btn" id="tabBtnStd-members" onclick="switchStdTab('members')">
-                <i class="fa-solid fa-users"></i> Phi hành đoàn (<span id="stdMemberCount">0</span>)
+                <i class="fa-solid fa-users"></i> <span data-i18n="station_tab_members">Phi hành đoàn</span> (<span id="stdMemberCount">0</span>)
             </button>
             <button class="prof-tab-btn" id="tabBtnStd-about" onclick="switchStdTab('about')">
-                <i class="fa-solid fa-circle-info"></i> Giới thiệu
+                <i class="fa-solid fa-circle-info"></i> <span data-i18n="station_tab_about">Giới thiệu</span>
             </button>
             <button class="prof-tab-btn" id="tabBtnStd-comments" onclick="switchStdTab('comments')">
-                <i class="fa-solid fa-comments"></i> Thảo luận
+                <i class="fa-solid fa-comments"></i> <span data-i18n="station_tab_comments">Thảo luận</span>
             </button>
         </div>
 
@@ -4533,11 +4533,11 @@
             <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom: 18px; flex-wrap:wrap;">
                 <div class="asset-search-bar" style="max-width: 350px; flex: 1; margin: 0;">
                     <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);"></i>
-                    <input type="text" id="stdInternalProjSearch" placeholder="Lọc dự án trong Station..." oninput="filterStudioInternalProjects(this.value)">
+                    <input type="text" id="stdInternalProjSearch" data-i18n-ph="station_internal_search_ph" placeholder="Lọc dự án trong Station..." oninput="filterStudioInternalProjects(this.value)">
                 </div>
                 <span id="stdProjCountDisplay" style="font-size:0.88rem; color:var(--text-muted);"></span>
             </div>
-            <div class="project-grid" id="stdProjectList">Chưa có dự án nào trong Station.</div>
+            <div class="project-grid" id="stdProjectList" data-i18n="station_no_projects">Chưa có dự án nào trong Station.</div>
         </div>
 
         <!-- TAB 2: THÀNH VIÊN -->
@@ -4549,13 +4549,13 @@
         <div id="stdTab-about" class="prof-tab-content" style="max-width: 850px;">
             <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
                 <h4 style="margin-bottom: 12px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Giới thiệu Station
+                    <i class="fa-solid fa-book-open" style="color: var(--primary);"></i> <span data-i18n="station_about_header">Giới thiệu Station</span>
                 </h4>
                 <p id="stdDetailDesc" style="font-size: 0.96rem; color: var(--text-main); white-space: pre-line; line-height: 1.65; margin: 0;"></p>
                 
                 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <span style="font-size: 0.85rem; color: var(--text-muted);">Mã định danh: <code id="stdDetailIdCode" style="background:var(--bg-secondary); padding:3px 7px; border-radius:6px;"></code></span>
-                    <button class="btn" style="font-size: 0.85rem; padding: 6px 14px;" onclick="copyCurrentStudioLink()"><i class="fa-solid fa-link"></i> Sao chép link Station</button>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);"><span data-i18n="station_id_label">Mã định danh:</span> <code id="stdDetailIdCode" style="background:var(--bg-secondary); padding:3px 7px; border-radius:6px;"></code></span>
+                    <button class="btn" style="font-size: 0.85rem; padding: 6px 14px;" onclick="copyCurrentStudioLink()"><i class="fa-solid fa-link"></i> <span data-i18n="station_btn_copy_link">Sao chép link Station</span></button>
                 </div>
             </div>
         </div>
@@ -4564,29 +4564,29 @@
         <div id="stdTab-comments" class="prof-tab-content" style="max-width: 850px;">
             <div id="comment-area-std" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
                 <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
-                    Đang trả lời <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')"></i>
+                    <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                 </div>
                 <div id="commentImgPreviewStd" class="comment-img-preview-box">
                     <img id="commentImgPreviewSrcStd" src="" alt="preview">
-                    <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
-                    <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" title="Gỡ ảnh">&times;</button>
+                    <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                    <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" title="&times;">&times;</button>
                 </div>
                 <form onsubmit="handlePostComment(event, 'std')" id="stdCommentForm" style="display:none;">
-                    <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" placeholder="Viết thảo luận trong Station..." autocomplete="off"></textarea></div>
+                    <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" data-i18n-ph="station_comment_ph" placeholder="Viết thảo luận trong Station..." autocomplete="off"></textarea></div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="display:flex; gap: 10px;">
-                            <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> Đính kèm ảnh</label>
+                            <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
                             <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
                             <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('std')"><i class="fa-solid fa-gift"></i> GIF</button>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd"><i class="fa-solid fa-paper-plane"></i> Gửi bình luận</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
                     </div>
                 </form>
                 <div id="loginPromptStd" style="text-align:center; color:#888; font-size:0.9rem;">
-                    <button class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập để tham gia thảo luận</button>
+                    <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="station_login_prompt">Đăng nhập để tham gia thảo luận</button>
                 </div>
             </div>
-            <div id="stdCommentList">Chưa có thảo luận nào.</div>
+            <div id="stdCommentList" data-i18n="station_no_comments">Chưa có thảo luận nào.</div>
         </div>
     </div>
 
@@ -4644,31 +4644,31 @@
             <!-- Hàng Tag thể loại trượt ngang nhanh -->
             <div class="home-category-track" id="homeCategoryTrack">
                 <button type="button" class="home-cat-chip active" onclick="filterHomeByTag('', this)">
-                    <i class="fa-solid fa-border-all"></i> Tất cả
+                    <i class="fa-solid fa-border-all"></i> <span data-i18n="home_cat_all">Tất cả</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#game', this)">
-                    <i class="fa-solid fa-gamepad"></i> Game
+                    <i class="fa-solid fa-gamepad"></i> <span data-i18n="home_cat_game">Game</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#platformer', this)">
-                    <i class="fa-solid fa-person-running"></i> Platformer
+                    <i class="fa-solid fa-person-running"></i> <span data-i18n="home_cat_platformer">Platformer</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#animation', this)">
-                    <i class="fa-solid fa-film"></i> Hoạt hình
+                    <i class="fa-solid fa-film"></i> <span data-i18n="home_cat_animation">Hoạt hình</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#music', this)">
-                    <i class="fa-solid fa-music"></i> Âm nhạc
+                    <i class="fa-solid fa-music"></i> <span data-i18n="home_cat_music">Âm nhạc</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#rpg', this)">
-                    <i class="fa-solid fa-shield-halved"></i> Nhập vai RPG
+                    <i class="fa-solid fa-shield-halved"></i> <span data-i18n="home_cat_rpg">Nhập vai RPG</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#pixel', this)">
-                    <i class="fa-solid fa-cubes"></i> Pixel Art
+                    <i class="fa-solid fa-cubes"></i> <span data-i18n="home_cat_pixel">Pixel Art</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#tool', this)">
-                    <i class="fa-solid fa-screwdriver-wrench"></i> Tiện ích
+                    <i class="fa-solid fa-screwdriver-wrench"></i> <span data-i18n="home_cat_tool">Tiện ích</span>
                 </button>
                 <button type="button" class="home-cat-chip" onclick="filterHomeByTag('#meme', this)">
-                    <i class="fa-solid fa-face-laugh-squint"></i> Meme / Vui
+                    <i class="fa-solid fa-face-laugh-squint"></i> <span data-i18n="home_cat_meme">Meme / Vui</span>
                 </button>
             </div>
         </div>
@@ -4697,7 +4697,7 @@
                         <h2 id="projPageTitle" style="color: var(--text-title); margin: 0; font-size: 1.7rem; font-weight: 900; line-height: 1.3; word-break: break-word;">Tên dự án</h2>
                         <div style="display: flex; align-items: center; gap: 14px; margin-top: 6px; flex-wrap: wrap;">
                             <span id="projPageDate" style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
-                            <span style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-solid fa-play" style="color:var(--primary);"></i> <b id="projViewCountDisplay" style="color:var(--text-title);">0</b> lượt chơi</span>
+                            <span style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-solid fa-play" style="color:var(--primary);"></i> <b id="projViewCountDisplay" style="color:var(--text-title);">0</b> <span data-i18n="proj_views_unit">lượt chơi</span></span>
                             <span id="projVersionBadge" style="display:none; font-size: 0.75rem; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 12px; font-weight: bold; border: 1px solid rgba(13,165,122,0.25);"><i class="fa-solid fa-code-commit"></i> <span id="projVersionText"></span></span>
                         </div>
                     </div>
@@ -4706,11 +4706,11 @@
                 <div class="proj-controls-row">
                     <!-- Thông tin tác giả bên trái -->
                     <div style="display: flex; gap: 12px; align-items: center;">
-                        <a href="#" id="projPageAuthorLinkAvt" title="Xem trang cá nhân" style="display:flex;">
+                        <a href="#" id="projPageAuthorLinkAvt" data-i18n-title="proj_author_avt_title" title="Xem trang cá nhân" style="display:flex;">
                             <img id="projPageAuthorAvt" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color);">
                         </a>
                         <div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Nhà phát triển</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="proj_dev_label">Nhà phát triển</div>
                             <a id="projPageAuthor" href="#" style="color: var(--primary); text-decoration: none; font-weight: 800; font-size: 1.05rem;">Author</a>
                         </div>
                     </div>
@@ -4719,49 +4719,49 @@
                     <div class="proj-btn-cluster">
                         <!-- Nhóm 1: Thích, Sao, Bookmark (Segmented Control liền khối) -->
                         <div class="proj-segmented-group">
-                            <button class="proj-seg-btn" id="btnLike" onclick="toggleAction('like')" title="Thích tác phẩm">
+                            <button class="proj-seg-btn" id="btnLike" onclick="toggleAction('like')" data-i18n-title="proj_like_title" title="Thích tác phẩm">
                                 <i class="fa-solid fa-heart"></i> <span id="likeCount">0</span>
                             </button>
-                            <button class="proj-seg-btn" id="btnStar" onclick="toggleAction('star')" title="Yêu thích">
+                            <button class="proj-seg-btn" id="btnStar" onclick="toggleAction('star')" data-i18n-title="proj_star_title" title="Yêu thích">
                                 <i class="fa-solid fa-star"></i> <span id="starCount">0</span>
                             </button>
-                            <button class="proj-seg-btn" onclick="openSaveToPlaylistModal()" title="Lưu vào Bộ sưu tập">
+                            <button class="proj-seg-btn" onclick="openSaveToPlaylistModal()" data-i18n-title="proj_bookmark_title" title="Lưu vào Bộ sưu tập">
                                 <i class="fa-solid fa-bookmark"></i>
                             </button>
                         </div>
 
                         <!-- Nhóm 2: Nút Tặng WOW (Tâm điểm năng lượng) -->
-                        <button class="btn-tip-WOW" onclick="openTipModal()" title="Ủng hộ tác giả bằng điểm WOW">
-                            <span class="wow-icon fa-bounce"></span> <span>Tặng WOW</span>
+                        <button class="btn-tip-WOW" onclick="openTipModal()" data-i18n-title="proj_tip_title" title="Ủng hộ tác giả bằng điểm WOW">
+                            <span class="wow-icon fa-bounce"></span> <span data-i18n="proj_tip_btn">Tặng WOW</span>
                         </button>
 
                         <!-- Nhóm 3: Tiện ích & Kết nối -->
-                        <button class="proj-pill-btn" onclick="openAddToStationModal()" title="Thêm vào Station">
+                        <button class="proj-pill-btn" onclick="openAddToStationModal()" data-i18n-title="proj_station_title" title="Thêm vào Station">
                             <i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span>Station</span>
                         </button>
                         
-                        <button class="proj-pill-btn" onclick="openShareModal()" title="Chia sẻ tác phẩm">
+                        <button class="proj-pill-btn" onclick="openShareModal()" data-i18n-title="proj_share_title" title="Chia sẻ tác phẩm">
                             <i class="fa-solid fa-share-nodes"></i> <span data-i18n="action_share">Chia sẻ</span>
                         </button>
 
-                        <a id="btnSeeInside" href="#" target="_blank" class="proj-pill-btn" title="Xem mã nguồn khối lệnh">
+                        <a id="btnSeeInside" href="#" target="_blank" class="proj-pill-btn" data-i18n-title="proj_code_title" title="Xem mã nguồn khối lệnh">
                             <i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span>
                         </a>
 
                         <!-- Nhóm 4: Menu tác vụ bổ sung (...) -->
                         <div class="proj-more-dropdown-wrap">
-                            <button class="proj-pill-btn" style="padding: 0 12px;" onclick="toggleProjMoreMenu(event)" title="Thêm tùy chọn">
+                            <button class="proj-pill-btn" style="padding: 0 12px;" onclick="toggleProjMoreMenu(event)" data-i18n-title="proj_more_title" title="Thêm tùy chọn">
                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                             </button>
                             <div class="proj-dropdown-menu" id="projMoreDropdown">
                                 <button class="proj-dropdown-item" id="btnProjSettings" style="display:none;" onclick="closeProjMoreMenu(); openModal('projSettingsModal');">
-                                    <i class="fa-solid fa-gear"></i> <span>Quản lý & Sửa dự án</span>
+                                    <i class="fa-solid fa-gear"></i> <span data-i18n="proj_menu_settings">Quản lý & Sửa dự án</span>
                                 </button>
                                 <button class="proj-dropdown-item" onclick="closeProjMoreMenu(); openReportModal('project');">
-                                    <i class="fa-solid fa-flag" style="color:#f59e0b;"></i> <span>Báo cáo vi phạm</span>
+                                    <i class="fa-solid fa-flag" style="color:#f59e0b;"></i> <span data-i18n="proj_menu_report">Báo cáo vi phạm</span>
                                 </button>
                                 <button class="proj-dropdown-item danger" id="btnAdminForcePrivate" style="display:none;" onclick="closeProjMoreMenu(); openAdminPrivateModal();">
-                                    <i class="fa-solid fa-shield-halved"></i> <span>Gỡ về riêng tư (Admin)</span>
+                                    <i class="fa-solid fa-shield-halved"></i> <span data-i18n="proj_menu_force_private">Gỡ về riêng tư (Admin)</span>
                                 </button>
                             </div>
                         </div>
@@ -4800,27 +4800,27 @@
                     <!-- KHỐI 2: KHU VỰC BÌNH LUẬN TRẢI RỘNG (FULL WIDTH THREAD) -->
                     <div class="proj-card-box" id="projCommentsArea">
                         <h3 style="margin-bottom:18px; font-size:1.25rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
-                            <i class="fa-solid fa-comments" style="color:var(--primary);"></i> Thảo luận cộng đồng
+                            <i class="fa-solid fa-comments" style="color:var(--primary);"></i> <span data-i18n="proj_comments_title">Thảo luận cộng đồng</span>
                         </h3>
 
                         <!-- Khung viết bình luận to rõ phía trên danh sách -->
                         <div id="comment-area-proj" class="comment-input-area" style="border:1px solid var(--border-color); border-radius:14px; padding:16px; margin-bottom:24px; background:var(--bg-secondary);">
                             <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
-                                Đang trả lời <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('proj')"></i>
+                                <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('proj')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                             </div>
                             <div id="commentImgPreviewProj" class="comment-img-preview-box">
                                 <img id="commentImgPreviewSrcProj" src="" alt="preview">
-                                <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
-                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" title="Gỡ ảnh">&times;</button>
+                                <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" title="&times;">&times;</button>
                             </div>
                             <form onsubmit="handlePostComment(event, 'proj')" id="commentFormProj" style="display:none;">
                                 <div class="comment-input-wrapper" style="padding: 8px 16px;">
                                     <input type="text" id="commentTextProj" data-i18n-ph="proj_comment_ph" placeholder="Chia sẻ suy nghĩ hoặc phản hồi của bạn..." autocomplete="off">
                                     <label for="commentImgUploadProj" style="margin:0; display:flex;">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" title="Đính kèm ảnh">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" data-i18n-title="comment_attach_image" title="Đính kèm ảnh">
                                     </label>
                                     <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
-                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" title="Chèn GIF">
+                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
                                         <i class="fa-solid fa-gift" style="font-size: 1.3rem; color: #855cd6;"></i>
                                     </button>
                                     <button type="submit" id="btnSubmitCommentProj" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.2rem; margin-left: 12px;">
@@ -4849,27 +4849,27 @@
                         <div id="projSidebarAuthorUser" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">@author</div>
                         <p id="projSidebarAuthorBio" style="font-size:0.88rem; color:var(--text-main); line-height:1.5; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Đang tải thông tin tác giả...</p>
                         <div style="display:flex; gap:8px; justify-content:center;">
-                            <a id="btnVisitAuthorProf" href="#" class="btn" style="flex:1; justify-content:center; border-radius:20px; font-size:0.85rem;"><i class="fa-solid fa-user"></i> Xem hồ sơ</a>
+                            <a id="btnVisitAuthorProf" href="#" class="btn" style="flex:1; justify-content:center; border-radius:20px; font-size:0.85rem;"><i class="fa-solid fa-user"></i> <span data-i18n="proj_btn_view_profile">Xem hồ sơ</span></a>
                         </div>
                     </div>
 
                     <!-- Thẻ Thông số kỹ thuật của Game -->
                     <div class="proj-card-box">
                         <h4 style="margin-bottom:14px; font-size:0.95rem; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; display:flex; align-items:center; gap:6px;">
-                            <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> Thông số tác phẩm
+                            <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i> <span data-i18n="proj_specs_title">Thông số tác phẩm</span>
                         </h4>
                         <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
                             <div style="display:flex; justify-content:space-between;">
-                                <span style="color:var(--text-muted);">Trình khởi chạy:</span>
+                                <span style="color:var(--text-muted);" data-i18n="proj_specs_engine">Trình khởi chạy:</span>
                                 <b id="projMetaEngine" style="color:var(--text-title);">Aftercode / SB3</b>
                             </div>
                             <div style="display:flex; justify-content:space-between;">
-                                <span style="color:var(--text-muted);">Hiển thị:</span>
-                                <b id="projMetaVis" style="color:var(--text-title);">Công khai</b>
+                                <span style="color:var(--text-muted);" data-i18n="proj_specs_vis">Hiển thị:</span>
+                                <b id="projMetaVis" style="color:var(--text-title);" data-i18n="upload_vis_public">Công khai</b>
                             </div>
                             <div style="display:flex; justify-content:space-between;">
-                                <span style="color:var(--text-muted);">Ngày phát hành:</span>
-                                <span id="projMetaDate" style="color:var(--text-title); font-weight:600;">Đang cập nhật</span>
+                                <span style="color:var(--text-muted);" data-i18n="proj_specs_date">Ngày phát hành:</span>
+                                <span id="projMetaDate" style="color:var(--text-title); font-weight:600;" data-i18n="proj_specs_date_updating">Đang cập nhật</span>
                             </div>
                         </div>
                     </div>
@@ -4908,8 +4908,8 @@
                             <img id="profAvt" src="https://i.ibb.co/QFg1cVVD/image.png" class="profile-avt-lg" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                         </div>
                         <div class="profile-actions">
-                            <button id="btnFollowProf" class="btn btn-primary" style="display:none;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> Theo dõi</button>
-                            <button id="btnReportProf" class="btn btn-danger" style="display:none;" onclick="openReportModal('user', viewingProfileUser)" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
+                            <button id="btnFollowProf" class="btn btn-primary" style="display:none;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
+                            <button id="btnReportProf" class="btn btn-danger" style="display:none;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
                             <button id="btnAdminWarn" class="btn btn-danger" style="display:none;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
                             <a id="btnEditProfModal" class="btn" href="#settings" style="display:none;"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Chỉnh sửa</span></a>
                         </div>
@@ -4962,7 +4962,7 @@
                 <button class="prof-tab-btn" id="tabBtnProf-likes" onclick="switchProfTab('likes')"><i class="fa-solid fa-heart"></i> <span data-i18n="prof_liked">Đã thích</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-activities" onclick="switchProfTab('activities')"><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="prof_activities">Hoạt động</span></button>
                 <button class="prof-tab-btn" id="tabBtnProf-comments" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments"></i> <span data-i18n="prof_comments">Lời nhắn</span></button>
-                <button class="prof-tab-btn" id="tabBtnProf-playlists" onclick="switchProfTab('playlists')"><i class="fa-solid fa-bookmark"></i> Bộ sưu tập</button>
+                <button class="prof-tab-btn" id="tabBtnProf-playlists" onclick="switchProfTab('playlists')"><i class="fa-solid fa-bookmark"></i> <span data-i18n="prof_playlists">Bộ sưu tập</span></button>
             </div>
 
             <div id="profTab-projects" class="prof-tab-content active">
@@ -4989,12 +4989,12 @@
             <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
                 <div id="comment-area-prof" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
                     <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
-                        Đang trả lời <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')"></i>
+                        <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
                     <div id="commentImgPreviewProf" class="comment-img-preview-box">
                         <img id="commentImgPreviewSrcProf" src="" alt="preview">
-                        <span style="font-size:0.8rem; color:#555;">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" title="Gỡ ảnh">&times;</button>
+                        <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" title="&times;">&times;</button>
                     </div>
                     <form onsubmit="handlePostComment(event, 'prof')" id="profCommentForm" style="display:none;">
                         <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextProf" class="form-control" rows="3" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này..." autocomplete="off"></textarea></div>
@@ -5017,10 +5017,10 @@
             <div id="profTab-playlists" class="prof-tab-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
                     <h4 style="margin:0; font-size:1.15rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> <span>Bộ sưu tập</span>
+                        <i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> <span data-i18n="prof_playlists">Bộ sưu tập</span>
                     </h4>
                     <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 7px 16px; font-weight:700;" onclick="openModal('createPlaylistModal')">
-                        <i class="fa-solid fa-plus"></i> <span>Tạo bộ sưu tập</span>
+                        <i class="fa-solid fa-plus"></i> <span data-i18n="prof_btn_create_playlist">Tạo bộ sưu tập</span>
                     </button>
                 </div>
                 <div class="project-grid" id="userPlaylistsList"></div>
@@ -5125,10 +5125,10 @@
                         </div>
                         <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <label style="margin:0;"><span class="wow-icon"></span> Cửa hàng Khung Avatar</label>
-                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Số dư: <b id="settingsWOWBalance" style="color:#ea580c;">0</b> WOW</div>
+                                <label style="margin:0;"><span class="wow-icon"></span> <span data-i18n="settings_frame_store">Cửa hàng Khung Avatar</span></label>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;"><span data-i18n="settings_balance_label">Số dư:</span> <b id="settingsWOWBalance" style="color:#ea580c;">0</b> WOW</div>
                             </div>
-                            <button type="button" class="btn btn-primary" onclick="openFrameShopModal()" style="border-radius: 20px; padding: 8px 16px;"><i class="fa-solid fa-store"></i> Xem & Mua</button>
+                            <button type="button" class="btn btn-primary" onclick="openFrameShopModal()" style="border-radius: 20px; padding: 8px 16px;"><i class="fa-solid fa-store"></i> <span data-i18n="settings_frame_btn_view">Xem & Mua</span></button>
                         </div>
                         <div class="form-group"><label data-i18n="settings_display_name">Tên hiển thị:</label><input type="text" id="editDisplayNameInput" class="form-control" data-i18n-ph="settings_display_name_ph" placeholder="Tên hiển thị tự do..."></div>
                         <div class="form-group"><label data-i18n="settings_location">Tỉnh thành / Quốc gia:</label><input type="text" id="editLocationInput" class="form-control" data-i18n-ph="settings_location_ph" placeholder="Ví dụ: Hà Nội, VN"></div>
@@ -5170,7 +5170,7 @@
                         <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
                             <button type="button" id="btnEngineAftercode" onclick="changeEngine('aftercode')" style="flex:1; min-width: 150px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--primary); border-radius:12px; background:var(--bg-secondary); cursor:pointer; transition:0.2s;">
                                 <img src="https://i.ibb.co/7dLkRJKZ/ezgif-1f45d90f66f6c39a.png" width="38" style="border-radius:8px;">
-                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Aftercode </br>(Mặc định)</span>
+                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Aftercode </br><span data-i18n="settings_engine_default">(Mặc định)</span></span>
                             </button>
                             <button type="button" id="btnEngineTurbowarp" onclick="changeEngine('turbowarp')" style="flex:1; min-width: 150px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s;">
                                 <img src="https://i.ibb.co/b5s3qVDx/ezgif-1f45d90f66f6c39a.png" width="38" style="border-radius:8px;">
@@ -5185,11 +5185,11 @@
                     <!-- THẺ TRẠNG THÁI XÁC THỰC EMAIL -->
                     <div id="emailVerifyAccountCard" style="margin-bottom: 20px; padding: 18px 20px; border-radius: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                         <div>
-                            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Trạng thái Email</div>
+                            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="settings_email_status_label">Trạng thái Email</div>
                             <div id="emailVerifyStatusBadge" style="font-weight: 800; font-size: 1.05rem; margin-top: 4px;">Đang kiểm tra...</div>
                         </div>
                         <button type="button" id="btnAccountVerifyAction" class="btn btn-primary" onclick="openVerifyEmailModal()" style="display: none; border-radius: 20px; padding: 8px 18px; font-weight: 700;">
-                            <i class="fa-solid fa-circle-check"></i> Xác thực ngay (+50 WOW)
+                            <i class="fa-solid fa-circle-check"></i> <span data-i18n="settings_email_btn_verify">Xác thực ngay (+50 WOW)</span>
                         </button>
                     </div>
                     <div id="scratchLinkStatus" style="margin-bottom:25px; padding: 20px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
@@ -5229,115 +5229,115 @@
         <div style="background: #111; padding: 30px; border-radius: 12px 12px 0 0; color: #fff; display: flex; align-items: center; gap: 15px; border-bottom: 4px solid #f5b041;">
             <i class="fa-solid fa-shield-halved" style="font-size: 2.5rem; color: #f5b041;"></i>
             <div>
-                <h1 style="margin: 0; font-size: 1.8rem;">Bảng Điều Khiển Quản Trị</h1>
-                <p style="color: #bbb; font-size: 0.9rem; margin-top: 5px;">Hệ thống lưu vết mọi thao tác. Giữ không gian cộng đồng an toàn.</p>
+                <h1 style="margin: 0; font-size: 1.8rem;" data-i18n="admin_panel_title">Bảng Điều Khiển Quản Trị</h1>
+                <p style="color: #bbb; font-size: 0.9rem; margin-top: 5px;" data-i18n="admin_panel_sub">Hệ thống lưu vết mọi thao tác. Giữ không gian cộng đồng an toàn.</p>
             </div>
         </div>
         <div style="background: #f6f7f8; border: 1px solid #d9d9d9; border-top: none; border-radius: 0 0 12px 12px; padding: 25px; min-height: 400px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
-                <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> Danh sách Tố cáo chờ xử lý</h3>
-                <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> Làm mới</button>
+                <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> <span data-i18n="admin_reports_title">Danh sách Tố cáo chờ xử lý</span></h3>
+                <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="admin_btn_refresh">Làm mới</span></button>
             </div>
 
             <!-- KHỐI QUẢN LÝ KHUNG AVATAR -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-crop-simple" style="color: #3b82f6;"></i> Thêm Khung Avatar Mới (Cửa hàng WOW)
+                    <i class="fa-solid fa-crop-simple" style="color: #3b82f6;"></i> <span data-i18n="admin_add_frame_title">Thêm Khung Avatar Mới (Cửa hàng WOW)</span>
                 </h4>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <div class="form-group" style="flex: 1; min-width: 150px;">
-                        <label>Tên Khung:</label>
-                        <input type="text" id="adminFrameName" class="form-control" placeholder="VD: Rồng Lửa">
+                        <label data-i18n="admin_frame_name_label">Tên Khung:</label>
+                        <input type="text" id="adminFrameName" class="form-control" data-i18n-ph="admin_frame_name_ph" placeholder="VD: Rồng Lửa">
                     </div>
                     <div class="form-group" style="flex: 2; min-width: 200px;">
-                        <label>URL Hình Ảnh (Khuyên dùng ImgBB PNG trong suốt):</label>
+                        <label data-i18n="admin_frame_url_label">URL Hình Ảnh (Khuyên dùng ImgBB PNG trong suốt):</label>
                         <input type="text" id="adminFrameUrl" class="form-control" placeholder="https://i.ibb.co/...">
                     </div>
                     <div class="form-group" style="flex: 1; min-width: 100px;">
-                        <label>Giá WOW:</label>
+                        <label data-i18n="admin_frame_price_label">Giá WOW:</label>
                         <input type="number" id="adminFramePrice" class="form-control" placeholder="100">
                     </div>
                 </div>
                 <button id="btnAdminAddFrame" class="btn btn-primary" onclick="adminAddFrame()" style="background: #3b82f6; border: none; margin-top: 5px;">
-                    <i class="fa-solid fa-plus"></i> Phát hành Khung mới
+                    <i class="fa-solid fa-plus"></i> <span data-i18n="admin_frame_btn_submit">Phát hành Khung mới</span>
                 </button>
             </div>
 
             <!-- KHỐI QUẢN LÝ SỰ KIỆN TRANG CHỦ -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-trophy" style="color: #10b981;"></i> Quản lý Sự kiện / Game Jam (Trang chủ)
+                    <i class="fa-solid fa-trophy" style="color: #10b981;"></i> <span data-i18n="admin_jam_title">Quản lý Sự kiện / Game Jam (Trang chủ)</span>
                 </h4>
                 
                 <!-- Form thêm sự kiện mới -->
                 <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 20px;">
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <div class="form-group" style="flex: 1; min-width: 200px;">
-                            <label>Tên Sự kiện:</label>
-                            <input type="text" id="adminEvTitle" class="form-control" placeholder="Tên sự kiện...">
+                            <label data-i18n="admin_jam_name_label">Tên Sự kiện:</label>
+                            <input type="text" id="adminEvTitle" class="form-control" data-i18n-ph="admin_jam_name_ph" placeholder="Tên sự kiện...">
                         </div>
                         <div class="form-group" style="flex: 1; min-width: 200px;">
-                            <label>Tag tìm kiếm (VD: #gamejam2026):</label>
-                            <input type="text" id="adminEvTag" class="form-control" placeholder="Hệ thống sẽ lọc dự án có tag này">
+                            <label data-i18n="admin_jam_tag_label">Tag tìm kiếm (VD: #gamejam2026):</label>
+                            <input type="text" id="adminEvTag" class="form-control" data-i18n-ph="admin_jam_tag_ph" placeholder="Hệ thống sẽ lọc dự án có tag này">
                         </div>
                     </div>
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <div class="form-group" style="flex: 2; min-width: 200px;">
-                            <label>Link ảnh nền Banner (16:9):</label>
+                            <label data-i18n="admin_jam_bg_label">Link ảnh nền Banner (16:9):</label>
                             <input type="text" id="adminEvImg" class="form-control" placeholder="https://i.ibb.co/...">
                         </div>
                         <div class="form-group" style="flex: 1; min-width: 150px;">
-                            <label>Ngày kết thúc (Để đếm ngược):</label>
+                            <label data-i18n="admin_jam_end_label">Ngày kết thúc (Để đếm ngược):</label>
                             <input type="date" id="adminEvDate" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Mô tả ngắn:</label>
-                        <input type="text" id="adminEvDesc" class="form-control" placeholder="Ví dụ: Tham gia tạo game sinh tồn...">
+                        <label data-i18n="admin_jam_desc_label">Mô tả ngắn:</label>
+                        <input type="text" id="adminEvDesc" class="form-control" data-i18n-ph="admin_jam_desc_ph" placeholder="Ví dụ: Tham gia tạo game sinh tồn...">
                     </div>
                     <button class="btn btn-primary" onclick="adminAddEventItem()" style="background: #10b981; border: none;">
-                        <i class="fa-solid fa-plus"></i> Thêm vào danh sách chờ
+                        <i class="fa-solid fa-plus"></i> <span data-i18n="admin_jam_btn_add">Thêm vào danh sách chờ</span>
                     </button>
                 </div>
 
                 <!-- Danh sách sự kiện hiện tại -->
-                <label style="font-weight: bold; color: #475569; margin-bottom: 10px; display: block;">Danh sách đang hiển thị trên Trang chủ:</label>
+                <label style="font-weight: bold; color: #475569; margin-bottom: 10px; display: block;" data-i18n="admin_jam_current_label">Danh sách đang hiển thị trên Trang chủ:</label>
                 <div id="adminEventsPreviewList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; max-height: 300px; overflow-y: auto;">
                     <!-- Sẽ render bằng JS -->
                 </div>
 
                 <button id="btnAdminSaveEvents" class="btn btn-primary" onclick="adminSaveEventsToServer()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1.05rem;">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Cập nhật lên Trang chủ
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="admin_jam_btn_save">Lưu & Cập nhật lên Trang chủ</span>
                 </button>
             </div>
 
             <!-- KHỐI PHÁT THANH GLOBAL PING -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #855cd6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-tower-broadcast" style="color: #855cd6;"></i> Phát thanh Server (Global Ping)
+                    <i class="fa-solid fa-tower-broadcast" style="color: #855cd6;"></i> <span data-i18n="admin_ping_box_title">Phát thanh Server (Global Ping)</span>
                 </h4>
-                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Treo một thông báo khẩn cấp trên cùng màn hình của mọi người dùng. Bỏ trống nội dung và bấm nút để gỡ thông báo xuống.</p>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;" data-i18n="admin_ping_box_desc">Treo một thông báo khẩn cấp trên cùng màn hình của mọi người dùng. Bỏ trống nội dung và bấm nút để gỡ thông báo xuống.</p>
                 
                 <div class="form-group">
-                    <label>Nội dung thông báo (Bắt buộc):</label>
-                    <textarea id="adminPingMessage" class="form-control" rows="2" placeholder="Ví dụ: Nền tảng vừa cập nhật Chính sách Bảo mật..."></textarea>
+                    <label data-i18n="admin_ping_msg_label">Nội dung thông báo (Bắt buộc):</label>
+                    <textarea id="adminPingMessage" class="form-control" rows="2" data-i18n-ph="admin_ping_msg_ph" placeholder="Ví dụ: Nền tảng vừa cập nhật Chính sách Bảo mật..."></textarea>
                 </div>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <div class="form-group" style="flex: 1; min-width: 200px;">
-                        <label>Tên nút hành động (Tùy chọn):</label>
-                        <input type="text" id="adminPingBtnText" class="form-control" placeholder="Ví dụ: Xem chi tiết">
+                        <label data-i18n="admin_ping_btn_text_label">Tên nút hành động (Tùy chọn):</label>
+                        <input type="text" id="adminPingBtnText" class="form-control" data-i18n-ph="admin_ping_btn_text_ph" placeholder="Ví dụ: Xem chi tiết">
                     </div>
                     <div class="form-group" style="flex: 1; min-width: 200px;">
-                        <label>Link đính kèm (Tùy chọn):</label>
+                        <label data-i18n="admin_ping_link_label">Link đính kèm (Tùy chọn):</label>
                         <input type="text" id="adminPingBtnLink" class="form-control" placeholder="https://...">
                     </div>
                 </div>
                 <button id="btnSubmitGlobalPing" class="btn btn-primary" onclick="submitGlobalPing()" style="background: #855cd6; border: none; margin-top: 10px;">
-                    <i class="fa-solid fa-paper-plane"></i> Gắn thông báo toàn Server
+                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="admin_ping_btn_send">Gắn thông báo toàn Server</span>
                 </button>
             </div>
 
-            <div id="adminReportsList">Đang tải dữ liệu an toàn từ máy chủ...</div>
+            <div id="adminReportsList" data-i18n="admin_reports_loading">Đang tải dữ liệu an toàn từ máy chủ...</div>
         </div>
     </div>
 
@@ -5374,26 +5374,26 @@
     <!-- MODAL TẠO STATION -->
     <div class="modal-overlay" id="createStudioModal">
         <div class="modal" style="max-width:480px;">
-            <div class="modal-header"><span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> Tạo Station Mới</span><button class="btn-close" onclick="closeModal('createStudioModal')">&times;</button></div>
+            <div class="modal-header"><span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span data-i18n="station_modal_create_title">Tạo Station Mới</span></span><button class="btn-close" onclick="closeModal('createStudioModal')">&times;</button></div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Tên Station *:</label>
-                    <input type="text" id="newStdTitle" class="form-control" required placeholder="Nhập tên Station...">
+                    <label data-i18n="station_modal_name_label">Tên Station *:</label>
+                    <input type="text" id="newStdTitle" class="form-control" required data-i18n-ph="station_modal_name_ph" placeholder="Nhập tên Station...">
                 </div>
                 <div class="form-group">
-                    <label>Mã định danh (Không bắt buộc):</label>
-                    <input type="text" id="newStdCustomId" class="form-control" placeholder="Để trống hệ thống sẽ tạo tự động. VD: my-station-123">
-                    <div style="font-size:0.8rem; color:#888; margin-top:4px;">Chỉ dùng chữ không dấu, số, gạch ngang và gạch dưới.</div>
+                    <label data-i18n="station_modal_id_label">Mã định danh (Không bắt buộc):</label>
+                    <input type="text" id="newStdCustomId" class="form-control" data-i18n-ph="station_modal_id_ph" placeholder="Để trống hệ thống sẽ tạo tự động. VD: my-station-123">
+                    <div style="font-size:0.8rem; color:#888; margin-top:4px;" data-i18n="station_modal_id_hint">Chỉ dùng chữ không dấu, số, gạch ngang và gạch dưới.</div>
                 </div>
                 <div class="form-group">
-                    <label>Ảnh bìa Station (Tỉ lệ 16:9):</label>
+                    <label data-i18n="station_modal_thumb_label">Ảnh bìa Station (Tỉ lệ 16:9):</label>
                     <input type="file" id="newStdThumb" accept="image/*" class="form-control" style="padding: 8px;">
                 </div>
                 <div class="form-group">
-                    <label>Mô tả:</label>
-                    <textarea id="newStdDesc" class="form-control" rows="3" placeholder="Giới thiệu về Station của bạn..."></textarea>
+                    <label data-i18n="station_modal_desc_label">Mô tả:</label>
+                    <textarea id="newStdDesc" class="form-control" rows="3" data-i18n-ph="station_modal_desc_ph" placeholder="Giới thiệu về Station của bạn..."></textarea>
                 </div>
-                <button type="button" id="btnCreateStudioSubmit" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center;">Tạo Station</button>
+                <button type="button" id="btnCreateStudioSubmit" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center;" data-i18n="station_modal_btn_create">Tạo Station</button>
             </div>
         </div>
     </div>
@@ -5402,20 +5402,20 @@
     <div class="modal-overlay" id="addProjStudioModal">
         <div class="modal" style="max-width:580px; max-height:85vh; display:flex; flex-direction:column;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-folder-plus" style="color:var(--primary);"></i> Thêm Dự án vào Station</span>
+                <span><i class="fa-solid fa-folder-plus" style="color:var(--primary);"></i> <span data-i18n="station_modal_add_title">Thêm Dự án vào Station</span></span>
                 <button class="btn-close" onclick="closeModal('addProjStudioModal')">&times;</button>
             </div>
             <div class="modal-body" style="overflow-y:auto; padding:20px;">
-                <label style="font-size:0.88rem; font-weight:700; margin-bottom:6px; display:block;">Nhập link hoặc ID dự án bất kỳ:</label>
+                <label style="font-size:0.88rem; font-weight:700; margin-bottom:6px; display:block;" data-i18n="station_modal_input_label">Nhập link hoặc ID dự án bất kỳ:</label>
                 <div class="form-group" style="display:flex; gap:10px; margin-bottom:18px;">
-                    <input type="text" id="stdProjIdInput" class="form-control" placeholder="Dán link hoặc ID dự án vào đây..." style="flex:1;">
-                    <button type="button" class="btn btn-primary" onclick="submitAddProjectToStudio()"><i class="fa-solid fa-plus"></i> Thêm</button>
+                    <input type="text" id="stdProjIdInput" class="form-control" data-i18n-ph="station_modal_input_ph" placeholder="Dán link hoặc ID dự án vào đây..." style="flex:1;">
+                    <button type="button" class="btn btn-primary" onclick="submitAddProjectToStudio()"><i class="fa-solid fa-plus"></i> <span data-i18n="station_modal_btn_add">Thêm</span></button>
                 </div>
 
                 <div style="border-top:1px solid var(--border-color); padding-top:16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <label style="font-size:0.88rem; font-weight:700; margin:0;">
-                            <i class="fa-solid fa-box-archive" style="color:var(--primary);"></i> Chọn nhanh dự án công khai của bạn:
+                            <i class="fa-solid fa-box-archive" style="color:var(--primary);"></i> <span data-i18n="station_modal_quick_pick">Chọn nhanh dự án công khai của bạn:</span>
                         </label>
                         <span id="myProjCountInModal" style="font-size:0.8rem; color:var(--text-muted);"></span>
                     </div>
@@ -5431,12 +5431,12 @@
     <div class="modal-overlay" id="addCurrentProjToStationModal">
         <div class="modal" style="max-width:520px; max-height:85vh; display:flex; flex-direction:column;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> Thêm vào Station</span>
+                <span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span data-i18n="station_modal_target_title">Thêm vào Station</span></span>
                 <button class="btn-close" onclick="closeModal('addCurrentProjToStationModal')">&times;</button>
             </div>
             <div class="modal-body" style="overflow-y:auto; padding:20px;">
                 <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">
-                    Chọn Station bạn muốn thêm tác phẩm <b id="addToStationProjTitle" style="color:var(--text-title);"></b> vào:
+                    <span data-i18n="station_modal_target_guide">Chọn Station bạn muốn thêm tác phẩm vào:</span> <b id="addToStationProjTitle" style="color:var(--text-title);"></b>
                 </p>
                 <div id="userStationsForProjList" style="display:flex; flex-direction:column; gap:10px;">
                     <!-- Đổ danh sách Station qua JS -->
@@ -5448,11 +5448,11 @@
     <!-- MODAL MỜI THÀNH VIÊN VÀO STATION -->
     <div class="modal-overlay" id="inviteStudioModal">
         <div class="modal" style="max-width:400px;">
-            <div class="modal-header"><span><i class="fa-solid fa-user-plus"></i> Mời Thành viên</span><button class="btn-close" onclick="closeModal('inviteStudioModal')">&times;</button></div>
+            <div class="modal-header"><span><i class="fa-solid fa-user-plus"></i> <span data-i18n="station_modal_invite_title">Mời Thành viên</span></span><button class="btn-close" onclick="closeModal('inviteStudioModal')">&times;</button></div>
             <div class="modal-body">
                 <div class="form-group" style="display:flex; gap:10px;">
-                    <input type="text" id="stdInviteUsername" class="form-control" placeholder="Nhập username..." style="flex:1;">
-                    <button type="button" class="btn btn-primary" onclick="submitInviteToStudio()">Mời</button>
+                    <input type="text" id="stdInviteUsername" class="form-control" data-i18n-ph="station_modal_invite_ph" placeholder="Nhập username..." style="flex:1;">
+                    <button type="button" class="btn btn-primary" onclick="submitInviteToStudio()" data-i18n="station_modal_invite_btn">Mời</button>
                 </div>
             </div>
         </div>
@@ -5461,24 +5461,24 @@
     <!-- MODAL CÀI ĐẶT STATION (DÀNH CHO BAN ĐIỀU HÀNH) -->
     <div class="modal-overlay" id="studioSettingsModal">
         <div class="modal" style="max-width:520px;">
-            <div class="modal-header"><span><i class="fa-solid fa-gear" style="color:var(--primary);"></i> Cài đặt Station</span><button class="btn-close" onclick="closeModal('studioSettingsModal')">&times;</button></div>
+            <div class="modal-header"><span><i class="fa-solid fa-gear" style="color:var(--primary);"></i> <span data-i18n="station_modal_settings_title">Cài đặt Station</span></span><button class="btn-close" onclick="closeModal('studioSettingsModal')">&times;</button></div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Tên Station *:</label>
+                    <label data-i18n="station_modal_name_label">Tên Station *:</label>
                     <input type="text" id="editStdTitle" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Ảnh bìa Station mới (Tỉ lệ 16:9):</label>
+                    <label data-i18n="station_modal_settings_thumb">Ảnh bìa Station mới (Tỉ lệ 16:9):</label>
                     <div style="display:flex; gap:15px; align-items:center; margin-bottom: 8px;">
                         <img id="stdEditThumbPreview" src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 150px; height: 84px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); background:#000;">
                         <input type="file" id="editStdThumb" accept="image/*" class="form-control" style="padding: 8px;" onchange="if(this.files[0]) document.getElementById('stdEditThumbPreview').src = URL.createObjectURL(this.files[0])">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Mô tả Station:</label>
+                    <label data-i18n="station_modal_settings_desc">Mô tả Station:</label>
                     <textarea id="editStdDesc" class="form-control" rows="4"></textarea>
                 </div>
-                <button type="button" id="btnSaveStdSettings" class="btn btn-primary" onclick="saveStudioSettings()" style="width:100%; justify-content:center; padding: 12px; font-weight: bold;">Lưu Cài đặt</button>
+                <button type="button" id="btnSaveStdSettings" class="btn btn-primary" onclick="saveStudioSettings()" style="width:100%; justify-content:center; padding: 12px; font-weight: bold;" data-i18n="station_modal_settings_save">Lưu Cài đặt</button>
             </div>
         </div>
     </div>
@@ -5514,23 +5514,23 @@
     <div class="modal-overlay" id="pollModal">
         <div class="modal" style="max-width:450px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-square-poll-vertical" style="color:#ea580c;"></i> Tạo Bình Chọn</span>
+                <span><i class="fa-solid fa-square-poll-vertical" style="color:#ea580c;"></i> <span data-i18n="poll_modal_title">Tạo Bình Chọn</span></span>
                 <button class="btn-close" onclick="closeModal('pollModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Câu hỏi bình chọn:</label>
-                    <input type="text" id="pollQuestion" class="form-control" placeholder="Ví dụ: Bạn thích thể loại game gì nhất?" required>
+                    <label data-i18n="poll_modal_q_label">Câu hỏi bình chọn:</label>
+                    <input type="text" id="pollQuestion" class="form-control" data-i18n-ph="poll_modal_q_ph" placeholder="Ví dụ: Bạn thích thể loại game gì nhất?" required>
                 </div>
-                <label>Các lựa chọn:</label>
+                <label data-i18n="poll_modal_opts_label">Các lựa chọn:</label>
                 <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
                     <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 1..." required>
                     <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 2..." required>
                 </div>
-                <button class="btn" type="button" style="width:100%; border:1px dashed var(--border-color); background:transparent; margin-bottom: 20px;" onclick="addPollOptionUI()">
+                <button class="btn" type="button" style="width:100%; border:1px dashed var(--border-color); background:transparent; margin-bottom: 20px;" onclick="addPollOptionUI()" data-i18n="poll_modal_btn_add">
                     <i class="fa-solid fa-plus"></i> Thêm lựa chọn
                 </button>
-                <button class="btn btn-primary" type="button" style="width:100%; justify-content:center; background:#ea580c;" onclick="submitPollChat()">
+                <button class="btn btn-primary" type="button" style="width:100%; justify-content:center; background:#ea580c;" onclick="submitPollChat()" data-i18n="poll_modal_btn_submit">
                     <i class="fa-solid fa-paper-plane"></i> Gửi Bình Chọn
                 </button>
             </div>
@@ -5588,7 +5588,7 @@
         <div class="modal asset-lightbox-modal">
             <div class="modal-header">
                 <span id="quickViewTitle" style="font-weight:800; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-eye" style="color:var(--primary);"></i> Xem trước tài nguyên
+                    <i class="fa-solid fa-eye" style="color:var(--primary);"></i> <span data-i18n="assets_qv_title">Xem trước tài nguyên</span>
                 </span>
                 <button class="btn-close" onclick="closeQuickViewModal()">&times;</button>
             </div>
@@ -5602,7 +5602,7 @@
                     <div>
                         <h3 id="quickViewHeading" style="margin:0 0 4px 0; font-size:1.25rem; color:var(--text-title);">Tên tài nguyên</h3>
                         <div style="font-size:0.85rem; color:var(--text-muted);">
-                            Bởi <a href="#" id="quickViewAuthorLink" style="color:var(--primary); font-weight:700; text-decoration:none;">@author</a> • Định dạng: <b id="quickViewExt">PNG</b> • Dung lượng: <span id="quickViewSize">0 MB</span>
+                            <span data-i18n="assets_qv_by">Bởi</span> <a href="#" id="quickViewAuthorLink" style="color:var(--primary); font-weight:700; text-decoration:none;">@author</a> • <span data-i18n="assets_qv_format">Định dạng:</span> <b id="quickViewExt">PNG</b> • <span data-i18n="assets_qv_size">Dung lượng:</span> <span id="quickViewSize">0 MB</span>
                         </div>
                     </div>
                     <span id="quickViewScoreBadge" style="font-size:0.95rem; font-weight:800; background:var(--bg-secondary); padding:4px 12px; border-radius:12px; border:1px solid var(--border-color);">0 vote</span>
@@ -5612,12 +5612,12 @@
 
                 <div style="display:flex; gap:10px; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;">
                     <a id="quickViewDownloadBtn" href="#" target="_blank" download class="btn btn-primary" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;">
-                        <i class="fa-solid fa-download"></i> Tải về máy
+                        <i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Tải về máy</span>
                     </a>
                     <button type="button" class="btn" id="quickViewCopyLinkBtn" style="flex:1; justify-content:center; padding:11px; font-weight:700; border-radius:12px;" onclick="copyCurrentAssetLink()">
-                        <i class="fa-solid fa-link"></i> Chép link
+                        <i class="fa-solid fa-link"></i> <span data-i18n="assets_qv_btn_copy">Chép link</span>
                     </button>
-                    <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:#f59e0b;" onclick="openReportCurrentAsset()" title="Báo cáo">
+                    <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:#f59e0b;" onclick="openReportCurrentAsset()" data-i18n-title="chat_action_report" title="Báo cáo">
                         <i class="fa-solid fa-flag"></i>
                     </button>
                 </div>
@@ -5640,9 +5640,9 @@
                 </div>
 
                 <div class="auth-showcase-footer">
-                    <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" class="auth-footer-link">Điều khoản dịch vụ</a>
+                    <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" class="auth-footer-link" data-i18n="settings_tos">Điều khoản dịch vụ</a>
                     <span class="auth-footer-dot">•</span>
-                    <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" class="auth-footer-link">Chính sách bảo mật</a>
+                    <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" class="auth-footer-link" data-i18n="settings_privacy">Chính sách bảo mật</a>
                 </div>
             </div>
 
@@ -5651,92 +5651,92 @@
                 <div class="auth-panel-topbar">
                     <div class="auth-nav-tabs">
                         <button type="button" class="auth-nav-tab-btn active" id="authTabBtnLogin" onclick="switchAuthTab('login')">
-                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Đăng nhập</span>
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="nav_login">Đăng nhập</span>
                         </button>
                         <button type="button" class="auth-nav-tab-btn" id="authTabBtnRegister" onclick="switchAuthTab('register')">
-                            <i class="fa-solid fa-user-plus"></i> <span>Đăng ký</span>
+                            <i class="fa-solid fa-user-plus"></i> <span data-i18n="auth_login_reg_now">Đăng ký ngay</span>
                         </button>
                     </div>
 
-                    <button class="btn-close" onclick="closeModal('authModal')" title="Đóng">&times;</button>
+                    <button class="btn-close" onclick="closeModal('authModal')" title="&times;">&times;</button>
                 </div>
 
                 <!-- PANE 1: FORM ĐĂNG NHẬP (2 Ô DUY NHẤT) -->
                 <div id="authPaneLogin">
                     <div class="auth-form-header">
-                        <div class="auth-form-title">Chào mừng trở lại!</div>
-                        <div class="auth-form-subtitle">Đăng nhập tài khoản để tiếp tục sáng tạo.</div>
+                        <div class="auth-form-title" data-i18n="auth_login_title">Chào mừng trở lại!</div>
+                        <div class="auth-form-subtitle" data-i18n="auth_login_subtitle">Đăng nhập tài khoản để tiếp tục sáng tạo.</div>
                     </div>
 
                     <form onsubmit="handleLoginNative(event)" id="loginFormDOM">
                         <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tài khoản hoặc Email *:</label>
+                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_login_id_label">Tài khoản hoặc Email *:</label>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-user auth-input-icon"></i>
-                                <input type="text" id="loginId" class="auth-control-input" required placeholder="Username hoặc email..." autocomplete="username">
+                                <input type="text" id="loginId" class="auth-control-input" required data-i18n-ph="auth_login_id_ph" placeholder="Username hoặc email..." autocomplete="username">
                             </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom:16px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Mật khẩu *:</label>
+                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_login_pw_label">Mật khẩu *:</label>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-lock auth-input-icon"></i>
-                                <input type="password" id="loginPw" class="auth-control-input" required placeholder="Nhập mật khẩu..." autocomplete="current-password">
-                                <button type="button" class="auth-pwd-toggle" onclick="toggleLoginPassword()" title="Hiện/Ẩn mật khẩu">
+                                <input type="password" id="loginPw" class="auth-control-input" required data-i18n-ph="auth_login_pw_ph" placeholder="Nhập mật khẩu..." autocomplete="current-password">
+                                <button type="button" class="auth-pwd-toggle" onclick="toggleLoginPassword()" title="eye">
                                     <i class="fa-solid fa-eye" id="loginEyeIcon"></i>
                                 </button>
                             </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary auth-submit-btn" id="btnLoginSubmit">
-                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Đăng nhập</span>
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="auth_login_btn">Đăng nhập</span>
                         </button>
                     </form>
 
                     <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:16px;">
-                        <span>Chưa có tài khoản?</span> 
-                        <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Đăng ký ngay</a>
+                        <span data-i18n="auth_login_no_acc">Chưa có tài khoản?</span> 
+                        <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;" data-i18n="auth_login_reg_now">Đăng ký ngay</a>
                     </div>
                 </div>
 
                 <!-- PANE 2: FORM ĐĂNG KÝ -->
                 <div id="authPaneRegister" style="display:none;">
                     <div class="auth-form-header">
-                        <div class="auth-form-title">Tạo tài khoản mới</div>
-                        <div class="auth-form-subtitle">Gia nhập cộng đồng lập trình Scratch & ACGN.</div>
+                        <div class="auth-form-title" data-i18n="auth_reg_title">Tạo tài khoản mới</div>
+                        <div class="auth-form-subtitle" data-i18n="auth_reg_subtitle">Gia nhập cộng đồng lập trình Scratch & ACGN.</div>
                     </div>
 
                     <form onsubmit="handleRegisterDirect(event)" id="regForm">
                         <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tên đăng nhập (Username) *:</label>
+                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_reg_user_label">Tên đăng nhập (Username) *:</label>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-at auth-input-icon"></i>
-                                <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" placeholder="username" title="Chỉ dùng chữ, số, gạch dưới (_) và gạch ngang (-)">
+                                <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" data-i18n-ph="auth_reg_user_ph" placeholder="username">
                             </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Tên hiển thị tự do *:</label>
+                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_reg_display_label">Tên hiển thị tự do *:</label>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-id-card auth-input-icon"></i>
-                                <input type="text" id="regDisplayName" class="auth-control-input" required maxlength="40" placeholder="Tên hiển thị trên hồ sơ">
+                                <input type="text" id="regDisplayName" class="auth-control-input" required maxlength="40" data-i18n-ph="auth_reg_display_ph" placeholder="Tên hiển thị trên hồ sơ">
                             </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Địa chỉ Email *:</label>
+                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_reg_email_label">Địa chỉ Email *:</label>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-envelope auth-input-icon"></i>
-                                <input type="email" id="regEmail" class="auth-control-input" required placeholder="example@gmail.com">
+                                <input type="email" id="regEmail" class="auth-control-input" required data-i18n-ph="auth_reg_email_ph" placeholder="example@gmail.com">
                             </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;">Mật khẩu *:</label>
+                            <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:6px;" data-i18n="auth_reg_pw_label">Mật khẩu *:</label>
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-lock auth-input-icon"></i>
-                                <input type="password" id="regPw" class="auth-control-input" required minlength="6" placeholder="Tối thiểu 6 ký tự">
-                                <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="Hiện/Ẩn mật khẩu">
+                                <input type="password" id="regPw" class="auth-control-input" required minlength="6" data-i18n-ph="auth_reg_pw_ph" placeholder="Tối thiểu 6 ký tự">
+                                <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="eye">
                                     <i class="fa-solid fa-eye" id="regEyeIcon"></i>
                                 </button>
                             </div>
@@ -5745,23 +5745,23 @@
                         <!-- Ô Mã Giới Thiệu tinh gọn (Tự động loại bỏ ký tự @) -->
                         <div class="form-group" style="margin-bottom:14px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                                <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); margin:0;">Mã giới thiệu (Tùy chọn):</label>
+                                <label style="font-size:0.83rem; font-weight:700; color:var(--text-title); margin:0;" data-i18n="auth_reg_referral_label">Mã giới thiệu (Tùy chọn):</label>
                                 <span class="auth-referral-mini-tag"><i class="fa-solid fa-gift"></i> +50 WOW</span>
                             </div>
                             <div class="auth-input-group" style="margin-bottom:0;">
                                 <i class="fa-solid fa-ticket auth-input-icon"></i>
-                                <input type="text" id="regReferralCode" class="auth-control-input" placeholder="Nhập username (không cần dấu @)..." oninput="this.value = this.value.replace(/@/g, '').trim()">
+                                <input type="text" id="regReferralCode" class="auth-control-input" data-i18n-ph="auth_reg_referral_ph" placeholder="Nhập username (không cần dấu @)..." oninput="this.value = this.value.replace(/@/g, '').trim()">
                             </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary auth-submit-btn" id="btnRegisterDirect">
-                            <i class="fa-solid fa-user-plus"></i> <span>Đăng ký tài khoản</span>
+                            <i class="fa-solid fa-user-plus"></i> <span data-i18n="auth_reg_btn_submit">Đăng ký tài khoản</span>
                         </button>
                     </form>
 
                     <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:16px;">
-                        <span>Đã có tài khoản?</span> 
-                        <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;">Đăng nhập ngay</a>
+                        <span data-i18n="auth_reg_has_acc">Đã có tài khoản?</span> 
+                        <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;" data-i18n="auth_reg_login_now">Đăng nhập ngay</a>
                     </div>
                 </div>
 
@@ -5776,15 +5776,15 @@
                 <div class="auth-header-badge">
                     <div class="auth-header-icon" style="color: #ea580c; background: rgba(234, 88, 12, 0.12);"><i class="fa-solid fa-shield-halved"></i></div>
                     <div>
-                        <div style="font-size:1.1rem; font-weight:800; color:var(--text-title);">Xác thực Email</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Bảo vệ tài khoản & mở khóa toàn bộ tính năng</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:var(--text-title);" data-i18n="auth_verify_title">Xác thực Email</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);" data-i18n="auth_verify_subtitle">Bảo vệ tài khoản & mở khóa toàn bộ tính năng</div>
                     </div>
                 </div>
                 <button class="btn-close" onclick="closeModal('verifyEmailModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 22px;">
                 <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.45; text-align:center; margin-bottom:15px;">
-                    Mã xác nhận 6 số đã được gửi tới địa chỉ:<br>
+                    <span data-i18n="auth_verify_sent_to">Mã xác nhận 6 số đã được gửi tới địa chỉ:</span><br>
                     <b id="verifyModalEmailText" style="color:var(--primary); font-size:0.95rem;"></b>
                 </p>
 
@@ -5794,26 +5794,26 @@
 
                 <div class="otp-sub-actions" style="margin-top: 15px;">
                     <button type="button" class="btn-link-action" onclick="toggleChangeEmailForm()">
-                        <i class="fa-solid fa-pen-to-square"></i> <span id="toggleChangeEmailBtnText">Đổi sang email khác</span>
+                        <i class="fa-solid fa-pen-to-square"></i> <span id="toggleChangeEmailBtnText" data-i18n="auth_verify_toggle_change">Đổi sang email khác</span>
                     </button>
                     <button type="button" class="btn-link-action" id="btnModalResendOtp" onclick="resendVerificationOtp(this)">
-                        <i class="fa-solid fa-rotate-right"></i> <span>Gửi lại mã</span> <span id="modalResendCountdown"></span>
+                        <i class="fa-solid fa-rotate-right"></i> <span data-i18n="auth_verify_btn_resend">Gửi lại mã</span> <span id="modalResendCountdown"></span>
                     </button>
                 </div>
 
                 <!-- KHUNG ĐỔI EMAIL PHỤ (ẨN MẶC ĐỊNH) -->
                 <div id="changeEmailSubForm" style="display:none; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-top:14px;">
-                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Nhập email mới:</label>
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;" data-i18n="auth_verify_new_email_label">Nhập email mới:</label>
                     <div style="display:flex; gap:8px;">
-                        <input type="email" id="newEmailInput" class="form-control" placeholder="newemail@gmail.com" style="font-size:0.88rem; padding:8px 10px;">
-                        <button type="button" class="btn btn-primary" id="btnSubmitChangeEmail" onclick="handleChangeEmailSubmit()" style="font-size:0.82rem; padding:8px 14px; white-space:nowrap;">
+                        <input type="email" id="newEmailInput" class="form-control" data-i18n-ph="auth_verify_new_email_ph" placeholder="newemail@gmail.com" style="font-size:0.88rem; padding:8px 10px;">
+                        <button type="button" class="btn btn-primary" id="btnSubmitChangeEmail" onclick="handleChangeEmailSubmit()" style="font-size:0.82rem; padding:8px 14px; white-space:nowrap;" data-i18n="auth_verify_btn_save_new">
                             Lưu & Gửi mã
                         </button>
                     </div>
                 </div>
 
                 <button type="button" onclick="handleVerifyEmailOtp()" class="btn btn-primary" id="btnSubmitVerifyOtp" style="width:100%; justify-content:center; padding:12px; font-size:1rem; border-radius:12px; font-weight:800; margin-top:18px;">
-                    <i class="fa-solid fa-circle-check"></i> <span>Xác nhận & Nhận 50 WOW</span>
+                    <i class="fa-solid fa-circle-check"></i> <span data-i18n="auth_verify_btn_confirm">Xác nhận & Nhận 50 WOW</span>
                 </button>
             </div>
         </div>
@@ -5840,11 +5840,11 @@
         <div class="modal daily-modal-box" style="max-width: 580px; text-align: center;">
             <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 16px 24px;">
                 <span style="font-size: 1.1rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
-                    <span class="wow-icon"></span> Phần thưởng Điểm danh
+                    <span class="wow-icon"></span> <span data-i18n="daily_reward_title">Phần thưởng Điểm danh</span>
                 </span>
                 <div style="display:flex; gap:10px; align-items:center;">
                     <button class="btn" style="padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; font-weight: bold;" onclick="openAboutWOWModal()">
-                        <i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> WOW là gì?
+                        <i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> <span data-i18n="daily_btn_about_wow">WOW là gì?</span>
                     </button>
                     <button class="btn-close" onclick="closeModal('dailyRewardModal')">&times;</button>
                 </div>
@@ -5853,7 +5853,7 @@
             <div class="modal-body" style="padding: 24px;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 5px;">
                     <div style="text-align:left;">
-                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Chuỗi chuyên cần</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" data-i18n="daily_streak_label">Chuỗi chuyên cần</span>
                         <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> Ngày liên tiếp</h3>
                     </div>
                     <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-weight: 800; color:var(--text-title); font-size: 0.95rem;">
@@ -5869,11 +5869,11 @@
                     <!-- Render bằng JS -->
                 </div>
 
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;" data-i18n="daily_desc">
                     Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.
                 </p>
 
-                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
+                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;" data-i18n="daily_btn_claim">
                     Nhận thưởng hôm nay
                 </button>
             </div>
@@ -5885,7 +5885,7 @@
         <div class="modal" style="max-width: 420px; border-radius: 24px; text-align: center; background: radial-gradient(circle at top, #1e1b4b 0%, #09061a 100%); color: #fff; border: 2px solid #a855f7; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
             <div class="modal-header" style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); justify-content: center; position: relative;">
                 <span style="font-size: 1.15rem; font-weight: 900; color: #f472b6;">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> XÉ TÚI MÙ VŨ TRỤ
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="blindbag_modal_header">XÉ TÚI MÙ VŨ TRỤ</span>
                 </span>
                 <button class="btn-close" onclick="closeModal('blindBagModal')" style="position: absolute; right: 15px; color: #fff;">&times;</button>
             </div>
@@ -5893,8 +5893,8 @@
                 <div id="gachaBagIconWrap">
                     <i class="fa-solid fa-gift bag-icon-anim" style="font-size: 4rem;"></i>
                 </div>
-                <h3 id="gachaStatusTitle" style="color: #fff !important; font-size: 1.25rem; margin: 10px 0 4px 0;">Đang xé túi mù...</h3>
-                <p id="gachaSubText" style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">Sức mạnh năng lượng WOW đang dao động từ 1 - 20</p>
+                <h3 id="gachaStatusTitle" style="color: #fff !important; font-size: 1.25rem; margin: 10px 0 4px 0;" data-i18n="blindbag_opening_title">Đang xé túi mù...</h3>
+                <p id="gachaSubText" style="color: #cbd5e1; font-size: 0.85rem; margin: 0;" data-i18n="blindbag_opening_sub">Sức mạnh năng lượng WOW đang dao động từ 1 - 20</p>
 
                 <div class="gacha-roller-box">
                     <div class="gacha-number-ticker">
@@ -5903,11 +5903,11 @@
                     </div>
                 </div>
 
-                <div id="gachaFinalMsg" style="display: none; font-size: 0.95rem; font-weight: 800; color: #10b981; margin-bottom: 16px;">
+                <div id="gachaFinalMsg" style="display: none; font-size: 0.95rem; font-weight: 800; color: #10b981; margin-bottom: 16px;" data-i18n="blindbag_final_msg">
                     🎉 Năng lượng đã được nạp thẳng vào tài khoản của bạn!
                 </div>
 
-                <button type="button" class="btn btn-primary" id="btnGachaDone" onclick="closeModal('blindBagModal')" style="display: none; width: 100%; justify-content: center; padding: 12px; border-radius: 14px; font-weight: 800;">
+                <button type="button" class="btn btn-primary" id="btnGachaDone" onclick="closeModal('blindBagModal')" style="display: none; width: 100%; justify-content: center; padding: 12px; border-radius: 14px; font-weight: 800;" data-i18n="blindbag_btn_done">
                     Tuyệt vời!
                 </button>
             </div>
@@ -5918,7 +5918,7 @@
     <div class="modal-overlay" id="aboutWOWModal">
         <div class="modal" style="max-width: 460px;">
             <div class="modal-header">
-                <span><span class="wow-icon"></span> Giới thiệu về hệ thống WOW</span>
+                <span><span class="wow-icon"></span> <span data-i18n="about_wow_title">Giới thiệu về hệ thống WOW</span></span>
                 <button class="btn-close" onclick="closeModal('aboutWOWModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 22px; line-height: 1.6;">
@@ -5926,18 +5926,18 @@
                     <div style="width:68px; height:68px; display:inline-flex; align-items:center; justify-content:center; margin-bottom: 10px;">
                         <span class="wow-icon" style="font-size: 4rem;"></span>
                     </div>
-                    <h3 style="margin:0; font-size:1.3rem;">Điểm Sáng Tạo & Danh Dự</h3>
+                    <h3 style="margin:0; font-size:1.3rem;" data-i18n="about_wow_subtitle">Điểm Sáng Tạo & Danh Dự</h3>
                 </div>
                 
-                <p style="color:var(--text-main); font-size:0.95rem; margin-bottom: 12px;">
+                <p style="color:var(--text-main); font-size:0.95rem; margin-bottom: 12px;" data-i18n="about_wow_desc">
                     <b>WOW</b> là điểm năng lượng vinh danh nội bộ dành riêng cho các lập trình viên và nhà sáng tạo trên <b>DANVworkshop</b>.
                 </p>
                 <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; margin-bottom: 15px; font-size: 0.9rem;">
-                    <div style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Cách nhận:</b> Điểm danh chuyên cần mỗi ngày tại trang chủ hoặc nhận ủng hộ từ người dùng khác.</div>
-                    <div style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Cửa hàng:</b> Dùng WOW để đổi các Khung đại diện phiên bản giới hạn tại mục Cài đặt.</div>
-                    <div><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Lan tỏa:</b> Trực tiếp gửi tặng WOW cho các tác phẩm xuất sắc để tri ân người sáng tạo.</div>
+                    <div style="margin-bottom: 8px;" data-i18n="about_wow_how_get"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Cách nhận:</b> Điểm danh chuyên cần mỗi ngày tại trang chủ hoặc nhận ủng hộ từ người dùng khác.</div>
+                    <div style="margin-bottom: 8px;" data-i18n="about_wow_store"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Cửa hàng:</b> Dùng WOW để đổi các Khung đại diện phiên bản giới hạn tại mục Cài đặt.</div>
+                    <div data-i18n="about_wow_spread"><i class="fa-solid fa-check" style="color:var(--primary);"></i> <b>Lan tỏa:</b> Trực tiếp gửi tặng WOW cho các tác phẩm xuất sắc để tri ân người sáng tạo.</div>
                 </div>
-                <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 10px;" onclick="closeModal('aboutWOWModal')">Đã hiểu</button>
+                <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 10px;" onclick="closeModal('aboutWOWModal')" data-i18n="about_wow_btn_close">Đã hiểu</button>
             </div>
         </div>
     </div>
@@ -5947,7 +5947,7 @@
         <div class="modal tip-modal-box" id="tipModalCardBox" style="max-width: 460px;">
             <div class="modal-header" style="background: transparent; border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
                 <span style="font-size: 1.15rem; font-weight: 900; display: flex; align-items: center; gap: 8px;">
-                    <span class="wow-icon fa-beat"></span> <span>Tiếp Năng Lượng Cho Tác Giả</span>
+                    <span class="wow-icon fa-beat"></span> <span data-i18n="tip_modal_title">Tiếp Năng Lượng Cho Tác Giả</span>
                 </span>
                 <button class="btn-close" onclick="closeModal('tipWOWModal')">&times;</button>
             </div>
@@ -5956,8 +5956,8 @@
                 <!-- KHỐI HUD SỐ DƯ SIÊU CHẤT -->
                 <div class="tip-balance-hud">
                     <div style="position: relative; z-index: 2;">
-                        <span style="font-size: 0.78rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; display:block;">Nguồn năng lượng sẵn có</span>
-                        <span style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Số dư ví của bạn:</span>
+                        <span style="font-size: 0.78rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; display:block;" data-i18n="tip_avail_energy">Nguồn năng lượng sẵn có</span>
+                        <span style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);" data-i18n="tip_my_balance">Số dư ví của bạn:</span>
                     </div>
                     <div class="tip-balance-val-wrap">
                         <span class="wow-icon" style="font-size: 1.8rem;"></span>
@@ -5966,30 +5966,30 @@
                 </div>
 
                 <label style="font-weight: 800; font-size: 0.9rem; display: block; margin-top: 5px; color: var(--text-title);">
-                    <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 5px;"></i> Chọn mốc kích hoạt năng lượng:
+                    <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 5px;"></i> <span data-i18n="tip_select_tier">Chọn mốc kích hoạt năng lượng:</span>
                 </label>
                 
                 <div class="tip-chip-group">
                     <div class="tip-chip active tier-1" onclick="selectTipChip(10, this, 'tier-1')">
-                        <span class="chip-label">Đồng</span>
+                        <span class="chip-label" data-i18n="tip_tier_bronze">Đồng</span>
                         <div class="chip-val"><span class="wow-icon"></span> 10</div>
                     </div>
                     <div class="tip-chip tier-2" onclick="selectTipChip(50, this, 'tier-2')">
-                        <span class="chip-label">Bạc</span>
+                        <span class="chip-label" data-i18n="tip_tier_silver">Bạc</span>
                         <div class="chip-val"><span class="wow-icon"></span> 50</div>
                     </div>
                     <div class="tip-chip tier-3" onclick="selectTipChip(100, this, 'tier-3')">
-                        <span class="chip-label">Vàng</span>
+                        <span class="chip-label" data-i18n="tip_tier_gold">Vàng</span>
                         <div class="chip-val"><span class="wow-icon"></span> 100</div>
                     </div>
                     <div class="tip-chip tier-4" onclick="selectTipChip(200, this, 'tier-4')">
-                        <span class="chip-label">Kim Cương</span>
+                        <span class="chip-label" data-i18n="tip_tier_diamond">Kim Cương</span>
                         <div class="chip-val"><span class="wow-icon"></span> 200</div>
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label style="font-size:0.85rem; font-weight: 700;">Hoặc nhập số điểm tùy biến:</label>
+                    <label style="font-size:0.85rem; font-weight: 700;" data-i18n="tip_custom_label">Hoặc nhập số điểm tùy biến:</label>
                     <div style="position: relative; display: flex; align-items: center;">
                         <span class="wow-icon" style="position: absolute; left: 14px; font-size: 1.3rem; z-index: 2;"></span>
                         <input type="number" id="tipCustomAmount" class="form-control" value="10" min="1" max="10000" style="padding-left: 45px; font-weight: 800; font-size: 1.1rem; color: #ea580c;" oninput="handleCustomTipInput(this.value)">
@@ -5997,8 +5997,8 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <label style="font-size:0.85rem; font-weight: 700;">Lời nhắn gửi tác giả (tùy chọn):</label>
-                    <textarea id="tipCustomMessage" class="form-control" rows="2" placeholder="Ví dụ: Đỉnh nóc kịch trần! Tặng bạn năng lượng sáng tạo..."></textarea>
+                    <label style="font-size:0.85rem; font-weight: 700;" data-i18n="tip_msg_label">Lời nhắn gửi tác giả (tùy chọn):</label>
+                    <textarea id="tipCustomMessage" class="form-control" rows="2" data-i18n-ph="tip_msg_ph" placeholder="Ví dụ: Đỉnh nóc kịch trần! Tặng bạn năng lượng sáng tạo..."></textarea>
                 </div>
 
                 <!-- NÚT NHẤN GIỮ NĂNG LƯỢNG RỰC RỠ -->
@@ -6006,11 +6006,11 @@
                     <div class="hold-progress-fill" id="holdProgressFill"></div>
                     <div class="btn-inner-content" id="holdBtnTextContent">
                         <i class="fa-solid fa-fire fa-bounce"></i>
-                        <span>NHẤN GIỮ ĐỂ TRUYỀN WOW</span>
+                        <span data-i18n="tip_btn_hold">NHẤN GIỮ ĐỂ TRUYỀN WOW</span>
                     </div>
                 </button>
                 <div style="text-align: center; font-size: 0.76rem; color: var(--text-muted); margin-top: 8px;">
-                    <i class="fa-solid fa-fingerprint"></i> Giữ chuột hoặc ngón tay khoảng 1.2 giây để phóng năng lượng
+                    <i class="fa-solid fa-fingerprint"></i> <span data-i18n="tip_hold_hint">Giữ chuột hoặc ngón tay khoảng 1.2 giây để phóng năng lượng</span>
                 </div>
             </div>
         </div>
@@ -6020,7 +6020,7 @@
     <div class="modal-overlay" id="shareModal">
         <div class="modal" style="max-width:400px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-share-nodes"></i> Chia sẻ dự án</span>
+                <span><i class="fa-solid fa-share-nodes"></i> <span data-i18n="share_title">Chia sẻ dự án</span></span>
                 <button class="btn-close" onclick="closeModal('shareModal')">&times;</button>
             </div>
             <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px;">
@@ -6035,10 +6035,10 @@
                 </a>
                 <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 5px 0;">
                 <button id="btnShareGlobalChat" class="btn btn-primary" style="justify-content: flex-start; padding: 12px; font-size: 0.95rem;" onclick="shareToGlobalChat()">
-                    <i class="fa-solid fa-earth-americas" style="font-size: 1.2rem; width: 25px;"></i> Kênh Giao lưu toàn cầu
+                    <i class="fa-solid fa-earth-americas" style="font-size: 1.2rem; width: 25px;"></i> <span data-i18n="share_global_chat">Kênh Giao lưu toàn cầu</span>
                 </button>
                 <button class="btn" style="justify-content: center; padding: 12px; margin-top: 5px;" onclick="copyProjLink()">
-                    <i class="fa-solid fa-link"></i> Sao chép liên kết
+                    <i class="fa-solid fa-link"></i> <span data-i18n="share_copy_link">Sao chép liên kết</span>
                 </button>
             </div>
         </div>
@@ -6049,18 +6049,18 @@
         <div class="modal" style="max-width:440px;">
             <div class="modal-header">
                 <span style="font-weight:800; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-bookmark" style="color:var(--primary);"></i> <span>Lưu vào Bộ sưu tập</span>
+                    <i class="fa-solid fa-bookmark" style="color:var(--primary);"></i> <span data-i18n="col_save_title">Lưu vào Bộ sưu tập</span>
                 </span>
                 <button class="btn-close" onclick="closeModal('saveToPlaylistModal')">&times;</button>
             </div>
             <div class="modal-body" style="max-height: 420px; overflow-y: auto;">
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;" data-i18n="col_save_desc">
                     Chọn các Bộ sưu tập bạn muốn lưu tác phẩm này vào:
                 </p>
                 <div id="playlistOptionsList" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 16px;">
                     <!-- Render từ JS -->
                 </div>
-                <button class="btn" style="width:100%; border: 1.5px dashed var(--primary); color: var(--primary); font-weight: bold; background: var(--bg-secondary); padding: 10px; border-radius: 12px;" onclick="closeModal('saveToPlaylistModal'); openModal('createPlaylistModal')">
+                <button class="btn" style="width:100%; border: 1.5px dashed var(--primary); color: var(--primary); font-weight: bold; background: var(--bg-secondary); padding: 10px; border-radius: 12px;" onclick="closeModal('saveToPlaylistModal'); openModal('createPlaylistModal')" data-i18n="col_save_btn_new">
                     <i class="fa-solid fa-plus"></i> Tạo bộ sưu tập mới
                 </button>
             </div>
@@ -6072,24 +6072,24 @@
         <div class="modal" style="max-width:420px;">
             <div class="modal-header">
                 <span style="font-weight:800; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-folder-plus" style="color:var(--primary);"></i> <span>Tạo Bộ sưu tập Mới</span>
+                    <i class="fa-solid fa-folder-plus" style="color:var(--primary);"></i> <span data-i18n="col_create_title">Tạo Bộ sưu tập Mới</span>
                 </span>
                 <button class="btn-close" onclick="closeModal('createPlaylistModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label style="font-size:0.88rem; font-weight:700;">Tên bộ sưu tập *:</label>
-                    <input type="text" id="newPlaylistTitle" class="form-control" placeholder="VD: Top Game Platformer Hay..." maxlength="60" required>
+                    <label style="font-size:0.88rem; font-weight:700;" data-i18n="col_create_name_label">Tên bộ sưu tập *:</label>
+                    <input type="text" id="newPlaylistTitle" class="form-control" data-i18n-ph="col_create_name_ph" placeholder="VD: Top Game Platformer Hay..." maxlength="60" required>
                 </div>
                 <div class="form-group">
-                    <label style="font-size:0.88rem; font-weight:700;">Quyền hiển thị:</label>
+                    <label style="font-size:0.88rem; font-weight:700;" data-i18n="col_create_vis_label">Quyền hiển thị:</label>
                     <select id="newPlaylistVis" class="form-control">
-                        <option value="public">Công khai (Mọi người đều thấy)</option>
-                        <option value="private">Riêng tư (Chỉ mình bạn thấy)</option>
+                        <option value="public" data-i18n="col_create_vis_pub">Công khai (Mọi người đều thấy)</option>
+                        <option value="private" data-i18n="col_create_vis_priv">Riêng tư (Chỉ mình bạn thấy)</option>
                     </select>
                 </div>
                 <button type="button" class="btn btn-primary" id="btnSubmitCreateCol" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:12px;" onclick="createNewPlaylist()">
-                    <i class="fa-solid fa-check"></i> Tạo Bộ sưu tập
+                    <i class="fa-solid fa-check"></i> <span data-i18n="col_create_btn_submit">Tạo Bộ sưu tập</span>
                 </button>
             </div>
         </div>
@@ -6102,22 +6102,22 @@
                 <div>
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
                         <span id="colDetailBadge" class="col-overlay-badge public" style="position:static;">Công khai</span>
-                        <span style="font-size:0.8rem; color:var(--text-muted);">Bởi <a href="#" id="colDetailAuthorLink" style="color:var(--primary); font-weight:700; text-decoration:none;">@author</a></span>
+                        <span style="font-size:0.8rem; color:var(--text-muted);"><span data-i18n="col_detail_by">Bởi</span> <a href="#" id="colDetailAuthorLink" style="color:var(--primary); font-weight:700; text-decoration:none;">@author</a></span>
                     </div>
                     <h2 id="colDetailTitle" style="font-size:1.45rem; font-weight:900; margin:0; color:var(--text-title); line-height:1.25;">Tên Bộ sưu tập</h2>
                     <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">
-                        <span id="colDetailCount">0</span> tác phẩm • Mã: <code id="colDetailIdCode" style="background:var(--border-color); padding:2px 6px; border-radius:4px;"></code>
+                        <span id="colDetailCount">0</span> <span data-i18n="col_detail_unit">tác phẩm</span> • <span data-i18n="col_detail_code">Mã:</span> <code id="colDetailIdCode" style="background:var(--border-color); padding:2px 6px; border-radius:4px;"></code>
                     </div>
                 </div>
 
                 <div style="display:flex; gap:8px; align-items:center;">
                     <button class="btn btn-primary" id="btnPlayFirstInCol" style="border-radius:20px; padding:7px 16px; font-weight:700;" onclick="playFirstProjectInCollection()">
-                        <i class="fa-solid fa-play"></i> Bắt đầu chơi
+                        <i class="fa-solid fa-play"></i> <span data-i18n="col_detail_btn_play">Bắt đầu chơi</span>
                     </button>
-                    <button class="btn" style="border-radius:50%; width:38px; height:38px; padding:0; justify-content:center;" onclick="copyCollectionLink()" title="Sao chép liên kết">
+                    <button class="btn" style="border-radius:50%; width:38px; height:38px; padding:0; justify-content:center;" onclick="copyCollectionLink()" data-i18n-title="col_detail_copy_link" title="Sao chép liên kết">
                         <i class="fa-solid fa-link"></i>
                     </button>
-                    <button class="btn" id="btnEditCollection" style="display:none; border-radius:50%; width:38px; height:38px; padding:0; justify-content:center;" onclick="openEditPlaylistModal()" title="Cài đặt Bộ sưu tập">
+                    <button class="btn" id="btnEditCollection" style="display:none; border-radius:50%; width:38px; height:38px; padding:0; justify-content:center;" onclick="openEditPlaylistModal()" data-i18n-title="col_detail_btn_edit" title="Cài đặt Bộ sưu tập">
                         <i class="fa-solid fa-gear"></i>
                     </button>
                     <button class="btn-close" onclick="closeModal('collectionDetailModal')">&times;</button>
@@ -6137,29 +6137,29 @@
         <div class="modal" style="max-width: 440px;">
             <div class="modal-header">
                 <span style="font-weight:800; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-sliders" style="color:var(--primary);"></i> <span>Cài đặt Bộ sưu tập</span>
+                    <i class="fa-solid fa-sliders" style="color:var(--primary);"></i> <span data-i18n="col_edit_title">Cài đặt Bộ sưu tập</span>
                 </span>
                 <button class="btn-close" onclick="closeModal('editPlaylistModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label style="font-size:0.88rem; font-weight:700;">Tên bộ sưu tập *:</label>
+                    <label style="font-size:0.88rem; font-weight:700;" data-i18n="col_create_name_label">Tên bộ sưu tập *:</label>
                     <input type="text" id="editPlaylistTitle" class="form-control" maxlength="60" required>
                 </div>
                 <div class="form-group">
-                    <label style="font-size:0.88rem; font-weight:700;">Quyền hiển thị:</label>
+                    <label style="font-size:0.88rem; font-weight:700;" data-i18n="col_create_vis_label">Quyền hiển thị:</label>
                     <select id="editPlaylistVis" class="form-control">
-                        <option value="public">Công khai (Mọi người đều thấy)</option>
-                        <option value="private">Riêng tư (Chỉ mình bạn thấy)</option>
+                        <option value="public" data-i18n="col_create_vis_pub">Công khai (Mọi người đều thấy)</option>
+                        <option value="private" data-i18n="col_create_vis_priv">Riêng tư (Chỉ mình bạn thấy)</option>
                     </select>
                 </div>
 
                 <div style="display:flex; gap:10px; margin-top:20px;">
                     <button type="button" class="btn btn-primary" id="btnSaveEditCol" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;" onclick="saveEditPlaylist()">
-                        <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                        <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="col_edit_btn_save">Lưu thay đổi</span>
                     </button>
                     <button type="button" class="btn btn-danger" style="flex:1; justify-content:center; padding:11px; font-weight:800; border-radius:12px;" onclick="deleteCurrentPlaylist()">
-                        <i class="fa-solid fa-trash-can"></i> Xóa
+                        <i class="fa-solid fa-trash-can"></i> <span data-i18n="col_edit_btn_delete">Xóa</span>
                     </button>
                 </div>
             </div>
@@ -6352,8 +6352,8 @@
                         <span class="wow-icon" style="font-size: 1.2rem;"></span>
                     </div>
                     <div>
-                        <div style="font-size: 1.15rem; font-weight: 900; color: var(--text-title); line-height: 1.2;">Studio Khung Đại Diện</div>
-                        <div style="font-size: 0.78rem; color: var(--text-muted);">Thử và mở khóa các bộ khung độc quyền</div>
+                        <div style="font-size: 1.15rem; font-weight: 900; color: var(--text-title); line-height: 1.2;" data-i18n="frame_shop_title">Studio Khung Đại Diện</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);" data-i18n="frame_shop_subtitle">Thử và mở khóa các bộ khung độc quyền</div>
                     </div>
                 </div>
 
@@ -6371,23 +6371,23 @@
                     
                     <!-- CỘT TRÁI: BỤC THỬ KHUNG TRỰC TIẾP -->
                     <div class="frame-tryon-booth">
-                        <span class="tryon-badge-tag"><i class="fa-solid fa-wand-magic-sparkles"></i> Xem thử trực tiếp</span>
+                        <span class="tryon-badge-tag"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="frame_tryon_badge">Xem thử trực tiếp</span></span>
                         
                         <div class="tryon-avt-stage">
                             <img id="tryonBaseAvt" src="https://i.ibb.co/QFg1cVVD/image.png" class="stage-base-avt" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                             <img id="tryonFrameOverlay" src="" class="stage-frame-overlay" style="display:none;">
                         </div>
 
-                        <div id="tryonFrameName" class="tryon-info-title">Khung Mặc định</div>
+                        <div id="tryonFrameName" class="tryon-info-title" data-i18n="frame_default_name">Khung Mặc định</div>
                         <div id="tryonStatusChip" class="tryon-status-chip status-equipped">
-                            <i class="fa-solid fa-check-circle"></i> Đang trang bị
+                            <i class="fa-solid fa-circle-check"></i> <span data-i18n="frame_status_equipped">Đang trang bị</span>
                         </div>
 
                         <div id="tryonActionContainer" style="width: 100%;">
                             <!-- Nút thao tác tự đổi theo khung đang chọn -->
                         </div>
 
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 14px; line-height: 1.4;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 14px; line-height: 1.4;" data-i18n="frame_tryon_hint">
                             <i class="fa-solid fa-circle-info"></i> Bấm vào bất kỳ khung nào bên phải để thử lên Avatar của bạn ngay lập tức.
                         </div>
                     </div>
@@ -6396,13 +6396,13 @@
                     <div>
                         <div class="frame-shop-toolbar">
                             <div class="frame-tab-pills">
-                                <button type="button" class="frame-tab-pill active" onclick="filterFrameShop('all', this)">Tất cả (<span id="countFrameAll">0</span>)</button>
-                                <button type="button" class="frame-tab-pill" onclick="filterFrameShop('owned', this)">Đã có (<span id="countFrameOwned">0</span>)</button>
-                                <button type="button" class="frame-tab-pill" onclick="filterFrameShop('store', this)">Cửa hàng (<span id="countFrameStore">0</span>)</button>
+                                <button type="button" class="frame-tab-pill active" onclick="filterFrameShop('all', this)"><span data-i18n="frame_tab_all">Tất cả</span> (<span id="countFrameAll">0</span>)</button>
+                                <button type="button" class="frame-tab-pill" onclick="filterFrameShop('owned', this)"><span data-i18n="frame_tab_owned">Đã có</span> (<span id="countFrameOwned">0</span>)</button>
+                                <button type="button" class="frame-tab-pill" onclick="filterFrameShop('store', this)"><span data-i18n="frame_tab_store">Cửa hàng</span> (<span id="countFrameStore">0</span>)</button>
                             </div>
 
                             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
-                                <i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> Vĩnh viễn
+                                <i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> <span data-i18n="frame_permanent_badge">Vĩnh viễn</span>
                             </div>
                         </div>
 
@@ -6580,6 +6580,10 @@
                 const key = el.getAttribute('data-i18n-ph');
                 if (langData[key]) el.placeholder = langData[key];
             });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const key = el.getAttribute('data-i18n-title');
+                if (langData[key]) el.title = langData[key];
+            });
         }
 
         // BẢN ĐỒ ÁNH XẠ CÂU NÓI TRONG JS SANG KEY CỦA FILE JSON (I18N BRIDGE)
@@ -6626,9 +6630,34 @@
             "Không tìm thấy dự án hoặc bạn không có quyền": "toast_proj_not_found",
             "Đã sao chép liên kết tin nhắn!": "toast_chat_link_copied",
             "Trình duyệt đã chặn mở tab mới. Vui lòng cho phép Pop-up hoặc bấm nút 'Mở lại tab'!": "toast_popup_blocked",
+            "Đã chép link Station!": "toast_station_link_copied",
+            "Đã sao chép link tài nguyên trực tiếp!": "toast_asset_link_copied",
+            "Vui lòng đợi 5 giây giữa các lần bình luận!": "toast_comment_cooldown",
+            "Dung lượng ảnh tối đa là 20MB!": "toast_image_too_large_20mb",
+            "Bạn không thể tự gửi tặng điểm cho chính tác phẩm của mình!": "toast_cannot_tip_self",
+            "Vui lòng xác thực Email tài khoản để tham gia bóc túi mù nhé!": "toast_verify_to_blindbag",
+            "Bạn không đủ điểm WOW! Hãy điểm danh nhận thưởng hàng ngày nhé.": "toast_not_enough_wow",
+            "Vui lòng xác thực email để sử dụng tính năng tặng WOW!": "toast_verify_to_tip",
+            "Vui lòng xác thực email trước khi xuất bản tác phẩm!": "toast_verify_to_upload",
+            "Vui lòng nhập đủ 6 chữ số xác nhận!": "toast_invalid_otp_length",
+            "Tài khoản hoặc mật khẩu không chính xác!": "toast_auth_invalid",
+            "Đã tạo Bộ sưu tập thành công!": "toast_col_created",
+            "Đã lưu thay đổi Bộ sưu tập!": "toast_col_saved_change",
+            "Đã xóa Bộ sưu tập thành công!": "toast_col_deleted",
+            "Đã lưu vào bộ sưu tập!": "toast_col_added_item",
+            "Đã gỡ khỏi bộ sưu tập": "toast_col_removed_item",
+            "Đã mở khóa khung thành công!": "toast_frame_unlocked",
+            "Đã trang bị khung đại diện!": "toast_frame_equipped",
+            "Đã tạo Station thành công!": "toast_station_created",
+            "Đã theo dõi Station!": "toast_station_followed",
+            "Đã gia nhập Station!": "toast_station_joined",
+            "Đã thêm vào Station!": "toast_station_added_proj",
+            "Đã gỡ dự án khỏi Station": "toast_station_removed_proj",
             "Bạn có tác phẩm chưa tải lên. Nếu rời đi bây giờ, dữ liệu đang nhập sẽ bị mất. Bạn có chắc chắn muốn rời đi?": "upload_warn_leave",
             "Xác nhận xóa bình luận này?": "confirm_delete_comment",
-            "Bạn có chắc chắn muốn xóa tin nhắn này?": "confirm_delete_chat"
+            "Bạn có chắc chắn muốn xóa tin nhắn này?": "confirm_delete_chat",
+            "Xác nhận gỡ dự án này khỏi Station?": "confirm_remove_station_proj",
+            "Xác nhận gỡ tác phẩm này khỏi bộ sưu tập?": "confirm_remove_col_item"
         };
 
         // Hàm tự động tìm và dịch thông qua file JSON đang kích hoạt (langData)
