@@ -917,11 +917,14 @@
         
         /* Featured Widget */
         .widget-featured-container { padding: 0 !important; position: relative; }
-        .bento-featured-banner { display: flex; width: 100%; height: 100%; background: #0f172a; color: #fff; }
+        .bento-featured-banner { display: flex; width: 100%; height: 100%; background: #0f172a; color: #ffffff !important; }
         .bento-featured-thumb { width: 45%; background: #000; overflow: hidden; }
         .bento-featured-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.4s ease; }
         .grid-stack-item-content:hover .bento-featured-thumb img { transform: scale(1.05); opacity: 1; }
-        .bento-featured-info { padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .bento-featured-info { padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; color: #ffffff !important; }
+        /* 🛡️ ÉP CHỮ TIÊU ĐỀ & MÔ TẢ LUÔN MÀU TRẮNG KỂ CẢ KHI BỊ CSS KHÁC GHI ĐÈ BỞI !IMPORTANT */
+        .bento-featured-banner h2, .bento-featured-info h2 { color: #ffffff !important; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .bento-featured-banner p, .bento-featured-info p { color: #cbd5e1 !important; }
         
         @media (max-width: 768px) {
             .bento-featured-banner { flex-direction: column; }
@@ -5228,6 +5231,21 @@
                     <b>Ghi chú tự do</b>
                     <span>Tin nhắn nổi bật</span>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỌN TÁC PHẨM TÂM HUYẾT TRỰC TIẾP -->
+    <div class="modal-overlay" id="selectFeaturedProjModal">
+        <div class="modal" style="max-width: 540px; max-height: 85vh; display: flex; flex-direction: column; border-radius: 20px;">
+            <div class="modal-header" style="padding: 16px 20px;">
+                <span style="font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-star" style="color: #f59e0b;"></i> Chọn Tác Phẩm Tâm Huyết
+                </span>
+                <button class="btn-close" onclick="closeModal('selectFeaturedProjModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; padding: 20px;" id="selectFeaturedProjList">
+                <!-- Danh sách dự án sẽ nạp tự động qua JavaScript -->
             </div>
         </div>
     </div>
@@ -14286,6 +14304,7 @@
                 `;
             } 
             else if (safeId === 'widget_featured') {
+                const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase());
                 if (data.featuredProject) {
                     contentHtml = `
                         <div class="bento-widget-inner widget-featured-container" id="bentoFeaturedWrapper">
@@ -14293,9 +14312,20 @@
                         </div>
                     `;
                 } else {
-                    contentHtml = `<div class="bento-widget-inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-star" style="font-size:2rem; margin-bottom:10px; opacity:0.5;"></i><br>Bạn chưa cài đặt Tác phẩm tâm huyết.<br>Vào phần "Hồ sơ" để cài nhé!</div>`;
+                    contentHtml = `
+                        <div class="bento-widget-inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:25px;">
+                            <i class="fa-solid fa-star" style="font-size:2.8rem; margin-bottom:10px; color:#f59e0b; opacity:0.8;"></i>
+                            <b style="font-size:1.05rem; color:var(--text-title); margin-bottom:4px;">Chưa chọn tác phẩm tâm huyết</b>
+                            <span style="font-size:0.85rem; color:var(--text-muted); max-width:280px; line-height:1.45;">${isOwner ? 'Ghim tác phẩm bạn tự hào nhất lên đầu trang cá nhân!' : 'Tác giả chưa cài đặt tác phẩm tâm huyết nào.'}</span>
+                            ${isOwner ? `
+                                <button type="button" class="btn btn-primary" style="margin-top:14px; border-radius:20px; font-weight:800; padding:8px 22px;" onclick="openSelectFeaturedProjectModal()">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Chọn tác phẩm ngay
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
                 }
-            } 
+            }
             else if (safeId.startsWith('widget_note')) {
                 const noteText = item.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
                 contentHtml = `
@@ -14516,21 +14546,130 @@
 
             const wrapper = document.getElementById('bentoFeaturedWrapper');
             if (wrapper && featProj) {
+                const isOwner = currentUser && currentBentoData && (currentUser.username.toLowerCase() === currentBentoData.username.toLowerCase());
                 wrapper.innerHTML = `
                     <div class="bento-featured-banner">
                         <div class="bento-featured-thumb">
                             <img src="${featProj.thumbId ? `${WORKER_URL}/api/project/${featProj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png'}">
                         </div>
                         <div class="bento-featured-info">
-                            <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#fff; padding:5px 12px; border-radius:8px; font-size:0.75rem; font-weight:800; width:max-content; margin-bottom:12px;">TÁC PHẨM TÂM HUYẾT</span>
-                            <h2 style="font-size:1.75rem; margin:0 0 10px 0; color: #fff; font-weight: 900; line-height: 1.25;">${escapeHtml(featProj.title)}</h2>
-                            <p style="color:#cbd5e1; font-size:0.95rem; margin-bottom:24px; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(featProj.description || 'Chơi và trải nghiệm ngay tác phẩm này!')}</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff !important; padding:5px 12px; border-radius:8px; font-size:0.75rem; font-weight:800; width:max-content;">TÁC PHẨM TÂM HUYẾT</span>
+                                ${isOwner ? `
+                                    <button type="button" class="btn" onclick="openSelectFeaturedProjectModal()" style="font-size:0.78rem; padding:4px 12px; border-radius:14px; background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.25);">
+                                        <i class="fa-solid fa-arrows-rotate"></i> Đổi tác phẩm
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <h2 style="font-size:1.75rem; margin:0 0 10px 0; color:#ffffff !important; font-weight: 900; line-height: 1.25;">${escapeHtml(featProj.title)}</h2>
+                            <p style="color:#cbd5e1 !important; font-size:0.95rem; margin-bottom:24px; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(featProj.description || 'Chơi và trải nghiệm ngay tác phẩm này!')}</p>
                             <a href="#project/${featProj.projectId || featProj.fileId}" class="btn btn-primary" style="width:max-content; padding:11px 26px; border-radius: 14px; font-weight: 800; font-size:0.95rem;"><i class="fa-solid fa-play"></i> Trải nghiệm ngay</a>
                         </div>
                     </div>
                 `;
             } else if (wrapper) {
                 wrapper.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted);">Dự án không tồn tại hoặc đã bị ẩn.</div>`;
+            }
+        }
+
+        // ================= POPUP CHỌN TÁC PHẨM TÂM HUYẾT TRỰC TIẾP =================
+        async function openSelectFeaturedProjectModal() {
+            if (!currentUser) return openModal('loginModal');
+            openModal('selectFeaturedProjModal');
+            const listEl = document.getElementById('selectFeaturedProjList');
+            listEl.innerHTML = '<div style="text-align:center; padding: 35px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">Đang nạp danh sách tác phẩm của bạn...</span></div>';
+
+            try {
+                let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
+                if (currentUser) projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                const res = await (await fetch(projUrl)).json();
+                const myProjs = (res && res.projects) ? res.projects : (Array.isArray(res) ? res : []);
+                const publicProjs = myProjs.filter(p => p.visibility !== 'private');
+
+                if (publicProjs.length === 0) {
+                    listEl.innerHTML = `
+                        <div style="text-align:center; padding:35px 10px; color:var(--text-muted);">
+                            <i class="fa-solid fa-folder-open" style="font-size:2.8rem; opacity:0.3; margin-bottom:12px; display:block;"></i>
+                            Bạn chưa có tác phẩm công khai nào.<br>
+                            <a href="#upload" class="btn btn-primary" onclick="closeModal('selectFeaturedProjModal')" style="margin-top:14px; border-radius:20px; font-size:0.85rem;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Đăng tác phẩm mới
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const currentFeatured = currentBentoData ? String(currentBentoData.featuredProject || '') : '';
+
+                listEl.innerHTML = publicProjs.map(p => {
+                    const pid = String(p.projectId || p.fileId);
+                    const isCurrent = (currentFeatured === pid);
+                    const thumb = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:var(--bg-secondary); border:1.5px solid ${isCurrent ? 'var(--primary)' : 'var(--border-color)'}; border-radius:14px; margin-bottom:10px;">
+                            <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                                <img src="${thumb}" style="width:68px; aspect-ratio:16/9; border-radius:8px; object-fit:cover; background:#000; flex-shrink:0;">
+                                <div style="min-width:0; flex:1;">
+                                    <div style="font-weight:800; font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.title)}</div>
+                                    <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
+                                        <i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes||[]).length} • <i class="fa-solid fa-play"></i> ${p.views||0} lượt chơi
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                ${isCurrent ? `
+                                    <button class="btn" style="font-size:0.8rem; padding:6px 14px; border-radius:18px; color:var(--primary); font-weight:bold;" disabled>
+                                        <i class="fa-solid fa-check"></i> Đang chọn
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-primary" style="font-size:0.8rem; padding:6px 16px; border-radius:18px; font-weight:bold;" onclick="setFeaturedProjectDirect('${pid}', this)">
+                                        Chọn
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch(e) {
+                listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444; font-size:0.9rem;">Lỗi tải danh sách tác phẩm.</div>';
+            }
+        }
+
+        async function setFeaturedProjectDirect(pid, btnEl) {
+            if (!currentUser) return;
+            const origHtml = btnEl.innerHTML;
+            btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btnEl.disabled = true;
+
+            const res = await apiFetch(`/api/user/update`, {
+                method: 'POST',
+                body: JSON.stringify({ featuredProject: pid })
+            });
+
+            if (res && res.success) {
+                showToast("Đã lưu Tác phẩm tâm huyết!", "success");
+                closeModal('selectFeaturedProjModal');
+
+                if (currentBentoData) currentBentoData.featuredProject = pid;
+                if (viewingProfileData) viewingProfileData.featuredProject = pid;
+                if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                    profileCache[currentUser.username].data.featuredProject = pid;
+                }
+
+                // Cập nhật nội dung Banner ngay lập tức
+                const wrapper = document.getElementById('bentoFeaturedWrapper');
+                if (wrapper) {
+                    wrapper.innerHTML = '<div style="text-align:center; padding: 40px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i></div>';
+                    loadBentoFeaturedProject(pid);
+                } else {
+                    renderBentoGrid(currentBentoData);
+                    if (isBentoEditMode) toggleBentoEditMode();
+                }
+            } else {
+                showToast("Không thể cập nhật tác phẩm. Thử lại sau!", "error");
+                btnEl.innerHTML = origHtml;
+                btnEl.disabled = false;
             }
         }
     </script>
