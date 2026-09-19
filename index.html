@@ -7707,17 +7707,8 @@
             const btnSeeInside = document.getElementById('btnSeeInside');
             btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
             btnSeeInside.target = (engineChoice === 'aftercode') ? '_self' : '_blank';
-            // 🔗 Tự động chuyển đổi các #hashtag trong Description & Credits thành đường dẫn tìm kiếm tương tác
-            const linkifyHashtags = (rawText) => {
-                if (!rawText) return '';
-                const safe = escapeHtml(rawText);
-                return safe.replace(/#([^\s#<]+)/g, (match) => {
-                    return `<a href="javascript:void(0)" onclick="navigateToTagSearch('${match}')" style="color:var(--primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:6px; background:rgba(13,165,122,0.12);">${match}</a>`;
-                });
-            };
-
-            document.getElementById('projDesc').innerHTML = proj.description ? linkifyHashtags(proj.description) : "Chưa có hướng dẫn.";
-            document.getElementById('projCredits').innerHTML = proj.credits ? linkifyHashtags(proj.credits) : "Tác giả gốc.";
+            document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
+            document.getElementById('projCredits').innerHTML = proj.credits ? formatProjectDesc(proj.credits) : "Tác giả gốc.";
             
             commentLimits.proj = 10; // Reset số lượng bình luận khi mở dự án mới
             updateActionBtns(); 
@@ -11475,19 +11466,19 @@
             return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
         }
 
-        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO URL SCRATCH & DANVWORKSHOP VÀ @USERNAME
+        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME
         function formatCommentText(text) {
             if (!text) return '';
             let safeText = escapeHtml(text);
             
-            // 1. Highlight link trang web
-            const linkRegex = /(https?:\/\/(?:scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)|((?:^|\s)(?:scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
+            // 1. Highlight link trang web: Hỗ trợ mọi link http://, https:// và các domain quen thuộc không cần gõ https://
+            const linkRegex = /(https?:\/\/[^\s<]+)|((?:^|\s)(?:turbows\.pages\.dev|scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
             safeText = safeText.replace(linkRegex, (match, p1, p2) => {
                 let raw = p1 || (p2 ? p2.trim() : '');
                 let prefix = (p2 && p2.startsWith(' ')) ? ' ' : '';
                 let cleanUrl = raw;
                 let trailing = '';
-                const matchTrailing = cleanUrl.match(/[.,!?;:]+$/);
+                const matchTrailing = cleanUrl.match(/([.,!?;:)]|&quot;)+$/);
                 if (matchTrailing) {
                     trailing = matchTrailing[0];
                     cleanUrl = cleanUrl.slice(0, -trailing.length);
@@ -11508,6 +11499,15 @@
             });
 
             return safeText;
+        }
+
+        // 🔗 BỘ ĐỊNH DẠNG TOÀN DIỆN CHO MÔ TẢ & CREDITS DỰ ÁN (LINK + HASHTAG + MENTION)
+        function formatProjectDesc(rawText) {
+            if (!rawText) return '';
+            let formatted = formatCommentText(rawText);
+            return formatted.replace(/(^|\s)#([^\s#<.,!?;:()]+)/g, (match, prefix, tag) => {
+                return `${prefix}<a href="javascript:void(0)" onclick="navigateToTagSearch('#${tag}')" style="color:var(--primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:6px; background:rgba(13,165,122,0.12);">#${tag}</a>`;
+            });
         }
 
         // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
@@ -11669,8 +11669,8 @@
                 currentProj.title = newTitle; currentProj.visibility = vis; currentProj.description = desc; currentProj.credits = cred;
                 if (newThumbId) currentProj.thumbId = newThumbId;
 
-                document.getElementById('projDesc').innerText = desc || "Chưa có hướng dẫn.";
-                document.getElementById('projCredits').innerText = cred || "Tác giả gốc.";
+                document.getElementById('projDesc').innerHTML = desc ? formatProjectDesc(desc) : "Chưa có hướng dẫn.";
+                document.getElementById('projCredits').innerHTML = cred ? formatProjectDesc(cred) : "Tác giả gốc.";
                 document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
                 
                 closeModal('projSettingsModal'); showToast("Đã lưu thông tin!", "success");
