@@ -9354,10 +9354,10 @@
             // 1. TÌM CHÍNH XÁC THEO KIỂU CHUỖI STRING (CHỐNG LỆCH NUMBER VÀ STRING)
             let proj = allProjects.find(p => (p.projectId && String(p.projectId) === cleanId) || (p.fileId && String(p.fileId) === cleanId));
             
-            // 2. NẾU CHƯA CÓ TRONG BỘ NHỚ -> TẢI TỪ MÁY CHỦ VÀ TÌM ĐÚNG ID (CHỐNG GÁN MÙ QUÁNG res.projects[0])
+            // 2. NẾU CHƯA CÓ TRONG BỘ NHỚ -> TẢI TỪ MÁY CHỦ VÀ TÌM ĐÚNG ID (DÙNG ?id= CHUẨN THAY VÌ ?search=)
             if (!proj) {
                 try {
-                    let fetchUrl = `${WORKER_URL}/api/projects?search=${encodeURIComponent(cleanId)}&limit=20`;
+                    let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(cleanId)}`;
                     if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                     const res = await (await fetch(fetchUrl)).json();
                     if (res && res.projects && res.projects.length > 0) {
@@ -11333,6 +11333,14 @@
                     // 🛡️ SỬA LỖI: Hỗ trợ cả 2 trường hợp API trả về mảng trực tiếp hoặc trả về Object chứa mảng projects
                     const items = (res && res.projects) ? res.projects : (Array.isArray(res) ? res : []);
                     state.hasMore = res.hasMore || false;
+
+                    // 🚀 ĐỒNG BỘ VÀO BỘ NHỚ RAM: Giúp mở dự án riêng tư ngay lập tức mà không bị lỗi quyền
+                    items.forEach(item => {
+                        const itemId = item.projectId || item.fileId;
+                        if (!allProjects.some(p => (p.projectId || p.fileId) === itemId)) {
+                            allProjects.push(item);
+                        }
+                    });
                     
                     if (tab === 'projects' && !isLoadMore && res.total !== undefined) {
                         document.getElementById('statProjectCount').innerText = res.total;
