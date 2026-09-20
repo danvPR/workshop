@@ -2382,15 +2382,14 @@
             body { padding-bottom: 65px; } /* Đẩy trang lên chống bị thanh bar che */
         }
 
-        /* ================= GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI (STREAM DOCK DESIGN) ================= */
+        /* ================= GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI (UNIFIED CREATIVE STREAM) ================= */
         .chat-layout-grid {
             display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 18px;
+            grid-template-columns: 1fr 300px;
+            gap: 16px;
             width: 100%;
-            height: calc(100vh - 120px);
-            min-height: 560px;
-            transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: clamp(520px, calc(100dvh - 110px), 940px);
+            transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .chat-layout-grid.sidebar-collapsed {
             grid-template-columns: 1fr;
@@ -2399,33 +2398,35 @@
         .chat-main-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
             overflow: hidden;
             position: relative;
         }
 
+        /* Header thanh thoát chỉ 46px */
         .chat-header-bar {
-            padding: 12px 20px;
+            padding: 8px 16px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-secondary);
-            backdrop-filter: blur(10px);
+            background: var(--bg-panel);
+            flex-shrink: 0;
         }
 
         .chat-sidebar-col {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
             height: 100%;
             overflow-y: auto;
-            transition: opacity 0.25s ease, transform 0.25s ease;
+            scrollbar-width: none;
         }
+        .chat-sidebar-col::-webkit-scrollbar { display: none; }
         .chat-layout-grid.sidebar-collapsed .chat-sidebar-col {
             display: none;
         }
@@ -2433,77 +2434,103 @@
         .chat-side-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .chat-side-title {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
         }
 
-        /* Ticker ghim thông báo gọn gàng */
+        /* Banner thông báo micro-ticker */
         .chat-pinned-banner {
-            background: linear-gradient(90deg, rgba(13, 165, 122, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%);
+            background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
-            padding: 8px 18px;
-            font-size: 0.82rem;
-            color: var(--text-main);
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
+            flex-shrink: 0;
         }
-        .chat-pinned-banner b { color: var(--primary); }
+        .chat-pinned-banner b { color: var(--text-title); font-weight: 700; }
 
-        /* Stream tin nhắn & Thanh cuộn thanh thoát */
+        /* Stream tin nhắn đồng nhất lề trái - Tối ưu GPU bằng contain: content */
         #chatMessageList {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
             scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+            transition: scrollbar-color 0.25s;
+        }
+        #chatMessageList:hover {
             scrollbar-color: var(--border-color) transparent;
         }
-        #chatMessageList::-webkit-scrollbar { width: 6px; }
-        #chatMessageList::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 6px; }
+        #chatMessageList::-webkit-scrollbar { width: 5px; }
+        #chatMessageList::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
+        #chatMessageList:hover::-webkit-scrollbar-thumb { background: var(--border-color); }
 
+        /* Hàng tin nhắn phẳng: Không đảo chiều zíc zắc */
         .chat-msg-row {
             display: flex;
-            gap: 12px;
-            margin-bottom: 10px;
+            gap: 10px;
             width: 100%;
-            align-items: flex-end;
+            align-items: flex-start;
             position: relative;
+            padding: 6px 8px;
+            border-radius: 8px;
+            transition: background-color 0.12s ease;
+            contain: content;
         }
+        .chat-msg-row:hover {
+            background: rgba(0, 0, 0, 0.025);
+        }
+        [data-theme="dark"] .chat-msg-row:hover {
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        /* Phân biệt tin nhắn của chính mình bằng dải màu nhận diện êm dịu */
         .chat-msg-row.mine {
-            flex-direction: row-reverse;
+            background: rgba(13, 165, 122, 0.04);
+            border-left: 2.5px solid var(--primary);
+            padding-left: 8px;
         }
+        [data-theme="dark"] .chat-msg-row.mine {
+            background: rgba(13, 165, 122, 0.08);
+        }
+
         .chat-msg-wrapper {
             display: flex;
             flex-direction: column;
-            max-width: 72%;
-            min-width: 60px;
+            flex: 1;
+            min-width: 0;
             position: relative;
-        }
-        .chat-msg-row.mine .chat-msg-wrapper {
-            align-items: flex-end;
-        }
-        .chat-msg-row:not(.mine) .chat-msg-wrapper {
-            align-items: flex-start;
         }
 
         .chat-meta-header {
             font-size: 0.74rem;
             color: var(--text-muted);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             display: flex;
             gap: 6px;
             align-items: center;
+            flex-wrap: wrap;
+            line-height: 1.2;
         }
         .chat-author-name {
             color: var(--text-title);
@@ -2512,84 +2539,75 @@
             font-size: 0.82rem;
         }
         .chat-author-name:hover { color: var(--primary); }
+        .chat-author-you-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            background: rgba(13, 165, 122, 0.12);
+            color: var(--primary);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
         .chat-time {
             font-size: 0.7rem;
             opacity: 0.75;
         }
 
-        /* Container bọc Bubble + Floating Action Bar */
         .chat-bubble-container {
             position: relative;
-            display: inline-flex;
-            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-width: 0;
         }
 
+        /* Loại bỏ bong bóng gò bó, chữ chảy tự nhiên theo luồng stream */
         .chat-bubble { 
-            width: fit-content; 
-            max-width: 100%; 
-            background: var(--bg-secondary); 
+            width: 100%;
+            background: transparent; 
             color: var(--text-main); 
-            padding: 9px 15px; 
-            border-radius: 18px 18px 18px 4px; 
-            border: 1px solid var(--border-color); 
-            font-size: 0.93rem; 
-            line-height: 1.48; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02); 
-            transition: all 0.2s ease;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            font-size: 0.92rem; 
+            line-height: 1.55; 
+            box-shadow: none;
         }
         .chat-text {
             white-space: pre-wrap;
             word-break: break-word;
-        }
-        .chat-msg-row.mine .chat-bubble { 
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); 
-            border-color: var(--primary-dark); 
-            border-radius: 18px 18px 4px 18px; 
-            color: #ffffff !important; 
-            box-shadow: 0 3px 12px rgba(13,165,122,0.25);
-        }
-        .chat-msg-row.mine .chat-bubble * { color: #ffffff !important; }
-        [data-theme="dark"] .chat-msg-row.mine .chat-bubble { 
-            background: linear-gradient(135deg, #0da57a 0%, #065f46 100%);
-            border-color: #0da57a; 
-            color: #ffffff !important; 
+            color: var(--text-main);
         }
 
-        /* Floating Action Bar siêu gọn khi Hover chuột vào tin nhắn */
+        /* Thanh Floating Action Bar bám góc phải, không che text phía trên */
         .chat-floating-actions {
             position: absolute;
-            top: -14px;
+            top: 2px;
+            right: 8px;
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 3px;
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 8px;
             padding: 2px 4px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.9);
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(-2px);
+            transition: opacity 0.12s ease, transform 0.12s ease;
             z-index: 10;
-        }
-        .chat-msg-row:not(.mine) .chat-floating-actions {
-            right: 4px;
-        }
-        .chat-msg-row.mine .chat-floating-actions {
-            left: 4px;
         }
         .chat-msg-row:hover .chat-floating-actions {
             opacity: 1;
             pointer-events: auto;
-            transform: scale(1);
+            transform: translateY(0);
         }
         .chat-float-btn {
             background: none;
             border: none;
             width: 26px;
             height: 26px;
-            border-radius: 50%;
+            border-radius: 6px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2601,7 +2619,6 @@
         .chat-float-btn:hover {
             background: var(--bg-secondary);
             color: var(--primary);
-            transform: scale(1.1);
         }
         .chat-float-btn.delete:hover {
             color: #ef4444;
@@ -2612,25 +2629,27 @@
             background: rgba(245, 158, 11, 0.1);
         }
 
-        /* All-In-One Input Dock (Khung gõ hợp nhất hiện đại) */
+        /* Khung soạn thảo (Zen Composer) nhẹ và thanh thoát */
         .chat-input-box {
-            padding: 14px 18px;
+            padding: 8px 14px 10px 14px;
             background: var(--bg-panel);
             border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
         .chat-composer-dock {
-            background: var(--bg-input);
-            border: 1.5px solid var(--border-color);
-            border-radius: 18px;
-            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 6px 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            gap: 4px;
+            transition: border-color 0.2s, background-color 0.2s;
         }
         .chat-composer-dock:focus-within {
+            background: var(--bg-input);
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
+            box-shadow: 0 0 0 2px rgba(13, 165, 122, 0.12);
         }
         .chat-input-textarea {
             width: 100%;
@@ -2638,10 +2657,10 @@
             border: none;
             outline: none;
             color: var(--text-main);
-            font-size: 0.94rem;
+            font-size: 0.91rem;
             resize: none;
-            max-height: 120px;
-            min-height: 26px;
+            max-height: 110px;
+            min-height: 24px;
             line-height: 1.45;
             font-family: inherit;
         }
@@ -2649,89 +2668,85 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 4px;
-            border-top: 1px solid rgba(0,0,0,0.04);
-        }
-        [data-theme="dark"] .chat-composer-bottom-bar {
-            border-top-color: rgba(255,255,255,0.05);
+            padding-top: 3px;
         }
         .chat-composer-tools-left {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
         }
         .chat-dock-icon-btn {
             background: none;
             border: none;
             color: var(--text-muted);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             transition: all 0.15s;
         }
         .chat-dock-icon-btn:hover {
             color: var(--primary);
-            background: var(--bg-secondary);
+            background: var(--bg-panel);
         }
         .chat-beabea-dock-pill {
-            background: rgba(244, 114, 182, 0.12);
+            background: rgba(244, 114, 182, 0.1);
             color: #db2777;
-            border: 1px solid rgba(244, 114, 182, 0.3);
-            border-radius: 14px;
-            padding: 4px 10px;
-            font-size: 0.76rem;
+            border: 1px solid rgba(244, 114, 182, 0.25);
+            border-radius: 10px;
+            padding: 3px 8px;
+            font-size: 0.72rem;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
+            gap: 4px;
+            transition: all 0.18s;
         }
         .chat-beabea-dock-pill:hover {
-            background: rgba(244, 114, 182, 0.22);
+            background: rgba(244, 114, 182, 0.2);
             transform: translateY(-1px);
         }
         .chat-composer-tools-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .chat-kbd-hint {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            opacity: 0.75;
+            opacity: 0.7;
             user-select: none;
         }
         .chat-btn-send {
             background: var(--primary);
             color: #ffffff;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.88rem;
+            font-size: 0.8rem;
             transition: all 0.2s ease;
-            box-shadow: 0 3px 10px rgba(13,165,122,0.3);
         }
         .chat-btn-send:hover {
             background: var(--primary-dark);
-            transform: scale(1.08);
+            transform: scale(1.06);
         }
 
         @media (max-width: 960px) {
             .chat-layout-grid { grid-template-columns: 1fr !important; }
             .chat-sidebar-col { display: none !important; }
             .chat-kbd-hint { display: none; }
+            .chat-msg-row:hover .chat-floating-actions { display: none; } /* Trên mobile ưu tiên chạm tự nhiên */
         }
 
         /* AVATAR FRAME & WOW SHOP CSS */
@@ -2994,52 +3009,7 @@
         .daily-day-box.claimed { border-color: #10b981; opacity: 1; background: #ecfdf5; }
         @media (max-width: 600px) { .daily-reward-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        /* 💬 KHỐI TRÍCH DẪN TRẢ LỜI TIN NHẮN (STREAMLINED REPLY QUOTE) */
-        .chat-reply-quote { 
-            font-size: 0.74rem; 
-            background: rgba(0, 0, 0, 0.05); 
-            border-left: 2.5px solid var(--primary); 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            margin-bottom: 5px; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 5px; 
-            line-height: 1.3;
-            max-width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        .chat-reply-quote i {
-            color: var(--primary) !important;
-            font-size: 0.7rem;
-        }
-        .chat-reply-quote span {
-            color: var(--text-muted) !important;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .chat-reply-quote b {
-            color: var(--text-title) !important;
-            font-weight: 700;
-        }
-
-        /* Khi ở Dark Mode */
-        [data-theme="dark"] .chat-reply-quote {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        /* Khi là tin nhắn của chính mình */
-        .chat-msg-row.mine .chat-reply-quote { 
-            background: rgba(0, 0, 0, 0.22) !important; 
-            border-left-color: #ffffff !important; 
-        }
-        .chat-msg-row.mine .chat-reply-quote i,
-        .chat-msg-row.mine .chat-reply-quote b,
-        .chat-msg-row.mine .chat-reply-quote span {
-            color: rgba(255, 255, 255, 0.95) !important;
-        }
+        
 
         .chat-img-attachment { 
             max-width: 260px; 
@@ -3332,44 +3302,50 @@
             color: #ffffff !important;
         }
 
-        /* 🛡️ CÂN BẰNG MÀU SẮC CHO BONG BÓNG CHAT VÀ THẺ DỰ ÁN */
-        .chat-msg-row.mine .chat-bubble {
-            background: var(--primary) !important;
-            border-color: var(--primary-dark) !important;
-            padding: 9px 15px !important;
-            box-shadow: 0 2px 8px rgba(13,165,122,0.25) !important;
+        /* 💬 KHỐI TRÍCH DẪN TRẢ LỜI TIN NHẮN (STREAMLINED REPLY QUOTE) */
+        .chat-reply-quote { 
+            font-size: 0.74rem; 
+            background: var(--bg-secondary); 
+            border-left: 2px solid var(--primary); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            margin-bottom: 4px; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px; 
+            line-height: 1.35;
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
-        .chat-msg-row.mine .chat-bubble:has(.chat-project-card),
-        .chat-msg-row:not(.mine) .chat-bubble:has(.chat-project-card) {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
+        .chat-reply-quote i {
+            color: var(--primary);
+            font-size: 0.68rem;
         }
-        .chat-msg-row.mine .chat-bubble .chat-text {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #ffffff !important;
-            padding: 9px 15px;
-            border-radius: 18px 18px 4px 18px;
-            margin-bottom: 6px;
-            width: fit-content;
-            box-shadow: 0 3px 12px rgba(13,165,122,0.25);
+        .chat-reply-quote span {
+            color: var(--text-muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .chat-msg-row.mine .chat-bubble .chat-project-card {
-            background: var(--bg-panel) !important;
+        .chat-reply-quote b {
+            color: var(--text-title);
+            font-weight: 700;
+        }
+
+        /* 🛡️ CÂN BẰNG MÀU SẮC ĐỒNG NHẤT CHO STREAM MỚI (TỰ NHIÊN TRÊN LIGHT & DARK) */
+        .chat-msg-row .chat-bubble .chat-project-card {
+            background: var(--bg-panel);
             margin-top: 6px;
         }
-        .chat-msg-row.mine .chat-bubble .chat-project-card * {
-            color: var(--text-main) !important;
+        .chat-msg-row .chat-bubble .chat-project-card .chat-proj-title {
+            color: var(--text-title);
         }
-        .chat-msg-row.mine .chat-bubble .chat-project-card .chat-proj-title {
-            color: var(--text-title) !important;
+        .chat-msg-row .chat-bubble .chat-project-card .chat-proj-author b {
+            color: var(--primary);
         }
-        .chat-msg-row.mine .chat-bubble .chat-project-card .chat-proj-author b {
-            color: var(--primary) !important;
-        }
-        .chat-msg-row.mine .chat-bubble .chat-project-card .vip-play-btn,
-        .chat-msg-row.mine .chat-bubble .chat-project-card .vip-play-btn * {
+        .chat-msg-row .chat-bubble .chat-project-card .vip-play-btn,
+        .chat-msg-row .chat-bubble .chat-project-card .vip-play-btn * {
             color: #ffffff !important;
         }
         
@@ -14870,7 +14846,7 @@
             if (btnJump) btnJump.classList.remove('show');
         }
 
-        // HÀM XUẤT HTML CHO 1 TIN NHẮN RIÊNG BIỆT
+        // HÀM XUẤT HTML CHO 1 TIN NHẮN RIÊNG BIỆT (UNIFIED STREAM PARADIGM)
         function renderSingleChatMessageHTML(c) {
             if (c.avt && c.avt.includes('|||')) {
                 let parts = c.avt.split('|||');
@@ -14895,16 +14871,16 @@
 
             return `
                 <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" data-msg-id="${messageId}">
-                    ${!isMine ? `
-                    <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}" style="display:flex;">
+                    <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}" style="display:flex; flex-shrink:0;">
                         ${renderAvtWithFrame(c.avt, c.frame, 'avt-circle', '', c.author)}
-                    </a>` : ''}
+                    </a>
                     
                     <div class="chat-msg-wrapper">
                         <div class="chat-meta-header">
-                            ${!isMine ? (c.author === 'BeaBea (AI)' 
+                            ${c.author === 'BeaBea (AI)' 
                                 ? `<span class="chat-author-name" style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> BeaBea (AI) <span style="font-size:0.65rem; background:#fce7f3; color:#ec4899; padding:1px 5px; border-radius:6px; margin-left:3px; border:1px solid #fbcfe8;">BOT</span></span>` 
-                                : `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>`) : ''}
+                                : `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>`}
+                            ${isMine ? `<span class="chat-author-you-badge">Bạn</span>` : ''}
                             <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
                         </div>
 
@@ -14916,7 +14892,7 @@
                                 ${transBoxHtml}
                             </div>
 
-                            <!-- Floating Quick Actions Bar nổi khi hover -->
+                            <!-- Floating Action Bar gắn gọn gàng góc phải -->
                             <div class="chat-floating-actions">
                                 ${currentUser && !isMine ? `
                                     <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
@@ -15174,14 +15150,17 @@
                     const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
 
                     return `
-                    <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" style="opacity: 0.85;">
-                        ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}"><img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:36px; height:36px; border: 1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'"></a>` : ''}
+                    <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" style="opacity: 0.88;">
+                        <a href="#profile/${encodeURIComponent(c.author)}" style="display:flex; flex-shrink:0;">
+                            <img src="${getAvtUrl(c.avt)}" class="avt-circle" style="width:34px; height:34px; border: 1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'">
+                        </a>
                         <div class="chat-msg-wrapper">
                             <div class="chat-meta-header">
-                                ${!isMine ? `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>` : ''}
+                                <a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>
+                                ${isMine ? `<span class="chat-author-you-badge">Bạn</span>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble" style="border: 1px dashed var(--border-color);">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
                         </div>
                     </div>
                     `;
