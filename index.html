@@ -2490,17 +2490,21 @@
         #chatMessageList::-webkit-scrollbar { width: 6px; }
         #chatMessageList::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
-        /* Hàng tin nhắn: Loại bỏ hover nền xám cũ, tập trung vào bong bóng */
+        /* Hàng tin nhắn: Bỏ contain: content để không cắt khung avatar và thanh thao tác */
         .chat-msg-row {
             display: flex;
             gap: 12px;
             width: 100%;
             align-items: flex-start;
             position: relative;
-            padding: 0;
+            padding: 6px 4px;
             border: none !important;
             background: transparent !important;
-            contain: content;
+        }
+
+        /* Đệm khoảng trống an toàn cho khung avatar không bị cấn mép */
+        .chat-msg-row .avt-wrapper {
+            margin: 6px 4px 4px 8px;
         }
 
         /* Tin nhắn của mình: Avatar vẫn bên trái nhưng đổi màu bong bóng */
@@ -2590,7 +2594,7 @@
             word-break: break-word;
         }
 
-        /* Thanh Floating Action Bar bám góc - Cải tiến đẹp hơn */
+        /* Thanh Floating Action Bar bám góc - Hỗ trợ cả Hover Desktop và Chạm trên Mobile */
         .chat-floating-actions {
             position: absolute;
             top: -15px; /* Đẩy nổi lên trên bong bóng */
@@ -2609,7 +2613,8 @@
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 10;
         }
-        .chat-msg-row:hover .chat-floating-actions {
+        .chat-msg-row:hover .chat-floating-actions,
+        .chat-msg-row.active-actions .chat-floating-actions {
             opacity: 1;
             pointer-events: auto;
             transform: translateY(0);
@@ -2781,14 +2786,46 @@
             .chat-layout-grid { grid-template-columns: 1fr !important; }
             .chat-sidebar-col { display: none !important; }
             .chat-kbd-hint { display: none; }
-            .chat-msg-row:hover .chat-floating-actions { display: none; } /* Trên mobile ưu tiên chạm tự nhiên */
-            .chat-main-card { border-radius: 0; border: none; } /* Phẳng hơn trên mobile */
-            .chat-bubble { max-width: 95%; }
+            .chat-main-card { border-radius: 0; border: none; }
+            .chat-bubble { max-width: 92%; }
+
+            /* Tối ưu thanh công cụ thao tác tin nhắn trên điện thoại khi chạm vào */
+            .chat-floating-actions {
+                top: -15px;
+                right: 8px;
+                padding: 3px 6px;
+                background: var(--bg-panel);
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+            }
+            .chat-msg-row.active-actions .chat-floating-actions {
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                transform: translateY(0) !important;
+                z-index: 25;
+            }
+            .chat-float-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.92rem;
+            }
         }
 
         /* AVATAR FRAME & WOW SHOP CSS */
         .avt-wrapper { position: relative; display: inline-flex; flex-shrink: 0; align-self: flex-start; }
-        .avt-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; object-fit: contain; }
+        .avt-frame { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            pointer-events: none; 
+            z-index: 2; 
+            object-fit: contain;
+            aspect-ratio: 1 / 1;
+            max-width: none !important;
+            max-height: none !important;
+        }
         
         .WOW-balance-pill { background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.3); cursor: pointer; transition: 0.2s; border: none; }
         .WOW-balance-pill:hover { transform: scale(1.05); }
@@ -14788,6 +14825,37 @@
                 this.style.height = Math.min(this.scrollHeight, 120) + 'px';
             });
         }
+
+        // 📱 XỬ LÝ CHẠM (TAP) BẬT/TẮT THANH THAO TÁC TIN NHẮN TRÊN ĐIỆN THOẠI
+        document.addEventListener('click', function(e) {
+            const chatList = document.getElementById('chatMessageList');
+            if (!chatList) return;
+
+            // Nếu click vào một nút trong thanh thao tác thì tự đóng thanh sau khi xử lý xong
+            if (e.target.closest('.chat-floating-actions button') || e.target.closest('.chat-floating-actions a')) {
+                setTimeout(() => {
+                    document.querySelectorAll('.chat-msg-row.active-actions').forEach(r => r.classList.remove('active-actions'));
+                }, 120);
+                return;
+            }
+
+            const row = e.target.closest('.chat-msg-row');
+            if (row && chatList.contains(row)) {
+                // Nếu bấm vào các liên kết ngoài, nút bình chọn, nút xem video... thì không chặn
+                if (e.target.closest('a, button, input, textarea, iframe, audio, .chat-poll-opt, .btn-open-blindbag, .bb-quiz-opt-btn')) {
+                    return;
+                }
+                const wasActive = row.classList.contains('active-actions');
+                document.querySelectorAll('.chat-msg-row.active-actions').forEach(r => r.classList.remove('active-actions'));
+                if (!wasActive) {
+                    row.classList.add('active-actions');
+                }
+                return;
+            }
+
+            // Chạm ra ngoài khu vực tin nhắn -> đóng thanh thao tác
+            document.querySelectorAll('.chat-msg-row.active-actions').forEach(r => r.classList.remove('active-actions'));
+        });
 
         // 🤖 PHÍM TẮT TƯƠNG TÁC BEABEA
         function quickMentionBeaBea() {
