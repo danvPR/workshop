@@ -98,15 +98,12 @@
   }
 
   function msg(id, vi, en) {
-    if (typeof Scratch.translate === "function") {
-      const res = Scratch.translate({ id: id, default: en });
-      if (res === en) {
-        const lang = (Scratch.translate.language || navigator.language || "").toLowerCase();
-        if (lang.startsWith("vi")) return vi;
-      }
-      return res;
-    }
-    const lang = (navigator.language || "").toLowerCase();
+    const lang = (
+      (Scratch.translate && Scratch.translate.language) ||
+      navigator.language ||
+      ""
+    ).toLowerCase();
+
     return lang.startsWith("vi") ? vi : en;
   }
 
