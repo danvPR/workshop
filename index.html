@@ -8975,28 +8975,61 @@
         async function openProjectPage(idParam, urlParams = null) {
             document.getElementById('projectView').style.display = 'block';
             
-            // Xóa iframe cũ và hiện loading mượt mà
+            // Xóa iframe cũ và hiện loading
             document.getElementById('playerContainer').innerHTML = '<div style="text-align:center; padding: 100px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary);"></i></div>';
 
-            let proj = allProjects.find(p => p.projectId === idParam || p.fileId === idParam);
+            const cleanId = String(idParam || '').trim();
+
+            // 1. TÌM CHÍNH XÁC THEO KIỂU CHUỖI STRING (CHỐNG LỆCH NUMBER VÀ STRING)
+            let proj = allProjects.find(p => (p.projectId && String(p.projectId) === cleanId) || (p.fileId && String(p.fileId) === cleanId));
             
-            // 🛡️ 
+            // 2. NẾU CHƯA CÓ TRONG BỘ NHỚ -> TẢI TỪ MÁY CHỦ VÀ TÌM ĐÚNG ID (CHỐNG GÁN MÙ QUÁNG res.projects[0])
             if (!proj) {
                 try {
-                    let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(idParam)}&limit=1`;
+                    let fetchUrl = `${WORKER_URL}/api/projects?search=${encodeURIComponent(cleanId)}&limit=20`;
                     if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                     const res = await (await fetch(fetchUrl)).json();
-                    if (res.projects && res.projects.length > 0) {
-                        proj = res.projects[0];
-                        allProjects.push(proj); // Caching để mở lại nhanh hơn
+                    if (res && res.projects && res.projects.length > 0) {
+                        const matched = res.projects.find(p => (p.projectId && String(p.projectId) === cleanId) || (p.fileId && String(p.fileId) === cleanId));
+                        if (matched) {
+                            proj = matched;
+                            allProjects.push(proj);
+                        }
                     }
                 } catch(e) {}
             }
 
-            if (!proj) { showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); location.hash="#home"; return; }
+            if (!proj) { 
+                showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); 
+                location.hash = "#home"; 
+                return; 
+            }
+            
             currentProj = proj;
 
-            // 🛡️ 
+            // 3. CÔ LẬP VÀ AN TOÀN HÓA MẢNG BÌNH LUẬN (CHỐNG DÙNG CHUNG BỘ NHỚ VỚI DỰ ÁN KHÁC)
+            let projComments = [];
+            if (Array.isArray(currentProj.comments)) {
+                projComments = [...currentProj.comments]; // Sao chép mảng độc lập
+            } else if (typeof currentProj.comments === 'string' && currentProj.comments.trim()) {
+                try {
+                    const parsed = JSON.parse(currentProj.comments);
+                    projComments = Array.isArray(parsed) ? parsed : [];
+                } catch(e) {
+                    projComments = [];
+                }
+            }
+            currentProj.comments = projComments;
+
+            // 4. RESET TOÀN BỘ TRẠNG THÁI BÌNH LUẬN KHI MỞ DỰ ÁN MỚI
+            commentLimits.proj = 10;
+            archiveCommentPage.proj = 1;
+            hasMoreArchiveComments.proj = true;
+            expandedThreads.proj = {};
+            cancelReply('proj');
+            removeCommentImage('proj');
+
+            // Cập nhật phân quyền bình luận
             if (currentUser) { 
                 document.getElementById('commentFormProj').style.display = 'block'; 
                 document.getElementById('loginPromptProj').style.display = 'none'; 
@@ -9005,14 +9038,15 @@
                 document.getElementById('loginPromptProj').style.display = 'block'; 
             }
 
-            // Cập nhật SEO cho trang dự án
+            // Cập nhật SEO
             const pageTitle = `${proj.title} - Tác phẩm bởi ${proj.author} | DANVworkshop`;
             const pageDesc = proj.description ? proj.description.substring(0, 150) : `Chơi và trải nghiệm dự án ${proj.title} được tạo bởi ${proj.author} trên DANVworkshop.`;
             const pageThumb = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             updateSEO(pageTitle, pageDesc, pageThumb, window.location.href);
 
-            document.getElementById('projPageTitle').innerHTML = proj.title + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
-            document.getElementById('projPageAuthor').innerText = proj.author; document.getElementById('projPageAuthor').href = `#profile/${proj.author}`;
+            document.getElementById('projPageTitle').innerHTML = escapeHtml(proj.title) + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
+            document.getElementById('projPageAuthor').innerText = proj.author; 
+            document.getElementById('projPageAuthor').href = `#profile/${encodeURIComponent(proj.author)}`;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
             document.getElementById('playerContainer').innerHTML = `<iframe src="https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
@@ -9024,24 +9058,19 @@
             document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
             document.getElementById('projCredits').innerHTML = proj.credits ? formatProjectDesc(proj.credits) : "Tác giả gốc.";
             
-            commentLimits.proj = 10; // Reset số lượng bình luận khi mở dự án mới
             updateActionBtns(); 
             
-            // Hiện loading
-            document.getElementById('commentListProj').innerHTML = '<div style="text-align:center; padding: 30px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="color:#666; font-size:0.9rem; margin-top:10px; display:inline-block;">Đang tải bình luận...</span></div>';
-            setTimeout(() => {
-                renderCommentList('proj', currentProj.comments || []); 
-                removeCommentImage('proj'); cancelReply('proj');
-            }, 300); // Đợi DOM sẵn sàng
-            
+            // 5. RENDER ĐÚNG BÌNH LUẬN CỦA DỰ ÁN HIỆN TẠI (BỎ setTimeout CHỐNG XUNG ĐỘT)
+            renderCommentList('proj', currentProj.comments);
+
             if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
                 switchProjTab('comments');
-                if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('proj', urlParams.get('c')), 500);
+                if (urlParams.get('c')) setTimeout(() => highlightAndScrollComment('proj', urlParams.get('c')), 300);
             } else {
                 switchProjTab('info');
             }
 
-            // Đồng bộ lượt chơi và các thông số kỹ thuật
+            // Đồng bộ lượt chơi và các thông số
             const viewCountEl = document.getElementById('projViewCountDisplay');
             if (viewCountEl) viewCountEl.innerText = proj.views || 0;
             const metaVis = document.getElementById('projMetaVis');
@@ -9049,13 +9078,40 @@
             const metaDate = document.getElementById('projMetaDate');
             if (metaDate) metaDate.innerText = proj.date ? proj.date.split(' ')[0] : 'Không rõ';
 
+            // Cập nhật thông tin ngày và changelog
+            const dateSpan = document.getElementById('projPageDate');
+            if (proj.date) {
+                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(proj.date)}`;
+                dateSpan.title = proj.date;
+            } else {
+                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> Đang cập nhật...`;
+            }
+
+            const badge = document.getElementById('projVersionBadge');
+            const badgeText = document.getElementById('projVersionText');
+            if (proj.changelog) {
+                badge.style.display = 'inline-block';
+                badgeText.innerText = proj.changelog;
+            } else {
+                badge.style.display = 'none';
+            }
+
+            const btnSettings = document.getElementById('btnProjSettings');
+            if (btnSettings) {
+                btnSettings.onclick = openProjSettingsModal;
+                btnSettings.style.display = (currentUser && (currentUser.username.toLowerCase() === proj.author.toLowerCase() || currentUser.role === 'admin')) ? 'inline-flex' : 'none';
+            }
+
+            if (currentUser && currentUser.role === 'admin') document.getElementById('btnAdminForcePrivate').style.display = 'inline-flex';
+            else document.getElementById('btnAdminForcePrivate').style.display = 'none';
+
             // Cập nhật Mini Creator Card ở cột phải
-            document.getElementById('projPageAuthorLinkAvt').href = `#profile/${proj.author}`;
+            document.getElementById('projPageAuthorLinkAvt').href = `#profile/${encodeURIComponent(proj.author)}`;
             document.getElementById('projPageAuthorAvt').src = DEFAULT_AVATAR;
             document.getElementById('projSidebarAuthorAvt').src = DEFAULT_AVATAR;
             document.getElementById('projSidebarAuthorName').innerText = proj.author;
             document.getElementById('projSidebarAuthorUser').innerText = `@${proj.author}`;
-            document.getElementById('btnVisitAuthorProf').href = `#profile/${proj.author}`;
+            document.getElementById('btnVisitAuthorProf').href = `#profile/${encodeURIComponent(proj.author)}`;
             
             fetch(`${WORKER_URL}/api/user/${encodeURIComponent(proj.author)}`)
                 .then(r => r.json())
@@ -9071,20 +9127,10 @@
                     }
                 }).catch(e=>{});
 
-            // Cập nhật Thời gian tương đối (Hover để xem giờ gốc)
-            const dateSpan = document.getElementById('projPageDate');
-            if (proj.date) {
-                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(proj.date)}`;
-                dateSpan.title = proj.date; // Hiển thị giờ cụ thể khi Hover
-            } else {
-                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> Đang cập nhật...`;
-            }
-            
-            //  TỰ ĐỘNG CỘNG LƯỢT XEM CHUẨN XÁC
+            // Tự động cộng lượt xem
             const viewSessionKey = `danv_viewed_${currentProj.projectId || currentProj.fileId}`;
             if (!sessionStorage.getItem(viewSessionKey)) {
                 sessionStorage.setItem(viewSessionKey, "true");
-                
                 fetch(`${WORKER_URL}/api/project/action`, { 
                     method: 'POST', 
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
@@ -9097,21 +9143,31 @@
                 }).then(r => r.json()).then(res => {
                     if (res && res.success && res.views !== undefined) {
                         currentProj.views = res.views;
+                        if (viewCountEl) viewCountEl.innerText = res.views;
                     }
                 }).catch(e => {});
             }
 
-            if (currentUser && (currentUser.username.toLowerCase() === proj.author.toLowerCase() || currentUser.role === 'admin')) {
-                document.getElementById('btnProjSettings').style.display = 'inline-flex';
-            } else {
-                document.getElementById('btnProjSettings').style.display = 'none';
+            // Mở tự động khung cập nhật nếu được kích hoạt
+            if (window.autoOpenSettingsForUpdate) {
+                window.autoOpenSettingsForUpdate = false;
+                openProjSettingsModal();
+                setTimeout(() => {
+                    const updateContainer = document.getElementById('updateSectionContainer');
+                    const updateSection = document.getElementById('updateProjFile');
+                    if (updateContainer && updateSection) {
+                        updateContainer.classList.add('highlight-attention');
+                        updateContainer.scrollIntoView({behavior: 'smooth', block: 'center'});
+                        if (pendingImportedData && pendingImportedData.sb3File) {
+                            const dt = new DataTransfer();
+                            dt.items.add(pendingImportedData.sb3File);
+                            updateSection.files = dt.files;
+                            showToast("Đã tự động điền file game mới. Hãy bấm Tải lên!", "success");
+                        }
+                        setTimeout(() => updateContainer.classList.remove('highlight-attention'), 4500);
+                    }
+                }, 250); 
             }
-
-            if (currentUser && currentUser.role === 'admin') document.getElementById('btnAdminForcePrivate').style.display = 'inline-flex';
-            else document.getElementById('btnAdminForcePrivate').style.display = 'none';
-
-            if (currentUser) { document.getElementById('commentFormProj').style.display = 'block'; document.getElementById('loginPromptProj').style.display = 'none'; } 
-            else { document.getElementById('commentFormProj').style.display = 'none'; document.getElementById('loginPromptProj').style.display = 'block'; }
         }
 
         function switchProjTab(tabName) {
@@ -9208,18 +9264,26 @@
             if (type === 'prof') containerId = 'profCommentList';
             if (type === 'std') containerId = 'stdCommentList';
             const container = document.getElementById(containerId);
-            
-            if (!list || list.length === 0) { container.innerHTML = `<div style="color:#888; text-align:center; padding:20px;">${t('proj_no_comments')}</div>`; return; }
+            if (!container) return;
+
+            // Đảm bảo list luôn là mảng, nếu là chuỗi thì tự động parse
+            if (typeof list === 'string') {
+                try { list = JSON.parse(list); } catch(e) { list = []; }
+            }
+            if (!Array.isArray(list) || list.length === 0) { 
+                container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px;">${t('proj_no_comments') || 'Chưa có bình luận nào.'}</div>`; 
+                return; 
+            }
 
             // Xử lý nạp Avatar cho bình luận lưu trữ
             list.forEach(c => {
-                if (c.isArchived && !c.avt) {
+                if (c && c.isArchived && !c.avt) {
                     if (globalUserCache[c.author]) {
                         c.avt = globalUserCache[c.author];
                     } else {
-                        c.avt = DEFAULT_AVATAR; // Mặc định
+                        c.avt = DEFAULT_AVATAR;
                         fetch(`${WORKER_URL}/api/user/${encodeURIComponent(c.author)}`).then(r=>r.json()).then(d=>{
-                            if(d.avt) {
+                            if(d && d.avt) {
                                 globalUserCache[c.author] = d.avt;
                                 const imgEl = document.getElementById(`avt-cmt-${c.id}`);
                                 if (imgEl) imgEl.src = getAvtUrl(d.avt);
@@ -9230,15 +9294,23 @@
             });
 
             const rootComments = []; const repliesMap = {};
-            list.forEach(c => { if (c.parentId) { if (!repliesMap[c.parentId]) repliesMap[c.parentId] = []; repliesMap[c.parentId].push(c); } else { rootComments.push(c); } });
+            list.forEach(c => { 
+                if (!c) return;
+                if (c.parentId) { 
+                    if (!repliesMap[c.parentId]) repliesMap[c.parentId] = []; 
+                    repliesMap[c.parentId].push(c); 
+                } else { 
+                    rootComments.push(c); 
+                } 
+            });
             rootComments.sort((a, b) => parseInt(b.id) - parseInt(a.id));
 
             const canDelete = (c) => {
-                if(!currentUser) return false;
+                if(!currentUser || !c) return false;
                 if(currentUser.role === 'admin') return true;
-                if(type === 'proj') return currentProj.author.toLowerCase() === currentUser.username.toLowerCase() || c.author.toLowerCase() === currentUser.username.toLowerCase();
-                if(type === 'prof') return viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase() || c.author.toLowerCase() === currentUser.username.toLowerCase();
-                if(type === 'std') return (currentStudio && currentStudio.managers.map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase())) || c.author.toLowerCase() === currentUser.username.toLowerCase();
+                if(type === 'proj' && currentProj) return (currentProj.author || '').toLowerCase() === currentUser.username.toLowerCase() || (c.author || '').toLowerCase() === currentUser.username.toLowerCase();
+                if(type === 'prof' && viewingProfileUser) return viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase() || (c.author || '').toLowerCase() === currentUser.username.toLowerCase();
+                if(type === 'std' && currentStudio) return ((currentStudio.managers || []).map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase())) || (c.author || '').toLowerCase() === currentUser.username.toLowerCase();
                 return false;
             };
 
@@ -13412,54 +13484,6 @@
             });
         }
 
-        // Sửa hàm OpenProjectPage để điền Ngày tải lên và gán nút Cài đặt đúng hàm mới
-        const originalOpenProjectPage = openProjectPage;
-        openProjectPage = async function(idParam, urlParams = null) {
-            await originalOpenProjectPage(idParam, urlParams);
-            if(currentProj) {
-                const dateSpan = document.getElementById('projPageDate');
-                if (currentProj.date) {
-                    dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(currentProj.date)}`;
-                    dateSpan.title = currentProj.date;
-                }
-                const badge = document.getElementById('projVersionBadge');
-                const badgeText = document.getElementById('projVersionText');
-                if (currentProj.changelog) {
-                    badge.style.display = 'inline-block';
-                    badgeText.innerText = currentProj.changelog;
-                } else {
-                    badge.style.display = 'none';
-                }
-                const btnSettings = document.getElementById('btnProjSettings');
-                if(btnSettings) btnSettings.onclick = openProjSettingsModal;
-
-                // Mở tự động Bảng cập nhật sau khi đã load 100% xong dự án
-                if (window.autoOpenSettingsForUpdate) {
-                    window.autoOpenSettingsForUpdate = false;
-                    openProjSettingsModal();
-                    
-                    setTimeout(() => {
-                        const updateContainer = document.getElementById('updateSectionContainer');
-                        const updateSection = document.getElementById('updateProjFile');
-                        
-                        if (updateContainer && updateSection) {
-                            updateContainer.classList.add('highlight-attention');
-                            updateContainer.scrollIntoView({behavior: 'smooth', block: 'center'});
-                            
-                            if (pendingImportedData && pendingImportedData.sb3File) {
-                                const dt = new DataTransfer();
-                                dt.items.add(pendingImportedData.sb3File);
-                                updateSection.files = dt.files;
-                                showToast("Đã tự động điền file game mới. Hãy bấm Tải lên!", "success");
-                            } else {
-                                showToast("Vui lòng tải file mới lên tại khu vực đang phát sáng", "info");
-                            }
-                            setTimeout(() => updateContainer.classList.remove('highlight-attention'), 4500);
-                        }
-                    }, 250); 
-                }
-            }
-        };
 
 
         // ================= TÍNH NĂNG QUẢN LÝ DỰ ÁN =================
