@@ -12654,14 +12654,22 @@
             btn.innerHTML = origHtml;
         }
 
-        // HÀM LẤY DỮ LIỆU THÔNG BÁO & HIỂN THỊ SỐ ĐỎ TRÊN HỘP THƯ
+        // HÀM LẤY DỮ LIỆU THÔNG BÁO & HIỂN THỊ SỐ ĐỎ TRÊN HỘP THƯ (CHỐNG TRÌNH DUYỆT CACHE)
         async function fetchNotifications(silent = false) {
             if(!currentUser) return;
             try {
-                const notifs = await (await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`)).json();
-                if (notifs.error) return; // Nếu không khớp token thì bỏ qua
-                window.cachedNotifs = Array.isArray(notifs) ? notifs : []; // Lưu lại bộ nhớ tạm
-                const unreadCount = window.cachedNotifs.filter(n => !n.read).length;
+                // 🛡️ Thêm _t=${Date.now()} và cache: 'no-store' để ép trình duyệt luôn hỏi máy chủ mới nhất
+                const res = await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`, {
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+                const notifs = await res.json();
+                if (notifs.error) return;
+
+                window.cachedNotifs = Array.isArray(notifs) ? notifs : [];
+                
+                // 🛡️ Chuẩn hóa kiểm tra: n.read === true hoặc n.read === "true" đều coi là ĐÃ ĐỌC
+                const unreadCount = window.cachedNotifs.filter(n => n.read !== true && n.read !== "true").length;
                 const badge = document.getElementById('notifBadge');
                 
                 if (badge) {
@@ -12687,9 +12695,11 @@
             container.innerHTML = '<div style="padding:40px; text-align:center; color:#855cd6;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i></div>';
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`);
+                const res = await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`, {
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
                 const data = await res.json();
-                // 🛡️ Kiểm tra nếu Backend trả về lỗi thì ép về mảng rỗng [] thay vì giữ Object lỗi
                 window.cachedNotifs = Array.isArray(data) ? data : []; 
             } catch(e) {
                 window.cachedNotifs = [];
@@ -12716,8 +12726,9 @@
         try { // Bọc try...catch để tin nhắn này lỗi thì tin nhắn khác vẫn chạy
             const { actionHtml, bubbleHtml } = formatScratchNotif(n);
             const isWarning = actionHtml.includes('background: #ef4444');
+            const isRead = (n.read === true || n.read === "true");
             return `
-                <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${n.read ? '#ffffff' : '#e6f0ff'};">
+                <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${isRead ? '#ffffff' : '#e6f0ff'};">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: ${bubbleHtml ? '10px' : '0'};">
                         <div style="display:flex; align-items:center; gap:10px; flex:1;">
                             ${isWarning ? '' : getNotifIcon(n.text || "")}
