@@ -4698,12 +4698,62 @@
             background: rgba(245, 158, 11, 0.18);
         }
 
+        /* Nút Rút Tiền Về Ví Nổi Bật */
+        .creator-btn-withdraw {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 20px;
+            padding: 9px 20px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .creator-btn-withdraw:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(16, 185, 129, 0.5);
+            color: #ffffff !important;
+        }
+        .creator-btn-withdraw:disabled {
+            background: var(--bg-secondary) !important;
+            color: var(--text-muted) !important;
+            border: 1px solid var(--border-color) !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            transform: none !important;
+            opacity: 0.7;
+        }
+
         /* 4 Thẻ HUD Chỉ Số Doanh Thu */
         .creator-stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
+        }
+        .creator-stat-card.pending-highlight {
+            border: 2px solid #ea580c !important;
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.08) 0%, var(--bg-panel) 100%) !important;
+            position: relative;
+        }
+        .creator-stat-card.pending-highlight::after {
+            content: 'Chờ rút';
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #ea580c;
+            background: rgba(234, 88, 12, 0.12);
+            padding: 2px 7px;
+            border-radius: 6px;
+            border: 1px solid rgba(234, 88, 12, 0.25);
         }
         .creator-stat-card {
             background: var(--bg-panel);
@@ -5379,6 +5429,13 @@
                 <span id="stdProjCountDisplay" style="font-size:0.88rem; color:var(--text-muted);"></span>
             </div>
             <div class="project-grid" id="stdProjectList" data-i18n="station_no_projects">Chưa có dự án nào trong Station.</div>
+            
+            <!-- NÚT XEM THÊM DỰ ÁN TRONG STATION -->
+            <div id="stdLoadMoreProjectsArea" style="text-align: center; padding: 20px 0 10px 0; display: none;">
+                <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreStudioProjects()">
+                    <i class="fa-solid fa-angle-down"></i> <span data-i18n="station_load_more_proj">Xem thêm dự án</span>
+                </button>
+            </div>
         </div>
 
         <!-- TAB 2: THÀNH VIÊN -->
@@ -6351,18 +6408,33 @@
             </div>
         </div>
 
-        <!-- 4 Khối HUD Chỉ Số Tài Chính -->
+        <!-- 4 Khối HUD Chỉ Số Tài Chính Mới -->
         <div class="creator-stats-grid">
-            <div class="creator-stat-card">
-                <div class="creator-stat-icon-wrap net">
+            <!-- Thẻ 1: Doanh thu chờ rút (70% làm tròn tổng) -->
+            <div class="creator-stat-card pending-highlight" style="cursor: pointer;" onclick="openCreatorWithdrawModal()" title="Bấm để mở bảng rút WOW về ví chính">
+                <div class="creator-stat-icon-wrap" style="background: rgba(234, 88, 12, 0.12); color: #ea580c;">
                     <span class="wow-icon" style="font-size: 1.6rem;"></span>
                 </div>
-                <div>
-                    <div class="creator-stat-meta-label">Thực nhận (70%)</div>
-                    <div class="creator-stat-val" id="creatorMetricNet" style="color: #10b981;">0</div>
+                <div style="min-width: 0; flex: 1;">
+                    <div class="creator-stat-meta-label">Chờ rút (70% tổng)</div>
+                    <div class="creator-stat-val" id="creatorMetricPendingNet" style="color: #ea580c;">0</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="creatorMetricPendingSub">Từ 0 đơn hàng</div>
                 </div>
             </div>
 
+            <!-- Thẻ 2: Đã rút về ví chính -->
+            <div class="creator-stat-card">
+                <div class="creator-stat-icon-wrap net">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <div class="creator-stat-meta-label">Đã rút về ví</div>
+                    <div class="creator-stat-val" id="creatorMetricWithdrawn" style="color: #10b981;">0</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Tích lũy trọn đời</div>
+                </div>
+            </div>
+
+            <!-- Thẻ 3: Tổng doanh số bán (100%) -->
             <div class="creator-stat-card">
                 <div class="creator-stat-icon-wrap gross">
                     <i class="fa-solid fa-coins"></i>
@@ -6370,9 +6442,11 @@
                 <div>
                     <div class="creator-stat-meta-label">Tổng doanh số (100%)</div>
                     <div class="creator-stat-val" id="creatorMetricGross">0</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Trước khi trừ phí 30%</div>
                 </div>
             </div>
 
+            <!-- Thẻ 4: Tổng số đơn hàng -->
             <div class="creator-stat-card">
                 <div class="creator-stat-icon-wrap orders">
                     <i class="fa-solid fa-receipt"></i>
@@ -6380,18 +6454,7 @@
                 <div>
                     <div class="creator-stat-meta-label">Lượt giao dịch</div>
                     <div class="creator-stat-val" id="creatorMetricOrders">0</div>
-                </div>
-            </div>
-
-            <div class="creator-stat-card">
-                <div class="creator-stat-icon-wrap top-item">
-                    <i class="fa-solid fa-fire"></i>
-                </div>
-                <div style="min-width: 0;">
-                    <div class="creator-stat-meta-label">Vật phẩm hot nhất</div>
-                    <div class="creator-stat-val" id="creatorMetricTopItem" style="font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;" title="Chưa có dữ liệu">
-                        --
-                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="creatorMetricTopItemSub">Vật phẩm: --</div>
                 </div>
             </div>
         </div>
@@ -7670,6 +7733,62 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN RÚT DOANH THU CREATOR (LÀM TRÒN SÀN THEO TỔNG ĐƠN) -->
+    <div class="modal-overlay" id="creatorWithdrawModal" style="z-index: 10002;">
+        <div class="modal" style="max-width: 480px; border-radius: 24px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color); box-shadow: 0 25px 70px rgba(0,0,0,0.4);">
+            <div class="modal-header" style="align-items: center; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);">
+                <span style="font-weight: 900; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; color: var(--text-title);">
+                    <i class="fa-solid fa-money-bill-transfer" style="color: #10b981;"></i> Rút Doanh Thu Về Ví
+                </span>
+                <button class="btn-close" onclick="closeModal('creatorWithdrawModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); line-height: 1.45;">
+                    Bạn đang thực hiện quyết toán toàn bộ doanh số bán vật phẩm in-game đang chờ rút:
+                </div>
+
+                <!-- Bảng chi tiết quyết toán -->
+                <div style="background: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: 16px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem;">
+                        <span style="color: var(--text-muted);">Tổng doanh số chờ rút (<b id="withdrawModalOrdersCount">0</b> đơn):</span>
+                        <b style="color: var(--text-title);" id="withdrawModalGross">0 WOW</b>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem;">
+                        <span style="color: var(--text-muted);">Tỷ lệ thực nhận:</span>
+                        <b style="color: #10b981;">70%</b>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem;">
+                        <span style="color: var(--text-muted);">Phí nền tảng (30% + phần lẻ):</span>
+                        <span style="color: #ef4444; font-weight: 700;" id="withdrawModalFee">-0 WOW</span>
+                    </div>
+                    <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; font-size: 0.95rem; color: var(--text-title);">Số WOW thực nhận:</span>
+                        <div style="font-size: 1.5rem; font-weight: 900; color: #10b981; display: flex; align-items: center; gap: 6px;">
+                            <span class="wow-icon"></span>
+                            <span id="withdrawModalNet">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chú thích chính sách làm tròn sàn theo tổng -->
+                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 10px 12px; font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 8px; line-height: 1.45;">
+                    <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1rem; margin-top: 2px; flex-shrink: 0;"></i>
+                    <span><b>Lợi ích làm tròn theo tổng:</b> Hệ thống gom toàn bộ doanh số để tính 70% và chỉ làm tròn sàn 1 lần duy nhất trên tổng số rút, giúp bạn không bị hao hụt các đơn hàng 1 hay 2 WOW!</span>
+                </div>
+
+                <!-- Cụm nút hành động -->
+                <div style="display: flex; gap: 10px; margin-top: 4px;">
+                    <button type="button" class="btn" style="flex: 1; padding: 12px; border-radius: 14px; font-weight: 700;" onclick="closeModal('creatorWithdrawModal')">
+                        Hủy bỏ
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmCreatorWithdraw" style="flex: 1.6; padding: 12px; border-radius: 14px; font-weight: 900; justify-content: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="handleConfirmCreatorWithdraw()">
+                        <i class="fa-solid fa-wallet"></i> Xác nhận rút về ví
+                    </button>
                 </div>
             </div>
         </div>
@@ -9927,18 +10046,25 @@
         }
 
         let loadedStudioProjects = [];
+        let currentStudioFilteredProjects = [];
+        const STD_PROJECTS_PER_PAGE = 12; // Giới hạn 12 dự án ban đầu (vừa vặn 3-4 dòng hiển thị)
+        let studioProjectsLimit = 12;
 
         async function renderStudioProjects() {
             const grid = document.getElementById('stdProjectList');
+            const loadMoreArea = document.getElementById('stdLoadMoreProjectsArea');
             const projs = currentStudio.projects || [];
             document.getElementById('stdProjCountDisplay').innerText = `Tổng số: ${projs.length} tác phẩm`;
+            studioProjectsLimit = STD_PROJECTS_PER_PAGE; // Reset lại số lượng hiển thị ban đầu
             
             if(projs.length === 0) { 
                 grid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 40px 0;"><i class="fa-solid fa-folder-open" style="font-size:2.5rem; opacity:0.3; display:block; margin-bottom:10px;"></i>Chưa có dự án nào trong Station.</div>'; 
+                if (loadMoreArea) loadMoreArea.style.display = 'none';
                 return; 
             }
             
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+            if (loadMoreArea) loadMoreArea.style.display = 'none';
             loadedStudioProjects = [];
             
             // 🚀 BƯỚC 1: Quét xem có bao nhiêu dự án bị thiếu trong bộ nhớ
@@ -9952,20 +10078,18 @@
                 }
             }
 
-            // 🚀 BƯỚC 2: TỐI ƯU CỰC MẠNH -> Thay vì gọi 30 request cho 30 dự án thiếu, ta gọi đúng 1 LẦN lấy danh sách tổng từ Backend (Backend đã cache sẵn nên rất nhanh)
+            // 🚀 BƯỚC 2: TỐI ƯU CỰC MẠNH -> Thay vì gọi 30 request cho 30 dự án thiếu, ta gọi đúng 1 LẦN lấy danh sách tổng từ Backend
             if (missingProjs) {
                 try {
                     const res = await fetch(`${WORKER_URL}/api/projects?limit=150`);
                     const data = await res.json();
                     if (data.projects) {
-                        // Trộn danh sách dự án mới vào bộ nhớ tổng
                         data.projects.forEach(newP => {
                             if (!allProjects.find(oldP => oldP.projectId === newP.projectId)) {
                                 allProjects.push(newP);
                             }
                         });
                         
-                        // Lọc lại các dự án thuộc Station
                         loadedStudioProjects = [];
                         for(const pid of projs) {
                             let p = allProjects.find(x => String(x.projectId) === String(pid) || String(x.fileId) === String(pid));
@@ -9980,18 +10104,26 @@
 
         function filterStudioInternalProjects(val) {
             const q = (val || '').toLowerCase().trim();
+            studioProjectsLimit = STD_PROJECTS_PER_PAGE; // Reset lại số lượng khi người dùng gõ tìm kiếm
             const filtered = loadedStudioProjects.filter(p => (p.title || '').toLowerCase().includes(q) || (p.author || '').toLowerCase().includes(q));
             displayStudioProjectCards(filtered);
         }
 
         function displayStudioProjectCards(list) {
+            currentStudioFilteredProjects = list || [];
             const grid = document.getElementById('stdProjectList');
+            const loadMoreArea = document.getElementById('stdLoadMoreProjectsArea');
+            
             if(!list || list.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">Không tìm thấy tác phẩm nào khớp với từ khóa.</div>';
+                if (loadMoreArea) loadMoreArea.style.display = 'none';
                 return;
             }
 
-            grid.innerHTML = list.map(p => {
+            // Cắt danh sách theo giới hạn hiện tại
+            const visibleList = list.slice(0, studioProjectsLimit);
+
+            grid.innerHTML = visibleList.map(p => {
                 const canRemove = currentUser && (
                     currentStudio.managers.map(m=>m.toLowerCase()).includes(currentUser.username.toLowerCase()) || 
                     p.author.toLowerCase() === currentUser.username.toLowerCase() ||
@@ -10013,6 +10145,17 @@
                     </div>
                 </div>`;
             }).join('');
+
+            // Hiển thị nút "Xem thêm" nếu số lượng dự án vượt quá giới hạn hiện tại
+            if (loadMoreArea) {
+                loadMoreArea.style.display = list.length > studioProjectsLimit ? 'block' : 'none';
+            }
+        }
+
+        // Hàm kích hoạt khi bấm nút "Xem thêm dự án"
+        function loadMoreStudioProjects() {
+            studioProjectsLimit += STD_PROJECTS_PER_PAGE;
+            displayStudioProjectCards(currentStudioFilteredProjects);
         }
 
         function renderStudioMembers() {
@@ -16845,6 +16988,7 @@
         let creatorSearchQuery = "";
         let creatorAllTransactions = [];
         let creatorTargetHighlightTx = null;
+        let creatorCurrentSummary = null; // Lưu trạng thái doanh thu chờ rút
 
         async function openCreatorPage(urlParams) {
             if (!currentUser) {
@@ -16914,19 +17058,33 @@
                     return;
                 }
 
-                // Cập nhật 4 thẻ HUD chỉ số tài chính
+                // Cập nhật 4 thẻ HUD chỉ số tài chính mới
                 const sum = res.summary || {};
-                document.getElementById('creatorMetricNet').innerHTML = `<span class="wow-icon"></span> ${sum.totalNet || 0}`;
-                document.getElementById('creatorMetricGross').innerHTML = `<span class="wow-icon" style="filter:grayscale(1);"></span> ${sum.totalGross || 0}`;
-                document.getElementById('creatorMetricOrders').innerText = sum.totalOrders || 0;
+                creatorCurrentSummary = sum; // Lưu lại để dùng trong Modal
+
+                const pendingNetEl = document.getElementById('creatorMetricPendingNet');
+                if (pendingNetEl) pendingNetEl.innerHTML = `<span class="wow-icon"></span> +${sum.estimatedNet || 0}`;
                 
-                const topItemEl = document.getElementById('creatorMetricTopItem');
-                if (sum.topItem && sum.topItem.name) {
-                    topItemEl.innerText = `${sum.topItem.name} (${sum.topItem.count} lượt)`;
-                    topItemEl.title = `${sum.topItem.name} (${sum.topItem.count} lượt)`;
-                } else {
-                    topItemEl.innerText = "--";
-                    topItemEl.title = "Chưa có vật phẩm nào được mua";
+                const pendingSubEl = document.getElementById('creatorMetricPendingSub');
+                if (pendingSubEl) pendingSubEl.innerText = `Từ ${sum.pendingOrders || 0} đơn (${sum.pendingGross || 0} WOW)`;
+
+                const withdrawnEl = document.getElementById('creatorMetricWithdrawn');
+                if (withdrawnEl) withdrawnEl.innerHTML = `<span class="wow-icon"></span> ${sum.totalWithdrawnNet || 0}`;
+
+                const grossEl = document.getElementById('creatorMetricGross');
+                if (grossEl) grossEl.innerHTML = `<span class="wow-icon" style="filter:grayscale(1);"></span> ${sum.totalGross || 0}`;
+
+                const ordersEl = document.getElementById('creatorMetricOrders');
+                if (ordersEl) ordersEl.innerText = sum.totalOrders || 0;
+
+                const topItemSubEl = document.getElementById('creatorMetricTopItemSub');
+                if (topItemSubEl) {
+                    if (sum.topItem && sum.topItem.name) {
+                        topItemSubEl.innerText = `Hot: ${sum.topItem.name} (${sum.topItem.count} đơn)`;
+                        topItemSubEl.title = `Vật phẩm bán chạy nhất: ${sum.topItem.name}`;
+                    } else {
+                        topItemSubEl.innerText = "Chưa có đơn hàng";
+                    }
                 }
 
                 const newTxs = res.transactions || [];
@@ -17082,6 +17240,69 @@
             btn.disabled = true;
 
             await fetchCreatorAnalyticsData(true);
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
+        }
+
+        // ================= XỬ LÝ RÚT TIỀN CREATOR (MODAL & EXECUTION) =================
+        function openCreatorWithdrawModal() {
+            if (!currentUser) return openModal('loginModal');
+            if (currentUser.emailVerified === false) {
+                showToast("Vui lòng xác thực Email tài khoản trước khi rút doanh thu!", "error");
+                openVerifyEmailModal();
+                return;
+            }
+
+            if (!creatorCurrentSummary || (creatorCurrentSummary.estimatedNet || 0) < 1) {
+                return showToast("Bạn chưa có doanh thu nào đủ điều kiện rút (tối thiểu 1 WOW sau tính 70%)!", "info");
+            }
+
+            // Đổ dữ liệu vào Modal
+            const pGross = creatorCurrentSummary.pendingGross || 0;
+            const pNet = creatorCurrentSummary.estimatedNet || 0;
+            const pFee = pGross - pNet;
+            const pOrders = creatorCurrentSummary.pendingOrders || 0;
+
+            document.getElementById('withdrawModalOrdersCount').innerText = pOrders;
+            document.getElementById('withdrawModalGross').innerText = `${pGross} WOW`;
+            document.getElementById('withdrawModalFee').innerText = `-${pFee} WOW`;
+            document.getElementById('withdrawModalNet').innerText = pNet;
+
+            openModal('creatorWithdrawModal');
+        }
+
+        async function handleConfirmCreatorWithdraw() {
+            if (!currentUser) return;
+            const btn = document.getElementById('btnConfirmCreatorWithdraw');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang quyết toán...';
+            btn.disabled = true;
+
+            const res = await apiFetch(`/api/creator/withdraw`, {
+                method: 'POST',
+                body: JSON.stringify({})
+            });
+
+            if (res && res.success) {
+                // 1. Cập nhật số dư ví chính Realtime
+                currentUser.WOW = res.newBalance;
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                syncAllWOWDisplays();
+
+                // 2. Hiệu ứng nổ pháo hoa mừng nhận tiền
+                const rect = btn.getBoundingClientRect();
+                spawnWOWEnergyBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+                showToast(`🎉 Rút thành công +${res.netAmount} WOW về ví chính!`, "success");
+                closeModal('creatorWithdrawModal');
+
+                // 3. Làm mới dữ liệu Studio
+                creatorCurrentPage = 1;
+                await fetchCreatorAnalyticsData(false);
+            } else {
+                showToast((res && res.error) ? res.error : "Không thể thực hiện yêu cầu rút tiền", "error");
+            }
 
             btn.innerHTML = origHtml;
             btn.disabled = false;
