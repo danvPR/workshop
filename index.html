@@ -7802,6 +7802,7 @@
         
         let attachedGifUrls = { proj: null, prof: null, chat: null }; // Biến nhớ GIF đang chọn (Hỗ trợ cả Chat)
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Hàm tạo timeout giả lập
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let chatInterval = null; // Vòng lặp tải chat tự động
         
@@ -9156,13 +9157,37 @@
             }
         }
 
+        let isActionCooldown = { like: false, star: false };
         async function toggleAction(type) {
             if (!currentUser) return openModal('loginModal');
-            const res = await apiFetch(`/api/project/action`, { method: 'POST', body: JSON.stringify({ fileId: currentProj.fileId, action: `toggle_${type}` }) });
-            if(res && res.success) {
-                let list = currentProj[`${type}s`] || [];
-                if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username); else list.push(currentUser.username);
-                currentProj[`${type}s`] = list; updateActionBtns();
+            if (isActionCooldown[type]) return;
+            isActionCooldown[type] = true;
+
+            const btn = document.getElementById(type === 'like' ? 'btnLike' : 'btnStar');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.style.pointerEvents = 'none';
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+            }
+
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch(`/api/project/action`, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ fileId: currentProj.fileId, action: `toggle_${type}` }) 
+                });
+                if(res && res.success) {
+                    let list = currentProj[`${type}s`] || [];
+                    if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username); 
+                    else list.push(currentUser.username);
+                    currentProj[`${type}s`] = list; 
+                }
+                const elapsed = Date.now() - startTime;
+                if (elapsed < 1200) await sleep(1200 - elapsed); // Ép chờ tối thiểu 1.2s
+            } finally {
+                updateActionBtns();
+                if (btn) btn.style.pointerEvents = 'auto';
+                isActionCooldown[type] = false;
             }
         }
 
@@ -10277,29 +10302,46 @@
             btn.disabled = false;
         }
 
+        let isStudioFollowCooldown = false;
         async function toggleFollowStudio() {
             if(!currentUser) return openModal('loginModal');
-            const btnFollow = document.getElementById('btnFollowStudio');
-            btnFollow.disabled = true;
+            if (isStudioFollowCooldown) return;
+            isStudioFollowCooldown = true;
 
-            const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'toggle_follow' }) });
-            if(res && res.success) {
-                if(!currentStudio.followers) currentStudio.followers = [];
-                const idx = currentStudio.followers.indexOf(currentUser.username);
-                if(idx > -1) {
-                    currentStudio.followers.splice(idx, 1);
-                    showToast("Đã hủy theo dõi", "info");
-                } else {
-                    currentStudio.followers.push(currentUser.username);
-                    showToast("Đã theo dõi Station!", "success");
-                }
-                
-                const isFollowing = currentStudio.followers.includes(currentUser.username);
-                btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> Đang theo dõi` : `<i class="fa-solid fa-plus"></i> Theo dõi`;
-                btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary';
-                document.getElementById('stdFollowersCount').innerText = currentStudio.followers.length;
+            const btnFollow = document.getElementById('btnFollowStudio');
+            const origHtml = btnFollow ? btnFollow.innerHTML : '';
+            if (btnFollow) {
+                btnFollow.disabled = true;
+                btnFollow.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             }
-            btnFollow.disabled = false;
+
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'toggle_follow' }) });
+                if(res && res.success) {
+                    if(!currentStudio.followers) currentStudio.followers = [];
+                    const idx = currentStudio.followers.indexOf(currentUser.username);
+                    if(idx > -1) {
+                        currentStudio.followers.splice(idx, 1);
+                        showToast("Đã hủy theo dõi", "info");
+                    } else {
+                        currentStudio.followers.push(currentUser.username);
+                        showToast("Đã theo dõi Station!", "success");
+                    }
+                    
+                    const isFollowing = currentStudio.followers.includes(currentUser.username);
+                    btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> Đang theo dõi` : `<i class="fa-solid fa-plus"></i> Theo dõi`;
+                    btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary';
+                    document.getElementById('stdFollowersCount').innerText = currentStudio.followers.length;
+                } else {
+                    if (btnFollow) btnFollow.innerHTML = origHtml;
+                }
+                const elapsed = Date.now() - startTime;
+                if (elapsed < 1500) await sleep(1500 - elapsed); // Ép chờ 1.5s
+            } finally {
+                if (btnFollow) btnFollow.disabled = false;
+                isStudioFollowCooldown = false;
+            }
         }
 
         function openStudioSettings() {
@@ -10951,48 +10993,63 @@
         }
 
 
+        let isFollowCooldown = false;
         async function toggleFollow() {
             if(!currentUser) return showToast(t('comment_login'), "error");
+            if (isFollowCooldown) return;
+            isFollowCooldown = true;
+
             const btnF = document.getElementById('btnFollowProf'); 
-            btnF.disabled = true;
-
-            const res = await apiFetch(`/api/user/follow`, { method: 'POST', body: JSON.stringify({ targetUser: viewingProfileUser }) });
-            
-            if(res && res.success) {
-                // 1. XÓA BỘ NHỚ ĐỆM 
-                if (typeof profileCache !== 'undefined' && profileCache[viewingProfileUser]) {
-                    delete profileCache[viewingProfileUser];
-                }
-
-                // 2. CẬP NHẬT GIAO DIỆN
-                if (viewingProfileData) {
-                    if (!viewingProfileData.followers) viewingProfileData.followers = [];
-                    
-                    const myIndex = viewingProfileData.followers.indexOf(currentUser.username);
-                    const isNowFollowing = (myIndex === -1); // Nếu chưa có thì là Đang theo dõi, có rồi thì là Bỏ theo dõi
-
-                    if (isNowFollowing) {
-                        viewingProfileData.followers.push(currentUser.username);
-                        showToast("Đã theo dõi " + viewingProfileUser, "success");
-                    } else {
-                        viewingProfileData.followers.splice(myIndex, 1);
-                        showToast("Đã hủy theo dõi", "info");
-                    }
-
-                    // Đổi giao diện nút bấm
-                    btnF.innerHTML = isNowFollowing 
-                        ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` 
-                        : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`;
-                    btnF.className = isNowFollowing ? 'btn' : 'btn btn-primary';
-
-                    // Cập nhật lại số lượng Followers
-                    const statFollowersEl = document.getElementById('statFollowersCount');
-                    if (statFollowersEl) {
-                        statFollowersEl.innerText = viewingProfileData.followers.length;
-                    }
-                }
+            const origHtml = btnF ? btnF.innerHTML : '';
+            if (btnF) {
+                btnF.disabled = true;
+                btnF.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             }
-            btnF.disabled = false;
+
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch(`/api/user/follow`, { method: 'POST', body: JSON.stringify({ targetUser: viewingProfileUser }) });
+                
+                if(res && res.success) {
+                    // 1. XÓA BỘ NHỚ ĐỆM 
+                    if (typeof profileCache !== 'undefined' && profileCache[viewingProfileUser]) {
+                        delete profileCache[viewingProfileUser];
+                    }
+
+                    // 2. CẬP NHẬT GIAO DIỆN
+                    if (viewingProfileData) {
+                        if (!viewingProfileData.followers) viewingProfileData.followers = [];
+                        
+                        const myIndex = viewingProfileData.followers.indexOf(currentUser.username);
+                        const isNowFollowing = (myIndex === -1);
+
+                        if (isNowFollowing) {
+                            viewingProfileData.followers.push(currentUser.username);
+                            showToast("Đã theo dõi " + viewingProfileUser, "success");
+                        } else {
+                            viewingProfileData.followers.splice(myIndex, 1);
+                            showToast("Đã hủy theo dõi", "info");
+                        }
+
+                        btnF.innerHTML = isNowFollowing 
+                            ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` 
+                            : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`;
+                        btnF.className = isNowFollowing ? 'btn' : 'btn btn-primary';
+
+                        const statFollowersEl = document.getElementById('statFollowersCount');
+                        if (statFollowersEl) {
+                            statFollowersEl.innerText = viewingProfileData.followers.length;
+                        }
+                    }
+                } else {
+                    if (btnF) btnF.innerHTML = origHtml;
+                }
+                const elapsed = Date.now() - startTime;
+                if (elapsed < 1500) await sleep(1500 - elapsed); // Ép chờ tối thiểu 1.5s
+            } finally {
+                if (btnF) btnF.disabled = false;
+                isFollowCooldown = false;
+            }
         }
 
         
@@ -12097,14 +12154,25 @@
             if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Tạo Bộ sưu tập'; }
         }
 
+        let playlistToggleLocks = {};
         async function toggleProjectInPlaylist(plId, isChecked) {
+            if (playlistToggleLocks[plId]) return;
+            playlistToggleLocks[plId] = true;
+
             const targetId = String(currentProj.projectId || currentProj.fileId);
-            const res = await apiFetch('/api/user/playlist', { 
-                method: 'POST', 
-                body: JSON.stringify({ action: 'toggle_project', playlistId: plId, targetProject: targetId }) 
-            });
-            if (res && res.success) {
-                showToast(isChecked ? "Đã lưu vào bộ sưu tập!" : "Đã gỡ khỏi bộ sưu tập", "info");
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch('/api/user/playlist', { 
+                    method: 'POST', 
+                    body: JSON.stringify({ action: 'toggle_project', playlistId: plId, targetProject: targetId }) 
+                });
+                if (res && res.success) {
+                    showToast(isChecked ? "Đã lưu vào bộ sưu tập!" : "Đã gỡ khỏi bộ sưu tập", "info");
+                }
+                const elapsed = Date.now() - startTime;
+                if (elapsed < 1200) await sleep(1200 - elapsed); // Chống click check/uncheck liên tục
+            } finally {
+                playlistToggleLocks[plId] = false;
             }
         }
 
@@ -14052,15 +14120,27 @@
         }
 
         // ================= VOTE & UPLOAD ASSET =================
+        let assetVoteLocks = {};
         async function toggleAssetVote(assetId, type) {
             if (!currentUser) return openModal('loginModal');
-            const res = await apiFetch(`/api/assets/action`, { method: 'POST', body: JSON.stringify({ assetId, action: `toggle_${type}` }) });
-            if (res && res.success) {
-                const asset = allAssets.find(a => a.assetId === assetId);
-                if (asset) {
-                    asset.upvotes = res.upvotes; asset.downvotes = res.downvotes;
-                    renderAssetGrid();
+            if (assetVoteLocks[assetId]) return;
+            assetVoteLocks[assetId] = true;
+
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch(`/api/assets/action`, { method: 'POST', body: JSON.stringify({ assetId, action: `toggle_${type}` }) });
+                if (res && res.success) {
+                    const asset = allAssets.find(a => a.assetId === assetId);
+                    if (asset) {
+                        asset.upvotes = res.upvotes; 
+                        asset.downvotes = res.downvotes;
+                        renderAssetGrid();
+                    }
                 }
+                const elapsed = Date.now() - startTime;
+                if (elapsed < 1200) await sleep(1200 - elapsed); // Chờ 1.2s
+            } finally {
+                assetVoteLocks[assetId] = false;
             }
         }
 
@@ -15736,21 +15816,26 @@
             const origAct = actContainer.innerHTML;
             actContainer.innerHTML = '<button class="btn-tryon-main btn" disabled><i class="fa-solid fa-spinner fa-spin"></i> Đang kích hoạt khung...</button>';
 
-            const res = await apiFetch(`/api/store/buy`, { method: 'POST', body: JSON.stringify({ frameId }) });
-            if (res && res.success) {
-                // 🚀 CẬP NHẬT TRẠNG THÁI NGAY LẬP TỨC (KHÔNG ĐỢI SERVER)
-                if (!myOwnedFrames.includes(frameId)) myOwnedFrames.push(frameId);
-                currentUser.ownedFrames = myOwnedFrames;
-                currentUser.WOW = res.newBalance !== undefined ? res.newBalance : (currentUser.WOW - price);
-                localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                
-                syncAllWOWDisplays();
-                showToast("Đã mở khóa khung thành công!", "success");
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch(`/api/store/buy`, { method: 'POST', body: JSON.stringify({ frameId }) });
+                if (res && res.success) {
+                    if (!myOwnedFrames.includes(frameId)) myOwnedFrames.push(frameId);
+                    currentUser.ownedFrames = myOwnedFrames;
+                    currentUser.WOW = res.newBalance !== undefined ? res.newBalance : (currentUser.WOW - price);
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    
+                    syncAllWOWDisplays();
+                    showToast("Đã mở khóa khung thành công!", "success");
 
-                // Tự động trang bị luôn cho người dùng
-                equipFrameDirect(frameId);
-            } else {
-                showToast((res && res.error) ? res.error : "Không thể thực hiện giao dịch", "error");
+                    const elapsed = Date.now() - startTime;
+                    if (elapsed < 1500) await sleep(1500 - elapsed); // Giữ delay 1.5s
+                    equipFrameDirect(frameId);
+                } else {
+                    showToast((res && res.error) ? res.error : "Không thể thực hiện giao dịch", "error");
+                    actContainer.innerHTML = origAct;
+                }
+            } catch(e) {
                 actContainer.innerHTML = origAct;
             }
         }
@@ -15760,33 +15845,36 @@
             const origAct = actContainer.innerHTML;
             actContainer.innerHTML = '<button class="btn-tryon-main btn" disabled><i class="fa-solid fa-spinner fa-spin"></i> Đang trang bị...</button>';
 
-            const res = await apiFetch(`/api/store/equip`, { method: 'POST', body: JSON.stringify({ frameId }) });
-            if (res && res.success) {
-                // 🚀 CẬP NHẬT NGAY LẬP TỨC TRÊN GIAO DIỆN (0 GIÂY DELAY)
-                currentUser.frame = res.frameUrl || null;
-                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+            const startTime = Date.now();
+            try {
+                const res = await apiFetch(`/api/store/equip`, { method: 'POST', body: JSON.stringify({ frameId }) });
+                if (res && res.success) {
+                    currentUser.frame = res.frameUrl || null;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
 
-                // 1. Cập nhật ngay Navbar Avatar
-                updateNav();
+                    updateNav();
 
-                // 2. Cập nhật ảnh Profile nếu đang xem chính hồ sơ của mình
-                if (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
-                    const profAvtWrapper = document.querySelector('.profile-avt-wrapper');
-                    if (profAvtWrapper) {
-                        profAvtWrapper.innerHTML = `
-                            <img id="profAvt" src="${getAvtUrl(currentUser.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
-                            ${currentUser.frame ? `<img src="${currentUser.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none; object-fit:contain; aspect-ratio:1/1;">` : ''}
-                        `;
+                    if (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
+                        const profAvtWrapper = document.querySelector('.profile-avt-wrapper');
+                        if (profAvtWrapper) {
+                            profAvtWrapper.innerHTML = `
+                                <img id="profAvt" src="${getAvtUrl(currentUser.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
+                                ${currentUser.frame ? `<img src="${currentUser.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none; object-fit:contain; aspect-ratio:1/1;">` : ''}
+                            `;
+                        }
                     }
+
+                    const elapsed = Date.now() - startTime;
+                    if (elapsed < 1200) await sleep(1200 - elapsed); // Giữ delay 1.2s
+
+                    updateTryonBoothUI();
+                    renderFrameGrid();
+                    showToast("Đã trang bị khung đại diện!", "success");
+                } else {
+                    showToast((res && res.error) ? res.error : "Không thể trang bị khung", "error");
+                    actContainer.innerHTML = origAct;
                 }
-
-                // 3. Cập nhật bục thử và render lại Grid tức thì
-                updateTryonBoothUI();
-                renderFrameGrid();
-
-                showToast("Đã trang bị khung đại diện!", "success");
-            } else {
-                showToast((res && res.error) ? res.error : "Không thể trang bị khung", "error");
+            } catch(e) {
                 actContainer.innerHTML = origAct;
             }
         }
