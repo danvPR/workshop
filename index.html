@@ -15078,7 +15078,7 @@
             ` : '';
 
             return `
-                <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" data-msg-id="${messageId}">
+                <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" data-msg-id="${messageId}" data-msg-text="${encodeURIComponent(c.text || '')}">
                     <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}" style="display:flex; flex-shrink:0;">
                         ${renderAvtWithFrame(c.avt, c.frame, 'avt-circle', '', c.author)}
                     </a>
@@ -15174,7 +15174,7 @@
                 });
 
                 let hasAppendedNewMessage = false;
-                let previousNode = null; // 🛡️ Cột mốc giữ đúng thứ tự tin nhắn theo thời gian (Sửa lỗi tin cũ bị nhét xuống đáy)
+                let previousNode = null; // 🛡️ Cột mốc giữ đúng thứ tự tin nhắn theo thời gian
 
                 // THỰC HIỆN ĐỒNG BỘ GIA TĂNG (INCREMENTAL DIFF)
                 const incomingIds = new Set();
@@ -15202,9 +15202,9 @@
                         const newElement = tempContainer.firstElementChild;
                         if (newElement) {
                             if (previousNode) {
-                                previousNode.after(newElement); // Chèn nối tiếp sau tin trước đó
+                                previousNode.after(newElement);
                             } else {
-                                liveWrapper.prepend(newElement); // Tin đầu tiên thì đưa lên đỉnh
+                                liveWrapper.prepend(newElement);
                             }
                             previousNode = newElement;
                             hasAppendedNewMessage = true;
@@ -15218,19 +15218,23 @@
                     } else {
                         previousNode = existingRow; // Cập nhật mốc vị trí
 
-                        // 🛡️ 1. SỬA LỖI TÚI MÙ KHÔNG HIỆN TÊN NGƯỜI BÓC:
-                        // Nếu server báo túi đã được bóc mà giao diện vẫn là thẻ chưa mở -> Vẽ lại thẻ đã mở ngay lập tức!
-                        if (c.text && c.text.includes('[BEABEA_BLIND_BAG_CLAIMED:')) {
-                            const isAlreadyClaimedUI = existingRow.querySelector('.blindbag-claimed-box');
-                            if (!isAlreadyClaimedUI) {
-                                const bubbleContainer = existingRow.querySelector('.chat-bubble');
-                                if (bubbleContainer) {
-                                    bubbleContainer.innerHTML = renderChatContent(c.text, c.author);
-                                }
+                        // 🛡️ 1. SỬA TRIỆT ĐỂ LỖI BEABEA BỊ KẸT [TYPING] HOẶC TREO:
+                        // So sánh nội dung hiện tại với dữ liệu mới từ Server. Nếu nội dung thay đổi -> Vẽ lại ngay!
+                        const prevEncodedText = existingRow.getAttribute('data-msg-text') || '';
+                        const nextEncodedText = encodeURIComponent(c.text || '');
+
+                        if (prevEncodedText !== nextEncodedText) {
+                            existingRow.setAttribute('data-msg-text', nextEncodedText);
+                            const bubbleContainer = existingRow.querySelector('.chat-bubble');
+                            if (bubbleContainer) {
+                                const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
+                                const replyHtml = c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : '';
+                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : '';
+                                bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(c.text || '', c.author)}${imgHtml}`;
                             }
                         }
 
-                        // 🛡️ 2. BẢO TOÀN IFRAME YOUTUBE ĐANG PHÁT (Không load lại iframe)
+                        // 🛡️ 2. BẢO TOÀN IFRAME YOUTUBE ĐANG PHÁT (Không reload iframe)
                         const hasYouTube = existingRow.querySelector('iframe, .chat-yt-embed-wrap');
                         if (hasYouTube) {
                             const timeEl = existingRow.querySelector('.chat-time');
@@ -15294,6 +15298,16 @@
                             </button>
                         </div>
                     `;
+                }
+
+                // 🤖 NẾU CÒN TIN NHẮN NÀO ĐANG Ở TRẠNG THÁI [TYPING] -> TỰ ĐỘNG QUÉT TIẾP SAU 1.5 GIÂY CHO ĐẾN KHI BEABEA XONG
+                const hasAnyTyping = messages.some(m => m.text && m.text.startsWith('[TYPING]'));
+                if (hasAnyTyping) {
+                    setTimeout(() => {
+                        if (!document.hidden && window.location.hash.split('?')[0] === '#chat') {
+                            loadGlobalChat(false);
+                        }
+                    }, 1500);
                 }
 
                 // QUẢN LÝ CUỘN TRANG THÔNG MINH
@@ -15562,12 +15576,10 @@
                 lastChatJSONStr = "";
                 await loadGlobalChat(true);
 
-                // ⚡ NẾU GỌI BEABEA: Tự động quét liên tục để lấy trạng thái Typing và Cập nhật câu trả lời
+                // ⚡ NẾU GỌI BEABEA: Kích hoạt quét ngay để lấy trạng thái [TYPING], sau đó hàm loadGlobalChat sẽ tự lặp quét liên tục 1.5s cho đến khi BeaBea trả lời xong
                 if (/@beabea/i.test(text)) {
-                    setTimeout(() => loadGlobalChat(true), 800);  // 0.8s: Lấy hiệu ứng Đang gõ...
-                    setTimeout(() => loadGlobalChat(true), 3000); // 3s: Check câu trả lời (lần 1)
-                    setTimeout(() => loadGlobalChat(true), 6000); // 6s: Check câu trả lời (lần 2)
-                    setTimeout(() => loadGlobalChat(true), 9000); // 9s: Check dự phòng mạng chậm
+                    setTimeout(() => loadGlobalChat(true), 600);
+                    setTimeout(() => loadGlobalChat(true), 1500);
                 }
             } else {
                 showToast("Lỗi gửi tin nhắn", "error");
