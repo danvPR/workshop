@@ -3611,76 +3611,103 @@
         }
         .onboarding-tooltip.center-mode .onboarding-arrow { display: none; }
 
-        /* 📊 GIAO DIỆN BÌNH CHỌN (POLL) TRONG CHAT - ĐÃ FIX MÀU CHỮ LIGHT/DARK */
+        /* 📊 GIAO DIỆN BÌNH CHỌN (POLL) HIỆN ĐẠI & SẮC NÉT */
         .chat-poll-card {
             background: var(--bg-panel) !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 14px;
-            padding: 16px;
+            border: 2px solid var(--border-color) !important;
+            border-radius: 16px;
+            padding: 18px;
             width: 320px;
             max-width: 100%;
-            margin-top: 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            margin-top: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
             text-align: left;
         }
         .chat-poll-question {
-            font-weight: 800;
-            font-size: 1.05rem;
+            font-weight: 900;
+            font-size: 1.1rem;
             color: var(--text-title) !important;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             line-height: 1.4;
+        }
+        .chat-poll-opts-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: opacity 0.3s ease;
         }
         .chat-poll-opt {
             position: relative;
             background: var(--bg-secondary) !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
+            border: 2px solid var(--border-color) !important;
+            border-radius: 10px;
+            padding: 12px 14px;
             cursor: pointer;
             overflow: hidden;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1;
-            transition: border-color 0.2s;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .chat-poll-opt:hover { border-color: var(--primary) !important; }
-        .chat-poll-opt.voted { border-color: var(--primary) !important; font-weight: bold; }
+        .chat-poll-opt:hover { 
+            border-color: var(--primary) !important; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.15);
+        }
+        .chat-poll-opt.voted { 
+            border-color: var(--primary) !important; 
+            background: var(--bg-panel) !important;
+        }
+        .chat-poll-opt.voted .poll-opt-text {
+            font-weight: 800;
+            color: var(--primary) !important;
+        }
         .chat-poll-opt.voted::before {
-            content: '\f00c';
+            content: '\f058'; /* Icon check circle solid */
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
             color: var(--primary) !important;
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 1.1rem;
         }
         .poll-opt-bg {
             position: absolute;
             left: 0; top: 0; bottom: 0;
-            background: rgba(13, 165, 122, 0.2);
+            background: rgba(13, 165, 122, 0.15);
             z-index: -1;
-            transition: width 0.4s ease-out;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .poll-opt-text { 
             font-size: 0.95rem; 
+            font-weight: 600;
             color: var(--text-main) !important; 
             z-index: 2; 
             flex: 1; 
+            transition: color 0.2s;
         }
         .poll-opt-percent { 
-            font-size: 0.85rem; 
-            font-weight: bold; 
-            color: var(--text-muted) !important; 
+            font-size: 0.9rem; 
+            font-weight: 900; 
+            color: var(--text-title) !important; 
             z-index: 2; 
-            margin-left: 10px; 
+            margin-left: 12px; 
+            background: rgba(0,0,0,0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
         }
+        [data-theme="dark"] .poll-opt-percent { background: rgba(255,255,255,0.1); }
+        
         .chat-poll-footer {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: var(--text-muted) !important;
-            margin-top: 10px;
+            margin-top: 14px;
             display: flex;
             align-items: center;
             gap: 6px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
         }
         .chat-poll-footer * {
             color: var(--text-muted) !important;
@@ -3698,13 +3725,16 @@
         .chat-msg-row.mine .chat-bubble .chat-poll-card * {
             color: var(--text-main) !important;
         }
-        .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-question {
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-question,
+        .chat-msg-row.mine .chat-bubble .chat-poll-card .poll-opt-percent {
             color: var(--text-title) !important;
         }
-        .chat-msg-row.mine .chat-bubble .chat-poll-card .poll-opt-percent,
         .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-footer,
         .chat-msg-row.mine .chat-bubble .chat-poll-card .chat-poll-footer * {
             color: var(--text-muted) !important;
+        }
+        .chat-msg-row.mine .chat-bubble .chat-poll-opt.voted .poll-opt-text {
+            color: var(--primary) !important;
         }
         /* 💡 MENU GỢI Ý MENTION @ TRONG CHAT */
         .chat-mention-item {
@@ -15144,6 +15174,7 @@
                 });
 
                 let hasAppendedNewMessage = false;
+                let previousNode = null; // 🛡️ Cột mốc giữ đúng thứ tự tin nhắn theo thời gian (Sửa lỗi tin cũ bị nhét xuống đáy)
 
                 // THỰC HIỆN ĐỒNG BỘ GIA TĂNG (INCREMENTAL DIFF)
                 const incomingIds = new Set();
@@ -15166,31 +15197,48 @@
                     const existingRow = existingDomMap.get(msgId);
 
                     if (!existingRow) {
-                        // TIN NHẮN HOÀN TOÀN MỚI -> TẠO NODE MỚI & THÊM VÀO DOM
+                        // TIN NHẮN MỚI HOẶC TIN CŨ TẢI THÊM -> CHÈN ĐÚNG THỨ TỰ
                         tempContainer.innerHTML = renderSingleChatMessageHTML(c);
                         const newElement = tempContainer.firstElementChild;
                         if (newElement) {
-                            liveWrapper.appendChild(newElement);
+                            if (previousNode) {
+                                previousNode.after(newElement); // Chèn nối tiếp sau tin trước đó
+                            } else {
+                                liveWrapper.prepend(newElement); // Tin đầu tiên thì đưa lên đỉnh
+                            }
+                            previousNode = newElement;
                             hasAppendedNewMessage = true;
 
-                            // 🔔 KÍCH HOẠT THÔNG BÁO NỔI TRÌNH DUYỆT (NẾU TIN THỰC SỰ MỚI)
+                            // 🔔 KÍCH HOẠT THÔNG BÁO NỔI TRÌNH DUYỆT
                             if (!chatNotifiedMsgIds.has(msgId)) {
                                 chatNotifiedMsgIds.add(msgId);
                                 triggerChatBrowserNotification(c, msgId);
                             }
                         }
                     } else {
-                        // TIN ĐÃ TỒN TẠI TRONG DOM -> KIỂM TRA BẢO TOÀN YOUTUBE
-                        // Nếu tin này có iframe YouTube, TUYỆT ĐỐI KHÔNG ĐƯỢC THAY THẾ ELEMENT!
-                        const hasYouTube = existingRow.querySelector('iframe, .chat-yt-embed-wrap');
-                        if (hasYouTube) {
-                            // Cập nhật timestamp nhẹ nhàng nếu cần, giữ nguyên cấu trúc phát video
-                            const timeEl = existingRow.querySelector('.chat-time');
-                            if (timeEl && c.time) timeEl.innerText = timeAgo(c.time);
-                            return; // Xong tin này, không đụng chạm gì nữa!
+                        previousNode = existingRow; // Cập nhật mốc vị trí
+
+                        // 🛡️ 1. SỬA LỖI TÚI MÙ KHÔNG HIỆN TÊN NGƯỜI BÓC:
+                        // Nếu server báo túi đã được bóc mà giao diện vẫn là thẻ chưa mở -> Vẽ lại thẻ đã mở ngay lập tức!
+                        if (c.text && c.text.includes('[BEABEA_BLIND_BAG_CLAIMED:')) {
+                            const isAlreadyClaimedUI = existingRow.querySelector('.blindbag-claimed-box');
+                            if (!isAlreadyClaimedUI) {
+                                const bubbleContainer = existingRow.querySelector('.chat-bubble');
+                                if (bubbleContainer) {
+                                    bubbleContainer.innerHTML = renderChatContent(c.text, c.author);
+                                }
+                            }
                         }
 
-                        // Nếu là Poll -> Chỉ cập nhật số vote / thanh % in-place, không render lại cả bubble
+                        // 🛡️ 2. BẢO TOÀN IFRAME YOUTUBE ĐANG PHÁT (Không load lại iframe)
+                        const hasYouTube = existingRow.querySelector('iframe, .chat-yt-embed-wrap');
+                        if (hasYouTube) {
+                            const timeEl = existingRow.querySelector('.chat-time');
+                            if (timeEl && c.time) timeEl.innerText = timeAgo(c.time);
+                            return;
+                        }
+
+                        // 🛡️ 3. CẬP NHẬT POLL BÌNH CHỌN REAL-TIME
                         if (c.text && c.text.startsWith('[DANV_POLL]')) {
                             try {
                                 const pollData = JSON.parse(c.text.replace('[DANV_POLL]', ''));
@@ -15204,7 +15252,10 @@
                                     const vCount = opt.votes ? opt.votes.length : 0;
                                     const pct = totalVotes === 0 ? 0 : Math.round((vCount / totalVotes) * 100);
                                     const optEl = existingRow.querySelector(`.chat-poll-opt[onclick*="'${opt.id}'"]`);
+                                    const isVoted = currentUser && opt.votes && opt.votes.includes(currentUser.username);
+
                                     if (optEl) {
+                                        optEl.classList.toggle('voted', isVoted);
                                         const bg = optEl.querySelector('.poll-opt-bg');
                                         const pctSpan = optEl.querySelector('.poll-opt-percent');
                                         if (bg) bg.style.width = `${pct}%`;
@@ -15263,10 +15314,8 @@
                             }
                         }, 200);
                     } else if (forceScroll || isNearBottom) {
-                        // Người dùng đang ở sát đáy hoặc vừa gửi tin -> Tự động cuộn mượt xuống đáy
                         setTimeout(() => { scrollChatToBottom(false); }, 60);
                     } else if (hasAppendedNewMessage && !isNearBottom) {
-                        // Người dùng đang cuộn lên trên đọc tin cũ và có tin mới tới -> Hiện nút Jump Pill, KHÔNG giật màn hình
                         if (btnJump) btnJump.classList.add('show');
                     }
                 }
@@ -15718,8 +15767,9 @@
             if (!msgRow) return;
             const msgId = msgRow.id.replace('chat-msg-', '');
 
-            if (el.style.opacity === '0.5') return;
-            el.closest('.chat-poll-opts-wrapper').style.opacity = '0.5';
+            // Chống spam click (Bỏ làm mờ toàn bộ khung gây xấu UI)
+            if (el.classList.contains('processing')) return;
+            el.classList.add('processing');
 
             const res = await apiFetch(`/api/chat/vote`, { 
                 method: 'POST', 
@@ -15731,8 +15781,8 @@
                 await loadGlobalChat(false);
             } else {
                 showToast(res ? res.error : "Lỗi bình chọn", "error");
-                el.closest('.chat-poll-opts-wrapper').style.opacity = '1';
             }
+            el.classList.remove('processing');
         }
 // ================= XỬ LÝ DỊCH THUẬT & MENU CHỌN NGÔN NGỮ (TỐI ƯU TOÀN DIỆN) =================
         // DANH SÁCH TÊN BẢN XỨ THUẦN TÚY (ENDONYM) - TUYỆT ĐỐI KHÔNG GHÉP TÊN TIẾNG KHÁC
