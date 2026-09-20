@@ -9142,17 +9142,25 @@
         });
 
         function updateActionBtns() {
-            const likes = currentProj.likes || []; const stars = currentProj.stars || [];
-            document.getElementById('likeCount').innerText = likes.length; 
-            document.getElementById('starCount').innerText = stars.length;
+            if (!currentProj) return;
+            const likes = currentProj.likes || []; 
+            const stars = currentProj.stars || [];
             const btnLike = document.getElementById('btnLike'); 
             const btnStar = document.getElementById('btnStar');
+
             if (btnLike) {
-                if (currentUser && likes.includes(currentUser.username)) btnLike.classList.add('active', 'like'); 
+                const isLiked = currentUser && likes.includes(currentUser.username);
+                // Khôi phục lại đầy đủ cấu trúc icon + thẻ đếm số
+                btnLike.innerHTML = `<i class="fa-solid fa-heart"></i> <span id="likeCount">${likes.length}</span>`;
+                if (isLiked) btnLike.classList.add('active', 'like'); 
                 else btnLike.classList.remove('active', 'like');
             }
+
             if (btnStar) {
-                if (currentUser && stars.includes(currentUser.username)) btnStar.classList.add('active', 'star'); 
+                const isStarred = currentUser && stars.includes(currentUser.username);
+                // Khôi phục lại đầy đủ cấu trúc icon + thẻ đếm số
+                btnStar.innerHTML = `<i class="fa-solid fa-star"></i> <span id="starCount">${stars.length}</span>`;
+                if (isStarred) btnStar.classList.add('active', 'star'); 
                 else btnStar.classList.remove('active', 'star');
             }
         }
@@ -9160,14 +9168,16 @@
         let isActionCooldown = { like: false, star: false };
         async function toggleAction(type) {
             if (!currentUser) return openModal('loginModal');
+            if (!currentProj) return;
             if (isActionCooldown[type]) return;
             isActionCooldown[type] = true;
 
             const btn = document.getElementById(type === 'like' ? 'btnLike' : 'btnStar');
-            const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
                 btn.style.pointerEvents = 'none';
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+                // Chỉ đổi icon bên trong thành xoay, giữ nguyên thẻ đếm số để không làm mất id
+                const icon = btn.querySelector('i');
+                if (icon) icon.className = 'fa-solid fa-circle-notch fa-spin';
             }
 
             const startTime = Date.now();
@@ -9183,7 +9193,9 @@
                     currentProj[`${type}s`] = list; 
                 }
                 const elapsed = Date.now() - startTime;
-                if (elapsed < 1200) await sleep(1200 - elapsed); // Ép chờ tối thiểu 1.2s
+                if (elapsed < 300) await sleep(300 - elapsed);
+            } catch (err) {
+                console.error("Lỗi khi thích/yêu thích:", err);
             } finally {
                 updateActionBtns();
                 if (btn) btn.style.pointerEvents = 'auto';
