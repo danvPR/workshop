@@ -1692,6 +1692,47 @@
         .set-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .set-tab-content { display: none; padding-top: 10px; animation: fadeIn 0.3s; }
         .set-tab-content.active { display: block; }
+
+        /* CÔNG TẮC BẬT/TẮT HIỆN ĐẠI (CYBER-SWITCH) */
+        .modern-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .modern-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .modern-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: var(--border-color);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 26px;
+        }
+        .modern-toggle-slider::before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #ffffff;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        .modern-toggle-switch input:checked + .modern-toggle-slider {
+            background-color: var(--primary);
+            box-shadow: 0 0 12px rgba(13, 165, 122, 0.35);
+        }
+        .modern-toggle-switch input:checked + .modern-toggle-slider::before {
+            transform: translateX(22px);
+        }
         
         /* MOBILE RESPONSIVE TWEAKS (ĐÃ TỐI ƯU GIAO DIỆN THANH TRÊN) */
         @media (max-width: 768px) {
@@ -4253,23 +4294,134 @@
             padding: 0 !important;
         }
 
-        /* 🎬 KHUNG NHÚNG VIDEO YOUTUBE TỰ ĐỘNG TRONG CHAT */
+        /* 🎬 KHUNG NHÚNG VIDEO YOUTUBE AMBIENT GLOW & MINI-DOCK NỔI (CYBER-CINEMA) */
         .chat-yt-embed-wrap {
-            width: 380px;
+            position: relative;
+            width: 420px;
             max-width: 100%;
+            border-radius: 16px;
+            background: #090d16;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            margin: 4px 0 2px 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: visible;
+        }
+        /* Vầng hào quang khuếch tán Ambient Glow */
+        .chat-yt-embed-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 20px;
+            background: radial-gradient(circle at center, rgba(239, 68, 68, 0.35) 0%, rgba(13, 165, 122, 0.2) 60%, transparent 80%);
+            filter: blur(14px);
+            opacity: 0.5;
+            z-index: -1;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .chat-yt-embed-wrap:hover::before {
+            opacity: 0.9;
+        }
+        .chat-yt-inner-box {
+            width: 100%;
             aspect-ratio: 16 / 9;
-            border-radius: 14px;
+            border-radius: 16px;
             overflow: hidden;
+            position: relative;
             background: #000;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
-            margin-top: 2px;
         }
         .chat-yt-iframe {
             width: 100%;
             height: 100%;
             border: none;
             display: block;
+        }
+        /* Thanh điều khiển mini trên video (Ghim nổi / Mở rộng) */
+        .chat-yt-toolbar {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 5;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.2s ease;
+        }
+        .chat-yt-embed-wrap:hover .chat-yt-toolbar,
+        .chat-yt-embed-wrap.is-pip-docked .chat-yt-toolbar {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .chat-yt-btn-tool {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+        .chat-yt-btn-tool:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* 🚀 CHẾ ĐỘ MINI-DOCK (PIP NỘI BỘ): Video tự ghim nổi góc phải khi cuộn chat mà KHÔNG hề reload iframe */
+        .chat-yt-embed-wrap.is-pip-docked {
+            position: fixed !important;
+            bottom: 85px !important;
+            right: 25px !important;
+            width: 320px !important;
+            z-index: 9999 !important;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(13, 165, 122, 0.45);
+            border: 2px solid var(--primary);
+            animation: pipPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes pipPopIn {
+            0% { transform: scale(0.7) translateY(40px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* NÚT THÔNG BÁO TIN NHẮN MỚI NỔI ĐÁY CHAT (JUMP TO BOTTOM PILL) */
+        .chat-jump-bottom-btn {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 7px 18px;
+            border-radius: 25px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(13, 165, 122, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 40;
+        }
+        .chat-jump-bottom-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .chat-jump-bottom-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(13, 165, 122, 0.6);
         }
 
         /* 🎯 THẺ CÂU ĐỐ TRẮC NGHIỆM BEABEA AI */
@@ -5224,9 +5376,14 @@
                 </div>
                 
                 <!-- Danh sách tin nhắn Stream -->
-                <div id="chatMessageList" style="flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column;">
+                <div id="chatMessageList" style="flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column; position: relative;">
                     <div style="text-align:center; color:#888; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_loading">Đang tải dữ liệu chat...</span></div>
                 </div>
+                
+                <!-- Nút nhảy xuống tin nhắn mới nổi bật -->
+                <button type="button" id="btnChatJumpBottom" class="chat-jump-bottom-btn" onclick="scrollChatToBottom(true)">
+                    <i class="fa-solid fa-arrow-down"></i> <span>Có tin nhắn mới</span>
+                </button>
 
                 <!-- Khu vực nhập tin nhắn Hợp Nhất (All-In-One Input Dock) -->
                 <div class="chat-input-box">
@@ -6218,6 +6375,25 @@
                             <!-- Danh sách ngôn ngữ gốc nạp bằng JS -->
                         </select>
                         <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_trans_target_hint">Hệ thống sẽ ưu tiên dịch các bình luận và tin nhắn sang ngôn ngữ này.</div>
+                    </div>
+
+                    <!-- THIẾT LẬP BẬT/TẮT THÔNG BÁO MÀN HÌNH KÊNH GIAO LƯU -->
+                    <div class="form-group" style="margin-bottom: 25px;" id="chatNotifSettingCard">
+                        <label>Thông báo Kênh Giao Lưu (Desktop Notifications):</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; background:var(--bg-secondary); padding:16px 18px; border-radius:14px; border:1px solid var(--border-color); margin-top:8px;">
+                            <div style="min-width:0; flex:1;">
+                                <div style="font-weight:800; font-size:0.95rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                                    <i class="fa-solid fa-bell" style="color:var(--primary);"></i>
+                                    <span>Thông báo tin nhắn màn hình</span>
+                                </div>
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px; line-height:1.45;" id="chatNotifStatusDesc">
+                                    Nhận thông báo nổi từ trình duyệt khi có tin nhắn mới kèm avatar người gửi và nội dung tóm tắt.
+                                </div>
+                            </div>
+                            <div id="chatNotifControlArea" style="flex-shrink:0;">
+                                <!-- Đổ bằng JavaScript updateChatNotifSettingUI() -->
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px;">
@@ -11155,6 +11331,7 @@
             const langEl = document.getElementById('langSelect');
             if (langEl) langEl.value = localStorage.getItem('lang') || 'vi';
             renderDefaultTransLangSelect();
+            updateChatNotifSettingUI(); // Đồng bộ trạng thái công tắc thông báo màn hình
 
             // 2. Nếu chưa đăng nhập: tự động chuyển sang tab Tùy chọn (Theme / Ngôn ngữ / Engine) mà không đá về Home
             if (!currentUser) {
@@ -13223,15 +13400,22 @@
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
 
-            // 🎬 EMBED VIDEO YOUTUBE (KHI CHỈ GỬI DUY NHẤT 1 LINK YOUTUBE)
-            const ytVideoId = getYouTubeIdIfOnly(rawText);
-            if (ytVideoId) {
-                return `
-                    <div class="chat-yt-embed-wrap">
-                        <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${ytVideoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            // 🎬 EMBED VIDEO YOUTUBE AMBIENT CINEMA & MINI-DOCK (CHỐNG RELOAD 100%)
+        const ytVideoId = getYouTubeIdIfOnly(rawText);
+        if (ytVideoId) {
+            return `
+                <div class="chat-yt-embed-wrap" id="yt-dock-${ytVideoId}">
+                    <div class="chat-yt-toolbar">
+                        <button type="button" class="chat-yt-btn-tool" onclick="toggleYouTubeMiniDock('yt-dock-${ytVideoId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                        </button>
                     </div>
-                `;
-            }
+                    <div class="chat-yt-inner-box">
+                        <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${ytVideoId}?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `;
+        }
 
             // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA (ĐÃ FIX TRIỆT ĐỂ LỖI BỊ CẮT VÌ DẤU ])
             if (isBeaBea && rawText.includes("[BEABEA_QUIZ:")) {
@@ -14439,6 +14623,333 @@
         let isAutoFindingMessage = false;
         let autoFindDepth = 0;
 
+        // =========================================================================
+        // 🔔 BỘ MÁY THÔNG BÁO TRÌNH DUYỆT (WEB NOTIFICATION ENGINE & MASKING)
+        // BẢO VỆ CHỐNG LỘ CÁC RAW TAG ĐẶC BIỆT: DỰ ÁN, BEABEA GIFT, BLIND BAG, QUIZ, POLL
+        // =========================================================================
+        let chatNotifiedMsgIds = new Set();
+        let isChatInitialBootstrap = true;
+
+        // 🛡️ BỘ LỌC TỐI THƯỢNG: Chuyển đổi mã thô thành lời thoại mượt mà, không lộ cú pháp hệ thống
+        function sanitizeChatNotificationText(c) {
+            const raw = (c.text || '').trim();
+
+            // 1. Bỏ qua hoàn toàn hiệu ứng đang gõ của bot
+            if (raw.startsWith('[TYPING]')) return null;
+
+            // 2. Widget Quà tặng BeaBea ([BEABEA_GIFT:amount] message)
+            const giftMatch = raw.match(/\[BEABEA_GIFT:\s*(\d+)\s*\]([\s\S]*)/i);
+            if (giftMatch) {
+                const amt = giftMatch[1];
+                const msg = giftMatch[2].trim();
+                return `🎁 BeaBea vừa phát lộc +${amt} WOW: "${msg || 'Nhận quà may mắn!'}"`;
+            }
+
+            // 3. Widget Túi Mù Vũ Trụ ([BEABEA_BLIND_BAG:id])
+            if (raw.includes('[BEABEA_BLIND_BAG:')) {
+                return `✨ Một túi mù năng lượng vũ trụ vừa xuất hiện! Hãy vào xé ngay!`;
+            }
+
+            // 4. Widget Túi Mù Đã Bóc ([BEABEA_BLIND_BAG_CLAIMED:...:claimer:reward])
+            const bagClaimed = raw.match(/\[BEABEA_BLIND_BAG_CLAIMED:[^:]+:([^:]+):(\d+)\]/);
+            if (bagClaimed) {
+                return `🎉 @${bagClaimed[1]} vừa nhanh tay xé trúng +${bagClaimed[2]} WOW từ túi mù!`;
+            }
+
+            // 5. Widget Thử Thách Trí Tuệ / Đố Vui BeaBea ([BEABEA_QUIZ:...])
+            if (raw.includes('[BEABEA_QUIZ:')) {
+                try {
+                    const startIdx = raw.indexOf('[BEABEA_QUIZ:');
+                    let bracketCount = 0;
+                    let endIdx = -1;
+                    for (let i = startIdx; i < raw.length; i++) {
+                        if (raw[i] === '[') bracketCount++;
+                        else if (raw[i] === ']') {
+                            bracketCount--;
+                            if (bracketCount === 0) { endIdx = i; break; }
+                        }
+                    }
+                    if (endIdx !== -1) {
+                        const jsonStr = raw.substring(startIdx + 13, endIdx).trim();
+                        const qData = JSON.parse(jsonStr);
+                        return `🎯 Thử thách trí tuệ: "${qData.q || 'Đố vui cùng BeaBea!'}"`;
+                    }
+                } catch(e) {}
+                return `🎯 BeaBea vừa đưa ra một thử thách đố vui trí tuệ!`;
+            }
+
+            // 6. Widget Bình Chọn Poll ([DANV_POLL]{...})
+            if (raw.startsWith('[DANV_POLL]')) {
+                try {
+                    const pollData = JSON.parse(raw.replace('[DANV_POLL]', ''));
+                    return `📊 Cuộc bình chọn mới: "${pollData.question || 'Tham gia bình chọn'}"`;
+                } catch(e) {}
+                return `📊 Một cuộc bình chọn mới vừa được mở`;
+            }
+
+            // 7. Widget Chia Sẻ Dự Án ([DANV_PROJECT_SHARE:id:title:author:...])
+            const shareMatch = raw.match(/\[DANV_PROJECT_SHARE:([^\]]+)\]/);
+            if (shareMatch) {
+                try {
+                    const parts = shareMatch[1].split(':');
+                    const pTitle = parts[1] ? decodeURIComponent(parts[1]) : 'Tác phẩm Scratch';
+                    const pAuthor = parts[2] ? decodeURIComponent(parts[2]) : '';
+                    const extra = raw.replace(shareMatch[0], '').trim();
+                    return `🎮 Đã chia sẻ tác phẩm "${pTitle}"${pAuthor ? ` của @${pAuthor}` : ''}${extra ? `: ${extra}` : ''}`;
+                } catch(e) {}
+                return `🎮 Đã chia sẻ một tác phẩm mới!`;
+            }
+            if (raw.includes('#project/')) {
+                return `🎮 Đã chia sẻ liên kết trải nghiệm tác phẩm`;
+            }
+
+            // 8. Video YouTube Embed độc lập
+            if (typeof getYouTubeIdIfOnly === 'function' && getYouTubeIdIfOnly(raw)) {
+                return `🎬 Đã chia sẻ một video YouTube`;
+            }
+
+            // 9. Tin nhắn thuần hình ảnh / GIF
+            if (!raw && c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined') {
+                return `📷 [Đã gửi một hình ảnh / GIF]`;
+            }
+
+            // 10. Tin nhắn văn bản thông thường
+            let clean = raw.replace(/\[BEABEA_[^\]]+\]/g, '').replace(/\[DANV_[^\]]+\]/g, '').trim();
+            if (c.replyTo) {
+                clean = `(Trả lời @${c.replyTo}) ${clean}`;
+            }
+            if (clean.length > 130) {
+                clean = clean.substring(0, 127) + '...';
+            }
+            return clean || 'Đã gửi một tin nhắn';
+        }
+
+        // PHÁT THÔNG BÁO RA MÀN HÌNH TRÌNH DUYỆT (NATIVE DESKTOP NOTIFICATION)
+        function triggerChatBrowserNotification(c, msgId) {
+            // Kiểm tra tùy chọn bật/tắt của người dùng trong cài đặt
+            const isEnabled = localStorage.getItem('danv_chat_desktop_notif') !== 'false';
+            if (!isEnabled) return;
+
+            // Không thông báo tin nhắn của chính mình
+            if (currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase()) return;
+
+            // Kiểm tra hỗ trợ Web Notification và quyền truy cập
+            if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+            // Lọc nội dung chống lộ mã
+            const sanitizedBody = sanitizeChatNotificationText(c);
+            if (!sanitizedBody) return;
+
+            const isBeaBea = (c.author === 'BeaBea (AI)');
+            const senderTitle = isBeaBea ? 'BeaBea (AI)' : `@${c.author || 'Thành viên'}`;
+            const avtUrl = isBeaBea 
+                ? "https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" 
+                : getAvtUrl(c.avt);
+
+            try {
+                const notif = new Notification(`${senderTitle} • Kênh Giao Lưu`, {
+                    body: sanitizedBody,
+                    icon: avtUrl,
+                    badge: "https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png",
+                    tag: `chat-msg-${msgId}`,
+                    renotify: true
+                });
+
+                notif.onclick = function() {
+                    window.focus();
+                    notif.close();
+                    if (window.location.hash.split('?')[0] === '#chat') {
+                        const targetEl = document.getElementById(`chat-msg-${msgId}`);
+                        if (targetEl) {
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            targetEl.classList.add('highlight-permanent');
+                        }
+                    } else {
+                        navigateTo('#chat?m=' + msgId);
+                    }
+                };
+            } catch(e) {
+                console.warn("Lỗi phát notification:", e);
+            }
+        }
+
+        // ĐỒNG BỘ GIAO DIỆN CÔNG TẮC BẬT/TẮT TRONG CÀI ĐẶT
+        function updateChatNotifSettingUI() {
+            const controlArea = document.getElementById('chatNotifControlArea');
+            const descEl = document.getElementById('chatNotifStatusDesc');
+            if (!controlArea) return;
+
+            if (!("Notification" in window)) {
+                controlArea.innerHTML = `<span style="font-size:0.8rem; color:#ef4444; font-weight:700;"><i class="fa-solid fa-ban"></i> Không hỗ trợ</span>`;
+                if (descEl) descEl.innerText = "Trình duyệt của bạn không hỗ trợ tính năng Web Notification.";
+                return;
+            }
+
+            const perm = Notification.permission;
+            const isEnabled = localStorage.getItem('danv_chat_desktop_notif') !== 'false';
+
+            if (perm === "denied") {
+                controlArea.innerHTML = `
+                    <span style="font-size:0.8rem; color:#ef4444; font-weight:700; display:inline-flex; align-items:center; gap:5px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Bị chặn
+                    </span>
+                `;
+                if (descEl) descEl.innerHTML = `Trình duyệt đang chặn thông báo. Vui lòng bấm vào <b>biểu tượng 🔒 ở thanh địa chỉ</b> để mở quyền cho trang web.`;
+            } else if (perm === "default") {
+                controlArea.innerHTML = `
+                    <button type="button" class="btn btn-primary" onclick="handleRequestChatNotifPermission()" style="font-size:0.82rem; padding:6px 14px; border-radius:18px; font-weight:800;">
+                        <i class="fa-solid fa-key"></i> Cấp quyền
+                    </button>
+                `;
+                if (descEl) descEl.innerText = "Bấm nút Cấp quyền để cho phép hiển thị thông báo tin nhắn mới trên màn hình.";
+            } else {
+                // Đã được cấp quyền -> Hiển thị công tắc Switch
+                controlArea.innerHTML = `
+                    <label class="modern-toggle-switch">
+                        <input type="checkbox" id="chatNotifToggleCheckbox" ${isEnabled ? 'checked' : ''} onchange="handleToggleChatNotification(this.checked)">
+                        <span class="modern-toggle-slider"></span>
+                    </label>
+                `;
+                if (descEl) descEl.innerText = isEnabled 
+                    ? "Đang bật thông báo nổi màn hình khi có tin nhắn mới kèm avatar người gửi." 
+                    : "Đã tắt thông báo màn hình (bạn vẫn nhận thông báo trong hòm thư hệ thống).";
+            }
+        }
+
+        // XỬ LÝ GẠT CÔNG TẮC BẬT/TẮT
+        function handleToggleChatNotification(checked) {
+            localStorage.setItem('danv_chat_desktop_notif', checked ? 'true' : 'false');
+            updateChatNotifSettingUI();
+            showToast(checked ? "Đã bật thông báo Kênh Giao Lưu trên màn hình!" : "Đã tắt thông báo màn hình!", "success");
+        }
+
+        // XỬ LÝ BẤM NÚT XIN QUYỀN THÔNG BÁO
+        async function handleRequestChatNotifPermission() {
+            if (!("Notification" in window)) return;
+            try {
+                const perm = await Notification.requestPermission();
+                if (perm === "granted") {
+                    localStorage.setItem('danv_chat_desktop_notif', 'true');
+                    showToast("Đã cấp quyền thông báo thành công!", "success");
+                    // Bắn một thông báo chào mừng kiểm thử
+                    try {
+                        new Notification("Kênh Giao Lưu • DANVworkshop", {
+                            body: "🎉 Bạn đã kích hoạt thông báo tin nhắn thành công!",
+                            icon: "https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png"
+                        });
+                    } catch(e) {}
+                } else if (perm === "denied") {
+                    showToast("Quyền thông báo đã bị từ chối!", "error");
+                }
+                updateChatNotifSettingUI();
+            } catch(e) {
+                console.error("Lỗi xin quyền Notification:", e);
+            }
+        }
+
+        // BẬT / TẮT CHẾ ĐỘ CỬA SỔ NỔI MINI-DOCK CHO YOUTUBE EMBED
+        function toggleYouTubeMiniDock(dockId, btn) {
+            const wrap = document.getElementById(dockId);
+            if (!wrap) return;
+            const isDocked = wrap.classList.toggle('is-pip-docked');
+            if (btn) {
+                btn.innerHTML = isDocked 
+                    ? '<i class="fa-solid fa-compress"></i>' 
+                    : '<i class="fa-solid fa-up-right-and-down-left-from-center"></i>';
+                btn.title = isDocked ? 'Ghim lại vào tin nhắn' : 'Ghim nổi ra góc màn hình';
+            }
+        }
+
+        // CUỘN XUỐNG ĐÁY PHÒNG CHAT & ẨN NÚT JUMP
+        function scrollChatToBottom(smooth = true) {
+            const list = document.getElementById('chatMessageList');
+            const btnJump = document.getElementById('btnChatJumpBottom');
+            if (list) {
+                list.scrollTo({ top: list.scrollHeight, behavior: smooth ? 'smooth' : 'instant' });
+            }
+            if (btnJump) btnJump.classList.remove('show');
+        }
+
+        // HÀM XUẤT HTML CHO 1 TIN NHẮN RIÊNG BIỆT
+        function renderSingleChatMessageHTML(c) {
+            if (c.avt && c.avt.includes('|||')) {
+                let parts = c.avt.split('|||');
+                c.avt = parts[0];
+                c.frame = parts[1];
+            }
+            const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
+            const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
+            const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
+            const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
+
+            const savedTrans = chatTranslations[messageId];
+            const transBoxHtml = savedTrans ? `
+                <div class="trans-result-box">
+                    <div class="trans-header">
+                        <span><i class="fa-solid fa-language"></i> ${escapeHtml(savedTrans.langName)}</span>
+                        <button type="button" class="trans-btn-close" onclick="closeChatTranslation('${messageId}')" title="Đóng">&times;</button>
+                    </div>
+                    <div class="trans-content" style="white-space:pre-line;">${escapeHtml(savedTrans.translatedText)}</div>
+                </div>
+            ` : '';
+
+            return `
+                <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}" data-msg-id="${messageId}">
+                    ${!isMine ? `
+                    <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}" style="display:flex;">
+                        ${renderAvtWithFrame(c.avt, c.frame, 'avt-circle', '', c.author)}
+                    </a>` : ''}
+                    
+                    <div class="chat-msg-wrapper">
+                        <div class="chat-meta-header">
+                            ${!isMine ? (c.author === 'BeaBea (AI)' 
+                                ? `<span class="chat-author-name" style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> BeaBea (AI) <span style="font-size:0.65rem; background:#fce7f3; color:#ec4899; padding:1px 5px; border-radius:6px; margin-left:3px; border:1px solid #fbcfe8;">BOT</span></span>` 
+                                : `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>`) : ''}
+                            <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
+                        </div>
+
+                        <div class="chat-bubble-container">
+                            <div class="chat-bubble">
+                                ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
+                                ${renderChatContent(c.text || '', c.author)}
+                                ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}
+                                ${transBoxHtml}
+                            </div>
+
+                            <!-- Floating Quick Actions Bar nổi khi hover -->
+                            <div class="chat-floating-actions">
+                                ${currentUser && !isMine ? `
+                                    <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
+                                        <i class="fa-solid fa-reply"></i>
+                                    </button>` : ''}
+                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
+                                    <div class="trans-menu-wrapper">
+                                        <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
+                                            <i class="fa-solid fa-language"></i>
+                                        </button>
+                                    </div>` : ''}
+                                <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" title="Sao chép liên kết">
+                                    <i class="fa-solid fa-link"></i>
+                                </button>
+                                ${currentUser && !isMine ? `
+                                    <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo vi phạm">
+                                        <i class="fa-solid fa-flag"></i>
+                                    </button>` : ''}
+                                ${canDelete ? `
+                                    <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // =========================================================================
+        // 🚀 BỘ MÁY ĐỒNG BỘ TIN NHẮN TỪNG NODE (INCREMENTAL DOM DIFFING)
+        // GIỮ NGUYÊN 100% IFRAME YOUTUBE ĐANG PHÁT - KHÔNG HỦY DIỆT CÂY DOM BẰNG INNERHTML
+        // =========================================================================
         async function loadGlobalChat(forceScroll = false, isLoadMore = false) {
             try {
                 const response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' });
@@ -14449,106 +14960,119 @@
                 const messages = Array.isArray(res) ? res : (res.messages || []);
                 chatHasMore = res.hasMore !== undefined ? res.hasMore : false;
 
-                const resStr = JSON.stringify(messages);
-                if (resStr === lastChatJSONStr && !forceScroll && !isLoadMore) return;
-                lastChatJSONStr = resStr;
-
                 const liveWrapper = document.getElementById('chatLiveWrapper');
                 const topArea = document.getElementById('chatLoadMoreTopArea');
                 const list = document.getElementById('chatMessageList');
+                const btnJump = document.getElementById('btnChatJumpBottom');
                 
-                if (!liveWrapper || !topArea) return;
+                if (!liveWrapper || !topArea || !list) return;
 
+                // TH1: Phòng chat rỗng hoàn toàn
                 if (!messages || messages.length === 0) {
-                    if (liveWrapper.innerHTML === '') {
+                    if (liveWrapper.children.length === 0) {
                         liveWrapper.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
                     }
                     return;
                 }
 
+                // Xóa placeholder loading nếu có
+                const placeholderSkeleton = liveWrapper.querySelector('.skeleton-card, .skeleton');
+                if (placeholderSkeleton) liveWrapper.innerHTML = '';
+
                 const oldScrollHeight = list.scrollHeight;
-                const isNearBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 140;
+                const isNearBottom = (list.scrollHeight - list.scrollTop <= list.clientHeight + 160);
 
-                const messagesHtml = messages.map(c => {
-                    // Tự động tách frame từ avatar nếu có
-                    if (c.avt && c.avt.includes('|||')) {
-                        let parts = c.avt.split('|||');
-                        c.avt = parts[0];
-                        c.frame = parts[1];
+                // 🛡️ BẢN ĐỒ DOM HIỆN TẠI (INDEXING EXISTING NODES)
+                const existingDomMap = new Map();
+                liveWrapper.querySelectorAll('.chat-msg-row').forEach(row => {
+                    const id = row.getAttribute('data-msg-id') || row.id.replace('chat-msg-', '');
+                    if (id) existingDomMap.set(id, row);
+                });
+
+                let hasAppendedNewMessage = false;
+
+                // THỰC HIỆN ĐỒNG BỘ GIA TĂNG (INCREMENTAL DIFF)
+                const incomingIds = new Set();
+                const tempContainer = document.createElement('div');
+
+                // Lần đầu mở chat: nạp toàn bộ tin hiện có vào bộ nhớ mốc để tránh spam thông báo đồng loạt
+                if (isChatInitialBootstrap) {
+                    messages.forEach(m => {
+                        const mid = String(m.msgId || m.id || m.chatId || m._id || '');
+                        if (mid) chatNotifiedMsgIds.add(mid);
+                    });
+                    isChatInitialBootstrap = false;
+                }
+
+                messages.forEach(c => {
+                    const msgId = String(c.msgId || c.id || c.chatId || c._id || '');
+                    if (!msgId) return;
+                    incomingIds.add(msgId);
+
+                    const existingRow = existingDomMap.get(msgId);
+
+                    if (!existingRow) {
+                        // TIN NHẮN HOÀN TOÀN MỚI -> TẠO NODE MỚI & THÊM VÀO DOM
+                        tempContainer.innerHTML = renderSingleChatMessageHTML(c);
+                        const newElement = tempContainer.firstElementChild;
+                        if (newElement) {
+                            liveWrapper.appendChild(newElement);
+                            hasAppendedNewMessage = true;
+
+                            // 🔔 KÍCH HOẠT THÔNG BÁO NỔI TRÌNH DUYỆT (NẾU TIN THỰC SỰ MỚI)
+                            if (!chatNotifiedMsgIds.has(msgId)) {
+                                chatNotifiedMsgIds.add(msgId);
+                                triggerChatBrowserNotification(c, msgId);
+                            }
+                        }
+                    } else {
+                        // TIN ĐÃ TỒN TẠI TRONG DOM -> KIỂM TRA BẢO TOÀN YOUTUBE
+                        // Nếu tin này có iframe YouTube, TUYỆT ĐỐI KHÔNG ĐƯỢC THAY THẾ ELEMENT!
+                        const hasYouTube = existingRow.querySelector('iframe, .chat-yt-embed-wrap');
+                        if (hasYouTube) {
+                            // Cập nhật timestamp nhẹ nhàng nếu cần, giữ nguyên cấu trúc phát video
+                            const timeEl = existingRow.querySelector('.chat-time');
+                            if (timeEl && c.time) timeEl.innerText = timeAgo(c.time);
+                            return; // Xong tin này, không đụng chạm gì nữa!
+                        }
+
+                        // Nếu là Poll -> Chỉ cập nhật số vote / thanh % in-place, không render lại cả bubble
+                        if (c.text && c.text.startsWith('[DANV_POLL]')) {
+                            try {
+                                const pollData = JSON.parse(c.text.replace('[DANV_POLL]', ''));
+                                let totalVotes = 0;
+                                pollData.options.forEach(opt => totalVotes += (opt.votes ? opt.votes.length : 0));
+                                
+                                const totalVotesEl = existingRow.querySelector('.poll-total-votes');
+                                if (totalVotesEl) totalVotesEl.innerText = totalVotes;
+
+                                pollData.options.forEach(opt => {
+                                    const vCount = opt.votes ? opt.votes.length : 0;
+                                    const pct = totalVotes === 0 ? 0 : Math.round((vCount / totalVotes) * 100);
+                                    const optEl = existingRow.querySelector(`.chat-poll-opt[onclick*="'${opt.id}'"]`);
+                                    if (optEl) {
+                                        const bg = optEl.querySelector('.poll-opt-bg');
+                                        const pctSpan = optEl.querySelector('.poll-opt-percent');
+                                        if (bg) bg.style.width = `${pct}%`;
+                                        if (pctSpan) pctSpan.innerText = `${pct}%`;
+                                    }
+                                });
+                            } catch(e){}
+                        }
                     }
-                    const messageId = String(c.msgId || c.id || c.chatId || c._id || '');
-                    const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
-                    const canDelete = currentUser && (currentUser.role === 'admin' || isMine);
-                    const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
+                });
 
-                    const savedTrans = chatTranslations[messageId];
-                    const transBoxHtml = savedTrans ? `
-                        <div class="trans-result-box">
-                            <div class="trans-header">
-                                <span><i class="fa-solid fa-language"></i> ${escapeHtml(savedTrans.langName)}</span>
-                                <button type="button" class="trans-btn-close" onclick="closeChatTranslation('${messageId}')" title="Đóng">&times;</button>
-                            </div>
-                            <div class="trans-content" style="white-space:pre-line;">${escapeHtml(savedTrans.translatedText)}</div>
-                        </div>
-                    ` : '';
+                // XÓA CÁC TIN NHẮN ĐÃ BỊ ADMIN/CHỦ SỞ HỮU XÓA KHỎI SERVER
+                existingDomMap.forEach((node, id) => {
+                    if (!incomingIds.has(id)) {
+                        node.style.transition = 'all 0.25s ease';
+                        node.style.opacity = '0';
+                        node.style.transform = 'scale(0.95)';
+                        setTimeout(() => node.remove(), 250);
+                    }
+                });
 
-                    return `
-                    <div class="chat-msg-row ${isMine ? 'mine' : ''}" id="chat-msg-${messageId}">
-                        ${!isMine ? `
-                        <a href="#profile/${encodeURIComponent(c.author)}" title="${escapeHtml(c.author)}" style="display:flex;">
-                            ${renderAvtWithFrame(c.avt, c.frame, 'avt-circle', '', c.author)}
-                        </a>` : ''}
-                        
-                        <div class="chat-msg-wrapper">
-                            <div class="chat-meta-header">
-                                ${!isMine ? (c.author === 'BeaBea (AI)' 
-                                    ? `<span class="chat-author-name" style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> BeaBea (AI) <span style="font-size:0.65rem; background:#fce7f3; color:#ec4899; padding:1px 5px; border-radius:6px; margin-left:3px; border:1px solid #fbcfe8;">BOT</span></span>` 
-                                    : `<a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>`) : ''}
-                                <span class="chat-time" title="${c.time || ''}">${timeAgo(c.time || '')}</span>
-                            </div>
-
-                            <div class="chat-bubble-container">
-                                <div class="chat-bubble">
-                                    ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
-                                    ${renderChatContent(c.text || '', c.author)}
-                                    ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}
-                                    ${transBoxHtml}
-                                </div>
-
-                                <!-- Floating Quick Actions Bar nổi khi hover -->
-                                <div class="chat-floating-actions">
-                                    ${currentUser && !isMine ? `
-                                        <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
-                                            <i class="fa-solid fa-reply"></i>
-                                        </button>` : ''}
-                                    ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
-                                        <div class="trans-menu-wrapper">
-                                            <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
-                                                <i class="fa-solid fa-language"></i>
-                                            </button>
-                                        </div>` : ''}
-                                    <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" title="Sao chép liên kết">
-                                        <i class="fa-solid fa-link"></i>
-                                    </button>
-                                    ${currentUser && !isMine ? `
-                                        <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo vi phạm">
-                                            <i class="fa-solid fa-flag"></i>
-                                        </button>` : ''}
-                                    ${canDelete ? `
-                                        <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                }).join('');
-
-                // CHỈ GHI ĐÈ KHUNG LIVE, GIỮ NGUYÊN KHUNG TIN CŨ TỪ SHEETS
-                liveWrapper.innerHTML = messagesHtml;
-
-                // NÚT LOAD MORE ĐẶT Ở VÙNG RIÊNG TRÊN CÙNG
+                // CẬP NHẬT NÚT TẢI TIN CŨ (TOP AREA)
                 if (chatHasMore && !isFetchingArchive) {
                     topArea.innerHTML = `
                         <div style="text-align:center; padding: 0 0 15px 0;">
@@ -14567,7 +15091,7 @@
                     `;
                 }
 
-                // CUỘN TRANG THÔNG MINH
+                // QUẢN LÝ CUỘN TRANG THÔNG MINH
                 if (isLoadMore && !isAutoFindingMessage) {
                     list.scrollTop = list.scrollHeight - oldScrollHeight;
                 } else {
@@ -14575,31 +15099,26 @@
                     const targetMsgId = urlParams.get('m');
                     
                     if (targetMsgId) {
-                        setTimeout(async () => {
+                        setTimeout(() => {
                             const targetEl = document.getElementById(`chat-msg-${targetMsgId}`);
                             if (targetEl) {
                                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 targetEl.classList.add('highlight-permanent');
                                 isAutoFindingMessage = false;
                                 autoFindDepth = 0;
-                            } else {
-                                if (chatHasMore || (typeof isFetchingArchive !== 'undefined' && isFetchingArchive)) {
-                                    if (!isAutoFindingMessage) {
-                                        isAutoFindingMessage = true;
-                                        autoFindDepth = 0;
-                                    }
-                                    await loadMoreChatMessages(true);
-                                } else {
-                                    showToast("Tin nhắn này quá cũ hoặc đã bị xóa", "info");
-                                    isAutoFindingMessage = false;
-                                }
                             }
                         }, 200);
                     } else if (forceScroll || isNearBottom) {
-                        setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+                        // Người dùng đang ở sát đáy hoặc vừa gửi tin -> Tự động cuộn mượt xuống đáy
+                        setTimeout(() => { scrollChatToBottom(false); }, 60);
+                    } else if (hasAppendedNewMessage && !isNearBottom) {
+                        // Người dùng đang cuộn lên trên đọc tin cũ và có tin mới tới -> Hiện nút Jump Pill, KHÔNG giật màn hình
+                        if (btnJump) btnJump.classList.add('show');
                     }
                 }
-            } catch(e) {}
+            } catch(e) {
+                console.error("Lỗi cập nhật Chat Incremental:", e);
+            }
         }
 
         let archiveChatPage = 1;
