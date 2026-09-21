@@ -2672,6 +2672,12 @@
             box-shadow: 0 8px 25px rgba(13, 165, 122, 0.15);
             transform: translateY(-2px); /* Hiệu ứng nảy nhẹ khi click vào gõ */
         }
+        .chat-composer-dock.drag-over {
+            border-color: var(--primary) !important;
+            background: rgba(13, 165, 122, 0.12) !important;
+            box-shadow: 0 0 20px rgba(13, 165, 122, 0.35) !important;
+            transform: scale(1.01);
+        }
         
         .chat-input-textarea {
             width: 100%;
@@ -14805,12 +14811,13 @@
             setupChatTextareaAutoBehavior();
         }
 
-        // ⌨️ BỘ XỬ LÝ TEXTAREA THÔNG MINH (Enter để gửi, Shift+Enter để xuống dòng)
+        // ⌨️ BỘ XỬ LÝ TEXTAREA THÔNG MINH (Enter để gửi, Shift+Enter để xuống dòng, Paste & Drag-Drop ảnh)
         function setupChatTextareaAutoBehavior() {
             const textarea = document.getElementById('commentTextChat');
             if (!textarea || textarea.dataset.keybound === "true") return;
             textarea.dataset.keybound = "true";
 
+            // 1. Phím Enter gửi tin, Shift+Enter xuống dòng
             textarea.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -14818,11 +14825,90 @@
                 }
             });
 
-            // Tự động co giãn chiều cao theo nội dung
+            // 2. Tự động co giãn chiều cao theo nội dung gõ
             textarea.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = Math.min(this.scrollHeight, 120) + 'px';
             });
+
+            // Hàm phụ trợ gán file ảnh vào input và hiển thị preview
+            const attachImageFileToChat = (file) => {
+                if (!file) return;
+                if (!file.type || !file.type.startsWith('image/')) {
+                    showToast("Chỉ cho phép đính kèm tệp hình ảnh!", "error");
+                    return;
+                }
+                if (file.size > 20 * 1024 * 1024) {
+                    showToast("Dung lượng ảnh tối đa là 20MB!", "error");
+                    return;
+                }
+
+                const fileInput = document.getElementById('commentImgUploadChat');
+                if (!fileInput) return;
+
+                try {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    fileInput.files = dt.files;
+                    handleCommentImagePreview(fileInput, 'chat');
+                    showToast("Đã đính kèm ảnh thành công!", "success");
+                } catch(err) {
+                    console.error("Lỗi khi đính kèm ảnh:", err);
+                }
+            };
+
+            // 3. Xử lý Paste ảnh (Ctrl + V / Command + V / Chụp màn hình dán vào)
+            textarea.addEventListener('paste', function(e) {
+                const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
+                if (!items) return;
+
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        const file = items[i].getAsFile();
+                        if (file) {
+                            e.preventDefault();
+                            attachImageFileToChat(file);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            // 4. Xử lý Kéo thả ảnh (Drag & Drop) vào khung soạn thảo chat
+            const dock = textarea.closest('.chat-composer-dock') || textarea.closest('.chat-input-box');
+            if (dock) {
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dock.addEventListener(eventName, function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dock.classList.add('drag-over');
+                    }, false);
+                });
+
+                ['dragleave', 'dragend'].forEach(eventName => {
+                    dock.addEventListener(eventName, function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dock.classList.remove('drag-over');
+                    }, false);
+                });
+
+                dock.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dock.classList.remove('drag-over');
+
+                    const dt = e.dataTransfer;
+                    if (dt && dt.files && dt.files.length > 0) {
+                        for (let i = 0; i < dt.files.length; i++) {
+                            if (dt.files[i].type.startsWith('image/')) {
+                                attachImageFileToChat(dt.files[i]);
+                                break;
+                            }
+                        }
+                    }
+                }, false);
+            }
         }
 
         // 📱 XỬ LÝ CHẠM (TAP) BẬT/TẮT THANH THAO TÁC TIN NHẮN TRÊN ĐIỆN THOẠI
