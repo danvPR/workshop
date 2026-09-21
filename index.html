@@ -13075,18 +13075,15 @@
         async function fetchNotifications(silent = false) {
             if(!currentUser) return;
             try {
-                // 🛡️ Thêm _t=${Date.now()} và cache: 'no-store' để ép trình duyệt luôn hỏi máy chủ mới nhất
-                const res = await fetch(`${WORKER_URL}/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`, {
-                    cache: 'no-store',
-                    headers: { 'Cache-Control': 'no-cache' }
-                });
-                const notifs = await res.json();
-                if (notifs.error) return;
-
-                window.cachedNotifs = Array.isArray(notifs) ? notifs : [];
+                // 🚀 FIX 1: Dùng apiFetch để đồng nhất bộ Header bảo mật, chống bị Cloudflare WAF chặn
+                const data = await apiFetch(`/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`);
                 
-                // 🛡️ Chuẩn hóa kiểm tra: n.read === true hoặc n.read === "true" đều coi là ĐÃ ĐỌC
-                const unreadCount = window.cachedNotifs.filter(n => n.read !== true && n.read !== "true").length;
+                if (!data || data.error) return;
+
+                window.cachedNotifs = Array.isArray(data) ? data : [];
+                
+                // 🚀 FIX 2: Thêm (n &&) để chống lỗi Crash TypeError nếu có 1 thông báo bị hỏng (null/undefined)
+                const unreadCount = window.cachedNotifs.filter(n => n && n.read !== true && n.read !== "true").length;
                 const badge = document.getElementById('notifBadge');
                 
                 if (badge) {
@@ -13104,7 +13101,9 @@
                 if (window.location.hash.split('?')[0] === '#notifications') {
                     renderNotifList();
                 }
-            } catch(e){}
+            } catch(e) {
+                console.error("Lỗi fetchNotifications:", e);
+            }
         }
         
         // HÀM MỞ TRANG TIN NHẮN
