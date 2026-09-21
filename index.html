@@ -6115,66 +6115,30 @@
                 <h3 style="margin:0; font-size:1.25rem; font-weight:900; color:var(--text-title); display:flex; align-items:center; gap:8px;">
                     🏮 <span>Thắp Lồng Đèn - Phá Cỗ Nhận WOW</span>
                 </h3>
-                <span style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">Tiến độ: <b style="color:var(--primary);">1 / 5 Đèn</b></span>
+                <span style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">Tiến độ: <b style="color:var(--primary);" id="midautumnProgressSummary">0 / 5 Đèn</b></span>
             </div>
             <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:18px;">
-                Mỗi ngày từ 21/09 đến 25/09, hoàn thành các thử thách sáng tạo để thắp sáng 1 chiếc lồng đèn và mở một hộp <b>Bánh Trung Thu Bí Mật</b> (20 - 60 WOW).
+                Mỗi ngày từ 21/09 đến 25/09, hoàn thành các nhiệm vụ bên dưới để thắp sáng lồng đèn và mở một hộp <b>Bánh Trung Thu Bí Mật</b> (+20 ~ 60 WOW, riêng đêm Rằm +100 WOW).
             </p>
 
-            <div class="midautumn-lantern-track">
-                <!-- 21/09 -->
-                <div class="midautumn-lantern-card lit" onclick="showToast('Sự kiện chưa diễn ra.', 'info')">
-                    <span style="font-size:0.75rem; font-weight:800; color:var(--primary);">21/09 • Hôm nay</span>
-                    <div class="midautumn-lantern-icon">🏮</div>
-                    <b style="font-size:0.95rem; color:var(--text-title);">Đèn Ông Sao</b>
-                    <span style="font-size:0.72rem; color:#10b981; font-weight:800;"><i class="fa-solid fa-check"></i> Đã thắp sáng</span>
-                </div>
-
-                <!-- 22/09 -->
-                <div class="midautumn-lantern-card" onclick="showToast('Sự kiện chưa diễn ra.', 'info')">
-                    <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">22/09</span>
-                    <div class="midautumn-lantern-icon" style="opacity:0.5;">🏮</div>
-                    <b style="font-size:0.95rem; color:var(--text-title);">Đèn Cá Chép</b>
-                    <span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Chưa mở</span>
-                </div>
-
-                <!-- 23/09 -->
-                <div class="midautumn-lantern-card" onclick="showToast('Sự kiện chưa diễn ra.', 'info')">
-                    <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">23/09</span>
-                    <div class="midautumn-lantern-icon" style="opacity:0.5;">🏮</div>
-                    <b style="font-size:0.95rem; color:var(--text-title);">Đèn Kéo Quân</b>
-                    <span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Chưa mở</span>
-                </div>
-
-                <!-- 24/09 -->
-                <div class="midautumn-lantern-card" onclick="showToast('Sự kiện chưa diễn ra.', 'info')">
-                    <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">24/09</span>
-                    <div class="midautumn-lantern-icon" style="opacity:0.5;">🏮</div>
-                    <b style="font-size:0.95rem; color:var(--text-title);">Đèn Thỏ Ngọc</b>
-                    <span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Chưa mở</span>
-                </div>
-
-                <!-- 25/09: Đêm Rằm -->
-                <div class="midautumn-lantern-card day-final" onclick="showToast('Sự kiện chưa diễn ra.', 'info')">
-                    <span style="font-size:0.75rem; font-weight:900; color:#ec4899;">25/09 • ĐÊM RẰM 🌕</span>
-                    <div class="midautumn-lantern-icon">👑</div>
-                    <b style="font-size:0.95rem; color:var(--text-title);">Đại Cỗ Nguyệt Cung</b>
-                    <span style="font-size:0.7rem; color:#ec4899; font-weight:800;">Khung Avatar 2026</span>
+            <div class="midautumn-lantern-track" id="midautumnLanternTrack">
+                <div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted);">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Đang nạp cung trăng...
                 </div>
             </div>
 
-            <!-- Bảng Nhiệm Vụ Hôm Nay -->
+            <!-- Bảng Nhiệm Vụ Hôm Nay (Tự động cập nhật theo Backend) -->
             <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:16px; padding:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
-                <div>
-                    <div style="font-size:0.95rem; font-weight:800; color:var(--text-title); margin-bottom:4px;">
-                        🎯 Nhiệm vụ hôm nay (21/09): Tương tác & Khám phá
+                <div style="flex:1; min-width:280px;">
+                    <div style="font-size:0.95rem; font-weight:800; color:var(--text-title); margin-bottom:6px;" id="midautumnDailyTaskTitle">
+                        🎯 Nhiệm vụ hôm nay
                     </div>
-                    <div style="font-size:0.82rem; color:var(--text-muted);">
-                        • Thả tim 3 dự án bất kỳ • Gửi lời chúc Trung Thu trong Kênh Giao Lưu • Trải nghiệm 1 game
+                    <div style="display:flex; flex-direction:column; gap:6px; font-size:0.85rem; color:var(--text-main);" id="midautumnDailyTaskList">
+                        <div>Đang tải danh sách nhiệm vụ...</div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="showToast('Sự kiện chưa diễn ra.', 'info')" style="border-radius:20px; padding:10px 22px; font-weight:800;">
-                    <i class="fa-solid fa-gift"></i> Mở Bánh Trung Thu Bí Mật
+                <button type="button" id="btnClaimMidAutumnGift" class="btn btn-primary" onclick="claimMidAutumnGift()" style="border-radius:20px; padding:11px 24px; font-weight:800;" disabled>
+                    <i class="fa-solid fa-gift"></i> <span>Mở Bánh Trung Thu Bí Mật</span>
                 </button>
             </div>
         </div>
@@ -9896,6 +9860,7 @@
             const viewSessionKey = `danv_viewed_${currentProj.projectId || currentProj.fileId}`;
             if (!sessionStorage.getItem(viewSessionKey)) {
                 sessionStorage.setItem(viewSessionKey, "true");
+                trackMidAutumnTask('play'); // 🏮 Đếm tiến độ trải nghiệm game Trung Thu
                 fetch(`${WORKER_URL}/api/project/action`, { 
                     method: 'POST', 
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
@@ -10009,8 +9974,12 @@
                 });
                 if(res && res.success) {
                     let list = currentProj[`${type}s`] || [];
-                    if (list.includes(currentUser.username)) list = list.filter(u => u !== currentUser.username); 
-                    else list.push(currentUser.username);
+                    if (list.includes(currentUser.username)) {
+                        list = list.filter(u => u !== currentUser.username); 
+                    } else {
+                        list.push(currentUser.username);
+                        if (type === 'like') trackMidAutumnTask('like'); // 🏮 Đếm tiến độ Trung Thu
+                    }
                     currentProj[`${type}s`] = list; 
                 }
                 const elapsed = Date.now() - startTime;
@@ -16090,6 +16059,7 @@
                 lastChatJSONStr = "";
                 await loadGlobalChat(true);
 
+                trackMidAutumnTask('chat'); // 🏮 Đếm tiến độ chat Trung Thu
                 // 🏮 EASTER EGG TRUNG THU: Nếu chat từ khóa mùa thu, kích hoạt mưa lồng đèn lấp lánh
                 if (/trung thu|rước đèn|ruoc den|bánh nướng|bánh dẻo|thỏ ngọc|chị hằng|chú cuội/i.test(text)) {
                     triggerMidAutumnChatLanterns();
@@ -18953,6 +18923,9 @@
         // 🌕 BỘ MÁY XỬ LÝ SỰ KIỆN: BEYOND THE MOONLIGHT 2026 (HỘI TRĂNG RẰM)
         // =========================================================================
         let midAutumnAudio = null;
+        let midAutumnState = { currentDay: 1, targets: [3, 1, 1], progress: [0, 0, 0], claimedDays: [] };
+        let isClaimingGift = false;
+
         let midAutumnQuizzes = [
             {
                 q: "Theo truyền thuyết dân gian Việt Nam, ai là người ngồi dưới gốc cây đa trên Cung Trăng?",
@@ -18971,12 +18944,30 @@
             }
         ];
 
-        function openMidAutumnPage() {
+        // 1. Tự động gửi tín hiệu hoàn thành nhiệm vụ chạy ngầm
+        async function trackMidAutumnTask(taskKind) {
+            if (!currentUser) return;
+            try {
+                const res = await apiFetch(`/api/event/midautumn`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'track', taskKind })
+                });
+                if (res && res.success && res.progress) {
+                    midAutumnState.progress = res.progress;
+                    if (window.location.hash.split('?')[0] === '#midautumn') {
+                        renderMidAutumnTasksUI();
+                    }
+                }
+            } catch(e) {}
+        }
+
+        // 2. Mở trang sự kiện & tải trạng thái
+        async function openMidAutumnPage() {
             document.getElementById('midautumnView').style.display = 'block';
             
-            // Tính số ngày còn lại tới 25/09/2026
-            const targetDate = new Date(2026, 8, 25); // Tháng 9 là index 8
-            const now = new Date(2026, 8, 21);
+            // Tính số ngày tới 25/09/2026
+            const targetDate = new Date(2026, 8, 25);
+            const now = new Date();
             const diffDays = Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
             const daysLeftEl = document.getElementById('midautumnDaysLeft');
             if (daysLeftEl) {
@@ -18985,12 +18976,188 @@
 
             renderMidAutumnQuiz();
             renderMidAutumnJamProjects();
+            await loadMidAutumnStatus();
         }
 
-        // Bật / Tắt BGM Trung Thu
+        // 3. Tải dữ liệu tiến độ từ Backend D1
+        async function loadMidAutumnStatus() {
+            if (!currentUser) {
+                renderMidAutumnTrackUI([0, 0, 0], [0, 0, 0], []);
+                renderMidAutumnTasksUI();
+                return;
+            }
+
+            try {
+                const res = await apiFetch(`/api/event/midautumn?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`);
+                if (res && res.success) {
+                    midAutumnState = res;
+                    renderMidAutumnTrackUI(res.targets, res.progress, res.claimedDays);
+                    renderMidAutumnTasksUI();
+                }
+            } catch(e) {
+                console.error("Lỗi nạp sự kiện Trung Thu:", e);
+            }
+        }
+
+        // 4. Render 5 chiếc Lồng Đèn
+        function renderMidAutumnTrackUI(targets, progress, claimedDays) {
+            const trackEl = document.getElementById('midautumnLanternTrack');
+            const summaryEl = document.getElementById('midautumnProgressSummary');
+            if (!trackEl) return;
+
+            const lanterns = [
+                { day: 1, date: "21/09", name: "Đèn Ông Sao", icon: "🏮" },
+                { day: 2, date: "22/09", name: "Đèn Cá Chép", icon: "🏮" },
+                { day: 3, date: "23/09", name: "Đèn Kéo Quân", icon: "🏮" },
+                { day: 4, date: "24/09", name: "Đèn Thỏ Ngọc", icon: "🏮" },
+                { day: 5, date: "25/09", name: "Đại Cỗ Nguyệt Cung", icon: "👑", isFinal: true }
+            ];
+
+            const claimedCount = claimedDays ? claimedDays.length : 0;
+            if (summaryEl) summaryEl.innerText = `${claimedCount} / 5 Đèn`;
+
+            trackEl.innerHTML = lanterns.map(l => {
+                const isClaimed = claimedDays && claimedDays.includes(l.day);
+                const isToday = (l.day === midAutumnState.currentDay);
+                const isLocked = (l.day > midAutumnState.currentDay);
+
+                let statusBadge = '';
+                let cardClass = 'midautumn-lantern-card';
+
+                if (l.isFinal) cardClass += ' day-final';
+
+                if (isClaimed) {
+                    cardClass += ' lit';
+                    statusBadge = `<span style="font-size:0.72rem; color:#10b981; font-weight:800;"><i class="fa-solid fa-check"></i> Đã thắp sáng</span>`;
+                } else if (isToday) {
+                    statusBadge = `<span style="font-size:0.72rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-clock"></i> Đang diễn ra</span>`;
+                } else if (isLocked) {
+                    statusBadge = `<span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Chưa mở</span>`;
+                } else {
+                    statusBadge = `<span style="font-size:0.72rem; color:#ef4444;"><i class="fa-solid fa-xmark"></i> Bỏ lỡ</span>`;
+                }
+
+                return `
+                    <div class="${cardClass}" style="${isLocked ? 'opacity:0.6;' : ''}">
+                        <span style="font-size:0.75rem; font-weight:800; color:${isToday ? 'var(--primary)' : 'var(--text-muted)'};">
+                            ${l.date} ${isToday ? '• Hôm nay' : ''}
+                        </span>
+                        <div class="midautumn-lantern-icon" style="${isLocked ? 'filter:grayscale(1); opacity:0.4;' : ''}">${l.icon}</div>
+                        <b style="font-size:0.95rem; color:var(--text-title);">${l.name}</b>
+                        ${statusBadge}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 5. Render Danh sách nhiệm vụ hôm nay & Trạng thái nút Mở Bánh
+        function renderMidAutumnTasksUI() {
+            const titleEl = document.getElementById('midautumnDailyTaskTitle');
+            const listEl = document.getElementById('midautumnDailyTaskList');
+            const btnClaim = document.getElementById('btnClaimMidAutumnGift');
+            if (!listEl || !btnClaim) return;
+
+            const day = midAutumnState.currentDay;
+            const tg = midAutumnState.targets || [3, 1, 1];
+            const pg = midAutumnState.progress || [0, 0, 0];
+            const isClaimedToday = midAutumnState.claimedDays && midAutumnState.claimedDays.includes(day);
+
+            if (titleEl) {
+                titleEl.innerHTML = `🎯 Nhiệm vụ hôm nay (Ngày ${day} • ${20 + day}/09):`;
+            }
+
+            const task1Done = pg[0] >= tg[0];
+            const task2Done = pg[1] >= tg[1];
+            const task3Done = pg[2] >= tg[2];
+            const allDone = task1Done && task2Done && task3Done;
+
+            listEl.innerHTML = `
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid ${task1Done ? 'fa-circle-check' : 'fa-circle-dot'}" style="color:${task1Done ? '#10b981' : 'var(--primary)'};"></i>
+                    <span>Thả tim dự án bất kỳ: <b>${Math.min(pg[0], tg[0])} / ${tg[0]}</b></span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid ${task2Done ? 'fa-circle-check' : 'fa-circle-dot'}" style="color:${task2Done ? '#10b981' : 'var(--primary)'};"></i>
+                    <span>Gửi tin nhắn trong Kênh Giao Lưu: <b>${Math.min(pg[1], tg[1])} / ${tg[1]}</b></span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid ${task3Done ? 'fa-circle-check' : 'fa-circle-dot'}" style="color:${task3Done ? '#10b981' : 'var(--primary)'};"></i>
+                    <span>Trải nghiệm game bất kỳ: <b>${Math.min(pg[2], tg[2])} / ${tg[2]}</b></span>
+                </div>
+            `;
+
+            if (!currentUser) {
+                btnClaim.disabled = false;
+                btnClaim.innerHTML = `<i class="fa-solid fa-user"></i> <span>Đăng nhập để nhận quà</span>`;
+                btnClaim.onclick = () => openModal('loginModal');
+                return;
+            }
+
+            btnClaim.onclick = claimMidAutumnGift;
+
+            if (isClaimedToday) {
+                btnClaim.disabled = true;
+                btnClaim.className = 'btn';
+                btnClaim.innerHTML = `<i class="fa-solid fa-check-double"></i> <span>Đã mở bánh hôm nay</span>`;
+            } else if (allDone) {
+                btnClaim.disabled = false;
+                btnClaim.className = 'btn btn-primary';
+                btnClaim.innerHTML = `<i class="fa-solid fa-gift fa-bounce"></i> <span>Mở Bánh Trung Thu Bí Mật</span>`;
+            } else {
+                btnClaim.disabled = true;
+                btnClaim.className = 'btn';
+                btnClaim.innerHTML = `<i class="fa-solid fa-lock"></i> <span>Chưa hoàn thành nhiệm vụ</span>`;
+            }
+        }
+
+        // 6. Nhận thưởng Bánh Trung Thu (Phá Cỗ)
+        async function claimMidAutumnGift() {
+            if (!currentUser) return openModal('loginModal');
+            if (isClaimingGift) return;
+
+            const btn = document.getElementById('btnClaimMidAutumnGift');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang phá cỗ...`;
+            isClaimingGift = true;
+
+            try {
+                const res = await apiFetch(`/api/event/midautumn`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'claim' })
+                });
+
+                if (res && res.success) {
+                    // Hiệu ứng pháo hoa năng lượng
+                    const rect = btn.getBoundingClientRect();
+                    spawnWOWEnergyBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+                    showToast(`🥮 Chúc mừng! Bạn nhận được +${res.reward} WOW từ Bánh Trung Thu!`, "success");
+
+                    // Cập nhật số dư
+                    currentUser.WOW = res.newBalance;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    syncAllWOWDisplays();
+
+                    // Tải lại giao diện lồng đèn
+                    await loadMidAutumnStatus();
+                } else {
+                    showToast(res ? res.error : "Không thể nhận quà!", "error");
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            } finally {
+                isClaimingGift = false;
+            }
+        }
+
+        // 7. Bật / Tắt Nhạc Trung Thu Lofi
         function toggleMidAutumnBGM() {
             const btnText = document.getElementById('midautumnBgmText');
-            // Bản nhạc nền acoustic lofi trăng rằm êm dịu
             const bgmUrl = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=chinese-traditional-folk-music-112185.mp3";
 
             if (!midAutumnAudio) {
@@ -19011,7 +19178,7 @@
             }
         }
 
-        // Render Đố Vui
+        // 8. Đố vui BeaBea
         function renderMidAutumnQuiz() {
             const qEl = document.getElementById('midautumnQuizQ');
             const optsEl = document.getElementById('midautumnQuizOptions');
@@ -19029,13 +19196,14 @@
 
         function handleAnswerMidAutumnQuiz(isCorrect) {
             if (isCorrect) {
-                showToast("Sự kiện chưa diễn ra.", "info");
+                showToast("🎉 Chính xác! Bạn quả là một chuyên gia Cung Trăng!", "success");
             } else {
-                showToast("Chưa đúng rồi! Hãy thử lại câu khác xem nhé.", "error");
+                showToast("Chưa đúng rồi! Hãy thử lại câu đố khác xem nhé.", "error");
             }
+            setTimeout(renderMidAutumnQuiz, 1500);
         }
 
-        // Lọc hiển thị Game Jam dự án Trăng Rằm (#trungthu2026 hoặc #trungthu)
+        // 9. Lọc Game Jam Trăng Rằm
         function renderMidAutumnJamProjects() {
             const container = document.getElementById('midautumnJamProjectList');
             if (!container) return;
@@ -19072,9 +19240,7 @@
                         <div class="card-author">@${escapeHtml(p.author)}</div>
                         <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
                             <span style="font-size:0.75rem; color:#f59e0b; font-weight:800;"><i class="fa-solid fa-moon"></i> Trăng Rằm Jam</span>
-                            <button class="btn btn-primary" style="padding:4px 10px; font-size:0.75rem; border-radius:12px;" onclick="event.stopPropagation(); showToast('Sự kiện chưa diễn ra.', 'info')">
-                                🥮 Tặng Bánh
-                            </button>
+                            <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views||0}</span>
                         </div>
                     </div>
                 </div>
@@ -19082,7 +19248,7 @@
             }).join('');
         }
 
-        // Hiệu ứng mưa lồng đèn rơi trong Kênh Giao Lưu (Chat)
+        // 10. Hiệu ứng mưa lồng đèn rơi trong Kênh Giao Lưu (Chat)
         function triggerMidAutumnChatLanterns() {
             const icons = ['🏮', '⭐', '🥮', '🐇', '🏮'];
             for (let i = 0; i < 18; i++) {
