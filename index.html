@@ -2491,13 +2491,12 @@
             .mobile-bottom-nav { display: flex; }
             body { padding-bottom: 70px; } /* Tránh nội dung bị thanh bar che */
 
-            /* Ẩn các icon không cần thiết trên Header Mobile để chống bấm nhầm */
-            .nav-actions a[href="#creator"],
-            .nav-actions a[href="#settings"] {
+            /* Chỉ ẩn nút Studio trên Header Mobile cho đỡ chật (vì đã đưa vào trang Hồ sơ) */
+            .nav-actions a[href="#creator"] {
                 display: none !important;
             }
             .nav-actions {
-                gap: 10px; /* Tăng khoảng cách các icon còn lại cho ngón tay chạm dễ dàng */
+                gap: 8px;
             }
         }
 
@@ -6758,6 +6757,10 @@
                             <button id="btnFollowProf" class="btn btn-primary" style="display:none;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
                             <button id="btnReportProf" class="btn btn-danger" style="display:none;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
                             <button id="btnAdminWarn" class="btn btn-danger" style="display:none;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
+                            
+                            <!-- Cụm công cụ cá nhân tiện lợi trên cả máy tính & điện thoại -->
+                            <a id="btnProfCreator" href="#creator" class="btn" style="display:none; text-decoration:none;"><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio</span></a>
+                            <a id="btnProfSettings" href="#settings" class="btn" style="display:none; text-decoration:none;"><i class="fa-solid fa-gear"></i> <span>Cài đặt</span></a>
                             <button id="btnCustomizeBento" class="btn" style="display:none; background: var(--primary); color: #fff;" onclick="toggleBentoEditMode()"><i class="fa-solid fa-shapes"></i> <span data-i18n="prof_btn_customize">Tùy biến</span></button>
                             <button id="btnEditProfModal" class="btn" style="display:none;" onclick="openEditProfileModal()"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Hồ sơ</span></button>
                         </div>
@@ -11789,19 +11792,25 @@
             // KHỞI TẠO BENTO GRID (HIỂN THỊ TĨNH - GIAI ĐOẠN 2)
             renderBentoGrid(viewingProfileData);
 
-            // Xử lý nút Follow / Edit / Customize
+            // Xử lý nút Follow / Edit / Customize / Settings / Creator
             const btnEdit = document.getElementById('btnEditProfModal'); 
             const btnFollow = document.getElementById('btnFollowProf');
             const btnCustomize = document.getElementById('btnCustomizeBento');
+            const btnProfCreator = document.getElementById('btnProfCreator');
+            const btnProfSettings = document.getElementById('btnProfSettings');
             
             const isAdmin = currentUser && currentUser.role === 'admin';
             
             if (isCurrentUser) { 
                 if(btnEdit) btnEdit.style.display = 'inline-flex'; 
                 if(btnCustomize) btnCustomize.style.display = 'inline-flex';
+                if(btnProfCreator) btnProfCreator.style.display = 'inline-flex';
+                if(btnProfSettings) btnProfSettings.style.display = 'inline-flex';
                 if(btnFollow) btnFollow.style.display = 'none'; 
             } else { 
                 if(btnEdit) btnEdit.style.display = 'none'; 
+                if(btnProfCreator) btnProfCreator.style.display = 'none';
+                if(btnProfSettings) btnProfSettings.style.display = 'none';
                 // Admin được phép thấy nút Tùy biến trên trang người khác
                 if(btnCustomize) btnCustomize.style.display = isAdmin ? 'inline-flex' : 'none';
                 
