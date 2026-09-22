@@ -13475,43 +13475,20 @@
                 const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
                 if (projRegex.test(textBeforeQuote)) {
                     actionHtml = textBeforeQuote.replace(projRegex, (match, p1) => {
-                        return match.includes('Station') ? `Station <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
-                        : `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
+                        return match.includes('Station') ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
+                        : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
                     });
                 } else {
-                    let targetText = linkWithTab.includes('profile') ? (t('notif_profile') || 'hồ sơ') : (linkWithTab.includes('studio') ? 'Station' : (t('notif_project') || 'dự án'));
-                    actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(${targetText})</a>`;
-                }
-
-                bubbleHtml = `
-                    <div style="display:flex; align-items:flex-start; gap:15px; padding-left: 28px; margin-top: 10px;">
-                        <a href="#profile/${sender}"><img src="${getAvtUrl(n.senderAvt)}" style="width:48px; height:48px; border-radius:4px; border:1px solid #d9d9d9; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'"></a>
-                        <div style="flex:1; max-width: 600px;">
-                            <div style="background:#fff; border:1px solid #d9d9d9; border-radius:6px; padding:12px 18px; position:relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                                <div style="position:absolute; left:-6px; top:15px; width:10px; height:10px; background:#fff; border-left:1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; transform:rotate(45deg);"></div>
-                                <span style="color:#575e75; font-size:0.95rem;">${commentSnippet}</span>
-                            </div>
-                            
-                            <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                                <input type="text" data-i18n-ph="proj_comment_ph" placeholder="${t('proj_comment_ph') || 'Viết bình luận...'}" style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="navigateTo('${linkWithTab}')">
-                                <button class="btn btn-primary" onclick="navigateTo('${linkWithTab}')" style="border-radius: 20px; padding: 9px 20px;">${t('proj_reply') || 'Trả lời'}</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                actionHtml = mainText.replace(sender, senderLink);
-                const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
-                
-                if (projRegex.test(actionHtml)) {
-                    actionHtml = actionHtml.replace(projRegex, (match, p1) => {
-                        return match.includes('Station') ? `Station <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
-                        : `dự án <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
-                    });
-                } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
-                    actionHtml += ` <a href="${linkWithTab}" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
-                }
-            }
+                    // Nếu là hồ sơ, biến ngay cụm từ "hồ sơ của bạn" hoặc "hồ sơ" thành link click, tránh bị ghép chữ "(dự án)" thừa
+                    if (textBeforeQuote.includes("hồ sơ của bạn")) {
+                        actionHtml = textBeforeQuote.replace("hồ sơ của bạn", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">hồ sơ của bạn</a>`);
+                    } else if (textBeforeQuote.includes("hồ sơ")) {
+                        actionHtml = textBeforeQuote.replace("hồ sơ", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">hồ sơ</a>`);
+                    } else {
+                        const isProfile = linkWithTab.includes('/users/') || linkWithTab.includes('profile');
+                        const isStudio = linkWithTab.includes('/studio/') || linkWithTab.includes('studio');
+                        const targetText = isProfile ? (t('notif_profile') || 'hồ sơ') : (isStudio ? 'Station' : (t('notif_project') || 'dự án'));
+                        actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${link
             return { actionHtml, bubbleHtml };
         }
 
