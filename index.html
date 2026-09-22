@@ -9029,6 +9029,17 @@
                     </div>
                 </div>
 
+                <!-- PHẦN 4: DANGER ZONE (XÓA DỰ ÁN) -->
+                <div id="deleteSectionContainer" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 20px; margin-top: 25px;">
+                    <h4 style="margin-bottom: 10px; color: #ef4444; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Khu vực Nguy hiểm
+                    </h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Xóa dự án này. Dự án sẽ bị ẩn khỏi trang chủ và trang cá nhân, đồng thời được chuyển vào Bộ sưu tập "Deleted" (Riêng tư).</p>
+                    <button type="button" onclick="softDeleteProject()" class="btn btn-danger" id="btnSoftDeleteProj" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
+                        <i class="fa-solid fa-trash-can"></i> Xóa dự án
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -12393,6 +12404,162 @@
 
         
         // ================= TRANG PROFILE (ĐÃ TỐI ƯU HÓA HOÀN TOÀN) =================
+        async function openProfilePage(username, urlParams = null) {
+            // 🛑 LƯU LẠI MỎ NEO (TARGET) ĐỂ TRÁNH RACE CONDITION
+            const targetUsername = username;
+            
+            document.getElementById('profileView').style.display = 'block';
+            viewingProfileUser = targetUsername; // Set global
+            
+            // 1. Xử lý khung nhập bình luận
+            const formProf = document.getElementById('profCommentForm');
+            const promptProf = document.getElementById('loginPromptProf');
+            if (currentUser) { if(formProf) formProf.style.display = 'block'; if(promptProf) promptProf.style.display = 'none'; } 
+            else { if(formProf) formProf.style.display = 'none'; if(promptProf) promptProf.style.display = 'block'; }
+
+            document.getElementById('profileContent').style.display = 'none';
+            const p404 = document.getElementById('profile404'); if(p404) p404.style.display = 'none';
+
+            // 2. BỘ NHỚ ĐỆM (CACHE)
+            const isCurrentUser = currentUser && currentUser.username.toLowerCase() === targetUsername.toLowerCase();
+            const now = Date.now();
+            let fetchedData = null; 
+            
+            if (!isCurrentUser && typeof profileCache !== 'undefined' && profileCache[targetUsername] && (now - profileCache[targetUsername].timestamp < PROF_CACHE_TTL)) {
+                fetchedData = profileCache[targetUsername].data; 
+            } else {
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(targetUsername)}`);
+                    
+                    // Chốt chặn 1
+                    if (viewingProfileUser !== targetUsername) return;
+
+                    if(res.status === 404) { if(p404) p404.style.display = 'block'; return; }
+                    if(!res.ok) { showToast("Máy chủ đang bận!", "error"); location.hash = "#home"; return; }
+                    
+                    fetchedData = await res.json();
+                    if (typeof profileCache !== 'undefined') {
+                        profileCache[targetUsername] = { data: fetchedData, timestamp: now }; 
+                    }
+                } catch(e) { 
+                    if (viewingProfileUser !== targetUsername) return;
+                    if(p404) p404.style.display = 'block'; return; 
+                }
+            }
+            
+            // Chốt chặn 2
+            if (viewingProfileUser !== targetUsername) return;
+            if (!fetchedData) {
+                if(p404) p404.style.display = 'block'; 
+                return;
+            }
+
+            viewingProfileData = fetchedData;
+            document.getElementById('profileContent').style.display = 'block';
+            
+            // 3. Đổ thông tin chữ cơ bản
+            document.title = `Hồ sơ ${viewingProfileData.display_name || targetUsername} (@${targetUsername}) trên DANVworkshop`;
+            const elName = document.getElementById('profDisplayName'); if(elName) elName.innerText = viewingProfileData.display_name || targetUsername;
+            const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || targetUsername;
+            const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
+            const elLoc = document.getElementById('profLocation'); if(elLoc) elLoc.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(viewingProfileData.location || t('prof_unknown_location') || 'Chưa rõ')}`;
+            const elBio = document.getElementById('profBio'); if(elBio) elBio.innerText = viewingProfileData.bio || t('prof_no_bio') || 'Chưa có tiểu sử.';
+            const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || t('prof_no_status') || 'Đang rảnh rỗi')}`;
+            
+            const badge = document.getElementById('profScratchBadge');
+            const scratchUserEl = document.getElementById('profScratchUsername');
+            if(badge) {
+                if(viewingProfileData.scratch_linked) { 
+                    badge.style.display = 'inline-flex'; 
+                    badge.removeAttribute('title');
+                    if(scratchUserEl) scratchUserEl.innerText = `@${viewingProfileData.scratch_linked}`;
+                } else { 
+                    badge.style.display = 'none'; 
+                }
+            }
+
+            // KHỞI TẠO BENTO GRID
+            if(typeof renderBentoGrid === 'function') renderBentoGrid(viewingProfileData);
+
+            // Xử lý nút Follow / Edit / Customize / Menu 3 chấm
+            const btnEdit = document.getElementById('btnEditProfModal'); 
+            const btnFollow = document.getElementById('btnFollowProf');
+            const btnCustomize = document.getElementById('btnCustomizeBento');
+            const profMoreWrap = document.getElementById('profMoreMenuWrap');
+            
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            
+            if (isCurrentUser) { 
+                if(btnEdit) btnEdit.style.display = 'inline-flex'; 
+                if(btnCustomize) btnCustomize.style.display = 'inline-flex';
+                if(profMoreWrap) profMoreWrap.style.display = 'inline-flex';
+                if(btnFollow) btnFollow.style.display = 'none'; 
+            } else { 
+                if(btnEdit) btnEdit.style.display = 'none'; 
+                if(profMoreWrap) profMoreWrap.style.display = 'none';
+                if(btnCustomize) btnCustomize.style.display = isAdmin ? 'inline-flex' : 'none';
+                
+                if(currentUser && btnFollow) {
+                    const isFollowing = (viewingProfileData.followers || []).includes(currentUser.username); 
+                    btnFollow.style.display = 'inline-flex'; 
+                    btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following') || 'Đang theo dõi'}` : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow') || 'Theo dõi'}`; 
+                    btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary'; 
+                } 
+            }
+            
+            const btnReport = document.getElementById('btnReportProf');
+            const btnWarn = document.getElementById('btnAdminWarn');
+            if(btnReport) btnReport.style.display = (currentUser && !isCurrentUser) ? 'inline-flex' : 'none';
+            if(btnWarn) btnWarn.style.display = (currentUser && currentUser.role === 'admin' && !isCurrentUser) ? 'inline-flex' : 'none';
+
+            // Đặt số liệu nhanh
+            const stProj = document.getElementById('statProjectCount'); if(stProj) stProj.innerText = "..."; 
+            const stLike = document.getElementById('statLikeCount'); if(stLike) stLike.innerText = "..."; 
+            const stFolEr = document.getElementById('statFollowersCount'); if(stFolEr) stFolEr.innerText = (viewingProfileData.followers || []).length;
+            const stFolIn = document.getElementById('statFollowingCount'); if(stFolIn) stFolIn.innerText = (viewingProfileData.following || []).length;
+
+            // Đặt lại trạng thái ban đầu cho các Tab
+            if(typeof profTabState !== 'undefined') {
+                profTabState = {
+                    projects: { page: 1, hasMore: false, loaded: false },
+                    likes: { page: 1, hasMore: false, loaded: false },
+                    activities: { page: 1, hasMore: false, loaded: false },
+                    playlists: { page: 1, hasMore: false, loaded: false }
+                };
+            }
+
+            // Dọn sạch rác màn hình cũ
+            ['userProjectList', 'userLikedList', 'userActivityList'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.innerHTML = '';
+            });
+            ['profLoadMore-projects', 'profLoadMore-likes', 'profLoadMore-activities'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.style.display = 'none';
+            });
+
+            // Xử lý Tab bình luận & Tự động Cuộn/Highlight
+            if(typeof commentLimits !== 'undefined') commentLimits.prof = 10;
+            if(typeof renderCommentList === 'function') renderCommentList('prof', viewingProfileData.comments || []);
+            if(typeof removeCommentImage === 'function') removeCommentImage('prof');
+            if(typeof cancelReply === 'function') cancelReply('prof');
+
+            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
+                switchProfTab('comments');
+                const targetCmtId = urlParams.get('c');
+                if (targetCmtId && typeof highlightAndScrollComment === 'function') {
+                    setTimeout(() => highlightAndScrollComment('prof', targetCmtId), 250);
+                }
+            } else if (urlParams && urlParams.get('collection')) {
+                switchProfTab('playlists');
+                if(typeof openCollectionDetail === 'function') {
+                    setTimeout(() => openCollectionDetail(urlParams.get('collection')), 350);
+                }
+            } else {
+                switchProfTab('projects');
+            }
+        }
+
         async function loadProfTab(tab, isLoadMore = false) {
             // 🛑 LƯU LẠI MỎ NEO (TARGET) ĐỂ TRÁNH RACE CONDITION TRÊN CÁC TAB
             const targetUsername = viewingProfileUser;
@@ -13896,6 +14063,7 @@
             const title = titleInput ? titleInput.value.trim() : "";
             const vis = document.getElementById('newPlaylistVis').value;
             if (!title) return showToast("Vui lòng nhập tên Bộ sưu tập!", "error");
+            if (title.toLowerCase() === 'deleted') return showToast("Tên 'Deleted' được dành riêng cho hệ thống!", "error");
 
             const btn = document.getElementById('btnSubmitCreateCol');
             if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...'; }
@@ -14079,6 +14247,7 @@
             const newTitle = document.getElementById('editPlaylistTitle').value.trim();
             const newVis = document.getElementById('editPlaylistVis').value;
             if (!newTitle) return showToast("Tên bộ sưu tập không được để trống!", "error");
+            if (newTitle.toLowerCase() === 'deleted') return showToast("Tên 'Deleted' được dành riêng cho hệ thống!", "error");
 
             const btn = document.getElementById('btnSaveEditCol');
             if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...'; }
@@ -15213,15 +15382,18 @@
             document.getElementById('editDescInput').value = currentProj.description || '';
             document.getElementById('editCreditsInput').value = currentProj.credits || '';
 
-            // Admin không được phép sửa file sb3 của người khác
+            // Admin không được phép sửa file sb3 hoặc tự ý xóa dự án vào thùng rác của người khác (Admin có nút gỡ riêng)
+            const isOwner = currentUser.username.toLowerCase() === currentProj.author.toLowerCase();
+            
             const updateFileSection = document.getElementById('updateProjFile');
             if (updateFileSection) {
                 const sectionContainer = updateFileSection.parentElement.parentElement;
-                if (currentUser.username.toLowerCase() !== currentProj.author.toLowerCase()) {
-                    sectionContainer.style.display = 'none'; // Ẩn với Admin
-                } else {
-                    sectionContainer.style.display = 'block'; // Hiện với chính chủ
-                }
+                sectionContainer.style.display = isOwner ? 'block' : 'none';
+            }
+            
+            const deleteSection = document.getElementById('deleteSectionContainer');
+            if (deleteSection) {
+                deleteSection.style.display = isOwner ? 'block' : 'none';
             }
 
             // Điền ảnh bìa
@@ -15370,6 +15542,42 @@
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
             btn.innerHTML = '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>'; btn.disabled = false;
+        }
+
+        // HÀM XỬ LÝ XÓA DỰ ÁN VÀO THÙNG RÁC
+        async function softDeleteProject() {
+            if (!currentProj) return;
+            const confirmMsg = "Bạn có chắc chắn muốn xóa tác phẩm này?\nNó sẽ bị ẩn khỏi mọi nơi và chuyển vào Bộ sưu tập 'Deleted' của bạn.";
+            if (!confirm(confirmMsg)) return;
+
+            const btn = document.getElementById('btnSoftDeleteProj');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xóa...';
+            btn.disabled = true;
+
+            const res = await apiFetch(`/api/project/action`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fileId: currentProj.fileId,
+                    action: "soft_delete"
+                })
+            });
+
+            if (res && res.success) {
+                showToast("Đã chuyển tác phẩm vào thùng rác!", "success");
+                closeModal('projSettingsModal');
+                
+                // Xóa Cache cục bộ để các tab làm mới lại
+                ramReadCache.delete("DANV_CACHE_PROJECTS");
+                ramReadCache.delete("DANV_CACHE_USERS");
+                
+                // Tự động đẩy về trang chủ để không bị kẹt ở trang dự án đã xóa
+                navigateTo('#home');
+            } else {
+                showToast((res && res.error) ? res.error : "Không thể xóa dự án", "error");
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
+            }
         }
 
         // ================= TÍNH NĂNG CHỌN ENGINE LẬP TRÌNH =================
