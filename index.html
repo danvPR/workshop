@@ -8776,8 +8776,96 @@
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let chatInterval = null; // Vòng lặp tải chat tự động
         
-        // 🚀 BỘ NHỚ ĐỆM FRONTEND (Giảm 99% request khi tải Avatar và Station)
+        // 🚀 BỘ NHỚ ĐỆM FRONTEND BỀN VỮNG (Giữ Cache 24h bằng LocalStorage)
         let globalUserCache = {}; 
+        try {
+            const lsAvtCache = localStorage.getItem('danv_global_user_cache');
+            if (lsAvtCache) {
+                const parsed = JSON.parse(lsAvtCache);
+                const now = Date.now();
+                for (const [user, data] of Object.entries(parsed)) {
+                    // Dọn dẹp cache quá 24 giờ
+                    if (now - data.time < 86400000) globalUserCache[user] = data.url;
+                }
+            }
+        } catch(e) {}
+
+        // Biến RAM để gom bản ghi trước khi lưu xuống ổ cứng
+        let pendingCacheWrites = false;
+
+        function saveGlobalUserCache(username, url) {
+            globalUserCache[username] = url;
+            pendingCacheWrites = true;
+            
+            // Dùng requestIdleCallback hoặc setTimeout để gom lệnh lưu ổ cứng, tránh giật lag UI
+            if (window.cacheWriteTimer) clearTimeout(window.cacheWriteTimer);
+            window.cacheWriteTimer = setTimeout(() => {
+                if (!pendingCacheWrites) return;
+                try {
+                    let cache = JSON.parse(localStorage.getItem('danv_global_user_cache') || '{}');
+                    const now = Date.now();
+                    // Lưu từ RAM vào Cache JSON
+                    for (const [u, link] of Object.entries(globalUserCache)) {
+                        if (!cache[u] || cache[u].url !== link) {
+                            cache[u] = { url: link, time: now };
+                        }
+                    }
+                    localStorage.setItem('danv_global_user_cache', JSON.stringify(cache));
+                    pendingCacheWrites = false;
+                } catch(e) {}
+            }, 500); // Lưu 1 lần duy nhất sau khi rảnh tay 500ms
+        }
+
+        // 🚀 CÔNG CỤ TỐI ƯU 1: BATCH REQUEST AVATAR (GIẢI QUYẾT N+1 QUERY)
+        let userFetchQueue = new Set();
+        let userFetchCallbacks = {};
+        let userFetchTimer = null;
+
+        function queueFetchUserAvt(username, callback) {
+            if (!username) return;
+            if (globalUserCache[username]) {
+                if (callback) callback(globalUserCache[username]);
+                return;
+            }
+            
+            userFetchQueue.add(username);
+            if (!userFetchCallbacks[username]) userFetchCallbacks[username] = [];
+            if (callback) userFetchCallbacks[username].push(callback);
+
+            clearTimeout(userFetchTimer);
+            userFetchTimer = setTimeout(async () => {
+                const usersToFetch = Array.from(userFetchQueue);
+                userFetchQueue.clear();
+                
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/users/batch?list=${encodeURIComponent(usersToFetch.join(','))}`);
+                    const data = await res.json();
+                    
+                    data.forEach(user => {
+                        if (user.avt) {
+                            saveGlobalUserCache(user.username, user.avt);
+                            // Gọi tất cả các hàm đang chờ ảnh của người này (Cập nhật DOM)
+                            if (userFetchCallbacks[user.username]) {
+                                userFetchCallbacks[user.username].forEach(cb => cb(user.avt));
+                            }
+                        }
+                    });
+                } catch(e) {}
+                
+                // Dọn dẹp mảng callback để giải phóng RAM
+                usersToFetch.forEach(u => delete userFetchCallbacks[u]);
+            }, 50); // Gom tất cả request trong 50ms thành 1 lần gọi duy nhất
+        }
+
+        // 🚀 CÔNG CỤ TỐI ƯU 2: DEBOUNCE CHỐNG SPAM INPUT
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
         let lastStudiosFetchTime = 0;
         
         // --- Smart Caching & Lazy Load cho Profile ---
@@ -9112,7 +9200,7 @@
                 }
                 checkEmailVerificationBanner(); // Kiểm tra banner xác thực email
                 loadEvents(); // Tải Sự kiện Game Jam
-                setInterval(autoFetchData, 35000);
+                startUnifiedHeartbeat(); // Kích hoạt luồng nhịp tim tổng hợp (Đợt 3)
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
 
@@ -9442,13 +9530,111 @@
         function linkScratchAuth() { localStorage.setItem('is_linking_scratch', 'true'); loginScratch(); }
         function logout() { localStorage.removeItem('danv_user'); currentUser = null; window.location.hash = '#home'; location.reload(); }
 
-        // ================= ROUTING & NAV =================
-        async function autoFetchData() {
-            // 🛡️ TIẾT KIỆM REQUEST 1: Nếu người dùng đang ẩn tab hoặc không bật web thì KHÔNG quét
-            if (document.hidden) return; 
+        // ================= ĐỢT 3: HEARTBEAT ENGINE (ROUTING & NAV) =================
+        let heartbeatTimer = null;
+        let heartbeatDelay = 6000; // Khởi điểm 6 giây
+        const MAX_HEARTBEAT_DELAY = 35000; // Nếu AFK hoặc ở tab khác, giãn ra tối đa 35 giây
+        let lastChatTimestamp = Date.now(); // Mốc thời gian để chỉ lấy tin nhắn mới
 
-            // 🛡️ TIẾT KIỆM
-            if (currentUser) fetchNotifications(true);
+        function startUnifiedHeartbeat() {
+            if (heartbeatTimer) clearTimeout(heartbeatTimer);
+            heartbeatTimer = setTimeout(async () => {
+                if (!document.hidden && !isUserAFK) {
+                    await executeHeartbeat();
+                }
+                startUnifiedHeartbeat();
+            }, heartbeatDelay);
+        }
+
+        async function executeHeartbeat() {
+            const isChatTab = window.location.hash.split('?')[0] === '#chat';
+            
+            let url = `${WORKER_URL}/api/heartbeat?_t=${Date.now()}`;
+            if (currentUser) url += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+            if (isChatTab) url += `&since=${lastChatTimestamp}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                // 1. XỬ LÝ GLOBAL PING
+                if (data.ping) {
+                    const dismissedStamp = localStorage.getItem('danv_dismissed_ping');
+                    if (dismissedStamp != data.ping.timestamp) {
+                        currentPingData = data.ping;
+                        document.getElementById('pingMessageText').innerText = data.ping.message;
+                        const customBtn = document.getElementById('pingCustomBtn');
+                        if (data.ping.btnText && data.ping.btnLink) {
+                            customBtn.innerText = data.ping.btnText;
+                            customBtn.href = data.ping.btnLink;
+                            customBtn.style.display = 'inline-block';
+                        } else { customBtn.style.display = 'none'; }
+                        document.getElementById('globalPingBanner').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('globalPingBanner').style.display = 'none';
+                }
+
+                // 2. XỬ LÝ THÔNG BÁO CHƯA ĐỌC (Chỉ lấy số, cập nhật cục bộ nhanh)
+                if (data.unreadNotifs !== null && data.unreadNotifs !== undefined) {
+                    const badge = document.getElementById('notifBadge');
+                    if (badge) {
+                        if (data.unreadNotifs > 0) {
+                            badge.innerText = data.unreadNotifs > 99 ? '99+' : data.unreadNotifs;
+                            badge.style.display = 'flex';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                }
+
+                // 3. XỬ LÝ TIN NHẮN CHAT MỚI (Chỉ đổ data nếu đang ở tab Chat)
+                if (isChatTab && data.chat && data.chat.length > 0) {
+                    const liveWrapper = document.getElementById('chatLiveWrapper');
+                    if (liveWrapper) {
+                        const tempContainer = document.createElement('div');
+                        let hasAppendedNewMessage = false;
+
+                        data.chat.forEach(c => {
+                            if (c.timestamp > lastChatTimestamp) lastChatTimestamp = c.timestamp;
+                            const msgId = String(c.msgId || c.id);
+                            if (!document.getElementById(`chat-msg-${msgId}`)) {
+                                tempContainer.innerHTML = renderSingleChatMessageHTML(c);
+                                const newElement = tempContainer.firstElementChild;
+                                if (newElement) {
+                                    liveWrapper.appendChild(newElement); // Nhét vào cuối mảng
+                                    hasAppendedNewMessage = true;
+                                    if (!chatNotifiedMsgIds.has(msgId)) {
+                                        chatNotifiedMsgIds.add(msgId);
+                                        triggerChatBrowserNotification(c, msgId);
+                                    }
+                                }
+                            }
+                        });
+
+                        if (hasAppendedNewMessage) {
+                            heartbeatDelay = 6000; // Reset tốc độ khi có người chat
+                            const list = document.getElementById('chatMessageList');
+                            const isNearBottom = (list.scrollHeight - list.scrollTop <= list.clientHeight + 160);
+                            if (isNearBottom) scrollChatToBottom(true);
+                            else {
+                                const btnJump = document.getElementById('btnChatJumpBottom');
+                                if (btnJump) btnJump.classList.add('show');
+                            }
+                        }
+                    }
+                }
+
+                // ĐIỀU CHỈNH KHOẢNG CÁCH GỌI API (ADAPTIVE POLLING)
+                if (isChatTab) {
+                    // Nếu đang ở phòng Chat mà không có tin nhắn -> Giãn dần ra tối đa 15s
+                    if (!data.chat || data.chat.length === 0) heartbeatDelay = Math.min(heartbeatDelay + 2000, 15000);
+                } else {
+                    // Nếu ở tab khác -> Giãn dần ra tối đa 35s (Chỉ để nuôi Ping và Notifs)
+                    heartbeatDelay = Math.min(heartbeatDelay + 5000, MAX_HEARTBEAT_DELAY);
+                }
+
+            } catch(e) {}
         }
 
         const BASE_PATH = window.location.pathname.includes('/workshop') ? '/workshop' : '';
@@ -9862,18 +10048,16 @@
 
             if (loadMoreBtn) loadMoreBtn.style.display = homeHasMore ? 'block' : 'none';
 
-            // Nạp Avatar cho các thẻ chưa có trong Cache ngầm
+            // Nạp Avatar cho các thẻ chưa có trong Cache ngầm (ĐÃ TỐI ƯU BATCH)
             allProjects.forEach(p => {
                 const author = p.author;
                 if (!author || globalUserCache[author]) return;
-                fetch(`${WORKER_URL}/api/user/${encodeURIComponent(author)}`).then(r => r.json()).then(d => {
-                    if (d && d.avt) {
-                        globalUserCache[author] = d.avt;
-                        document.querySelectorAll(`[id^="home-card-avt-${author}-"]`).forEach(img => {
-                            img.src = getAvtUrl(d.avt);
-                        });
-                    }
-                }).catch(() => {});
+                
+                queueFetchUserAvt(author, (avtCode) => {
+                    document.querySelectorAll(`[id^="home-card-avt-${author}-"]`).forEach(img => {
+                        img.src = getAvtUrl(avtCode);
+                    });
+                });
             });
         }
 
@@ -10269,20 +10453,17 @@
                 return; 
             }
 
-            // Xử lý nạp Avatar cho bình luận lưu trữ
+            // Xử lý nạp Avatar cho bình luận lưu trữ (ĐÃ TỐI ƯU BATCH)
             list.forEach(c => {
                 if (c && c.isArchived && !c.avt) {
                     if (globalUserCache[c.author]) {
                         c.avt = globalUserCache[c.author];
                     } else {
                         c.avt = DEFAULT_AVATAR;
-                        fetch(`${WORKER_URL}/api/user/${encodeURIComponent(c.author)}`).then(r=>r.json()).then(d=>{
-                            if(d && d.avt) {
-                                globalUserCache[c.author] = d.avt;
-                                const imgEl = document.getElementById(`avt-cmt-${c.id}`);
-                                if (imgEl) imgEl.src = getAvtUrl(d.avt);
-                            }
-                        }).catch(()=>{});
+                        queueFetchUserAvt(c.author, (avtCode) => {
+                            const imgEl = document.getElementById(`avt-cmt-${c.id}`);
+                            if (imgEl) imgEl.src = getAvtUrl(avtCode);
+                        });
                     }
                 }
             });
@@ -10981,10 +11162,6 @@
             }
         }
 
-        function handleStationSearch(val) {
-            studioSearchTerm = (val || '').toLowerCase().trim();
-            renderStudiosGrid();
-        }
 
         function filterStations(mode, btnEl) {
             studioFilterMode = mode;
@@ -11205,12 +11382,17 @@
             displayStudioProjectCards(loadedStudioProjects);
         }
 
-        function filterStudioInternalProjects(val) {
+        const handleStationSearch = debounce((val) => {
+            studioSearchTerm = (val || '').toLowerCase().trim();
+            renderStudiosGrid();
+        }, 300);
+
+        const filterStudioInternalProjects = debounce((val) => {
             const q = (val || '').toLowerCase().trim();
-            studioProjectsLimit = STD_PROJECTS_PER_PAGE; // Reset lại số lượng khi người dùng gõ tìm kiếm
+            studioProjectsLimit = STD_PROJECTS_PER_PAGE;
             const filtered = loadedStudioProjects.filter(p => (p.title || '').toLowerCase().includes(q) || (p.author || '').toLowerCase().includes(q));
             displayStudioProjectCards(filtered);
-        }
+        }, 300);
 
         function displayStudioProjectCards(list) {
             currentStudioFilteredProjects = list || [];
@@ -11312,22 +11494,17 @@
 
             list.innerHTML = html;
 
-            // 🚀 TỐI ƯU TẢI AVATAR: Chỉ tải những người chưa có trong Cache
+            // 🚀 TỐI ƯU TẢI AVATAR BẰNG BATCH QUEUE
             members.forEach(m => {
                 const img = document.getElementById(`std-avt-${m}`);
                 if (!img) return;
 
                 if (globalUserCache[m]) {
-                    // CÓ TRONG RAM RỒI -> Lấy ra dùng ngay lập tức, 0 tốn request
                     img.src = getAvtUrl(globalUserCache[m]);
                 } else {
-                    // CHƯA CÓ -> Gọi API, sau đó lưu vào RAM để lần sau không phải gọi nữa
-                    fetch(`${WORKER_URL}/api/user/${encodeURIComponent(m)}`).then(r=>r.json()).then(d=>{
-                        if(d.avt) {
-                            globalUserCache[m] = d.avt; // Lưu vào Cache
-                            img.src = getAvtUrl(d.avt);
-                        }
-                    }).catch(()=>{});
+                    queueFetchUserAvt(m, (avtCode) => {
+                        img.src = getAvtUrl(avtCode);
+                    });
                 }
             });
         }
@@ -14180,7 +14357,7 @@
                     </a>
                 `).join('');
 
-                // 🚀 TỐI ƯU TẢI AVATAR FOLLOW (Dùng chung bộ nhớ với Station)
+                // 🚀 TỐI ƯU TẢI AVATAR FOLLOW BẰNG BATCH QUEUE
                 list.forEach(username => {
                     const imgEl = document.getElementById(`follow-avt-${username}`);
                     if (!imgEl) return;
@@ -14188,15 +14365,9 @@
                     if (globalUserCache[username]) {
                         imgEl.src = getAvtUrl(globalUserCache[username]);
                     } else {
-                        fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)
-                            .then(res => res.json())
-                            .then(data => {
-                                if(data && data.avt) {
-                                    globalUserCache[username] = data.avt; // Lưu vào Cache
-                                    imgEl.src = getAvtUrl(data.avt);
-                                }
-                            })
-                            .catch(e => console.log("Lỗi tải avt follow:", e));
+                        queueFetchUserAvt(username, (avtCode) => {
+                            imgEl.src = getAvtUrl(avtCode);
+                        });
                     }
                 });
             }
@@ -15309,7 +15480,7 @@
             showToast(`Đã chuyển sang chế độ ${theme === 'dark' ? 'Tối' : 'Sáng'}`, "success");
         }
 
-        // ================= HỆ THỐNG GLOBAL CHAT (ĐÃ TỐI ƯU & SỬA LỖI XÓA) =================
+        // ================= HỆ THỐNG GLOBAL CHAT (ADAPTIVE POLLING THÔNG MINH) =================
         let lastChatJSONStr = "";
         let chatDisplayLimit = 20; // Giới hạn 20 tin ban đầu
         let chatHasMore = false;
@@ -15317,19 +15488,15 @@
 
         let isUserAFK = false;
         let afkTimer = null;
+        
+        // (Đã xóa hàm startChatPolling -> startUnifiedHeartbeat)
 
-        function startChatPolling() {
-            if (chatInterval) clearInterval(chatInterval);
-            // Giãn từ 3.5s lên 7s (tiết kiệm gấp đôi request)
-            chatInterval = setInterval(() => {
-                // Nếu tab bị ẩn hoặc người dùng không hoạt động (AFK) thì ngưng gửi request
-                if (!document.hidden && !isUserAFK && window.location.hash.split('?')[0] === '#chat') {
-                    loadGlobalChat(false);
-                }
-            }, 7000);
-        }
-
+        let isThrottlingAFK = false;
         function resetAFKTimer() {
+            if (isThrottlingAFK) return;
+            isThrottlingAFK = true;
+            setTimeout(() => { isThrottlingAFK = false; }, 2000); // 2 giây mới kích hoạt timer 1 lần
+
             isUserAFK = false;
             clearTimeout(afkTimer);
             // Sau 3 phút không rê chuột hay gõ phím -> Coi như AFK, dừng quét ngầm
@@ -15401,8 +15568,10 @@
                 <div id="chatLiveWrapper">${getSkeletonHTML('chat')}</div>
             `;
 
-            loadGlobalChat(true);
-            startChatPolling();
+            loadGlobalChat(true).then(() => {
+                lastChatTimestamp = Date.now(); // Đặt mốc thời gian ngay sau khi tải lần đầu
+            });
+            heartbeatDelay = 6000; // Ép hệ thống đập nhanh lại khi vừa vào phòng chat
             setupChatMentionAutocomplete();
             setupChatTextareaAutoBehavior();
         }
@@ -16068,6 +16237,15 @@
                         }
                     }, 1500);
                 }
+
+                // 🚀 BÁO CHO HEARTBEAT ENGINE BIẾT ĐÃ TỰ CẬP NHẬT CHAT ĐỂ TRÁNH TRÙNG LẶP
+                if (hasAppendedNewMessage) {
+                    heartbeatDelay = 6000; 
+                }
+                
+                // Khởi động lại chu kỳ Heartbeat từ đầu (tránh việc nó nổ ngay lập tức cùng lúc)
+                if (heartbeatTimer) clearTimeout(heartbeatTimer);
+                startUnifiedHeartbeat();
 
                 // QUẢN LÝ CUỘN TRANG THÔNG MINH
                 if (isLoadMore && !isAutoFindingMessage) {
@@ -18397,7 +18575,7 @@
             try {
                 const data = await (await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`)).json();
                 if (data && data.avt) {
-                    globalUserCache[username] = data.avt;
+                    saveGlobalUserCache(username, data.avt);
                     img.src = getAvtUrl(data.avt);
                 }
             } catch(e){}
