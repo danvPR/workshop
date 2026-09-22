@@ -235,12 +235,42 @@
             background: rgba(245, 158, 11, 0.08);
         }
 
-        /* Nút Upload tinh giản */
+        /* ẨN HOÀN TOÀN NÚT ĐĂNG TÁC PHẨM TRÊN HEADER */
         .nav-btn-upload {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.88rem;
-            font-weight: 700;
+            display: none !important;
+        }
+
+        /* NÚT SÁNG TẠO NỔI BẬT (PRIMARY CTA DÀNH CHO HỌC SINH) */
+        .nav-btn-create {
+            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
+            color: #ffffff !important;
+            padding: 8px 20px;
+            border-radius: 24px;
+            font-size: 0.94rem;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin: 0 4px;
+        }
+        .nav-btn-create i {
+            color: #fef08a;
+            font-size: 1rem;
+            transition: transform 0.25s ease;
+        }
+        .nav-btn-create:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 20px rgba(13, 165, 122, 0.55);
+            color: #ffffff !important;
+        }
+        .nav-btn-create:hover i {
+            transform: rotate(15deg) scale(1.15);
+        }
+        .nav-btn-create.active {
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.25), 0 6px 18px rgba(13, 165, 122, 0.45);
         }
 
         /* Thẻ User Pill sang trọng */
@@ -607,18 +637,20 @@
         .card-title { 
             font-weight: 800; 
             color: var(--text-title); 
-            font-size: 0.94rem; 
-            line-height: 1.35;
+            font-size: 0.98rem; 
+            line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            margin: 0 0 2px 0;
+            margin: 0 0 3px 0;
             word-break: break-word;
             width: 100%;
+            text-transform: none !important; /* Ngăn chặn in hoa toàn bộ, giúp học sinh dễ đọc */
+            letter-spacing: -0.2px;
         }
         .card-author { 
-            font-size: 0.78rem; 
+            font-size: 0.8rem; 
             color: var(--text-muted); 
             font-weight: 600;
             white-space: nowrap;
@@ -635,50 +667,52 @@
             color: var(--primary);
         }
 
-        /* Thẻ tag mini thanh thoát */
+        /* Thẻ tag mini bo tròn thân thiện */
         .card-tags-row {
             display: flex;
             gap: 5px;
             flex-wrap: wrap;
-            margin-bottom: 8px;
+            margin: 4px 0 8px 0;
             position: relative;
             z-index: 2;
         }
         .card-mini-tag {
-            font-size: 0.68rem;
+            font-size: 0.72rem;
             font-weight: 700;
             background: var(--bg-secondary);
             color: var(--primary);
             border: 1px solid var(--border-color);
-            padding: 1px 7px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 8px;
             white-space: nowrap;
         }
 
+        /* Cụm chỉ số tương tác to rõ hơn */
         .card-stats-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 8px;
+            padding-top: 10px;
             border-top: 1px solid var(--border-color);
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-title);
+            font-weight: 800;
         }
         .card-stats-left {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
         .card-stat-item {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
-        .card-stat-item.likes i { color: #ff4c4c; }
-        .card-stat-item.stars i { color: #f5b041; }
-        .card-stat-item.views i { color: #3b82f6; }
+        .card-stat-item i { font-size: 0.95rem; }
+        .card-stat-item.likes i { color: #ff4757; }
+        .card-stat-item.stars i { color: #ffa502; }
+        .card-stat-item.views i { color: #2ed573; }
 
         @media (max-width: 768px) {
             .project-grid {
@@ -2389,17 +2423,82 @@
         .nav-link.active { color: var(--primary) !important; position: relative; }
         .nav-link.active::after { content: ''; position: absolute; bottom: 0; left: 10px; right: 10px; height: 3px; background: var(--primary); border-radius: 3px 3px 0 0; }
 
-        /* 📱 NAVIGATION BAR PHONE */
-        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-panel); border-top: 1px solid var(--border-color); z-index: 2000; justify-content: space-around; padding: 8px 0; padding-bottom: env(safe-area-inset-bottom, 8px); box-shadow: 0 -4px 15px rgba(0,0,0,0.08); }
-        .mobile-nav-link { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); text-decoration: none; font-size: 0.72rem; gap: 4px; font-weight: bold; transition: 0.2s; }
+        /* 📱 NAVIGATION BAR PHONE (5 TAB CHUẨN UX MOBILE VỚI NÚT SÁNG TẠO FAB Ở GIỮA) */
+        .mobile-bottom-nav { 
+            display: none; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: var(--bg-panel); 
+            border-top: 1px solid var(--border-color); 
+            z-index: 2000; 
+            align-items: center;
+            justify-content: space-around; 
+            padding: 6px 4px; 
+            padding-bottom: env(safe-area-inset-bottom, 8px); 
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.06); 
+        }
+        .mobile-nav-link { 
+            flex: 1;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 0.72rem; 
+            gap: 4px; 
+            font-weight: 700; 
+            transition: all 0.2s ease; 
+            min-height: 44px;
+        }
         .mobile-nav-link i { font-size: 1.25rem; }
-        .mobile-nav-link.active { color: var(--primary); transform: translateY(-2px); }
-        .mobile-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+        .mobile-nav-link.active { color: var(--primary); }
+        .mobile-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--border-color); }
+
+        /* Nút Sáng tạo FAB tròn nổi bật ở chính giữa */
+        .mobile-nav-create-fab {
+            flex: 0 0 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.45);
+            border: 3px solid var(--bg-panel);
+            margin-top: -16px; /* Nhô nhẹ lên trên thanh bar */
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-decoration: none;
+        }
+        .mobile-nav-create-fab:active {
+            transform: scale(0.92);
+        }
+        .mobile-nav-create-fab i {
+            font-size: 1.35rem !important;
+            color: #ffffff !important;
+            margin: 0;
+        }
+        .mobile-nav-create-fab.active {
+            box-shadow: 0 0 0 4px rgba(13, 165, 122, 0.3), 0 8px 22px rgba(13, 165, 122, 0.6);
+        }
         
         @media (max-width: 768px) {
-            .navbar .nav-left > .nav-link { display: none; }
+            .navbar .nav-left > .nav-link, 
+            .navbar .nav-left > .nav-btn-create { display: none !important; }
             .mobile-bottom-nav { display: flex; }
-            body { padding-bottom: 65px; } /* Đẩy trang lên chống bị thanh bar che */
+            body { padding-bottom: 70px; } /* Tránh nội dung bị thanh bar che */
+
+            /* Ẩn các icon không cần thiết trên Header Mobile để chống bấm nhầm */
+            .nav-actions a[href="#creator"],
+            .nav-actions a[href="#settings"] {
+                display: none !important;
+            }
+            .nav-actions {
+                gap: 10px; /* Tăng khoảng cách các icon còn lại cho ngón tay chạm dễ dàng */
+            }
         }
 
         /* ================= GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI (KID-FRIENDLY BUBBLE STREAM) ================= */
@@ -5764,21 +5863,24 @@
             </a>
             <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
             <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
-            <a href="#create" class="nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
+            <!-- Nút Sáng tạo nâng cấp thành CTA Button bắt mắt -->
+            <a href="#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
             <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
 
-    <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE -->
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE (RÚT XUỐNG 5 TAB + NÚT SÁNG TẠO FAB CHÍNH GIỮA) -->
     <nav class="mobile-bottom-nav">
         <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
         <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
-        <a href="#create" class="mobile-nav-link nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="nav_create">Sáng tạo</span></a>
+        <!-- Nút tròn FAB ở giữa -->
+        <a href="#create" class="mobile-nav-create-fab nav-create" title="Sáng tạo">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </a>
         <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
-        <a href="#studios" class="mobile-nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i><span data-i18n="nav_studios">Stations</span></a>
-        <div id="mobileUserNav"></div>
+        <div id="mobileUserNav" style="display:contents;"></div>
     </nav>
 
     <!-- TRANG SÁNG TẠO -->
@@ -9498,7 +9600,7 @@
                 document.title = t('nav_chat') + " | " + brandName;
             }
             else if (hash === '#create') { 
-                document.querySelectorAll('.nav-create').forEach(el => el.classList.add('active')); 
+                document.querySelectorAll('.nav-create, .nav-btn-create, .mobile-nav-create-fab').forEach(el => el.classList.add('active')); 
                 document.title = t('nav_create') + " | " + brandName;
             }
             else if (hash.startsWith('#assets')) { 
@@ -9581,10 +9683,6 @@
 
                     <a href="#settings" class="nav-icon-btn" title="${t('settings_options') || 'Cài đặt'}">
                         <i class="fa-solid fa-gear"></i>
-                    </a>
-
-                    <a href="#upload" class="btn btn-primary nav-btn-upload">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> <span>${t('nav_upload') || 'Đăng tác phẩm'}</span>
                     </a>
                     
                     <a href="#profile/${currentUser.username}" class="nav-user-pill" title="Hồ sơ của bạn">
@@ -18864,46 +18962,46 @@
             tooltip: null,
             isActive: false,
 
-            // Kịch bản các bước (Tìm element nào đang hiển thị trên Desktop/Mobile)
+            // Kịch bản các bước mới (Đồng bộ với giao diện nút Sáng tạo & Chuẩn hành trình học sinh)
             steps: [
                 {
                     type: 'center',
                     title: 'Chào mừng Tân Binh! 🎉',
-                    text: 'Tớ là <b>BeaBea</b> - trợ lý AI của DANVworkshop. Cậu dành cho tớ 30 giây để giới thiệu trạm không gian này nhé? Xong việc tớ tặng cậu <b>+20 WOW</b> làm vốn khởi nghiệp!',
-                    btnText: 'Bắt đầu chuyến đi 🚀'
-                },
-                {
-                    type: 'spotlight',
-                    targetSelectors: ['.navbar .WOW-balance-pill', '#navActions .WOW-balance-pill'],
-                    title: 'Ví Năng Lượng WOW ⚡',
-                    text: 'Đây là điểm vinh dự WOW! Hãy nhấn vào đây để điểm danh nhận WOW miễn phí mỗi ngày. Cậu dùng nó để mua Khung Avatar hoặc tặng cho các game yêu thích nhé.',
-                    placement: 'bottom'
+                    text: 'Tớ là <b>BeaBea</b> 🐰 - trợ lý AI đồng hành cùng cậu tại <b>DANVworkshop</b>. Cậu dành cho tớ 30 giây để dạo quanh trạm sáng tạo này nhé? Hoàn thành xong tớ sẽ tặng cậu một <b>Túi Mù May Mắn</b>!',
+                    btnText: 'Khám phá ngay thôi 🚀'
                 },
                 {
                     type: 'spotlight',
                     targetSelectors: ['.nav-home', '.mobile-bottom-nav .nav-home'],
-                    title: 'Trạm Khám Phá 🧭',
-                    text: 'Nơi hội tụ các siêu phẩm game và hoạt hình. Cậu có thể chơi, thả tim, và bình luận giao lưu với các tác giả ở đây.',
+                    title: 'Trạm Khám Phá 🎮',
+                    text: 'Nơi tụ hội hàng trăm siêu phẩm game và hoạt hình từ các bạn học sinh. Cậu có thể vào chơi thử, thả tim, bình luận và học hỏi ý tưởng hay!',
+                    placement: 'bottom'
+                },
+                {
+                    type: 'spotlight',
+                    targetSelectors: ['.nav-btn-create', '.mobile-nav-create-fab', '.nav-create'],
+                    title: 'Vào Code Ngay Nào! ✨',
+                    text: 'Tâm điểm của chúng mình! Nhấn vào đây để mở ngay trình chỉnh sửa lập trình <b>Aftercode / TurboWarp</b>, kéo thả khối lệnh và biến ý tưởng game của cậu thành hiện thực.',
                     placement: 'bottom'
                 },
                 {
                     type: 'spotlight',
                     targetSelectors: ['.nav-chat', '.mobile-bottom-nav .nav-chat'],
-                    title: 'Kênh Giao Lưu Toàn Cầu 🌍',
-                    text: 'Bí ý tưởng hay cần tìm người lập team? Hãy vào đây chém gió! Và nhớ nhé, cứ gõ <b>@BeaBea</b> là tớ sẽ xuất hiện trả lời cậu ngay.',
+                    title: 'Kênh Giao Lưu & Hỏi Đáp 🌍',
+                    text: 'Cần tìm bạn lập team, bí kịch bản hay lỗi code? Hãy vào đây trò chuyện nhé! Cứ gõ <b>@BeaBea</b> là tớ sẽ có mặt giải đáp và gợi ý ý tưởng cho cậu 24/7.',
                     placement: 'bottom'
                 },
                 {
                     type: 'spotlight',
-                    targetSelectors: ['.nav-btn-upload'],
-                    title: 'Nhà Sáng Tạo 🎨',
-                    text: 'Cuối cùng, khi làm xong một dự án siêu ngầu trên Scratch hoặc Aftercode, bấm vào đây để xuất bản cho cả thế giới cùng xem nha!',
+                    targetSelectors: ['.navbar .WOW-balance-pill', '#navActions .WOW-balance-pill'],
+                    title: 'Năng Lượng WOW & Phần Thưởng ⚡',
+                    text: 'Điểm vinh danh của cộng đồng! Bấm vào đây để điểm danh nhận WOW miễn phí mỗi ngày. Tích lũy WOW để đổi các Khung Avatar cực chất hoặc tặng cho các tựa game cậu thích mê!',
                     placement: 'bottom'
                 },
                 {
                     type: 'center',
-                    title: 'Tuyệt Vời! Cậu Đã Tốt Nghiệp 🎓',
-                    text: 'Cậu đã nắm rõ các tính năng cơ bản. Như đã hứa, tớ gửi cậu một <b>Túi Mù Vũ Trụ</b>. Hãy xé túi để nhận vốn khởi nghiệp và thay Avatar thôi nào!',
+                    title: 'Chúc Mừng Tốt Nghiệp Khóa Tân Binh! 🎓',
+                    text: 'Cậu đã nắm vững trạm không gian rồi đấy. Như đã hứa, phần quà khởi nghiệp của cậu là một <b>Túi Mù Vũ Trụ</b> chứa năng lượng ngẫu nhiên. Mở ra xem vận may hôm nay nhé!',
                     btnText: 'Xé Túi Mù Nhận Thưởng 🎁'
                 }
             ],
