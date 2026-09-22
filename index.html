@@ -6754,15 +6754,37 @@
                             <img id="profAvt" src="https://i.ibb.co/QFg1cVVD/image.png" class="profile-avt-lg" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                         </div>
                         <div class="profile-actions">
-                            <button id="btnFollowProf" class="btn btn-primary" style="display:none;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
-                            <button id="btnReportProf" class="btn btn-danger" style="display:none;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
-                            <button id="btnAdminWarn" class="btn btn-danger" style="display:none;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
+                            <button id="btnFollowProf" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 20px; font-weight: 700;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
+                            <button id="btnReportProf" class="btn btn-danger" style="display:none; border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
+                            <button id="btnAdminWarn" class="btn btn-danger" style="display:none; border-radius: 20px;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
                             
-                            <!-- Cụm công cụ cá nhân tiện lợi trên cả máy tính & điện thoại -->
-                            <a id="btnProfCreator" href="#creator" class="btn" style="display:none; text-decoration:none;"><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio</span></a>
-                            <a id="btnProfSettings" href="#settings" class="btn" style="display:none; text-decoration:none;"><i class="fa-solid fa-gear"></i> <span>Cài đặt</span></a>
-                            <button id="btnCustomizeBento" class="btn" style="display:none; background: var(--primary); color: #fff;" onclick="toggleBentoEditMode()"><i class="fa-solid fa-shapes"></i> <span data-i18n="prof_btn_customize">Tùy biến</span></button>
-                            <button id="btnEditProfModal" class="btn" style="display:none;" onclick="openEditProfileModal()"><i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Hồ sơ</span></button>
+                            <!-- Nút hành động chính: Chỉnh sửa hồ sơ -->
+                            <button id="btnEditProfModal" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 18px; font-weight: 700;" onclick="openEditProfileModal()">
+                                <i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Chỉnh sửa hồ sơ</span>
+                            </button>
+
+                            <!-- Nút hành động phụ: Tùy biến giao diện Bento -->
+                            <button id="btnCustomizeBento" class="btn" style="display:none; border-radius: 20px; padding: 8px 16px; font-weight: 700;" onclick="toggleBentoEditMode()">
+                                <i class="fa-solid fa-shapes" style="color:var(--primary);"></i> <span data-i18n="prof_btn_customize">Tùy biến</span>
+                            </button>
+
+                            <!-- Nút Menu 3 chấm gom gọn: Studio, Cài đặt, Chia sẻ link -->
+                            <div class="proj-more-dropdown-wrap" id="profMoreMenuWrap" style="display:none;">
+                                <button type="button" class="btn" style="border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="toggleProfMoreMenu(event)" title="Tùy chọn khác">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <div class="proj-dropdown-menu" id="profMoreDropdown">
+                                    <a href="#creator" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
+                                        <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
+                                    </a>
+                                    <a href="#settings" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
+                                        <i class="fa-solid fa-gear"></i> <span>Cài đặt tài khoản</span>
+                                    </a>
+                                    <button type="button" class="proj-dropdown-item" onclick="closeProfMoreMenu(); copyProfileShareLink();">
+                                        <i class="fa-solid fa-link" style="color:#3b82f6;"></i> <span>Sao chép link hồ sơ</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -10365,9 +10387,30 @@
             if (drop) drop.classList.remove('show');
         }
 
+        // Xử lý Menu 3 chấm trên trang Hồ sơ (Profile)
+        function toggleProfMoreMenu(e) {
+            e.stopPropagation();
+            const drop = document.getElementById('profMoreDropdown');
+            if (drop) drop.classList.toggle('show');
+        }
+
+        function closeProfMoreMenu() {
+            const drop = document.getElementById('profMoreDropdown');
+            if (drop) drop.classList.remove('show');
+        }
+
+        function copyProfileShareLink() {
+            const link = window.location.origin + window.location.pathname + `#profile/${encodeURIComponent(viewingProfileUser || (currentUser ? currentUser.username : ''))}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast("Đã sao chép liên kết hồ sơ!", "success");
+            });
+        }
+
+        // Tự động đóng dropdown khi click ra ngoài
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.proj-more-dropdown-wrap')) {
                 closeProjMoreMenu();
+                closeProfMoreMenu();
             }
         });
 
@@ -11970,25 +12013,22 @@
             // KHỞI TẠO BENTO GRID (HIỂN THỊ TĨNH - GIAI ĐOẠN 2)
             renderBentoGrid(viewingProfileData);
 
-            // Xử lý nút Follow / Edit / Customize / Settings / Creator
+            // Xử lý nút Follow / Edit / Customize / Menu 3 chấm
             const btnEdit = document.getElementById('btnEditProfModal'); 
             const btnFollow = document.getElementById('btnFollowProf');
             const btnCustomize = document.getElementById('btnCustomizeBento');
-            const btnProfCreator = document.getElementById('btnProfCreator');
-            const btnProfSettings = document.getElementById('btnProfSettings');
+            const profMoreWrap = document.getElementById('profMoreMenuWrap');
             
             const isAdmin = currentUser && currentUser.role === 'admin';
             
             if (isCurrentUser) { 
                 if(btnEdit) btnEdit.style.display = 'inline-flex'; 
                 if(btnCustomize) btnCustomize.style.display = 'inline-flex';
-                if(btnProfCreator) btnProfCreator.style.display = 'inline-flex';
-                if(btnProfSettings) btnProfSettings.style.display = 'inline-flex';
+                if(profMoreWrap) profMoreWrap.style.display = 'inline-flex';
                 if(btnFollow) btnFollow.style.display = 'none'; 
             } else { 
                 if(btnEdit) btnEdit.style.display = 'none'; 
-                if(btnProfCreator) btnProfCreator.style.display = 'none';
-                if(btnProfSettings) btnProfSettings.style.display = 'none';
+                if(profMoreWrap) profMoreWrap.style.display = 'none';
                 // Admin được phép thấy nút Tùy biến trên trang người khác
                 if(btnCustomize) btnCustomize.style.display = isAdmin ? 'inline-flex' : 'none';
                 
