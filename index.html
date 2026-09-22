@@ -578,6 +578,14 @@
             align-items: flex-start;
             margin-bottom: 6px;
         }
+        .card-link-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: 16px;
+            text-decoration: none;
+            outline: none;
+        }
         .card-creator-avt {
             width: 32px;
             height: 32px;
@@ -586,10 +594,15 @@
             border: 1px solid var(--border-color);
             flex-shrink: 0;
             background: var(--bg-secondary);
+            position: relative;
+            z-index: 2;
         }
         .card-title-info {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
         .card-title { 
             font-weight: 800; 
@@ -602,6 +615,7 @@
             overflow: hidden;
             margin: 0 0 2px 0;
             word-break: break-word;
+            width: 100%;
         }
         .card-author { 
             font-size: 0.78rem; 
@@ -610,8 +624,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: block;
+            display: inline-block;
+            width: fit-content;
+            max-width: 100%;
             text-decoration: none;
+            position: relative;
+            z-index: 2;
         }
         .card-author:hover {
             color: var(--primary);
@@ -623,6 +641,8 @@
             gap: 5px;
             flex-wrap: wrap;
             margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
         }
         .card-mini-tag {
             font-size: 0.68rem;
@@ -9698,7 +9718,8 @@
                     : '';
 
                 return `
-                <div class="card" onclick="navigateTo('/projects/${pid}')">
+                <div class="card">
+                    <a href="/projects/${pid}" class="card-link-overlay" aria-label="${escapeHtml(p.title)}"></a>
                     ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
                     
                     <div class="card-thumb">
@@ -9709,12 +9730,12 @@
 
                     <div class="card-body">
                         <div class="card-title-row">
-                            <a href="#profile/${encodeURIComponent(author)}" onclick="event.stopPropagation();" title="@${escapeHtml(author)}">
+                            <a href="/users/${encodeURIComponent(author)}" style="position:relative; z-index:2; display:flex;" title="@${escapeHtml(author)}">
                                 <img src="${cachedAvt}" id="home-card-avt-${escapeHtml(author)}-${pid}" class="card-creator-avt" onerror="this.src='${DEFAULT_AVATAR}'" loading="lazy">
                             </a>
                             <div class="card-title-info">
                                 <h3 class="card-title" title="${escapeHtml(p.title)}">${escapeHtml(displayTitle)}</h3>
-                                <a href="#profile/${encodeURIComponent(author)}" class="card-author" onclick="event.stopPropagation();">@${escapeHtml(author)}</a>
+                                <a href="/users/${encodeURIComponent(author)}" class="card-author">@${escapeHtml(author)}</a>
                             </div>
                         </div>
 
