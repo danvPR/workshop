@@ -12393,133 +12393,157 @@
 
         
         // ================= TRANG PROFILE (ĐÃ TỐI ƯU HÓA HOÀN TOÀN) =================
-        async function openProfilePage(username, urlParams = null) {
-            document.getElementById('profileView').style.display = 'block';
-            viewingProfileUser = username;
-            
-            // 1. Xử lý khung nhập bình luận
-            const formProf = document.getElementById('profCommentForm');
-            const promptProf = document.getElementById('loginPromptProf');
-            if (currentUser) { if(formProf) formProf.style.display = 'block'; if(promptProf) promptProf.style.display = 'none'; } 
-            else { if(formProf) formProf.style.display = 'none'; if(promptProf) promptProf.style.display = 'block'; }
+        async function loadProfTab(tab, isLoadMore = false) {
+            // 🛑 LƯU LẠI MỎ NEO (TARGET) ĐỂ TRÁNH RACE CONDITION TRÊN CÁC TAB
+            const targetUsername = viewingProfileUser;
 
-            document.getElementById('profileContent').style.display = 'none';
-            const p404 = document.getElementById('profile404'); if(p404) p404.style.display = 'none';
-
-            // 2. BỘ NHỚ ĐỆM (CACHE): Nếu vừa vào xem dưới 3 phút thì lấy ngay từ RAM (0 giây loading)
-            // (Nếu là chính mình thì luôn tải mới để không bị kẹt thông tin vừa sửa)
-            const isCurrentUser = currentUser && currentUser.username.toLowerCase() === username.toLowerCase();
-            const now = Date.now();
-            
-            if (!isCurrentUser && profileCache[username] && (now - profileCache[username].timestamp < PROF_CACHE_TTL)) {
-                viewingProfileData = profileCache[username].data; // Lấy từ Cache tức thì
-            } else {
-                try {
-                    const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(username)}`);
-                    if(res.status === 404) { if(p404) p404.style.display = 'block'; return; }
-                    if(!res.ok) { showToast("Máy chủ đang bận!", "error"); location.hash = "#home"; return; }
-                    viewingProfileData = await res.json();
-                    profileCache[username] = { data: viewingProfileData, timestamp: now }; // Lưu Cache
-                } catch(e) { if(p404) p404.style.display = 'block'; return; }
+            if (!profTabState[tab]) {
+                profTabState[tab] = { page: 1, hasMore: false, loaded: false };
             }
+            const state = profTabState[tab];
+            if (isLoadMore) state.page++;
             
-            document.getElementById('profileContent').style.display = 'block';
+            let containerId = 'userProjectList';
+            if (tab === 'likes') containerId = 'userLikedList';
+            else if (tab === 'activities') containerId = 'userActivityList';
+            else if (tab === 'playlists') containerId = 'userPlaylistsList';
             
-            // 3. Đổ nhanh thông tin chữ cơ bản & Cập nhật SEO Title
-            document.title = `Hồ sơ ${viewingProfileData.display_name || username} (@${username}) trên DANVworkshop`;
-            const elName = document.getElementById('profDisplayName'); if(elName) elName.innerText = viewingProfileData.display_name || username;
-            const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || username;
-            const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
-            const elLoc = document.getElementById('profLocation'); if(elLoc) elLoc.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(viewingProfileData.location || t('prof_unknown_location'))}`;
-            const elBio = document.getElementById('profBio'); if(elBio) elBio.innerText = viewingProfileData.bio || t('prof_no_bio');
-            const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || t('prof_no_status'))}`;
+            const container = document.getElementById(containerId);
+            const loadMoreBtn = document.getElementById(`profLoadMore-${tab}`);
             
-            const badge = document.getElementById('profScratchBadge');
-            const scratchUserEl = document.getElementById('profScratchUsername');
-            if(badge) {
-                if(viewingProfileData.scratch_linked) { 
-                    badge.style.display = 'inline-flex'; 
-                    badge.removeAttribute('title'); // Xóa bỏ thuộc tính mặc định của trình duyệt
-                    if(scratchUserEl) scratchUserEl.innerText = `@${viewingProfileData.scratch_linked}`;
-                } else { 
-                    badge.style.display = 'none'; 
+            if (!isLoadMore && container) {
+                if (tab === 'activities') {
+                    container.innerHTML = getSkeletonHTML('activity');
+                } else if (tab === 'playlists') {
+                    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">Đang tải danh sách phát...</span></div>';
+                } else {
+                    container.innerHTML = getSkeletonHTML('card');
                 }
+            } else if (loadMoreBtn) {
+                const btnOrig = loadMoreBtn.innerHTML;
+                loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...';
+                loadMoreBtn.setAttribute('data-orig', btnOrig);
             }
 
-
-            // KHỞI TẠO BENTO GRID (HIỂN THỊ TĨNH - GIAI ĐOẠN 2)
-            renderBentoGrid(viewingProfileData);
-
-            // Xử lý nút Follow / Edit / Customize / Menu 3 chấm
-            const btnEdit = document.getElementById('btnEditProfModal'); 
-            const btnFollow = document.getElementById('btnFollowProf');
-            const btnCustomize = document.getElementById('btnCustomizeBento');
-            const profMoreWrap = document.getElementById('profMoreMenuWrap');
-            
-            const isAdmin = currentUser && currentUser.role === 'admin';
-            
-            if (isCurrentUser) { 
-                if(btnEdit) btnEdit.style.display = 'inline-flex'; 
-                if(btnCustomize) btnCustomize.style.display = 'inline-flex';
-                if(profMoreWrap) profMoreWrap.style.display = 'inline-flex';
-                if(btnFollow) btnFollow.style.display = 'none'; 
-            } else { 
-                if(btnEdit) btnEdit.style.display = 'none'; 
-                if(profMoreWrap) profMoreWrap.style.display = 'none';
-                // Admin được phép thấy nút Tùy biến trên trang người khác
-                if(btnCustomize) btnCustomize.style.display = isAdmin ? 'inline-flex' : 'none';
+            try {
+                let html = '';
                 
-                if(currentUser && btnFollow) {
-                    const isFollowing = (viewingProfileData.followers || []).includes(currentUser.username); 
-                    btnFollow.style.display = 'inline-flex'; 
-                    btnFollow.innerHTML = isFollowing ? `<i class="fa-solid fa-check"></i> ${t('prof_btn_following')}` : `<i class="fa-solid fa-user-plus"></i> ${t('prof_btn_follow')}`; 
-                    btnFollow.className = isFollowing ? 'btn' : 'btn btn-primary'; 
+                if (tab === 'projects' || tab === 'likes') {
+                    let apiUrl = `${WORKER_URL}/api/projects?${tab==='projects' ? 'author' : 'likedBy'}=${encodeURIComponent(targetUsername)}&page=${state.page}&limit=${PROF_ITEMS_PER_PAGE}`;
+                    if (currentUser) apiUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                    
+                    const res = await (await fetch(apiUrl)).json();
+
+                    // 🛑 CHỐT CHẶN: Nếu người dùng đã click sang xem hồ sơ khác thì hủy kết quả này
+                    if (viewingProfileUser !== targetUsername) return;
+
+                    const items = (res && res.projects) ? res.projects : (Array.isArray(res) ? res : []);
+                    state.hasMore = res.hasMore || false;
+
+                    items.forEach(item => {
+                        const itemId = item.projectId || item.fileId;
+                        if (!allProjects.some(p => (p.projectId || p.fileId) === itemId)) {
+                            allProjects.push(item);
+                        }
+                    });
+                    
+                    if (tab === 'projects' && !isLoadMore && res.total !== undefined) {
+                        document.getElementById('statProjectCount').innerText = res.total;
+                        document.getElementById('statLikeCount').innerText = items.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0) + (res.total > PROF_ITEMS_PER_PAGE ? '+' : '');
+                    }
+                    
+                    if (!isLoadMore && items.length === 0) {
+                        html = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:30px;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
+                    } else {
+                        html = items.map(p => `
+                            <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
+                                ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
+                                <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
+                                <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
+                            </div>
+                        `).join('');
+                    }
                 } 
-            }
-            
-            document.getElementById('btnReportProf').style.display = (currentUser && !isCurrentUser) ? 'inline-flex' : 'none';
-            document.getElementById('btnAdminWarn').style.display = (currentUser && currentUser.role === 'admin' && !isCurrentUser) ? 'inline-flex' : 'none';
+                else if (tab === 'playlists') {
+                    // Đọc từ viewingProfileData (Dữ liệu cục bộ nên ko cần chốt chặn fetch)
+                    const isOwner = currentUser && targetUsername.toLowerCase() === currentUser.username.toLowerCase();
+                    const btnCreate = document.getElementById('btnCreatePlaylist');
+                    if (btnCreate) btnCreate.style.display = isOwner ? 'inline-flex' : 'none';
+                    
+                    let playlists = viewingProfileData.playlists ? (typeof viewingProfileData.playlists === 'string' ? JSON.parse(viewingProfileData.playlists) : viewingProfileData.playlists) : [];
+                    
+                    if (!isOwner) playlists = playlists.filter(pl => pl.isPublic);
 
-            // Đặt số liệu nhanh
-            document.getElementById('statProjectCount').innerText = "..."; 
-            document.getElementById('statLikeCount').innerText = "..."; 
-            document.getElementById('statFollowersCount').innerText = (viewingProfileData.followers || []).length;
-            document.getElementById('statFollowingCount').innerText = (viewingProfileData.following || []).length;
+                    if (playlists.length === 0) {
+                        html = `<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:3rem; margin-bottom:12px; opacity:0.35; display:block;"></i>Chưa có bộ sưu tập nào.</div>`;
+                    } else {
+                        html = playlists.map(pl => {
+                            let coverImgSrc = '';
+                            if (pl.projects && pl.projects.length > 0) {
+                                const firstPid = pl.projects[0];
+                                const pObj = allProjects.find(p => (p.projectId || p.fileId) === firstPid);
+                                if (pObj && pObj.thumbId) coverImgSrc = `${WORKER_URL}/api/project/${pObj.thumbId}`;
+                            }
 
-            // Đặt lại trạng thái ban đầu cho các Tab (Kèm cả Playlists)
-            profTabState = {
-                projects: { page: 1, hasMore: false, loaded: false },
-                likes: { page: 1, hasMore: false, loaded: false },
-                activities: { page: 1, hasMore: false, loaded: false },
-                playlists: { page: 1, hasMore: false, loaded: false }
-            };
+                            const isPublic = pl.isPublic !== false;
+                            const badgeHtml = isPublic
+                                ? `<span class="col-overlay-badge public"><i class="fa-solid fa-earth-americas"></i> Công khai</span>`
+                                : `<span class="col-overlay-badge private"><i class="fa-solid fa-lock"></i> Riêng tư</span>`;
 
-            // Dọn sạch rác màn hình cũ
-            document.getElementById('userProjectList').innerHTML = ''; 
-            document.getElementById('userLikedList').innerHTML = ''; 
-            document.getElementById('userActivityList').innerHTML = '';
-            document.getElementById('profLoadMore-projects').style.display = 'none'; 
-            document.getElementById('profLoadMore-likes').style.display = 'none'; 
-            document.getElementById('profLoadMore-activities').style.display = 'none';
-
-            // Xử lý Tab bình luận & Tự động Cuộn/Highlight
-            commentLimits.prof = 10;
-            // Dựng danh sách bình luận ngay lập tức từ dữ liệu đã nạp
-            renderCommentList('prof', viewingProfileData.comments || []);
-            removeCommentImage('prof');
-            cancelReply('prof');
-
-            if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
-                switchProfTab('comments');
-                const targetCmtId = urlParams.get('c');
-                if (targetCmtId) {
-                    setTimeout(() => highlightAndScrollComment('prof', targetCmtId), 250);
+                            return `
+                                <div class="collection-card" onclick="openCollectionDetail('${pl.id}')">
+                                    <div class="col-cover-wrap">
+                                        ${coverImgSrc ? `<img src="${coverImgSrc}" class="col-cover-img" alt="${escapeHtml(pl.title)}" loading="lazy">` : `<i class="fa-solid fa-layer-group" style="font-size:2.8rem; color:#64748b; opacity:0.6;"></i>`}
+                                        ${badgeHtml}
+                                        <div class="col-count-pill"><i class="fa-solid fa-gamepad"></i> <span>${pl.projects ? pl.projects.length : 0} tác phẩm</span></div>
+                                    </div>
+                                    <div class="col-card-body">
+                                        <div class="col-card-title" title="${escapeHtml(pl.title)}">${escapeHtml(pl.title)}</div>
+                                        <div class="col-card-meta"><span><i class="fa-regular fa-clock"></i> ${pl.createdAt || 'Gần đây'}</span><span style="color:var(--primary); font-weight:700;"><i class="fa-solid fa-arrow-right"></i> Xem</span></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    state.hasMore = false;
                 }
-            } else if (urlParams && urlParams.get('collection')) {
-                switchProfTab('playlists');
-                setTimeout(() => openCollectionDetail(urlParams.get('collection')), 350);
-            } else {
-                switchProfTab('projects'); // Mặc định mở Tab Tác phẩm đầu tiên
+                else if (tab === 'activities') {
+                    const allActivities = viewingProfileData.activities || [];
+                    const startIndex = (state.page - 1) * PROF_ITEMS_PER_PAGE;
+                    const endIndex = startIndex + PROF_ITEMS_PER_PAGE;
+                    const items = allActivities.slice(startIndex, endIndex);
+                    state.hasMore = endIndex < allActivities.length;
+
+                    if (!isLoadMore && items.length === 0) {
+                        html = `<p style="color:var(--text-muted); text-align:center; padding:30px;">Chưa có hoạt động nào.</p>`;
+                    } else {
+                        html = items.map(a => `
+                            <div class="timeline-item">
+                                <div style="font-size:0.95rem;"><b>${escapeHtml(viewingProfileData.username)}</b> ${a.action} <a href="${a.link}" style="color:var(--primary); font-weight:bold; text-decoration:none;">"${escapeHtml(a.detail)}"</a></div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">${a.time}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                // 🛑 CHỐT CHẶN CUỐI CÙNG TRƯỚC KHI VẼ HTML (Phòng khi quá trình render JS tốn vài ms)
+                if (viewingProfileUser !== targetUsername) return;
+
+                if (container) {
+                    if (isLoadMore) container.insertAdjacentHTML('beforeend', html);
+                    else { container.innerHTML = html; state.loaded = true; }
+                }
+
+                if (loadMoreBtn) {
+                    if (isLoadMore) loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
+                    loadMoreBtn.style.display = state.hasMore ? 'block' : 'none';
+                }
+
+            } catch (e) {
+                if (viewingProfileUser !== targetUsername) return; // Ignore if user changed tab
+                console.error("Lỗi tab profile:", e);
+                if (!isLoadMore && container) container.innerHTML = '<p style="color:#ef4444; grid-column:1/-1; text-align:center;">Lỗi tải dữ liệu.</p>';
+                if (isLoadMore && loadMoreBtn) loadMoreBtn.innerHTML = loadMoreBtn.getAttribute('data-orig');
             }
         }
 
