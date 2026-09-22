@@ -5152,11 +5152,11 @@
             opacity: 0.75;
         }
 
-        /* ================= GIAO DIỆN TRANG NHÀ SÁNG TẠO PRO (CYBER CREATOR COCKPIT) ================= */
+        /* ================= GIAO DIỆN XƯỞNG SÁNG TẠO NHÍ (KID-FRIENDLY CREATOR WORKSHOP) ================= */
         .creator-hero-card {
-            background: linear-gradient(135deg, rgba(13, 165, 122, 0.12) 0%, rgba(59, 130, 246, 0.08) 50%, rgba(245, 158, 11, 0.08) 100%);
-            border: 1.5px solid var(--border-color);
-            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(245, 158, 11, 0.12) 50%, rgba(168, 85, 247, 0.08) 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 26px;
             padding: 24px 28px;
             margin-bottom: 22px;
             display: flex;
@@ -5164,7 +5164,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 18px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.03);
             position: relative;
             overflow: hidden;
         }
@@ -5175,32 +5175,34 @@
             min-width: 280px;
         }
         .creator-hero-badge-icon {
-            width: 58px;
-            height: 58px;
-            border-radius: 18px;
+            width: 62px;
+            height: 62px;
+            border-radius: 20px;
             background: linear-gradient(135deg, #10b981 0%, #0da57a 100%);
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             box-shadow: 0 8px 24px rgba(13, 165, 122, 0.35);
             flex-shrink: 0;
+            animation: floatMascot 3s infinite ease-in-out;
         }
         .creator-hero-title {
-            font-size: 1.65rem;
+            font-size: 1.7rem;
             font-weight: 900;
             color: var(--text-title);
             line-height: 1.25;
-            margin: 0 0 4px 0;
+            margin: 0 0 5px 0;
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: -0.3px;
         }
         .creator-hero-sub {
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            line-height: 1.4;
+            line-height: 1.45;
             margin: 0;
         }
         .creator-hero-actions {
@@ -5210,24 +5212,31 @@
             flex-wrap: wrap;
         }
         .creator-policy-tag {
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            background: rgba(245, 158, 11, 0.14);
+            border: 1.5px solid rgba(245, 158, 11, 0.45);
             color: #d97706;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.78rem;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.82rem;
             font-weight: 800;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            letter-spacing: 0.4px;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .creator-policy-tag:hover {
+            background: #f59e0b;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
         }
         [data-theme="dark"] .creator-policy-tag {
             color: #fbbf24;
             background: rgba(245, 158, 11, 0.2);
         }
 
-        /* BENTO FINANCIAL HUD */
+        /* HEO ĐẤT & BẢNG NĂNG LƯỢNG (GAMIFIED BENTO HUD) */
         .creator-cockpit-grid {
             display: grid;
             grid-template-columns: 1.35fr 1fr 1fr 1.15fr;
@@ -5235,89 +5244,90 @@
             margin-bottom: 24px;
         }
         .creator-master-card {
-            background: linear-gradient(145deg, rgba(234, 88, 12, 0.12) 0%, rgba(245, 158, 11, 0.05) 100%), var(--bg-panel);
-            border: 2px solid #ea580c;
-            border-radius: 20px;
+            background: radial-gradient(circle at top, rgba(245, 158, 11, 0.18) 0%, rgba(234, 88, 12, 0.08) 100%), var(--bg-panel);
+            border: 2px solid #f59e0b;
+            border-radius: 24px;
             padding: 20px 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            box-shadow: 0 8px 25px rgba(234, 88, 12, 0.12);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.16);
             transition: all 0.25s ease;
         }
         .creator-master-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(234, 88, 12, 0.2);
+            box-shadow: 0 14px 35px rgba(245, 158, 11, 0.25);
         }
         .creator-master-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
+            align-items: center;
+            margin-bottom: 8px;
         }
         .creator-master-label {
-            font-size: 0.78rem;
-            font-weight: 800;
+            font-size: 0.82rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
             color: #ea580c;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         .creator-master-val {
-            font-size: 2.1rem;
+            font-size: 2.3rem;
             font-weight: 900;
             color: #ea580c;
             line-height: 1.15;
             display: flex;
             align-items: center;
             gap: 8px;
-            margin: 4px 0 6px 0;
+            margin: 6px 0 6px 0;
             text-shadow: 0 2px 10px rgba(234, 88, 12, 0.25);
         }
         [data-theme="dark"] .creator-master-val {
             color: #fbbf24;
         }
         .creator-master-sub {
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             margin-bottom: 14px;
+            line-height: 1.4;
         }
         .creator-btn-withdraw-direct {
-            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%) !important;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
             color: #ffffff !important;
             border: none;
-            padding: 10px 18px;
-            border-radius: 14px;
-            font-size: 0.92rem;
-            font-weight: 800;
+            padding: 12px 20px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            font-weight: 900;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(234, 88, 12, 0.4);
-            transition: all 0.2s ease;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             width: 100%;
         }
         .creator-btn-withdraw-direct:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.6);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
         }
         .creator-btn-withdraw-direct:disabled {
             background: var(--bg-secondary) !important;
             color: var(--text-muted) !important;
             box-shadow: none;
             cursor: not-allowed;
-            opacity: 0.7;
+            opacity: 0.75;
         }
 
         .creator-sub-card {
             background: var(--bg-panel);
-            border: 1.5px solid var(--border-color);
-            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 22px;
             padding: 18px 20px;
             display: flex;
             flex-direction: column;
@@ -5337,27 +5347,27 @@
             margin-bottom: 8px;
         }
         .creator-sub-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
-        .creator-sub-icon.net { background: rgba(16, 185, 129, 0.12); color: #10b981; }
-        .creator-sub-icon.gross { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
-        .creator-sub-icon.orders { background: rgba(168, 85, 247, 0.12); color: #a855f7; }
+        .creator-sub-icon.net { background: rgba(16, 185, 129, 0.14); color: #10b981; }
+        .creator-sub-icon.gross { background: rgba(59, 130, 246, 0.14); color: #3b82f6; }
+        .creator-sub-icon.orders { background: rgba(168, 85, 247, 0.14); color: #a855f7; }
 
         .creator-sub-label {
-            font-size: 0.76rem;
-            font-weight: 800;
+            font-size: 0.78rem;
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
         }
         .creator-sub-val {
-            font-size: 1.6rem;
+            font-size: 1.75rem;
             font-weight: 900;
             color: var(--text-title);
             line-height: 1.2;
@@ -5374,14 +5384,14 @@
             text-overflow: ellipsis;
         }
 
-        /* 3 TABS ĐIỀU HƯỚNG HIỆN ĐẠI DẠNG VIÊN THUỐC */
+        /* 3 TABS ĐIỀU HƯỚNG DẠNG VIÊN THUỐC */
         .creator-tabs-bar {
             display: flex;
             gap: 8px;
             background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 5px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px;
             margin-bottom: 20px;
             overflow-x: auto;
             scrollbar-width: none;
@@ -5391,9 +5401,9 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            padding: 9px 20px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            padding: 10px 22px;
+            border-radius: 14px;
+            font-size: 0.92rem;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
@@ -5419,13 +5429,13 @@
             display: block;
         }
 
-        /* THANH TOOLBAR LỌC & TÌM KIẾM */
+        /* TOOLBAR LỌC & TÌM KIẾM */
         .creator-feed-toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
         }
         .creator-search-box {
@@ -5434,8 +5444,8 @@
             gap: 8px;
             background: var(--bg-panel);
             border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            padding: 4px 14px;
+            border-radius: 16px;
+            padding: 6px 16px;
             flex: 1;
             min-width: 260px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
@@ -5443,94 +5453,95 @@
         }
         .creator-search-box:focus-within {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.14);
         }
         .creator-search-box input {
             border: none;
             background: none;
             color: var(--text-main);
             outline: none;
-            padding: 8px 4px;
-            font-size: 0.9rem;
+            padding: 6px 4px;
+            font-size: 0.92rem;
             width: 100%;
         }
 
-        /* TIÊU ĐỀ BẢNG DỮ LIỆU DESKTOP */
-        .creator-table-header {
-            display: grid;
-            grid-template-columns: 2.2fr 1.6fr 1.6fr 1.2fr 1.5fr;
-            padding: 10px 18px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 0.76rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        /* DANH SÁCH DÒNG GIAO DỊCH DẠNG COMPACT DATA FEED */
+        /* THẺ ĐƠN HÀNG HOẠT ĐỘNG BẠN BÈ (KID-FRIENDLY ACTIVITY FEED) */
         .creator-feed-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 25px;
         }
-        .creator-tx-row {
+        .creator-tx-card {
             background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 12px 18px;
-            display: grid;
-            grid-template-columns: 2.2fr 1.6fr 1.6fr 1.2fr 1.5fr;
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 14px 18px;
+            display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            gap: 16px;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            flex-wrap: wrap;
         }
-        .creator-tx-row:hover {
+        .creator-tx-card:hover {
             border-color: var(--primary);
-            transform: translateX(2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            transform: translateX(3px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
         }
-        .creator-tx-row.highlight-tx {
+        .creator-tx-card.highlight-tx {
             border-color: #f59e0b !important;
-            background: rgba(245, 158, 11, 0.05) !important;
+            background: rgba(245, 158, 11, 0.06) !important;
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25) !important;
         }
-        
-        .creator-tx-col-main {
+
+        .creator-tx-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 260px;
+            flex: 1;
+        }
+        .creator-buyer-avt-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+        }
+        .creator-tx-details {
             display: flex;
             flex-direction: column;
             gap: 3px;
-            min-width: 0;
         }
-        .creator-item-title {
-            font-weight: 800;
-            font-size: 0.95rem;
+        .creator-tx-headline {
+            font-size: 0.96rem;
+            color: var(--text-main);
+            line-height: 1.35;
+        }
+        .creator-tx-headline b {
             color: var(--text-title);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
-        .creator-tx-meta-sub {
-            font-size: 0.75rem;
+        .creator-tx-submeta {
+            font-size: 0.78rem;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .creator-tx-code-pill {
             font-family: monospace;
             font-size: 0.72rem;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            padding: 1px 6px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 8px;
             cursor: pointer;
-            color: var(--text-title);
+            color: var(--text-muted);
             transition: all 0.15s;
         }
         .creator-tx-code-pill:hover {
@@ -5538,96 +5549,75 @@
             color: var(--primary);
         }
 
-        .creator-buyer-pill {
-            display: inline-flex;
+        .creator-tx-right {
+            display: flex;
             align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: var(--text-title);
-            font-weight: 700;
-            font-size: 0.85rem;
-            min-width: 0;
-            overflow: hidden;
+            gap: 12px;
+            text-align: right;
         }
-        .creator-buyer-pill img {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1.5px solid var(--border-color);
-            flex-shrink: 0;
-        }
-        .creator-buyer-pill:hover span {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-
-        .creator-project-badge {
+        .creator-wow-gain-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(13, 165, 122, 0.1);
-            border: 1px solid rgba(13, 165, 122, 0.25);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-decoration: none;
-            max-width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            transition: background 0.15s;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.06) 100%);
+            border: 1.5px solid rgba(16, 185, 129, 0.35);
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #10b981;
         }
-        .creator-project-badge:hover {
-            background: rgba(13, 165, 122, 0.2);
+        .creator-wow-gain-pill.pending {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(234, 88, 12, 0.08) 100%);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #ea580c;
+        }
+        [data-theme="dark"] .creator-wow-gain-pill.pending {
+            color: #fbbf24;
         }
 
-        .creator-gross-pill {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: var(--text-title);
+        /* NÚT LOAD MORE TẢI THÊM THÂN THIỆN */
+        .creator-load-more-btn {
+            background: var(--bg-panel);
+            border: 2px dashed var(--primary);
+            color: var(--primary);
+            padding: 12px 32px;
+            border-radius: 24px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            transition: all 0.25s ease;
         }
-        .creator-acc-pill {
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 2px 6px;
-            border-radius: 6px;
-            background: rgba(245, 158, 11, 0.15);
-            color: #d97706;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            margin-left: 4px;
-        }
-        [data-theme="dark"] .creator-acc-pill {
-            color: #fbbf24;
+        .creator-load-more-btn:hover {
+            background: rgba(13, 165, 122, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 165, 122, 0.2);
         }
 
         /* TAB 2: LƯỚI TÁC PHẨM & BẢNG GIÁ VẬT PHẨM */
         .creator-games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 18px;
+            gap: 20px;
             margin-bottom: 25px;
         }
         .creator-game-card {
             background: var(--bg-panel);
-            border: 1.5px solid var(--border-color);
-            border-radius: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             box-shadow: 0 4px 16px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .creator-game-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             border-color: var(--primary);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.06);
         }
         .creator-game-thumb {
             width: 100%;
@@ -5640,6 +5630,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .creator-game-card:hover .creator-game-thumb img {
+            transform: scale(1.04);
         }
         .creator-game-card-body {
             padding: 16px;
@@ -5649,42 +5643,82 @@
             gap: 10px;
         }
 
-        /* TAB 3: BỘ CÔNG CỤ LẬP TRÌNH (DEVELOPER TOOLKIT) */
+        /* TAB 3: BỘ CÔNG CỤ LẬP TRÌNH VIÊN NHÍ (MÔ PHỎNG KHỐI SCRATCH TRỰC QUAN) */
         .creator-toolkit-box {
             background: var(--bg-panel);
-            border: 1.5px solid var(--border-color);
-            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
             padding: 26px;
             margin-bottom: 24px;
         }
-        .creator-code-snippet {
-            background: #0f172a;
-            color: #f8fafc;
-            padding: 16px 18px;
-            border-radius: 12px;
-            font-family: monospace;
-            font-size: 0.88rem;
-            position: relative;
-            margin: 12px 0 16px 0;
-            overflow-x: auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .creator-btn-copy-code {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,255,255,0.15);
-            color: #ffffff;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 0.78rem;
+        .scratch-block-stage {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 18px;
+            padding: 20px;
+            margin: 14px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-family: "Segoe UI", sans-serif;
             font-weight: 700;
-            cursor: pointer;
-            transition: background 0.15s;
+            font-size: 0.92rem;
+            user-select: none;
         }
-        .creator-btn-copy-code:hover {
-            background: var(--primary);
+        .sb-block {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            width: fit-content;
+        }
+        .sb-hat-event {
+            background: #ffbf00;
+            border-radius: 16px 16px 8px 8px;
+            color: #333;
+        }
+        .sb-wow-token {
+            background: #ff6680;
+        }
+        .sb-control {
+            background: #ffab19;
+            color: #333;
+        }
+        .sb-variable {
+            background: #ff8c1a;
+        }
+        .sb-look {
+            background: #9966ff;
+        }
+        .sb-slot {
+            background: rgba(255, 255, 255, 0.9);
+            color: #222;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.15);
+            font-weight: 800;
+        }
+
+        /* THẺ HƯỚNG DẪN RIÊNG CHO AFTERCODE & TURBOWARP */
+        .engine-guide-card {
+            border-radius: 18px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            border: 2px solid var(--border-color);
+        }
+        .engine-guide-card.aftercode {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(13, 165, 122, 0.04) 100%);
+            border-color: #10b981;
+        }
+        .engine-guide-card.turbowarp {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.08) 0%, rgba(245, 158, 11, 0.04) 100%);
+            border-color: #ea580c;
         }
 
         /* TỐI ƯU MOBILE RESPONSIVE */
@@ -5695,13 +5729,16 @@
             .creator-master-card {
                 grid-column: span 2;
             }
-            .creator-table-header {
-                display: none;
-            }
-            .creator-tx-row {
-                grid-template-columns: 1fr;
+            .creator-tx-card {
+                flex-direction: column;
+                align-items: flex-start;
                 gap: 10px;
-                padding: 14px;
+            }
+            .creator-tx-right {
+                width: 100%;
+                justify-content: space-between;
+                border-top: 1px dashed var(--border-color);
+                padding-top: 8px;
             }
         }
         @media (max-width: 650px) {
@@ -7581,111 +7618,112 @@
         </div>
     </div>
 
-    <!-- ================= TRANG 8: STUDIO NHÀ SÁNG TẠO PRO (CYBER CREATOR COCKPIT) ================= -->
+    <!-- ================= TRANG 8: XƯỞNG SÁNG TẠO NHÍ (KID-FRIENDLY CREATOR WORKSHOP) ================= -->
     <div id="creatorView" class="page-view" style="max-width: 1140px; padding: 20px 20px 60px 20px;">
         
-        <!-- 1. Banner Header Cockpit -->
+        <!-- 1. Banner Chào Mừng Xưởng Sáng Lập Game -->
         <div class="creator-hero-card">
             <div class="creator-hero-left">
                 <div class="creator-hero-badge-icon">
-                    <i class="fa-solid fa-laptop-code"></i>
+                    <i class="fa-solid fa-palette"></i>
                 </div>
                 <div>
                     <h2 class="creator-hero-title">
-                        <span>Studio Nhà Sáng Tạo</span>
-                        <span style="font-size:0.75rem; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); padding:2px 8px; border-radius:12px; font-weight:800;">DEV HUB</span>
+                        <span>Xưởng Sáng Tạo Game</span>
+                        <span style="font-size:0.75rem; background:rgba(16,185,129,0.18); color:#10b981; border:1px solid rgba(16,185,129,0.35); padding:2px 10px; border-radius:14px; font-weight:800;">CREATOR HUB</span>
                     </h2>
-                    <p class="creator-hero-sub">Trung tâm điều hành kinh tế game, theo dõi người mua và quản lý doanh thu vật phẩm.</p>
+                    <p class="creator-hero-sub">Nơi theo dõi các bạn ủng hộ, nhận điểm thưởng WOW từ game và học cách tạo cửa hàng vật phẩm.</p>
                 </div>
             </div>
 
             <div class="creator-hero-actions">
-                <div class="creator-policy-tag" title="Chính sách bảo vệ quyền lợi lập trình viên">
-                    <i class="fa-solid fa-scale-balanced"></i>
-                    <span>Tỷ Lệ Nhận: <b>70%</b> • Gom Tổng Sàn</span>
-                </div>
-                <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="btn btn-primary" style="border-radius:16px; font-weight:800; padding:8px 18px;">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Aftercode
+                <!-- Cập nhật link chính sách WOW chính thức -->
+                <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="creator-policy-tag" title="Bấm để xem chính sách chi tiết về WOW">
+                    <i class="fa-solid fa-shield-cat"></i>
+                    <span>Tỷ lệ nhận: <b>70% WOW</b> • Xem chính sách <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i></span>
+                </a>
+                <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="btn btn-primary" style="border-radius:18px; font-weight:800; padding:9px 20px;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Aftercode Code Ngay
                 </a>
             </div>
         </div>
 
-        <!-- 2. Bento Financial HUD (Thẻ Master Chờ Rút Tích Hợp Nút Rút Trực Tiếp) -->
+        <!-- 2. Heo Đất Tiết Kiệm & Năng Lượng Game (Gamified HUD) -->
         <div class="creator-cockpit-grid">
-            <!-- Thẻ Master: Chờ rút tiền -->
+            <!-- Thẻ Master: WOW Chờ Bỏ Vào Túi -->
             <div class="creator-master-card" id="creatorMasterCard">
                 <div>
                     <div class="creator-master-header">
-                        <span class="creator-master-label"><i class="fa-solid fa-bolt"></i> Doanh thu chờ rút (70%)</span>
-                        <span style="font-size:0.72rem; font-weight:800; background:rgba(234,88,12,0.15); color:#ea580c; border:1px solid rgba(234,88,12,0.3); padding:2px 8px; border-radius:8px;">QUỸ KHẢ DỤNG</span>
+                        <span class="creator-master-label"><i class="fa-solid fa-piggy-bank"></i> WOW Đang Chờ Bỏ Túi (70%)</span>
+                        <span style="font-size:0.72rem; font-weight:900; background:rgba(234,88,12,0.15); color:#ea580c; border:1px solid rgba(234,88,12,0.3); padding:2px 8px; border-radius:10px;">ỐNG HEO</span>
                     </div>
                     <div class="creator-master-val" id="creatorMetricPendingNet">
                         <span class="wow-icon"></span> +0
                     </div>
-                    <div class="creator-master-sub" id="creatorMetricPendingSub">Đang kết nối sổ cái...</div>
+                    <div class="creator-master-sub" id="creatorMetricPendingSub">Đang kiểm tra ống heo tiết kiệm...</div>
                 </div>
                 <button type="button" class="creator-btn-withdraw-direct" onclick="openCreatorWithdrawModal()" id="btnMasterWithdraw" disabled>
-                    <i class="fa-solid fa-money-bill-transfer"></i> Quyết toán về ví chính
+                    <i class="fa-solid fa-wallet"></i> Chuyển ngay vào Ví của Bạn ✨
                 </button>
             </div>
 
-            <!-- Thẻ phụ 1: Doanh số gộp 100% -->
+            <!-- Thẻ phụ 1: Tổng WOW Game Thu Về -->
             <div class="creator-sub-card">
                 <div class="creator-sub-header">
-                    <span class="creator-sub-label">Tổng doanh số</span>
+                    <span class="creator-sub-label">Tổng WOW Game Thu Được</span>
                     <div class="creator-sub-icon gross"><i class="fa-solid fa-coins"></i></div>
                 </div>
                 <div>
                     <div class="creator-sub-val" id="creatorMetricGross">0</div>
-                    <div class="creator-sub-hint">100% trước trừ phí</div>
+                    <div class="creator-sub-hint">Điểm gốc trước trừ phí duy trì</div>
                 </div>
             </div>
 
-            <!-- Thẻ phụ 2: Đã rút về ví -->
+            <!-- Thẻ phụ 2: Đã Bỏ Vào Ống Heo -->
             <div class="creator-sub-card">
                 <div class="creator-sub-header">
-                    <span class="creator-sub-label">Đã rút về ví</span>
-                    <div class="creator-sub-icon net"><i class="fa-solid fa-wallet"></i></div>
+                    <span class="creator-sub-label">Đã Bỏ Vào Ví Của Bạn</span>
+                    <div class="creator-sub-icon net"><i class="fa-solid fa-circle-check"></i></div>
                 </div>
                 <div>
                     <div class="creator-sub-val" id="creatorMetricWithdrawn" style="color:#10b981;">0</div>
-                    <div class="creator-sub-hint">Tích lũy trọn đời</div>
+                    <div class="creator-sub-hint">WOW đã nhận từ trước tới nay</div>
                 </div>
             </div>
 
-            <!-- Thẻ phụ 3: Lượt mua & Item Hot -->
+            <!-- Thẻ phụ 3: Lượt Mua Đồ & Món Bán Chạy -->
             <div class="creator-sub-card">
                 <div class="creator-sub-header">
-                    <span class="creator-sub-label">Lượt đơn hàng</span>
-                    <div class="creator-sub-icon orders"><i class="fa-solid fa-receipt"></i></div>
+                    <span class="creator-sub-label">Lượt Mua Vật Phẩm</span>
+                    <div class="creator-sub-icon orders"><i class="fa-solid fa-bag-shopping"></i></div>
                 </div>
                 <div>
                     <div class="creator-sub-val" id="creatorMetricOrders">0</div>
-                    <div class="creator-sub-hint" id="creatorMetricTopItemSub">Item hot: --</div>
+                    <div class="creator-sub-hint" id="creatorMetricTopItemSub">Món hot: --</div>
                 </div>
             </div>
         </div>
 
-        <!-- 3. Thanh Chuyển Tab Chức Năng (Transactions | Games Breakdown | Dev Toolkit) -->
+        <!-- 3. Thanh Chuyển Tab Thân Thiện -->
         <div class="creator-tabs-bar">
             <button type="button" class="creator-tab-btn active" id="btnCreatorTab-tx" onclick="switchCreatorTab('transactions')">
-                <i class="fa-solid fa-list-check"></i> <span>Sổ cái & Lịch sử giao dịch</span>
+                <i class="fa-solid fa-heart"></i> <span>Người ủng hộ & Mua đồ</span>
             </button>
             <button type="button" class="creator-tab-btn" id="btnCreatorTab-games" onclick="switchCreatorTab('games')">
                 <i class="fa-solid fa-gamepad"></i> <span>Tác phẩm & Bảng giá</span>
             </button>
             <button type="button" class="creator-tab-btn" id="btnCreatorTab-toolkit" onclick="switchCreatorTab('toolkit')">
-                <i class="fa-solid fa-code"></i> <span>Bộ công cụ tích hợp (Aftercode)</span>
+                <i class="fa-solid fa-puzzle-piece"></i> <span>Khối lệnh bán đồ (Aftercode / TurboWarp)</span>
             </button>
         </div>
 
-        <!-- TAB 1: SỔ CÁI GIAO DỊCH (DATA TABLE FEED) -->
+        <!-- TAB 1: NHẬT KÝ BẠN BÈ ỦNG HỘ & ĐƠN HÀNG (CARD FEED CHUẨN UX) -->
         <div class="creator-tab-pane active" id="creatorPane-transactions">
             <!-- Toolbar Lọc & Tìm kiếm -->
             <div class="creator-feed-toolbar">
                 <div class="creator-search-box">
-                    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.88rem;"></i>
-                    <input type="text" id="creatorSearchInput" placeholder="Tìm theo Mã GD (TX ID), tên vật phẩm, người mua..." onkeyup="handleCreatorSearch(event)">
+                    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.9rem;"></i>
+                    <input type="text" id="creatorSearchInput" placeholder="Tìm tên bạn bè, tên món đồ hoặc mã đơn..." onkeyup="handleCreatorSearch(event)">
                 </div>
 
                 <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
@@ -7693,79 +7731,135 @@
                         <option value="">Tất cả tác phẩm</option>
                     </select>
 
-                    <button type="button" class="btn" onclick="refreshCreatorData()" title="Làm mới dữ liệu">
+                    <button type="button" class="btn" onclick="refreshCreatorData()" title="Làm mới">
                         <i class="fa-solid fa-rotate-right"></i> Làm mới
                     </button>
                 </div>
             </div>
 
-            <!-- Tiêu đề các cột dữ liệu (Desktop) -->
-            <div class="creator-table-header">
-                <div>Vật phẩm & Mã giao dịch</div>
-                <div>Tác phẩm phát sinh</div>
-                <div>Người mua</div>
-                <div>Giá bán gốc</div>
-                <div style="text-align:right;">Đóng góp doanh thu</div>
-            </div>
-
-            <!-- Danh sách các dòng dữ liệu (Render qua JS) -->
+            <!-- Danh sách các thẻ đơn hàng thân thiện (Render bằng JS) -->
             <div class="creator-feed-list" id="creatorTxList">
                 <!-- Nạp qua JS -->
             </div>
 
-            <!-- Phân trang tải thêm -->
+            <!-- Phân trang tải thêm (Mỗi lần 8 đơn) -->
             <div style="text-align: center; padding: 10px 0 20px 0; display: none;" id="creatorLoadMoreArea">
-                <button class="btn" style="padding: 10px 32px; border-radius: 20px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreCreatorTransactions()">
-                    <i class="fa-solid fa-angle-down"></i> Tải thêm lịch sử cũ
+                <button type="button" class="creator-load-more-btn" onclick="loadMoreCreatorTransactions()">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Xem đơn hàng cũ hơn
                 </button>
             </div>
         </div>
 
-        <!-- TAB 2: QUẢN LÝ GAME & VẬT PHẨM BÁN CHẠY -->
+        <!-- TAB 2: QUẢN LÝ TÁC PHẨM & BẢNG GIÁ (CÓ LOAD LIMIT 6 GAME & LOAD MORE) -->
         <div class="creator-tab-pane" id="creatorPane-games">
+            <!-- Toolbar Lọc Nhanh Tác Phẩm -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn std-filter-pill active" id="btnGameFilterAll" onclick="filterCreatorGames('all', this)">
+                        <i class="fa-solid fa-border-all"></i> Tất cả tác phẩm (<span id="creatorGamesCountAll">0</span>)
+                    </button>
+                    <button type="button" class="btn std-filter-pill" id="btnGameFilterSales" onclick="filterCreatorGames('sales', this)">
+                        <i class="fa-solid fa-coins" style="color:#f59e0b;"></i> Có bán đồ / Có doanh thu (<span id="creatorGamesCountSales">0</span>)
+                    </button>
+                </div>
+                <span style="font-size:0.85rem; color:var(--text-muted);" id="creatorGamesProgressText">Đang hiển thị...</span>
+            </div>
+
+            <!-- Lưới Game -->
             <div class="creator-games-grid" id="creatorGamesGrid">
                 <!-- Nạp qua JS -->
             </div>
+
+            <!-- Nút Tải Thêm Game (Load More 6 Game tiếp theo) -->
+            <div style="text-align: center; padding: 10px 0 30px 0; display: none;" id="creatorGamesLoadMoreArea">
+                <button type="button" class="creator-load-more-btn" onclick="loadMoreCreatorGames()">
+                    <i class="fa-solid fa-angle-down"></i> <span id="creatorGamesLoadMoreText">Xem thêm tựa game khác ▾</span>
+                </button>
+            </div>
         </div>
 
-        <!-- TAB 3: BỘ CÔNG CỤ LẬP TRÌNH VIÊN (DEVELOPER TOOLKIT) -->
+        <!-- TAB 3: BỘ CÔNG CỤ LẬP TRÌNH VIÊN NHÍ (MINH HỌA KHỐI LỆNH) -->
         <div class="creator-tab-pane" id="creatorPane-toolkit">
             <div class="creator-toolkit-box">
-                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-                    <div style="width:42px; height:42px; border-radius:12px; background:rgba(16,185,129,0.15); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
-                        <i class="fa-solid fa-puzzle-piece"></i>
+                
+                <!-- Hướng Dẫn Tương Thích Theo Engine -->
+                <div class="engine-guide-card aftercode">
+                    <div style="width:46px; height:46px; border-radius:14px; background:#10b981; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
                     </div>
                     <div>
-                        <h3 style="margin:0; font-size:1.2rem; color:var(--text-title);">Tích Hợp Khối Lệnh Bán Vật Phẩm In-Game</h3>
-                        <span style="font-size:0.85rem; color:var(--text-muted);">Tạo cửa hàng trang bị, hồi máu, VIP Pass hoặc mở khóa màn chơi chỉ với vài khối lệnh.</span>
+                        <div style="font-weight:900; font-size:1.15rem; color:var(--text-title); margin-bottom:4px;">
+                            Dành cho các bạn dùng Aftercode (Trình soạn thảo khuyên dùng)
+                        </div>
+                        <div style="font-size:0.9rem; color:var(--text-main); line-height:1.5;">
+                            🎉 <b>Tin vui:</b> Tiện ích <b>WOW Token đã được tích hợp sẵn 100% trong Aftercode</b>! Bạn không cần phải dán link gì cả. Chỉ cần bấm vào nút <b style="color:var(--primary);">"Thêm tiện ích (Extensions)"</b> ở góc dưới cùng bên trái là sẽ thấy ngay danh mục khối lệnh WOW!
+                        </div>
                     </div>
                 </div>
 
-                <p style="font-size:0.9rem; line-height:1.6; color:var(--text-main);">
-                    Hệ thống <b>WOW Economy</b> cho phép dự án Scratch / Aftercode của bạn mở trực tiếp cửa sổ xác nhận mua hàng chuẩn Roblox ngay trong game mà không làm gián đoạn gameplay.
+                <div class="engine-guide-card turbowarp">
+                    <div style="width:46px; height:46px; border-radius:14px; background:#ea580c; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-weight:900; font-size:1.15rem; color:var(--text-title); margin-bottom:4px;">
+                            Dành cho các bạn mở bằng TurboWarp
+                        </div>
+                        <div style="font-size:0.9rem; color:var(--text-main); line-height:1.5; margin-bottom:8px;">
+                            Nếu bạn lập trình trên TurboWarp, hãy bấm vào <b>"Thêm tiện ích" $\rightarrow$ "Tiện ích tùy chỉnh (Custom Extension)"</b> rồi dán đường link này vào nhé:
+                        </div>
+                        <div class="creator-code-snippet" style="margin: 6px 0;">
+                            <button type="button" class="creator-btn-copy-code" onclick="copyCreatorCodeSnippet('https://raw.githubusercontent.com/danvPR/workshop/main/WOWtoken-extension.js', this)">
+                                <i class="fa-solid fa-copy"></i> Sao chép link
+                            </button>
+                            <code>https://raw.githubusercontent.com/danvPR/workshop/main/WOWtoken-extension.js</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mô Phỏng Khối Lệnh Scratch/Aftercode Bắt Mắt Dễ Hiểu -->
+                <h3 style="margin:22px 0 6px 0; font-size:1.2rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-cubes-stacked" style="color:var(--primary);"></i> <span>Cách ghép khối lệnh tạo cửa hàng trong game</span>
+                </h3>
+                <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:12px;">
+                    Dưới đây là một kịch bản bán <b>"Kiếm Ánh Sáng"</b> chuẩn xịn. Khi người chơi click vào món đồ, game sẽ tự động hiện bảng xác nhận mua giống hệt Roblox!
                 </p>
 
-                <h4 style="font-size:0.95rem; margin:16px 0 6px 0; color:var(--text-title);">1. Link nạp Extension tùy chỉnh vào Aftercode / TurboWarp:</h4>
-                <div class="creator-code-snippet">
-                    <button type="button" class="creator-btn-copy-code" onclick="copyCreatorCodeSnippet('https://raw.githubusercontent.com/danvPR/workshop/main/WOWtoken-extension.js', this)">
-                        <i class="fa-solid fa-copy"></i> Sao chép
-                    </button>
-                    <code>https://raw.githubusercontent.com/danvPR/workshop/main/WOWtoken-extension.js</code>
+                <div class="scratch-block-stage">
+                    <div class="sb-block sb-hat-event">
+                        <i class="fa-solid fa-hand-pointer"></i> khi bấm vào nhân vật này
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <div class="sb-block sb-wow-token">
+                            <i class="fa-solid fa-bag-shopping"></i> yêu cầu mua <span class="sb-slot">Kiếm Ánh Sáng</span> giá <span class="sb-slot">10</span> WOW
+                        </div>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <div class="sb-block sb-control">
+                            <i class="fa-solid fa-hourglass-half"></i> đợi cho đến khi <span class="sb-slot" style="background:#ff6680; color:#fff;">&lt;giao dịch hoàn tất?&gt;</span>
+                        </div>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <div class="sb-block sb-control">
+                            nếu <span class="sb-slot" style="background:#59c059; color:#fff;">&lt;kết quả giao dịch = "SUCCESS"&gt;</span> thì
+                        </div>
+                        <div style="margin-left: 25px; margin-top: 6px; display:flex; flex-direction:column; gap:6px;">
+                            <div class="sb-block sb-variable">
+                                thay đổi <span class="sb-slot">Sức Mạnh ▾</span> một lượng <span class="sb-slot">50</span>
+                            </div>
+                            <div class="sb-block sb-look">
+                                nói <span class="sb-slot">Mua thành công! Cảm ơn bạn đã ủng hộ!</span> trong <span class="sb-slot">2</span> giây
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <h4 style="font-size:0.95rem; margin:18px 0 6px 0; color:var(--text-title);">2. Cấu trúc khối lệnh mẫu:</h4>
-                <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:14px; padding:16px; font-size:0.88rem; line-height:1.7;">
-                    <div>🔹 <code>khi bấm vào nhân vật này:</code></div>
-                    <div style="margin-left:20px;">🔹 <code>yêu cầu mua [Kiếm Ánh Sáng] giá [10] WOW</code></div>
-                    <div style="margin-left:20px;">🔹 <code>đợi cho đến khi &lt;giao dịch hoàn tất?&gt;</code></div>
-                    <div style="margin-left:20px;">🔹 <code>nếu &lt;trạng thái = "SUCCESS"&gt; thì:</code></div>
-                    <div style="margin-left:40px;">🔸 <code>thay đổi [Sức Mạnh v] một lượng (50)</code></div>
-                    <div style="margin-left:40px;">🔸 <code>nói [Mua thành công!] trong (2) giây</code></div>
-                </div>
-
-                <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
-                    <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="btn btn-primary" style="border-radius:18px; padding:10px 22px; font-weight:800;">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Trình Soạn Thảo Để Thử Ngay
+                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
+                    <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="btn btn-primary" style="border-radius:20px; padding:11px 24px; font-weight:800; font-size:0.95rem;">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Trình Soạn Thảo Thử Ngay
+                    </a>
+                    <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="btn" style="border-radius:20px; padding:11px 20px; font-weight:700;">
+                        <i class="fa-solid fa-book-open"></i> Đọc thêm về Cơ Chế WOW
                     </a>
                 </div>
             </div>
@@ -9020,56 +9114,56 @@
         </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN RÚT DOANH THU CREATOR (LÀM TRÒN SÀN THEO TỔNG ĐƠN) -->
+    <!-- MODAL XÁC NHẬN CHUYỂN WOW VÀO VÍ (THÂN THIỆN VỚI HỌC SINH) -->
     <div class="modal-overlay" id="creatorWithdrawModal" style="z-index: 10002;">
-        <div class="modal" style="max-width: 480px; border-radius: 24px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color); box-shadow: 0 25px 70px rgba(0,0,0,0.4);">
-            <div class="modal-header" style="align-items: center; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);">
+        <div class="modal" style="max-width: 480px; border-radius: 24px; overflow: hidden; background: var(--bg-panel); border: 2px solid var(--border-color); box-shadow: 0 25px 70px rgba(0,0,0,0.35);">
+            <div class="modal-header" style="align-items: center; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);">
                 <span style="font-weight: 900; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; color: var(--text-title);">
-                    <i class="fa-solid fa-money-bill-transfer" style="color: #10b981;"></i> Rút Doanh Thu Về Ví
+                    <i class="fa-solid fa-wallet" style="color: #10b981;"></i> Chuyển WOW Vào Ví Của Bạn
                 </span>
                 <button class="btn-close" onclick="closeModal('creatorWithdrawModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
-                <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); line-height: 1.45;">
-                    Bạn đang thực hiện quyết toán toàn bộ doanh số bán vật phẩm in-game đang chờ rút:
+                <div style="text-align: center; font-size: 0.92rem; color: var(--text-muted); line-height: 1.45;">
+                    Bạn chuẩn bị mở ống heo để chuyển toàn bộ điểm thưởng WOW thu được từ game vào ví chính:
                 </div>
 
-                <!-- Bảng chi tiết quyết toán -->
-                <div style="background: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: 16px; padding: 16px;">
+                <!-- Bảng chi tiết chuyển WOW -->
+                <div style="background: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: 18px; padding: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem;">
-                        <span style="color: var(--text-muted);">Tổng doanh số chờ rút (<b id="withdrawModalOrdersCount">0</b> đơn):</span>
+                        <span style="color: var(--text-muted);">Tổng điểm trong các đơn (<b id="withdrawModalOrdersCount">0</b> đơn):</span>
                         <b style="color: var(--text-title);" id="withdrawModalGross">0 WOW</b>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem;">
-                        <span style="color: var(--text-muted);">Tỷ lệ thực nhận:</span>
-                        <b style="color: #10b981;">70%</b>
+                        <span style="color: var(--text-muted);">Tỷ lệ nhận của bạn:</span>
+                        <b style="color: #10b981; font-size: 1rem;">70% WOW</b>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem;">
-                        <span style="color: var(--text-muted);">Phí nền tảng (30% + phần lẻ):</span>
+                        <span style="color: var(--text-muted);">Phí duy trì máy chủ (30% + phần lẻ):</span>
                         <span style="color: #ef4444; font-weight: 700;" id="withdrawModalFee">-0 WOW</span>
                     </div>
                     <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 800; font-size: 0.95rem; color: var(--text-title);">Số WOW thực nhận:</span>
-                        <div style="font-size: 1.5rem; font-weight: 900; color: #10b981; display: flex; align-items: center; gap: 6px;">
+                        <span style="font-weight: 900; font-size: 1rem; color: var(--text-title);">Số WOW chuyển vào ví:</span>
+                        <div style="font-size: 1.6rem; font-weight: 900; color: #10b981; display: flex; align-items: center; gap: 6px;">
                             <span class="wow-icon"></span>
                             <span id="withdrawModalNet">0</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Chú thích chính sách làm tròn sàn theo tổng -->
-                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 10px 12px; font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 8px; line-height: 1.45;">
-                    <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1rem; margin-top: 2px; flex-shrink: 0;"></i>
-                    <span><b>Lợi ích làm tròn theo tổng:</b> Hệ thống gom toàn bộ doanh số để tính 70% và chỉ làm tròn sàn 1 lần duy nhất trên tổng số rút, giúp bạn không bị hao hụt các đơn hàng 1 hay 2 WOW!</span>
+                <!-- Chú thích chính sách WOW dễ hiểu cho học sinh -->
+                <div style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.25); border-radius: 14px; padding: 12px 14px; font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 10px; line-height: 1.5;">
+                    <i class="fa-solid fa-circle-info" style="color: #10b981; font-size: 1.1rem; margin-top: 2px; flex-shrink: 0;"></i>
+                    <span><b>Gom điểm thông minh:</b> Hệ thống gom tổng tất cả các đơn mua đồ rồi mới tính 70%, giúp bạn không bao giờ bị hao hụt những món đồ 1 hay 2 WOW! <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" style="color: var(--primary); font-weight: 700;">Xem chính sách</a></span>
                 </div>
 
                 <!-- Cụm nút hành động -->
                 <div style="display: flex; gap: 10px; margin-top: 4px;">
                     <button type="button" class="btn" style="flex: 1; padding: 12px; border-radius: 14px; font-weight: 700;" onclick="closeModal('creatorWithdrawModal')">
-                        Hủy bỏ
+                        Để sau
                     </button>
-                    <button type="button" class="btn btn-primary" id="btnConfirmCreatorWithdraw" style="flex: 1.6; padding: 12px; border-radius: 14px; font-weight: 900; justify-content: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="handleConfirmCreatorWithdraw()">
-                        <i class="fa-solid fa-wallet"></i> Xác nhận rút về ví
+                    <button type="button" class="btn btn-primary" id="btnConfirmCreatorWithdraw" style="flex: 1.7; padding: 12px; border-radius: 14px; font-weight: 900; justify-content: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="handleConfirmCreatorWithdraw()">
+                        <i class="fa-solid fa-sparkles"></i> Nhận Ngay Vào Ví
                     </button>
                 </div>
             </div>
@@ -19142,7 +19236,7 @@
         }
 
         // =========================================================================
-        // 🚀 BỘ MÁY ĐIỀU HÀNH TRANG NHÀ SÁNG TẠO PRO (CYBER CREATOR COCKPIT LOGIC)
+        // 🚀 BỘ MÁY ĐIỀU HÀNH XƯỞNG SÁNG TẠO NHÍ (KID-FRIENDLY CREATOR WORKSHOP LOGIC)
         // =========================================================================
         let creatorCurrentPage = 1;
         let creatorHasMore = false;
@@ -19153,6 +19247,12 @@
         let creatorCurrentSummary = null;
         let creatorActiveTab = "transactions";
         let creatorProjectsCache = [];
+        
+        // 🌟 BỘ QUẢN LÝ PHÂN TRANG & LOAD LIMIT
+        const CREATOR_TX_LIMIT_PER_PAGE = 8; // Giới hạn 8 đơn hàng mỗi lần tải
+        const CREATOR_GAMES_LIMIT_STEP = 6;  // Mỗi lần bấm xem thêm nạp thêm 6 game
+        let creatorGamesDisplayLimit = 6;    // Mặc định hiện 6 game ban đầu
+        let creatorGamesFilter = "all";      // 'all' hoặc 'sales'
 
         function switchCreatorTab(tab) {
             creatorActiveTab = tab;
@@ -19171,7 +19271,7 @@
 
         async function openCreatorPage(urlParams) {
             if (!currentUser) {
-                showToast("Vui lòng đăng nhập tài khoản để truy cập Studio Nhà sáng tạo!", "error");
+                showToast("Vui lòng đăng nhập tài khoản để vào Xưởng Sáng Tạo!", "error");
                 openModal('loginModal');
                 navigateTo('#home');
                 return;
@@ -19179,12 +19279,22 @@
 
             document.getElementById('creatorView').style.display = 'block';
 
-            // Nhận diện mã giao dịch cần tô sáng nếu người dùng bấm từ thông báo hộp thư
-            creatorTargetHighlightTx = urlParams ? urlParams.get('tx') : null;
+            // ĐỒNG BỘ LOGO THƯƠNG HIỆU (DANVworkshop / TURBOworkshop) VÀO HERO BANNER
+            const liveNavLogo = document.querySelector('.nav-logo-img') || document.querySelector('.footer-logo-img');
+            const brandLogoUrl = (langData && langData['brand_logo']) || (liveNavLogo ? liveNavLogo.src : "https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png");
+            const heroBadge = document.querySelector('.creator-hero-badge-icon');
+            if (heroBadge) {
+                heroBadge.innerHTML = `<img src="${brandLogoUrl}" alt="Logo" style="height:36px; width:auto; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));">`;
+            }
 
+            // Đặt lại các biến phân trang về ban đầu
+            creatorTargetHighlightTx = urlParams ? urlParams.get('tx') : null;
             creatorCurrentPage = 1;
             creatorSelectedProjectId = "";
             creatorSearchQuery = "";
+            creatorGamesDisplayLimit = CREATOR_GAMES_LIMIT_STEP;
+            creatorGamesFilter = "all";
+
             switchCreatorTab('transactions');
 
             const searchInp = document.getElementById('creatorSearchInput');
@@ -19221,43 +19331,44 @@
             if (!listContainer) return;
 
             if (!isLoadMore) {
-                listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2.2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">Đang kết nối sổ cái giao dịch...</span></div>';
+                listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2.2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">Đang kết nối ống heo tiết kiệm...</span></div>';
             }
 
             try {
-                let apiUrl = `${WORKER_URL}/api/creator/analytics?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&page=${creatorCurrentPage}&limit=25`;
+                // Tải theo giới hạn CREATOR_TX_LIMIT_PER_PAGE (8 đơn/lần)
+                let apiUrl = `${WORKER_URL}/api/creator/analytics?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&page=${creatorCurrentPage}&limit=${CREATOR_TX_LIMIT_PER_PAGE}`;
                 if (creatorSelectedProjectId) apiUrl += `&projectId=${encodeURIComponent(creatorSelectedProjectId)}`;
 
                 const res = await (await fetch(apiUrl)).json();
 
                 if (!res || !res.success) {
-                    listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; margin-bottom:8px; display:block;"></i>${escapeHtml(res?.error || "Không thể tải dữ liệu giao dịch")}</div>`;
+                    listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; margin-bottom:8px; display:block;"></i>${escapeHtml(res?.error || "Không thể tải dữ liệu đơn hàng")}</div>`;
                     return;
                 }
 
                 const sum = res.summary || {};
                 creatorCurrentSummary = sum;
 
-                // Cập nhật số liệu Thẻ Master Chờ Rút
+                // 1. Cập nhật Thẻ Master (WOW chờ bỏ túi)
                 const pendingNetVal = sum.estimatedNet || 0;
                 const pendingNetEl = document.getElementById('creatorMetricPendingNet');
                 if (pendingNetEl) pendingNetEl.innerHTML = `<span class="wow-icon"></span> +${pendingNetVal}`;
                 
                 const pendingSubEl = document.getElementById('creatorMetricPendingSub');
                 if (pendingSubEl) {
-                    pendingSubEl.innerHTML = `Gom quỹ từ <b>${sum.pendingOrders || 0}</b> đơn (Tổng ${sum.pendingGross || 0} WOW) • Không mất phí lẻ`;
+                    pendingSubEl.innerHTML = `Tích lũy từ <b>${sum.pendingOrders || 0}</b> lượt mua đồ (Tổng ${sum.pendingGross || 0} WOW) • Gom 70% tròn vẹn`;
                 }
 
-                // Kích hoạt hoặc vô hiệu hóa nút Rút Tiền
+                // 2. Kích hoạt nút chuyển vào ví
                 const btnMasterWithdraw = document.getElementById('btnMasterWithdraw');
                 if (btnMasterWithdraw) {
                     btnMasterWithdraw.disabled = (pendingNetVal < 1);
                     btnMasterWithdraw.innerHTML = pendingNetVal >= 1 
-                        ? `<i class="fa-solid fa-money-bill-transfer"></i> Rút ngay +${pendingNetVal} WOW về ví` 
-                        : `<i class="fa-solid fa-lock"></i> Chưa đủ số dư rút (Tối thiểu 1 WOW)`;
+                        ? `<i class="fa-solid fa-wallet"></i> Chuyển ngay +${pendingNetVal} WOW vào Ví ✨` 
+                        : `<i class="fa-solid fa-piggy-bank"></i> Chưa có WOW để rút (Tối thiểu 1 WOW)`;
                 }
 
-                // Cập nhật 3 thẻ phụ
+                // 3. Cập nhật 3 Thẻ Phụ
                 const withdrawnEl = document.getElementById('creatorMetricWithdrawn');
                 if (withdrawnEl) withdrawnEl.innerHTML = `<span class="wow-icon"></span> ${sum.totalWithdrawnNet || 0}`;
 
@@ -19270,10 +19381,10 @@
                 const topItemSubEl = document.getElementById('creatorMetricTopItemSub');
                 if (topItemSubEl) {
                     if (sum.topItem && sum.topItem.name) {
-                        topItemSubEl.innerText = `Hot: ${sum.topItem.name} (${sum.topItem.count} đơn)`;
-                        topItemSubEl.title = `Vật phẩm bán chạy nhất: ${sum.topItem.name}`;
+                        topItemSubEl.innerText = `⭐ Món hot: ${sum.topItem.name} (${sum.topItem.count} lượt)`;
+                        topItemSubEl.title = `Vật phẩm được mua nhiều nhất: ${sum.topItem.name}`;
                     } else {
-                        topItemSubEl.innerText = "Chưa có đơn hàng";
+                        topItemSubEl.innerText = "Chưa có lượt mua";
                     }
                 }
 
@@ -19297,6 +19408,7 @@
             }
         }
 
+        // RENDER TAB 1: DANH SÁCH ĐƠN MUA ĐỒ (THẺ HOẠT ĐỘNG BẠN BÈ)
         function renderCreatorTransactionsList() {
             const listContainer = document.getElementById('creatorTxList');
             if (!listContainer) return;
@@ -19317,101 +19429,80 @@
             if (filtered.length === 0) {
                 if (creatorAllTransactions.length === 0) {
                     listContainer.innerHTML = `
-                        <div class="creator-empty-guide-card">
-                            <i class="fa-solid fa-cube guide-icon"></i>
-                            <div style="font-size:1.25rem; font-weight:800; color:var(--text-title);">Chưa có giao dịch in-game nào</div>
-                            <div style="max-width:520px; font-size:0.9rem; line-height:1.5;">
-                                Hãy biến dự án game của bạn thành một thế giới sống động! Bạn có thể tạo các shop bán vật phẩm, hồi máu, mở khóa màn chơi bằng cách nhúng khối lệnh <b>WOW Economy Extension</b>.
+                        <div style="text-align:center; padding:50px 20px; background:var(--bg-panel); border:2px dashed var(--border-color); border-radius:24px;">
+                            <div style="font-size:3.5rem; margin-bottom:12px;">🛍️</div>
+                            <div style="font-size:1.25rem; font-weight:900; color:var(--text-title); margin-bottom:6px;">Chưa có bạn nào mua vật phẩm trong game</div>
+                            <div style="max-width:500px; margin:0 auto 16px auto; font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
+                                Hãy lập trình một shop bán trang bị, hồi máu hoặc chìa khóa mở bàn mới bằng khối lệnh WOW! Game của bạn sẽ trở nên cực kỳ hấp dẫn.
                             </div>
-                            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:6px;">
-                                <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="btn btn-primary" style="border-radius:20px; padding:9px 20px; font-weight:800;">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Aftercode để tích hợp
-                                </a>
-                                <button type="button" class="btn" style="border-radius:20px; padding:9px 18px; font-weight:700;" onclick="switchCreatorTab('toolkit')">
-                                    <i class="fa-solid fa-code"></i> Xem hướng dẫn Code
-                                </button>
-                            </div>
+                            <button type="button" class="btn btn-primary" style="border-radius:20px; padding:10px 22px; font-weight:800;" onclick="switchCreatorTab('toolkit')">
+                                <i class="fa-solid fa-puzzle-piece"></i> Xem cách tạo shop đồ trong game
+                            </button>
                         </div>
                     `;
                 } else {
-                    listContainer.innerHTML = `<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:8px; opacity:0.4; display:block;"></i>Không tìm thấy giao dịch nào khớp với từ khóa "${escapeHtml(creatorSearchQuery)}".</div>`;
+                    listContainer.innerHTML = `<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:8px; opacity:0.4; display:block;"></i>Không tìm thấy lượt mua nào khớp với từ khóa "${escapeHtml(creatorSearchQuery)}".</div>`;
                 }
                 return;
             }
 
             listContainer.innerHTML = filtered.map(tx => {
                 const isTarget = (creatorTargetHighlightTx && tx.txId === creatorTargetHighlightTx);
+                const isWithdrawn = tx.isWithdrawn;
+                const buyerAvt = getAvtUrl(tx.buyerAvt);
+                const formattedTime = timeAgo(tx.time);
 
-                // 🛡️ KHẮC PHỤC TRIỆT ĐỂ LỖI HIỂN THỊ "+0 WOW"
-                let netColHtml = '';
-                if (tx.isWithdrawn) {
-                    netColHtml = `
-                        <div style="text-align:right;">
-                            <div style="color:#10b981; font-weight:800; font-size:0.95rem; display:inline-flex; align-items:center; gap:4px;">
-                                <i class="fa-solid fa-circle-check"></i> Đã quyết toán
-                            </div>
-                            <div style="font-size:0.72rem; color:var(--text-muted);">Đã vào ví chính</div>
+                let gainPillHtml = '';
+                if (isWithdrawn) {
+                    gainPillHtml = `
+                        <div class="creator-wow-gain-pill">
+                            <i class="fa-solid fa-circle-check"></i> Đã vào ví
                         </div>
                     `;
                 } else if (tx.grossAmount === 1) {
-                    // Đơn 1 WOW được gom vào quỹ 70%
-                    netColHtml = `
-                        <div style="text-align:right;">
-                            <div style="color:#ea580c; font-weight:900; font-size:1.05rem; display:inline-flex; align-items:center; gap:4px;">
-                                <span class="wow-icon"></span> +0.7 <span class="creator-acc-pill" title="Được làm tròn gom chung khi bấm Rút tiền">Gom 70%</span>
-                            </div>
-                            <div style="font-size:0.72rem; color:var(--text-muted);">Chờ rút theo tổng</div>
+                    gainPillHtml = `
+                        <div class="creator-wow-gain-pill pending" title="Được làm tròn gom chung 70% khi bấm Chuyển vào ví">
+                            <span class="wow-icon"></span> +0.7 WOW
+                            <span class="creator-acc-pill">Gom 70%</span>
                         </div>
                     `;
                 } else {
-                    netColHtml = `
-                        <div style="text-align:right;">
-                            <div style="color:#ea580c; font-weight:900; font-size:1.05rem; display:inline-flex; align-items:center; gap:4px;">
-                                <span class="wow-icon"></span> +${tx.netAmount} <span class="creator-acc-pill">Chờ rút</span>
-                            </div>
-                            <div style="font-size:0.72rem; color:var(--text-muted);">(Phí 30%: -${tx.feeAmount})</div>
+                    gainPillHtml = `
+                        <div class="creator-wow-gain-pill pending">
+                            <span class="wow-icon"></span> +${tx.netAmount} WOW
+                            <span class="creator-acc-pill">Chờ vào ví</span>
                         </div>
                     `;
                 }
 
                 return `
-                    <div class="creator-tx-row ${isTarget ? 'highlight-tx' : ''}" id="creator-tx-${tx.txId}">
-                        <!-- Cột 1: Tên vật phẩm & TX Code -->
-                        <div class="creator-tx-col-main">
-                            <span class="creator-item-title" title="${escapeHtml(tx.itemName || "Vật phẩm")}">${escapeHtml(tx.itemName || "Vật phẩm")}</span>
-                            <div class="creator-tx-meta-sub">
-                                <span title="${tx.time}"><i class="fa-regular fa-clock"></i> ${timeAgo(tx.time)}</span>
-                                <span>•</span>
-                                <span class="creator-tx-code-pill" onclick="copyCreatorTxId('${tx.txId}', this)" title="Bấm để sao chép mã">
-                                    <i class="fa-regular fa-copy"></i> <code>${tx.txId}</code>
-                                </span>
+                    <div class="creator-tx-card ${isTarget ? 'highlight-tx' : ''}" id="creator-tx-${tx.txId}">
+                        <div class="creator-tx-left">
+                            <a href="#profile/${encodeURIComponent(tx.buyer)}" title="Xem trang cá nhân của @${escapeHtml(tx.buyer)}">
+                                <img src="${buyerAvt}" class="creator-buyer-avt-wrap" onerror="this.src='${DEFAULT_AVATAR}'">
+                            </a>
+                            <div class="creator-tx-details">
+                                <div class="creator-tx-headline">
+                                    <a href="#profile/${encodeURIComponent(tx.buyer)}" style="font-weight:900; color:var(--primary); text-decoration:none;">@${escapeHtml(tx.buyer)}</a>
+                                    <span>đã mua</span>
+                                    <b>"${escapeHtml(tx.itemName || "Vật phẩm")}"</b>
+                                    <span>trong</span>
+                                    <a href="#project/${encodeURIComponent(tx.projectId)}" style="font-weight:800; color:var(--text-title); text-decoration:underline;">${escapeHtml(tx.projectTitle || "Tác phẩm")}</a>
+                                </div>
+                                <div class="creator-tx-submeta">
+                                    <span title="${tx.time}"><i class="fa-regular fa-clock"></i> ${formattedTime}</span>
+                                    <span>•</span>
+                                    <span>Giá gốc: <b>${tx.grossAmount} WOW</b></span>
+                                    <span>•</span>
+                                    <span class="creator-tx-code-pill" onclick="copyCreatorTxId('${tx.txId}', this)" title="Sao chép mã đơn hàng">
+                                        <i class="fa-regular fa-copy"></i> <code>${tx.txId}</code>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Cột 2: Tác phẩm phát sinh -->
-                        <div>
-                            <a href="#project/${encodeURIComponent(tx.projectId)}" class="creator-project-badge" title="${escapeHtml(tx.projectTitle || "Dự án")}">
-                                <i class="fa-solid fa-gamepad"></i> <span>${escapeHtml(tx.projectTitle || "Dự án")}</span>
-                            </a>
+                        <div class="creator-tx-right">
+                            ${gainPillHtml}
                         </div>
-
-                        <!-- Cột 3: Người mua -->
-                        <div>
-                            <a href="#profile/${encodeURIComponent(tx.buyer)}" class="creator-buyer-pill" title="Xem hồ sơ @${escapeHtml(tx.buyer)}">
-                                <img src="${getAvtUrl(tx.buyerAvt)}" onerror="this.src='${DEFAULT_AVATAR}'">
-                                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@${escapeHtml(tx.buyer)}</span>
-                            </a>
-                        </div>
-
-                        <!-- Cột 4: Giá gốc 100% -->
-                        <div>
-                            <span class="creator-gross-pill">
-                                <span class="wow-icon" style="font-size:0.95rem;"></span> ${tx.grossAmount} WOW
-                            </span>
-                        </div>
-
-                        <!-- Cột 5: Đóng góp thực nhận -->
-                        ${netColHtml}
                     </div>
                 `;
             }).join('');
@@ -19424,17 +19515,22 @@
             }
         }
 
-        // RENDER TAB 2: THỐNG KÊ DOANH THU THEO TỪNG GAME
+        // RENDER TAB 2: QUẢN LÝ TÁC PHẨM & BẢNG GIÁ (CÓ LOAD LIMIT 6 GAME & LOAD MORE)
         function renderCreatorProjectsBreakdown() {
             const grid = document.getElementById('creatorGamesGrid');
+            const loadMoreArea = document.getElementById('creatorGamesLoadMoreArea');
+            const loadMoreText = document.getElementById('creatorGamesLoadMoreText');
+            const progressText = document.getElementById('creatorGamesProgressText');
             if (!grid) return;
 
             if (!creatorProjectsCache || creatorProjectsCache.length === 0) {
                 grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">Bạn chưa xuất bản tác phẩm nào.</div>`;
+                if (loadMoreArea) loadMoreArea.style.display = 'none';
+                if (progressText) progressText.innerText = '';
                 return;
             }
 
-            // Tính toán doanh số theo từng Game từ mảng transactions
+            // Tính thống kê từ mảng giao dịch
             const statsMap = {};
             creatorAllTransactions.forEach(tx => {
                 const pid = tx.projectId;
@@ -19445,7 +19541,44 @@
                 statsMap[pid].items[iName] = (statsMap[pid].items[iName] || 0) + 1;
             });
 
-            grid.innerHTML = creatorProjectsCache.map(p => {
+            // Đếm số lượng cho 2 tab lọc
+            const allCount = creatorProjectsCache.length;
+            const salesCount = creatorProjectsCache.filter(p => {
+                const pid = String(p.projectId || p.fileId);
+                const st = statsMap[pid];
+                return st && (st.orders > 0 || st.gross > 0);
+            }).length;
+
+            const countAllEl = document.getElementById('creatorGamesCountAll');
+            const countSalesEl = document.getElementById('creatorGamesCountSales');
+            if (countAllEl) countAllEl.innerText = allCount;
+            if (countSalesEl) countSalesEl.innerText = salesCount;
+
+            // Lọc theo chế độ đang chọn
+            let filteredGames = creatorProjectsCache;
+            if (creatorGamesFilter === 'sales') {
+                filteredGames = creatorProjectsCache.filter(p => {
+                    const pid = String(p.projectId || p.fileId);
+                    const st = statsMap[pid];
+                    return st && (st.orders > 0 || st.gross > 0);
+                });
+            }
+
+            if (filteredGames.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-muted); background:var(--bg-panel); border-radius:18px; border:1px dashed var(--border-color);"><i class="fa-solid fa-gamepad" style="font-size:2.5rem; opacity:0.3; margin-bottom:10px; display:block;"></i>Chưa có game nào có lượt mua vật phẩm. Hãy thêm khối lệnh WOW vào game của bạn nhé!</div>`;
+                if (loadMoreArea) loadMoreArea.style.display = 'none';
+                if (progressText) progressText.innerText = '';
+                return;
+            }
+
+            // CẮT THEO LOAD LIMIT (MẶC ĐỊNH 6 GAME)
+            const visibleGames = filteredGames.slice(0, creatorGamesDisplayLimit);
+
+            if (progressText) {
+                progressText.innerText = `Hiển thị ${visibleGames.length} / ${filteredGames.length} tác phẩm`;
+            }
+
+            grid.innerHTML = visibleGames.map(p => {
                 const pid = String(p.projectId || p.fileId);
                 const st = statsMap[pid] || { orders: 0, gross: 0, items: {} };
                 const thumb = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
@@ -19460,7 +19593,7 @@
                 return `
                     <div class="creator-game-card">
                         <div class="creator-game-thumb">
-                            <img src="${thumb}" loading="lazy">
+                            <img src="${thumb}" loading="lazy" alt="${escapeHtml(p.title)}">
                             <span style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.8); color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px;">
                                 ${p.visibility === 'private' ? 'Riêng tư' : 'Công khai'}
                             </span>
@@ -19473,37 +19606,61 @@
                                 <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views || 0} lượt trải nghiệm</span>
                             </div>
 
-                            <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:12px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:14px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center;">
                                 <div>
-                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">Doanh số thu về</div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">Tổng WOW Thu Về</div>
                                     <div style="font-size:1.15rem; font-weight:900; color:#ea580c; display:flex; align-items:center; gap:5px; margin-top:2px;">
                                         <span class="wow-icon"></span> ${st.gross} WOW
                                     </div>
                                 </div>
                                 <div style="text-align:right;">
-                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">Đơn hàng</div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">Đã bán</div>
                                     <div style="font-size:1.15rem; font-weight:900; color:var(--text-title); margin-top:2px;">
-                                        ${st.orders}
+                                        ${st.orders} món
                                     </div>
                                 </div>
                             </div>
 
-                            <div style="font-size:0.78rem; color:var(--text-muted);">
-                                <b>Món bán chạy:</b> <span style="color:var(--text-title);">${escapeHtml(bestItemName)}</span>
+                            <div style="font-size:0.8rem; color:var(--text-muted);">
+                                <b>Món hot nhất:</b> <span style="color:var(--text-title); font-weight:700;">${escapeHtml(bestItemName)}</span>
                             </div>
 
                             <div style="display:flex; gap:8px; margin-top:auto; padding-top:6px;">
-                                <button type="button" class="btn btn-primary" style="flex:1; font-size:0.8rem; border-radius:12px; justify-content:center; padding:7px;" onclick="filterCreatorTransactionsByGame('${pid}')">
-                                    <i class="fa-solid fa-receipt"></i> Xem các đơn
+                                <button type="button" class="btn btn-primary" style="flex:1; font-size:0.82rem; border-radius:12px; justify-content:center; padding:8px;" onclick="filterCreatorTransactionsByGame('${pid}')">
+                                    <i class="fa-solid fa-bag-shopping"></i> Xem đơn mua
                                 </button>
-                                <a href="#project/${pid}" class="btn" style="border-radius:12px; font-size:0.8rem; padding:7px 12px;" title="Mở trang game">
-                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <a href="#project/${pid}" class="btn" style="border-radius:12px; font-size:0.82rem; padding:8px 14px;" title="Vào trang game">
+                                    <i class="fa-solid fa-play"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            // HIỂN THỊ NÚT "XEM THÊM" GAME
+            if (loadMoreArea) {
+                const remaining = filteredGames.length - visibleGames.length;
+                if (remaining > 0) {
+                    loadMoreArea.style.display = 'block';
+                    if (loadMoreText) loadMoreText.innerText = `Xem thêm tựa game khác (Còn ${remaining} game) ▾`;
+                } else {
+                    loadMoreArea.style.display = 'none';
+                }
+            }
+        }
+
+        function filterCreatorGames(filterMode, btnEl) {
+            creatorGamesFilter = filterMode;
+            creatorGamesDisplayLimit = CREATOR_GAMES_LIMIT_STEP;
+            document.querySelectorAll('#creatorPane-games .std-filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            renderCreatorProjectsBreakdown();
+        }
+
+        function loadMoreCreatorGames() {
+            creatorGamesDisplayLimit += CREATOR_GAMES_LIMIT_STEP;
+            renderCreatorProjectsBreakdown();
         }
 
         function filterCreatorTransactionsByGame(pid) {
@@ -19528,7 +19685,7 @@
 
         function copyCreatorTxId(txId, pillEl) {
             navigator.clipboard.writeText(txId).then(() => {
-                showToast(`Đã sao chép mã giao dịch: ${txId}`, "success");
+                showToast(`Đã sao chép mã đơn hàng: ${txId}`, "success");
                 const origHtml = pillEl.innerHTML;
                 pillEl.innerHTML = `<i class="fa-solid fa-check" style="color:#10b981;"></i> Đã chép`;
                 setTimeout(() => { pillEl.innerHTML = origHtml; }, 1800);
@@ -19549,7 +19706,7 @@
         function refreshCreatorData() {
             creatorCurrentPage = 1;
             fetchCreatorAnalyticsData(false);
-            showToast("Đã làm mới dữ liệu doanh thu!", "info");
+            showToast("Đã làm mới dữ liệu!", "info");
         }
 
         async function loadMoreCreatorTransactions() {
@@ -19557,7 +19714,7 @@
             creatorCurrentPage++;
             const btn = document.querySelector('#creatorLoadMoreArea button');
             const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải thêm đơn...';
             btn.disabled = true;
 
             await fetchCreatorAnalyticsData(true);
@@ -19566,17 +19723,17 @@
             btn.disabled = false;
         }
 
-        // ================= XỬ LÝ RÚT TIỀN CREATOR (MODAL & EXECUTION) =================
+        // ================= XỬ LÝ CHUYỂN WOW VÀO VÍ CỦA BẠN (MODAL & CONFIRM) =================
         function openCreatorWithdrawModal() {
             if (!currentUser) return openModal('loginModal');
             if (currentUser.emailVerified === false) {
-                showToast("Vui lòng xác thực Email tài khoản trước khi rút doanh thu!", "error");
+                showToast("Vui lòng xác thực Email tài khoản trước khi chuyển WOW vào ví!", "error");
                 openVerifyEmailModal();
                 return;
             }
 
             if (!creatorCurrentSummary || (creatorCurrentSummary.estimatedNet || 0) < 1) {
-                return showToast("Bạn chưa có doanh thu nào đủ điều kiện rút (tối thiểu 1 WOW sau tính 70%)!", "info");
+                return showToast("Bạn chưa có điểm WOW nào đủ điều kiện chuyển vào ví (tối thiểu 1 WOW sau khi tính 70%)!", "info");
             }
 
             const pGross = creatorCurrentSummary.pendingGross || 0;
@@ -19596,7 +19753,7 @@
             if (!currentUser) return;
             const btn = document.getElementById('btnConfirmCreatorWithdraw');
             const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang quyết toán...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang chuyển vào ví...';
             btn.disabled = true;
 
             const res = await apiFetch(`/api/creator/withdraw`, {
@@ -19612,13 +19769,13 @@
                 const rect = btn.getBoundingClientRect();
                 spawnWOWEnergyBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
-                showToast(`🎉 Rút thành công +${res.netAmount} WOW về ví chính!`, "success");
+                showToast(`🎉 Đã chuyển thành công +${res.netAmount} WOW vào Ví của bạn!`, "success");
                 closeModal('creatorWithdrawModal');
 
                 creatorCurrentPage = 1;
                 await fetchCreatorAnalyticsData(false);
             } else {
-                showToast((res && res.error) ? res.error : "Không thể thực hiện yêu cầu rút tiền", "error");
+                showToast((res && res.error) ? res.error : "Không thể hoàn tất chuyển điểm vào ví", "error");
             }
 
             btn.innerHTML = origHtml;
