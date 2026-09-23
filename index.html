@@ -7455,6 +7455,7 @@
                 <div class="settings-nav">
                     <button class="set-tab-btn active" id="setTabBtn-pref" onclick="switchSettingsTab('pref')"><i class="fa-solid fa-sliders"></i> <span data-i18n="settings_tab_pref">Tùy chọn hiển thị</span></button>
                     <button class="set-tab-btn" id="setTabBtn-account" onclick="switchSettingsTab('account')"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="settings_tab_account">Tài khoản & Liên kết</span></button>
+                    <button class="set-tab-btn" id="setTabBtn-wow" onclick="switchSettingsTab('wow')"><i class="fa-solid fa-coins" style="color:#f59e0b;"></i> <span>Lịch sử WOW</span></button>
                 </div>
 
                 <!-- TAB: TÙY CHỌN & HIỂN THỊ -->
@@ -7541,6 +7542,25 @@
                     </div>
 
                     <button class="btn btn-danger" onclick="logout()" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="settings_logout">Đăng xuất tài khoản</span></button>
+                </div>
+
+                <!-- TAB 4: LỊCH SỬ GIAO DỊCH WOW -->
+                <div id="setTab-wow" class="set-tab-content">
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Số dư hiện tại</div>
+                        <div style="font-size: 2.2rem; font-weight: 900; color: #ea580c; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span class="wow-icon" style="font-size: 2.2rem;"></span> <span id="settingsWOWBalanceHist">0</span>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 15px; color: var(--text-title); display: flex; align-items: center; gap: 8px; justify-content: space-between;">
+                        <span><i class="fa-solid fa-clock-rotate-left"></i> Giao dịch gần đây</span>
+                        <button class="btn" style="padding: 4px 10px; font-size: 0.8rem; border-radius: 12px;" onclick="loadWowHistory()"><i class="fa-solid fa-rotate-right"></i></button>
+                    </h4>
+                    
+                    <div id="wowHistoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                        <div style="text-align: center; color: var(--text-muted); padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+                    </div>
                 </div>
 
             </div>
@@ -10770,26 +10790,28 @@
                     }
                 }).catch(e=>{});
 
-            // Tự động cộng lượt xem
-            const viewSessionKey = `danv_viewed_${currentProj.projectId || currentProj.fileId}`;
-            if (!sessionStorage.getItem(viewSessionKey)) {
-                sessionStorage.setItem(viewSessionKey, "true");
-                trackMidAutumnTask('play'); // 🏮 Đếm tiến độ trải nghiệm game Trung Thu
-                fetch(`${WORKER_URL}/api/project/action`, { 
-                    method: 'POST', 
-                    headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ 
-                        fileId: currentProj.fileId, 
-                        action: "add_view",
-                        username: currentUser ? currentUser.username : "",
-                        sessionToken: currentUser ? currentUser.sessionToken : ""
-                    }) 
-                }).then(r => r.json()).then(res => {
-                    if (res && res.success && res.views !== undefined) {
-                        currentProj.views = res.views;
-                        if (viewCountEl) viewCountEl.innerText = res.views;
-                    }
-                }).catch(e => {});
+            // Tự động cộng lượt xem (CHỈ TÍNH KHI ĐĂNG NHẬP, KHÔNG TÍNH LƯỢT TRÙNG)
+            if (currentUser) {
+                const viewSessionKey = `danv_viewed_${currentProj.projectId || currentProj.fileId}_${currentUser.username}`;
+                if (!sessionStorage.getItem(viewSessionKey)) {
+                    sessionStorage.setItem(viewSessionKey, "true");
+                    trackMidAutumnTask('play'); // 🏮 Đếm tiến độ trải nghiệm game Trung Thu
+                    fetch(`${WORKER_URL}/api/project/action`, { 
+                        method: 'POST', 
+                        headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
+                        body: JSON.stringify({ 
+                            fileId: currentProj.fileId, 
+                            action: "add_view",
+                            username: currentUser.username,
+                            sessionToken: currentUser.sessionToken
+                        }) 
+                    }).then(r => r.json()).then(res => {
+                        if (res && res.success && res.views !== undefined) {
+                            currentProj.views = res.views;
+                            if (viewCountEl) viewCountEl.innerText = res.views;
+                        }
+                    }).catch(e => {});
+                }
             }
 
             // Mở tự động khung cập nhật nếu được kích hoạt
@@ -16181,6 +16203,10 @@
             
             document.getElementById(`setTabBtn-${tabName}`).classList.add('active');
             document.getElementById(`setTab-${tabName}`).classList.add('active');
+
+            if (tabName === 'wow') {
+                loadWowHistory();
+            }
         }
 
         function toggleTheme(theme) {
@@ -18084,6 +18110,46 @@
             if (navWOW) navWOW.innerText = val;
             const shopWOW = document.getElementById('shopModalWOWBalance');
             if (shopWOW) shopWOW.innerText = val;
+            const histWOW = document.getElementById('settingsWOWBalanceHist');
+            if (histWOW) histWOW.innerText = val;
+        }
+        
+        async function loadWowHistory() {
+            const listEl = document.getElementById('wowHistoryList');
+            listEl.innerHTML = '<div style="text-align: center; color: var(--primary); padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size: 2rem;"></i></div>';
+            
+            try {
+                const res = await apiFetch(`/api/user/wow_history?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`, { method: 'GET' });
+                if (res && res.success) {
+                    if (!res.history || res.history.length === 0) {
+                        listEl.innerHTML = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Bạn chưa có giao dịch WOW nào.</div>';
+                        return;
+                    }
+                    
+                    listEl.innerHTML = res.history.map(item => {
+                        const isPos = item.amount > 0;
+                        const amtClass = isPos ? 'color: #10b981;' : 'color: #ef4444;';
+                        const sign = isPos ? '+' : '';
+                        const date = new Date(item.timestamp).toLocaleString('vi-VN');
+                        
+                        return `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px;">
+                            <div>
+                                <div style="font-weight: 700; color: var(--text-title); font-size: 0.95rem;">${escapeHtml(item.description)}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">${date}</div>
+                            </div>
+                            <div style="font-weight: 900; font-size: 1.1rem; ${amtClass}">
+                                ${sign}${item.amount} <span class="wow-icon" style="font-size: 0.9rem;"></span>
+                            </div>
+                        </div>
+                        `;
+                    }).join('');
+                } else {
+                    listEl.innerHTML = '<div style="text-align:center; color:#ef4444;">Lỗi tải dữ liệu</div>';
+                }
+            } catch (e) {
+                listEl.innerHTML = '<div style="text-align:center; color:#ef4444;">Lỗi kết nối máy chủ</div>';
+            }
         }
 
         async function loadAvatarFramesShop(forceServer = false) {
