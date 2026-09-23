@@ -8428,6 +8428,9 @@
                                 </div>
                             </div>
 
+                            <!-- KHUNG BẢO VỆ TURNSTILE -->
+                            <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" style="margin-bottom: 15px; display: flex; justify-content: center;"></div>
+
                             <button type="submit" class="btn btn-primary auth-submit-btn" id="btnForgotSendOtp">
                                 <i class="fa-solid fa-paper-plane"></i> <span>Gửi mã xác nhận OTP</span>
                             </button>
@@ -14850,6 +14853,12 @@
             const identifier = input ? input.value.trim() : '';
             if (!identifier) return showToast("Vui lòng nhập Username hoặc Email!", "error");
 
+            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM QUÊN MẬT KHẨU
+            const turnstileToken = document.querySelector('#forgotStep1 [name="cf-turnstile-response"]')?.value;
+            if (!turnstileToken) {
+                return showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
+            }
+
             const btn = document.getElementById('btnForgotSendOtp');
             const origHtml = btn.innerHTML;
             btn.disabled = true;
@@ -14859,7 +14868,7 @@
                 const res = await (await fetch(`${WORKER_URL}/api/auth/forgot_password`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
-                    body: JSON.stringify({ identifier })
+                    body: JSON.stringify({ identifier, turnstileToken })
                 })).json();
 
                 if (res.success) {
@@ -14880,9 +14889,12 @@
                     showToast("Đã gửi mã xác thực đến email của bạn!", "success");
                 } else {
                     showToast(res.error || "Không tìm thấy tài khoản!", "error");
+                    // Reset Turnstile để user thử lại
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ!", "error");
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             }
 
             btn.disabled = false;
