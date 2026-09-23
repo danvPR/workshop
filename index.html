@@ -9133,12 +9133,12 @@
                 </div>
                 <div class="form-group" style="margin-bottom: 16px;">
                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; color: #ef4444; font-weight: bold; background: #fee2e2; padding: 10px; border-radius: 8px; border: 1px solid #fca5a5;">
-                        <input type="checkbox" id="adminBanIpCheckbox" style="width: 18px; height: 18px; accent-color: #ef4444;">
-                        Khóa luôn địa chỉ IP (Chặn đăng ký nick clone mới)
+                        <input type="checkbox" id="adminBanHardwareCheckbox" style="width: 18px; height: 18px; accent-color: #ef4444;">
+                        Khóa vĩnh viễn
                     </label>
                 </div>
                 <button type="button" id="btnSubmitBanUser" onclick="submitAdminBan()" class="btn btn-danger" style="width:100%; justify-content:center; padding:12px; font-weight:800; background:#b91c1c; border:none; border-radius: 12px;">
-                    <i class="fa-solid fa-lock"></i> Xác nhận khóa
+                    <i class="fa-solid fa-lock"></i> Xác thường
                 </button>
             </div>
         </div>
@@ -9770,6 +9770,70 @@
         let otpCooldownTimer = null;
         let otpCooldownSeconds = 0;
 
+        // 🛡️ HÀM TẠO MÃ THIẾT BỊ (FINGERPRINTING) CHỐNG CLONE
+        async function getDeviceFingerprint() {
+            try {
+                const nav = window.navigator;
+                const screen = window.screen;
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                let gpu = 'unknown';
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (debugInfo) gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                }
+                const components = [
+                    nav.userAgent, nav.language, screen.colorDepth, 
+                    `${screen.width}x${screen.height}`,
+                    new Date().getTimezoneOffset(),
+                    nav.hardwareConcurrency || 'unknown',
+                    nav.deviceMemory || 'unknown',
+                    gpu
+                ];
+                const rawString = components.join('|||');
+                
+                // Thuật toán Hash chuỗi thành mã ngắn gọn (vd: dev_8a3b1c)
+                let hash = 0;
+                for (let i = 0; i < rawString.length; i++) {
+                    hash = ((hash << 5) - hash) + rawString.charCodeAt(i);
+                    hash |= 0; 
+                }
+                return 'dev_' + Math.abs(hash).toString(16);
+            } catch(e) { return 'dev_unknown'; }
+        }
+
+        // 🛡️ HÀM TẠO MÃ THIẾT BỊ (FINGERPRINTING) CHỐNG CLONE
+        async function getDeviceFingerprint() {
+            try {
+                const nav = window.navigator;
+                const screen = window.screen;
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                let gpu = 'unknown';
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (debugInfo) gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                }
+                const components = [
+                    nav.userAgent, nav.language, screen.colorDepth, 
+                    `${screen.width}x${screen.height}`,
+                    new Date().getTimezoneOffset(),
+                    nav.hardwareConcurrency || 'unknown',
+                    nav.deviceMemory || 'unknown',
+                    gpu
+                ];
+                const rawString = components.join('|||');
+                
+                // Thuật toán Hash chuỗi thành mã ngắn gọn (vd: dev_8a3b1c)
+                let hash = 0;
+                for (let i = 0; i < rawString.length; i++) {
+                    hash = ((hash << 5) - hash) + rawString.charCodeAt(i);
+                    hash |= 0; 
+                }
+                return 'dev_' + Math.abs(hash).toString(16);
+            } catch(e) { return 'dev_unknown'; }
+        }
+
         function toggleRegPassword() {
             const pwInput = document.getElementById('regPw');
             const eyeIcon = document.getElementById('regEyeIcon');
@@ -9817,10 +9881,11 @@
             refCode = refCode.replace(/@/g, '').trim();
 
             try {
+                const deviceId = await getDeviceFingerprint();
                 const res = await (await fetch(`${WORKER_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode })
+                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId })
                 })).json();
 
                 if (res.success) {
@@ -10026,10 +10091,11 @@
             const pw = document.getElementById('loginPw').value;
 
             try {
+                const deviceId = await getDeviceFingerprint(); // Lấy mã thiết bị
                 const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { 
                     method: 'POST', 
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" }, 
-                    body: JSON.stringify({ loginId, password: pw }) 
+                    body: JSON.stringify({ loginId, password: pw, deviceId }) 
                 })).json();
 
                 if(res.success) { 
@@ -13993,21 +14059,21 @@
             if (!viewingProfileUser) return;
             if (viewingProfileData && viewingProfileData.isBanned) {
                 // Nếu đang bị khóa -> Hỏi mở khóa
-                if (confirm(`Bạn có chắc chắn muốn MỞ KHÓA cho tài khoản @${viewingProfileUser}? (IP của người này cũng sẽ được tự động mở khóa nếu có)`)) {
+                if (confirm(`Bạn có chắc chắn muốn MỞ KHÓA cho tài khoản @${viewingProfileUser}? (Thiết bị/IP của người này cũng sẽ được tự động mở khóa)`)) {
                     submitAdminUnban();
                 }
             } else {
                 // Nếu chưa bị khóa -> Mở modal nhập lý do
                 document.getElementById('adminBanTargetUsername').innerText = `@${viewingProfileUser}`;
                 document.getElementById('adminBanReason').value = "";
-                document.getElementById('adminBanIpCheckbox').checked = false; // Xóa tick cũ
+                document.getElementById('adminBanHardwareCheckbox').checked = false; // Xóa tick cũ
                 openModal('adminBanModal');
             }
         }
 
         async function submitAdminBan() {
             const reason = document.getElementById('adminBanReason').value.trim();
-            const banIp = document.getElementById('adminBanIpCheckbox').checked;
+            const banHardware = document.getElementById('adminBanHardwareCheckbox').checked;
             if (!reason) return showToast("Vui lòng nhập lý do khóa tài khoản!", "error");
 
             const btn = document.getElementById('btnSubmitBanUser');
@@ -14019,7 +14085,7 @@
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'ban_user',
-                    payload: { targetUser: viewingProfileUser, reason: reason, banIp: banIp }
+                    payload: { targetUser: viewingProfileUser, reason: reason, banHardware: banHardware }
                 })
             });
             if (res && res.success) {
