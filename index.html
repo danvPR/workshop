@@ -6106,6 +6106,8 @@
             .midautumn-quiz-box { padding: 20px; }
         }
     </style>
+    <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div id="globalLoader">
@@ -8325,6 +8327,9 @@
                             </div>
                         </div>
 
+                        <!-- KHUNG BẢO VỆ TURNSTILE -->
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" style="margin-bottom: 15px; display: flex; justify-content: center;"></div>
+
                         <button type="submit" class="btn btn-primary auth-submit-btn" id="btnLoginSubmit">
                             <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="auth_login_btn">Đăng nhập</span>
                         </button>
@@ -8390,6 +8395,9 @@
                                 <input type="text" id="regReferralCode" class="auth-control-input" data-i18n-ph="auth_reg_referral_ph" placeholder="Nhập username (không cần dấu @)..." oninput="this.value = this.value.replace(/@/g, '').trim()">
                             </div>
                         </div>
+
+                        <!-- KHUNG BẢO VỆ TURNSTILE -->
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" style="margin-bottom: 15px; display: flex; justify-content: center;"></div>
 
                         <button type="submit" class="btn btn-primary auth-submit-btn" id="btnRegisterDirect">
                             <i class="fa-solid fa-user-plus"></i> <span data-i18n="auth_reg_btn_submit">Đăng ký tài khoản</span>
@@ -9849,12 +9857,21 @@
             // Loại bỏ hoàn toàn ký tự @ nếu người dùng cố tình dán vào
             refCode = refCode.replace(/@/g, '').trim();
 
+            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM
+            const turnstileToken = document.querySelector('#authPaneRegister [name="cf-turnstile-response"]')?.value;
+            if (!turnstileToken) {
+                showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
+                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+                return;
+            }
+
             try {
                 const deviceId = await getDeviceFingerprint();
                 const res = await (await fetch(`${WORKER_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId })
+                    // Gửi kèm turnstileToken lên Backend
+                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId, turnstileToken })
                 })).json();
 
                 if (res.success) {
@@ -9875,9 +9892,12 @@
                     setTimeout(() => { OnboardingTour.start(); }, 1500);
                 } else {
                     showToast(res.error || "Không thể đăng ký tài khoản!", "error");
+                    // Đăng ký lỗi -> Reset Turnstile để user thử lại
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             }
 
             if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
@@ -10059,15 +10079,23 @@
             const loginId = document.getElementById('loginId').value.trim(); 
             const pw = document.getElementById('loginPw').value;
 
+            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM
+            const turnstileToken = document.querySelector('#authPaneLogin [name="cf-turnstile-response"]')?.value;
+            if (!turnstileToken) {
+                showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
+                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+                return;
+            }
+
             try {
                 const deviceId = await getDeviceFingerprint(); // Lấy mã thiết bị
                 const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { 
                     method: 'POST', 
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" }, 
-                    body: JSON.stringify({ loginId, password: pw, deviceId }) 
+                    body: JSON.stringify({ loginId, password: pw, deviceId, turnstileToken }) 
                 })).json();
 
-                if(res.success) { 
+                if(res.success) {
                     currentUser = { 
                         username: res.username, 
                         sessionToken: res.sessionToken, 
@@ -10084,9 +10112,12 @@
                     location.reload(); 
                 } else {
                     showToast(res.error || "Tài khoản hoặc mật khẩu không chính xác!", "error");
+                    // Đăng nhập lỗi -> Reset Turnstile để user thử lại
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             }
 
             if (btn) {
