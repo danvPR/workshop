@@ -7056,7 +7056,6 @@
                             <button id="btnFollowProf" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 20px; font-weight: 700;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
                             <button id="btnReportProf" class="btn btn-danger" style="display:none; border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
                             <button id="btnAdminWarn" class="btn btn-danger" style="display:none; border-radius: 20px;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
-                            <button id="btnAdminBan" class="btn btn-danger" style="display:none; border-radius: 20px; background:#b91c1c; color:#fff;" onclick="handleAdminBanClick()"><i class="fa-solid fa-user-lock"></i> <span id="btnAdminBanText">Khóa</span></button>
                             
                             <!-- Nút hành động chính: Chỉnh sửa hồ sơ -->
                             <button id="btnEditProfModal" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 18px; font-weight: 700;" onclick="openEditProfileModal()">
@@ -9115,36 +9114,6 @@
             </div>
         </div>
     </div>
-
-    <!-- MODAL LOCKY (ADMIN) -->
-    <div class="modal-overlay" id="adminBanModal">
-        <div class="modal" style="max-width:420px;">
-            <div class="modal-header">
-                <span><i class="fa-solid fa-user-lock" style="color:#ef4444;"></i> [Admin] Khóa Tài Khoản</span>
-                <button class="btn-close" onclick="closeModal('adminBanModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:12px;">
-                    Bạn đang chuẩn bị khóa tài khoản <b id="adminBanTargetUsername" style="color:var(--text-title);"></b> khỏi hệ thống.
-                </p>
-                <div class="form-group">
-                    <label style="font-size:0.85rem; font-weight:bold;">Lý do khóa tài khoản *:</label>
-                    <input type="text" id="adminBanReason" class="form-control" placeholder="Ví dụ: Cố tình phá hoại, dùng tài khoản rác...">
-                </div>
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; color: #ef4444; font-weight: bold; background: #fee2e2; padding: 10px; border-radius: 8px; border: 1px solid #fca5a5;">
-                        <input type="checkbox" id="adminBanHardwareCheckbox" style="width: 18px; height: 18px; accent-color: #ef4444;">
-                        Khóa vĩnh viễn
-                    </label>
-                </div>
-                <button type="button" id="btnSubmitBanUser" onclick="submitAdminBan()" class="btn btn-danger" style="width:100%; justify-content:center; padding:12px; font-weight:800; background:#b91c1c; border:none; border-radius: 12px;">
-                    <i class="fa-solid fa-lock"></i> Xác thường
-                </button>
-            </div>
-        </div>
-    </div>
-
-
 
     <!-- MODAL DANH SÁCH FOLLOW -->
     <div class="modal-overlay" id="followListModal">
@@ -12640,8 +12609,6 @@
             
             const btnReport = document.getElementById('btnReportProf');
             const btnWarn = document.getElementById('btnAdminWarn');
-            const btnBan = document.getElementById('btnAdminBan');
-            const btnBanText = document.getElementById('btnAdminBanText');
             const banAlert = document.getElementById('profBanAlert');
             const banReasonText = document.getElementById('profBanReasonText');
 
@@ -12655,24 +12622,6 @@
 
             if(btnReport) btnReport.style.display = (currentUser && !isCurrentUser) ? 'inline-flex' : 'none';
             if(btnWarn) btnWarn.style.display = (currentUser && currentUser.role === 'admin' && !isCurrentUser) ? 'inline-flex' : 'none';
-            
-            // Xử lý nút Khóa / Mở khóa của Admin
-            if(btnBan) {
-                if (currentUser && currentUser.role === 'admin' && !isCurrentUser) {
-                    btnBan.style.display = 'inline-flex';
-                    if (viewingProfileData.isBanned) {
-                        if (btnBanText) btnBanText.innerText = "Mở khóa";
-                        btnBan.style.background = "#10b981";
-                        btnBan.querySelector('i').className = "fa-solid fa-lock-open";
-                    } else {
-                        if (btnBanText) btnBanText.innerText = "Khóa";
-                        btnBan.style.background = "#b91c1c";
-                        btnBan.querySelector('i').className = "fa-solid fa-user-lock";
-                    }
-                } else {
-                    btnBan.style.display = 'none';
-                }
-            }
 
             // Đặt số liệu nhanh
             const stProj = document.getElementById('statProjectCount'); if(stProj) stProj.innerText = "..."; 
@@ -14052,72 +14001,6 @@
             if(!reason) return showToast("Phải nhập lý do cảnh cáo", "error");
             const res = await apiFetch(`/api/admin/action`, { method: 'POST', body: JSON.stringify({ action: "warn_user", payload: { targetUser: viewingProfileUser, reason } }) });
             if(res && res.success) { showToast("Đã gửi cảnh cáo!", "success"); closeModal('adminWarnModal'); }
-        }
-
-        // ================= XỬ LÝ KHÓA & MỞ KHÓA TÀI KHOẢN (ADMIN) =================
-        function handleAdminBanClick() {
-            if (!viewingProfileUser) return;
-            if (viewingProfileData && viewingProfileData.isBanned) {
-                // Nếu đang bị khóa -> Hỏi mở khóa
-                if (confirm(`Bạn có chắc chắn muốn MỞ KHÓA cho tài khoản @${viewingProfileUser}? (Thiết bị/IP của người này cũng sẽ được tự động mở khóa)`)) {
-                    submitAdminUnban();
-                }
-            } else {
-                // Nếu chưa bị khóa -> Mở modal nhập lý do
-                document.getElementById('adminBanTargetUsername').innerText = `@${viewingProfileUser}`;
-                document.getElementById('adminBanReason').value = "";
-                document.getElementById('adminBanHardwareCheckbox').checked = false; // Xóa tick cũ
-                openModal('adminBanModal');
-            }
-        }
-
-        async function submitAdminBan() {
-            const reason = document.getElementById('adminBanReason').value.trim();
-            const banHardware = document.getElementById('adminBanHardwareCheckbox').checked;
-            if (!reason) return showToast("Vui lòng nhập lý do khóa tài khoản!", "error");
-
-            const btn = document.getElementById('btnSubmitBanUser');
-            const origHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang khóa...';
-
-            const res = await apiFetch('/api/admin/action', {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'ban_user',
-                    payload: { targetUser: viewingProfileUser, reason: reason, banHardware: banHardware }
-                })
-            });
-            if (res && res.success) {
-                showToast(`Đã khóa tài khoản @${viewingProfileUser}!`, "success");
-                closeModal('adminBanModal');
-                // Xóa cache và tải lại trang profile ngay lập tức
-                if (typeof profileCache !== 'undefined') delete profileCache[viewingProfileUser];
-                openProfilePage(viewingProfileUser);
-            } else {
-                showToast((res && res.error) ? res.error : "Không thể khóa tài khoản!", "error");
-            }
-
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-        }
-
-        async function submitAdminUnban() {
-            const res = await apiFetch('/api/admin/action', {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'unban_user',
-                    payload: { targetUser: viewingProfileUser }
-                })
-            });
-
-            if (res && res.success) {
-                showToast(`Đã mở khóa tài khoản @${viewingProfileUser}!`, "success");
-                if (typeof profileCache !== 'undefined') delete profileCache[viewingProfileUser];
-                openProfilePage(viewingProfileUser);
-            } else {
-                showToast((res && res.error) ? res.error : "Không thể mở khóa tài khoản!", "error");
-            }
         }
 
         // ================= ADMIN QUẢN LÝ SỰ KIỆN TRANG CHỦ =================
