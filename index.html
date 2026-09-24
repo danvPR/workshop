@@ -6131,38 +6131,6 @@
         </div>
     </div>
 
-    <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL (NỔI BẬT & RÕ RÀNG HƠN) -->
-    <div id="emailVerifyBanner" style="display:none; position: sticky; top: 60px; left: 0; width: 100%; background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%); color: white; z-index: 997; padding: 12px 24px; box-shadow: 0 4px 18px rgba(220, 38, 38, 0.35); border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div style="display: flex; align-items: flex-start; gap: 12px; font-size: 0.92rem; font-weight: 600; flex: 1;">
-                <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
-                    <i class="fa-solid fa-triangle-exclamation fa-bounce" style="font-size: 1.1rem; color: #fef08a;"></i>
-                </div>
-                <div>
-                    <div style="font-size: 1rem;"><b data-i18n="banner_email_unverified">Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)</div>
-                    <div style="font-size: 0.85rem; opacity: 0.95; margin-top: 6px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
-                        <div style="margin-bottom: 4px;">⚠️ <b>Các tính năng đang bị giới hạn:</b></div>
-                        <ul style="margin-left: 20px; margin-bottom: 6px; padding-left: 0;">
-                            <li>Không thể gửi tặng WOW & Bóc Túi mù.</li>
-                            <li>Không thể tạo Station (Trạm không gian).</li>
-                            <li>Không thể chia sẻ Tài nguyên (Assets).</li>
-                            <li>Không thể rút năng lượng WOW về ví.</li>
-                        </ul>
-                        Hãy xác minh ngay để gỡ bỏ giới hạn và nhận thưởng <b style="color: #fef08a; font-size: 0.9rem;">+50 WOW</b>!
-                    </div>
-                </div>
-            </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #dc2626; padding: 7px 18px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                    <i class="fa-solid fa-circle-check"></i> <span data-i18n="banner_email_btn_verify">Xác minh ngay</span>
-                </button>
-                <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.25); color: white; padding: 7px 14px; border-radius: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; cursor: pointer;">
-                    <i class="fa-solid fa-rotate-right"></i> <span data-i18n="banner_email_btn_resend">Gửi lại mã</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <nav class="navbar">
         <div class="nav-left">
             <a href="#home" class="navbar-brand">
@@ -6177,6 +6145,36 @@
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
+
+    <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL (TINH GỌN & ĐẶT DƯỚI NAVBAR KHÔNG BỊ ĐÈ) -->
+    <div id="emailVerifyBanner" style="display:none; position: sticky; top: 60px; left: 0; width: 100%; background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%); color: white; z-index: 997; padding: 10px 24px; box-shadow: 0 4px 18px rgba(220, 38, 38, 0.25); border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; font-weight: 600; flex: 1; min-width: 280px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1rem; color: #fef08a;"></i>
+                </div>
+                <div style="line-height: 1.45;">
+                    <div>
+                        <b data-i18n="banner_email_unverified">Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)
+                    </div>
+                    <div style="font-size: 0.82rem; opacity: 0.95; font-weight: 500;">
+                        Xác minh để nhận <b style="color: #fef08a;">+50 WOW</b> và mở khóa toàn bộ tính năng.
+                        <a href="javascript:void(0)" onclick="openModal('emailRestrictionsModal')" style="color: #fef08a; text-decoration: underline; font-weight: 700; margin-left: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-circle-info"></i> <span>Xem các tính năng bị giới hạn</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #dc2626; padding: 7px 18px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-circle-check"></i> <span data-i18n="banner_email_btn_verify">Xác minh ngay</span>
+                </button>
+                <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.25); color: white; padding: 7px 14px; border-radius: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; cursor: pointer;">
+                    <i class="fa-solid fa-rotate-right"></i> <span data-i18n="banner_email_btn_resend">Gửi lại mã</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE (RÚT XUỐNG 5 TAB + NÚT SÁNG TẠO FAB CHÍNH GIỮA) -->
     <nav class="mobile-bottom-nav">
@@ -8494,6 +8492,81 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL TÍNH NĂNG BỊ GIỚI HẠN KHI CHƯA XÁC MINH EMAIL -->
+    <div class="modal-overlay" id="emailRestrictionsModal">
+        <div class="modal" style="max-width: 490px; border-radius: 20px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color);">
+            <div class="modal-header" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(234, 88, 12, 0.05) 100%); padding: 18px 22px; border-bottom: 1px solid var(--border-color);">
+                <span style="font-weight: 800; font-size: 1.1rem; color: var(--text-title); display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i>
+                    <span>Tính năng bị giới hạn</span>
+                </span>
+                <button class="btn-close" onclick="closeModal('emailRestrictionsModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 16px;">
+                    Để đảm bảo an toàn, phòng chống tài khoản clone và bảo vệ cộng đồng, tài khoản chưa xác minh email sẽ tạm thời bị giới hạn các tính năng sau:
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;">
+                        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(239, 68, 68, 0.12); color: #ef4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem;">
+                            <i class="fa-solid fa-gift"></i>
+                        </div>
+                        <div>
+                            <b style="font-size: 0.92rem; color: var(--text-title);">Tặng WOW & Bóc Túi Mù</b>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;">Không thể truyền điểm năng lượng WOW cho tác giả khác hoặc mở túi mù may mắn trong phòng chat.</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;">
+                        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(245, 158, 11, 0.12); color: #f59e0b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem;">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                        </div>
+                        <div>
+                            <b style="font-size: 0.92rem; color: var(--text-title);">Tạo Station (Trạm Không Gian)</b>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;">Chỉ các tài khoản chính thức đã xác minh mới được khởi tạo và quản trị Station cộng đồng.</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;">
+                        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(59, 130, 246, 0.12); color: #3b82f6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem;">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <div>
+                            <b style="font-size: 0.92rem; color: var(--text-title);">Chia sẻ Tài nguyên (Assets Store)</b>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;">Không thể xuất bản âm thanh, hình ảnh sprite lên Cửa hàng Tài nguyên dùng chung.</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;">
+                        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem;">
+                            <i class="fa-solid fa-vault"></i>
+                        </div>
+                        <div>
+                            <b style="font-size: 0.92rem; color: var(--text-title);">Rút WOW từ Két Sắt Creator</b>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;">Không thể gom và chuyển điểm WOW thu được từ game vào ví cá nhân của bạn.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(13, 165, 122, 0.08); border: 1px dashed var(--primary); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; font-size: 0.85rem; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-circle-check" style="color: var(--primary); font-size: 1.2rem; flex-shrink: 0;"></i>
+                    <span>Xác minh email ngay để mở khóa toàn bộ tính năng và nhận ngay <b style="color: var(--primary); font-size: 0.95rem;">+50 WOW</b>!</span>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn" style="flex: 1; justify-content: center; padding: 11px; border-radius: 12px; font-weight: 700;" onclick="closeModal('emailRestrictionsModal')">
+                        Để sau
+                    </button>
+                    <button type="button" class="btn btn-primary" style="flex: 1.6; justify-content: center; padding: 11px; border-radius: 12px; font-weight: 800; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="closeModal('emailRestrictionsModal'); openVerifyEmailModal();">
+                        <i class="fa-solid fa-circle-check"></i> Xác minh ngay (+50 WOW)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
