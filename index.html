@@ -6134,14 +6134,21 @@
     <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL (NỔI BẬT & RÕ RÀNG HƠN) -->
     <div id="emailVerifyBanner" style="display:none; position: sticky; top: 60px; left: 0; width: 100%; background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%); color: white; z-index: 997; padding: 12px 24px; box-shadow: 0 4px 18px rgba(220, 38, 38, 0.35); border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
         <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; font-weight: 600; flex: 1;">
-                <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <div style="display: flex; align-items: flex-start; gap: 12px; font-size: 0.92rem; font-weight: 600; flex: 1;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
                     <i class="fa-solid fa-triangle-exclamation fa-bounce" style="font-size: 1.1rem; color: #fef08a;"></i>
                 </div>
                 <div>
-                    <div><b data-i18n="banner_email_unverified">Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)</div>
-                    <div style="font-size: 0.8rem; opacity: 0.92; margin-top: 2px;" data-i18n="banner_email_hint">
-                        ⚠️ Bạn đang bị giới hạn tính năng: Không thể bóc Túi mù, đăng dự án hay gửi tặng WOW. Hãy xác minh ngay để mở khóa toàn bộ và nhận thưởng <b style="color: #fef08a; font-size: 0.88rem;">+50 WOW</b>!
+                    <div style="font-size: 1rem;"><b data-i18n="banner_email_unverified">Tài khoản chưa xác minh email</b> (<span id="bannerUserEmailText" style="text-decoration: underline;">...</span>)</div>
+                    <div style="font-size: 0.85rem; opacity: 0.95; margin-top: 6px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+                        <div style="margin-bottom: 4px;">⚠️ <b>Các tính năng đang bị giới hạn:</b></div>
+                        <ul style="margin-left: 20px; margin-bottom: 6px; padding-left: 0;">
+                            <li>Không thể gửi tặng WOW & Bóc Túi mù.</li>
+                            <li>Không thể tạo Station (Trạm không gian).</li>
+                            <li>Không thể chia sẻ Tài nguyên (Assets).</li>
+                            <li>Không thể rút năng lượng WOW về ví.</li>
+                        </ul>
+                        Hãy xác minh ngay để gỡ bỏ giới hạn và nhận thưởng <b style="color: #fef08a; font-size: 0.9rem;">+50 WOW</b>!
                     </div>
                 </div>
             </div>
@@ -12143,6 +12150,11 @@
 
         function openCreateStudioModal() {
             if(!currentUser) return openModal('loginModal');
+            if (currentUser.emailVerified === false) {
+                showToast("Vui lòng xác thực email tài khoản trước khi tạo Station.", "error");
+                openVerifyEmailModal();
+                return;
+            }
             document.getElementById('newStdTitle').value = "";
             document.getElementById('newStdDesc').value = "";
             document.getElementById('newStdThumb').value = "";
@@ -13375,11 +13387,7 @@
 
         function openUploadPage() {
             if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
-            if(currentUser.emailVerified === false) {
-                showToast("Vui lòng xác thực email trước khi xuất bản tác phẩm!", "error");
-                openVerifyEmailModal();
-                return;
-            }
+            // Đã cấp quyền cho người dùng chưa xác minh tải lên tác phẩm
             document.getElementById('uploadView').style.display = 'block';
             
             // Luôn đặt lại về màn hình chọn mỗi khi mở trang
@@ -16259,6 +16267,11 @@
 
         function openUploadAssetModal() {
             if (!currentUser) return openModal('loginModal');
+            if (currentUser.emailVerified === false) {
+                showToast("Vui lòng xác thực email tài khoản trước khi chia sẻ Tài nguyên.", "error");
+                openVerifyEmailModal();
+                return;
+            }
             document.getElementById('assetUpFile').value = '';
             document.getElementById('assetUpTitle').value = '';
             document.getElementById('assetUpKeywords').value = '';
