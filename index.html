@@ -1726,8 +1726,79 @@
             border-color: var(--primary);
         }
 
-        #globalLoader { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; opacity: 1; transition: opacity 0.5s ease; }
-        #globalLoader { position: fixed; inset: 0; background: var(--bg-panel); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        #globalLoader { position: fixed; inset: 0; background: var(--bg-panel); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; opacity: 1; transition: opacity 0.5s ease; }
+
+        /* ================= MÀN HÌNH CHỜ XÁC MINH CLOUDFLARE ================= */
+        .cf-verify-screen {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #1f2937;
+            text-align: center;
+        }
+        [data-theme="dark"] .cf-verify-screen {
+            background: #111827;
+            color: #f9fafb;
+        }
+        .cf-verify-card {
+            max-width: 460px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cf-verify-domain {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: #111827;
+        }
+        [data-theme="dark"] .cf-verify-domain {
+            color: #f9fafb;
+        }
+        .cf-verify-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .cf-verify-desc {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+        [data-theme="dark"] .cf-verify-desc {
+            color: #9ca3af;
+        }
+        .cf-turnstile-slot {
+            margin-bottom: 28px;
+            min-height: 65px;
+            display: flex;
+            justify-content: center;
+        }
+        .cf-verify-footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .cf-verify-footer a {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        [data-theme="dark"] .cf-verify-footer a {
+            color: #d1d5db;
+        }
         
         /* CẬP NHẬT MÀU NỀN THEO THEME CHO CÁC ELEMENT CỐ ĐỊNH */
         .form-control { background: var(--bg-input); color: var(--text-main); }
@@ -6404,6 +6475,25 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
+    <!-- MÀN HÌNH XÁC MINH CLOUDFLARE "VERIFY YOU ARE HUMAN" -->
+    <div id="cfVerifyScreen" class="cf-verify-screen">
+        <div class="cf-verify-card">
+            <div class="cf-verify-domain">turbows.pages.dev</div>
+            <h1 class="cf-verify-title">Verify you are human</h1>
+            <p class="cf-verify-desc">This may take a few seconds. Check if the connection is secure.</p>
+            
+            <div class="cf-turnstile-slot">
+                <!-- Turnstile Widget với hàm callback tự động mở web khi hoàn tất -->
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" data-callback="onCloudflareVerifySuccess"></div>
+            </div>
+
+            <div class="cf-verify-footer">
+                <div>DDoS protection by <a href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer">Cloudflare</a></div>
+                <div style="font-family: monospace; font-size: 0.75rem; opacity: 0.7;">Ray ID: <span id="cfRayIdSim"></span></div>
+            </div>
+        </div>
+    </div>
+
     <div id="globalLoader">
         <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
         <h3 style="color: #666; font-weight:normal;" id="loaderText" data-i18n="loader_text">Thank you!</h3>
@@ -9679,6 +9769,37 @@
     </div>
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
+        // ================= XỬ LÝ MÀN HÌNH XÁC THỰC CLOUDFLARE =================
+        function generateRandomRayId() {
+            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
+            return `${hex()}${hex()}${hex()} - SGN`;
+        }
+
+        // Tự động giải phóng màn hình khi người dùng vượt qua kiểm tra Turnstile
+        window.onCloudflareVerifySuccess = function(token) {
+            sessionStorage.setItem('cf_human_verified', 'true');
+            const screen = document.getElementById('cfVerifyScreen');
+            if (screen) {
+                screen.style.transition = 'opacity 0.4s ease';
+                screen.style.opacity = '0';
+                setTimeout(() => screen.remove(), 400);
+            }
+        };
+
+        // Kiểm tra xem trong phiên này người dùng đã xác minh chưa (tránh hỏi lại liên tục mỗi khi tải trang)
+        (function checkInitialCfVerification() {
+            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
+            document.addEventListener('DOMContentLoaded', () => {
+                const raySpan = document.getElementById('cfRayIdSim');
+                if (raySpan) raySpan.innerText = generateRandomRayId();
+
+                if (isVerified) {
+                    const screen = document.getElementById('cfVerifyScreen');
+                    if (screen) screen.remove();
+                }
+            });
+        })();
+
         const WIKI_CLIENT_ID = "70970406"; 
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
