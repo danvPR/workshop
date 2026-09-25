@@ -7,10 +7,10 @@
     <meta name="description" content="DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN." id="metaDesc" />
     <meta property="og:title" content="DANVworkshop - Coding community" id="ogTitle" />
     <meta property="og:description" content="Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu." id="ogDesc" />
-    <meta property="og:image" content="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" id="ogImage" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" id="ogImage" />
     <meta property="og:url" content="https://turbows.pages.dev/" id="ogUrl" />
     <link rel="canonical" href="https://turbows.pages.dev/" />
-    <link rel="icon" type="image/png" href="https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
@@ -24,7 +24,7 @@
             setMeta('metaDesc', desc);
             setMeta('ogTitle', title);
             setMeta('ogDescription', desc);
-            setMeta('ogImage', imageUrl || "https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png");
+            setMeta('ogImage', imageUrl || "https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-En.png");
             setMeta('ogUrl', url || window.location.href);
             if (typeof currentProj !== 'undefined' && currentProj) {
                 injectStructuredData(currentProj);
@@ -1844,100 +1844,299 @@
             color: var(--text-main) !important;
         }
 
-        /* 3. TỐI ƯU HÓA TOÀN DIỆN GIAO DIỆN TRANG TIN NHẮN (MESSAGES) TRONG DARK MODE */
-        /* Khung ngoài trang tin nhắn */
-        [data-theme="dark"] #notificationsView > div:last-child {
-            background: var(--bg-panel) !important;
-            border-color: var(--border-color) !important;
+        /* ================= GIAO DIỆN TRANG THÔNG BÁO STUDIO PRO (STUDENT FRIENDLY) ================= */
+        .notif-hub-wrapper {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
         }
-        [data-theme="dark"] #notificationsView > div:first-child {
-            background: linear-gradient(135deg, #6b21a8 0%, #4c1d95 100%) !important;
-            border: 1px solid var(--border-color) !important;
-            border-bottom: none !important;
+        .notif-hero-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #0da57a 100%);
+            padding: 28px 32px;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
         }
-
-        /* Phân biệt tin nhắn ĐÃ ĐỌC (nền tối êm dịu) */
-        [data-theme="dark"] #notifPageList > div[style*="background: #ffffff"],
-        [data-theme="dark"] #notifPageList > div[style*="background:#ffffff"] {
-            background-color: var(--bg-panel) !important;
-            border-bottom-color: var(--border-color) !important;
+        .notif-hero-banner::after {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+            pointer-events: none;
         }
-
-        /* Phân biệt tin nhắn CHƯA ĐỌC (nổi bật với viền tím sáng và nền ánh tím nhẹ) */
-        [data-theme="dark"] #notifPageList > div[style*="background: #e6f0ff"],
-        [data-theme="dark"] #notifPageList > div[style*="background:#e6f0ff"] {
-            background-color: rgba(133, 92, 214, 0.14) !important;
-            border-bottom-color: var(--border-color) !important;
-            border-left: 4px solid #a78bfa !important;
+        .notif-hero-title {
+            font-size: 1.85rem;
+            font-weight: 900;
+            margin: 0;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
         }
-
-        /* Chữ nội dung và tiêu đề trong tin nhắn */
-        [data-theme="dark"] #notifPageList span[style*="color:#575e75"],
-        [data-theme="dark"] #notifPageList span[style*="color: #575e75"] {
-            color: var(--text-main) !important;
+        .notif-hero-sub {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.88);
+            margin-top: 4px;
         }
-        [data-theme="dark"] #notifPageList a[style*="color:#575e75"],
-        [data-theme="dark"] #notifPageList a[style*="color: #575e75"] {
-            color: var(--text-title) !important;
+        .btn-notif-mark-read {
+            background: rgba(255, 255, 255, 0.18) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
+            backdrop-filter: blur(8px);
+            padding: 9px 20px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
-        [data-theme="dark"] #notifPageList a[style*="color:#855cd6"],
-        [data-theme="dark"] #notifPageList a[style*="color: #855cd6"] {
-            color: #c084fc !important; /* Tím sáng tương phản cao trên nền tối */
-            text-decoration: underline !important;
-        }
-        [data-theme="dark"] #notifPageList span[style*="color:#858585"],
-        [data-theme="dark"] #notifPageList span[style*="color: #858585"] {
-            color: var(--text-muted) !important;
-        }
-
-        /* Bong bóng phản hồi (Bubble) và mũi tên tam giác chỉ sang Avatar */
-        [data-theme="dark"] #notifPageList div[style*="background:#fff"],
-        [data-theme="dark"] #notifPageList div[style*="background: #fff"] {
-            background-color: var(--bg-secondary) !important;
-            border-color: var(--border-color) !important;
-            color: var(--text-main) !important;
-        }
-        [data-theme="dark"] #notifPageList div[style*="transform:rotate(45deg)"] {
-            background-color: var(--bg-secondary) !important;
-            border-left-color: var(--border-color) !important;
-            border-bottom-color: var(--border-color) !important;
-        }
-
-        /* Ô nhập trả lời nhanh dưới bình luận */
-        [data-theme="dark"] #notifPageList input[type="text"] {
-            background-color: var(--bg-input) !important;
-            border-color: var(--border-color) !important;
-            color: var(--text-main) !important;
-        }
-        [data-theme="dark"] #notifPageList input[type="text"]::placeholder {
-            color: var(--text-muted) !important;
-            opacity: 0.75;
+        .btn-notif-mark-read:hover {
+            background: #ffffff !important;
+            color: #4f46e5 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
 
-        /* Viền ảnh đại diện trong danh sách thông báo */
-        [data-theme="dark"] #notifPageList img[style*="border:1px solid #d9d9d9"] {
-            border-color: var(--border-color) !important;
+        /* Thanh phân loại danh mục thông báo (Filter Pills) */
+        .notif-filter-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .notif-filter-bar::-webkit-scrollbar { display: none; }
+        .notif-tab-pill {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 7px 15px;
+            border-radius: 14px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .notif-tab-pill:hover {
+            color: var(--text-title);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .notif-tab-pill.active {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
+        }
+        .notif-tab-counter {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.08);
+        }
+        .notif-tab-pill.active .notif-tab-counter {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
 
-        /* Hộp thư quà tặng WOW khi nhận điểm */
+        /* Thẻ thông báo từng dòng (Notification Item Card) */
+        .notif-card-row {
+            padding: 18px 26px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: background-color 0.2s ease, border-color 0.2s;
+            position: relative;
+        }
+        .notif-card-row:last-child { border-bottom: none; }
+        .notif-card-row.unread {
+            background: rgba(79, 70, 229, 0.04);
+            border-left: 4px solid #6366f1;
+        }
+        [data-theme="dark"] .notif-card-row.unread {
+            background: rgba(99, 102, 241, 0.12);
+            border-left: 4px solid #818cf8;
+        }
+        .notif-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .notif-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+        .notif-icon-avatar-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .notif-icon-avatar-wrap.icon-like { background: rgba(239, 68, 68, 0.12); color: #ef4444; border-color: rgba(239, 68, 68, 0.25); }
+        .notif-icon-avatar-wrap.icon-star { background: rgba(245, 158, 11, 0.12); color: #f59e0b; border-color: rgba(245, 158, 11, 0.25); }
+        .notif-icon-avatar-wrap.icon-comment { background: rgba(14, 165, 233, 0.12); color: #0284c7; border-color: rgba(14, 165, 233, 0.25); }
+        .notif-icon-avatar-wrap.icon-follow { background: rgba(16, 185, 129, 0.12); color: #10b981; border-color: rgba(16, 185, 129, 0.25); }
+        .notif-icon-avatar-wrap.icon-system { background: rgba(220, 38, 38, 0.14); color: #dc2626; border-color: rgba(220, 38, 38, 0.3); }
+
+        .notif-meta-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .notif-meta-text a {
+            color: var(--primary) !important;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .notif-meta-text a:hover {
+            text-decoration: underline;
+        }
+        .notif-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .notif-time-badge {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .notif-unread-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6366f1;
+            box-shadow: 0 0 8px #6366f1;
+            display: inline-block;
+        }
+
+        /* Khung hiển thị bong bóng trích dẫn bình luận */
+        .notif-comment-bubble-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding-left: 54px;
+        }
+        .notif-sender-avt-img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-secondary);
+            flex-shrink: 0;
+        }
+        .notif-comment-speech {
+            flex: 1;
+            max-width: 680px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0 16px 16px 16px;
+            padding: 10px 16px;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .notif-quick-reply-row {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 680px;
+        }
+        .notif-quick-reply-input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .notif-quick-reply-input:focus {
+            border-color: var(--primary);
+        }
+        .notif-quick-reply-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .notif-quick-reply-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hộp quà WOW trong thông báo */
+        .notif-tip-gift-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.06) 100%) !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
+            border-radius: 16px !important;
+            padding: 14px 18px !important;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1) !important;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 4px 0;
+        }
         [data-theme="dark"] .notif-tip-gift-box {
-            background: linear-gradient(135deg, rgba(234, 88, 12, 0.22) 0%, rgba(245, 158, 11, 0.1) 100%) !important;
-            border-color: #ea580c !important;
-        }
-        [data-theme="dark"] .notif-tip-gift-box div[style*="color:#ea580c"] {
-            color: #fbbf24 !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(234, 88, 12, 0.1) 100%) !important;
+            border-color: rgba(245, 158, 11, 0.5) !important;
         }
 
-        /* Khu vực nút 'Xem thêm' cuối danh sách */
-        [data-theme="dark"] #notifPageList > div:last-child[style*="text-align: center"] {
-            background: transparent !important;
-            border: none !important;
+        @media (max-width: 768px) {
+            .notif-hero-banner { padding: 20px 18px; }
+            .notif-hero-title { font-size: 1.45rem; }
+            .notif-card-row { padding: 14px 16px; }
+            .notif-comment-bubble-box { padding-left: 0; }
         }
-
-        /* Dropdown thông báo trên thanh Navbar */
-        [data-theme="dark"] .notif-header { background: var(--bg-panel) !important; }
-        [data-theme="dark"] .notif-item { background: var(--bg-panel); color: var(--text-main); }
-        [data-theme="dark"] .notif-item:hover { background: var(--bg-secondary); }
 
         /* ================= ASSETS STORE PRO REDESIGN ================= */
         .assets-hero-container {
@@ -6134,7 +6333,7 @@
     <nav class="navbar">
         <div class="nav-left">
             <a href="#home" class="navbar-brand">
-                <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="StudioDANV Logo" class="nav-logo-img">
+                <img src="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
             <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
             <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
@@ -7579,17 +7778,53 @@
         </div>
     </div>
 
-    <!-- TRANG 6: THÔNG BÁO (TIN NHẮN) GIỐNG SCRATCH -->
-    <div id="notificationsView" class="page-view" style="max-width: 950px; padding: 0 20px 40px 20px;">
-        <div style="background: #855cd6; padding: 35px 40px; border-radius: 12px 12px 0 0; color: #fff; display: flex; justify-content: space-between; align-items: center;">
-            <h1 style="margin: 0; font-size: 2.2rem; font-weight: bold;" data-i18n="notif_title">Tin nhắn</h1>
-            <button class="btn" style="background: rgba(255,255,255,0.2); color: #fff; border: none; font-weight: bold;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'" onclick="markAllNotifsRead(event)">
-                <i class="fa-solid fa-check-double"></i> <span data-i18n="notif_mark_read">Đánh dấu đã đọc tất cả</span>
-            </button>
-        </div>
-        <div style="background: #f6f7f8; border: 1px solid #d9d9d9; border-top: none; border-radius: 0 0 12px 12px; min-height: 400px;">
-            <div id="notifPageList">
-                <!-- Nội dung tin nhắn sẽ arender ở đây -->
+    <!-- TRANG 6: TRUNG TÂM THÔNG BÁO CỘNG ĐỒNG PRO -->
+    <div id="notificationsView" class="page-view" style="max-width: 980px; padding: 10px 20px 50px 20px;">
+        <div class="notif-hub-wrapper">
+            <!-- Header Banner Nổi Bật -->
+            <div class="notif-hero-banner">
+                <div>
+                    <h1 class="notif-hero-title">
+                        <i class="fa-solid fa-bell-concierge"></i> <span data-i18n="notif_title">Hộp Thư Thông Báo</span>
+                    </h1>
+                    <div class="notif-hero-sub">Cập nhật tương tác, bình luận và năng lượng WOW từ bạn bè</div>
+                </div>
+                <button type="button" class="btn-notif-mark-read" onclick="markAllNotifsRead(event)">
+                    <i class="fa-solid fa-check-double"></i> <span data-i18n="notif_mark_read">Đánh dấu đã đọc tất cả</span>
+                </button>
+            </div>
+
+            <!-- Thanh Phân Loại Thông Báo Thông Minh (Filter Bar) -->
+            <div class="notif-filter-bar">
+                <button type="button" class="notif-tab-pill active" onclick="setNotifFilter('all', this)">
+                    <i class="fa-solid fa-layer-group"></i> <span>Tất cả</span>
+                    <span class="notif-tab-counter" id="cntNotifAll">0</span>
+                </button>
+                <button type="button" class="notif-tab-pill" onclick="setNotifFilter('unread', this)">
+                    <i class="fa-solid fa-envelope-open-text" style="color:#6366f1;"></i> <span>Chưa đọc</span>
+                    <span class="notif-tab-counter" id="cntNotifUnread">0</span>
+                </button>
+                <button type="button" class="notif-tab-pill" onclick="setNotifFilter('comment', this)">
+                    <i class="fa-solid fa-comments" style="color:#0284c7;"></i> <span>Bình luận</span>
+                    <span class="notif-tab-counter" id="cntNotifComment">0</span>
+                </button>
+                <button type="button" class="notif-tab-pill" onclick="setNotifFilter('tip', this)">
+                    <i class="fa-solid fa-gift" style="color:#ea580c;"></i> <span>Quà WOW</span>
+                    <span class="notif-tab-counter" id="cntNotifTip">0</span>
+                </button>
+                <button type="button" class="notif-tab-pill" onclick="setNotifFilter('reaction', this)">
+                    <i class="fa-solid fa-heart" style="color:#ff4757;"></i> <span>Thích & Sao</span>
+                    <span class="notif-tab-counter" id="cntNotifReaction">0</span>
+                </button>
+                <button type="button" class="notif-tab-pill" onclick="setNotifFilter('system', this)">
+                    <i class="fa-solid fa-shield-halved" style="color:#ef4444;"></i> <span>Hệ thống</span>
+                    <span class="notif-tab-counter" id="cntNotifSystem">0</span>
+                </button>
+            </div>
+
+            <!-- Danh sách hiển thị các thẻ thông báo -->
+            <div id="notifPageList" style="min-height: 420px;">
+                <!-- Dữ liệu render từ JS -->
             </div>
         </div>
     </div>
@@ -7956,7 +8191,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-left">
-                <img src="https://i.ibb.co/9mhxsQM2/ezgif-1b203d38782d98f9.png" alt="Logo" class="footer-logo-img" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+                <img src="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" alt="Logo" class="footer-logo-img" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
                 <p data-i18n="footer_desc" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 5px;">Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu.</p>
                 <div style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;" data-i18n="footer_copyright">&copy; 2026 DANVworkshop. All rights reserved.</div>
             </div>
@@ -14590,27 +14825,71 @@
             } catch(e) { return dateString; }
         }
 
-        function getNotifIcon(text) {
-            text = text || "";
-            if (text.includes("Thích")) return '<i class="fa-solid fa-heart" style="color:#ff4c4c; font-size:1.2rem;"></i>';
-            if (text.includes("Sao")) return '<i class="fa-solid fa-star" style="color:#f5b041; font-size:1.2rem;"></i>';
-            if (text.includes("bình luận") || text.includes("lời nhắn") || text.includes("trả lời")) return '<i class="fa-solid fa-comment" style="color:#4b97ff; font-size:1.2rem;"></i>';
-            if (text.includes("theo dõi")) return '<i class="fa-solid fa-user-plus" style="color:#8b5cf6; font-size:1.2rem;"></i>';
-            if (text.includes("Quản trị viên") || text.includes("HỆ THỐNG") || text.includes("bị gỡ")) return '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444; font-size:1.2rem;"></i>';
-            return '<i class="fa-solid fa-bell" style="color:#888; font-size:1.2rem;"></i>';
+        // ================= HỆ THỐNG THÔNG BÁO VÀ PHÂN LOẠI HIỆN ĐẠI =================
+        let currentNotifFilter = 'all';
+        let notifDisplayLimit = 50;
+
+        // Phân loại thông báo dựa vào nội dung và người gửi
+        function getNotifCategory(n) {
+            const text = (n.text || '').toLowerCase();
+            const sender = n.sender || '';
+
+            if (text.startsWith('[wow_tip:') || text.startsWith('[omg_tip:') || text.includes('wow') || text.includes('túi mù')) {
+                return 'tip';
+            }
+            if (sender === 'HỆ THỐNG' || text.includes('cảnh cáo') || text.includes('bị gỡ') || text.includes('quản trị viên') || text.includes('tiêu chuẩn cộng đồng')) {
+                return 'system';
+            }
+            if (text.includes('thích') || text.includes('sao') || text.includes('yêu thích')) {
+                return 'reaction';
+            }
+            if (text.includes('bình luận') || text.includes('lời nhắn') || text.includes('trả lời') || text.includes(': &quot;')) {
+                return 'comment';
+            }
+            return 'other';
         }
 
-        // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH
-        let notifDisplayLimit = 50; // Biến giới hạn load 50 tin nhắn
+        // Icon FontAwesome chuẩn cho từng hành động (Không dùng Emoji)
+        function getNotifVisualProps(n) {
+            const cat = getNotifCategory(n);
+            const text = (n.text || '').toLowerCase();
 
-        // TẠO GIAO DIỆN BONG BÓNG CHAT GIỐNG SCRATCH (ĐÃ CÓ TỰ ĐỘNG CHUYỂN TAB COMMENTS)
+            if (cat === 'tip') {
+                return { iconClass: 'fa-solid fa-gift', wrapClass: 'icon-like', label: 'Quà tặng WOW' };
+            }
+            if (cat === 'system') {
+                return { iconClass: 'fa-solid fa-triangle-exclamation', wrapClass: 'icon-system', label: 'Hệ thống' };
+            }
+            if (cat === 'reaction') {
+                if (text.includes('sao')) return { iconClass: 'fa-solid fa-star', wrapClass: 'icon-star', label: 'Yêu thích' };
+                return { iconClass: 'fa-solid fa-heart', wrapClass: 'icon-like', label: 'Lượt thích' };
+            }
+            if (cat === 'comment') {
+                if (text.includes('trả lời')) return { iconClass: 'fa-solid fa-reply', wrapClass: 'icon-comment', label: 'Phản hồi' };
+                return { iconClass: 'fa-solid fa-comment-dots', wrapClass: 'icon-comment', label: 'Bình luận' };
+            }
+            if (text.includes('theo dõi')) {
+                return { iconClass: 'fa-solid fa-user-plus', wrapClass: 'icon-follow', label: 'Theo dõi' };
+            }
+            return { iconClass: 'fa-solid fa-bell', wrapClass: '', label: 'Thông báo' };
+        }
+
+        function setNotifFilter(cat, btnEl) {
+            currentNotifFilter = cat;
+            document.querySelectorAll('.notif-tab-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            renderNotifList();
+        }
+
+        // Định dạng thẻ thông báo theo phong cách Studio Game hiện đại
         function formatScratchNotif(n) {
             let sender = n.sender || "Hệ thống";
-            let senderLink = `<a href="#profile/${sender}" style="font-weight:bold; color:#575e75; text-decoration:none;">${sender}</a>`;
+            let senderLink = `<a href="#profile/${encodeURIComponent(sender)}" style="font-weight:800; color:var(--primary); text-decoration:none;">@${sender}</a>`;
             let mainText = escapeHtml(n.text || "");
-            let actionHtml = ''; let bubbleHtml = '';
+            let actionHtml = '';
+            let bubbleHtml = '';
 
-            // NHẬN QUÀ TẶNG NĂNG LƯỢNG WOW (GIAO DIỆN HOÀNG KIM)
+            // 1. Quà tặng năng lượng WOW
             if (mainText.startsWith("[WOW_TIP:") || mainText.startsWith("[OMG_TIP:")) {
                 const splitParts = mainText.split(/\]:\s*(?:&quot;|")/);
                 let tipAmount = "nhiều";
@@ -14629,32 +14908,34 @@
 
                 actionHtml = `
                     <div class="notif-tip-gift-box">
-                        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(234,88,12,0.4);">
-                            <i class="fa-solid fa-gift" style="color:#fff; font-size:1.4rem;"></i>
+                        <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(234,88,12,0.35);">
+                            <span class="wow-icon" style="font-size:1.4rem;"></span>
                         </div>
-                        <div style="flex:1;">
-                            <div style="font-size:1.05rem; font-weight:800; color:#ea580c;">
-                                Nhận được +${tipAmount} WOW từ ${senderLink}!
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:1rem; font-weight:900; color:#ea580c; display:flex; align-items:center; gap:6px;">
+                                <i class="fa-solid fa-gift"></i> <span>Nhận được +${tipAmount} WOW từ ${senderLink}!</span>
                             </div>
-                            <div style="font-size:0.9rem; color:var(--text-main); margin-top:2px;">
-                                Dành tặng cho tác phẩm <a href="${n.link || '#home'}" style="font-weight:bold; color:var(--primary); text-decoration:none;">&quot;${projTitle}&quot;</a>
+                            <div style="font-size:0.88rem; color:var(--text-main); margin-top:3px;">
+                                Dành tặng cho tác phẩm <a href="${n.link || '#home'}" style="font-weight:800; color:var(--primary); text-decoration:none;">&quot;${projTitle}&quot;</a>
                             </div>
-                            ${tipMsg ? `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; font-style:italic;">&ldquo;${tipMsg}&rdquo;</div>` : ''}
+                            ${tipMsg ? `<div style="font-size:0.84rem; color:var(--text-muted); margin-top:5px; font-style:italic; border-left:2px solid #ea580c; padding-left:8px;">&ldquo;${tipMsg}&rdquo;</div>` : ''}
                         </div>
                     </div>
                 `;
                 return { actionHtml, bubbleHtml: '' };
             }
 
-            // FIX 2: Bỏ việc check text "Cảnh cáo", "bị gỡ" vì user có thể cố tình chat chữ đó. Chỉ xét Admin/Hệ Thống.
+            // 2. Thông báo khẩn cấp từ Ban Quản Trị / Hệ Thống
             if (sender === "HỆ THỐNG") {
-                actionHtml = `<div style="background: #ef4444; color: #fff; padding: 15px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(239,68,68,0.2); border: 2px solid #b91c1c;">
-                    <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px; font-size:1.2rem;"></i> ${mainText}
-                </div>`;
+                actionHtml = `
+                    <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 14px 18px; border-radius: 12px; font-weight: 700; border: 1.5px solid #ef4444; display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:1.3rem; flex-shrink:0;"></i>
+                        <span style="line-height:1.4;">${mainText}</span>
+                    </div>
+                `;
                 return { actionHtml, bubbleHtml: '' };
             }
 
-            // 🛡️ Đảm bảo link luôn là chuỗi, không bao giờ bị undefined
             let linkWithTab = (n.link || "#home").replace('#project/', '/projects/').replace('#profile/', '/users/');
             if (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn")) {
                 if (!linkWithTab.includes('tab=comments')) {
@@ -14662,50 +14943,47 @@
                 }
             }
 
-            // FIX 1: Tách riêng phần thông báo và phần nội dung comment dựa vào dấu `: "` do backend trả về
             let parts = mainText.split(': &quot;'); 
 
             if (parts.length > 1 && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
-                // Toàn bộ phần text đằng trước dấu hai chấm
                 let textBeforeQuote = parts.slice(0, -1).join(': &quot;'); 
                 textBeforeQuote = textBeforeQuote.replace(sender, senderLink);
-                
-                // Nội dung comment thực sự
                 let commentSnippet = parts[parts.length - 1].replace(/&quot;$/, ''); 
                 
-                // Regex tìm đúng tên dự án HOẶC Station (để in đậm/đóng link) nếu có
                 const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
                 if (projRegex.test(textBeforeQuote)) {
                     actionHtml = textBeforeQuote.replace(projRegex, (match, p1) => {
-                        return match.includes('Station') ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
-                        : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
+                        return match.includes('Station') 
+                            ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>` 
+                            : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>`;
                     });
                 } else {
-                    // Nếu là hồ sơ, biến ngay cụm từ "hồ sơ của bạn" hoặc "hồ sơ" thành link click, tránh bị ghép chữ "(dự án)" thừa
                     if (textBeforeQuote.includes("hồ sơ của bạn")) {
-                        actionHtml = textBeforeQuote.replace("hồ sơ của bạn", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">hồ sơ của bạn</a>`);
+                        actionHtml = textBeforeQuote.replace("hồ sơ của bạn", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">hồ sơ của bạn</a>`);
                     } else if (textBeforeQuote.includes("hồ sơ")) {
-                        actionHtml = textBeforeQuote.replace("hồ sơ", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">hồ sơ</a>`);
+                        actionHtml = textBeforeQuote.replace("hồ sơ", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">hồ sơ</a>`);
                     } else {
                         const isProfile = linkWithTab.includes('/users/') || linkWithTab.includes('profile');
                         const isStudio = linkWithTab.includes('/studio/') || linkWithTab.includes('studio');
                         const targetText = isProfile ? (t('notif_profile') || 'hồ sơ') : (isStudio ? 'Station' : (t('notif_project') || 'dự án'));
-                        actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">(${targetText})</a>`;
+                        actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">(${targetText})</a>`;
                     }
                 }
 
                 bubbleHtml = `
-                    <div style="display:flex; align-items:flex-start; gap:15px; padding-left: 28px; margin-top: 10px;">
-                        <a href="#profile/${sender}"><img src="${getAvtUrl(n.senderAvt)}" style="width:48px; height:48px; border-radius:4px; border:1px solid #d9d9d9; object-fit:cover;" onerror="this.src='${DEFAULT_AVATAR}'"></a>
-                        <div style="flex:1; max-width: 600px;">
-                            <div style="background:#fff; border:1px solid #d9d9d9; border-radius:6px; padding:12px 18px; position:relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                                <div style="position:absolute; left:-6px; top:15px; width:10px; height:10px; background:#fff; border-left:1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; transform:rotate(45deg);"></div>
-                                <span style="color:#575e75; font-size:0.95rem;">${commentSnippet}</span>
+                    <div class="notif-comment-bubble-box">
+                        <a href="#profile/${encodeURIComponent(sender)}" style="display:flex;">
+                            <img src="${getAvtUrl(n.senderAvt)}" class="notif-sender-avt-img" onerror="this.src='${DEFAULT_AVATAR}'">
+                        </a>
+                        <div style="flex:1; min-width:0;">
+                            <div class="notif-comment-speech">
+                                <span>${commentSnippet}</span>
                             </div>
-                            
-                            <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                                <input type="text" data-i18n-ph="proj_comment_ph" placeholder="${t('proj_comment_ph') || 'Viết bình luận...'}" style="flex:1; padding: 10px 15px; border-radius: 20px; border: 1px solid #d9d9d9; outline: none; background: #f9f9f9; font-size: 0.9rem; cursor:text;" onclick="navigateTo('${linkWithTab}')">
-                                <button class="btn btn-primary" onclick="navigateTo('${linkWithTab}')" style="border-radius: 20px; padding: 9px 20px;">${t('proj_reply') || 'Trả lời'}</button>
+                            <div class="notif-quick-reply-row">
+                                <input type="text" class="notif-quick-reply-input" placeholder="${t('proj_comment_ph') || 'Nhấn để chuyển đến bình luận...'}" readonly onclick="navigateTo('${linkWithTab}')">
+                                <button type="button" class="notif-quick-reply-btn" onclick="navigateTo('${linkWithTab}')">
+                                    <i class="fa-solid fa-reply"></i> <span>${t('proj_reply') || 'Trả lời'}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -14716,17 +14994,17 @@
                 
                 if (projRegex.test(actionHtml)) {
                     actionHtml = actionHtml.replace(projRegex, (match, p1) => {
-                        return match.includes('Station') ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>` 
-                        : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">&quot;${p1}&quot;</a>`;
+                        return match.includes('Station') 
+                            ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>` 
+                            : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>`;
                     });
                 } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
-                    actionHtml += ` <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:bold; color:#855cd6; text-decoration:none;">(Xem)</a>`;
+                    actionHtml += ` <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">(Xem ngay)</a>`;
                 }
             }
             return { actionHtml, bubbleHtml };
         }
 
-        // HÀM CLICK ĐÁNH DẤU ĐỌC TẤT CẢ
         async function markAllNotifsRead(event) {
             if(!currentUser) return;
             const btn = event.currentTarget;
@@ -14741,23 +15019,18 @@
             
             if(window.cachedNotifs) {
                 window.cachedNotifs = window.cachedNotifs.map(n => ({...n, read: true}));
-                renderNotifList(); // Cập nhật lại màu nền ngay lập tức
+                renderNotifList();
             }
             btn.innerHTML = origHtml;
         }
 
-        // HÀM LẤY DỮ LIỆU THÔNG BÁO & HIỂN THỊ SỐ ĐỎ TRÊN HỘP THƯ (CHỐNG TRÌNH DUYỆT CACHE)
         async function fetchNotifications(silent = false) {
             if(!currentUser) return;
             try {
-                // 🚀 FIX 1: Dùng apiFetch để đồng nhất bộ Header bảo mật, chống bị Cloudflare WAF chặn
                 const data = await apiFetch(`/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`);
-                
                 if (!data || data.error) return;
 
                 window.cachedNotifs = Array.isArray(data) ? data : [];
-                
-                // 🚀 FIX 2: Thêm (n &&) để chống lỗi Crash TypeError nếu có 1 thông báo bị hỏng (null/undefined)
                 const unreadCount = window.cachedNotifs.filter(n => n && n.read !== true && n.read !== "true").length;
                 const badge = document.getElementById('notifBadge');
                 
@@ -14765,14 +15038,11 @@
                     if (unreadCount > 0) { 
                         badge.innerText = unreadCount > 99 ? '99+' : unreadCount; 
                         badge.style.display = 'flex'; 
-                        badge.style.justifyContent = 'center'; 
-                        badge.style.alignItems = 'center'; 
                     } else { 
                         badge.style.display = 'none'; 
                     }
                 }
 
-                // Cập nhật lại UI nếu người dùng đang mở trực tiếp trang Tin nhắn
                 if (window.location.hash.split('?')[0] === '#notifications') {
                     renderNotifList();
                 }
@@ -14781,78 +15051,116 @@
             }
         }
         
-        // HÀM MỞ TRANG TIN NHẮN
         async function openNotificationsPage() {
             if(!currentUser) return location.hash='#home';
             document.getElementById('notificationsView').style.display = 'block';
             notifDisplayLimit = 50;
+            currentNotifFilter = 'all';
             
             const container = document.getElementById('notifPageList');
-            container.innerHTML = '<div style="padding:40px; text-align:center; color:#855cd6;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i></div>';
+            container.innerHTML = '<div style="padding:50px; text-align:center; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">Đang tải hộp thư...</span></div>';
 
             try {
-                // Dùng apiFetch thay vì fetch thuần để được bảo vệ tự động đăng xuất nếu hết hạn
                 const data = await apiFetch(`/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`);
-                
-                if (!data || data.error) {
-                    window.cachedNotifs = [];
-                } else {
-                    window.cachedNotifs = Array.isArray(data) ? data : []; 
-                }
+                window.cachedNotifs = (!data || data.error) ? [] : (Array.isArray(data) ? data : []);
             } catch(e) {
                 window.cachedNotifs = [];
             }
             renderNotifList();
         }
 
-        // HÀM RENDER TIN NHẮN & NÚT "XEM THÊM"
         function renderNotifList() {
-    const container = document.getElementById('notifPageList');
-    let notifs = window.cachedNotifs;
-    
-    // Đảm bảo notifs luôn là một mảng, chống sập hàm slice
-    if (!Array.isArray(notifs)) notifs = [];
+            const container = document.getElementById('notifPageList');
+            let notifs = window.cachedNotifs;
+            if (!Array.isArray(notifs)) notifs = [];
 
-    if (notifs.length === 0) {
-        container.innerHTML = `<div style="padding:40px; text-align:center; color:#575e75; font-size:1.1rem;">${t('notif_empty')}</div>`;
-        return;
-    }
+            // 1. Cập nhật các bộ đếm số lượng cho thanh phân loại
+            let countAll = notifs.length;
+            let countUnread = 0;
+            let countComment = 0;
+            let countTip = 0;
+            let countReaction = 0;
+            let countSystem = 0;
 
-    const visibleNotifs = notifs.slice(0, notifDisplayLimit);
+            notifs.forEach(n => {
+                const isUnread = (n.read !== true && n.read !== "true");
+                if (isUnread) countUnread++;
+                const cat = getNotifCategory(n);
+                if (cat === 'comment') countComment++;
+                else if (cat === 'tip') countTip++;
+                else if (cat === 'reaction') countReaction++;
+                else if (cat === 'system') countSystem++;
+            });
 
-    let html = visibleNotifs.map(n => {
-        try { // Bọc try...catch để tin nhắn này lỗi thì tin nhắn khác vẫn chạy
-            const { actionHtml, bubbleHtml } = formatScratchNotif(n);
-            const isWarning = actionHtml.includes('background: #ef4444');
-            const isRead = (n.read === true || n.read === "true");
-            return `
-                <div style="padding: 20px 25px; border-bottom: 1px solid #d9d9d9; background: ${isRead ? '#ffffff' : '#e6f0ff'};">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: ${bubbleHtml ? '10px' : '0'};">
-                        <div style="display:flex; align-items:center; gap:10px; flex:1;">
-                            ${isWarning ? '' : getNotifIcon(n.text || "")}
-                            <span style="font-size:1rem; color:#575e75; line-height:1.5; flex:1;">${actionHtml}</span>
-                        </div>
-                        <span style="font-size:0.85rem; color:#858585; white-space:nowrap; margin-left:15px; margin-top:2px;">${timeAgo(n.time)}</span>
+            const elAll = document.getElementById('cntNotifAll'); if (elAll) elAll.innerText = countAll;
+            const elUnread = document.getElementById('cntNotifUnread'); if (elUnread) elUnread.innerText = countUnread;
+            const elComment = document.getElementById('cntNotifComment'); if (elComment) elComment.innerText = countComment;
+            const elTip = document.getElementById('cntNotifTip'); if (elTip) elTip.innerText = countTip;
+            const elReaction = document.getElementById('cntNotifReaction'); if (elReaction) elReaction.innerText = countReaction;
+            const elSystem = document.getElementById('cntNotifSystem'); if (elSystem) elSystem.innerText = countSystem;
+
+            // 2. Lọc danh sách theo Tab đang chọn
+            let filteredNotifs = notifs.filter(n => {
+                if (currentNotifFilter === 'all') return true;
+                if (currentNotifFilter === 'unread') return (n.read !== true && n.read !== "true");
+                return getNotifCategory(n) === currentNotifFilter;
+            });
+
+            if (filteredNotifs.length === 0) {
+                container.innerHTML = `
+                    <div style="padding:60px 20px; text-align:center; color:var(--text-muted);">
+                        <i class="fa-solid fa-box-open" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>
+                        <b style="font-size:1.05rem; color:var(--text-title); display:block; margin-bottom:4px;">Không có thông báo trong mục này</b>
+                        <span style="font-size:0.88rem;">Hộp thư của bạn luôn được đồng bộ và cập nhật tự động.</span>
                     </div>
-                    ${bubbleHtml}
-                </div>
-            `;
-        } catch(e) {
-            console.error("Bỏ qua 1 tin nhắn lỗi:", e);
-            return "";
+                `;
+                return;
+            }
+
+            const visibleNotifs = filteredNotifs.slice(0, notifDisplayLimit);
+
+            let html = visibleNotifs.map(n => {
+                try {
+                    const { actionHtml, bubbleHtml } = formatScratchNotif(n);
+                    const isRead = (n.read === true || n.read === "true");
+                    const visual = getNotifVisualProps(n);
+
+                    return `
+                        <div class="notif-card-row ${isRead ? '' : 'unread'}">
+                            <div class="notif-card-header">
+                                <div class="notif-header-left">
+                                    <div class="notif-icon-avatar-wrap ${visual.wrapClass}" title="${visual.label}">
+                                        <i class="${visual.iconClass}"></i>
+                                    </div>
+                                    <div class="notif-meta-text">
+                                        ${actionHtml}
+                                    </div>
+                                </div>
+                                <div class="notif-header-right">
+                                    <span class="notif-time-badge" title="${n.time || ''}">${timeAgo(n.time || '')}</span>
+                                    ${!isRead ? '<span class="notif-unread-dot" title="Chưa đọc"></span>' : ''}
+                                </div>
+                            </div>
+                            ${bubbleHtml}
+                        </div>
+                    `;
+                } catch(e) {
+                    console.error("Bỏ qua thông báo lỗi:", e);
+                    return "";
+                }
+            }).join('');
+
+            if (filteredNotifs.length > notifDisplayLimit) {
+                html += `
+                <div style="padding: 25px; text-align: center; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-primary" style="padding: 10px 30px; border-radius: 20px; font-weight: 800;" onclick="loadMoreNotifs()">
+                        <i class="fa-solid fa-angle-down"></i> ${t('notif_load_more') || 'Xem thêm thông báo'}
+                    </button>
+                </div>`;
+            }
+            container.innerHTML = html;
         }
-    }).join('');
 
-    if (notifs.length > notifDisplayLimit) {
-        html += `
-        <div style="padding: 30px; text-align: center;">
-            <button class="btn btn-primary" style="padding: 10px 30px; border-radius: 20px; font-weight: bold;" onclick="loadMoreNotifs()">${t('notif_load_more')}</button>
-        </div>`;
-    }
-    container.innerHTML = html;
-}
-
-        // HÀM KÍCH HOẠT NÚT XEM THÊM
         function loadMoreNotifs() {
             notifDisplayLimit += 50;
             renderNotifList();
@@ -16815,7 +17123,7 @@
                 const notif = new Notification(`${senderTitle} • Kênh Giao Lưu`, {
                     body: sanitizedBody,
                     icon: avtUrl,
-                    badge: "https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png",
+                    badge: "https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png",
                     tag: `chat-msg-${msgId}`,
                     renotify: true
                 });
@@ -16900,7 +17208,7 @@
                     try {
                         new Notification("Kênh Giao Lưu • DANVworkshop", {
                             body: "🎉 Bạn đã kích hoạt thông báo tin nhắn thành công!",
-                            icon: "https://i.ibb.co/CpSdZCfv/ezgif-6163dce644345227.png"
+                            icon: "https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png"
                         });
                     } catch(e) {}
                 } else if (perm === "denied") {
