@@ -4822,11 +4822,12 @@
         }
         [data-theme="dark"] .bb-gift-msg { color: #e2e8f0; border-top-color: rgba(217, 70, 239, 0.4); }
 
-        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube để không bị viền xấu */
+        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube / TikTok để không bị viền xấu */
         .chat-msg-row .chat-bubble:has(.beabea-gift-card),
         .chat-msg-row .chat-bubble:has(.beabea-blindbag-card),
         .chat-msg-row .chat-bubble:has(.beabea-quiz-card),
-        .chat-msg-row .chat-bubble:has(.chat-yt-embed-wrap:only-child) {
+        .chat-msg-row .chat-bubble:has(.chat-yt-embed-wrap:only-child),
+        .chat-msg-row .chat-bubble:has(.chat-tiktok-embed-wrap:only-child) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
@@ -4928,6 +4929,100 @@
         @keyframes pipPopIn {
             0% { transform: scale(0.7) translateY(40px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* 🎵 KHUNG NHÚNG VIDEO TIKTOK AMBIENT GLOW & MINI-DOCK NỔI */
+        .chat-tiktok-embed-wrap {
+            position: relative;
+            width: 325px;
+            max-width: 100%;
+            border-radius: 18px;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            margin: 4px 0 2px 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: visible;
+        }
+        /* Hào quang màu Neon TikTok (Cyan & Hot Pink) */
+        .chat-tiktok-embed-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 22px;
+            background: radial-gradient(circle at center, rgba(254, 44, 85, 0.4) 0%, rgba(37, 244, 238, 0.25) 60%, transparent 80%);
+            filter: blur(14px);
+            opacity: 0.55;
+            z-index: -1;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .chat-tiktok-embed-wrap:hover::before {
+            opacity: 0.95;
+        }
+        .chat-tiktok-inner-box {
+            width: 100%;
+            height: 575px;
+            max-height: 80vh;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        .chat-tiktok-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .chat-tiktok-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 5;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.2s ease;
+        }
+        .chat-tiktok-embed-wrap:hover .chat-tiktok-toolbar,
+        .chat-tiktok-embed-wrap.is-pip-docked .chat-tiktok-toolbar {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .chat-tiktok-btn-tool {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            transition: all 0.2s ease;
+        }
+        .chat-tiktok-btn-tool:hover {
+            background: #fe2c55;
+            transform: scale(1.1);
+        }
+        .chat-tiktok-embed-wrap.is-pip-docked {
+            position: fixed !important;
+            bottom: 85px !important;
+            right: 25px !important;
+            width: 260px !important;
+            z-index: 9999 !important;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 25px rgba(254, 44, 85, 0.5);
+            border: 2px solid #fe2c55;
+            animation: pipPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chat-tiktok-embed-wrap.is-pip-docked .chat-tiktok-inner-box {
+            height: 450px !important;
         }
 
         /* NÚT THÔNG BÁO TIN NHẮN MỚI NỔI ĐÁY CHAT (JUMP TO BOTTOM PILL) */
@@ -15611,6 +15706,26 @@
             return match ? match[1] : null;
         }
 
+        // 🔍 KIỂM TRA NẾU TIN NHẮN CHỨA LINK HOẶC MÃ NHÚNG TIKTOK
+        function getTikTokVideoId(text) {
+            if (!text) return null;
+            const trimmed = text.trim();
+            
+            // 1. Trường hợp người dùng dán cả đoạn mã nhúng <blockquote class="tiktok-embed" ...>
+            if (trimmed.includes('tiktok-embed') || trimmed.includes('data-video-id')) {
+                const idMatch = trimmed.match(/data-video-id=["']?(\d+)["']?/i) || trimmed.match(/\/video\/(\d+)/i);
+                if (idMatch) return idMatch[1];
+            }
+            
+            // 2. Trường hợp người dùng dán link video trực tiếp (tiktok.com/@user/video/id...)
+            if (!/\s/.test(trimmed)) {
+                const match = trimmed.match(/(?:tiktok\.com\/@[^\/]+\/video\/|tiktok\.com\/(?:player\/v1|embed\/v2|embed|v)\/)(\d+)/i);
+                if (match) return match[1];
+            }
+            
+            return null;
+        }
+
         // 🎴 HÀM RENDER NỘI DUNG CHAT (CHỈ CHO PHÉP BEABEA FORMAT CÁC THẺ ĐẶC BIỆT CHỐNG GIẢ MẠO)
         function renderChatContent(rawText, author = '') {
             if (!rawText) return '';
@@ -15632,6 +15747,23 @@
                 </div>
             `;
         }
+
+            // 🎵 EMBED VIDEO TIKTOK CHUYÊN NGHIỆP & MINI-DOCK NỔI
+            const ttVideoId = getTikTokVideoId(rawText);
+            if (ttVideoId) {
+                return `
+                    <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${ttVideoId}">
+                        <div class="chat-tiktok-toolbar">
+                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${ttVideoId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                            </button>
+                        </div>
+                        <div class="chat-tiktok-inner-box">
+                            <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${ttVideoId}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                        </div>
+                    </div>
+                `;
+            }
 
             // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA (ĐÃ FIX TRIỆT ĐỂ LỖI BỊ CẮT VÌ DẤU ])
             if (isBeaBea && rawText.includes("[BEABEA_QUIZ:")) {
@@ -17076,9 +17208,12 @@
                 return `🎮 Đã chia sẻ liên kết trải nghiệm tác phẩm`;
             }
 
-            // 8. Video YouTube Embed độc lập
+            // 8. Video YouTube & TikTok Embed độc lập
             if (typeof getYouTubeIdIfOnly === 'function' && getYouTubeIdIfOnly(raw)) {
                 return `🎬 Đã chia sẻ một video YouTube`;
+            }
+            if (typeof getTikTokVideoId === 'function' && getTikTokVideoId(raw)) {
+                return `🎵 Đã chia sẻ một video TikTok`;
             }
 
             // 9. Tin nhắn thuần hình ảnh / GIF
@@ -17233,6 +17368,19 @@
             }
         }
 
+        // BẬT / TẮT CHẾ ĐỘ CỬA SỔ NỔI MINI-DOCK CHO TIKTOK EMBED
+        function toggleTikTokMiniDock(dockId, btn) {
+            const wrap = document.getElementById(dockId);
+            if (!wrap) return;
+            const isDocked = wrap.classList.toggle('is-pip-docked');
+            if (btn) {
+                btn.innerHTML = isDocked 
+                    ? '<i class="fa-solid fa-compress"></i>' 
+                    : '<i class="fa-solid fa-up-right-and-down-left-from-center"></i>';
+                btn.title = isDocked ? 'Ghim lại vào tin nhắn' : 'Ghim nổi ra góc màn hình';
+            }
+        }
+
         // CUỘN XUỐNG ĐÁY PHÒNG CHAT & ẨN NÚT JUMP
         function scrollChatToBottom(smooth = true) {
             const list = document.getElementById('chatMessageList');
@@ -17295,7 +17443,7 @@
                                     <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
                                         <i class="fa-solid fa-reply"></i>
                                     </button>` : ''}
-                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) ? `
+                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) && !getTikTokVideoId(c.text) ? `
                                     <div class="trans-menu-wrapper">
                                         <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
                                             <i class="fa-solid fa-language"></i>
@@ -17423,9 +17571,9 @@
                             }
                         }
 
-                        // 🛡️ 2. BẢO TOÀN IFRAME YOUTUBE ĐANG PHÁT (Không reload iframe)
-                        const hasYouTube = existingRow.querySelector('iframe, .chat-yt-embed-wrap');
-                        if (hasYouTube) {
+                        // 🛡️ 2. BẢO TOÀN IFRAME YOUTUBE & TIKTOK ĐANG PHÁT (Không reload iframe)
+                        const hasMediaEmbed = existingRow.querySelector('iframe, .chat-yt-embed-wrap, .chat-tiktok-embed-wrap');
+                        if (hasMediaEmbed) {
                             const timeEl = existingRow.querySelector('.chat-time');
                             if (timeEl && c.time) timeEl.innerText = timeAgo(c.time);
                             return;
