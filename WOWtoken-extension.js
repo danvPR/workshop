@@ -16,6 +16,7 @@
   ];
 
   const COOLDOWN_MS = 5000;
+  const REQUEST_TIMEOUT_MS = 10000;
 
   let userBalance = 0;
   let isLoggedIn = false;
@@ -25,6 +26,11 @@
 
   let lastSyncTime = 0;
   let lastRequestTime = 0;
+
+  let hasRequestedPlayerName = false;
+  let handshakeTimeoutTimer = null;
+  let syncBalanceTimeoutTimer = null;
+  let isSyncingBalance = false;
 
   const pendingPaymentResolvers = new Map();
 
@@ -36,13 +42,22 @@
     }
   }
 
-  function sendHandshake() {
+  function requestPlayerNameOnce() {
+    if (hasRequestedPlayerName) return;
+    hasRequestedPlayerName = true;
+
     if (!isEmbedded()) return;
+
+    if (handshakeTimeoutTimer) clearTimeout(handshakeTimeoutTimer);
+    handshakeTimeoutTimer = setTimeout(() => {
+      handshakeTimeoutTimer = null;
+    }, REQUEST_TIMEOUT_MS);
+
     window.parent.postMessage({ type: "DANV_WOW_HANDSHAKE" }, "*");
   }
 
   lastSyncTime = Date.now();
-  sendHandshake();
+  requestPlayerNameOnce();
 
   window.addEventListener("message", (event) => {
     const isAllowedOrigin = TRUSTED_PARENT_ORIGINS.includes(event.origin);
@@ -52,8 +67,20 @@
     if (!data || typeof data !== "object" || !data.type) return;
 
     if (data.type === "DANV_WOW_INIT") {
+      if (handshakeTimeoutTimer) {
+        clearTimeout(handshakeTimeoutTimer);
+        handshakeTimeoutTimer = null;
+      }
+      if (syncBalanceTimeoutTimer) {
+        clearTimeout(syncBalanceTimeoutTimer);
+        syncBalanceTimeoutTimer = null;
+        isSyncingBalance = false;
+      }
+
       isLoggedIn = !!data.isLoggedIn;
-      currentUsername = String(data.username || "");
+      if (!currentUsername && data.username) {
+        currentUsername = String(data.username || "");
+      }
       userBalance = parseInt(data.balance, 10) || 0;
     }
 
@@ -210,12 +237,23 @@
     }
 
     syncBalanceNow() {
+      if (!isEmbedded()) return;
+      if (isSyncingBalance) return;
+
       const now = Date.now();
       if (now - lastSyncTime < COOLDOWN_MS) {
         return;
       }
       lastSyncTime = now;
-      sendHandshake();
+      isSyncingBalance = true;
+
+      if (syncBalanceTimeoutTimer) clearTimeout(syncBalanceTimeoutTimer);
+      syncBalanceTimeoutTimer = setTimeout(() => {
+        syncBalanceTimeoutTimer = null;
+        isSyncingBalance = false;
+      }, REQUEST_TIMEOUT_MS);
+
+      window.parent.postMessage({ type: "DANV_WOW_HANDSHAKE" }, "*");
     }
 
     requestPaymentAndWait(args) {
@@ -299,6 +337,16 @@
 
   if (Scratch.vm && Scratch.vm.runtime) {
     Scratch.vm.runtime.on("PROJECT_STOP_ALL", () => {
+      if (handshakeTimeoutTimer) {
+        clearTimeout(handshakeTimeoutTimer);
+        handshakeTimeoutTimer = null;
+      }
+      if (syncBalanceTimeoutTimer) {
+        clearTimeout(syncBalanceTimeoutTimer);
+        syncBalanceTimeoutTimer = null;
+        isSyncingBalance = false;
+      }
+
       for (const resolver of pendingPaymentResolvers.values()) {
         clearTimeout(resolver.timer);
         resolver.resolve(false);
