@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js"></script>
     <script>
 
         // CẬP NHẬT SEO & OPEN GRAPH ĐỘNG
@@ -2428,6 +2429,116 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* ================= BẢNG CHỌN EMOJI HIỆN ĐẠI (EMOJI PICKER POPOVER) ================= */
+        .emoji-picker-popover {
+            position: fixed;
+            width: 325px;
+            max-width: 92vw;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+            z-index: 100005;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(14px);
+            animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .emoji-picker-header {
+            padding: 10px 12px 6px 12px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .emoji-search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 5px 10px;
+        }
+        .emoji-search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 0.84rem;
+            color: var(--text-main);
+            width: 100%;
+        }
+        .emoji-category-tabs {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 2px;
+        }
+        .emoji-category-tabs::-webkit-scrollbar { display: none; }
+        .emoji-cat-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-size: 1rem;
+            opacity: 0.65;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .emoji-cat-btn:hover, .emoji-cat-btn.active {
+            opacity: 1;
+            background: var(--bg-panel);
+            transform: scale(1.1);
+        }
+        .emoji-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            padding: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            user-select: none;
+        }
+        .emoji-picker-grid::-webkit-scrollbar {
+            width: 5px;
+        }
+        .emoji-picker-grid::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        .emoji-grid-item {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.12s ease, background 0.12s ease;
+        }
+        .emoji-grid-item:hover {
+            transform: scale(1.22);
+            background: var(--bg-secondary);
+        }
+        .emoji-picker-footer {
+            padding: 6px 12px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 28px;
         }
 
         /* ================= ASSETS STORE PRO REDESIGN ================= */
@@ -6977,6 +7088,10 @@
                                         <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
                                     </button>
 
+                                    <button type="button" class="chat-dock-icon-btn" onclick="toggleEmojiPicker('chat', event)" title="Chèn biểu tượng Emoji">
+                                        <i class="fa-regular fa-face-smile" style="color: #f59e0b;"></i>
+                                    </button>
+
                                     <button type="button" id="btnCreatePollChat" class="chat-dock-icon-btn" style="display:none;" onclick="openCreatePollModal()" data-i18n-title="chat_create_poll_title" title="Tạo bình chọn">
                                         <i class="fa-solid fa-square-poll-vertical" style="color: #ea580c;"></i>
                                     </button>
@@ -7205,6 +7320,7 @@
                             <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
                             <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
                             <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('std')"><i class="fa-solid fa-film"></i> GIF</button>
+                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#f59e0b;" onclick="toggleEmojiPicker('std', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
                         </div>
                         <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
                     </div>
@@ -7609,6 +7725,9 @@
                                     <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
                                         <i class="fa-solid fa-film" style="font-size: 1.3rem; color: #855cd6;"></i>
                                     </button>
+                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="toggleEmojiPicker('proj', event)" title="Chèn biểu tượng Emoji">
+                                        <i class="fa-regular fa-face-smile" style="font-size: 1.3rem; color: #f59e0b;"></i>
+                                    </button>
                                     <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openTipModal()" title="Tặng WOW">
                                         <span class="wow-icon" style="font-size: 1.3rem; filter: none;"></span>
                                     </button>
@@ -7803,10 +7922,11 @@
                         <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextProf" class="form-control" rows="3" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này..." autocomplete="off"></textarea></div>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; gap: 10px;">
-                                <label for="commentImgUploadProf" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
-                                <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
-                                <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-film"></i> GIF</button>
-                            </div>
+                            <label for="commentImgUploadProf" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
+                            <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
+                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-film"></i> GIF</button>
+                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#f59e0b;" onclick="toggleEmojiPicker('prof', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
+                        </div>
                             <button type="submit" class="btn btn-primary" id="btnSubmitCommentProf"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
                         </div>
                     </form>
@@ -16148,35 +16268,124 @@
         }
         function escapeHtml(text) { return text ? text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
 
-        // 🔍 KIỂM TRA NẾU TIN NHẮN CHỈ CHỨA DUY NHẤT 1 LINK YOUTUBE
-        function getYouTubeIdIfOnly(text) {
+        // 🔍 KIỂM TRA & TRÍCH XUẤT VIDEO ID YOUTUBE (HỖ TRỢ HOÀN TOÀN youtu.be, youtube.com/watch, shorts, live)
+        function getYouTubeVideoId(text) {
             if (!text) return null;
-            const trimmed = text.trim();
-            // Nếu có khoảng trắng nghĩa là có kèm theo chữ khác -> không embed
-            if (/\s/.test(trimmed)) return null;
-            const ytRegex = /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^&\s]*&)*v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[?&][^\s]*)?$/i;
-            const match = trimmed.match(ytRegex);
+            const str = text.trim();
+            // Bắt ID 11 ký tự của YouTube kể cả khi có ?si=..., dấu gạch chéo đuôi hoặc câu chữ kèm theo
+            const match = str.match(/(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^\s&]*&)*v=|shorts\/|live\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
             return match ? match[1] : null;
         }
+        function getYouTubeIdIfOnly(text) {
+            return getYouTubeVideoId(text);
+        }
 
-        // 🔍 KIỂM TRA NẾU TIN NHẮN CHỨA LINK HOẶC MÃ NHÚNG TIKTOK
-        function getTikTokVideoId(text) {
+        // 🔍 BỘ NHẬN DIỆN THÔNG TIN TIKTOK TOÀN DIỆN (HỖ TRỢ LINK GỐC & LINK RÚT GỌN vt.tiktok.com, vm.tiktok.com)
+        window.tiktokResolvedCache = window.tiktokResolvedCache || {};
+        try {
+            const savedTt = localStorage.getItem('danv_tiktok_cache');
+            if (savedTt) Object.assign(window.tiktokResolvedCache, JSON.parse(savedTt));
+        } catch(e) {}
+
+        function getTikTokInfo(text) {
             if (!text) return null;
-            const trimmed = text.trim();
-            
-            // 1. Trường hợp người dùng dán cả đoạn mã nhúng <blockquote class="tiktok-embed" ...>
-            if (trimmed.includes('tiktok-embed') || trimmed.includes('data-video-id')) {
-                const idMatch = trimmed.match(/data-video-id=["']?(\d+)["']?/i) || trimmed.match(/\/video\/(\d+)/i);
-                if (idMatch) return idMatch[1];
+            const str = text.trim();
+
+            // 1. Trường hợp có Numeric ID trực tiếp (tiktok.com/@user/video/123456... hoặc blockquote nhúng)
+            const directMatch = str.match(/(?:tiktok\.com\/@[^\/\s?#]+\/video\/|tiktok\.com\/(?:player\/v1|embed\/v2|embed|v)\/|data-video-id=["']?)(\d{15,22})/i);
+            if (directMatch) {
+                return { type: 'id', id: directMatch[1], originalUrl: str };
             }
-            
-            // 2. Trường hợp người dùng dán link video trực tiếp (tiktok.com/@user/video/id...)
-            if (!/\s/.test(trimmed)) {
-                const match = trimmed.match(/(?:tiktok\.com\/@[^\/]+\/video\/|tiktok\.com\/(?:player\/v1|embed\/v2|embed|v)\/)(\d+)/i);
-                if (match) return match[1];
+
+            // 2. Trường hợp là link rút gọn vt.tiktok.com, vm.tiktok.com, tiktok.com/t/
+            const shortMatch = str.match(/(?:https?:\/\/)?((?:vt|vm|v)\.tiktok\.com\/[a-zA-Z0-9_\-]+|www\.tiktok\.com\/t\/[a-zA-Z0-9_\-]+)/i);
+            if (shortMatch) {
+                let fullShortUrl = shortMatch[0];
+                if (!fullShortUrl.startsWith('http')) fullShortUrl = 'https://' + fullShortUrl;
+                // Chuẩn hóa bỏ dấu gạch chéo cuối để khớp key cache
+                fullShortUrl = fullShortUrl.replace(/\/+$/, '');
+                const cleanCode = shortMatch[1].replace(/[\/\.]/g, '_');
+                return { type: 'short', url: fullShortUrl, shortCode: cleanCode };
             }
-            
+
             return null;
+        }
+
+        function getTikTokVideoId(text) {
+            const info = getTikTokInfo(text);
+            if (!info) return null;
+            if (info.type === 'id') return info.id;
+            if (info.type === 'short') {
+                return (window.tiktokResolvedCache && window.tiktokResolvedCache[info.url]) 
+                    ? window.tiktokResolvedCache[info.url] 
+                    : info.shortCode;
+            }
+            return null;
+        }
+
+        // Bộ giải mã link rút gọn vt.tiktok.com sang ID số của TikTok Player
+        async function resolveTikTokShortUrl(shortUrl, dockId) {
+            const cleanUrl = shortUrl.replace(/\/+$/, '');
+            if (window.tiktokResolvedCache && window.tiktokResolvedCache[cleanUrl]) {
+                applyResolvedTikTokId(window.tiktokResolvedCache[cleanUrl], dockId);
+                return;
+            }
+
+            let videoId = null;
+            try {
+                // Thử 1: Gọi TikWM API trực tiếp
+                const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(cleanUrl)}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.data && json.data.id) videoId = json.data.id;
+                }
+            } catch(e) {}
+
+            // Thử 2: Dự phòng qua CORS proxy nếu mạng chặn
+            if (!videoId) {
+                try {
+                    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.tikwm.com/api/?url=${encodeURIComponent(cleanUrl)}`)}`;
+                    const res = await fetch(proxyUrl);
+                    if (res.ok) {
+                        const wrap = await res.json();
+                        const json = JSON.parse(wrap.contents);
+                        if (json && json.data && json.data.id) videoId = json.data.id;
+                    }
+                } catch(e) {}
+            }
+
+            if (videoId) {
+                window.tiktokResolvedCache[cleanUrl] = videoId;
+                try {
+                    localStorage.setItem('danv_tiktok_cache', JSON.stringify(window.tiktokResolvedCache));
+                } catch(e) {}
+                applyResolvedTikTokId(videoId, dockId);
+            } else {
+                // Nếu video đã bị xóa hoặc không thể resolve, hiển thị thẻ mở trực tiếp
+                const box = document.getElementById(`tiktok-box-${dockId}`);
+                if (box) {
+                    box.innerHTML = `
+                        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#0f172a; color:#fff; gap:12px; padding:20px; text-align:center;">
+                            <i class="fa-brands fa-tiktok" style="font-size:2.8rem; color:#fe2c55;"></i>
+                            <b style="font-size:0.95rem; color:#fff;">Video TikTok (Liên kết rút gọn)</b>
+                            <span style="font-size:0.8rem; color:#94a3b8; max-width:230px; line-height:1.4;">Bấm nút bên dưới để mở và xem video trên TikTok</span>
+                            <a href="${escapeHtml(cleanUrl)}" target="_blank" rel="noopener noreferrer" class="btn" style="background:#fe2c55; color:#fff; border-radius:20px; font-weight:800; padding:8px 18px; text-decoration:none;">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trên TikTok
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function applyResolvedTikTokId(videoId, dockId) {
+            const loader = document.getElementById(`tiktok-loader-${dockId}`);
+            const iframe = document.getElementById(`tiktok-iframe-${dockId}`);
+            if (iframe) {
+                iframe.src = `https://www.tiktok.com/player/v1/${videoId}`;
+                iframe.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
         }
 
         // 🎴 HÀM RENDER NỘI DUNG CHAT (CHỈ CHO PHÉP BEABEA FORMAT CÁC THẺ ĐẶC BIỆT CHỐNG GIẢ MẠO)
@@ -16184,10 +16393,14 @@
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
 
-            // 🎬 EMBED VIDEO YOUTUBE AMBIENT CINEMA & MINI-DOCK (CHỐNG RELOAD 100%)
-        const ytVideoId = getYouTubeIdIfOnly(rawText);
+            // 🎬 EMBED VIDEO YOUTUBE (HỖ TRỢ youtu.be, youtube.com VÀ KÈM LỜI NHẮN NẾU CÓ)
+        const ytVideoId = getYouTubeVideoId(rawText);
         if (ytVideoId) {
-            return `
+            // Tách phần chữ nếu người dùng nhắn kèm lời bình cạnh link
+            const textWithoutYt = rawText.replace(/(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^\s&]*&)*v=|shorts\/|live\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_\-]+(?:\/[^\s]*|\?[^\s]*)?/gi, '').trim();
+            const commentHtml = textWithoutYt ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(textWithoutYt)}</div>` : '';
+
+            return commentHtml + `
                 <div class="chat-yt-embed-wrap" id="yt-dock-${ytVideoId}">
                     <div class="chat-yt-toolbar">
                         <button type="button" class="chat-yt-btn-tool" onclick="toggleYouTubeMiniDock('yt-dock-${ytVideoId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
@@ -16201,22 +16414,65 @@
             `;
         }
 
-            // 🎵 EMBED VIDEO TIKTOK CHUYÊN NGHIỆP & MINI-DOCK NỔI
-            const ttVideoId = getTikTokVideoId(rawText);
-            if (ttVideoId) {
-                return `
-                    <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${ttVideoId}">
+        // 🎵 EMBED VIDEO TIKTOK (HỖ TRỢ CẢ LINK GỐC VÀ vt.tiktok.com, vm.tiktok.com)
+        const ttInfo = getTikTokInfo(rawText);
+        if (ttInfo) {
+            const textWithoutTt = rawText.replace(/(?:https?:\/\/)?(?:(?:vt|vm|v)\.tiktok\.com\/[a-zA-Z0-9_\-]+|www\.tiktok\.com\/(?:t\/[a-zA-Z0-9_\-]+|@[^\/\s?#]+\/video\/\d{15,22}))(?:\/[^\s]*|\?[^\s]*)?/gi, '').trim();
+            const commentHtml = textWithoutTt ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(textWithoutTt)}</div>` : '';
+
+            if (ttInfo.type === 'id') {
+                return commentHtml + `
+                    <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${ttInfo.id}">
                         <div class="chat-tiktok-toolbar">
-                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${ttVideoId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${ttInfo.id}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
                                 <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                             </button>
                         </div>
                         <div class="chat-tiktok-inner-box">
-                            <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${ttVideoId}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                            <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${ttInfo.id}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                        </div>
+                    </div>
+                `;
+            } else if (ttInfo.type === 'short') {
+                const cachedId = window.tiktokResolvedCache && window.tiktokResolvedCache[ttInfo.url];
+                const dockId = cachedId || `short-${ttInfo.shortCode}`;
+
+                if (cachedId) {
+                    return commentHtml + `
+                        <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
+                            <div class="chat-tiktok-toolbar">
+                                <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                </button>
+                            </div>
+                            <div class="chat-tiktok-inner-box">
+                                <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${cachedId}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Nếu chưa có trong cache -> Render khung chờ và kích hoạt giải mã link ngầm
+                setTimeout(() => resolveTikTokShortUrl(ttInfo.url, dockId), 60);
+
+                return commentHtml + `
+                    <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
+                        <div class="chat-tiktok-toolbar">
+                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                            </button>
+                        </div>
+                        <div class="chat-tiktok-inner-box" id="tiktok-box-${dockId}">
+                            <div id="tiktok-loader-${dockId}" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#fff; gap:12px; padding:20px; text-align:center;">
+                                <i class="fa-brands fa-tiktok fa-bounce" style="font-size:2.8rem; color:#fe2c55;"></i>
+                                <span style="font-size:0.85rem; color:#cbd5e1; font-weight:600;">Đang nạp video TikTok...</span>
+                            </div>
+                            <iframe class="chat-tiktok-iframe" id="tiktok-iframe-${dockId}" style="display:none;" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
                         </div>
                     </div>
                 `;
             }
+        }
 
             // 🎤 CYBER VOICE MESSAGE (CÓ WEB SPEECH API & TỰ ĐỘNG HỦY MỜ CHỮ THEO TIẾN TRÌNH ÂM THANH)
             if (rawText.startsWith('[VOICE_MESSAGE]') && c.imageId && c.imageId !== 'null') {
@@ -16522,6 +16778,13 @@
         function formatCommentText(text) {
             if (!text) return '';
             let safeText = escapeHtml(text);
+
+            // 🌟 TỰ ĐỘNG CHUYỂN ĐỔI SHORTCODE EMOJI (VD: :sob: -> 😭, :joy: -> 😂, :heart: -> ❤️)
+            if (typeof joypixels !== 'undefined' && joypixels.shortnameToUnicode) {
+                try {
+                    safeText = joypixels.shortnameToUnicode(safeText);
+                } catch(e) {}
+            }
             
             // 1. Highlight link trang web: Hỗ trợ mọi link http://, https:// và các domain quen thuộc không cần gõ https://
             const linkRegex = /(https?:\/\/[^\s<]+)|((?:^|\s)(?:turbows\.pages\.dev|scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
@@ -22339,7 +22602,245 @@
             }
         }
 
-        
+        // =========================================================================
+        // 😀 BỘ MÁY THANH CHỌN EMOJI (EMOJI PICKER POPOVER & SHORTCODE SYSTEM)
+        // =========================================================================
+        let currentEmojiTargetType = 'chat';
+        let currentEmojiCategory = 'smileys';
+        let emojiSearchTerm = '';
+
+        const DANV_EMOJI_CATEGORIES = {
+            smileys: {
+                icon: '😀',
+                name: 'Cảm xúc',
+                emojis: [
+                    { char: '😀', code: ':grinning:' }, { char: '😃', code: ':smiley:' }, { char: '😄', code: ':smile:' }, { char: '😁', code: ':grin:' },
+                    { char: '😆', code: ':laughing:' }, { char: '😅', code: ':sweat_smile:' }, { char: '🤣', code: ':rofl:' }, { char: '😂', code: ':joy:' },
+                    { char: '🙂', code: ':slight_smile:' }, { char: '🙃', code: ':upside_down:' }, { char: '😉', code: ':wink:' }, { char: '😊', code: ':blush:' },
+                    { char: '😇', code: ':innocent:' }, { char: '🥰', code: ':smiling_face_with_3_hearts:' }, { char: '😍', code: ':heart_eyes:' }, { char: '🤩', code: ':star_struck:' },
+                    { char: '😘', code: ':kissing_heart:' }, { char: '😋', code: ':yum:' }, { char: '😛', code: ':stuck_out_tongue:' }, { char: '😜', code: ':stuck_out_tongue_winking_eye:' },
+                    { char: '🤪', code: ':zany_face:' }, { char: '😝', code: ':stuck_out_tongue_closed_eyes:' }, { char: '🤑', code: ':money_mouth:' }, { char: '🤗', code: ':hugging:' },
+                    { char: '🤔', code: ':thinking:' }, { char: '🤐', code: ':zipper_mouth:' }, { char: '🤨', code: ':raised_eyebrow:' }, { char: '😐', code: ':neutral_face:' },
+                    { char: '😏', code: ':smirk:' }, { char: '😒', code: ':unamused:' }, { char: '🙄', code: ':rolling_eyes:' }, { char: '😬', code: ':grimacing:' },
+                    { char: '😌', code: ':relieved:' }, { char: '😔', code: ':pensive:' }, { char: '😪', code: ':sleepy:' }, { char: '🤤', code: ':drooling_face:' },
+                    { char: '😴', code: ':sleeping:' }, { char: '😷', code: ':mask:' }, { char: '🤒', code: ':face_with_thermometer:' }, { char: '🤕', code: ':face_with_head_bandage:' },
+                    { char: '🤧', code: ':sneezing_face:' }, { char: '🥵', code: ':hot_face:' }, { char: '🥶', code: ':cold_face:' }, { char: '🥴', code: ':woozy_face:' },
+                    { char: '😵', code: ':dizzy_face:' }, { char: '🤯', code: ':exploding_head:' }, { char: '😎', code: ':sunglasses:' }, { char: '🤓', code: ':nerd:' },
+                    { char: '🧐', code: ':monocle:' }, { char: '😕', code: ':confused:' }, { char: '😟', code: ':worried:' }, { char: '😮', code: ':open_mouth:' },
+                    { char: '😲', code: ':astonished:' }, { char: '😳', code: ':flushed:' }, { char: '🥺', code: ':pleading_face:' }, { char: '😦', code: ':frowning:' },
+                    { char: '😨', code: ':fearful:' }, { char: '😰', code: ':cold_sweat:' }, { char: '😥', code: ':disappointed_relieved:' }, { char: '😢', code: ':cry:' },
+                    { char: '😭', code: ':sob:' }, { char: '😱', code: ':scream:' }, { char: '😖', code: ':confounded:' }, { char: '😣', code: ':persevere:' },
+                    { char: '😞', code: ':disappointed:' }, { char: '😓', code: ':sweat:' }, { char: '😩', code: ':weary:' }, { char: '😫', code: ':tired_face:' },
+                    { char: '😤', code: ':triumph:' }, { char: '😡', code: ':rage:' }, { char: '😠', code: ':angry:' }, { char: '🤬', code: ':cursing_face:' },
+                    { char: '😈', code: ':smiling_imp:' }, { char: '👿', code: ':imp:' }, { char: '💀', code: ':skull:' }, { char: '💩', code: ':poop:' },
+                    { char: '🤡', code: ':clown:' }, { char: '👻', code: ':ghost:' }, { char: '👽', code: ':alien:' }, { char: '🤖', code: ':robot:' }
+                ]
+            },
+            people: {
+                icon: '👍',
+                name: 'Cử chỉ & Người',
+                emojis: [
+                    { char: '👋', code: ':wave:' }, { char: '✋', code: ':raised_hand:' }, { char: '👌', code: ':ok_hand:' }, { char: '🤌', code: ':pinched_fingers:' },
+                    { char: '✌️', code: ':v:' }, { char: '🤞', code: ':crossed_fingers:' }, { char: '🤟', code: ':love_you_gesture:' }, { char: '🤘', code: ':metal:' },
+                    { char: '🤙', code: ':call_me:' }, { char: '👈', code: ':point_left:' }, { char: '👉', code: ':point_right:' }, { char: '👆', code: ':point_up_2:' },
+                    { char: '👇', code: ':point_down:' }, { char: '👍', code: ':+1:' }, { char: '👎', code: ':-1:' }, { char: '✊', code: ':fist:' },
+                    { char: '👊', code: ':punch:' }, { char: '🤛', code: ':left_facing_fist:' }, { char: '🤜', code: ':right_facing_fist:' }, { char: '👏', code: ':clap:' },
+                    { char: '🙌', code: ':raised_hands:' }, { char: '🤝', code: ':handshake:' }, { char: '🙏', code: ':pray:' }, { char: '✍️', code: ':writing_hand:' },
+                    { char: '💪', code: ':muscle:' }, { char: '🧠', code: ':brain:' }, { char: '👀', code: ':eyes:' }, { char: '❤️', code: ':heart:' },
+                    { char: '🧡', code: ':orange_heart:' }, { char: '💛', code: ':yellow_heart:' }, { char: '💚', code: ':green_heart:' }, { char: '💙', code: ':blue_heart:' },
+                    { char: '💜', code: ':purple_heart:' }, { char: '🖤', code: ':black_heart:' }, { char: '🤍', code: ':white_heart:' }, { char: '💔', code: ':broken_heart:' },
+                    { char: '🔥', code: ':fire:' }, { char: '✨', code: ':sparkles:' }, { char: '🌟', code: ':glowing_star:' }, { char: '💯', code: ':100:' }
+                ]
+            },
+            animals: {
+                icon: '🐱',
+                name: 'Động vật & Tự nhiên',
+                emojis: [
+                    { char: '🐶', code: ':dog:' }, { char: '🐱', code: ':cat:' }, { char: '🐭', code: ':mouse:' }, { char: '🐹', code: ':hamster:' },
+                    { char: '🐰', code: ':rabbit:' }, { char: '🦊', code: ':fox:' }, { char: '🐻', code: ':bear:' }, { char: '🐼', code: ':panda_face:' },
+                    { char: '🐨', code: ':koala:' }, { char: '🐯', code: ':tiger:' }, { char: '🦁', code: ':lion:' }, { char: '🐮', code: ':cow:' },
+                    { char: '🐷', code: ':pig:' }, { char: '🐸', code: ':frog:' }, { char: '🐵', code: ':monkey_face:' }, { char: '🐔', code: ':chicken:' },
+                    { char: '🐧', code: ':penguin:' }, { char: '🐦', code: ':bird:' }, { char: '🐤', code: ':baby_chick:' }, { char: '🦆', code: ':duck:' },
+                    { char: '🦅', code: ':eagle:' }, { char: '🦉', code: ':owl:' }, { char: '🦇', code: ':bat:' }, { char: '🦄', code: ':unicorn:' },
+                    { char: '🐝', code: ':bee:' }, { char: '🐛', code: ':bug:' }, { char: '🦋', code: ':butterfly:' }, { char: '🐢', code: ':turtle:' },
+                    { char: '🐍', code: ':snake:' }, { char: '🐙', code: ':octopus:' }, { char: '🐬', code: ':dolphin:' }, { char: '🐳', code: ':whale:' },
+                    { char: '🌸', code: ':cherry_blossom:' }, { char: '🌹', code: ':rose:' }, { char: '🌻', code: ':sunflower:' }, { char: '🍀', code: ':four_leaf_clover:' },
+                    { char: '🍁', code: ':maple_leaf:' }, { char: '🌙', code: ':crescent_moon:' }, { char: '☀️', code: ':sunny:' }, { char: '⚡', code: ':zap:' }
+                ]
+            },
+            activities: {
+                icon: '🎮',
+                name: 'Game & Hoạt động',
+                emojis: [
+                    { char: '🎮', code: ':video_game:' }, { char: '🕹️', code: ':joystick:' }, { char: '🎲', code: ':game_die:' }, { char: '🧩', code: ':jigsaw:' },
+                    { char: '🎨', code: ':art:' }, { char: '🎬', code: ':clapper:' }, { char: '🎤', code: ':microphone:' }, { char: '🎧', code: ':headphones:' },
+                    { char: '🎼', code: ':musical_score:' }, { char: '🎹', code: ':musical_keyboard:' }, { char: '🏆', code: ':trophy:' }, { char: '🥇', code: ':first_place:' },
+                    { char: '🥈', code: ':second_place:' }, { char: '🥉', code: ':third_place:' }, { char: '🎯', code: ':dart:' }, { char: '🚀', code: ':rocket:' },
+                    { char: '🛸', code: ':flying_saucer:' }, { char: '💡', code: ':bulb:' }, { char: '💣', code: ':bomb:' }, { char: '🛡️', code: ':shield:' },
+                    { char: '💎', code: ':gem:' }, { char: '👑', code: ':crown:' }, { char: '🎁', code: ':gift:' }, { char: '🎉', code: ':tada:' },
+                    { char: '🎊', code: ':confetti_ball:' }, { char: '🏮', code: ':izakaya_lantern:' }, { char: '🔔', code: ':bell:' }, { char: '💬', code: ':speech_balloon:' }
+                ]
+            }
+        };
+
+        // Bật / Tắt thanh chọn Emoji
+        function toggleEmojiPicker(targetType, event) {
+            if (event && event.stopPropagation) event.stopPropagation();
+
+            const existing = document.getElementById('danvEmojiPickerPopover');
+            if (existing) {
+                const wasSameTarget = (existing.dataset.targetType === targetType);
+                existing.remove();
+                if (wasSameTarget) return;
+            }
+
+            currentEmojiTargetType = targetType;
+            emojiSearchTerm = '';
+
+            const popover = document.createElement('div');
+            popover.id = 'danvEmojiPickerPopover';
+            popover.className = 'emoji-picker-popover';
+            popover.dataset.targetType = targetType;
+
+            const triggerBtn = event.currentTarget || event.target;
+            document.body.appendChild(popover);
+
+            renderEmojiPickerContent(popover);
+
+            // Định vị thông minh bám theo nút bấm (không bị che khuất)
+            const rect = triggerBtn.getBoundingClientRect();
+            const popWidth = 325;
+            const popHeight = 350;
+
+            let top = rect.bottom + 8;
+            if (window.innerHeight - rect.bottom < popHeight && rect.top > popHeight) {
+                top = rect.top - popHeight - 8;
+            }
+
+            let left = rect.left;
+            if (left + popWidth > window.innerWidth - 12) {
+                left = window.innerWidth - popWidth - 12;
+            }
+            if (left < 10) left = 10;
+
+            popover.style.top = `${Math.max(10, top)}px`;
+            popover.style.left = `${left}px`;
+        }
+
+        // Vẽ nội dung trong bảng chọn Emoji
+        function renderEmojiPickerContent(popoverEl) {
+            const catKeys = Object.keys(DANV_EMOJI_CATEGORIES);
+            const activeCategoryData = DANV_EMOJI_CATEGORIES[currentEmojiCategory] || DANV_EMOJI_CATEGORIES.smileys;
+
+            const tabsHtml = catKeys.map(k => `
+                <button type="button" class="emoji-cat-btn ${k === currentEmojiCategory ? 'active' : ''}" onclick="switchEmojiCategory('${k}', event)" title="${DANV_EMOJI_CATEGORIES[k].name}">
+                    ${DANV_EMOJI_CATEGORIES[k].icon}
+                </button>
+            `).join('');
+
+            let emojisToDisplay = activeCategoryData.emojis;
+            if (emojiSearchTerm) {
+                emojisToDisplay = [];
+                catKeys.forEach(k => {
+                    DANV_EMOJI_CATEGORIES[k].emojis.forEach(item => {
+                        if (item.code.toLowerCase().includes(emojiSearchTerm) || item.char.includes(emojiSearchTerm)) {
+                            emojisToDisplay.push(item);
+                        }
+                    });
+                });
+            }
+
+            const gridHtml = emojisToDisplay.map(item => `
+                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
+                    ${item.char}
+                </div>
+            `).join('');
+
+            popoverEl.innerHTML = `
+                <div class="emoji-picker-header">
+                    <div class="emoji-search-box">
+                        <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                        <input type="text" id="emojiSearchField" placeholder="Tìm kiếm emoji (ví dụ: sob, heart)..." value="${escapeHtml(emojiSearchTerm)}" oninput="handleEmojiSearch(this.value)">
+                    </div>
+                    <div class="emoji-category-tabs">
+                        ${tabsHtml}
+                    </div>
+                </div>
+                <div class="emoji-picker-grid" id="emojiPickerGridItems">
+                    ${gridHtml || '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px; font-size:0.85rem;">Không tìm thấy emoji nào</div>'}
+                </div>
+                <div class="emoji-picker-footer">
+                    <span id="emojiPreviewShortcode" style="font-family:monospace; color:var(--primary); font-weight:700;">:emoji:</span>
+                    <span style="font-size:0.7rem; opacity:0.75;">JoyPixels Engine</span>
+                </div>
+            `;
+
+            const searchInp = popoverEl.querySelector('#emojiSearchField');
+            if (searchInp && emojiSearchTerm) {
+                searchInp.focus();
+                const len = searchInp.value.length;
+                searchInp.setSelectionRange(len, len);
+            }
+        }
+
+        function switchEmojiCategory(catKey, event) {
+            if (event) event.stopPropagation();
+            currentEmojiCategory = catKey;
+            emojiSearchTerm = '';
+            const popover = document.getElementById('danvEmojiPickerPopover');
+            if (popover) renderEmojiPickerContent(popover);
+        }
+
+        function handleEmojiSearch(val) {
+            emojiSearchTerm = (val || '').toLowerCase().trim();
+            const popover = document.getElementById('danvEmojiPickerPopover');
+            if (popover) renderEmojiPickerContent(popover);
+        }
+
+        function previewEmojiCode(code) {
+            const previewEl = document.getElementById('emojiPreviewShortcode');
+            if (previewEl) previewEl.innerText = code || ':emoji:';
+        }
+
+        // Chèn Emoji vào đúng vị trí con trỏ của input đang chọn
+        function insertSelectedEmoji(emojiChar) {
+            const targetMap = {
+                chat: 'commentTextChat',
+                proj: 'commentTextProj',
+                prof: 'commentTextProf',
+                std: 'commentTextStd'
+            };
+
+            const inputId = targetMap[currentEmojiTargetType] || 'commentTextChat';
+            const inputEl = document.getElementById(inputId);
+
+            if (inputEl) {
+                const startPos = inputEl.selectionStart || 0;
+                const endPos = inputEl.selectionEnd || 0;
+                const prevVal = inputEl.value;
+
+                inputEl.value = prevVal.substring(0, startPos) + emojiChar + prevVal.substring(endPos);
+                inputEl.focus();
+
+                const newCursor = startPos + emojiChar.length;
+                inputEl.setSelectionRange(newCursor, newCursor);
+
+                // Kích hoạt lại input event để tự resize textarea nếu ở chat
+                inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            // Tự động đóng popover sau khi chọn
+            const popover = document.getElementById('danvEmojiPickerPopover');
+            if (popover) popover.remove();
+        }
+
+        // Đóng popover khi click ra ngoài
+        document.addEventListener('click', function(e) {
+            const popover = document.getElementById('danvEmojiPickerPopover');
+            if (popover && !popover.contains(e.target) && !e.target.closest('button[onclick*="toggleEmojiPicker"]')) {
+                popover.remove();
+            }
+        });
     </script>
 </body>
 </html>
