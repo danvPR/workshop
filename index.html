@@ -11093,14 +11093,16 @@
         async function loadProjects(isLoadMore = false) { 
             if (!isLoadMore) {
                 homeCurrentPage = 1;
-                document.getElementById('projectList').innerHTML = getSkeletonHTML('card');
+                const pList = document.getElementById('projectList');
+                if (pList) pList.innerHTML = getSkeletonHTML('card');
             }
 
             try { 
                 let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
                 if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                 
-                const res = await (await fetch(url)).json(); 
+                // Đính kèm Header StudioDANV-Web để Worker nhận diện client chính chủ
+                const res = await (await fetch(url, { headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
                 
                 if (res.projects) {
                     if (isLoadMore) {
