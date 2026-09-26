@@ -17011,10 +17011,16 @@
         let isUserAFK = false;
         let afkTimer = null;
 
-        // 🚀 KHỞI TẠO SUPABASE CLIENT
-        const SUPABASE_URL = "https://<PROJECT-REF>.supabase.co"; // DÁN PROJECT URL CỦA BẠN VÀO ĐÂY
-        const SUPABASE_ANON_KEY = "<DÁN_ANON_KEY_VÀO_ĐÂY>"; // DÁN ANON_KEY (MÀU XANH) VÀO ĐÂY
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // 🚀 KHỞI TẠO SUPABASE CLIENT (BẢO VỆ CHỐNG CRASH TOÀN TRANG)
+        const SUPABASE_URL = "https://iaelelwrjhijuvdisthi.supabase.co/rest/v1/"; // 
+        const SUPABASE_ANON_KEY = "sb_publishable_i8vUGhuAEzTwdb75ewHQOg_uBn2cA0Z"; // 
+        
+        let supabase = null;
+        try {
+            if (window.supabase && SUPABASE_URL.startsWith('http') && !SUPABASE_URL.includes('<PROJECT-REF>')) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch(e) { console.error("Lỗi khởi tạo Supabase:", e); }
         
         let globalChatChannel = null;
 
