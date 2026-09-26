@@ -17032,6 +17032,7 @@
         let globalChatChannel = null;
 
         function connectGlobalChatWebSocket() {
+            if (!supabase) return; // BẢO VỆ CHỐNG SẬP WEB NẾU THƯ VIỆN CHƯA TẢI XONG
             if (globalChatChannel) return; // Tránh tạo nhiều kênh trùng lặp
 
             globalChatChannel = supabase.channel('realtime:global_chat');
