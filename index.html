@@ -10908,9 +10908,9 @@
             // ĐÓNG KẾT NỐI WEBSOCKET KHI RỜI KHỎI TAB CHAT ĐỂ TIẾT KIỆM BĂNG THÔNG CHO MÁY CHỦ
             if (hash !== '#chat') {
                 if (typeof chatInterval !== 'undefined' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
-                if (typeof globalChatChannel !== 'undefined' && globalChatChannel && supabaseClient) { 
-                    supabaseClient.removeChannel(globalChatChannel); 
-                    globalChatChannel = null; 
+                if (window.globalChatChannel && window.supabaseClient) { 
+                    window.supabaseClient.removeChannel(window.globalChatChannel); 
+                    window.globalChatChannel = null; 
                 }
             }
 
@@ -17010,11 +17010,11 @@
         let isChatLoadingMore = false;
 
         let isUserAFK = false;
-        // KHỞI TẠO CLIENT SUPABASE
-        const SUPABASE_URL = "URL_SUPABASE_CỦA_BẠN"; 
-        const SUPABASE_ANON_KEY = "KEY_ANON_CỦA_BẠN"; 
-        const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-        let globalChatChannel = null;
+        // KHỞI TẠO CLIENT SUPABASE (Dùng var để chống lỗi khởi tạo sớm)
+        var SUPABASE_URL = "https://iaelelwrjhijuvdisthi.supabase.co/rest/v1/"; // BẮT BUỘC phải có https:// ở đầu
+        var SUPABASE_ANON_KEY = "sb_publishable_i8vUGhuAEzTwdb75ewHQOg_uBn2cA0Z"; 
+        var supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        var globalChatChannel = null;
 
         function connectGlobalChatWebSocket() {
             if (!supabaseClient) {
