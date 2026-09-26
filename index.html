@@ -6471,36 +6471,8 @@
             .midautumn-quiz-box { padding: 20px; }
         }
     </style>
-    <!-- CHUẨN BỊ SẴN CALLBACK CHO TURNSTILE TRƯỚC KHI TẢI THƯ VIỆN (CHỐNG LỖI RACE CONDITION) -->
-    <script>
-        window.onCloudflareVerifySuccess = function(token) {
-            sessionStorage.setItem('cf_human_verified', 'true');
-            const screen = document.getElementById('cfVerifyScreen');
-            if (screen) {
-                screen.style.transition = 'opacity 0.4s ease';
-                screen.style.opacity = '0';
-                setTimeout(() => screen.remove(), 400);
-            }
-            // Gọi khởi tạo App nếu đã sẵn sàng, nếu chưa thì đánh dấu cờ để code phía dưới tự gọi
-            if (typeof window.initMainApp === 'function') {
-                window.initMainApp();
-            } else {
-                window.pendingAppInit = true;
-            }
-        };
-
-        // FALLBACK: Tự động xé rào cho qua sau 8 giây nếu Turnstile bị lỗi mạng / bị adblock chặn
-        setTimeout(() => {
-            if (!sessionStorage.getItem('cf_human_verified')) {
-                console.warn("Turnstile timeout or blocked, forcing app init...");
-                window.onCloudflareVerifySuccess('fallback_token');
-            }
-        }, 8000);
-    </script>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <!-- THÊM THƯ VIỆN SUPABASE ĐỂ LÀM REALTIME CHAT -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- MÀN HÌNH XÁC MINH CLOUDFLARE "VERIFY YOU ARE HUMAN" -->
@@ -9797,21 +9769,44 @@
     </div>
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
-        const WIKI_CLIENT_ID = "70970406";
+        // ================= XỬ LÝ MÀN HÌNH XÁC THỰC CLOUDFLARE =================
+        function generateRandomRayId() {
+            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
+            return `${hex()}${hex()}${hex()} - SGN`;
+        }
+
+        // Tự động giải phóng màn hình khi người dùng vượt qua kiểm tra Turnstile
+        window.onCloudflareVerifySuccess = function(token) {
+            sessionStorage.setItem('cf_human_verified', 'true');
+            const screen = document.getElementById('cfVerifyScreen');
+            if (screen) {
+                screen.style.transition = 'opacity 0.4s ease';
+                screen.style.opacity = '0';
+                setTimeout(() => screen.remove(), 400);
+            }
+        };
+
+        // Kiểm tra xem trong phiên này người dùng đã xác minh chưa (tránh hỏi lại liên tục mỗi khi tải trang)
+        (function checkInitialCfVerification() {
+            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
+            document.addEventListener('DOMContentLoaded', () => {
+                const raySpan = document.getElementById('cfRayIdSim');
+                if (raySpan) raySpan.innerText = generateRandomRayId();
+
+                if (isVerified) {
+                    const screen = document.getElementById('cfVerifyScreen');
+                    if (screen) screen.remove();
+                }
+            });
+        })();
+
+        const WIKI_CLIENT_ID = "70970406"; 
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         const KLIPY_API_KEY = "u5fpMSE07ITa9E5Nxh9meqnGez7Km7PCC2mj3V6NviVocR7nBEThpAZQEFOn4S1S";
         
         let attachedGifUrls = { proj: null, prof: null, chat: null }; // Biến nhớ GIF đang chọn (Hỗ trợ cả Chat)
-        
-        // Cứu hộ Crash: Nếu dữ liệu người dùng bị lỗi format, tự động xóa để web sống lại
-        let currentUser = null;
-        try {
-            currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
-        } catch(e) {
-            localStorage.removeItem('danv_user');
-        }
-        
+        let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Hàm tạo timeout giả lập
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let chatInterval = null; // Vòng lặp tải chat tự động
@@ -10196,19 +10191,7 @@
             } catch(e) { showToast("Lỗi kết nối máy chủ", "error"); return null; }
         }
 
-        // ================= XỬ LÝ KHỞI TẠO APP VÀ CAPTCHA =================
-        let isAppInitialized = false;
-
-        function generateRandomRayId() {
-            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
-            return `${hex()}${hex()}${hex()} - SGN`;
-        }
-
-        // HÀM KHỞI TẠO APP CHÍNH THỨC (Gắn vào window để thẻ Head gọi được)
-        window.initMainApp = async function() {
-            if (isAppInitialized) return;
-            isAppInitialized = true;
-
+        document.addEventListener('DOMContentLoaded', async () => {
             const loader = document.getElementById('globalLoader');
             
             // Khởi tạo Theme ngay lập tức
@@ -10220,7 +10203,6 @@
                 const initialLang = await detectLanguage();
                 await setLanguage(initialLang);
                 const urlParams = new URLSearchParams(window.location.search);
-                
                 // 🎁 TỰ ĐỘNG NHẬN DIỆN LINK MỜI BẠN BÈ (?ref=username hoặc ?r=username)
                 const refCandidate = urlParams.get('ref') || urlParams.get('r');
                 if (refCandidate) {
@@ -10231,7 +10213,6 @@
                         showToast(`Bạn được @${refCandidate.trim()} mời gia nhập! Đăng ký ngay để nhận 50 WOW.`, 'info');
                     }
                 }
-                
                 if (urlParams.get('code')) {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
                     
@@ -10255,48 +10236,18 @@
                     checkLegacyUser();
                 }
 
-                await loadProjects(); 
-                updateNav(); 
-                handleRouting();
+                await loadProjects(); updateNav(); handleRouting();
                 checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
-                
                 // Kiểm tra nếu có user đăng nhập mà chưa xem Hướng dẫn tân thủ
                 if (currentUser && !localStorage.getItem('danv_tour_completed')) {
-                    setTimeout(() => { OnboardingTour.start(); }, 1500);
+                setTimeout(() => { OnboardingTour.start(); }, 1500);
                 }
-                
                 checkEmailVerificationBanner(); // Kiểm tra banner xác thực email
                 loadEvents(); // Tải Sự kiện Game Jam
                 startUnifiedHeartbeat(); // Kích hoạt luồng nhịp tim tổng hợp (Đợt 3)
-            } catch (e) {
-                console.error("Lỗi khởi tạo App:", e);
-            } finally { 
-                if (loader) {
-                    loader.style.opacity = '0'; 
-                    setTimeout(() => loader.style.display = 'none', 500); 
-                }
-            }
-        };
-
-        // BẮT SỰ KIỆN DOMContentLoaded: Liên kết với trạng thái của Captcha
-        document.addEventListener('DOMContentLoaded', () => {
-            const raySpan = document.getElementById('cfRayIdSim');
-            if (raySpan) raySpan.innerText = generateRandomRayId();
-
-            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
-            
-            if (isVerified) {
-                // Nếu đã pass captcha từ trước
-                const screen = document.getElementById('cfVerifyScreen');
-                if (screen) screen.remove();
-                window.initMainApp();
-            } else if (window.pendingAppInit) {
-                // Nếu Captcha đã giải xong RẤT NHANH trước khi trang load xong hoàn toàn
-                window.initMainApp();
-            }
-            // Nếu chưa xong, window.onCloudflareVerifySuccess (đã đặt ở <head>) sẽ tự động gọi initMainApp khi pass
+            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
-        
+
         // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ) & ĐỒNG BỘ TRẠNG THÁI EMAIL
         async function checkLegacyUser() {
             if(!currentUser) return;
@@ -10952,13 +10903,10 @@
             }
             previousHash = path + currentHash;
 
-            // ĐÓNG KẾT NỐI SUPABASE REALTIME KHI RỜI KHỎI TAB CHAT
+            // ĐÓNG KẾT NỐI WEBSOCKET KHI RỜI KHỎI TAB CHAT ĐỂ TIẾT KIỆM BĂNG THÔNG CHO MÁY CHỦ
             if (hash !== '#chat') {
                 if (typeof chatInterval !== 'undefined' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
-                if (typeof globalChatChannel !== 'undefined' && globalChatChannel) {
-                    supabase.removeChannel(globalChatChannel);
-                    globalChatChannel = null;
-                }
+                if (typeof globalChatWS !== 'undefined' && globalChatWS) { globalChatWS.close(); globalChatWS = null; }
             }
 
             // 🎯 XỬ LÝ HIGHLIGHT TAB & TITLE ĐỘNG CHO TỪNG TRANG (SEO TITLE FORMAT)
@@ -10998,10 +10946,17 @@
 
             // Ẩn tất cả các trang
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
-            const pContainer = document.getElementById('playerContainer');
-            if (pContainer) pContainer.innerHTML = '';
+            document.getElementById('playerContainer').innerHTML = '';
+            
+            // Tải dữ liệu trước nếu cần
+            if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/') || hash === '#chat') {
+                if (allProjects.length === 0) await loadProjects(); 
+            }
+            if (hash.startsWith('#assets')) {
+                if (allAssets.length === 0) await fetchAssetsList();
+            }
 
-            // BẬT TRANG LẬP TỨC (Không được bắt giao diện chờ mạng rồi mới chịu hiện)
+            // Chạy hàm mở trang tương ứng (Display: block được gọi bên trong các hàm này)
             if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
             else if (hash.startsWith('#profile/')) await openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#midautumn' || hash === '#trungthu') openMidAutumnPage();
@@ -11015,10 +10970,7 @@
             else if (hash === '#creator') await openCreatorPage(urlParams);
             else if (hash === '#chat') openChatPage();
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
-            else {
-                openHomePage(); // Bật ngay Banner, ô tìm kiếm và khung xương lên màn hình
-                if (allProjects.length === 0) loadProjects(); // Kéo dữ liệu chạy ngầm, không chặn hiển thị
-            }
+            else openHomePage();
 
             // ⚡ FIX TRIỆT ĐỂ LỖI KHOẢNG TRẮNG SCROLL:
             // Đợi 10ms để trình duyệt render xong CSS display: block của trang mới rồi mới ép cuộn lên đầu và tính toán lại Layout
@@ -11095,16 +11047,14 @@
         async function loadProjects(isLoadMore = false) { 
             if (!isLoadMore) {
                 homeCurrentPage = 1;
-                const pList = document.getElementById('projectList');
-                if (pList) pList.innerHTML = getSkeletonHTML('card');
+                document.getElementById('projectList').innerHTML = getSkeletonHTML('card');
             }
 
             try { 
                 let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
                 if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                 
-                // Đính kèm Header StudioDANV-Web để Worker nhận diện client chính chủ
-                const res = await (await fetch(url, { headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
+                const res = await (await fetch(url)).json(); 
                 
                 if (res.projects) {
                     if (isLoadMore) {
@@ -11249,8 +11199,7 @@
         }
 
         function openHomePage() {
-            const home = document.getElementById('homeView');
-            if (home) home.style.display = 'block'; // Đảm bảo Trang chủ luôn bật display: block
+            document.getElementById('homeView').style.display = 'block';
             
             // Cập nhật ngày đếm ngược cho Banner Trung Thu ngoài Trang Chủ
             const cdEl = document.getElementById('homeMidAutumnCountdown');
@@ -11261,8 +11210,8 @@
                 cdEl.innerText = diffDays > 0 ? `Đêm Rằm 25/09 • Còn ${diffDays} ngày` : 'Đang diễn ra đêm Rằm 25/09!';
             }
 
-            // Luôn gọi hàm vẽ (khi chưa có dữ liệu sẽ hiện khung xương chờ tải thay vì để trắng màn hình)
-            renderHomeProjects(false);
+            // Cập nhật lại giao diện thẻ game để đồng bộ số Tim/Sao mới nhất vừa bấm
+            if (allProjects && allProjects.length > 0) renderHomeProjects(false);
         }
 
         function toggleClearSearchBtn() {
@@ -17049,81 +16998,74 @@
             showToast(`Đã chuyển sang chế độ ${theme === 'dark' ? 'Tối' : 'Sáng'}`, "success");
         }
 
-        // ================= HỆ THỐNG GLOBAL CHAT (SUPABASE REALTIME) =================
+        // ================= HỆ THỐNG GLOBAL CHAT (ADAPTIVE POLLING THÔNG MINH) =================
         let lastChatJSONStr = "";
-        let chatDisplayLimit = 20; 
+        let chatDisplayLimit = 20; // Giới hạn 20 tin ban đầu
         let chatHasMore = false;
         let isChatLoadingMore = false;
-        let isUserAFK = false;
-        let afkTimer = null;
 
-        // 🚀 KHỞI TẠO SUPABASE CLIENT (BẢO VỆ CHỐNG CRASH TOÀN TRANG)
-        const SUPABASE_URL = "https://iaelelwrjhijuvdisthi.supabase.co/rest/v1/"; // 
-        const SUPABASE_ANON_KEY = "sb_publishable_i8vUGhuAEzTwdb75ewHQOg_uBn2cA0Z"; // 
-        
-        let supabase = null;
-        try {
-            if (window.supabase && SUPABASE_URL.startsWith('http') && !SUPABASE_URL.includes('<PROJECT-REF>')) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch(e) { console.error("Lỗi khởi tạo Supabase:", e); }
-        
-        let globalChatChannel = null;
+        let isUserAFK = false;
+        let globalChatWS = null; // Biến lưu trữ kết nối WebSocket
 
         function connectGlobalChatWebSocket() {
-            if (!supabase) return; // BẢO VỆ CHỐNG SẬP WEB NẾU THƯ VIỆN CHƯA TẢI XONG
-            if (globalChatChannel) return; // Tránh tạo nhiều kênh trùng lặp
+            if (globalChatWS && (globalChatWS.readyState === WebSocket.OPEN || globalChatWS.readyState === WebSocket.CONNECTING)) return;
 
-            globalChatChannel = supabase.channel('realtime:global_chat');
+            // Tự động đổi http/https thành ws/wss
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsDomain = WORKER_URL.replace(/^https?:\/\//, '');
+            const wsUrl = `${wsProtocol}//${wsDomain}/api/chat/stream`;
 
-            // 1. Lắng nghe TIN NHẮN MỚI
-            globalChatChannel.on('broadcast', { event: 'NEW_MESSAGE' }, (payload) => {
-                const data = payload.payload;
-                const liveWrapper = document.getElementById('chatLiveWrapper');
-                if (!liveWrapper) return;
-                
-                const msgId = String(data.message.msgId || data.message.id);
-                if (document.getElementById(`chat-msg-${msgId}`)) return;
+            globalChatWS = new WebSocket(wsUrl);
 
-                const temp = document.createElement('div');
-                temp.innerHTML = renderSingleChatMessageHTML(data.message);
-                const newEl = temp.firstElementChild;
-                if (newEl) {
-                    liveWrapper.appendChild(newEl);
-                    scrollChatToBottom(true);
-                    if (!chatNotifiedMsgIds.has(msgId)) {
-                        chatNotifiedMsgIds.add(msgId);
-                        triggerChatBrowserNotification(data.message, msgId);
+            globalChatWS.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    const liveWrapper = document.getElementById('chatLiveWrapper');
+                    if (!liveWrapper) return;
+
+                    // 1. NHẬN TIN NHẮN MỚI
+                    if (data.type === "NEW_MESSAGE") {
+                        const msgId = String(data.message.msgId || data.message.id);
+                        if (document.getElementById(`chat-msg-${msgId}`)) return; // Tránh render trùng lặp
+
+                        const temp = document.createElement('div');
+                        temp.innerHTML = renderSingleChatMessageHTML(data.message);
+                        const newEl = temp.firstElementChild;
+                        if (newEl) {
+                            liveWrapper.appendChild(newEl);
+                            scrollChatToBottom(true);
+                            if (!chatNotifiedMsgIds.has(msgId)) {
+                                chatNotifiedMsgIds.add(msgId);
+                                triggerChatBrowserNotification(data.message, msgId);
+                            }
+                        }
+                    } 
+                    // 2. CẬP NHẬT TIN NHẮN (BÓC TÚI MÙ, POLL, AI TRẢ LỜI)
+                    else if (data.type === "UPDATE_MESSAGE") {
+                        // Tận dụng hàm diffing DOM siêu mượt có sẵn của bạn để vẽ lại mà không bị giật
+                        loadGlobalChat(false);
+                    } 
+                    // 3. XÓA TIN NHẮN REALTIME
+                    else if (data.type === "DELETE_MESSAGE") {
+                        const targetEl = document.getElementById(`chat-msg-${data.msgId}`);
+                        if (targetEl) {
+                            targetEl.style.transition = 'all 0.25s ease';
+                            targetEl.style.opacity = '0';
+                            targetEl.style.transform = 'scale(0.95)';
+                            setTimeout(() => targetEl.remove(), 250);
+                        }
                     }
-                }
-            });
+                } catch(e) {}
+            };
 
-            // 2. Lắng nghe CẬP NHẬT (Bóc túi mù, Poll, BeaBea gõ phím)
-            globalChatChannel.on('broadcast', { event: 'UPDATE_MESSAGE' }, (payload) => {
-                loadGlobalChat(false); // Dùng lại hàm diffing DOM siêu mượt của bạn
-            });
-
-            // 3. Lắng nghe XÓA TIN NHẮN
-            globalChatChannel.on('broadcast', { event: 'DELETE_MESSAGE' }, (payload) => {
-                const targetEl = document.getElementById(`chat-msg-${payload.payload.msgId}`);
-                if (targetEl) {
-                    targetEl.style.transition = 'all 0.25s ease';
-                    targetEl.style.opacity = '0';
-                    targetEl.style.transform = 'scale(0.95)';
-                    setTimeout(() => targetEl.remove(), 250);
+            globalChatWS.onclose = () => {
+                // Tự động kết nối lại sau 3 giây nếu vẫn đang mở Kênh Giao Lưu (tránh rớt mạng)
+                if (window.location.hash.split('?')[0] === '#chat') {
+                    setTimeout(connectGlobalChatWebSocket, 3000);
                 }
-            });
-
-            // Kích hoạt theo dõi
-            globalChatChannel.subscribe((status) => {
-                if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
-                    globalChatChannel = null;
-                    if (window.location.hash.split('?')[0] === '#chat') {
-                        setTimeout(connectGlobalChatWebSocket, 3000);
-                    }
-                }
-            });
+            };
         }
+        let afkTimer = null;
         
         // (Đã xóa hàm startChatPolling -> startUnifiedHeartbeat)
 
