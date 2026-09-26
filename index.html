@@ -11249,7 +11249,8 @@
         }
 
         function openHomePage() {
-            document.getElementById('homeView').style.display = 'block';
+            const home = document.getElementById('homeView');
+            if (home) home.style.display = 'block';
             
             // Cập nhật ngày đếm ngược cho Banner Trung Thu ngoài Trang Chủ
             const cdEl = document.getElementById('homeMidAutumnCountdown');
@@ -11260,8 +11261,8 @@
                 cdEl.innerText = diffDays > 0 ? `Đêm Rằm 25/09 • Còn ${diffDays} ngày` : 'Đang diễn ra đêm Rằm 25/09!';
             }
 
-            // Cập nhật lại giao diện thẻ game để đồng bộ số Tim/Sao mới nhất vừa bấm
-            if (allProjects && allProjects.length > 0) renderHomeProjects(false);
+            // Luôn gọi vẽ trang chủ kể cả khi chưa có dữ liệu để không bị màn hình trắng trơn
+            renderHomeProjects(false);
         }
 
         function toggleClearSearchBtn() {
