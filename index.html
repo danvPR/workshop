@@ -14478,6 +14478,21 @@
 
             // 2. PAYMENT PROMPT: Nhận yêu cầu thanh toán từ Aftercode
             if (data.type === "DANV_WOW_PAY_REQUEST") {
+                // 🛑 TỰ ĐỘNG THOÁT TOÀN MÀN HÌNH NẾU EMBED/TRÌNH DUYỆT ĐANG FULLSCREEN
+                try {
+                    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen().catch(() => {});
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.mozCancelFullScreen) {
+                            document.mozCancelFullScreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                } catch(fsErr) {}
+
                 const sendReply = (status, extra = {}) => {
                     event.source.postMessage({
                         type: "DANV_WOW_PAY_RESPONSE",
