@@ -10411,8 +10411,8 @@
             // Loại bỏ hoàn toàn ký tự @ nếu người dùng cố tình dán vào
             refCode = refCode.replace(/@/g, '').trim();
 
-            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM
-            const turnstileToken = document.querySelector('#authPaneRegister [name="cf-turnstile-response"]')?.value;
+            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM ĐANG ĐƯỢC SUBMIT
+            const turnstileToken = e.target.querySelector('[name="cf-turnstile-response"]')?.value;
             if (!turnstileToken) {
                 showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
@@ -10633,8 +10633,8 @@
             const loginId = document.getElementById('loginId').value.trim(); 
             const pw = document.getElementById('loginPw').value;
 
-            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM
-            const turnstileToken = document.querySelector('#authPaneLogin [name="cf-turnstile-response"]')?.value;
+            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM ĐANG ĐƯỢC SUBMIT
+            const turnstileToken = e.target.querySelector('[name="cf-turnstile-response"]')?.value;
             if (!turnstileToken) {
                 showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
@@ -15537,8 +15537,8 @@
             const identifier = input ? input.value.trim() : '';
             if (!identifier) return showToast("Vui lòng nhập Username hoặc Email!", "error");
 
-            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM QUÊN MẬT KHẨU
-            const turnstileToken = document.querySelector('#forgotStep1 [name="cf-turnstile-response"]')?.value;
+            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM ĐANG ĐƯỢC SUBMIT
+            const turnstileToken = e.target.querySelector('[name="cf-turnstile-response"]')?.value;
             if (!turnstileToken) {
                 return showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
             }
@@ -21327,6 +21327,155 @@
                 }
             }
         };
+
+        // ================= XỬ LÝ KHÓA BÌNH LUẬN DỰ ÁN VÀ HỒ SƠ =================
+        async function toggleLockComments(type) {
+            if (!currentUser) return openModal('loginModal');
+            let endpoint = '';
+            let payload = {};
+            
+            if (type === 'proj') {
+                endpoint = `/api/project/action`;
+                payload = { fileId: currentProj.fileId, action: "toggle_lock_comments" };
+            } else if (type === 'prof') {
+                endpoint = `/api/user/comment`;
+                payload = { targetUser: viewingProfileUser, action: "toggle_lock" };
+            } else {
+                return;
+            }
+
+            const btnId = type === 'proj' ? 'btnLockProjComments' : 'btnLockProfComments';
+            const btn = document.getElementById(btnId);
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const res = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
+            if (res && res.success) {
+                let list = [];
+                if (type === 'proj') list = currentProj.comments || [];
+                else if (type === 'prof') list = viewingProfileData.comments || [];
+
+                if (res.isLocked) {
+                    list.unshift({ id: "SYSTEM_LOCK", isSystem: true });
+                    showToast("Đã khóa tính năng bình luận!", "success");
+                } else {
+                    if (list.length > 0 && list[0].id === "SYSTEM_LOCK") list.shift();
+                    showToast("Đã mở khóa bình luận!", "success");
+                }
+                renderCommentList(type, list);
+            } else {
+                showToast(res ? res.error : "Không thể thay đổi trạng thái!", "error");
+            }
+            
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
+        }
+
+        // ================= XỬ LÝ TIN NHẮN THOẠI (VOICE CHAT) =================
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let voiceTimerInterval = null;
+        let voiceSeconds = 0;
+
+        async function toggleVoiceRecord() {
+            if (!currentUser) return openModal('loginModal');
+            
+            const btn = document.getElementById('btnVoiceChat');
+            const timerSpan = document.getElementById('voiceRecordTimer');
+
+            // Nếu đang ghi âm -> Dừng lại và gửi
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                clearInterval(voiceTimerInterval);
+                timerSpan.style.display = 'none';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                btn.style.color = 'var(--text-muted)';
+                btn.disabled = true;
+                return;
+            }
+
+            // Nếu chưa ghi âm -> Xin quyền và bắt đầu
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data.size > 0) audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    // Tắt luồng micro trên trình duyệt
+                    stream.getTracks().forEach(track => track.stop());
+
+                    if (audioChunks.length === 0) {
+                        resetVoiceBtn(btn);
+                        return showToast("Không có dữ liệu âm thanh!", "error");
+                    }
+
+                    // Đóng gói âm thanh
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioFile = new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' });
+
+                    // Upload file thoại lên server
+                    const fd = new FormData(); 
+                    fd.append("file", audioFile); 
+                    fd.append("username", currentUser.username); 
+                    fd.append("sessionToken", currentUser.sessionToken);
+                    
+                    try {
+                        const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
+                        if (upRes.success) {
+                            // Gửi vào kênh chat với tag đặc biệt
+                            const payload = { text: "[VOICE_MESSAGE]", replyTo: replyState.chat.user, imageId: upRes.file_id };
+                            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+                            if (res && res.success) {
+                                cancelReply('chat');
+                                lastChatJSONStr = "";
+                                await loadGlobalChat(true);
+                            } else {
+                                showToast("Lỗi gửi tin nhắn thoại!", "error");
+                            }
+                        } else {
+                            showToast(upRes.error || "Lỗi tải lên tệp âm thanh", "error");
+                        }
+                    } catch (err) {
+                        showToast("Lỗi kết nối khi gửi âm thanh!", "error");
+                    }
+
+                    resetVoiceBtn(btn);
+                };
+
+                // Bắt đầu ghi âm
+                mediaRecorder.start();
+                btn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+                btn.style.color = '#ef4444'; // Chuyển nút sang màu đỏ nhấp nháy
+                
+                voiceSeconds = 0;
+                timerSpan.innerText = '0:00';
+                timerSpan.style.display = 'inline';
+                
+                voiceTimerInterval = setInterval(() => {
+                    voiceSeconds++;
+                    const mins = Math.floor(voiceSeconds / 60);
+                    const secs = (voiceSeconds % 60).toString().padStart(2, '0');
+                    timerSpan.innerText = `${mins}:${secs}`;
+                    // Tự động dừng sau 60 giây để tránh file quá lớn
+                    if (voiceSeconds >= 60) toggleVoiceRecord();
+                }, 1000);
+
+            } catch (err) {
+                showToast("Vui lòng cấp quyền sử dụng Micro để gửi tin nhắn thoại!", "error");
+            }
+        }
+
+        function resetVoiceBtn(btn) {
+            btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+            btn.style.color = 'var(--text-muted)';
+            btn.disabled = false;
+            mediaRecorder = null;
+        }
 
         // =========================================================================
         // 🌕 BỘ MÁY XỬ LÝ SỰ KIỆN: BEYOND THE MOONLIGHT 2026 (HỘI TRĂNG RẰM)
