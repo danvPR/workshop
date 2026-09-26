@@ -6471,8 +6471,56 @@
             .midautumn-quiz-box { padding: 20px; }
         }
     </style>
-    <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT & XỬ LÝ MÀN HÌNH CHỜ -->
+    <script>
+        function generateRandomRayId() {
+            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
+            return `${hex()}${hex()}${hex()} - SGN`;
+        }
+
+        // Đóng màn hình xác minh mượt mà
+        function dismissCfVerifyScreen() {
+            const screen = document.getElementById('cfVerifyScreen');
+            if (screen) {
+                screen.style.transition = 'opacity 0.35s ease';
+                screen.style.opacity = '0';
+                setTimeout(() => { if (screen) screen.remove(); }, 350);
+            }
+        }
+
+        // Callback chuẩn của Turnstile ngay khi tick xanh
+        window.onCloudflareVerifySuccess = function(token) {
+            sessionStorage.setItem('cf_human_verified', 'true');
+            dismissCfVerifyScreen();
+        };
+
+        // Khởi tạo Ray ID và kiểm tra phiên xác minh an toàn
+        function initCfVerifyScreen() {
+            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
+            if (isVerified) {
+                dismissCfVerifyScreen();
+                return;
+            }
+
+            const raySpan = document.getElementById('cfRayIdSim');
+            if (raySpan) raySpan.innerText = generateRandomRayId();
+
+            // Dự phòng: Theo dõi nếu Turnstile đã tick xanh mà callback bị trễ
+            const checkTimer = setInterval(() => {
+                if (sessionStorage.getItem('cf_human_verified') === 'true') {
+                    clearInterval(checkTimer);
+                    dismissCfVerifyScreen();
+                }
+            }, 300);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCfVerifyScreen);
+        } else {
+            initCfVerifyScreen();
+        }
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>DANV
     <!-- THÊM THƯ VIỆN SUPABASE ĐỂ LÀM REALTIME CHAT -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -9771,38 +9819,7 @@
     </div>
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
-        // ================= XỬ LÝ MÀN HÌNH XÁC THỰC CLOUDFLARE =================
-        function generateRandomRayId() {
-            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
-            return `${hex()}${hex()}${hex()} - SGN`;
-        }
-
-        // Tự động giải phóng màn hình khi người dùng vượt qua kiểm tra Turnstile
-        window.onCloudflareVerifySuccess = function(token) {
-            sessionStorage.setItem('cf_human_verified', 'true');
-            const screen = document.getElementById('cfVerifyScreen');
-            if (screen) {
-                screen.style.transition = 'opacity 0.4s ease';
-                screen.style.opacity = '0';
-                setTimeout(() => screen.remove(), 400);
-            }
-        };
-
-        // Kiểm tra xem trong phiên này người dùng đã xác minh chưa (tránh hỏi lại liên tục mỗi khi tải trang)
-        (function checkInitialCfVerification() {
-            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
-            document.addEventListener('DOMContentLoaded', () => {
-                const raySpan = document.getElementById('cfRayIdSim');
-                if (raySpan) raySpan.innerText = generateRandomRayId();
-
-                if (isVerified) {
-                    const screen = document.getElementById('cfVerifyScreen');
-                    if (screen) screen.remove();
-                }
-            });
-        })();
-
-        const WIKI_CLIENT_ID = "70970406"; 
+        const WIKI_CLIENT_ID = "70970406";
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         const KLIPY_API_KEY = "u5fpMSE07ITa9E5Nxh9meqnGez7Km7PCC2mj3V6NviVocR7nBEThpAZQEFOn4S1S";
