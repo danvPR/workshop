@@ -1915,36 +1915,78 @@
             color: var(--text-main) !important;
         }
 
-        /* ================= GIAO DIỆN TRANG THÔNG BÁO STUDIO PRO (STUDENT FRIENDLY) ================= */
+        /* ================= GIAO DIỆN TRANG THÔNG BÁO AI-NEURAL INTERFACE ================= */
         .notif-hub-wrapper {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
+            border-radius: 26px;
             overflow: hidden;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(99, 102, 241, 0.08);
+            backdrop-filter: blur(16px);
+            position: relative;
         }
+        [data-theme="dark"] .notif-hub-wrapper {
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 0 30px rgba(99, 102, 241, 0.12);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
         .notif-hero-banner {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #0da57a 100%);
-            padding: 28px 32px;
+            background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, #0f172a 60%, #064e3b 100%);
+            padding: 30px 34px;
             color: #ffffff;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 18px;
+            gap: 20px;
             position: relative;
             overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .notif-hero-banner::after {
+        .notif-hero-banner::before {
             content: '';
             position: absolute;
-            top: -40px; right: -40px;
-            width: 180px; height: 180px;
-            background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+            top: -50%; right: -20%;
+            width: 340px; height: 340px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, rgba(13, 165, 122, 0.2) 50%, transparent 75%);
+            filter: blur(30px);
             pointer-events: none;
+            animation: pulseAura 4s infinite ease-in-out;
+        }
+        .notif-hero-left {
+            position: relative;
+            z-index: 2;
+        }
+        .notif-ai-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .notif-ai-pill {
+            font-size: 0.68rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            background: rgba(99, 102, 241, 0.22);
+            color: #a5b4fc;
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .notif-ai-pulse {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulseActiveSlot 1.5s infinite;
         }
         .notif-hero-title {
-            font-size: 1.85rem;
+            font-size: 2rem;
             font-weight: 900;
             margin: 0;
             color: #ffffff !important;
@@ -1952,35 +1994,40 @@
             align-items: center;
             gap: 12px;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
         }
         .notif-hero-sub {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.88);
-            margin-top: 4px;
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            margin-top: 6px;
+            font-weight: 500;
         }
         .btn-notif-mark-read {
-            background: rgba(255, 255, 255, 0.18) !important;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.12) !important;
             color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.35) !important;
-            backdrop-filter: blur(8px);
-            padding: 9px 20px;
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
+            backdrop-filter: blur(10px);
+            padding: 10px 22px;
+            border-radius: 24px;
             font-weight: 800;
             font-size: 0.88rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         .btn-notif-mark-read:hover {
             background: #ffffff !important;
-            color: #4f46e5 !important;
+            color: #0f172a !important;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
         }
 
-        /* Thanh phân loại danh mục thông báo (Filter Pills) */
+        /* Thanh Phân Loại Thông Báo Cyber-Pills */
         .notif-filter-bar {
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
@@ -1996,14 +2043,14 @@
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 7px 15px;
-            border-radius: 14px;
-            font-size: 0.84rem;
-            font-weight: 700;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             white-space: nowrap;
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -2013,16 +2060,16 @@
             transform: translateY(-1px);
         }
         .notif-tab-pill.active {
-            background: var(--primary) !important;
+            background: linear-gradient(135deg, #4f46e5 0%, #0da57a 100%) !important;
             color: #ffffff !important;
-            border-color: var(--primary) !important;
-            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
+            border-color: transparent !important;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
         }
         .notif-tab-counter {
-            font-size: 0.72rem;
-            font-weight: 800;
+            font-size: 0.7rem;
+            font-weight: 900;
             padding: 2px 7px;
-            border-radius: 10px;
+            border-radius: 12px;
             background: rgba(0, 0, 0, 0.08);
         }
         .notif-tab-pill.active .notif-tab-counter {
@@ -2030,7 +2077,7 @@
             color: #ffffff;
         }
 
-        /* Thẻ thông báo từng dòng (Notification Item Card) */
+        /* Thẻ Thông Báo Từng Dòng AI-Matrix Row */
         .notif-card-row {
             padding: 18px 26px;
             border-bottom: 1px solid var(--border-color);
@@ -2038,35 +2085,38 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            transition: background-color 0.2s ease, border-color 0.2s;
+            transition: all 0.2s ease;
             position: relative;
+        }
+        .notif-card-row:hover {
+            background: var(--bg-secondary);
         }
         .notif-card-row:last-child { border-bottom: none; }
         .notif-card-row.unread {
-            background: rgba(79, 70, 229, 0.04);
+            background: rgba(99, 102, 241, 0.04);
             border-left: 4px solid #6366f1;
         }
         [data-theme="dark"] .notif-card-row.unread {
-            background: rgba(99, 102, 241, 0.12);
+            background: rgba(99, 102, 241, 0.1);
             border-left: 4px solid #818cf8;
         }
         .notif-card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 12px;
+            gap: 14px;
         }
         .notif-header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex: 1;
             min-width: 0;
         }
         .notif-icon-avatar-wrap {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2074,6 +2124,11 @@
             flex-shrink: 0;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+        .notif-card-row:hover .notif-icon-avatar-wrap {
+            transform: scale(1.06);
         }
         .notif-icon-avatar-wrap.icon-like { background: rgba(239, 68, 68, 0.12); color: #ef4444; border-color: rgba(239, 68, 68, 0.25); }
         .notif-icon-avatar-wrap.icon-star { background: rgba(245, 158, 11, 0.12); color: #f59e0b; border-color: rgba(245, 158, 11, 0.25); }
@@ -2084,7 +2139,7 @@
         .notif-meta-text {
             font-size: 0.95rem;
             color: var(--text-main);
-            line-height: 1.45;
+            line-height: 1.5;
             word-break: break-word;
         }
         .notif-meta-text a {
@@ -2098,29 +2153,32 @@
         .notif-header-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
         }
         .notif-time-badge {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: var(--text-muted);
             white-space: nowrap;
+            background: var(--bg-secondary);
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
         .notif-unread-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background: #6366f1;
-            box-shadow: 0 0 8px #6366f1;
+            box-shadow: 0 0 10px #6366f1;
             display: inline-block;
         }
 
-        /* Khung hiển thị bong bóng trích dẫn bình luận */
         .notif-comment-bubble-box {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            padding-left: 54px;
+            padding-left: 58px;
         }
         .notif-sender-avt-img {
             width: 38px;
@@ -2136,11 +2194,11 @@
             max-width: 680px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 0 16px 16px 16px;
+            border-radius: 0 18px 18px 18px;
             padding: 10px 16px;
             font-size: 0.92rem;
             color: var(--text-main);
-            line-height: 1.45;
+            line-height: 1.5;
             word-break: break-word;
         }
         .notif-quick-reply-row {
@@ -2166,7 +2224,7 @@
             border-color: var(--primary);
         }
         .notif-quick-reply-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
             color: #ffffff;
             border: none;
             padding: 8px 18px;
@@ -2181,20 +2239,19 @@
             flex-shrink: 0;
         }
         .notif-quick-reply-btn:hover {
-            background: var(--primary-dark);
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.4);
         }
 
-        /* Hộp quà WOW trong thông báo */
         .notif-tip-gift-box {
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.06) 100%) !important;
             border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
-            border-radius: 16px !important;
-            padding: 14px 18px !important;
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1) !important;
+            border-radius: 18px !important;
+            padding: 16px 20px !important;
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12) !important;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
             margin: 4px 0;
         }
         [data-theme="dark"] .notif-tip-gift-box {
@@ -2203,10 +2260,174 @@
         }
 
         @media (max-width: 768px) {
-            .notif-hero-banner { padding: 20px 18px; }
-            .notif-hero-title { font-size: 1.45rem; }
+            .notif-hero-banner { padding: 22px 18px; }
+            .notif-hero-title { font-size: 1.5rem; }
             .notif-card-row { padding: 14px 16px; }
             .notif-comment-bubble-box { padding-left: 0; }
+        }
+
+        /* ================= CYBER VOICECHAT & SPEECH RECOGNITION STYLES ================= */
+        .voice-bubble-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border: 1.5px solid rgba(14, 165, 233, 0.28);
+            border-radius: 18px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 250px;
+            max-width: 380px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+        [data-theme="dark"] .voice-bubble-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.14) 0%, rgba(99, 102, 241, 0.08) 100%);
+            border-color: rgba(14, 165, 233, 0.35);
+        }
+        .voice-card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .voice-play-round-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0284c7 0%, #6366f1 100%);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.38);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
+        }
+        .voice-play-round-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.55);
+        }
+        .voice-wave-bars-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 24px;
+        }
+        .voice-bar-unit {
+            flex: 1;
+            height: 6px;
+            background: var(--text-muted);
+            border-radius: 3px;
+            transition: height 0.15s ease, background 0.15s ease;
+            opacity: 0.5;
+        }
+        .voice-bubble-card.is-playing .voice-bar-unit {
+            opacity: 1;
+            background: #0284c7;
+            animation: audioWaveMotion 0.8s infinite ease-in-out;
+        }
+        .voice-bubble-card.is-playing .voice-bar-unit:nth-child(2n) { animation-delay: 0.15s; }
+        .voice-bubble-card.is-playing .voice-bar-unit:nth-child(3n) { animation-delay: 0.3s; }
+        .voice-bubble-card.is-playing .voice-bar-unit:nth-child(4n) { animation-delay: 0.45s; }
+        
+        .voice-meta-duration {
+            font-size: 0.74rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            font-family: monospace;
+            flex-shrink: 0;
+        }
+
+        /* Khung hiển thị văn bản nhận diện giọng nói & Hủy mờ (Un-blur) */
+        .voice-transcript-box {
+            background: var(--bg-panel);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 9px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .voice-transcript-header {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #0284c7;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .voice-transcript-words {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            word-break: break-word;
+        }
+        .voice-word {
+            display: inline-block;
+            margin-right: 4px;
+            transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease, transform 0.2s ease;
+        }
+        .voice-word.blurred {
+            filter: blur(5px);
+            opacity: 0.28;
+            user-select: none;
+        }
+        .voice-word.revealed {
+            filter: blur(0px);
+            opacity: 1;
+            color: var(--text-title);
+        }
+        .voice-word.active-word {
+            filter: blur(0px);
+            opacity: 1;
+            color: #0284c7 !important;
+            font-weight: 800;
+            transform: scale(1.08);
+            text-shadow: 0 0 10px rgba(2, 132, 199, 0.35);
+        }
+
+        /* Khung Live Voice Recording Dock */
+        .voice-recording-live-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
+            border: 1.5px solid rgba(239, 68, 68, 0.35);
+            border-radius: 14px;
+            margin-bottom: 8px;
+            animation: pulseActiveSlot 1.5s infinite;
+        }
+        .voice-rec-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #ef4444;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .voice-rec-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+        .voice-rec-preview-text {
+            font-size: 0.84rem;
+            color: var(--text-main);
+            font-style: italic;
+            max-width: 60%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* ================= ASSETS STORE PRO REDESIGN ================= */
@@ -6720,6 +6941,16 @@
                         <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-muted); padding:2px;" onclick="cancelReply('chat')" title="Hủy trả lời"></i>
                     </div>
 
+                    <!-- THANH HIỂN THỊ NHẬN DIỆN GIỌNG NÓI REALTIME KHI ĐANG GHI ÂM -->
+                    <div id="voiceRecordingLiveBar" class="voice-recording-live-bar">
+                        <div class="voice-rec-pill">
+                            <span class="voice-rec-dot"></span>
+                            <span>Đang ghi âm & Nhận diện</span>
+                        </div>
+                        <div class="voice-rec-preview-text" id="voiceLiveTranscriptPreview">Đang lắng nghe...</div>
+                        <button type="button" class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:12px;" onclick="cancelVoiceRecord()">Hủy</button>
+                    </div>
+
                     <div id="commentImgPreviewChat" class="comment-img-preview-box">
                         <img id="commentImgPreviewSrcChat" src="" alt="preview">
                         <span style="font-size:0.78rem; color:var(--text-main);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
@@ -6761,7 +6992,7 @@
                                 </div>
 
                                 <div class="chat-composer-tools-right">
-                                    <span id="voiceRecordTimer" style="display:none; font-size:0.8rem; color:#ef4444; font-weight:bold; margin-right:4px;">0:00</span>
+                                    <span id="voiceRecordTimer" style="display:none; font-size:0.82rem; color:#ef4444; font-weight:900; margin-right:4px; font-family:monospace;">0:00</span>
                                     <button type="button" id="btnVoiceChat" class="chat-dock-icon-btn" onclick="toggleVoiceRecord()" title="Gửi tin nhắn thoại">
                                         <i class="fa-solid fa-microphone"></i>
                                     </button>
@@ -7983,16 +8214,20 @@
         </div>
     </div>
 
-    <!-- TRANG 6: TRUNG TÂM THÔNG BÁO CỘNG ĐỒNG PRO -->
-    <div id="notificationsView" class="page-view" style="max-width: 980px; padding: 10px 20px 50px 20px;">
+    <!-- TRANG 6: TRUNG TÂM THÔNG BÁO CỘNG ĐỒNG PRO (AI-NEURAL MATRIX) -->
+    <div id="notificationsView" class="page-view" style="max-width: 1000px; padding: 10px 20px 50px 20px;">
         <div class="notif-hub-wrapper">
-            <!-- Header Banner Nổi Bật -->
+            <!-- Header Banner Nổi Bật Chuẩn AI -->
             <div class="notif-hero-banner">
-                <div>
+                <div class="notif-hero-left">
+                    <div class="notif-ai-badge-row">
+                        <span class="notif-ai-pill"><span class="notif-ai-pulse"></span> AI NEURAL HUB v2.6</span>
+                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Realtime Stream</span>
+                    </div>
                     <h1 class="notif-hero-title">
-                        <i class="fa-solid fa-bell-concierge"></i> <span data-i18n="notif_title">Hộp Thư Thông Báo</span>
+                        <i class="fa-solid fa-satellite-dish" style="color:#38bdf8;"></i> <span data-i18n="notif_title">Hộp Thư Thông Báo</span>
                     </h1>
-                    <div class="notif-hero-sub">Cập nhật tương tác, bình luận và năng lượng WOW từ bạn bè</div>
+                    <div class="notif-hero-sub">Trợ lý AI tổng hợp tương tác, bình luận và năng lượng WOW từ bạn bè</div>
                 </div>
                 <button type="button" class="btn-notif-mark-read" onclick="markAllNotifsRead(event)">
                     <i class="fa-solid fa-check-double"></i> <span data-i18n="notif_mark_read">Đánh dấu đã đọc tất cả</span>
@@ -15124,12 +15359,30 @@
         let currentNotifFilter = 'all';
         let notifDisplayLimit = 50;
 
-        // Phân loại thông báo dựa vào nội dung và người gửi
+        // Phân loại thông báo thông minh (Chống lọc nhầm bình luận của User có chứa từ "wow")
         function getNotifCategory(n) {
             const text = (n.text || '').toLowerCase();
             const sender = n.sender || '';
 
-            if (text.startsWith('[wow_tip:') || text.startsWith('[omg_tip:') || text.includes('wow') || text.includes('túi mù')) {
+            // Nếu đây là cấu trúc bình luận trích dẫn (: &quot;...) hoặc thông báo bình luận/trả lời/lời nhắn
+            // thì TUYỆT ĐỐI xếp vào 'comment', bất kể bên trong nội dung người dùng có gõ chữ "wow" hay không
+            const isCommentStructure = text.includes(': &quot;') || 
+                                       text.includes(': "') || 
+                                       text.includes('đã bình luận') || 
+                                       text.includes('đã gửi lời nhắn') || 
+                                       text.includes('đã trả lời') ||
+                                       text.includes('commented on') ||
+                                       text.includes('replied to');
+
+            // Chỉ xếp vào tab 'tip' khi đúng là cấu trúc tặng WOW hệ thống hoặc mở túi mù
+            const isGenuineTip = text.startsWith('[wow_tip:') || 
+                                 text.startsWith('[omg_tip:') || 
+                                 text.includes('đã tặng') && text.includes('wow') ||
+                                 text.includes('nhận được +') && text.includes('wow') ||
+                                 text.includes('túi mù') ||
+                                 (sender === 'HỆ THỐNG' && (text.includes('wow') || text.includes('thưởng')));
+
+            if (!isCommentStructure && isGenuineTip) {
                 return 'tip';
             }
             if (sender === 'HỆ THỐNG' || text.includes('cảnh cáo') || text.includes('bị gỡ') || text.includes('quản trị viên') || text.includes('tiêu chuẩn cộng đồng')) {
@@ -15138,7 +15391,7 @@
             if (text.includes('thích') || text.includes('sao') || text.includes('yêu thích')) {
                 return 'reaction';
             }
-            if (text.includes('bình luận') || text.includes('lời nhắn') || text.includes('trả lời') || text.includes(': &quot;')) {
+            if (isCommentStructure || text.includes('bình luận') || text.includes('lời nhắn') || text.includes('trả lời')) {
                 return 'comment';
             }
             return 'other';
@@ -15965,12 +16218,68 @@
                 `;
             }
 
-            // 🎤 VOICE MESSAGE (TIN NHẮN THOẠI)
-            if (rawText === '[VOICE_MESSAGE]' && c.imageId && c.imageId !== 'null') {
+            // 🎤 CYBER VOICE MESSAGE (CÓ WEB SPEECH API & TỰ ĐỘNG HỦY MỜ CHỮ THEO TIẾN TRÌNH ÂM THANH)
+            if (rawText.startsWith('[VOICE_MESSAGE]') && c.imageId && c.imageId !== 'null') {
+                const parts = rawText.split('|||');
+                let transcript = '';
+                if (parts.length > 1) {
+                    try { transcript = decodeURIComponent(parts[1]); } catch(e) { transcript = parts[1]; }
+                }
+
+                const audioUrl = `${WORKER_URL}/api/project/${c.imageId}?ext=webm`;
+                const safeMsgId = String(c.msgId || c.id || Math.random().toString(36).substring(2));
+                const words = transcript ? transcript.trim().split(/\s+/) : [];
+
+                let transcriptHtml = '';
+                if (words.length > 0) {
+                    const spans = words.map((w, idx) => `<span class="voice-word blurred" data-word-idx="${idx}">${escapeHtml(w)}</span>`).join(' ');
+                    transcriptHtml = `
+                        <div class="voice-transcript-box">
+                            <div class="voice-transcript-header">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Lời thoại nhận diện</span>
+                            </div>
+                            <div class="voice-transcript-words" id="voice-words-${safeMsgId}">
+                                ${spans}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    transcriptHtml = `
+                        <div class="voice-transcript-box">
+                            <div class="voice-transcript-header" style="justify-content:space-between;">
+                                <span><i class="fa-solid fa-microphone"></i> Tin nhắn thoại</span>
+                                <button type="button" class="btn" style="padding:2px 8px; font-size:0.72rem; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-muted);" onclick="transcribeVoiceAudio('${safeMsgId}', '${audioUrl}')">
+                                    <i class="fa-solid fa-closed-captioning"></i> Hiện phụ đề
+                                </button>
+                            </div>
+                            <div class="voice-transcript-words" id="voice-words-${safeMsgId}" style="display:none; font-size:0.85rem; color:var(--text-main);"></div>
+                        </div>
+                    `;
+                }
+
                 return `
-                    <div style="background: var(--bg-secondary); padding: 8px 12px; border-radius: 14px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border-color); margin-top: 4px;">
-                        <i class="fa-solid fa-microphone" style="color: var(--primary);"></i>
-                        <audio controls style="height: 35px; max-width: 220px; outline: none;" src="${WORKER_URL}/api/project/${c.imageId}?ext=webm"></audio>
+                    <div class="voice-bubble-card" id="voiceCard-${safeMsgId}">
+                        <div class="voice-card-top">
+                            <button type="button" class="voice-play-round-btn" onclick="togglePlayVoiceMessage('${safeMsgId}', '${audioUrl}', event)">
+                                <i class="fa-solid fa-play" id="voiceIcon-${safeMsgId}"></i>
+                            </button>
+                            <div class="voice-wave-bars-wrap">
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                                <span class="voice-bar-unit"></span>
+                            </div>
+                            <span class="voice-meta-duration" id="voiceDuration-${safeMsgId}">0:00</span>
+                        </div>
+                        ${transcriptHtml}
                     </div>
                 `;
             }
@@ -21375,53 +21684,93 @@
             btn.disabled = false;
         }
 
-        // ================= XỬ LÝ TIN NHẮN THOẠI (VOICE CHAT) =================
+        // ================= XỬ LÝ TIN NHẮN THOẠI & WEB SPEECH API (UN-BLUR WORDS) =================
         let mediaRecorder = null;
         let audioChunks = [];
         let voiceTimerInterval = null;
         let voiceSeconds = 0;
+        let voiceSpeechRecognizer = null;
+        let voiceRecordedTranscript = "";
+        let isVoiceCancelled = false;
+
+        // Trình phát âm thanh voicechat đơn nhất (tránh phát chồng chéo nhiều tin nhắn)
+        let activeVoicePlayback = null;
 
         async function toggleVoiceRecord() {
             if (!currentUser) return openModal('loginModal');
             
             const btn = document.getElementById('btnVoiceChat');
             const timerSpan = document.getElementById('voiceRecordTimer');
+            const liveBar = document.getElementById('voiceRecordingLiveBar');
+            const previewText = document.getElementById('voiceLiveTranscriptPreview');
 
-            // Nếu đang ghi âm -> Dừng lại và gửi
+            // 1. NẾU ĐANG GHI ÂM -> DỪNG VÀ GỬI
             if (mediaRecorder && mediaRecorder.state === 'recording') {
+                isVoiceCancelled = false;
                 mediaRecorder.stop();
+                if (voiceSpeechRecognizer) {
+                    try { voiceSpeechRecognizer.stop(); } catch(e){}
+                }
                 clearInterval(voiceTimerInterval);
-                timerSpan.style.display = 'none';
+                if (timerSpan) timerSpan.style.display = 'none';
+                if (liveBar) liveBar.style.display = 'none';
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-                btn.style.color = 'var(--text-muted)';
                 btn.disabled = true;
                 return;
             }
 
-            // Nếu chưa ghi âm -> Xin quyền và bắt đầu
+            // 2. BẮT ĐẦU GHI ÂM VÀ KHỞI TẠO WEB SPEECH API
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
+                voiceRecordedTranscript = "";
+                isVoiceCancelled = false;
+
+                // Khởi tạo Web Speech API nếu trình duyệt hỗ trợ
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    voiceSpeechRecognizer = new SpeechRecognition();
+                    voiceSpeechRecognizer.lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en-US' : 'vi-VN';
+                    voiceSpeechRecognizer.continuous = true;
+                    voiceSpeechRecognizer.interimResults = true;
+
+                    voiceSpeechRecognizer.onresult = (event) => {
+                        let finalTrans = "";
+                        let interimTrans = "";
+                        for (let i = event.resultIndex; i < event.results.length; ++i) {
+                            if (event.results[i].isFinal) {
+                                finalTrans += event.results[i][0].transcript;
+                            } else {
+                                interimTrans += event.results[i][0].transcript;
+                            }
+                        }
+                        if (finalTrans) voiceRecordedTranscript += " " + finalTrans;
+                        voiceRecordedTranscript = voiceRecordedTranscript.trim();
+                        if (previewText) {
+                            previewText.innerText = (voiceRecordedTranscript + " " + interimTrans).trim() || "Đang lắng nghe...";
+                        }
+                    };
+
+                    voiceSpeechRecognizer.onerror = () => {};
+                    try { voiceSpeechRecognizer.start(); } catch(e){}
+                }
 
                 mediaRecorder.ondataavailable = event => {
                     if (event.data.size > 0) audioChunks.push(event.data);
                 };
 
                 mediaRecorder.onstop = async () => {
-                    // Tắt luồng micro trên trình duyệt
                     stream.getTracks().forEach(track => track.stop());
 
-                    if (audioChunks.length === 0) {
+                    if (isVoiceCancelled || audioChunks.length === 0) {
                         resetVoiceBtn(btn);
-                        return showToast("Không có dữ liệu âm thanh!", "error");
+                        return;
                     }
 
-                    // Đóng gói âm thanh
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const audioFile = new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' });
 
-                    // Upload file thoại lên server
                     const fd = new FormData(); 
                     fd.append("file", audioFile); 
                     fd.append("username", currentUser.username); 
@@ -21430,8 +21779,12 @@
                     try {
                         const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
                         if (upRes.success) {
-                            // Gửi vào kênh chat với tag đặc biệt
-                            const payload = { text: "[VOICE_MESSAGE]", replyTo: replyState.chat.user, imageId: upRes.file_id };
+                            const cleanTranscript = voiceRecordedTranscript.trim();
+                            const finalMessageText = cleanTranscript 
+                                ? `[VOICE_MESSAGE]|||${encodeURIComponent(cleanTranscript)}` 
+                                : `[VOICE_MESSAGE]`;
+
+                            const payload = { text: finalMessageText, replyTo: replyState.chat.user, imageId: upRes.file_id };
                             const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
                             if (res && res.success) {
                                 cancelReply('chat');
@@ -21450,21 +21803,24 @@
                     resetVoiceBtn(btn);
                 };
 
-                // Bắt đầu ghi âm
                 mediaRecorder.start();
                 btn.innerHTML = '<i class="fa-solid fa-stop"></i>';
-                btn.style.color = '#ef4444'; // Chuyển nút sang màu đỏ nhấp nháy
+                btn.style.color = '#ef4444';
                 
+                if (liveBar) liveBar.style.display = 'flex';
+                if (previewText) previewText.innerText = "Đang lắng nghe...";
+
                 voiceSeconds = 0;
-                timerSpan.innerText = '0:00';
-                timerSpan.style.display = 'inline';
+                if (timerSpan) {
+                    timerSpan.innerText = '0:00';
+                    timerSpan.style.display = 'inline';
+                }
                 
                 voiceTimerInterval = setInterval(() => {
                     voiceSeconds++;
                     const mins = Math.floor(voiceSeconds / 60);
                     const secs = (voiceSeconds % 60).toString().padStart(2, '0');
-                    timerSpan.innerText = `${mins}:${secs}`;
-                    // Tự động dừng sau 60 giây để tránh file quá lớn
+                    if (timerSpan) timerSpan.innerText = `${mins}:${secs}`;
                     if (voiceSeconds >= 60) toggleVoiceRecord();
                 }, 1000);
 
@@ -21473,11 +21829,169 @@
             }
         }
 
+        function cancelVoiceRecord() {
+            isVoiceCancelled = true;
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+            }
+            if (voiceSpeechRecognizer) {
+                try { voiceSpeechRecognizer.stop(); } catch(e){}
+            }
+            const btn = document.getElementById('btnVoiceChat');
+            resetVoiceBtn(btn);
+            showToast("Đã hủy bản ghi âm", "info");
+        }
+
         function resetVoiceBtn(btn) {
-            btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-            btn.style.color = 'var(--text-muted)';
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                btn.style.color = 'var(--text-muted)';
+                btn.disabled = false;
+            }
+            const timerSpan = document.getElementById('voiceRecordTimer');
+            const liveBar = document.getElementById('voiceRecordingLiveBar');
+            if (timerSpan) timerSpan.style.display = 'none';
+            if (liveBar) liveBar.style.display = 'none';
+            clearInterval(voiceTimerInterval);
             mediaRecorder = null;
+            voiceSpeechRecognizer = null;
+            voiceRecordedTranscript = "";
+        }
+
+        // ================= HÀM PHÁT VOICECHAT & TỰ ĐỘNG HỦY MỜ CHỮ THEO GIỌNG NÓI =================
+        function togglePlayVoiceMessage(msgId, audioSrc, event) {
+            if (event) event.stopPropagation();
+
+            const card = document.getElementById(`voiceCard-${msgId}`);
+            const icon = document.getElementById(`voiceIcon-${msgId}`);
+            const durEl = document.getElementById(`voiceDuration-${msgId}`);
+            const wordsContainer = document.getElementById(`voice-words-${msgId}`);
+
+            // 1. Nếu đang phát chính tin nhắn này -> Tạm dừng
+            if (activeVoicePlayback && activeVoicePlayback.msgId === msgId) {
+                if (activeVoicePlayback.audio.paused) {
+                    activeVoicePlayback.audio.play();
+                    if (card) card.classList.add('is-playing');
+                    if (icon) icon.className = 'fa-solid fa-pause';
+                } else {
+                    activeVoicePlayback.audio.pause();
+                    if (card) card.classList.remove('is-playing');
+                    if (icon) icon.className = 'fa-solid fa-play';
+                }
+                return;
+            }
+
+            // 2. Nếu đang phát tin khác -> Dừng tin cũ
+            if (activeVoicePlayback) {
+                activeVoicePlayback.audio.pause();
+                const oldCard = document.getElementById(`voiceCard-${activeVoicePlayback.msgId}`);
+                const oldIcon = document.getElementById(`voiceIcon-${activeVoicePlayback.msgId}`);
+                if (oldCard) oldCard.classList.remove('is-playing');
+                if (oldIcon) oldIcon.className = 'fa-solid fa-play';
+                activeVoicePlayback = null;
+            }
+
+            // 3. Khởi tạo phát âm thanh mới
+            const audio = new Audio(audioSrc);
+            activeVoicePlayback = { msgId, audio };
+
+            // Chuẩn bị lại hiệu ứng mờ cho toàn bộ từ
+            if (wordsContainer) {
+                wordsContainer.querySelectorAll('.voice-word').forEach(w => {
+                    w.className = 'voice-word blurred';
+                });
+            }
+
+            if (card) card.classList.add('is-playing');
+            if (icon) icon.className = 'fa-solid fa-pause';
+
+            audio.play().catch(() => {
+                showToast("Trình duyệt chặn tự động phát âm thanh.", "info");
+                if (card) card.classList.remove('is-playing');
+                if (icon) icon.className = 'fa-solid fa-play';
+            });
+
+            // 🌟 TIẾN TRÌNH HỦY MỜ CHỮ THEO GIỌNG NÓI
+            audio.ontimeupdate = () => {
+                const cur = audio.currentTime;
+                const dur = audio.duration || 1;
+                
+                // Cập nhật nhãn thời gian 0:00
+                if (durEl && !isNaN(cur)) {
+                    const m = Math.floor(cur / 60);
+                    const s = Math.floor(cur % 60).toString().padStart(2, '0');
+                    durEl.innerText = `${m}:${s}`;
+                }
+
+                if (wordsContainer) {
+                    const allWords = wordsContainer.querySelectorAll('.voice-word');
+                    const totalWords = allWords.length;
+                    if (totalWords > 0) {
+                        // Tính toán tỷ lệ phát và số từ cần mở khóa
+                        const ratio = Math.min(1, cur / dur);
+                        const currentActiveIndex = Math.floor(ratio * totalWords);
+
+                        allWords.forEach((wordNode, index) => {
+                            if (index < currentActiveIndex) {
+                                wordNode.className = 'voice-word revealed';
+                            } else if (index === currentActiveIndex) {
+                                wordNode.className = 'voice-word active-word';
+                            } else {
+                                wordNode.className = 'voice-word blurred';
+                            }
+                        });
+                    }
+                }
+            };
+
+            audio.onended = () => {
+                if (card) card.classList.remove('is-playing');
+                if (icon) icon.className = 'fa-solid fa-play';
+                // Khi kết thúc thì hiển thị rõ 100% tất cả các từ
+                if (wordsContainer) {
+                    wordsContainer.querySelectorAll('.voice-word').forEach(w => {
+                        w.className = 'voice-word revealed';
+                    });
+                }
+                activeVoicePlayback = null;
+            };
+        }
+
+        // Nhận diện giọng nói bổ sung nếu tin nhắn thoại cũ chưa có sẵn transcript
+        function transcribeVoiceAudio(msgId, audioSrc) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                return showToast("Trình duyệt của bạn không hỗ trợ Web Speech API!", "error");
+            }
+
+            const wordsContainer = document.getElementById(`voice-words-${msgId}`);
+            if (!wordsContainer) return;
+            wordsContainer.style.display = 'block';
+            wordsContainer.innerHTML = '<span style="font-style:italic; opacity:0.7;"><i class="fa-solid fa-spinner fa-spin"></i> Đang phân tích âm thanh...</span>';
+
+            const recognizer = new SpeechRecognition();
+            recognizer.lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en-US' : 'vi-VN';
+            
+            recognizer.onresult = (event) => {
+                let trans = "";
+                for (let i = 0; i < event.results.length; ++i) {
+                    trans += event.results[i][0].transcript;
+                }
+                trans = trans.trim();
+                if (trans) {
+                    const words = trans.split(/\s+/);
+                    wordsContainer.innerHTML = words.map((w, idx) => `<span class="voice-word revealed" data-word-idx="${idx}">${escapeHtml(w)}</span>`).join(' ');
+                } else {
+                    wordsContainer.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Không nhận diện được giọng nói trong tệp.</span>';
+                }
+            };
+
+            recognizer.onerror = () => {
+                wordsContainer.innerHTML = '<span style="color:#ef4444; font-size:0.8rem;">Không thể nhận diện giọng nói từ tệp này.</span>';
+            };
+
+            togglePlayVoiceMessage(msgId, audioSrc);
+            try { recognizer.start(); } catch(e){}
         }
 
         // =========================================================================
