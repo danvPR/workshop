@@ -6471,54 +6471,7 @@
             .midautumn-quiz-box { padding: 20px; }
         }
     </style>
-    <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT & XỬ LÝ MÀN HÌNH CHỜ -->
-    <script>
-        // Hàm Phá Cửa Khẩn Cấp: Tắt toàn bộ mọi màn hình chờ
-        function forceCloseAllLoaders() {
-            sessionStorage.setItem('cf_human_verified', 'true');
-            const cfScreen = document.getElementById('cfVerifyScreen');
-            const gLoader = document.getElementById('globalLoader');
-            
-            if (cfScreen) cfScreen.remove();
-            if (gLoader) {
-                gLoader.style.display = 'none';
-                gLoader.style.opacity = '0';
-                gLoader.style.zIndex = '-9999';
-            }
-            document.body.style.overflow = 'auto'; // Trả lại thanh cuộn
-        }
-
-        // Nếu Turnstile thành công (Không bị lỗi 401)
-        window.onCloudflareVerifySuccess = function(token) {
-            forceCloseAllLoaders();
-        };
-
-        // Khởi tạo kiểm tra
-        function initCfVerifyScreen() {
-            if (sessionStorage.getItem('cf_human_verified') === 'true') {
-                forceCloseAllLoaders();
-                return;
-            }
-
-            const raySpan = document.getElementById('cfRayIdSim');
-            if (raySpan) {
-                const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
-                raySpan.innerText = `${hex()}${hex()}${hex()} - SGN`;
-            }
-
-            // 🚀 TỐI HẬU THƯ: Nếu sau 3 giây mà Turnstile bị lỗi 401 (hoặc sập mạng) thì ÉP BUỘC mở trang web!
-            setTimeout(() => {
-                console.warn("Turnstile API không phản hồi hoặc bị lỗi 401. Đang kích hoạt Bypass khẩn cấp...");
-                forceCloseAllLoaders();
-            }, 3000);
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCfVerifyScreen);
-        } else {
-            initCfVerifyScreen();
-        }
-    </script>
+    <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE ĐỂ LÀM REALTIME CHAT -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10217,19 +10170,40 @@
             } catch(e) { showToast("Lỗi kết nối máy chủ", "error"); return null; }
         }
 
-        function hideGlobalLoader() {
-            const loader = document.getElementById('globalLoader');
-            if (loader && loader.style.display !== 'none') {
-                loader.style.transition = 'opacity 0.35s ease';
-                loader.style.opacity = '0';
-                setTimeout(() => { if (loader) loader.style.display = 'none'; }, 350);
-            }
+        // ================= XỬ LÝ MÀN HÌNH XÁC THỰC CLOUDFLARE =================
+        function generateRandomRayId() {
+            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
+            return `${hex()}${hex()}${hex()} - SGN`;
         }
 
-        async function initApp() {
-            // Cơ chế bảo vệ: Dù mạng nhanh hay chậm, tối đa 1.5s là tự động mở giao diện
-            setTimeout(hideGlobalLoader, 1500);
+        // Tự động giải phóng màn hình khi người dùng vượt qua kiểm tra Turnstile
+        window.onCloudflareVerifySuccess = function(token) {
+            sessionStorage.setItem('cf_human_verified', 'true');
+            const screen = document.getElementById('cfVerifyScreen');
+            if (screen) {
+                screen.style.transition = 'opacity 0.4s ease';
+                screen.style.opacity = '0';
+                setTimeout(() => screen.remove(), 400);
+            }
+        };
 
+        // Kiểm tra xem trong phiên này người dùng đã xác minh chưa (tránh hỏi lại liên tục mỗi khi tải trang)
+        (function checkInitialCfVerification() {
+            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
+            document.addEventListener('DOMContentLoaded', () => {
+                const raySpan = document.getElementById('cfRayIdSim');
+                if (raySpan) raySpan.innerText = generateRandomRayId();
+
+                if (isVerified) {
+                    const screen = document.getElementById('cfVerifyScreen');
+                    if (screen) screen.remove();
+                }
+            });
+        })();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loader = document.getElementById('globalLoader');
+            
             // Khởi tạo Theme ngay lập tức
             const savedTheme = localStorage.getItem('danv_theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -10238,8 +10212,8 @@
                 // Kích hoạt đa ngôn ngữ
                 const initialLang = await detectLanguage();
                 await setLanguage(initialLang);
-
                 const urlParams = new URLSearchParams(window.location.search);
+                // 🎁 TỰ ĐỘNG NHẬN DIỆN LINK MỜI BẠN BÈ (?ref=username hoặc ?r=username)
                 const refCandidate = urlParams.get('ref') || urlParams.get('r');
                 if (refCandidate) {
                     const refInput = document.getElementById('regReferralCode');
@@ -10249,19 +10223,22 @@
                         showToast(`Bạn được @${refCandidate.trim()} mời gia nhập! Đăng ký ngay để nhận 50 WOW.`, 'info');
                     }
                 }
-
                 if (urlParams.get('code')) {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+                    
+                    // NẾU CODE TỪ LINK SCRATCH MÀ ĐÃ CÓ CURRENTUSER => NGHĨA LÀ HỌ ĐANG LIÊN KẾT NICK
                     if (localStorage.getItem('is_linking_scratch') === 'true' && currentUser) {
                         localStorage.removeItem('is_linking_scratch');
                         const res = await apiFetch(`/api/auth/link_scratch`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }) });
                         if(res && res.success) { showToast("Đã liên kết Scratch thành công!", "success"); location.hash = `#settings`; }
                     } else {
+                        // NẾU LÀ ĐĂNG NHẬP SCRATCH THEO KIỂU CŨ
                         const res = await (await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }), headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                         if (res.success) {
                             currentUser = { username: res.username, sessionToken: res.sessionToken, avt: res.avt };
                             localStorage.setItem('danv_user', JSON.stringify(currentUser));
                             showToast(`Đăng nhập tạm thời thành công!`, 'success');
+                            // Check xem đã có mail chưa, chưa có thì ép cập nhật
                             checkLegacyUser();
                         }
                     }
@@ -10269,31 +10246,17 @@
                     checkLegacyUser();
                 }
 
-                // Cập nhật điều hướng & nạp dự án
-                updateNav();
-                handleRouting();
-                await loadProjects();
-
-                checkGlobalPing();
+                await loadProjects(); updateNav(); handleRouting();
+                checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
+                // Kiểm tra nếu có user đăng nhập mà chưa xem Hướng dẫn tân thủ
                 if (currentUser && !localStorage.getItem('danv_tour_completed')) {
-                    setTimeout(() => { OnboardingTour.start(); }, 1500);
+                setTimeout(() => { OnboardingTour.start(); }, 1500);
                 }
-                checkEmailVerificationBanner();
-                loadEvents();
-                startUnifiedHeartbeat();
-            } catch (e) {
-                console.error("Lỗi khởi tạo ứng dụng:", e);
-            } finally {
-                hideGlobalLoader();
-            }
-        }
-
-        // Đảm bảo chạy ngay lập tức dù sự kiện DOMContentLoaded đã trôi qua hay chưa
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
-        }
+                checkEmailVerificationBanner(); // Kiểm tra banner xác thực email
+                loadEvents(); // Tải Sự kiện Game Jam
+                startUnifiedHeartbeat(); // Kích hoạt luồng nhịp tim tổng hợp (Đợt 3)
+            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
+        });
 
         // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ) & ĐỒNG BỘ TRẠNG THÁI EMAIL
         async function checkLegacyUser() {
