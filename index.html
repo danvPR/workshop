@@ -15927,7 +15927,7 @@
         }
 
         // 🎴 HÀM RENDER NỘI DUNG CHAT (CHỈ CHO PHÉP BEABEA FORMAT CÁC THẺ ĐẶC BIỆT CHỐNG GIẢ MẠO)
-        function renderChatContent(rawText, author = '') {
+        function renderChatContent(rawText, author = '', c = {}) {
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
 
@@ -17719,7 +17719,7 @@
                         <div class="chat-bubble-container">
                             <div class="chat-bubble">
                                 ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
-                                ${renderChatContent(c.text || '', c.author)}
+                                ${renderChatContent(c.text || '', c.author, c)}
                                 ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}
                                 ${transBoxHtml}
                             </div>
@@ -17854,7 +17854,7 @@
                                 const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
                                 const replyHtml = c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : '';
                                 const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : '';
-                                bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(c.text || '', c.author)}${imgHtml}`;
+                                bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(c.text || '', c.author, c)}${imgHtml}`;
                             }
                         }
 
@@ -17914,7 +17914,7 @@
                             </button>
                         </div>
                     `;
-                } else if (!isFetchingArchive && topArea.innerHTML === '') {
+                } else if (!isFetchingArchive) {
                     topArea.innerHTML = `
                         <div style="text-align:center; padding: 0 0 15px 0;">
                             <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
@@ -17961,7 +17961,10 @@
                             }
                         }, 200);
                     } else if (forceScroll || isNearBottom) {
-                        setTimeout(() => { scrollChatToBottom(false); }, 60);
+                        requestAnimationFrame(() => {
+                            scrollChatToBottom(false);
+                            setTimeout(() => scrollChatToBottom(false), 150);
+                        });
                     } else if (hasAppendedNewMessage && !isNearBottom) {
                         if (btnJump) btnJump.classList.add('show');
                     }
@@ -18034,7 +18037,7 @@
                                 ${isMine ? `<span class="chat-author-you-badge">Bạn</span>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
                         </div>
                     </div>
                     `;
