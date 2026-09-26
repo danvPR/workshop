@@ -10210,9 +10210,19 @@
             } catch(e) { showToast("Lỗi kết nối máy chủ", "error"); return null; }
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
+        function hideGlobalLoader() {
             const loader = document.getElementById('globalLoader');
-            
+            if (loader && loader.style.display !== 'none') {
+                loader.style.transition = 'opacity 0.35s ease';
+                loader.style.opacity = '0';
+                setTimeout(() => { if (loader) loader.style.display = 'none'; }, 350);
+            }
+        }
+
+        async function initApp() {
+            // Cơ chế bảo vệ: Dù mạng nhanh hay chậm, tối đa 1.5s là tự động mở giao diện
+            setTimeout(hideGlobalLoader, 1500);
+
             // Khởi tạo Theme ngay lập tức
             const savedTheme = localStorage.getItem('danv_theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -10221,8 +10231,8 @@
                 // Kích hoạt đa ngôn ngữ
                 const initialLang = await detectLanguage();
                 await setLanguage(initialLang);
+
                 const urlParams = new URLSearchParams(window.location.search);
-                // 🎁 TỰ ĐỘNG NHẬN DIỆN LINK MỜI BẠN BÈ (?ref=username hoặc ?r=username)
                 const refCandidate = urlParams.get('ref') || urlParams.get('r');
                 if (refCandidate) {
                     const refInput = document.getElementById('regReferralCode');
@@ -10232,22 +10242,19 @@
                         showToast(`Bạn được @${refCandidate.trim()} mời gia nhập! Đăng ký ngay để nhận 50 WOW.`, 'info');
                     }
                 }
+
                 if (urlParams.get('code')) {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-                    
-                    // NẾU CODE TỪ LINK SCRATCH MÀ ĐÃ CÓ CURRENTUSER => NGHĨA LÀ HỌ ĐANG LIÊN KẾT NICK
                     if (localStorage.getItem('is_linking_scratch') === 'true' && currentUser) {
                         localStorage.removeItem('is_linking_scratch');
                         const res = await apiFetch(`/api/auth/link_scratch`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }) });
                         if(res && res.success) { showToast("Đã liên kết Scratch thành công!", "success"); location.hash = `#settings`; }
                     } else {
-                        // NẾU LÀ ĐĂNG NHẬP SCRATCH THEO KIỂU CŨ
                         const res = await (await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }), headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                         if (res.success) {
                             currentUser = { username: res.username, sessionToken: res.sessionToken, avt: res.avt };
                             localStorage.setItem('danv_user', JSON.stringify(currentUser));
                             showToast(`Đăng nhập tạm thời thành công!`, 'success');
-                            // Check xem đã có mail chưa, chưa có thì ép cập nhật
                             checkLegacyUser();
                         }
                     }
@@ -10255,17 +10262,31 @@
                     checkLegacyUser();
                 }
 
-                await loadProjects(); updateNav(); handleRouting();
-                checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
-                // Kiểm tra nếu có user đăng nhập mà chưa xem Hướng dẫn tân thủ
+                // Cập nhật điều hướng & nạp dự án
+                updateNav();
+                handleRouting();
+                await loadProjects();
+
+                checkGlobalPing();
                 if (currentUser && !localStorage.getItem('danv_tour_completed')) {
-                setTimeout(() => { OnboardingTour.start(); }, 1500);
+                    setTimeout(() => { OnboardingTour.start(); }, 1500);
                 }
-                checkEmailVerificationBanner(); // Kiểm tra banner xác thực email
-                loadEvents(); // Tải Sự kiện Game Jam
-                startUnifiedHeartbeat(); // Kích hoạt luồng nhịp tim tổng hợp (Đợt 3)
-            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
-        });
+                checkEmailVerificationBanner();
+                loadEvents();
+                startUnifiedHeartbeat();
+            } catch (e) {
+                console.error("Lỗi khởi tạo ứng dụng:", e);
+            } finally {
+                hideGlobalLoader();
+            }
+        }
+
+        // Đảm bảo chạy ngay lập tức dù sự kiện DOMContentLoaded đã trôi qua hay chưa
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
 
         // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ) & ĐỒNG BỘ TRẠNG THÁI EMAIL
         async function checkLegacyUser() {
