@@ -6473,6 +6473,8 @@
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- MÀN HÌNH XÁC MINH CLOUDFLARE "VERIFY YOU ARE HUMAN" -->
@@ -10906,7 +10908,10 @@
             // ĐÓNG KẾT NỐI WEBSOCKET KHI RỜI KHỎI TAB CHAT ĐỂ TIẾT KIỆM BĂNG THÔNG CHO MÁY CHỦ
             if (hash !== '#chat') {
                 if (typeof chatInterval !== 'undefined' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
-                if (typeof globalChatWS !== 'undefined' && globalChatWS) { globalChatWS.close(); globalChatWS = null; }
+                if (typeof globalChatChannel !== 'undefined' && globalChatChannel && supabaseClient) { 
+                    supabaseClient.removeChannel(globalChatChannel); 
+                    globalChatChannel = null; 
+                }
             }
 
             // 🎯 XỬ LÝ HIGHLIGHT TAB & TITLE ĐỘNG CHO TỪNG TRANG (SEO TITLE FORMAT)
@@ -17005,65 +17010,74 @@
         let isChatLoadingMore = false;
 
         let isUserAFK = false;
-        let globalChatWS = null; // Biến lưu trữ kết nối WebSocket
+        // KHỞI TẠO CLIENT SUPABASE
+        const SUPABASE_URL = "URL_SUPABASE_CỦA_BẠN"; 
+        const SUPABASE_ANON_KEY = "KEY_ANON_CỦA_BẠN"; 
+        const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        let globalChatChannel = null;
 
         function connectGlobalChatWebSocket() {
-            if (globalChatWS && (globalChatWS.readyState === WebSocket.OPEN || globalChatWS.readyState === WebSocket.CONNECTING)) return;
+            if (!supabaseClient) {
+                console.error("Supabase client chưa được tải!");
+                return;
+            }
 
-            // Tự động đổi http/https thành ws/wss
-            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsDomain = WORKER_URL.replace(/^https?:\/\//, '');
-            const wsUrl = `${wsProtocol}//${wsDomain}/api/chat/stream`;
+            // Nếu đang kết nối rồi thì bỏ qua
+            if (globalChatChannel && globalChatChannel.state === 'joined') return;
 
-            globalChatWS = new WebSocket(wsUrl);
+            // Lắng nghe kênh Broadcast từ Backend
+            globalChatChannel = supabaseClient.channel('realtime:global_chat');
 
-            globalChatWS.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    const liveWrapper = document.getElementById('chatLiveWrapper');
-                    if (!liveWrapper) return;
+            globalChatChannel
+                .on('broadcast', { event: '*' }, (payload) => {
+                    try {
+                        const eventType = payload.event;
+                        const data = payload.payload;
+                        
+                        const liveWrapper = document.getElementById('chatLiveWrapper');
+                        if (!liveWrapper) return;
 
-                    // 1. NHẬN TIN NHẮN MỚI
-                    if (data.type === "NEW_MESSAGE") {
-                        const msgId = String(data.message.msgId || data.message.id);
-                        if (document.getElementById(`chat-msg-${msgId}`)) return; // Tránh render trùng lặp
+                        // 1. NHẬN TIN NHẮN MỚI
+                        if (eventType === "NEW_MESSAGE") {
+                            const msgId = String(data.message.msgId || data.message.id);
+                            if (document.getElementById(`chat-msg-${msgId}`)) return;
 
-                        const temp = document.createElement('div');
-                        temp.innerHTML = renderSingleChatMessageHTML(data.message);
-                        const newEl = temp.firstElementChild;
-                        if (newEl) {
-                            liveWrapper.appendChild(newEl);
-                            scrollChatToBottom(true);
-                            if (!chatNotifiedMsgIds.has(msgId)) {
-                                chatNotifiedMsgIds.add(msgId);
-                                triggerChatBrowserNotification(data.message, msgId);
+                            const temp = document.createElement('div');
+                            temp.innerHTML = renderSingleChatMessageHTML(data.message);
+                            const newEl = temp.firstElementChild;
+                            if (newEl) {
+                                liveWrapper.appendChild(newEl);
+                                scrollChatToBottom(true);
+                                if (!chatNotifiedMsgIds.has(msgId)) {
+                                    chatNotifiedMsgIds.add(msgId);
+                                    triggerChatBrowserNotification(data.message, msgId);
+                                }
+                            }
+                        } 
+                        // 2. CẬP NHẬT TIN NHẮN (BÓC TÚI MÙ, POLL, AI TRẢ LỜI)
+                        else if (eventType === "UPDATE_MESSAGE") {
+                            loadGlobalChat(false);
+                        } 
+                        // 3. XÓA TIN NHẮN REALTIME
+                        else if (eventType === "DELETE_MESSAGE") {
+                            const targetEl = document.getElementById(`chat-msg-${data.msgId}`);
+                            if (targetEl) {
+                                targetEl.style.transition = 'all 0.25s ease';
+                                targetEl.style.opacity = '0';
+                                targetEl.style.transform = 'scale(0.95)';
+                                setTimeout(() => targetEl.remove(), 250);
                             }
                         }
-                    } 
-                    // 2. CẬP NHẬT TIN NHẮN (BÓC TÚI MÙ, POLL, AI TRẢ LỜI)
-                    else if (data.type === "UPDATE_MESSAGE") {
-                        // Tận dụng hàm diffing DOM siêu mượt có sẵn của bạn để vẽ lại mà không bị giật
-                        loadGlobalChat(false);
-                    } 
-                    // 3. XÓA TIN NHẮN REALTIME
-                    else if (data.type === "DELETE_MESSAGE") {
-                        const targetEl = document.getElementById(`chat-msg-${data.msgId}`);
-                        if (targetEl) {
-                            targetEl.style.transition = 'all 0.25s ease';
-                            targetEl.style.opacity = '0';
-                            targetEl.style.transform = 'scale(0.95)';
-                            setTimeout(() => targetEl.remove(), 250);
+                    } catch(e) { console.error("Lỗi đồng bộ Realtime:", e); }
+                })
+                .subscribe((status) => {
+                    if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+                        // Tự động kết nối lại sau 3 giây nếu rớt mạng
+                        if (window.location.hash.split('?')[0] === '#chat') {
+                            setTimeout(connectGlobalChatWebSocket, 3000);
                         }
                     }
-                } catch(e) {}
-            };
-
-            globalChatWS.onclose = () => {
-                // Tự động kết nối lại sau 3 giây nếu vẫn đang mở Kênh Giao Lưu (tránh rớt mạng)
-                if (window.location.hash.split('?')[0] === '#chat') {
-                    setTimeout(connectGlobalChatWebSocket, 3000);
-                }
-            };
+                });
         }
         let afkTimer = null;
         
