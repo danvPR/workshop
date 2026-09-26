@@ -6761,6 +6761,10 @@
                                 </div>
 
                                 <div class="chat-composer-tools-right">
+                                    <span id="voiceRecordTimer" style="display:none; font-size:0.8rem; color:#ef4444; font-weight:bold; margin-right:4px;">0:00</span>
+                                    <button type="button" id="btnVoiceChat" class="chat-dock-icon-btn" onclick="toggleVoiceRecord()" title="Gửi tin nhắn thoại">
+                                        <i class="fa-solid fa-microphone"></i>
+                                    </button>
                                     <span class="chat-kbd-hint">Enter ↵</span>
                                     <button type="submit" id="btnSubmitChat" class="chat-btn-send" data-i18n-title="chat_send_title" title="Gửi tin nhắn">
                                         <i class="fa-solid fa-paper-plane"></i>
@@ -6969,7 +6973,7 @@
                         <div style="display:flex; gap: 10px;">
                             <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
                             <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
-                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('std')"><i class="fa-solid fa-gift"></i> GIF</button>
+                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('std')"><i class="fa-solid fa-film"></i> GIF</button>
                         </div>
                         <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
                     </div>
@@ -7345,9 +7349,14 @@
 
                     <!-- KHỐI 2: KHU VỰC BÌNH LUẬN TRẢI RỘNG (FULL WIDTH THREAD) -->
                     <div class="proj-card-box" id="projCommentsArea">
-                        <h3 style="margin-bottom:18px; font-size:1.25rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
-                            <i class="fa-solid fa-comments" style="color:var(--primary);"></i> <span data-i18n="proj_comments_title">Thảo luận cộng đồng</span>
-                        </h3>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                            <h3 style="margin:0; font-size:1.25rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-comments" style="color:var(--primary);"></i> <span data-i18n="proj_comments_title">Thảo luận cộng đồng</span>
+                            </h3>
+                            <button id="btnLockProjComments" class="btn" style="display:none; border-radius: 12px; font-size: 0.85rem;" onclick="toggleLockComments('proj')">
+                                <i class="fa-solid fa-lock"></i> Khóa
+                            </button>
+                        </div>
 
                         <!-- Khung viết bình luận to rõ phía trên danh sách -->
                         <div id="comment-area-proj" class="comment-input-area" style="border:1px solid var(--border-color); border-radius:14px; padding:16px; margin-bottom:24px; background:var(--bg-secondary);">
@@ -7367,7 +7376,10 @@
                                     </label>
                                     <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
                                     <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
-                                        <i class="fa-solid fa-gift" style="font-size: 1.3rem; color: #855cd6;"></i>
+                                        <i class="fa-solid fa-film" style="font-size: 1.3rem; color: #855cd6;"></i>
+                                    </button>
+                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openTipModal()" title="Tặng WOW">
+                                        <span class="wow-icon" style="font-size: 1.3rem; filter: none;"></span>
                                     </button>
                                     <button type="submit" id="btnSubmitCommentProj" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.2rem; margin-left: 12px;">
                                         <i class="fa-solid fa-paper-plane"></i>
@@ -7541,6 +7553,12 @@
             </div>
 
             <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="margin:0; font-size:1.15rem; color:var(--text-title);"><i class="fa-solid fa-comments" style="color:var(--primary);"></i> Lời nhắn</h4>
+                    <button id="btnLockProfComments" class="btn" style="display:none; border-radius: 12px; font-size: 0.85rem;" onclick="toggleLockComments('prof')">
+                        <i class="fa-solid fa-lock"></i> Khóa
+                    </button>
+                </div>
                 <div id="comment-area-prof" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
                     <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
                         <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
@@ -7556,7 +7574,7 @@
                             <div style="display:flex; gap: 10px;">
                                 <label for="commentImgUploadProf" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
                                 <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
-                                <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-gift"></i> GIF</button>
+                                <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-film"></i> GIF</button>
                             </div>
                             <button type="submit" class="btn btn-primary" id="btnSubmitCommentProf"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
                         </div>
@@ -11613,7 +11631,59 @@
             if (typeof list === 'string') {
                 try { list = JSON.parse(list); } catch(e) { list = []; }
             }
-            if (!Array.isArray(list) || list.length === 0) { 
+
+            // Xử lý cờ khóa bình luận
+            let isLocked = false;
+            if (list.length > 0 && list[0].id === "SYSTEM_LOCK") {
+                isLocked = true;
+                list = list.slice(1); // Bỏ qua phần tử hệ thống khi render
+            }
+
+            // Quản lý hiển thị nút Khóa cho Chủ/Admin
+            if (type === 'proj' && currentProj) {
+                const btnLock = document.getElementById('btnLockProjComments');
+                if (btnLock) {
+                    if (currentUser && (currentUser.username.toLowerCase() === currentProj.author.toLowerCase() || currentUser.role === 'admin')) {
+                        btnLock.style.display = 'inline-flex';
+                        btnLock.innerHTML = isLocked ? `<i class="fa-solid fa-unlock"></i> Mở khóa` : `<i class="fa-solid fa-lock"></i> Khóa`;
+                        btnLock.className = isLocked ? 'btn btn-primary' : 'btn';
+                    } else {
+                        btnLock.style.display = 'none';
+                    }
+                }
+            } else if (type === 'prof' && viewingProfileUser) {
+                const btnLock = document.getElementById('btnLockProfComments');
+                if (btnLock) {
+                    if (currentUser && (currentUser.username.toLowerCase() === viewingProfileUser.toLowerCase() || currentUser.role === 'admin')) {
+                        btnLock.style.display = 'inline-flex';
+                        btnLock.innerHTML = isLocked ? `<i class="fa-solid fa-unlock"></i> Mở khóa` : `<i class="fa-solid fa-lock"></i> Khóa`;
+                        btnLock.className = isLocked ? 'btn btn-primary' : 'btn';
+                    } else {
+                        btnLock.style.display = 'none';
+                    }
+                }
+            }
+
+            // Ẩn/Hiện Form nhập bình luận và thông báo khóa
+            const areaIdMap = { proj: 'comment-area-proj', prof: 'comment-area-prof', std: 'comment-area-std' };
+            const areaEl = document.getElementById(areaIdMap[type]);
+            if (areaEl) {
+                if (isLocked) {
+                    areaEl.style.display = 'none';
+                    if (!document.getElementById(`lock-msg-${type}`)) {
+                        const lockMsg = document.createElement('div');
+                        lockMsg.id = `lock-msg-${type}`;
+                        lockMsg.innerHTML = '<div style="text-align:center; padding:15px; color:var(--text-muted); background:var(--bg-secondary); border-radius:12px; margin-bottom:20px; border: 1px dashed var(--border-color);"><i class="fa-solid fa-lock"></i> Tính năng bình luận đã bị chủ sở hữu đóng.</div>';
+                        areaEl.parentNode.insertBefore(lockMsg, areaEl);
+                    }
+                } else {
+                    areaEl.style.display = 'block';
+                    const lockMsg = document.getElementById(`lock-msg-${type}`);
+                    if (lockMsg) lockMsg.remove();
+                }
+            }
+
+            if (!Array.isArray(list) || list.length === 0) {
                 container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px;">${t('proj_no_comments') || 'Chưa có bình luận nào.'}</div>`; 
                 return; 
             }
@@ -15895,6 +15965,16 @@
                 `;
             }
 
+            // 🎤 VOICE MESSAGE (TIN NHẮN THOẠI)
+            if (rawText === '[VOICE_MESSAGE]' && c.imageId && c.imageId !== 'null') {
+                return `
+                    <div style="background: var(--bg-secondary); padding: 8px 12px; border-radius: 14px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border-color); margin-top: 4px;">
+                        <i class="fa-solid fa-microphone" style="color: var(--primary);"></i>
+                        <audio controls style="height: 35px; max-width: 220px; outline: none;" src="${WORKER_URL}/api/project/${c.imageId}?ext=webm"></audio>
+                    </div>
+                `;
+            }
+
             // 🎯 0. CÂU HỎI ĐỐ VUI (QUIZ CARD) - CHỈ TỪ BEABEA (ĐÃ FIX TRIỆT ĐỂ LỖI BỊ CẮT VÌ DẤU ])
             if (isBeaBea && rawText.includes("[BEABEA_QUIZ:")) {
                 const startIdx = rawText.indexOf("[BEABEA_QUIZ:");
@@ -17416,6 +17496,11 @@
             }
             if (typeof getTikTokVideoId === 'function' && getTikTokVideoId(raw)) {
                 return `🎵 Đã chia sẻ một video TikTok`;
+            }
+
+            // 8.5 Tin nhắn thoại (Voice Chat)
+            if (raw === '[VOICE_MESSAGE]' && c.imageId && c.imageId !== 'null') {
+                return `🎤 [Tin nhắn thoại]`;
             }
 
             // 9. Tin nhắn thuần hình ảnh / GIF
@@ -21587,6 +21672,8 @@
                 setTimeout(() => lantern.remove(), 5000);
             }
         }
+
+        
     </script>
 </body>
 </html>
