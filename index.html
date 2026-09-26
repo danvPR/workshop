@@ -6473,47 +6473,44 @@
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT & XỬ LÝ MÀN HÌNH CHỜ -->
     <script>
-        function generateRandomRayId() {
-            const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
-            return `${hex()}${hex()}${hex()} - SGN`;
-        }
-
-        // Đóng màn hình xác minh mượt mà
-        function dismissCfVerifyScreen() {
-            const screen = document.getElementById('cfVerifyScreen');
-            if (screen) {
-                screen.style.transition = 'opacity 0.35s ease';
-                screen.style.opacity = '0';
-                setTimeout(() => { if (screen) screen.remove(); }, 350);
-            }
-        }
-
-        // Callback chuẩn của Turnstile ngay khi tick xanh
-        window.onCloudflareVerifySuccess = function(token) {
+        // Hàm Phá Cửa Khẩn Cấp: Tắt toàn bộ mọi màn hình chờ
+        function forceCloseAllLoaders() {
             sessionStorage.setItem('cf_human_verified', 'true');
-            dismissCfVerifyScreen();
+            const cfScreen = document.getElementById('cfVerifyScreen');
+            const gLoader = document.getElementById('globalLoader');
+            
+            if (cfScreen) cfScreen.remove();
+            if (gLoader) {
+                gLoader.style.display = 'none';
+                gLoader.style.opacity = '0';
+                gLoader.style.zIndex = '-9999';
+            }
+            document.body.style.overflow = 'auto'; // Trả lại thanh cuộn
+        }
+
+        // Nếu Turnstile thành công (Không bị lỗi 401)
+        window.onCloudflareVerifySuccess = function(token) {
+            forceCloseAllLoaders();
         };
 
-        // Khởi tạo Ray ID và kiểm tra phiên xác minh an toàn
+        // Khởi tạo kiểm tra
         function initCfVerifyScreen() {
-            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
-            if (isVerified) {
-                dismissCfVerifyScreen();
+            if (sessionStorage.getItem('cf_human_verified') === 'true') {
+                forceCloseAllLoaders();
                 return;
             }
 
             const raySpan = document.getElementById('cfRayIdSim');
-            if (raySpan) raySpan.innerText = generateRandomRayId();
+            if (raySpan) {
+                const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
+                raySpan.innerText = `${hex()}${hex()}${hex()} - SGN`;
+            }
 
-            let attempts = 0;
-            // Cứu hộ khẩn cấp: Nếu Turnstile bị Adblock chặn, tự động cho qua sau 5 giây để không làm kẹt Web
-            const checkTimer = setInterval(() => {
-                attempts++;
-                if (sessionStorage.getItem('cf_human_verified') === 'true' || attempts > 16) { 
-                    clearInterval(checkTimer);
-                    dismissCfVerifyScreen();
-                }
-            }, 300);
+            // 🚀 TỐI HẬU THƯ: Nếu sau 3 giây mà Turnstile bị lỗi 401 (hoặc sập mạng) thì ÉP BUỘC mở trang web!
+            setTimeout(() => {
+                console.warn("Turnstile API không phản hồi hoặc bị lỗi 401. Đang kích hoạt Bypass khẩn cấp...");
+                forceCloseAllLoaders();
+            }, 3000);
         }
 
         if (document.readyState === 'loading') {
