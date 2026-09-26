@@ -10996,17 +10996,10 @@
 
             // Ẩn tất cả các trang
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none'); 
-            document.getElementById('playerContainer').innerHTML = '';
-            
-            // Tải dữ liệu trước nếu cần
-            if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/') || hash === '#chat') {
-                if (allProjects.length === 0) await loadProjects(); 
-            }
-            if (hash.startsWith('#assets')) {
-                if (allAssets.length === 0) await fetchAssetsList();
-            }
+            const pContainer = document.getElementById('playerContainer');
+            if (pContainer) pContainer.innerHTML = '';
 
-            // Chạy hàm mở trang tương ứng (Display: block được gọi bên trong các hàm này)
+            // BẬT TRANG LẬP TỨC (Không được bắt giao diện chờ mạng rồi mới chịu hiện)
             if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
             else if (hash.startsWith('#profile/')) await openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#midautumn' || hash === '#trungthu') openMidAutumnPage();
@@ -11020,7 +11013,10 @@
             else if (hash === '#creator') await openCreatorPage(urlParams);
             else if (hash === '#chat') openChatPage();
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
-            else openHomePage();
+            else {
+                openHomePage(); // Bật ngay Banner, ô tìm kiếm và khung xương lên màn hình
+                if (allProjects.length === 0) loadProjects(); // Kéo dữ liệu chạy ngầm, không chặn hiển thị
+            }
 
             // ⚡ FIX TRIỆT ĐỂ LỖI KHOẢNG TRẮNG SCROLL:
             // Đợi 10ms để trình duyệt render xong CSS display: block của trang mới rồi mới ép cuộn lên đầu và tính toán lại Layout
@@ -11250,7 +11246,7 @@
 
         function openHomePage() {
             const home = document.getElementById('homeView');
-            if (home) home.style.display = 'block';
+            if (home) home.style.display = 'block'; // Đảm bảo Trang chủ luôn bật display: block
             
             // Cập nhật ngày đếm ngược cho Banner Trung Thu ngoài Trang Chủ
             const cdEl = document.getElementById('homeMidAutumnCountdown');
@@ -11261,7 +11257,7 @@
                 cdEl.innerText = diffDays > 0 ? `Đêm Rằm 25/09 • Còn ${diffDays} ngày` : 'Đang diễn ra đêm Rằm 25/09!';
             }
 
-            // Luôn gọi vẽ trang chủ kể cả khi chưa có dữ liệu để không bị màn hình trắng trơn
+            // Luôn gọi hàm vẽ (khi chưa có dữ liệu sẽ hiện khung xương chờ tải thay vì để trắng màn hình)
             renderHomeProjects(false);
         }
 
