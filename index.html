@@ -11620,6 +11620,15 @@
         function execHomeSearch() {
             homeSearchQuery = document.getElementById('homeSearchInput').value.trim();
             toggleClearSearchBtn();
+            
+            // 🚀 TỐI ƯU UX: Nếu đang ở tab "Đề xuất" mà gõ tìm kiếm, tự động chuyển sang "Thịnh hành" để quét toàn bộ kho game
+            if (homeSortMode === 'foryou' && homeSearchQuery !== '') {
+                homeSortMode = 'trending';
+                document.querySelectorAll('.home-sort-seg-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.sort === 'trending');
+                });
+            }
+            
             loadProjects(false);
         }
 
@@ -11637,6 +11646,15 @@
             document.getElementById('homeSearchInput').value = tag;
             toggleClearSearchBtn();
             homeSearchQuery = tag;
+            
+            // 🚀 TỐI ƯU UX: Nếu đang ở tab "Đề xuất" mà chọn Thể loại (khác "Tất cả"), tự động chuyển sang "Thịnh hành"
+            if (homeSortMode === 'foryou' && tag !== '') {
+                homeSortMode = 'trending';
+                document.querySelectorAll('.home-sort-seg-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.sort === 'trending');
+                });
+            }
+            
             loadProjects(false);
         }
 
