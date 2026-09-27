@@ -11085,13 +11085,17 @@
 
                 // 2. XỬ LÝ THÔNG BÁO CHƯA ĐỌC (Chỉ lấy số, cập nhật cục bộ nhanh)
                 if (data.unreadNotifs !== null && data.unreadNotifs !== undefined) {
-                    const badge = document.getElementById('notifBadge');
-                    if (badge) {
-                        if (data.unreadNotifs > 0) {
-                            badge.innerText = data.unreadNotifs > 99 ? '99+' : data.unreadNotifs;
-                            badge.style.display = 'flex';
-                        } else {
-                            badge.style.display = 'none';
+                    if (window.justMarkedNotifsRead && Date.now() - window.justMarkedNotifsRead < 5000) {
+                        // 🚀 Bỏ qua làm mới nếu user vừa bấm Đánh dấu đọc xong (Chờ server đồng bộ xong)
+                    } else {
+                        const badge = document.getElementById('notifBadge');
+                        if (badge) {
+                            if (data.unreadNotifs > 0) {
+                                badge.innerText = data.unreadNotifs > 99 ? '99+' : data.unreadNotifs;
+                                badge.style.display = 'flex';
+                            } else {
+                                badge.style.display = 'none';
+                            }
                         }
                     }
                 }
@@ -15698,7 +15702,13 @@
             showToast("Đã đánh dấu đọc tất cả", "success");
             
             const badge = document.getElementById('notifBadge');
-            if(badge) badge.style.display = 'none';
+            if(badge) {
+                badge.innerText = '0';
+                badge.style.display = 'none';
+            }
+            
+            // 🚀 Chặn radar Heartbeat gọi ngược lại số lượng cũ khi server chưa kịp xóa cache
+            window.justMarkedNotifsRead = Date.now();
             
             if(window.cachedNotifs) {
                 window.cachedNotifs = window.cachedNotifs.map(n => ({...n, read: true}));
