@@ -305,6 +305,32 @@
         .page-view { display: none; max-width: 1200px; margin: 0 auto; padding: 30px 20px; flex: 1; width: 100%; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* ================= GIAO DIỆN LEADERBOARD (BẢNG XẾP HẠNG) ================= */
+        .lb-hero { background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); padding: 30px 20px; border-radius: 20px; text-align: center; color: #fff; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
+        .lb-title { font-size: 2rem; font-weight: 900; margin-bottom: 8px; color: #fff !important; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .lb-tabs { display: inline-flex; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 16px; gap: 5px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); margin-top: 10px;}
+        .lb-tab-btn { background: none; border: none; color: #cbd5e1; padding: 8px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .lb-tab-btn.active { background: #10b981; color: #fff; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+
+        .lb-podium-wrap { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin: 35px 0; }
+        .lb-podium-item { display: flex; flex-direction: column; align-items: center; width: 120px; position: relative; }
+        .lb-podium-avt { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 2;}
+        .lb-podium-name { font-weight: 800; font-size: 0.85rem; color: #fff; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; text-shadow: 0 2px 4px rgba(0,0,0,0.8);}
+        .lb-podium-val { font-size: 0.8rem; color: #fef08a; font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);}
+        .lb-podium-bar { width: 100%; border-radius: 16px 16px 8px 8px; display: flex; align-items: flex-start; justify-content: center; padding-top: 10px; font-size: 2rem; font-weight: 900; color: rgba(255,255,255,0.8); box-shadow: 0 -5px 20px rgba(0,0,0,0.2); position: relative;}
+        
+        .lb-rank-1 { z-index: 3; } .lb-rank-1 .lb-podium-avt { width: 85px; height: 85px; border-color: #f59e0b; } .lb-rank-1 .lb-podium-bar { height: 160px; background: linear-gradient(to top, #d97706, #fef08a); border: 2px solid #f59e0b; border-bottom: none;}
+        .lb-rank-2 { z-index: 2; } .lb-rank-2 .lb-podium-avt { border-color: #94a3b8; } .lb-rank-2 .lb-podium-bar { height: 110px; background: linear-gradient(to top, #64748b, #cbd5e1); border: 2px solid #94a3b8; border-bottom: none;}
+        .lb-rank-3 { z-index: 1; } .lb-rank-3 .lb-podium-avt { border-color: #b45309; } .lb-rank-3 .lb-podium-bar { height: 80px; background: linear-gradient(to top, #78350f, #d97706); border: 2px solid #b45309; border-bottom: none;}
+
+        .lb-list-wrap { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto; }
+        .lb-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 16px; transition: 0.2s; cursor: pointer; }
+        .lb-row:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.03); background: var(--bg-secondary); }
+        .lb-row-rank { font-size: 1.2rem; font-weight: 900; color: var(--text-muted); width: 40px; text-align: center; }
+        .lb-row-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+        .lb-row-val { font-size: 1.1rem; font-weight: 900; color: var(--text-title); display: flex; align-items: center; gap: 6px; }
+        @media (max-width: 600px) { .lb-podium-item { width: 95px; } .lb-rank-1 .lb-podium-bar { height: 140px; } .lb-row { padding: 10px 12px; } }
+
         /* ================= GIAO DIỆN TRANG CHỦ & THẺ DỰ ÁN PRO (CLEAN GAME HUB REDESIGN) ================= */
         /* 1. Thanh sự kiện & Slider nhẹ nhàng */
         .home-events-header {
@@ -6977,6 +7003,7 @@
             <a href="#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
             <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
+            <a href="#leaderboard" class="nav-link nav-leaderboard"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> <span data-i18n="nav_leaderboard">Xếp hạng</span></a>
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
@@ -7696,6 +7723,33 @@
         <div style="text-align: center; padding-bottom: 40px; display: none;" id="homeLoadMoreArea">
             <button class="btn" style="padding: 11px 34px; border-radius: 20px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreProjects()">
                 <i class="fa-solid fa-angle-down"></i> <span data-i18n="home_load_more">Xem thêm tác phẩm</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- TRANG BẢNG XẾP HẠNG (LEADERBOARD) -->
+    <div id="leaderboardView" class="page-view">
+        <div class="lb-hero">
+            <h1 class="lb-title"><i class="fa-solid fa-ranking-star" style="color: #fef08a;"></i> Bảng Vàng Vinh Danh</h1>
+            <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 20px;">Top những nhà sáng tạo xuất sắc nhất toàn máy chủ DANVworkshop.</p>
+            <div class="lb-tabs">
+                <button class="lb-tab-btn active" id="lbTab-wow" onclick="switchLeaderboardTab('wow')"><i class="fa-solid fa-bolt"></i> Đại Gia WOW</button>
+                <button class="lb-tab-btn" id="lbTab-followers" onclick="switchLeaderboardTab('followers')"><i class="fa-solid fa-users"></i> Idol Theo Dõi</button>
+            </div>
+
+            <!-- Bục Podium Top 3 -->
+            <div class="lb-podium-wrap" id="lbPodiumArea">
+                <!-- Render từ JS -->
+            </div>
+        </div>
+
+        <div class="lb-list-wrap" id="lbListArea">
+            <!-- Render từ JS -->
+        </div>
+
+        <div style="text-align: center; padding: 25px 0; display: none;" id="lbLoadMoreArea">
+            <button class="btn" style="padding: 10px 30px; border-radius: 20px; font-weight: bold; background: var(--bg-panel); border: 1px solid var(--border-color);" onclick="loadMoreLeaderboard()">
+                <i class="fa-solid fa-angle-down"></i> Xem các thứ hạng tiếp theo
             </button>
         </div>
     </div>
@@ -10354,6 +10408,7 @@
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Hàm tạo timeout giả lập
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let chatInterval = null; // Vòng lặp tải chat tự động
+        const chatPingAudio = new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3'); // Âm thanh Ping nhẹ
         
         // 🚀 BỘ NHỚ ĐỆM FRONTEND BỀN VỮNG (Giữ Cache 24h bằng LocalStorage)
         let globalUserCache = {}; 
@@ -11291,6 +11346,11 @@
                                     if (!chatNotifiedMsgIds.has(msgId)) {
                                         chatNotifiedMsgIds.add(msgId);
                                         triggerChatBrowserNotification(c, msgId);
+                                        // Phát âm thanh Ping nếu có tin nhắn từ người khác
+                                        const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
+                                        if (!isMine) {
+                                            try { chatPingAudio.play().catch(() => {}); } catch(e) {}
+                                        }
                                     }
                                 }
                             }
@@ -11491,6 +11551,10 @@
                 document.querySelectorAll('.nav-studios').forEach(el => el.classList.add('active'));
                 document.title = "Stations | " + brandName;
             }
+            else if (hash === '#leaderboard') {
+                document.querySelectorAll('.nav-leaderboard').forEach(el => el.classList.add('active'));
+                document.title = "Bảng Xếp Hạng | " + brandName;
+            }
             else if (hash === '#upload') document.title = t('nav_upload') + " | " + brandName;
             else if (hash === '#settings') document.title = t('settings_title') + " | " + brandName;
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
@@ -11519,6 +11583,7 @@
             else if (hash === '#notifications') await openNotificationsPage();
             else if (hash === '#create') openCreatePage();
             else if (hash === '#studios') openStudiosPage();
+            else if (hash === '#leaderboard') openLeaderboardPage();
             else if (hash.startsWith('#studio/')) await openStudioDetailPage(hash.replace('#studio/', ''), urlParams);
             else if (hash === '#admin') await openAdminPage();
             else if (hash === '#creator') await openCreatorPage(urlParams);
@@ -12950,6 +13015,130 @@
 
         // ================= PROFILE & SETTINGS =================
     
+        // ================= LEADERBOARD SYSTEM =================
+        let lbCurrentType = 'wow';
+        let lbCurrentPage = 1;
+        let lbHasMore = false;
+        let lbAllData = [];
+
+        function openLeaderboardPage() {
+            document.getElementById('leaderboardView').style.display = 'block';
+            if (lbAllData.length === 0) {
+                switchLeaderboardTab('wow');
+            }
+        }
+
+        function switchLeaderboardTab(type) {
+            lbCurrentType = type;
+            lbCurrentPage = 1;
+            lbAllData = [];
+            document.querySelectorAll('.lb-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`lbTab-${type}`).classList.add('active');
+            
+            document.getElementById('lbPodiumArea').innerHTML = '';
+            document.getElementById('lbListArea').innerHTML = '<div style="text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
+            document.getElementById('lbLoadMoreArea').style.display = 'none';
+            
+            fetchLeaderboardData();
+        }
+
+        async function fetchLeaderboardData(isLoadMore = false) {
+            if (isLoadMore) lbCurrentPage++;
+            const btnMore = document.querySelector('#lbLoadMoreArea button');
+            if (isLoadMore && btnMore) {
+                btnMore.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+                btnMore.disabled = true;
+            }
+
+            try {
+                const res = await (await fetch(`${WORKER_URL}/api/leaderboard?type=${lbCurrentType}&page=${lbCurrentPage}&limit=20`)).json();
+                
+                if (res.users) {
+                    if (isLoadMore) lbAllData = lbAllData.concat(res.users);
+                    else lbAllData = res.users;
+                    
+                    lbHasMore = res.hasMore;
+                    renderLeaderboard();
+                }
+            } catch (e) {
+                document.getElementById('lbListArea').innerHTML = '<div style="text-align:center; color:#ef4444; padding:20px;">Lỗi tải dữ liệu.</div>';
+            }
+
+            if (isLoadMore && btnMore) {
+                btnMore.innerHTML = '<i class="fa-solid fa-angle-down"></i> Xem các thứ hạng tiếp theo';
+                btnMore.disabled = false;
+            }
+        }
+
+        function renderLeaderboard() {
+            const podiumArea = document.getElementById('lbPodiumArea');
+            const listArea = document.getElementById('lbListArea');
+            const loadMoreArea = document.getElementById('lbLoadMoreArea');
+
+            if (lbAllData.length === 0) {
+                podiumArea.innerHTML = '';
+                listArea.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px;">Hệ thống đang cập nhật dữ liệu.</div>';
+                loadMoreArea.style.display = 'none';
+                return;
+            }
+
+            // 1. Render Podium (Top 3) - Chỉ vẽ ở Page 1
+            if (lbCurrentPage === 1) {
+                let podiumHtml = '';
+                const top3 = [lbAllData[1], lbAllData[0], lbAllData[2]]; // Sắp xếp UI: Hạng 2 - Hạng 1 - Hạng 3
+                const rankMap = [2, 1, 3];
+
+                top3.forEach((u, i) => {
+                    if (!u) return;
+                    const rank = rankMap[i];
+                    const valIcon = lbCurrentType === 'wow' ? '<span class="wow-icon" style="font-size:1rem;"></span>' : '<i class="fa-solid fa-users" style="color:#60a5fa;"></i>';
+                    const valText = lbCurrentType === 'wow' ? u.wow : u.followers;
+                    const avtUrl = getAvtUrl(u.avt);
+
+                    podiumHtml += `
+                        <div class="lb-podium-item lb-rank-${rank}" onclick="navigateTo('/users/${encodeURIComponent(u.username)}')">
+                            <div class="lb-podium-val">${valIcon} ${valText}</div>
+                            ${renderAvtWithFrame(u.avt, u.frame, 'lb-podium-avt')}
+                            <div class="lb-podium-name">@${escapeHtml(u.username)}</div>
+                            <div class="lb-podium-bar">${rank}</div>
+                        </div>
+                    `;
+                });
+                podiumArea.innerHTML = podiumHtml;
+            }
+
+            // 2. Render List (Top 4 trở đi)
+            const listData = lbAllData.slice(3);
+            if (listData.length > 0) {
+                listArea.innerHTML = listData.map((u, idx) => {
+                    const realRank = idx + 4;
+                    const valIcon = lbCurrentType === 'wow' ? '<span class="wow-icon" style="font-size:1.1rem;"></span>' : '<i class="fa-solid fa-users" style="color:#3b82f6;"></i>';
+                    const valText = lbCurrentType === 'wow' ? u.wow : u.followers;
+                    
+                    return `
+                        <div class="lb-row" onclick="navigateTo('/users/${encodeURIComponent(u.username)}')">
+                            <div class="lb-row-rank">#${realRank}</div>
+                            <div class="lb-row-info">
+                                ${renderAvtWithFrame(u.avt, u.frame, '', '')}
+                                <div style="display:flex; flex-direction:column;">
+                                    <b style="font-size:0.95rem; color:var(--text-title);">${escapeHtml(u.display_name)}</b>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">@${escapeHtml(u.username)}</span>
+                                </div>
+                            </div>
+                            <div class="lb-row-val">${valIcon} ${valText}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                listArea.innerHTML = '';
+            }
+
+            loadMoreArea.style.display = lbHasMore ? 'block' : 'none';
+        }
+
+        function loadMoreLeaderboard() {
+            if (lbHasMore) fetchLeaderboardData(true);
+        }
 
         // ================= STUDIOS SYSTEM =================
         let currentStudio = null;
@@ -17973,6 +18162,10 @@
                                 if (!chatNotifiedMsgIds.has(msgId)) {
                                     chatNotifiedMsgIds.add(msgId);
                                     triggerChatBrowserNotification(data.message, msgId);
+                                    // Phát âm thanh Ping nếu có tin nhắn từ người khác
+                                    if (!isMine) {
+                                        try { chatPingAudio.play().catch(() => {}); } catch(e) {}
+                                    }
                                 }
                             }
                         }
