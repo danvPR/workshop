@@ -6169,6 +6169,15 @@
             justify-content: flex-end;
             min-width: 280px;
         }
+
+        /* ĐIỀU KHIỂN ẨN / HIỆN CÁC PHÂN VÙNG TAB STUDIO */
+        .creator-tab-pane {
+            display: none;
+        }
+        .creator-tab-pane.active {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
         .creator-search-input-pill {
             display: flex;
             align-items: center;
@@ -21303,13 +21312,21 @@
 
         function switchCreatorTab(tab) {
             creatorActiveTab = tab;
+            // Gỡ bỏ trạng thái active của tất cả các nút tab và các phân vùng nội dung
             document.querySelectorAll('.creator-nav-pill-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.creator-tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.creator-tab-pane').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none';
+            });
 
             const targetBtn = document.getElementById(`btnCreatorTab-${tab === 'transactions' ? 'tx' : (tab === 'games' ? 'games' : 'toolkit')}`);
             const targetPane = document.getElementById(`creatorPane-${tab}`);
+            
             if (targetBtn) targetBtn.classList.add('active');
-            if (targetPane) targetPane.classList.add('active');
+            if (targetPane) {
+                targetPane.classList.add('active');
+                targetPane.style.display = 'block';
+            }
 
             if (tab === 'games') {
                 renderCreatorProjectsBreakdown();
