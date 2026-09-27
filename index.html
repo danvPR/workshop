@@ -3820,6 +3820,92 @@
             display: block; 
             border: 1px solid rgba(0,0,0,0.08); 
             background: rgba(0,0,0,0.02);
+            cursor: zoom-in;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        }
+        .chat-img-attachment:hover {
+            transform: scale(1.025);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+        }
+
+        /* KHUNG LIGHTBOX XEM ẢNH GIAO LƯU FULL MÀN HÌNH */
+        .chat-image-lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100010;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        .chat-lightbox-wrapper {
+            position: relative;
+            max-width: 92vw;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chat-lightbox-img {
+            max-width: 92vw;
+            max-height: 84vh;
+            border-radius: 16px;
+            object-fit: contain;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            user-select: none;
+        }
+        .chat-lightbox-close-btn {
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .chat-lightbox-close-btn:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+            transform: scale(1.1);
+        }
+        .chat-lightbox-bottom-bar {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-lightbox-action-link {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .chat-lightbox-action-link:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         /* NÚT VÀ MENU CHỌN NGÔN NGỮ DỊCH THUẬT (PORTAL FIXED TỐI ƯU) */
@@ -10202,6 +10288,19 @@
             </div>
         </div>
     </div>
+    <!-- MODAL LIGHTBOX XEM ẢNH GIAO LƯU PHÓNG TO -->
+    <div id="chatImageLightboxOverlay" class="chat-image-lightbox-overlay" onclick="closeChatImageLightbox(event)">
+        <div class="chat-lightbox-wrapper" onclick="event.stopPropagation()">
+            <button type="button" class="chat-lightbox-close-btn" onclick="closeChatImageLightbox()" title="Đóng (Esc)">&times;</button>
+            <img id="chatLightboxImg" src="" class="chat-lightbox-img" alt="Zoom Preview">
+            <div class="chat-lightbox-bottom-bar">
+                <a id="chatLightboxOpenTabLink" href="#" target="_blank" rel="noopener noreferrer" class="chat-lightbox-action-link">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>Mở ảnh gốc</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
         // ================= XỬ LÝ MÀN HÌNH XÁC THỰC CLOUDFLARE =================
@@ -18474,7 +18573,7 @@
                             <div class="chat-bubble">
                                 ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
                                 ${renderChatContent(c.text || '', c.author, c)}
-                                ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : ''}
+                                ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : ''}
                                 ${transBoxHtml}
                             </div>
 
@@ -18607,7 +18706,7 @@
                             if (bubbleContainer) {
                                 const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
                                 const replyHtml = c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : '';
-                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()">` : '';
+                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : '';
                                 bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(c.text || '', c.author, c)}${imgHtml}`;
                             }
                         }
@@ -18800,7 +18899,7 @@
                                 ${isMine ? `<span class="chat-author-you-badge">Bạn</span>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : ''}</div>
                         </div>
                     </div>
                     `;
@@ -23017,6 +23116,44 @@
             const popover = document.getElementById('danvEmojiPickerPopover');
             if (popover && !popover.contains(e.target) && !e.target.closest('button[onclick*="toggleEmojiPicker"]')) {
                 popover.remove();
+            }
+        });
+
+        // ================= HÀM XEM ẢNH GIAO LƯU PHÓNG TO (LIGHTBOX) =================
+        function openChatImageLightbox(src) {
+            if (!src) return;
+            const overlay = document.getElementById('chatImageLightboxOverlay');
+            const imgEl = document.getElementById('chatLightboxImg');
+            const openLink = document.getElementById('chatLightboxOpenTabLink');
+
+            if (imgEl) imgEl.src = src;
+            if (openLink) openLink.href = src;
+            if (overlay) {
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // Khóa cuộn trang khi đang xem
+            }
+        }
+
+        function closeChatImageLightbox(event) {
+            if (event && event.target && event.target.id !== 'chatImageLightboxOverlay' && !event.target.classList.contains('chat-lightbox-close-btn')) {
+                return;
+            }
+            const overlay = document.getElementById('chatImageLightboxOverlay');
+            const imgEl = document.getElementById('chatLightboxImg');
+            if (overlay) {
+                overlay.style.display = 'none';
+                document.body.style.overflow = ''; // Mở lại thanh cuộn
+            }
+            if (imgEl) imgEl.src = '';
+        }
+
+        // Bấm phím Esc để đóng nhanh
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('chatImageLightboxOverlay');
+                if (overlay && overlay.style.display === 'flex') {
+                    closeChatImageLightbox();
+                }
             }
         });
     </script>
