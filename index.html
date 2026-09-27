@@ -7660,6 +7660,9 @@
                                 <button class="proj-dropdown-item" onclick="closeProjMoreMenu(); openReportModal('project');">
                                     <i class="fa-solid fa-flag" style="color:#f59e0b;"></i> <span data-i18n="proj_menu_report">Báo cáo vi phạm</span>
                                 </button>
+                                <button class="proj-dropdown-item" id="btnAdminToggleFeatured" style="display:none;" onclick="closeProjMoreMenu(); toggleAdminFeatured();">
+                                    <i class="fa-solid fa-star" style="color:#f5b041;"></i> <span id="adminToggleFeaturedText">[Admin] Đưa lên Đề xuất</span>
+                                </button>
                                 <button class="proj-dropdown-item danger" id="btnAdminForcePrivate" style="display:none;" onclick="closeProjMoreMenu(); openAdminPrivateModal();">
                                     <i class="fa-solid fa-shield-halved"></i> <span data-i18n="proj_menu_force_private">Gỡ về riêng tư (Admin)</span>
                                 </button>
@@ -8404,32 +8407,6 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
                 <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> <span data-i18n="admin_reports_title">Danh sách Tố cáo chờ xử lý</span></h3>
                 <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="admin_btn_refresh">Làm mới</span></button>
-            </div>
-
-            <!-- KHỐI QUẢN LÝ THUẬT TOÁN ĐỀ XUẤT (BACKFILL CŨ) -->
-            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                <h4 style="margin: 0 0 10px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-filter" style="color: #8b5cf6;"></i> Hệ thống duyệt "Đề xuất" (Dự án cũ)
-                </h4>
-                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Dùng công cụ này để hệ thống âm thầm quét và chấm điểm Gameplay/Đầu tư của các dự án cũ chưa được phân loại, sau đó đưa chúng lên Tab Đề Xuất (Mỗi lần quét 10 dự án để tránh quá tải).</p>
-                <button id="btnAdminScanLegacy" class="btn btn-primary" onclick="adminScanLegacyProjects()" style="background: #8b5cf6; border: none;">
-                    <i class="fa-solid fa-radar"></i> Bắt đầu quét 10 dự án tiếp theo
-                </button>
-                <script>
-                    async function adminScanLegacyProjects() {
-                        const btn = document.getElementById('btnAdminScanLegacy');
-                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Hệ thống đang phân tích...';
-                        btn.disabled = true;
-                        const res = await apiFetch('/api/admin/ai_scan_legacy', { method: 'POST', body: JSON.stringify({}) });
-                        if(res && res.success) {
-                            showToast(`Đã quét xong! ${res.approved} đạt yêu cầu / Tổng ${res.scanned} dự án.`, "success");
-                        } else {
-                            showToast(res ? res.error : "Lỗi kết nối", "error");
-                        }
-                        btn.innerHTML = '<i class="fa-solid fa-radar"></i> Bắt đầu quét 10 dự án tiếp theo';
-                        btn.disabled = false;
-                    }
-                </script>
             </div>
 
             <!-- KHỐI QUẢN LÝ KHUNG AVATAR -->
@@ -11823,8 +11800,19 @@
                 btnSettings.style.display = (currentUser && (currentUser.username.toLowerCase() === proj.author.toLowerCase() || currentUser.role === 'admin')) ? 'inline-flex' : 'none';
             }
 
-            if (currentUser && currentUser.role === 'admin') document.getElementById('btnAdminForcePrivate').style.display = 'inline-flex';
-            else document.getElementById('btnAdminForcePrivate').style.display = 'none';
+            const btnAdminPrivate = document.getElementById('btnAdminForcePrivate');
+            const btnAdminFeature = document.getElementById('btnAdminToggleFeatured');
+            
+            if (currentUser && currentUser.role === 'admin') {
+                if (btnAdminPrivate) btnAdminPrivate.style.display = 'inline-flex';
+                if (btnAdminFeature) {
+                    btnAdminFeature.style.display = 'inline-flex';
+                    document.getElementById('adminToggleFeaturedText').innerText = proj.ai_featured ? "[Admin] Gỡ khỏi Đề xuất" : "[Admin] Đưa lên Đề xuất";
+                }
+            } else {
+                if (btnAdminPrivate) btnAdminPrivate.style.display = 'none';
+                if (btnAdminFeature) btnAdminFeature.style.display = 'none';
+            }
 
             // Cập nhật Mini Creator Card ở cột phải
             document.getElementById('projPageAuthorLinkAvt').href = `#profile/${encodeURIComponent(proj.author)}`;
@@ -11891,6 +11879,36 @@
                         setTimeout(() => updateContainer.classList.remove('highlight-attention'), 4500);
                     }
                 }, 250); 
+            }
+        }
+
+        async function toggleAdminFeatured() {
+            if (!currentProj || !currentUser || currentUser.role !== 'admin') return;
+            const isCurrentlyFeatured = currentProj.ai_featured;
+            const confirmMsg = isCurrentlyFeatured 
+                ? `Bạn có chắc muốn GỠ dự án "${currentProj.title}" khỏi danh sách Đề xuất?` 
+                : `Bạn có chắc muốn ĐƯA dự án "${currentProj.title}" lên danh sách Đề xuất trang chủ?`;
+            
+            if (!confirm(confirmMsg)) return;
+
+            const res = await apiFetch(`/api/project/action`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fileId: currentProj.fileId,
+                    action: "toggle_featured",
+                    payload: { featured: !isCurrentlyFeatured }
+                })
+            });
+
+            if (res && res.success) {
+                showToast(res.isFeatured ? "Đã ĐƯA LÊN danh sách Đề xuất!" : "Đã GỠ KHỎI danh sách Đề xuất!", "success");
+                currentProj.ai_featured = res.isFeatured;
+                document.getElementById('adminToggleFeaturedText').innerText = currentProj.ai_featured ? "[Admin] Gỡ khỏi Đề xuất" : "[Admin] Đưa lên Đề xuất";
+                
+                // Xóa cache để khách reload trang chủ sẽ thấy ngay
+                ramReadCache.delete("DANV_CACHE_PROJECTS");
+            } else {
+                showToast(res ? res.error : "Lỗi: Không thể thay đổi trạng thái!", "error");
             }
         }
 
