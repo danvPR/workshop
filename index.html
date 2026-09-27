@@ -11109,7 +11109,10 @@
                 // 3. XỬ LÝ TIN NHẮN CHAT MỚI (Chỉ đổ data nếu đang ở tab Chat)
                 if (isChatTab && data.chat && data.chat.length > 0) {
                     const liveWrapper = document.getElementById('chatLiveWrapper');
-                    if (liveWrapper) {
+                    const list = document.getElementById('chatMessageList');
+                    if (liveWrapper && list) {
+                        // Xác định trạng thái cuộn trước khi thêm tin nhắn vào DOM
+                        const isNearBottom = (list.scrollHeight - list.scrollTop - list.clientHeight <= 80);
                         const tempContainer = document.createElement('div');
                         let hasAppendedNewMessage = false;
 
@@ -11132,10 +11135,10 @@
 
                         if (hasAppendedNewMessage) {
                             heartbeatDelay = 6000; // Reset tốc độ khi có người chat
-                            const list = document.getElementById('chatMessageList');
-                            const isNearBottom = (list.scrollHeight - list.scrollTop <= list.clientHeight + 160);
-                            if (isNearBottom) scrollChatToBottom(true);
-                            else {
+                            if (isNearBottom) {
+                                scrollChatToBottom(true);
+                            } else {
+                                // Đang xem tin cũ: Giữ nguyên màn hình, chỉ hiện nút nhảy xuống
                                 const btnJump = document.getElementById('btnChatJumpBottom');
                                 if (btnJump) btnJump.classList.add('show');
                             }
@@ -17784,18 +17787,32 @@
                             const msgId = String(data.message.msgId || data.message.id);
                             if (document.getElementById(`chat-msg-${msgId}`)) return;
 
+                            // Kiểm tra trước khi chèn tin nhắn: người dùng có đang ở đáy hay đang xem tin cũ
+                            const list = document.getElementById('chatMessageList');
+                            const isNearBottom = list ? (list.scrollHeight - list.scrollTop - list.clientHeight <= 80) : true;
+                            const isMine = currentUser && data.message.author && data.message.author.toLowerCase() === currentUser.username.toLowerCase();
+
                             const temp = document.createElement('div');
                             temp.innerHTML = renderSingleChatMessageHTML(data.message);
                             const newEl = temp.firstElementChild;
                             if (newEl) {
                                 liveWrapper.appendChild(newEl);
-                                scrollChatToBottom(true);
+                                
+                                // Nếu là tin nhắn của chính mình hoặc đang ở đáy thì mới cuộn xuống
+                                if (isNearBottom || isMine) {
+                                    scrollChatToBottom(true);
+                                } else {
+                                    // Đang xem tin cũ: Giữ nguyên vị trí đọc, chỉ hiện nút báo có tin mới
+                                    const btnJump = document.getElementById('btnChatJumpBottom');
+                                    if (btnJump) btnJump.classList.add('show');
+                                }
+
                                 if (!chatNotifiedMsgIds.has(msgId)) {
                                     chatNotifiedMsgIds.add(msgId);
                                     triggerChatBrowserNotification(data.message, msgId);
                                 }
                             }
-                        } 
+                        }
                         // 2. CẬP NHẬT TIN NHẮN (BÓC TÚI MÙ, POLL, AI TRẢ LỜI)
                         else if (eventType === "UPDATE_MESSAGE") {
                             loadGlobalChat(false);
@@ -17904,6 +17921,17 @@
                 <div id="chatArchiveWrapper"></div>
                 <div id="chatLiveWrapper">${getSkeletonHTML('chat')}</div>
             `;
+
+            // Tự động ẩn nút "Có tin nhắn mới" khi người dùng tự cuộn tay xuống đáy
+            if (!list.dataset.scrollBound) {
+                list.dataset.scrollBound = "true";
+                list.addEventListener('scroll', () => {
+                    if (list.scrollHeight - list.scrollTop - list.clientHeight <= 80) {
+                        const btnJump = document.getElementById('btnChatJumpBottom');
+                        if (btnJump) btnJump.classList.remove('show');
+                    }
+                }, { passive: true });
+            }
 
             loadGlobalChat(true).then(() => {
                 lastChatTimestamp = Date.now(); // Đặt mốc thời gian ngay sau khi tải lần đầu
@@ -18450,7 +18478,7 @@
                 if (placeholderSkeleton) liveWrapper.innerHTML = '';
 
                 const oldScrollHeight = list.scrollHeight;
-                const isNearBottom = (list.scrollHeight - list.scrollTop <= list.clientHeight + 160);
+                const isNearBottom = (list.scrollHeight - list.scrollTop - list.clientHeight <= 80);
 
                 // 🛡️ BẢN ĐỒ DOM HIỆN TẠI (INDEXING EXISTING NODES)
                 const existingDomMap = new Map();
@@ -18622,13 +18650,22 @@
                                 autoFindDepth = 0;
                             }
                         }, 200);
-                    } else if (forceScroll || isNearBottom) {
+                    } else if (forceScroll) {
+                        // Chỉ ép cuộn xuống khi mở trang chat lần đầu hoặc vừa gửi tin nhắn mới
                         requestAnimationFrame(() => {
                             scrollChatToBottom(false);
                             setTimeout(() => scrollChatToBottom(false), 150);
                         });
-                    } else if (hasAppendedNewMessage && !isNearBottom) {
-                        if (btnJump) btnJump.classList.add('show');
+                    } else if (hasAppendedNewMessage) {
+                        // Có tin nhắn mới từ người khác: chỉ cuộn nếu người dùng đang ở sẵn dưới đáy
+                        if (isNearBottom) {
+                            requestAnimationFrame(() => {
+                                scrollChatToBottom(true);
+                            });
+                        } else {
+                            // Đang xem tin cũ: Giữ nguyên màn hình, hiện nút "Có tin nhắn mới"
+                            if (btnJump) btnJump.classList.add('show');
+                        }
                     }
                 }
             } catch(e) {
