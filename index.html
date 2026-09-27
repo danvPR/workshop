@@ -327,9 +327,31 @@
         .lb-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 16px; transition: 0.2s; cursor: pointer; }
         .lb-row:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.03); background: var(--bg-secondary); }
         .lb-row-rank { font-size: 1.2rem; font-weight: 900; color: var(--text-muted); width: 40px; text-align: center; }
-        .lb-row-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+        .lb-row-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
         .lb-row-val { font-size: 1.1rem; font-weight: 900; color: var(--text-title); display: flex; align-items: center; gap: 6px; }
-        @media (max-width: 600px) { .lb-podium-item { width: 95px; } .lb-rank-1 .lb-podium-bar { height: 140px; } .lb-row { padding: 10px 12px; } }
+        
+        /* Căn chỉnh kích thước avatar và khung đều đặn trên bảng xếp hạng */
+        .lb-podium-item .avt-wrapper { align-self: center; }
+        .lb-row-info .avt-wrapper { align-self: center; margin: 0 4px; }
+        .lb-row-avt { 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 1.5px solid var(--border-color); 
+            background: var(--bg-secondary); 
+            flex-shrink: 0; 
+            display: block; 
+        }
+
+        @media (max-width: 600px) { 
+            .lb-podium-item { width: 95px; } 
+            .lb-rank-1 .lb-podium-bar { height: 140px; } 
+            .lb-rank-1 .lb-podium-avt { width: 72px; height: 72px; }
+            .lb-podium-avt { width: 54px; height: 54px; }
+            .lb-row { padding: 10px 12px; } 
+            .lb-row-avt { width: 36px; height: 36px; }
+        }
 
         /* ================= GIAO DIỆN TRANG CHỦ & THẺ DỰ ÁN PRO (CLEAN GAME HUB REDESIGN) ================= */
         /* 1. Thanh sự kiện & Slider nhẹ nhàng */
@@ -13119,7 +13141,7 @@
                         <div class="lb-row" onclick="navigateTo('/users/${encodeURIComponent(u.username)}')">
                             <div class="lb-row-rank">#${realRank}</div>
                             <div class="lb-row-info">
-                                ${renderAvtWithFrame(u.avt, u.frame, '', '')}
+                                ${renderAvtWithFrame(u.avt, u.frame, 'lb-row-avt', '')}
                                 <div style="display:flex; flex-direction:column;">
                                     <b style="font-size:0.95rem; color:var(--text-title);">${escapeHtml(u.display_name)}</b>
                                     <span style="font-size:0.75rem; color:var(--text-muted);">@${escapeHtml(u.username)}</span>
