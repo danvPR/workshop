@@ -6831,6 +6831,17 @@
 <body>
     <!-- MÀN HÌNH XÁC MINH CLOUDFLARE "VERIFY YOU ARE HUMAN" -->
     <div id="cfVerifyScreen" class="cf-verify-screen">
+        <script>
+            // Kiểm tra ngay lập tức: Nếu đã xác minh còn hạn thì ẩn ngay lập tức, không để chớp màn hình
+            (function() {
+                try {
+                    const verifiedUntil = localStorage.getItem('cf_human_verified_until');
+                    if (verifiedUntil && Date.now() < parseInt(verifiedUntil, 10)) {
+                        document.getElementById('cfVerifyScreen').style.display = 'none';
+                    }
+                } catch(e) {}
+            })();
+        </script>
         <div class="cf-verify-card">
             <div class="cf-verify-domain">turbows.pages.dev</div>
             <h1 class="cf-verify-title">Verify you are human</h1>
@@ -10201,7 +10212,10 @@
 
         // Tự động giải phóng màn hình khi người dùng vượt qua kiểm tra Turnstile
         window.onCloudflareVerifySuccess = function(token) {
-            sessionStorage.setItem('cf_human_verified', 'true');
+            // Lưu thời hạn nhớ xác minh trong 30 ngày vào localStorage
+            const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+            localStorage.setItem('cf_human_verified_until', (Date.now() + thirtyDays).toString());
+            
             const screen = document.getElementById('cfVerifyScreen');
             if (screen) {
                 screen.style.transition = 'opacity 0.4s ease';
@@ -10210,16 +10224,23 @@
             }
         };
 
-        // Kiểm tra xem trong phiên này người dùng đã xác minh chưa (tránh hỏi lại liên tục mỗi khi tải trang)
+        // Kiểm tra trạng thái xác minh: Nếu còn hạn thì gỡ bỏ màn hình vĩnh viễn
         (function checkInitialCfVerification() {
-            const isVerified = sessionStorage.getItem('cf_human_verified') === 'true';
+            let isVerified = false;
+            try {
+                const verifiedUntil = localStorage.getItem('cf_human_verified_until');
+                if (verifiedUntil && Date.now() < parseInt(verifiedUntil, 10)) {
+                    isVerified = true;
+                }
+            } catch(e) {}
+
             document.addEventListener('DOMContentLoaded', () => {
                 const raySpan = document.getElementById('cfRayIdSim');
                 if (raySpan) raySpan.innerText = generateRandomRayId();
 
-                if (isVerified) {
-                    const screen = document.getElementById('cfVerifyScreen');
-                    if (screen) screen.remove();
+                const screen = document.getElementById('cfVerifyScreen');
+                if (isVerified && screen) {
+                    screen.remove(); // Xóa hoàn toàn khỏi giao diện nếu đã xác minh
                 }
             });
         })();
