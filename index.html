@@ -18193,7 +18193,26 @@
                         }
                         // 2. CẬP NHẬT TIN NHẮN (BÓC TÚI MÙ, POLL, AI TRẢ LỜI)
                         else if (eventType === "UPDATE_MESSAGE") {
-                            loadGlobalChat(false);
+                            // 🚀 TỐI ƯU REALTIME TỐI THƯỢNG: Trực tiếp thay đổi DOM, KHÔNG gọi API loadGlobalChat
+                            // Ngăn chặn tình trạng hàng trăm user gọi API cùng lúc khi có 1 túi mù được bóc
+                            const targetRow = document.getElementById(`chat-msg-${data.msgId}`);
+                            if (targetRow) {
+                                targetRow.setAttribute('data-msg-text', encodeURIComponent(data.text || ''));
+                                
+                                const bubbleContainer = targetRow.querySelector('.chat-bubble');
+                                if (bubbleContainer) {
+                                    // Giữ lại phần Trích dẫn và Hình ảnh đính kèm (để không bị mất UI)
+                                    const replyHtml = targetRow.querySelector('.chat-reply-quote')?.outerHTML || '';
+                                    const imgHtml = targetRow.querySelector('.chat-img-attachment')?.outerHTML || '';
+                                    
+                                    // Kiểm tra xem tác giả có phải là BeaBea không để hàm Render xuất đúng thẻ Túi Mù
+                                    const authorNameEl = targetRow.querySelector('.chat-author-name');
+                                    const msgAuthor = (authorNameEl && authorNameEl.innerText.includes('BeaBea')) ? 'BeaBea (AI)' : '';
+                                    
+                                    // Render chèn đè lên nội dung bong bóng hiện tại (Ví dụ: Chuyển từ thẻ Chưa Bóc sang Đã Bóc)
+                                    bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(data.text || '', msgAuthor, { text: data.text })}${imgHtml}`;
+                                }
+                            }
                         } 
                         // 3. XÓA TIN NHẮN REALTIME
                         else if (eventType === "DELETE_MESSAGE") {
