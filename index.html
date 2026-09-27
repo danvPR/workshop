@@ -7519,7 +7519,10 @@
 
                 <!-- Cụm Segmented Sắp xếp thanh lịch -->
                 <div class="home-sort-segmented">
-                    <button type="button" class="home-sort-seg-btn active" data-sort="recent" onclick="changeHomeSort('recent')">
+                    <button type="button" class="home-sort-seg-btn active" data-sort="foryou" onclick="changeHomeSort('foryou')">
+                        <i class="fa-solid fa-star"></i> <span data-i18n="home_filter_foryou">Đề xuất</span>
+                    </button>
+                    <button type="button" class="home-sort-seg-btn" data-sort="recent" onclick="changeHomeSort('recent')">
                         <i class="fa-regular fa-clock"></i> <span data-i18n="home_filter_recent">Mới nhất</span>
                     </button>
                     <button type="button" class="home-sort-seg-btn" data-sort="trending" onclick="changeHomeSort('trending')">
@@ -8401,6 +8404,32 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
                 <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> <span data-i18n="admin_reports_title">Danh sách Tố cáo chờ xử lý</span></h3>
                 <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="admin_btn_refresh">Làm mới</span></button>
+            </div>
+
+            <!-- KHỐI QUẢN LÝ THUẬT TOÁN ĐỀ XUẤT (BACKFILL CŨ) -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="margin: 0 0 10px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-filter" style="color: #8b5cf6;"></i> Hệ thống duyệt "Đề xuất" (Dự án cũ)
+                </h4>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Dùng công cụ này để hệ thống âm thầm quét và chấm điểm Gameplay/Đầu tư của các dự án cũ chưa được phân loại, sau đó đưa chúng lên Tab Đề Xuất (Mỗi lần quét 10 dự án để tránh quá tải).</p>
+                <button id="btnAdminScanLegacy" class="btn btn-primary" onclick="adminScanLegacyProjects()" style="background: #8b5cf6; border: none;">
+                    <i class="fa-solid fa-radar"></i> Bắt đầu quét 10 dự án tiếp theo
+                </button>
+                <script>
+                    async function adminScanLegacyProjects() {
+                        const btn = document.getElementById('btnAdminScanLegacy');
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Hệ thống đang phân tích...';
+                        btn.disabled = true;
+                        const res = await apiFetch('/api/admin/ai_scan_legacy', { method: 'POST', body: JSON.stringify({}) });
+                        if(res && res.success) {
+                            showToast(`Đã quét xong! ${res.approved} đạt yêu cầu / Tổng ${res.scanned} dự án.`, "success");
+                        } else {
+                            showToast(res ? res.error : "Lỗi kết nối", "error");
+                        }
+                        btn.innerHTML = '<i class="fa-solid fa-radar"></i> Bắt đầu quét 10 dự án tiếp theo';
+                        btn.disabled = false;
+                    }
+                </script>
             </div>
 
             <!-- KHỐI QUẢN LÝ KHUNG AVATAR -->
@@ -10287,7 +10316,7 @@
         // --- Home Pagination & Filter ---
         let homeCurrentPage = 1;
         let homeSearchQuery = "";
-        let homeSortMode = "recent";
+        let homeSortMode = "foryou";
         let homeHasMore = false;
         const HOME_ITEMS_PER_PAGE = 16; // Tải 4 dòng (mỗi dòng 4 dự án tùy màn hình)
 
