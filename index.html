@@ -7045,6 +7045,13 @@
         </div>
 
         <div class="station-grid" id="studiosGridList" data-i18n="station_loading">Đang tải danh sách Station...</div>
+        
+        <!-- NÚT XEM THÊM STATION -->
+        <div id="studiosLoadMoreArea" style="text-align: center; padding: 25px 0 10px 0; display: none;">
+            <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreStudios()">
+                <i class="fa-solid fa-angle-down"></i> <span data-i18n="station_load_more">Xem thêm Station</span>
+            </button>
+        </div>
     </div>
 
     <!-- TRANG STATION DETAIL -->
@@ -7755,7 +7762,12 @@
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_note')">
                     <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i>
                     <b>Ghi chú tự do</b>
-                    <span>Tin nhắn / Thông báo</span>
+                    <span>Tin nhắn / Markdown</span>
+                </div>
+                <div class="bento-drawer-item" onclick="addBentoWidget('widget_frames')">
+                    <i class="fa-solid fa-crop-simple" style="color:#10b981;"></i>
+                    <b>Tủ đồ Khung</b>
+                    <span>Khoe Khung Avatar</span>
                 </div>
             </div>
         </div>
@@ -12703,11 +12715,14 @@
         let allStudios = [];
         let studioFilterMode = 'all';
         let studioSearchTerm = '';
+        const STD_LIST_PER_PAGE = 16;
+        let studiosDisplayLimit = STD_LIST_PER_PAGE;
 
         function openStudiosPage() {
             document.getElementById('studiosListView').style.display = 'block';
             studioFilterMode = 'all';
             studioSearchTerm = '';
+            studiosDisplayLimit = STD_LIST_PER_PAGE;
             const searchInput = document.getElementById('stationSearchInput');
             if (searchInput) searchInput.value = '';
             document.querySelectorAll('.std-filter-pill').forEach((p, idx) => p.classList.toggle('active', idx === 0));
@@ -12737,15 +12752,24 @@
 
         function filterStations(mode, btnEl) {
             studioFilterMode = mode;
+            studiosDisplayLimit = STD_LIST_PER_PAGE; // Reset limit khi đổi tab
             document.querySelectorAll('.std-filter-pill').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
             renderStudiosGrid();
         }
 
+        function loadMoreStudios() {
+            studiosDisplayLimit += STD_LIST_PER_PAGE;
+            renderStudiosGrid();
+        }
+
         function renderStudiosGrid() {
             const grid = document.getElementById('studiosGridList');
+            const loadMoreArea = document.getElementById('studiosLoadMoreArea');
+
             if (!allStudios || allStudios.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding: 50px 20px;"><i class="fa-solid fa-satellite-dish" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có Station nào được tạo.</div>';
+                if (loadMoreArea) loadMoreArea.style.display = 'none';
                 return;
             }
 
@@ -12771,10 +12795,13 @@
 
             if (filtered.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding: 40px;"><i class="fa-solid fa-magnifying-glass" style="font-size:2rem; margin-bottom:10px; opacity:0.4; display:block;"></i>Không tìm thấy Station phù hợp.</div>';
+                if (loadMoreArea) loadMoreArea.style.display = 'none';
                 return;
             }
 
-            grid.innerHTML = filtered.map(s => {
+            const visibleStudios = filtered.slice(0, studiosDisplayLimit);
+
+            grid.innerHTML = visibleStudios.map(s => {
                 const thumb = s.thumbId ? `${WORKER_URL}/api/project/${s.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
                 const projCount = (s.projects || []).length;
                 const memCount = (s.members || []).length;
@@ -12800,6 +12827,10 @@
                     </div>
                 `;
             }).join('');
+
+            if (loadMoreArea) {
+                loadMoreArea.style.display = filtered.length > studiosDisplayLimit ? 'block' : 'none';
+            }
         }
 
         async function openStudioDetailPage(id, urlParams) {
@@ -20144,12 +20175,10 @@
             const raw = profileGrid.save() || [];
             const clean = raw.map(n => {
                 let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
-                if (n.id.startsWith('widget_note')) {
-                    const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"] .widget-note-container div`);
-                    if (el) obj.content = el.innerText;
-                }
                 const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"]`);
                 if (el) {
+                    if (el.getAttribute('data-raw-note-title')) obj.noteTitle = el.getAttribute('data-raw-note-title');
+                    if (el.getAttribute('data-raw-note-content')) obj.content = el.getAttribute('data-raw-note-content');
                     if (el.getAttribute('data-target-id')) obj.targetId = el.getAttribute('data-target-id');
                     if (el.getAttribute('data-target-user')) obj.targetUser = el.getAttribute('data-target-user');
                     if (el.getAttribute('data-relation')) obj.relation = el.getAttribute('data-relation');
@@ -20371,12 +20400,39 @@
                     </div>
                 `;
             }
-            // 10. GHI CHÚ TỰ DO
+            // 10. GHI CHÚ TỰ DO (MARKDOWN CƠ BẢN & TIÊU ĐỀ)
             else if (safeId.startsWith('widget_note')) {
-                const noteText = item.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
+                const titleText = item.noteTitle || "";
+                let rawContent = item.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
+                
+                // Đóng gói data thuần để quá trình lưu không bị mất định dạng Markdown
+                extraAttrs += ` data-raw-note-title="${escapeHtml(titleText)}" data-raw-note-content="${escapeHtml(rawContent)}"`;
+
+                // Phân tích cú pháp Markdown cơ bản
+                let parsedContent = escapeHtml(rawContent);
+                parsedContent = parsedContent.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'); // In đậm
+                parsedContent = parsedContent.replace(/\*(.*?)\*/g, '<i>$1</i>'); // In nghiêng
+                parsedContent = parsedContent.replace(/__(.*?)__/g, '<u>$1</u>'); // Gạch chân
+                parsedContent = parsedContent.replace(/\n/g, '<br>'); // Xuống dòng
+
                 contentHtml = `
                     <div class="bento-widget-inner widget-note-container" style="display:flex; flex-direction:column; justify-content:center; text-align:center; background:var(--bg-secondary);">
-                        <div style="font-size: 1.05rem; font-weight:bold; color:var(--text-title); line-height:1.5; word-wrap:break-word;">${escapeHtml(noteText)}</div>
+                        ${titleText ? `<h4 style="font-size:1.15rem; color:var(--primary); margin:0 0 10px 0; font-weight:900;">${escapeHtml(titleText)}</h4>` : ''}
+                        <div style="font-size: 1rem; color:var(--text-main); line-height:1.6; word-wrap:break-word;">${parsedContent}</div>
+                    </div>
+                `;
+            }
+            // 11. KHUNG AVATAR SỞ HỮU
+            else if (safeId.startsWith('widget_frames')) {
+                // Sẽ render khung Loading trước, sau đó Async load sẽ lấp đầy
+                contentHtml = `
+                    <div class="bento-widget-inner" style="display:flex; flex-direction:column; padding:18px;">
+                        <h4 style="font-size: 0.88rem; color: var(--text-muted); text-transform: uppercase; margin: 0 0 12px 0; letter-spacing:0.5px;">
+                            <i class="fa-solid fa-crop-simple" style="color:var(--primary);"></i> Khung Avatar Sở Hữu
+                        </h4>
+                        <div id="bentoFramesBox-${safeId}" style="flex:1; display:flex; align-items:center; justify-content:center;">
+                            <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary); font-size:1.5rem;"></i>
+                        </div>
                     </div>
                 `;
             }
@@ -20469,7 +20525,47 @@
                 if (item.id && item.id.startsWith('widget_station_') && (item.stationId || item.targetId)) {
                     loadBentoStationCard(item.id, item.stationId || item.targetId);
                 }
+                if (item.id && item.id.startsWith('widget_frames')) {
+                    loadBentoOwnedFrames(item.id, data.ownedFrames);
+                }
             });
+        }
+
+        // HÀM BỔ SUNG: Nạp ảnh của các khung avatar đã sở hữu
+        async function loadBentoOwnedFrames(widgetSafeId, ownedFramesJSON) {
+            const box = document.getElementById(`bentoFramesBox-${widgetSafeId}`);
+            if (!box) return;
+
+            let ids = [];
+            try { ids = typeof ownedFramesJSON === 'string' ? JSON.parse(ownedFramesJSON) : (ownedFramesJSON || []); } catch(e){}
+
+            if (ids.length === 0) {
+                box.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.85rem;">Tác giả chưa sở hữu Khung Avatar nào.</div>`;
+                return;
+            }
+
+            // Gọi store data (Nếu chưa nạp)
+            if (availableFrames.length === 0) {
+                try {
+                    const framesRes = await fetch(`${WORKER_URL}/api/frames`);
+                    availableFrames = await framesRes.json();
+                } catch(e) {
+                    box.innerHTML = `<div style="text-align:center; color:#ef4444; font-size:0.85rem;">Lỗi tải dữ liệu tủ đồ.</div>`;
+                    return;
+                }
+            }
+
+            const myFramesData = ids.map(id => availableFrames.find(f => f.id === id)).filter(Boolean);
+            
+            box.innerHTML = `
+                <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; width:100%; height:100%; align-content: flex-start;">
+                    ${myFramesData.map(f => `
+                        <div style="width: 50px; height: 50px; border-radius: 10px; border: 1.5px solid var(--border-color); background: var(--bg-secondary); padding: 2px;" title="${escapeHtml(f.name)}">
+                            <img src="${f.url}" style="width:100%; height:100%; object-fit:contain;">
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
 
         // ================= EDIT MODE, DIRTY CHECKING & BẢO VỆ REQUEST =================
@@ -20532,9 +20628,16 @@
             else if (widgetId === 'widget_note') {
                 newItem.id = 'widget_note_' + Date.now();
                 newItem.w = 4; newItem.h = 3; newItem.minW = 3; newItem.minH = 2;
-                const userText = prompt("Nhập nội dung Ghi chú của bạn (Hỗ trợ Emoji):", "Chào mừng ghé thăm hồ sơ!");
+                const noteTitle = prompt("Nhập TIÊU ĐỀ ghi chú (Có thể để trống):", "");
+                if (noteTitle === null) return; // Hủy
+                const userText = prompt("Nhập NỘI DUNG Ghi chú (Hỗ trợ Emoji, Markdown **in đậm**, *nghiêng*, __gạch chân__):", "Chào mừng ghé thăm hồ sơ! ✨");
                 if (!userText) return;
-                newItem.content = userText;
+                newItem.noteTitle = noteTitle.trim();
+                newItem.content = userText.trim();
+            }
+            else if (widgetId === 'widget_frames') {
+                newItem.id = 'widget_frames_' + Date.now();
+                newItem.w = 6; newItem.h = 3; newItem.minW = 4; newItem.minH = 2;
             }
 
             const html = getBentoWidgetHTML(newItem, currentBentoData);
@@ -20816,12 +20919,10 @@
             // Nén dữ liệu tối giản nhất trước khi gửi
             const cleanLayout = rawLayout.map(n => {
                 let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
-                if (n.id.startsWith('widget_note')) {
-                    const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"] .widget-note-container div`);
-                    if (el) obj.content = el.innerText;
-                }
                 const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"]`);
                 if (el) {
+                    if (el.getAttribute('data-raw-note-title')) obj.noteTitle = el.getAttribute('data-raw-note-title');
+                    if (el.getAttribute('data-raw-note-content')) obj.content = el.getAttribute('data-raw-note-content');
                     if (el.getAttribute('data-target-id')) obj.targetId = el.getAttribute('data-target-id');
                     if (el.getAttribute('data-target-user')) obj.targetUser = el.getAttribute('data-target-user');
                     if (el.getAttribute('data-relation')) obj.relation = el.getAttribute('data-relation');
