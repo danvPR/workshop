@@ -2126,7 +2126,7 @@
             color: #ffffff;
         }
 
-        /* GIAO DIỆN THÔNG BÁO TINH GIẢN HIỆN ĐẠI (CLEAN FEED UI) */
+        /* GIAO DIỆN THÔNG BÁO TINH GIẢN MÀ VẪN GIỮ BUBBLE CHAT CHỨC NĂNG */
         .notif-card-row {
             padding: 16px 22px;
             border-bottom: 1px solid var(--border-color);
@@ -2196,20 +2196,6 @@
         }
         .notif-clean-title a:hover { text-decoration: underline; color: var(--primary); }
         
-        .notif-clean-snippet {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            background: var(--bg-secondary);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border-left: 3px solid var(--border-color);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            word-break: break-word;
-            margin-top: 4px;
-        }
         .notif-clean-time {
             font-size: 0.8rem;
             color: var(--text-muted);
@@ -2223,6 +2209,70 @@
             background: var(--primary);
             flex-shrink: 0;
             margin-top: 20px;
+        }
+
+        /* KHÔI PHỤC PHẦN BUBBLE CHAT VÀ NÚT TRẢ LỜI */
+        .notif-comment-bubble-box {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 6px;
+        }
+        .notif-comment-speech {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0 16px 16px 16px;
+            padding: 10px 16px;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            word-break: break-word;
+            display: inline-block;
+        }
+        .notif-quick-reply-row {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 680px;
+        }
+        .notif-quick-reply-input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+            cursor: pointer;
+        }
+        .notif-quick-reply-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .notif-tip-gift-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.06) 100%) !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
+            border-radius: 18px !important;
+            padding: 14px 18px !important;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 6px;
+        }
+        [data-theme="dark"] .notif-tip-gift-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(234, 88, 12, 0.1) 100%) !important;
+            border-color: rgba(245, 158, 11, 0.5) !important;
         }
 
         @media (max-width: 768px) {
@@ -11502,7 +11552,7 @@
                     <img src="${thumbSrc}" style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(8px); transform: scale(1.1);">
                     <img src="${thumbSrc}" style="position: absolute; width: 100%; height: 100%; object-fit: contain;">
                     <div style="position: relative; z-index: 2; background: rgba(13, 165, 122, 0.95); color: white; padding: 14px 30px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        <i class="fa-solid fa-play"></i> BẤM ĐỂ CHƠI
+                        <i class="fa-solid fa-play"></i> BẮT ĐẦU
                     </div>
                 </div>
             `;
@@ -15496,13 +15546,13 @@
             renderNotifList();
         }
 
-        // BỘ NHẬN DIỆN VÀ RENDER THÔNG BÁO TINH GIẢN (MODERN FEED STYLE)
+        // BỘ NHẬN DIỆN VÀ RENDER THÔNG BÁO TINH GIẢN (KẾT HỢP BUBBLE CHAT)
         function formatScratchNotif(n) {
             let sender = n.sender || "Hệ thống";
             let senderLink = `<a href="#profile/${encodeURIComponent(sender)}" onclick="event.stopPropagation()" style="font-weight:800; color:var(--text-title); text-decoration:none;">@${sender}</a>`;
             let mainText = escapeHtml(n.text || "");
             let actionHtml = '';
-            let contentHtml = '';
+            let bubbleHtml = ''; // KHÔI PHỤC BIẾN NÀY ĐỂ TRẢ VỀ BONG BÓNG
             let linkWithTab = (n.link || "#home").replace('#project/', '/projects/').replace('#profile/', '/users/');
 
             // Sửa đuôi link nếu là thông báo về bình luận
@@ -15526,18 +15576,33 @@
                 }
 
                 actionHtml = `${senderLink} đã tặng <b style="color:#ea580c;">+${tipAmount} WOW</b> cho tác phẩm <b>${projTitle}</b>`;
-                if (tipMsg) contentHtml = `"${tipMsg}"`;
-                return { actionHtml, contentHtml, link: linkWithTab };
+                
+                if (tipMsg) {
+                    bubbleHtml = `
+                        <div class="notif-tip-gift-box">
+                            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(234,88,12,0.35);">
+                                <span class="wow-icon" style="font-size:1.2rem;"></span>
+                            </div>
+                            <div style="font-size:0.88rem; color:var(--text-muted); font-style:italic; border-left:2px solid #ea580c; padding-left:8px;">&ldquo;${tipMsg}&rdquo;</div>
+                        </div>
+                    `;
+                }
+                return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
             // 2. Thông báo khẩn cấp từ Ban Quản Trị / Hệ Thống
             if (sender === "HỆ THỐNG") {
                 actionHtml = `<b style="color:#ef4444;">Thông báo từ Ban Quản Trị</b>`;
-                contentHtml = mainText;
-                return { actionHtml, contentHtml, link: linkWithTab };
+                bubbleHtml = `
+                    <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 14px 18px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444; display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:1.3rem; flex-shrink:0;"></i>
+                        <span style="line-height:1.4;">${mainText}</span>
+                    </div>
+                `;
+                return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
-            // 3. Bình luận / Trả lời có trích dẫn nội dung
+            // 3. Bình luận / Trả lời có trích dẫn nội dung (SỬ DỤNG BUBBLE GỐC)
             let parts = mainText.split(': &quot;');
             if (parts.length > 1 && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
                 let textBeforeQuote = parts.slice(0, -1).join(': &quot;');
@@ -15555,8 +15620,24 @@
                 }
 
                 actionHtml = textBeforeQuote;
-                contentHtml = commentSnippet;
-                return { actionHtml, contentHtml, link: linkWithTab };
+                
+                // Trả về bong bóng chat và thanh nút reply nhanh
+                bubbleHtml = `
+                    <div class="notif-comment-bubble-box">
+                        <div style="flex:1; min-width:0;">
+                            <div class="notif-comment-speech">
+                                <span>${commentSnippet}</span>
+                            </div>
+                            <div class="notif-quick-reply-row">
+                                <input type="text" class="notif-quick-reply-input" placeholder="Nhấn để chuyển đến bình luận..." readonly onclick="event.stopPropagation(); navigateTo('${linkWithTab}')">
+                                <button type="button" class="notif-quick-reply-btn" onclick="event.stopPropagation(); navigateTo('${linkWithTab}')">
+                                    <i class="fa-solid fa-reply"></i> <span>Trả lời</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
             // 4. Lượt thích, Yêu thích, Follow và các Action khác không có Quote
@@ -15567,7 +15648,7 @@
                     return match.includes('Station') ? `trạm <b>${p1}</b>` : `dự án <b>${p1}</b>`;
                 });
             }
-            return { actionHtml, contentHtml: "", link: linkWithTab };
+            return { actionHtml, bubbleHtml: "", link: linkWithTab };
         }
 
         async function markAllNotifsRead(event) {
@@ -15682,7 +15763,7 @@
 
             let html = visibleNotifs.map(n => {
                 try {
-                    const { actionHtml, contentHtml, link } = formatScratchNotif(n);
+                    const { actionHtml, bubbleHtml, link } = formatScratchNotif(n);
                     const isRead = (n.read === true || n.read === "true");
                     const visual = getNotifVisualProps(n);
 
@@ -15703,8 +15784,8 @@
                             </div>
                             <div class="notif-clean-body">
                                 <div class="notif-clean-title">${actionHtml}</div>
-                                ${contentHtml ? `<div class="notif-clean-snippet">${contentHtml}</div>` : ''}
                                 <div class="notif-clean-time">${timeAgo(n.time || '')}</div>
+                                ${bubbleHtml}
                             </div>
                             ${!isRead ? '<div class="notif-clean-unread-dot"></div>' : ''}
                         </div>
