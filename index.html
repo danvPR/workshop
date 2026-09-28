@@ -2126,186 +2126,103 @@
             color: #ffffff;
         }
 
-        /* Thẻ Thông Báo Từng Dòng AI-Matrix Row */
+        /* GIAO DIỆN THÔNG BÁO TINH GIẢN HIỆN ĐẠI (CLEAN FEED UI) */
         .notif-card-row {
-            padding: 18px 26px;
+            padding: 16px 22px;
             border-bottom: 1px solid var(--border-color);
             background: var(--bg-panel);
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-        .notif-card-row:hover {
-            background: var(--bg-secondary);
-        }
-        .notif-card-row:last-child { border-bottom: none; }
-        .notif-card-row.unread {
-            background: rgba(99, 102, 241, 0.04);
-            border-left: 4px solid #6366f1;
-        }
-        [data-theme="dark"] .notif-card-row.unread {
-            background: rgba(99, 102, 241, 0.1);
-            border-left: 4px solid #818cf8;
-        }
-        .notif-card-header {
-            display: flex;
-            justify-content: space-between;
             align-items: flex-start;
             gap: 14px;
+            transition: background 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
         }
-        .notif-header-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-            min-width: 0;
+        .notif-card-row:hover { background: var(--bg-secondary); }
+        .notif-card-row:last-child { border-bottom: none; }
+        .notif-card-row.unread { background: rgba(13, 165, 122, 0.04); }
+
+        .notif-clean-avt-wrap {
+            position: relative;
+            flex-shrink: 0;
         }
-        .notif-icon-avatar-wrap {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
+        .notif-clean-avt {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+        .notif-clean-icon {
+            position: absolute;
+            bottom: -2px;
+            right: -4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
-            flex-shrink: 0;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: transform 0.2s;
+            font-size: 0.65rem;
+            color: white;
+            border: 2px solid var(--bg-panel);
         }
-        .notif-card-row:hover .notif-icon-avatar-wrap {
-            transform: scale(1.06);
-        }
-        .notif-icon-avatar-wrap.icon-like { background: rgba(239, 68, 68, 0.12); color: #ef4444; border-color: rgba(239, 68, 68, 0.25); }
-        .notif-icon-avatar-wrap.icon-star { background: rgba(245, 158, 11, 0.12); color: #f59e0b; border-color: rgba(245, 158, 11, 0.25); }
-        .notif-icon-avatar-wrap.icon-comment { background: rgba(14, 165, 233, 0.12); color: #0284c7; border-color: rgba(14, 165, 233, 0.25); }
-        .notif-icon-avatar-wrap.icon-follow { background: rgba(16, 185, 129, 0.12); color: #10b981; border-color: rgba(16, 185, 129, 0.25); }
-        .notif-icon-avatar-wrap.icon-system { background: rgba(220, 38, 38, 0.14); color: #dc2626; border-color: rgba(220, 38, 38, 0.3); }
+        .notif-clean-icon.icon-like { background: #ef4444; }
+        .notif-clean-icon.icon-star { background: #f59e0b; }
+        .notif-clean-icon.icon-comment { background: #0284c7; }
+        .notif-clean-icon.icon-follow { background: #10b981; }
+        .notif-clean-icon.icon-system { background: #dc2626; }
+        .notif-clean-icon.icon-gift { background: #ea580c; }
 
-        .notif-meta-text {
+        .notif-clean-body {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-top: 2px;
+        }
+        .notif-clean-title {
             font-size: 0.95rem;
             color: var(--text-main);
-            line-height: 1.5;
-            word-break: break-word;
+            line-height: 1.45;
         }
-        .notif-meta-text a {
-            color: var(--primary) !important;
-            font-weight: 700;
+        .notif-clean-title b, .notif-clean-title a {
+            color: var(--text-title);
+            font-weight: 800;
             text-decoration: none;
         }
-        .notif-meta-text a:hover {
-            text-decoration: underline;
-        }
-        .notif-header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-        .notif-time-badge {
-            font-size: 0.76rem;
+        .notif-clean-title a:hover { text-decoration: underline; color: var(--primary); }
+        
+        .notif-clean-snippet {
+            font-size: 0.9rem;
             color: var(--text-muted);
-            white-space: nowrap;
             background: var(--bg-secondary);
-            padding: 3px 8px;
+            padding: 8px 12px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        .notif-unread-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #6366f1;
-            box-shadow: 0 0 10px #6366f1;
-            display: inline-block;
-        }
-
-        .notif-comment-bubble-box {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding-left: 58px;
-        }
-        .notif-sender-avt-img {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1.5px solid var(--border-color);
-            background: var(--bg-secondary);
-            flex-shrink: 0;
-        }
-        .notif-comment-speech {
-            flex: 1;
-            max-width: 680px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0 18px 18px 18px;
-            padding: 10px 16px;
-            font-size: 0.92rem;
-            color: var(--text-main);
-            line-height: 1.5;
+            border-left: 3px solid var(--border-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
             word-break: break-word;
+            margin-top: 4px;
         }
-        .notif-quick-reply-row {
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 680px;
+        .notif-clean-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-weight: 500;
         }
-        .notif-quick-reply-input {
-            flex: 1;
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: 1.5px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-main);
-            font-size: 0.88rem;
-            outline: none;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .notif-quick-reply-input:focus {
-            border-color: var(--primary);
-        }
-        .notif-quick-reply-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
-            color: #ffffff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+        .notif-clean-unread-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
             flex-shrink: 0;
-        }
-        .notif-quick-reply-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.4);
-        }
-
-        .notif-tip-gift-box {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.06) 100%) !important;
-            border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
-            border-radius: 18px !important;
-            padding: 16px 20px !important;
-            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12) !important;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 4px 0;
-        }
-        [data-theme="dark"] .notif-tip-gift-box {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(234, 88, 12, 0.1) 100%) !important;
-            border-color: rgba(245, 158, 11, 0.5) !important;
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
@@ -11576,7 +11493,20 @@
             document.getElementById('projPageAuthor').href = `#profile/${encodeURIComponent(proj.author)}`;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            document.getElementById('playerContainer').innerHTML = `<iframe src="https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen class="player-iframe"></iframe>`;
+            const embedUrl = `https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
+            const thumbSrc = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+
+            // GIAO DIỆN LAZY LOAD: Hiện ảnh nền mờ và nút Play, bấm vào mới Load Iframe
+            document.getElementById('playerContainer').innerHTML = `
+                <div style="position: relative; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer;" onclick="this.innerHTML='<iframe src=\\'${embedUrl}\\' allowtransparency=\\'true\\' frameborder=\\'0\\' scrolling=\\'no\\' allowfullscreen class=\\'player-iframe\\'></iframe>'; this.onclick=null;">
+                    <img src="${thumbSrc}" style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(8px); transform: scale(1.1);">
+                    <img src="${thumbSrc}" style="position: absolute; width: 100%; height: 100%; object-fit: contain;">
+                    <div style="position: relative; z-index: 2; background: rgba(13, 165, 122, 0.95); color: white; padding: 14px 30px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fa-solid fa-play"></i> BẤM ĐỂ CHƠI
+                    </div>
+                </div>
+            `;
+            
             const engineChoice = localStorage.getItem('engine') || 'aftercode';
             const editorBaseUrl = engineChoice === 'turbowarp' ? 'https://turbowarp.org/editor?project_url=' : 'https://aftercode-web-wheat.vercel.app/editor.html?project_url=';
             const btnSeeInside = document.getElementById('btnSeeInside');
@@ -15566,13 +15496,21 @@
             renderNotifList();
         }
 
-        // Định dạng thẻ thông báo theo phong cách Studio Game hiện đại
+        // BỘ NHẬN DIỆN VÀ RENDER THÔNG BÁO TINH GIẢN (MODERN FEED STYLE)
         function formatScratchNotif(n) {
             let sender = n.sender || "Hệ thống";
-            let senderLink = `<a href="#profile/${encodeURIComponent(sender)}" style="font-weight:800; color:var(--primary); text-decoration:none;">@${sender}</a>`;
+            let senderLink = `<a href="#profile/${encodeURIComponent(sender)}" onclick="event.stopPropagation()" style="font-weight:800; color:var(--text-title); text-decoration:none;">@${sender}</a>`;
             let mainText = escapeHtml(n.text || "");
             let actionHtml = '';
-            let bubbleHtml = '';
+            let contentHtml = '';
+            let linkWithTab = (n.link || "#home").replace('#project/', '/projects/').replace('#profile/', '/users/');
+
+            // Sửa đuôi link nếu là thông báo về bình luận
+            if (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn")) {
+                if (!linkWithTab.includes('tab=comments')) {
+                    linkWithTab += linkWithTab.includes('?') ? '&tab=comments' : '?tab=comments';
+                }
+            }
 
             // 1. Quà tặng năng lượng WOW
             if (mainText.startsWith("[WOW_TIP:") || mainText.startsWith("[OMG_TIP:")) {
@@ -15582,112 +15520,54 @@
                 let tipMsg = "";
 
                 if (splitParts.length > 1) {
-                    const tagHeader = splitParts[0]; 
-                    const prefixMatch = tagHeader.match(/^\[(?:WOW|OMG)_TIP:(\d+):([\s\S]+)$/);
-                    if (prefixMatch) {
-                        tipAmount = prefixMatch[1];
-                        projTitle = prefixMatch[2];
-                    }
+                    const prefixMatch = splitParts[0].match(/^\[(?:WOW|OMG)_TIP:(\d+):([\s\S]+)$/);
+                    if (prefixMatch) { tipAmount = prefixMatch[1]; projTitle = prefixMatch[2]; }
                     tipMsg = splitParts.slice(1).join(']: &quot;').replace(/(?:&quot;|")$/, '');
                 }
 
-                actionHtml = `
-                    <div class="notif-tip-gift-box">
-                        <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ea580c); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(234,88,12,0.35);">
-                            <span class="wow-icon" style="font-size:1.4rem;"></span>
-                        </div>
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-size:1rem; font-weight:900; color:#ea580c; display:flex; align-items:center; gap:6px;">
-                                <i class="fa-solid fa-gift"></i> <span>Nhận được +${tipAmount} WOW từ ${senderLink}!</span>
-                            </div>
-                            <div style="font-size:0.88rem; color:var(--text-main); margin-top:3px;">
-                                Dành tặng cho tác phẩm <a href="${n.link || '#home'}" style="font-weight:800; color:var(--primary); text-decoration:none;">&quot;${projTitle}&quot;</a>
-                            </div>
-                            ${tipMsg ? `<div style="font-size:0.84rem; color:var(--text-muted); margin-top:5px; font-style:italic; border-left:2px solid #ea580c; padding-left:8px;">&ldquo;${tipMsg}&rdquo;</div>` : ''}
-                        </div>
-                    </div>
-                `;
-                return { actionHtml, bubbleHtml: '' };
+                actionHtml = `${senderLink} đã tặng <b style="color:#ea580c;">+${tipAmount} WOW</b> cho tác phẩm <b>${projTitle}</b>`;
+                if (tipMsg) contentHtml = `"${tipMsg}"`;
+                return { actionHtml, contentHtml, link: linkWithTab };
             }
 
             // 2. Thông báo khẩn cấp từ Ban Quản Trị / Hệ Thống
             if (sender === "HỆ THỐNG") {
-                actionHtml = `
-                    <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 14px 18px; border-radius: 12px; font-weight: 700; border: 1.5px solid #ef4444; display:flex; align-items:center; gap:10px;">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size:1.3rem; flex-shrink:0;"></i>
-                        <span style="line-height:1.4;">${mainText}</span>
-                    </div>
-                `;
-                return { actionHtml, bubbleHtml: '' };
+                actionHtml = `<b style="color:#ef4444;">Thông báo từ Ban Quản Trị</b>`;
+                contentHtml = mainText;
+                return { actionHtml, contentHtml, link: linkWithTab };
             }
 
-            let linkWithTab = (n.link || "#home").replace('#project/', '/projects/').replace('#profile/', '/users/');
-            if (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn")) {
-                if (!linkWithTab.includes('tab=comments')) {
-                    linkWithTab += linkWithTab.includes('?') ? '&tab=comments' : '?tab=comments';
-                }
-            }
-
-            let parts = mainText.split(': &quot;'); 
-
+            // 3. Bình luận / Trả lời có trích dẫn nội dung
+            let parts = mainText.split(': &quot;');
             if (parts.length > 1 && (mainText.includes("bình luận") || mainText.includes("trả lời") || mainText.includes("nhắn"))) {
-                let textBeforeQuote = parts.slice(0, -1).join(': &quot;'); 
+                let textBeforeQuote = parts.slice(0, -1).join(': &quot;');
+                let commentSnippet = parts[parts.length - 1].replace(/&quot;$/, '');
+
                 textBeforeQuote = textBeforeQuote.replace(sender, senderLink);
-                let commentSnippet = parts[parts.length - 1].replace(/&quot;$/, ''); 
-                
                 const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
+
                 if (projRegex.test(textBeforeQuote)) {
-                    actionHtml = textBeforeQuote.replace(projRegex, (match, p1) => {
-                        return match.includes('Station') 
-                            ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>` 
-                            : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>`;
+                    textBeforeQuote = textBeforeQuote.replace(projRegex, (match, p1) => {
+                        return match.includes('Station') ? `trạm <b>${p1}</b>` : `dự án <b>${p1}</b>`;
                     });
-                } else {
-                    if (textBeforeQuote.includes("hồ sơ của bạn")) {
-                        actionHtml = textBeforeQuote.replace("hồ sơ của bạn", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">hồ sơ của bạn</a>`);
-                    } else if (textBeforeQuote.includes("hồ sơ")) {
-                        actionHtml = textBeforeQuote.replace("hồ sơ", `<a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">hồ sơ</a>`);
-                    } else {
-                        const isProfile = linkWithTab.includes('/users/') || linkWithTab.includes('profile');
-                        const isStudio = linkWithTab.includes('/studio/') || linkWithTab.includes('studio');
-                        const targetText = isProfile ? (t('notif_profile') || 'hồ sơ') : (isStudio ? 'Station' : (t('notif_project') || 'dự án'));
-                        actionHtml = `${textBeforeQuote} <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">(${targetText})</a>`;
-                    }
+                } else if (textBeforeQuote.includes("hồ sơ của bạn")) {
+                    textBeforeQuote = textBeforeQuote.replace("hồ sơ của bạn", `<b>hồ sơ của bạn</b>`);
                 }
 
-                bubbleHtml = `
-                    <div class="notif-comment-bubble-box">
-                        <a href="#profile/${encodeURIComponent(sender)}" style="display:flex;">
-                            <img src="${getAvtUrl(n.senderAvt)}" class="notif-sender-avt-img" onerror="this.src='${DEFAULT_AVATAR}'">
-                        </a>
-                        <div style="flex:1; min-width:0;">
-                            <div class="notif-comment-speech">
-                                <span>${commentSnippet}</span>
-                            </div>
-                            <div class="notif-quick-reply-row">
-                                <input type="text" class="notif-quick-reply-input" placeholder="${t('proj_comment_ph') || 'Nhấn để chuyển đến bình luận...'}" readonly onclick="navigateTo('${linkWithTab}')">
-                                <button type="button" class="notif-quick-reply-btn" onclick="navigateTo('${linkWithTab}')">
-                                    <i class="fa-solid fa-reply"></i> <span>${t('proj_reply') || 'Trả lời'}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                actionHtml = mainText.replace(sender, senderLink);
-                const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
-                
-                if (projRegex.test(actionHtml)) {
-                    actionHtml = actionHtml.replace(projRegex, (match, p1) => {
-                        return match.includes('Station') 
-                            ? `Station <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>` 
-                            : `dự án <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">&quot;${p1}&quot;</a>`;
-                    });
-                } else if (!actionHtml.includes('<a') && !actionHtml.includes('<div')) {
-                    actionHtml += ` <a href="${linkWithTab}" onclick="event.preventDefault(); navigateTo('${linkWithTab}');" style="font-weight:800; color:var(--primary);">(Xem ngay)</a>`;
-                }
+                actionHtml = textBeforeQuote;
+                contentHtml = commentSnippet;
+                return { actionHtml, contentHtml, link: linkWithTab };
             }
-            return { actionHtml, bubbleHtml };
+
+            // 4. Lượt thích, Yêu thích, Follow và các Action khác không có Quote
+            actionHtml = mainText.replace(sender, senderLink);
+            const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
+            if (projRegex.test(actionHtml)) {
+                actionHtml = actionHtml.replace(projRegex, (match, p1) => {
+                    return match.includes('Station') ? `trạm <b>${p1}</b>` : `dự án <b>${p1}</b>`;
+                });
+            }
+            return { actionHtml, contentHtml: "", link: linkWithTab };
         }
 
         async function markAllNotifsRead(event) {
@@ -15705,7 +15585,6 @@
                 badge.style.display = 'none';
             }
             
-            // 🚀 Chặn radar Heartbeat gọi ngược lại số lượng cũ khi server chưa kịp xóa cache
             window.justMarkedNotifsRead = Date.now();
             
             if(window.cachedNotifs) {
@@ -15737,9 +15616,7 @@
                 if (window.location.hash.split('?')[0] === '#notifications') {
                     renderNotifList();
                 }
-            } catch(e) {
-                console.error("Lỗi fetchNotifications:", e);
-            }
+            } catch(e) {}
         }
         
         async function openNotificationsPage() {
@@ -15765,17 +15642,11 @@
             let notifs = window.cachedNotifs;
             if (!Array.isArray(notifs)) notifs = [];
 
-            // 1. Cập nhật các bộ đếm số lượng cho thanh phân loại
             let countAll = notifs.length;
-            let countUnread = 0;
-            let countComment = 0;
-            let countTip = 0;
-            let countReaction = 0;
-            let countSystem = 0;
+            let countUnread = 0; let countComment = 0; let countTip = 0; let countReaction = 0; let countSystem = 0;
 
             notifs.forEach(n => {
-                const isUnread = (n.read !== true && n.read !== "true");
-                if (isUnread) countUnread++;
+                if (n.read !== true && n.read !== "true") countUnread++;
                 const cat = getNotifCategory(n);
                 if (cat === 'comment') countComment++;
                 else if (cat === 'tip') countTip++;
@@ -15790,7 +15661,6 @@
             const elReaction = document.getElementById('cntNotifReaction'); if (elReaction) elReaction.innerText = countReaction;
             const elSystem = document.getElementById('cntNotifSystem'); if (elSystem) elSystem.innerText = countSystem;
 
-            // 2. Lọc danh sách theo Tab đang chọn
             let filteredNotifs = notifs.filter(n => {
                 if (currentNotifFilter === 'all') return true;
                 if (currentNotifFilter === 'unread') return (n.read !== true && n.read !== "true");
@@ -15812,33 +15682,34 @@
 
             let html = visibleNotifs.map(n => {
                 try {
-                    const { actionHtml, bubbleHtml } = formatScratchNotif(n);
+                    const { actionHtml, contentHtml, link } = formatScratchNotif(n);
                     const isRead = (n.read === true || n.read === "true");
                     const visual = getNotifVisualProps(n);
 
+                    let iconBgClass = 'icon-system';
+                    if (visual.iconClass.includes('fa-heart')) iconBgClass = 'icon-like';
+                    if (visual.iconClass.includes('fa-star')) iconBgClass = 'icon-star';
+                    if (visual.iconClass.includes('fa-comment') || visual.iconClass.includes('fa-reply')) iconBgClass = 'icon-comment';
+                    if (visual.iconClass.includes('fa-user-plus')) iconBgClass = 'icon-follow';
+                    if (visual.iconClass.includes('fa-gift')) iconBgClass = 'icon-gift';
+
+                    const avtUrl = n.senderAvt ? getAvtUrl(n.senderAvt) : DEFAULT_AVATAR;
+
                     return `
-                        <div class="notif-card-row ${isRead ? '' : 'unread'}">
-                            <div class="notif-card-header">
-                                <div class="notif-header-left">
-                                    <div class="notif-icon-avatar-wrap ${visual.wrapClass}" title="${visual.label}">
-                                        <i class="${visual.iconClass}"></i>
-                                    </div>
-                                    <div class="notif-meta-text">
-                                        ${actionHtml}
-                                    </div>
-                                </div>
-                                <div class="notif-header-right">
-                                    <span class="notif-time-badge" title="${n.time || ''}">${timeAgo(n.time || '')}</span>
-                                    ${!isRead ? '<span class="notif-unread-dot" title="Chưa đọc"></span>' : ''}
-                                </div>
+                        <div class="notif-card-row ${isRead ? '' : 'unread'}" onclick="navigateTo('${link}')">
+                            <div class="notif-clean-avt-wrap">
+                                <img src="${avtUrl}" class="notif-clean-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                                <div class="notif-clean-icon ${iconBgClass}"><i class="${visual.iconClass}"></i></div>
                             </div>
-                            ${bubbleHtml}
+                            <div class="notif-clean-body">
+                                <div class="notif-clean-title">${actionHtml}</div>
+                                ${contentHtml ? `<div class="notif-clean-snippet">${contentHtml}</div>` : ''}
+                                <div class="notif-clean-time">${timeAgo(n.time || '')}</div>
+                            </div>
+                            ${!isRead ? '<div class="notif-clean-unread-dot"></div>' : ''}
                         </div>
                     `;
-                } catch(e) {
-                    console.error("Bỏ qua thông báo lỗi:", e);
-                    return "";
-                }
+                } catch(e) { return ""; }
             }).join('');
 
             if (filteredNotifs.length > notifDisplayLimit) {
