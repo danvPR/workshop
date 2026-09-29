@@ -5413,50 +5413,194 @@
             border-color: #ea580c;
         }
 
-        /* ================= GIAO DIỆN STATIONS MỚI ================= */
-        .station-header-bar {
+        /* ================= GIAO DIỆN STATIONS & CỬA SỔ HIỆN ĐẠI (PRO V4) ================= */
+        .station-shell-wrapper {
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 16px 20px 50px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* 1. HERO BANNER TRANG DANH SÁCH STATIONS */
+        .station-hero-banner {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
-            margin-bottom: 22px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
         }
-        .station-search-filter-wrap {
+        [data-theme="dark"] .station-hero-banner {
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .station-hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(13, 165, 122, 0.16) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .station-hero-left {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
             align-items: center;
-            margin-bottom: 22px;
-            background: var(--bg-panel);
-            padding: 12px 16px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
+            gap: 14px;
+            position: relative;
+            z-index: 2;
         }
+        .station-hero-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(13, 165, 122, 0.16) 0%, rgba(59, 130, 246, 0.08) 100%);
+            border: 1px solid rgba(13, 165, 122, 0.35);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.12);
+        }
+        .station-hero-title {
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: var(--text-title);
+            margin: 0;
+            letter-spacing: -0.4px;
+            line-height: 1.2;
+        }
+        .station-hero-desc {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            margin: 4px 0 0 0;
+            font-weight: 500;
+        }
+        .btn-create-station-cta {
+            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
+            color: #ffffff !important;
+            padding: 9px 20px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 2;
+        }
+        .btn-create-station-cta:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(13, 165, 122, 0.5);
+        }
+
+        /* 2. TOOLBAR TÌM KIẾM & BỘ LỌC ĐỒNG BỘ */
+        .station-toolbar-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .station-search-capsule {
+            flex: 1;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: var(--bg-panel);
+            border: 2px solid var(--border-color);
+            border-radius: 22px;
+            padding: 6px 16px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+            transition: all 0.25s ease;
+        }
+        .station-search-capsule:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.14);
+        }
+        .station-search-capsule input {
+            border: none;
+            background: none;
+            flex: 1;
+            padding: 8px 10px;
+            color: var(--text-main);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .station-filter-pills {
+            display: inline-flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 3px;
+            gap: 3px;
+        }
+        .std-filter-pill {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 16px;
+            border-radius: 10px;
+            font-size: 0.83rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .std-filter-pill:hover {
+            color: var(--text-title);
+        }
+        .std-filter-pill.active {
+            background: var(--bg-panel) !important;
+            color: var(--primary) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* 3. LƯỚI THẺ STATIONS ĐƯỢC NÂNG CẤP */
         .station-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 22px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
         .station-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 18px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease, border-color 0.2s;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            position: relative;
         }
         .station-card:hover {
             transform: translateY(-4px);
             border-color: var(--primary);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
         }
         .station-card-thumb {
             width: 100%;
             aspect-ratio: 16 / 9;
-            background: #0f172a;
+            background: #090d16;
             position: relative;
             overflow: hidden;
         }
@@ -5464,93 +5608,127 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
         .station-card:hover .station-card-thumb img {
-            transform: scale(1.04);
+            transform: scale(1.05);
         }
-        .station-badge-tag {
+        .station-card-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
             color: #10b981;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            backdrop-filter: blur(4px);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            z-index: 2;
         }
         .station-card-body {
-            padding: 16px;
+            padding: 14px 16px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
         .station-card-title {
-            font-size: 1.1rem;
-            font-weight: 800;
+            font-size: 1.05rem;
+            font-weight: 900;
             color: var(--text-title);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             line-height: 1.35;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .station-card-desc {
-            font-size: 0.86rem;
+            font-size: 0.84rem;
             color: var(--text-muted);
             line-height: 1.45;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            min-height: 2.9em;
         }
         .station-card-footer {
             margin-top: auto;
-            padding-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
+        .station-card-creator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .station-card-stats {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-weight: 700;
+        }
 
-        /* Chi tiết Station */
+        /* 4. TRANG CHI TIẾT BÊN TRONG STATION (HERO REDESIGN) */
         .station-detail-banner {
-            border-radius: 18px;
+            border-radius: 24px;
             overflow: hidden;
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+            margin-bottom: 24px;
+            position: relative;
+        }
+        [data-theme="dark"] .station-detail-banner {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+            border-color: rgba(255, 255, 255, 0.08);
         }
         .station-banner-cover {
-            height: 160px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%);
+            height: 180px;
+            background: linear-gradient(135deg, #091a16 0%, #0d1e2b 50%, #0f172a 100%);
             position: relative;
+            overflow: hidden;
+        }
+        .station-banner-cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 15% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
+                        radial-gradient(circle at 85% 70%, rgba(56, 189, 248, 0.25) 0%, transparent 60%);
+            pointer-events: none;
         }
         .station-banner-content {
-            padding: 0 26px 22px 26px;
+            padding: 0 32px 26px 32px;
             display: flex;
-            gap: 22px;
-            align-items: flex-start;
+            gap: 24px;
+            align-items: flex-end;
             margin-top: -65px;
             flex-wrap: wrap;
-        }
-        .station-banner-thumb {
-            width: 250px;
-            aspect-ratio: 16 / 9;
-            border-radius: 14px;
-            background: #000;
-            border: 4px solid var(--bg-panel);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-            overflow: hidden;
-            flex-shrink: 0;
             position: relative;
             z-index: 2;
+        }
+        .station-banner-thumb {
+            width: 220px;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            background: #000;
+            border: 4px solid var(--bg-panel);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+            overflow: hidden;
+            flex-shrink: 0;
         }
         .station-banner-thumb img {
             width: 100%;
@@ -5560,58 +5738,178 @@
         .station-banner-info {
             flex: 1;
             min-width: 280px;
-            padding-top: 70px;
+            padding-bottom: 4px;
+        }
+        .station-banner-topline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+        .station-tag-pill {
+            background: rgba(13, 165, 122, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(13, 165, 122, 0.3);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .station-hero-heading {
+            font-size: 1.85rem;
+            font-weight: 900;
+            color: var(--text-title);
+            margin: 0 0 6px 0;
+            line-height: 1.25;
+            letter-spacing: -0.4px;
+        }
+        .station-meta-capsules {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            flex-wrap: wrap;
         }
         .station-action-bar {
             display: flex;
             gap: 10px;
+            align-items: center;
             flex-wrap: wrap;
-            margin-top: 14px;
         }
+
+        /* Thẻ Thành Viên / Phi Hành Đoàn */
         .station-member-card {
-            background: var(--bg-secondary);
+            background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 14px;
+            border-radius: 16px;
+            padding: 14px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
         }
-        .station-member-card .user-meta {
+        .station-member-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+
+        /* 5. CỬA SỔ MODAL STUDIO PRO (CHO UPLOAD ASSET & TẠO STATION) */
+        .modal-studio-box {
+            max-width: 540px !important;
+            border-radius: 24px !important;
+            overflow: hidden !important;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35) !important;
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+        .modal-studio-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(13, 165, 122, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-studio-title {
             display: flex;
             align-items: center;
             gap: 10px;
-            text-decoration: none;
+            font-size: 1.18rem;
+            font-weight: 900;
             color: var(--text-title);
-            font-weight: 700;
-            font-size: 0.92rem;
         }
-        .station-member-card .user-meta img {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
+        .modal-studio-title i {
+            color: var(--primary);
+        }
+        .modal-studio-body {
+            padding: 22px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Khung tải file Dropzone tương tác cao */
+        .interactive-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-secondary);
+            padding: 22px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 130px;
+        }
+        .interactive-dropzone:hover {
+            border-color: var(--primary);
+            background: rgba(13, 165, 122, 0.04);
+        }
+        .interactive-dropzone img.preview-drop-img {
+            max-width: 100%;
+            max-height: 160px;
+            object-fit: contain;
+            border-radius: 10px;
+            display: none;
+        }
+        .interactive-dropzone .dropzone-icon {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            opacity: 0.85;
+        }
+
+        /* Gợi ý Tag bấm nhanh */
+        .modal-tag-suggestions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .modal-suggest-tag {
+            background: var(--bg-secondary);
             border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
+        .modal-suggest-tag:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
         @media (max-width: 768px) {
-            .station-banner-content {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                margin-top: -50px;
-                padding: 0 16px 18px 16px;
-            }
-            .station-banner-thumb {
-                width: 200px;
-            }
-            .station-banner-info {
-                padding-top: 12px;
-                width: 100%;
-            }
-            .station-action-bar {
-                justify-content: center;
-            }
+            .station-shell-wrapper { padding: 12px 14px 40px 12px; }
+            .station-hero-banner { padding: 18px 16px; border-radius: 18px; }
+            .station-hero-title { font-size: 1.3rem; }
+            .btn-create-station-cta { width: 100%; justify-content: center; }
+            .station-toolbar-wrap { flex-direction: column; align-items: stretch; }
+            .station-filter-pills { justify-content: center; width: 100%; }
+            .std-filter-pill { flex: 1; text-align: center; }
+            .station-grid { grid-template-columns: 1fr; gap: 14px; }
+            .station-banner-content { flex-direction: column; align-items: center; text-align: center; margin-top: -55px; padding: 0 16px 20px 16px; }
+            .station-banner-thumb { width: 190px; }
+            .station-banner-info { width: 100%; }
+            .station-meta-capsules, .station-action-bar { justify-content: center; }
+            .modal-studio-box { width: 94% !important; margin: 10px; }
+            .modal-studio-body { padding: 18px 16px; }
         }
 
         /* 🎁 HỘP QUÀ VIP TỪ BEABEA AI TRONG CHAT */
@@ -7399,167 +7697,199 @@
     </div>
 
 
-    <!-- TRANG STATIONS LIST -->
-    <div id="studiosListView" class="page-view">
-        <div class="station-header-bar">
-            <div>
-                <h2 style="font-size: 1.75rem; margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-satellite-dish" style="color: var(--primary);"></i> <span data-i18n="station_list_title">Không gian Stations</span>
-                </h2>
-                <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0;" data-i18n="station_list_desc">Các trạm tập hợp dự án, nhóm lập trình và cộng đồng sáng tạo.</p>
-            </div>
-            <button class="btn btn-primary" onclick="openCreateStudioModal()" style="border-radius: 20px; padding: 9px 18px;">
-                <i class="fa-solid fa-plus"></i> <span data-i18n="station_btn_create">Tạo Station</span>
-            </button>
-        </div>
+    <!-- TRANG STATIONS LIST (MODERN STATIONS HUB) -->
+    <div id="studiosListView" class="page-view" style="max-width: 100%; padding: 0;">
+        <div class="station-shell-wrapper">
+            
+            <!-- 1. HERO BANNER HEADER & TẠO TRẠM -->
+            <div class="station-hero-banner">
+                <div class="station-hero-left">
+                    <div class="station-hero-icon">
+                        <i class="fa-solid fa-satellite-dish"></i>
+                    </div>
+                    <div>
+                        <h2 class="station-hero-title" data-i18n="station_list_title">Không gian Stations</h2>
+                        <p class="station-hero-desc" data-i18n="station_list_desc">Các trạm tập hợp dự án, nhóm lập trình và cộng đồng sáng tạo.</p>
+                    </div>
+                </div>
 
-        <!-- Bộ lọc & Thanh tìm kiếm -->
-        <div class="station-search-filter-wrap">
-            <div class="asset-search-bar" style="flex: 1; min-width: 260px; margin: 0;">
-                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-                <input type="text" id="stationSearchInput" data-i18n-ph="station_search_ph" placeholder="Tìm tên Station, tác giả..." oninput="handleStationSearch(this.value)">
+                <button class="btn-create-station-cta" onclick="openCreateStudioModal()">
+                    <i class="fa-solid fa-plus"></i> <span data-i18n="station_btn_create">Tạo Station Mới</span>
+                </button>
             </div>
-            <div style="display: flex; gap: 8px; overflow-x: auto;">
-                <button class="btn std-filter-pill active" onclick="filterStations('all', this)" data-i18n="station_filter_all">Tất cả</button>
-                <button class="btn std-filter-pill" onclick="filterStations('mine', this)" data-i18n="station_filter_mine">Của tôi</button>
-                <button class="btn std-filter-pill" onclick="filterStations('following', this)" data-i18n="station_filter_following">Đang theo dõi</button>
-            </div>
-        </div>
 
-        <div class="station-grid" id="studiosGridList" data-i18n="station_loading">Đang tải danh sách Station...</div>
-        
-        <!-- NÚT XEM THÊM STATION -->
-        <div id="studiosLoadMoreArea" style="text-align: center; padding: 25px 0 10px 0; display: none;">
-            <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreStudios()">
-                <i class="fa-solid fa-angle-down"></i> <span data-i18n="station_load_more">Xem thêm Station</span>
-            </button>
+            <!-- 2. TOOLBAR TÌM KIẾM & BỘ LỌC ĐỒNG BỘ -->
+            <div class="station-toolbar-wrap">
+                <div class="station-search-capsule">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.9rem;"></i>
+                    <input type="text" id="stationSearchInput" data-i18n-ph="station_search_ph" placeholder="Tìm tên Station, tác giả, mô tả..." oninput="handleStationSearch(this.value)">
+                </div>
+
+                <div class="station-filter-pills">
+                    <button type="button" class="std-filter-pill active" onclick="filterStations('all', this)" data-i18n="station_filter_all">Tất cả</button>
+                    <button type="button" class="std-filter-pill" onclick="filterStations('mine', this)" data-i18n="station_filter_mine">Của tôi</button>
+                    <button type="button" class="std-filter-pill" onclick="filterStations('following', this)" data-i18n="station_filter_following">Đang theo dõi</button>
+                </div>
+            </div>
+
+            <!-- 3. LƯỚI DANH SÁCH STATIONS (LOAD 8 MẶC ĐỊNH) -->
+            <div class="station-grid" id="studiosGridList" data-i18n="station_loading">Đang tải danh sách Station...</div>
+            
+            <!-- NÚT XEM THÊM STATION -->
+            <div id="studiosLoadMoreArea" style="text-align: center; padding: 15px 0 30px 0; display: none;">
+                <button type="button" class="btn" style="border-radius: 20px; padding: 10px 34px; font-weight: 800; border: 1.5px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreStudios()">
+                    <i class="fa-solid fa-angle-down"></i> <span data-i18n="station_load_more">Xem thêm Station</span>
+                </button>
+            </div>
+
         </div>
     </div>
 
-    <!-- TRANG STATION DETAIL -->
-    <div id="studioDetailView" class="page-view">
-        <div class="station-detail-banner">
-            <div class="station-banner-cover"></div>
-            <div class="station-banner-content">
-                <div class="station-banner-thumb">
-                    <img id="stdDetailThumb" src="https://i.ibb.co/QFg1cVVD/image.png" alt="Station Thumbnail">
-                </div>
-                <div class="station-banner-info">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                        <span class="station-badge-tag" style="position: static;"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">
-                            <span data-i18n="station_creator_label">Trạm trưởng:</span> <a id="stdDetailCreator" href="#" style="color: var(--primary); font-weight: bold; text-decoration: none;">@creator</a>
-                        </span>
-                    </div>
-                    <h2 id="stdDetailTitle" style="font-size: 1.85rem; font-weight: 900; margin-bottom: 8px; color: var(--text-title); line-height: 1.25;">Tên Station</h2>
-                    <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; gap: 14px; align-items: center;">
-                        <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> <b id="stdFollowersCount" style="color:var(--text-title);">0</b> <span data-i18n="station_followers_label">người theo dõi</span></span>
-                        <span><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> <b id="stdProjCountBadge" style="color:var(--text-title);">0</b> <span data-i18n="station_projects_label">dự án</span></span>
-                    </div>
-
-                    <div class="station-action-bar">
-                        <button id="btnFollowStudio" class="btn btn-primary" onclick="toggleFollowStudio()" style="border-radius: 20px;">
-                            <i class="fa-solid fa-plus"></i> <span data-i18n="station_btn_follow">Theo dõi</span>
-                        </button>
-                        <button id="btnAddProjToStudio" class="btn btn-primary" style="display:none; border-radius: 20px;" onclick="openAddProjectToStudioModal()">
-                            <i class="fa-solid fa-folder-plus"></i> <span data-i18n="station_btn_add_proj">Thêm dự án</span>
-                        </button>
-                        <button id="btnInviteMemberToStudio" class="btn" style="display:none; border-radius: 20px;" onclick="openInviteStudioModal()">
-                            <i class="fa-solid fa-user-plus"></i> <span data-i18n="station_btn_invite">Mời thành viên</span>
-                        </button>
-                        <button id="btnStdAcceptInvite" class="btn btn-primary" style="display:none; background:#10b981; border-radius: 20px;" onclick="acceptStudioInvite()">
-                            <i class="fa-solid fa-check"></i> <span data-i18n="station_btn_accept_invite">Chấp nhận lời mời</span>
-                        </button>
-                        <button id="btnStdSettings" class="btn" style="display:none; border-radius: 20px;" onclick="openStudioSettings()">
-                            <i class="fa-solid fa-gear"></i> <span data-i18n="station_btn_settings">Cài đặt</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-nav-tabs" style="margin-bottom: 20px;">
-            <button class="prof-tab-btn active" id="tabBtnStd-projects" onclick="switchStdTab('projects')">
-                <i class="fa-solid fa-folder-open"></i> <span data-i18n="station_tab_projects">Kho dự án</span> (<span id="stdProjCount">0</span>)
-            </button>
-            <button class="prof-tab-btn" id="tabBtnStd-members" onclick="switchStdTab('members')">
-                <i class="fa-solid fa-users"></i> <span data-i18n="station_tab_members">Phi hành đoàn</span> (<span id="stdMemberCount">0</span>)
-            </button>
-            <button class="prof-tab-btn" id="tabBtnStd-about" onclick="switchStdTab('about')">
-                <i class="fa-solid fa-circle-info"></i> <span data-i18n="station_tab_about">Giới thiệu</span>
-            </button>
-            <button class="prof-tab-btn" id="tabBtnStd-comments" onclick="switchStdTab('comments')">
-                <i class="fa-solid fa-comments"></i> <span data-i18n="station_tab_comments">Thảo luận</span>
-            </button>
-        </div>
-
-        <!-- TAB 1: DỰ ÁN -->
-        <div id="stdTab-projects" class="prof-tab-content active">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom: 18px; flex-wrap:wrap;">
-                <div class="asset-search-bar" style="max-width: 350px; flex: 1; margin: 0;">
-                    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);"></i>
-                    <input type="text" id="stdInternalProjSearch" data-i18n-ph="station_internal_search_ph" placeholder="Lọc dự án trong Station..." oninput="filterStudioInternalProjects(this.value)">
-                </div>
-                <span id="stdProjCountDisplay" style="font-size:0.88rem; color:var(--text-muted);"></span>
-            </div>
-            <div class="project-grid" id="stdProjectList" data-i18n="station_no_projects">Chưa có dự án nào trong Station.</div>
+    <!-- TRANG CHI TIẾT BÊN TRONG STATION (STATION DETAIL V4) -->
+    <div id="studioDetailView" class="page-view" style="max-width: 100%; padding: 0;">
+        <div class="station-shell-wrapper">
             
-            <!-- NÚT XEM THÊM DỰ ÁN TRONG STATION -->
-            <div id="stdLoadMoreProjectsArea" style="text-align: center; padding: 20px 0 10px 0; display: none;">
-                <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreStudioProjects()">
-                    <i class="fa-solid fa-angle-down"></i> <span data-i18n="station_load_more_proj">Xem thêm dự án</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- TAB 2: THÀNH VIÊN -->
-        <div id="stdTab-members" class="prof-tab-content">
-            <div id="stdCuratorsList"></div>
-        </div>
-
-        <!-- TAB 3: GIỚI THIỆU -->
-        <div id="stdTab-about" class="prof-tab-content" style="max-width: 850px;">
-            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="margin-bottom: 12px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-book-open" style="color: var(--primary);"></i> <span data-i18n="station_about_header">Giới thiệu Station</span>
-                </h4>
-                <p id="stdDetailDesc" style="font-size: 0.96rem; color: var(--text-main); white-space: pre-line; line-height: 1.65; margin: 0;"></p>
-                
-                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <span style="font-size: 0.85rem; color: var(--text-muted);"><span data-i18n="station_id_label">Mã định danh:</span> <code id="stdDetailIdCode" style="background:var(--bg-secondary); padding:3px 7px; border-radius:6px;"></code></span>
-                    <button class="btn" style="font-size: 0.85rem; padding: 6px 14px;" onclick="copyCurrentStudioLink()"><i class="fa-solid fa-link"></i> <span data-i18n="station_btn_copy_link">Sao chép link Station</span></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: THẢO LUẬN (COMMENTS) -->
-        <div id="stdTab-comments" class="prof-tab-content" style="max-width: 850px;">
-            <div id="comment-area-std" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
-                <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
-                    <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
-                </div>
-                <div id="commentImgPreviewStd" class="comment-img-preview-box">
-                    <img id="commentImgPreviewSrcStd" src="" alt="preview">
-                    <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                    <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" title="&times;">&times;</button>
-                </div>
-                <form onsubmit="handlePostComment(event, 'std')" id="stdCommentForm" style="display:none;">
-                    <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" data-i18n-ph="station_comment_ph" placeholder="Viết thảo luận trong Station..." autocomplete="off"></textarea></div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="display:flex; gap: 10px;">
-                            <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
-                            <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
-                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('std')"><i class="fa-solid fa-film"></i> GIF</button>
-                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#f59e0b;" onclick="toggleEmojiPicker('std', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
+            <!-- BANNER BÌA & THÔNG TIN TRẠM -->
+            <div class="station-detail-banner">
+                <div class="station-banner-cover"></div>
+                <div class="station-banner-content">
+                    <div class="station-banner-thumb">
+                        <img id="stdDetailThumb" src="https://i.ibb.co/QFg1cVVD/image.png" alt="Station Thumbnail">
                     </div>
-                </form>
-                <div id="loginPromptStd" style="text-align:center; color:#888; font-size:0.9rem;">
-                    <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="station_login_prompt">Đăng nhập để tham gia thảo luận</button>
+
+                    <div class="station-banner-info">
+                        <div class="station-banner-topline">
+                            <span class="station-tag-pill"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">
+                                <span data-i18n="station_creator_label">Trạm trưởng:</span> 
+                                <a id="stdDetailCreator" href="#" style="color: var(--primary); font-weight: 800; text-decoration: none;">@creator</a>
+                            </span>
+                        </div>
+
+                        <h1 id="stdDetailTitle" class="station-hero-heading">Tên Station</h1>
+
+                        <div class="station-meta-capsules">
+                            <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> <b id="stdFollowersCount" style="color:var(--text-title);">0</b> <span data-i18n="station_followers_label">theo dõi</span></span>
+                            <span>•</span>
+                            <span><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> <b id="stdProjCountBadge" style="color:var(--text-title);">0</b> <span data-i18n="station_projects_label">tác phẩm</span></span>
+                            <span>•</span>
+                            <span><i class="fa-solid fa-users" style="color:#3b82f6;"></i> <b id="stdMemberCountBadge" style="color:var(--text-title);">0</b> <span>thành viên</span></span>
+                        </div>
+
+                        <div class="station-action-bar">
+                            <button id="btnFollowStudio" class="btn btn-primary" onclick="toggleFollowStudio()" style="border-radius: 20px; font-weight: 800; padding: 8px 18px;">
+                                <i class="fa-solid fa-plus"></i> <span data-i18n="station_btn_follow">Theo dõi</span>
+                            </button>
+                            <button id="btnAddProjToStudio" class="btn btn-primary" style="display:none; border-radius: 20px; font-weight: 800; padding: 8px 18px;" onclick="openAddProjectToStudioModal()">
+                                <i class="fa-solid fa-folder-plus"></i> <span data-i18n="station_btn_add_proj">Thêm dự án</span>
+                            </button>
+                            <button id="btnInviteMemberToStudio" class="btn" style="display:none; border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="openInviteStudioModal()">
+                                <i class="fa-solid fa-user-plus"></i> <span data-i18n="station_btn_invite">Mời phi hành đoàn</span>
+                            </button>
+                            <button id="btnStdAcceptInvite" class="btn btn-primary" style="display:none; background:#10b981; border-radius: 20px; font-weight: 800; padding: 8px 18px;" onclick="acceptStudioInvite()">
+                                <i class="fa-solid fa-check"></i> <span data-i18n="station_btn_accept_invite">Gia nhập trạm</span>
+                            </button>
+                            <button id="btnStdSettings" class="btn" style="display:none; border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="openStudioSettings()">
+                                <i class="fa-solid fa-gear"></i> <span data-i18n="station_btn_settings">Cài đặt</span>
+                            </button>
+                            <button type="button" class="btn" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="copyCurrentStudioLink()" title="Sao chép link Station">
+                                <i class="fa-solid fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="stdCommentList" data-i18n="station_no_comments">Chưa có thảo luận nào.</div>
+
+            <!-- THANH TABS ĐIỀU HƯỚNG DẠNG FLOATING CAPSULE -->
+            <div style="display:flex; justify-content:center; width:100%;">
+                <div class="profile-nav-tabs">
+                    <button class="prof-tab-btn active" id="tabBtnStd-projects" onclick="switchStdTab('projects')">
+                        <i class="fa-solid fa-folder-open"></i> <span data-i18n="station_tab_projects">Kho dự án</span> (<span id="stdProjCount">0</span>)
+                    </button>
+                    <button class="prof-tab-btn" id="tabBtnStd-members" onclick="switchStdTab('members')">
+                        <i class="fa-solid fa-users"></i> <span data-i18n="station_tab_members">Phi hành đoàn</span> (<span id="stdMemberCount">0</span>)
+                    </button>
+                    <button class="prof-tab-btn" id="tabBtnStd-about" onclick="switchStdTab('about')">
+                        <i class="fa-solid fa-circle-info"></i> <span data-i18n="station_tab_about">Giới thiệu</span>
+                    </button>
+                    <button class="prof-tab-btn" id="tabBtnStd-comments" onclick="switchStdTab('comments')">
+                        <i class="fa-solid fa-comments"></i> <span data-i18n="station_tab_comments">Thảo luận</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 1: KHO DỰ ÁN TRONG STATION -->
+            <div id="stdTab-projects" class="prof-tab-content active">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom: 18px; flex-wrap:wrap;">
+                    <div class="station-search-capsule" style="max-width: 380px; flex: 1; margin: 0; padding: 4px 14px;">
+                        <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.85rem;"></i>
+                        <input type="text" id="stdInternalProjSearch" data-i18n-ph="station_internal_search_ph" placeholder="Lọc tác phẩm trong Station..." oninput="filterStudioInternalProjects(this.value)">
+                    </div>
+                    <span id="stdProjCountDisplay" style="font-size:0.85rem; font-weight:700; color:var(--text-muted);"></span>
+                </div>
+
+                <div class="project-grid" id="stdProjectList" data-i18n="station_no_projects">Chưa có dự án nào trong Station.</div>
+                
+                <!-- NÚT XEM THÊM DỰ ÁN TRONG STATION -->
+                <div id="stdLoadMoreProjectsArea" style="text-align: center; padding: 22px 0 10px 0; display: none;">
+                    <button type="button" class="btn" style="border-radius: 20px; padding: 9px 32px; font-weight: 800; border: 1.5px solid var(--border-color); background: var(--bg-panel);" onclick="loadMoreStudioProjects()">
+                        <i class="fa-solid fa-angle-down"></i> <span data-i18n="station_load_more_proj">Xem thêm dự án</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 2: THÀNH VIÊN (PHI HÀNH ĐOÀN) -->
+            <div id="stdTab-members" class="prof-tab-content">
+                <div id="stdCuratorsList"></div>
+            </div>
+
+            <!-- TAB 3: GIỚI THIỆU -->
+            <div id="stdTab-about" class="prof-tab-content" style="max-width: 850px; margin: 0 auto;">
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 20px; padding: 26px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                    <h4 style="margin: 0 0 14px 0; font-size: 1.1rem; font-weight:900; display: flex; align-items: center; gap: 8px; color:var(--text-title);">
+                        <i class="fa-solid fa-book-open" style="color: var(--primary);"></i> <span data-i18n="station_about_header">Thông tin Station</span>
+                    </h4>
+                    <p id="stdDetailDesc" style="font-size: 0.96rem; color: var(--text-main); white-space: pre-line; line-height: 1.65; margin: 0;"></p>
+                    
+                    <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);"><span data-i18n="station_id_label">Mã định danh trạm:</span> <code id="stdDetailIdCode" style="background:var(--bg-secondary); padding:4px 8px; border-radius:6px; font-family:monospace; border:1px solid var(--border-color);"></code></span>
+                        <button type="button" class="btn btn-primary" style="font-size: 0.84rem; padding: 7px 18px; border-radius: 14px; font-weight:800;" onclick="copyCurrentStudioLink()">
+                            <i class="fa-solid fa-link"></i> <span data-i18n="station_btn_copy_link">Sao chép link Station</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: THẢO LUẬN TRONG TRẠM (COMMENTS) -->
+            <div id="stdTab-comments" class="prof-tab-content" style="max-width: 850px; margin: 0 auto;">
+                <div id="comment-area-std" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:18px; padding:20px; margin-bottom:25px; box-shadow:0 4px 20px rgba(0,0,0,0.02); transition: all 0.3s ease;">
+                    <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
+                        <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
+                    </div>
+                    <div id="commentImgPreviewStd" class="comment-img-preview-box">
+                        <img id="commentImgPreviewSrcStd" src="" alt="preview">
+                        <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" title="&times;">&times;</button>
+                    </div>
+                    <form onsubmit="handlePostComment(event, 'std')" id="stdCommentForm" style="display:none;">
+                        <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" data-i18n-ph="station_comment_ph" placeholder="Viết thảo luận trong Station..." autocomplete="off" style="border-radius:14px;"></textarea></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <div style="display:flex; gap: 8px;">
+                                <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:var(--bg-secondary); border-radius:12px; font-size:0.84rem;"><i class="fa-solid fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_attach_image">Ảnh</span></label>
+                                <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
+                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#855cd6; border-radius:12px; font-size:0.84rem;" onclick="openKlipyModal('std')"><i class="fa-solid fa-film"></i> GIF</button>
+                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#f59e0b; border-radius:12px; font-size:0.84rem;" onclick="toggleEmojiPicker('std', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd" style="border-radius:14px; font-weight:800; padding:8px 20px;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi thảo luận</span></button>
+                        </div>
+                    </form>
+                    <div id="loginPromptStd" style="text-align:center; color:var(--text-muted); font-size:0.92rem;">
+                        <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="station_login_prompt" style="border-radius:18px; font-weight:800; padding:9px 24px;">Đăng nhập để tham gia thảo luận</button>
+                    </div>
+                </div>
+                <div id="stdCommentList" data-i18n="station_no_comments">Chưa có thảo luận nào.</div>
+            </div>
+
         </div>
     </div>
 
@@ -8950,29 +9280,53 @@
 
     <!-- ================= MODALS HỆ THỐNG ================= -->
 
-    <!-- MODAL TẠO STATION -->
+    <!-- MODAL TẠO STATION (STATION STUDIO REDESIGN) -->
     <div class="modal-overlay" id="createStudioModal">
-        <div class="modal" style="max-width:480px;">
-            <div class="modal-header"><span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span data-i18n="station_modal_create_title">Tạo Station Mới</span></span><button class="btn-close" onclick="closeModal('createStudioModal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label data-i18n="station_modal_name_label">Tên Station *:</label>
-                    <input type="text" id="newStdTitle" class="form-control" required data-i18n-ph="station_modal_name_ph" placeholder="Nhập tên Station...">
+        <div class="modal modal-studio-box">
+            <div class="modal-studio-header">
+                <div class="modal-studio-title">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span data-i18n="station_modal_create_title">Khởi tạo Station Không gian</span>
                 </div>
-                <div class="form-group">
-                    <label data-i18n="station_modal_id_label">Mã định danh (Không bắt buộc):</label>
-                    <input type="text" id="newStdCustomId" class="form-control" data-i18n-ph="station_modal_id_ph" placeholder="Để trống hệ thống sẽ tạo tự động. VD: my-station-123">
-                    <div style="font-size:0.8rem; color:#888; margin-top:4px;" data-i18n="station_modal_id_hint">Chỉ dùng chữ không dấu, số, gạch ngang và gạch dưới.</div>
+                <button class="btn-close" onclick="closeModal('createStudioModal')">&times;</button>
+            </div>
+
+            <div class="modal-studio-body">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;" data-i18n="station_modal_name_label">Tên Station *:</label>
+                    <input type="text" id="newStdTitle" class="form-control" required data-i18n-ph="station_modal_name_ph" placeholder="Ví dụ: Trạm Game RPG Việt, Không gian Hoạt hình..." style="border-radius:12px;">
                 </div>
-                <div class="form-group">
-                    <label data-i18n="station_modal_thumb_label">Ảnh bìa Station (Tỉ lệ 16:9):</label>
-                    <input type="file" id="newStdThumb" accept="image/*" class="form-control" style="padding: 8px;">
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin:0;" data-i18n="station_modal_id_label">Mã định danh (ID):</label>
+                        <span style="font-size:0.74rem; color:var(--text-muted);">Tùy chọn</span>
+                    </div>
+                    <input type="text" id="newStdCustomId" class="form-control" data-i18n-ph="station_modal_id_ph" placeholder="VD: rpg-studio (để trống hệ thống tạo tự động)" style="border-radius:12px;" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')">
                 </div>
-                <div class="form-group">
-                    <label data-i18n="station_modal_desc_label">Mô tả:</label>
-                    <textarea id="newStdDesc" class="form-control" rows="3" data-i18n-ph="station_modal_desc_ph" placeholder="Giới thiệu về Station của bạn..."></textarea>
+
+                <!-- Khung Dropzone chọn ảnh bìa Station (16:9) -->
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;" data-i18n="station_modal_thumb_label">Ảnh bìa Station (Tỉ lệ 16:9):</label>
+                    <label for="newStdThumb" class="interactive-dropzone" id="stdThumbDropzone" style="min-height: 120px;">
+                        <i class="fa-solid fa-image dropzone-icon" id="stdThumbDropIcon"></i>
+                        <img id="newStdThumbPreview" class="preview-drop-img" alt="Bìa Station" style="aspect-ratio:16/9; max-height:120px;">
+                        <div id="stdThumbTextWrap">
+                            <b style="font-size:0.88rem; color:var(--text-title); display:block;">Bấm để chọn ảnh bìa đại diện</b>
+                            <span style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; display:block;">Khuyên dùng ảnh tỷ lệ 16:9 (JPG, PNG)</span>
+                        </div>
+                    </label>
+                    <input type="file" id="newStdThumb" accept="image/*" style="display:none;" onchange="handleStationThumbPreview(this)">
                 </div>
-                <button type="button" id="btnCreateStudioSubmit" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center;" data-i18n="station_modal_btn_create">Tạo Station</button>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;" data-i18n="station_modal_desc_label">Mô tả Station:</label>
+                    <textarea id="newStdDesc" class="form-control" rows="3" data-i18n-ph="station_modal_desc_ph" placeholder="Giới thiệu mục tiêu, luật tham gia hoặc định hướng của Station..." style="border-radius:12px;"></textarea>
+                </div>
+
+                <button type="button" id="btnCreateStudioSubmit" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center; padding:12px; font-weight:800; font-size:0.95rem; border-radius:14px;" data-i18n="station_modal_btn_create">
+                    <i class="fa-solid fa-satellite-dish"></i> Tạo Station
+                </button>
             </div>
         </div>
     </div>
@@ -9140,22 +9494,60 @@
         </div>
     </div>
 
-    <!-- MODAL UPLOAD TÀI NGUYÊN -->
+    <!-- MODAL UPLOAD TÀI NGUYÊN (PRO DROPZONE STUDIO) -->
     <div class="modal-overlay" id="uploadAssetModal">
-        <div class="modal" style="max-width:500px;">
-            <div class="modal-header"><span><i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_title">Chia sẻ Tài nguyên</span></span><button class="btn-close" onclick="closeModal('uploadAssetModal')">&times;</button></div>
-            <div class="modal-body">
+        <div class="modal modal-studio-box">
+            <div class="modal-studio-header">
+                <div class="modal-studio-title">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span data-i18n="asset_upload_title">Đóng góp Tài nguyên</span>
+                </div>
+                <button class="btn-close" onclick="closeModal('uploadAssetModal')">&times;</button>
+            </div>
+            
+            <div class="modal-studio-body">
                 <form onsubmit="handleUploadAssetSubmit(event)">
-                    <div class="form-group">
-                        <label data-i18n="asset_upload_file">Chọn File (Tối đa 50MB) *:</label>
-                        <input type="file" id="assetUpFile" class="form-control" required style="padding: 8px;" accept="image/*, audio/*, video/*, .svg">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;" data-i18n="asset_upload_file_hint">Hỗ trợ: PNG, JPG, GIF, SVG, MP3, WAV... File lớn hơn 18MB sẽ tự động chia nhỏ.</div>
-                    </div>
-                    <div class="form-group"><label data-i18n="asset_upload_name">Tên tài nguyên *:</label><input type="text" id="assetUpTitle" class="form-control" required data-i18n-ph="asset_upload_name_ph" placeholder="Ví dụ: Nút bấm Pixel 2D"></div>
-                    <div class="form-group"><label data-i18n="asset_upload_tags">Từ khóa (Tags) *:</label><input type="text" id="assetUpKeywords" class="form-control" required data-i18n-ph="asset_upload_tags_ph" placeholder="Ví dụ: ui, button, pixel, gui (cách nhau dấu phẩy)"></div>
                     
-                    <button type="submit" class="btn btn-primary" id="btnSubmitUploadAsset" style="width:100%; justify-content:center; margin-top: 15px; padding: 12px;">
-                        <i class="fa-solid fa-upload"></i> <span data-i18n="asset_upload_btn">Đăng Tài nguyên</span>
+                    <!-- Khung Dropzone tương tác -->
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;">Tệp tin đính kèm (Tối đa 50MB) *:</label>
+                        <label for="assetUpFile" class="interactive-dropzone" id="assetDropzoneBox">
+                            <i class="fa-solid fa-cloud-arrow-up dropzone-icon" id="assetDropIcon"></i>
+                            <img id="assetDropPreviewImg" class="preview-drop-img" alt="Xem thử">
+                            <div id="assetDropTextWrap">
+                                <b style="font-size:0.92rem; color:var(--text-title); display:block;" id="assetDropMainText">Nhấp để chọn hoặc kéo thả tệp vào đây</b>
+                                <span style="font-size:0.76rem; color:var(--text-muted); margin-top:3px; display:block;">Hỗ trợ: PNG, JPG, GIF, SVG, MP3, WAV, OGG...</span>
+                            </div>
+                        </label>
+                        <input type="file" id="assetUpFile" required style="display:none;" accept="image/*, audio/*, video/*, .svg" onchange="handleAssetFileSelected(this)">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;" data-i18n="asset_upload_name">Tên tài nguyên *:</label>
+                        <input type="text" id="assetUpTitle" class="form-control" required data-i18n-ph="asset_upload_name_ph" placeholder="Ví dụ: Nhân vật Pixel Ninja, Nhạc nền Dungeon..." style="border-radius: 12px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin:0;" data-i18n="asset_upload_tags">Từ khóa tìm kiếm (Tags) *:</label>
+                            <span style="font-size:0.74rem; color:var(--text-muted);">Cách nhau bằng dấu phẩy</span>
+                        </div>
+                        <input type="text" id="assetUpKeywords" class="form-control" required data-i18n-ph="asset_upload_tags_ph" placeholder="sprite, pixel, effect, bgm..." style="border-radius: 12px;">
+                        
+                        <!-- Gợi ý tag chọn nhanh -->
+                        <div class="modal-tag-suggestions">
+                            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; align-self:center;">Gợi ý:</span>
+                            <span class="modal-suggest-tag" onclick="appendAssetKeyword('sprite')">#sprite</span>
+                            <span class="modal-suggest-tag" onclick="appendAssetKeyword('pixel')">#pixel</span>
+                            <span class="modal-suggest-tag" onclick="appendAssetKeyword('background')">#background</span>
+                            <span class="modal-suggest-tag" onclick="appendAssetKeyword('bgm')">#bgm</span>
+                            <span class="modal-suggest-tag" onclick="appendAssetKeyword('sfx')">#sfx</span>
+                            <span class="modal-suggest-tag" onclick="appendAssetKeyword('ui')">#ui</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="btnSubmitUploadAsset" style="width:100%; justify-content:center; padding:12px; font-weight:800; font-size:0.95rem; border-radius:14px;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>
                     </button>
                 </form>
             </div>
@@ -13134,7 +13526,7 @@
         let allStudios = [];
         let studioFilterMode = 'all';
         let studioSearchTerm = '';
-        const STD_LIST_PER_PAGE = 16;
+        const STD_LIST_PER_PAGE = 8; // RÚT XUỐNG 8 STATION MẶC ĐỊNH
         let studiosDisplayLimit = STD_LIST_PER_PAGE;
 
         function openStudiosPage() {
@@ -13151,7 +13543,6 @@
         async function loadStudiosList() {
             const grid = document.getElementById('studiosGridList');
             
-            // 🚀 BỘ NHỚ ĐỆM: Nếu đã tải danh sách Studio trong vòng 30 giây qua, KHÔNG GỌI API NỮA, lấy luôn dữ liệu cũ ra vẽ (Siêu mượt)
             if (allStudios.length > 0 && (Date.now() - lastStudiosFetchTime < 30000)) {
                 renderStudiosGrid();
                 return;
@@ -13161,17 +13552,16 @@
             try {
                 const res = await fetch(`${WORKER_URL}/api/studios`);
                 allStudios = await res.json();
-                lastStudiosFetchTime = Date.now(); // Lưu vết thời gian tải
+                lastStudiosFetchTime = Date.now();
                 renderStudiosGrid();
             } catch(e) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding: 20px;">Lỗi tải dữ liệu Station. Vui lòng thử lại!</div>';
             }
         }
 
-
         function filterStations(mode, btnEl) {
             studioFilterMode = mode;
-            studiosDisplayLimit = STD_LIST_PER_PAGE; // Reset limit khi đổi tab
+            studiosDisplayLimit = STD_LIST_PER_PAGE;
             document.querySelectorAll('.std-filter-pill').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
             renderStudiosGrid();
@@ -13225,21 +13615,25 @@
                 const projCount = (s.projects || []).length;
                 const memCount = (s.members || []).length;
                 const followCount = (s.followers || []).length;
+                const creatorAvt = globalUserCache[s.creator] ? getAvtUrl(globalUserCache[s.creator]) : DEFAULT_AVATAR;
+
                 return `
                     <div class="station-card" onclick="navigateTo('/studio/${s.id}')">
                         <div class="station-card-thumb">
                             <img src="${thumb}" alt="${escapeHtml(s.title)}" loading="lazy">
-                            <span class="station-badge-tag"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
+                            <span class="station-card-badge"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
                         </div>
                         <div class="station-card-body">
-                            <div class="station-card-title">${escapeHtml(s.title)}</div>
+                            <div class="station-card-title" title="${escapeHtml(s.title)}">${escapeHtml(s.title)}</div>
                             <div class="station-card-desc">${escapeHtml(s.description || 'Chưa có mô tả cho Station này.')}</div>
                             <div class="station-card-footer">
-                                <span><i class="fa-solid fa-user-astronaut" style="color:var(--primary);"></i> @${escapeHtml(s.creator)}</span>
-                                <div style="display:flex; gap:10px;">
-                                    <span title="Dự án"><i class="fa-solid fa-folder"></i> ${projCount}</span>
-                                    <span title="Thành viên"><i class="fa-solid fa-users"></i> ${memCount}</span>
-                                    <span title="Theo dõi"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${followCount}</span>
+                                <span class="station-card-creator">
+                                    <img src="${creatorAvt}" id="std-creator-avt-${escapeHtml(s.creator)}-${s.id}" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border:1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'">
+                                    <span>@${escapeHtml(s.creator)}</span>
+                                </span>
+                                <div class="station-card-stats">
+                                    <span title="Tác phẩm"><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> ${projCount}</span>
+                                    <span title="Người theo dõi"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${followCount}</span>
                                 </div>
                             </div>
                         </div>
@@ -13250,6 +13644,16 @@
             if (loadMoreArea) {
                 loadMoreArea.style.display = filtered.length > studiosDisplayLimit ? 'block' : 'none';
             }
+
+            // Nạp bổ sung avatar tác giả
+            visibleStudios.forEach(s => {
+                if (!s.creator || globalUserCache[s.creator]) return;
+                queueFetchUserAvt(s.creator, (avtCode) => {
+                    document.querySelectorAll(`[id^="std-creator-avt-${s.creator}-"]`).forEach(img => {
+                        img.src = getAvtUrl(avtCode);
+                    });
+                });
+            });
         }
 
         async function openStudioDetailPage(id, urlParams) {
@@ -13266,6 +13670,8 @@
                 document.getElementById('stdDetailDesc').innerText = currentStudio.description || 'Station này chưa có phần giới thiệu.';
                 document.getElementById('stdFollowersCount').innerText = (currentStudio.followers || []).length;
                 document.getElementById('stdProjCountBadge').innerText = (currentStudio.projects || []).length;
+                const memBadge = document.getElementById('stdMemberCountBadge');
+                if (memBadge) memBadge.innerText = (currentStudio.members || []).length;
                 document.getElementById('stdDetailThumb').src = currentStudio.thumbId ? `${WORKER_URL}/api/project/${currentStudio.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
                 const idCode = document.getElementById('stdDetailIdCode');
                 if (idCode) idCode.innerText = currentStudio.id;
@@ -13546,8 +13952,18 @@
                 return;
             }
             document.getElementById('newStdTitle').value = "";
+            document.getElementById('newStdCustomId').value = "";
             document.getElementById('newStdDesc').value = "";
             document.getElementById('newStdThumb').value = "";
+
+            // Đặt lại khung xem trước ảnh bìa Station
+            const previewImg = document.getElementById('newStdThumbPreview');
+            const dropIcon = document.getElementById('stdThumbDropIcon');
+            const textWrap = document.getElementById('stdThumbTextWrap');
+            if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+            if (dropIcon) dropIcon.style.display = 'block';
+            if (textWrap) textWrap.style.display = 'block';
+
             openModal('createStudioModal');
         }
 
@@ -18019,7 +18435,86 @@
             document.getElementById('assetUpFile').value = '';
             document.getElementById('assetUpTitle').value = '';
             document.getElementById('assetUpKeywords').value = '';
+            
+            // Đặt lại trạng thái Dropzone
+            const previewImg = document.getElementById('assetDropPreviewImg');
+            const dropIcon = document.getElementById('assetDropIcon');
+            const mainText = document.getElementById('assetDropMainText');
+            if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+            if (dropIcon) dropIcon.style.display = 'block';
+            if (mainText) mainText.innerText = 'Nhấp để chọn hoặc kéo thả tệp vào đây';
+
             openModal('uploadAssetModal');
+        }
+
+        // Bắt sự kiện chọn file tài nguyên để hiển thị tên và preview trực tiếp
+        function handleAssetFileSelected(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const previewImg = document.getElementById('assetDropPreviewImg');
+            const dropIcon = document.getElementById('assetDropIcon');
+            const mainText = document.getElementById('assetDropMainText');
+            const titleInput = document.getElementById('assetUpTitle');
+
+            // Tự động điền tên tệp nếu người dùng chưa nhập tiêu đề
+            if (titleInput && !titleInput.value) {
+                const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                titleInput.value = nameWithoutExt.replace(/[-_]/g, ' ');
+            }
+
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            if (mainText) mainText.innerHTML = `Đã chọn: <b>${escapeHtml(file.name)}</b> (${sizeMB} MB)`;
+
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (previewImg) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = 'block';
+                    }
+                    if (dropIcon) dropIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if (previewImg) previewImg.style.display = 'none';
+                if (dropIcon) {
+                    dropIcon.style.display = 'block';
+                    dropIcon.className = file.type.startsWith('audio/') ? 'fa-solid fa-music dropzone-icon' : 'fa-solid fa-file dropzone-icon';
+                }
+            }
+        }
+
+        // Thêm tag nhanh cho tài nguyên
+        function appendAssetKeyword(tag) {
+            const input = document.getElementById('assetUpKeywords');
+            if (!input) return;
+            let current = input.value.trim();
+            let tags = current ? current.split(',').map(t => t.trim()) : [];
+            if (!tags.includes(tag)) {
+                tags.push(tag);
+                input.value = tags.join(', ');
+            }
+            input.focus();
+        }
+
+        // Bắt sự kiện chọn ảnh bìa cho Station mới
+        function handleStationThumbPreview(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const previewImg = document.getElementById('newStdThumbPreview');
+            const dropIcon = document.getElementById('stdThumbDropIcon');
+            const textWrap = document.getElementById('stdThumbTextWrap');
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (previewImg) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                }
+                if (dropIcon) dropIcon.style.display = 'none';
+                if (textWrap) textWrap.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
         }
 
         async function handleUploadAssetSubmit(e) {
