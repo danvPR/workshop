@@ -1933,6 +1933,17 @@
             
             .modal { max-width: 95vw; margin: 10px; }
         }
+        /* ẨN TOÀN BỘ TRANG WEB KHI ĐANG XÁC MINH CLOUDFLARE */
+        body.is-verifying > *:not(#cfVerifyScreen) {
+            display: none !important;
+        }
+        body.is-verifying {
+            background-color: #ffffff;
+        }
+        [data-theme="dark"] body.is-verifying {
+            background-color: #111827;
+        }
+
         /* --- BẢN VÁ LỖI MÀU CHỮ (DARK/LIGHT MODE TEXT FIX) --- */
         
         /* 1. Ép các Class chứa Username, Title, Chữ đậm theo biến màu của Theme */
@@ -6723,7 +6734,7 @@
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body class="is-verifying">
     <!-- MÀN HÌNH XÁC MINH CLOUDFLARE "VERIFY YOU ARE HUMAN" -->
     <div id="cfVerifyScreen" class="cf-verify-screen">
         <script>
@@ -6733,6 +6744,7 @@
                     const verifiedUntil = localStorage.getItem('cf_human_verified_until');
                     if (verifiedUntil && Date.now() < parseInt(verifiedUntil, 10)) {
                         document.getElementById('cfVerifyScreen').style.display = 'none';
+                        document.body.classList.remove('is-verifying');
                     }
                 } catch(e) {}
             })();
@@ -10019,7 +10031,12 @@
             if (screen) {
                 screen.style.transition = 'opacity 0.4s ease';
                 screen.style.opacity = '0';
-                setTimeout(() => screen.remove(), 400);
+                setTimeout(() => {
+                    screen.remove();
+                    document.body.classList.remove('is-verifying'); // Hiện lại toàn bộ web
+                }, 400);
+            } else {
+                document.body.classList.remove('is-verifying');
             }
         };
 
