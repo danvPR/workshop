@@ -180,32 +180,37 @@
             border-bottom-color: rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
-        .nav-left { display: flex; align-items: center; gap: 10px; }
-        .navbar-brand { display: flex; align-items: center; text-decoration: none; margin-right: 12px; }
+        /* BỐ CỤC 3 CỘT: CÂN ĐỐI 1 - 2 - 1 ĐỂ MENU GIỮA LUÔN NẰM TRUNG TÂM */
+        .nav-left { flex: 1; display: flex; align-items: center; justify-content: flex-start; }
+        .navbar-brand { display: flex; align-items: center; text-decoration: none; margin-right: 0; }
         .nav-logo-img { height: 38px; width: auto; object-fit: contain; vertical-align: middle; transition: transform 0.2s; }
         .nav-logo-img:hover { transform: scale(1.04); }
+
+        .nav-center { flex: 2; display: flex; align-items: center; justify-content: center; gap: 4px; }
+
+        .nav-right { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
         
         .nav-link { 
             color: var(--text-muted); 
             text-decoration: none; 
-            font-weight: 700; /* Đậm hơn để dễ đọc với font Nunito */
+            font-weight: 700; 
             font-size: 0.95rem; 
-            padding: 8px 12px; 
-            border-radius: 12px; /* Bo góc tròn hơn */
+            padding: 8px 14px; 
+            border-radius: 12px; 
             display: inline-flex;
             align-items: center;
             gap: 6px;
             transition: all 0.2s ease; 
         }
         .nav-link:hover { 
-            color: var(--primary); 
-            background: rgba(13, 165, 122, 0.08);
+            color: var(--text-title); 
+            background: var(--bg-secondary);
         }
         .nav-link.active {
             color: var(--primary) !important;
             background: rgba(13, 165, 122, 0.12) !important;
         }
-        .nav-link.active::after { display: none; } /* Bỏ gạch chân cũ */
+        .nav-link.active::after { display: none; }
         
         .nav-actions { display: flex; gap: 8px; align-items: center; position: relative; }
         
@@ -258,7 +263,7 @@
             gap: 8px;
             box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            margin: 0 4px;
+            margin: 0 6px 0 0; /* Tạo khoảng cách vừa vặn với các icon bên phải */
         }
         .nav-btn-create i {
             color: #fef08a;
@@ -3132,8 +3137,8 @@
         }
         
         @media (max-width: 768px) {
-            .navbar .nav-left > .nav-link, 
-            .navbar .nav-left > .nav-btn-create { display: none !important; }
+            .navbar .nav-center, 
+            .navbar .nav-right .nav-btn-create { display: none !important; }
             .mobile-bottom-nav { display: flex; }
             body { padding-bottom: 70px; } /* Tránh nội dung bị thanh bar che */
 
@@ -6724,15 +6729,19 @@
             <a href="/#home" class="navbar-brand">
                 <img src="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
+        </div>
+        <div class="nav-center">
             <a href="/#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
             <a href="/#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
-            <!-- Nút Sáng tạo nâng cấp thành CTA Button bắt mắt -->
-            <a href="/#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="/#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
             <a href="/#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
             <a href="/#leaderboard" class="nav-link nav-leaderboard"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> <span data-i18n="nav_leaderboard">Xếp hạng</span></a>
         </div>
-        <div class="nav-actions" id="navActions"></div>
+        <div class="nav-right">
+            <!-- Chuyển nút Sáng tạo sang bên phải cạnh cụm User -->
+            <a href="/#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
+            <div class="nav-actions" id="navActions"></div>
+        </div>
     </nav>
 
     <!-- BANNER NHẮC NHỞ XÁC MINH EMAIL (TINH GỌN & ĐẶT DƯỚI NAVBAR KHÔNG BỊ ĐÈ) -->
