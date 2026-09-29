@@ -139,21 +139,23 @@
         })();
     </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+        
         :root { 
             --primary: #0da57a; --primary-dark: #0a8260;
-            --bg-body: #f4f5f7; --bg-panel: #ffffff;
+            --bg-body: #f3f4f6; --bg-panel: #ffffff;
             --bg-secondary: #f8fafc; --bg-input: #ffffff;
-            --text-main: #222222; --text-muted: #666666; --text-title: #111111;
+            --text-main: #374151; --text-muted: #6b7280; --text-title: #111827;
             --border-color: #e5e7eb;
         }
         [data-theme="dark"] {
-            --primary: #0da57a; --primary-dark: #12d6a1;
-            --bg-body: #0f172a; --bg-panel: #1e293b;
-            --bg-secondary: #334155; --bg-input: #0f172a;
-            --text-main: #cbd5e1; --text-muted: #94a3b8; --text-title: #f8fafc;
-            --border-color: #334155;
+            --primary: #10b981; --primary-dark: #34d399; /* Xanh ngọc sáng hơn */
+            --bg-body: #111827; --bg-panel: #1f2937; /* Đổi sang màu than chì Tailwind mềm mắt hơn */
+            --bg-secondary: #374151; --bg-input: #111827;
+            --text-main: #e5e7eb; --text-muted: #9ca3af; --text-title: #f9fafb;
+            --border-color: #374151;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', "Segoe UI", ui-rounded, system-ui, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
         
         /* NAVBAR HIỆN ĐẠI (GLASSMORPHISM & THEME ADAPTIVE) */
@@ -186,13 +188,13 @@
         .nav-link { 
             color: var(--text-muted); 
             text-decoration: none; 
-            font-weight: 600; 
-            font-size: 0.92rem; 
-            padding: 8px 14px; 
-            border-radius: 10px;
+            font-weight: 700; /* Đậm hơn để dễ đọc với font Nunito */
+            font-size: 0.95rem; 
+            padding: 8px 12px; 
+            border-radius: 12px; /* Bo góc tròn hơn */
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
             transition: all 0.2s ease; 
         }
         .nav-link:hover { 
@@ -444,21 +446,20 @@
             gap: 5px;
         }
 
-        /* 2. Thanh công cụ tìm kiếm & Bộ lọc phân loại tinh gọn */
+        /* 2. Thanh công cụ tìm kiếm & Bộ lọc phân loại (Redesign: Float Style) */
         .home-toolbar-wrap {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin: 18px 0 20px 0;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 14px 18px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            gap: 16px;
+            margin: 10px 0 25px 0;
+            background: transparent; /* Bỏ khối hộp xám bao quanh */
+            border: none;
+            padding: 0;
+            box-shadow: none;
         }
         .home-toolbar-main {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
@@ -468,11 +469,12 @@
             min-width: 260px;
             display: flex;
             align-items: center;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 3px 12px;
-            transition: all 0.2s ease;
+            background: var(--bg-panel); /* Trắng/Xanh đen thuần */
+            border: 2px solid var(--border-color); /* Viền rõ ràng hơn */
+            border-radius: 20px; /* Bo tròn mạnh như viên thuốc */
+            padding: 6px 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: all 0.25s ease;
         }
         .home-search-pill-box:focus-within {
             background: var(--bg-panel);
@@ -685,10 +687,10 @@
             align-items: flex-start;
         }
         .card-title { 
-            font-weight: 800; 
+            font-weight: 900; /* Chữ đậm lên tối đa */
             color: var(--text-title); 
-            font-size: 0.98rem; 
-            line-height: 1.4;
+            font-size: 1.05rem; /* Font to hơn 1 chút */
+            line-height: 1.35;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -696,12 +698,13 @@
             margin: 0 0 3px 0;
             word-break: break-word;
             width: 100%;
-            text-transform: none !important; /* Ngăn chặn in hoa toàn bộ, giúp học sinh dễ đọc */
+            text-transform: none !important; 
             letter-spacing: -0.2px;
         }
         .card-author { 
             font-size: 0.8rem; 
             color: var(--text-muted); 
+            opacity: 0.75; /* Làm mờ tên tác giả đi 1 chút để focus vào Tên game */
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
@@ -11346,10 +11349,8 @@
                 // Chuẩn bị avatar tác giả từ Cache
                 let cachedAvt = globalUserCache[author] ? getAvtUrl(globalUserCache[author]) : DEFAULT_AVATAR;
 
-                // Tách hashtag thành mini chip
-                const tagsHtml = tags.length > 0 
-                    ? `<div class="card-tags-row">${tags.map(t => `<span class="card-mini-tag">${escapeHtml(t)}</span>`).join('')}</div>` 
-                    : '';
+                // Tách hashtag thành mini chip (ĐÃ ẨN ĐỂ GIAO DIỆN THOÁNG HƠN)
+                const tagsHtml = ''; /* Ẩn tag ở mặt ngoài thẻ dự án */
 
                 return `
                 <div class="card">
@@ -15182,8 +15183,8 @@
                         <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; color:var(--primary); margin-bottom:3px; display:inline-flex; align-items:center; gap:4px;">
                             <i class="fa-solid fa-trophy"></i> Sự kiện
                         </span>
-                        <h4 style="margin: 0; color: #ffffff !important; font-size: 1.15rem; font-weight:900; line-height: 1.25; text-shadow:0 2px 6px rgba(0,0,0,0.45);">${escapeHtml(ev.title)}</h4>
-                        <span style="font-size: 0.8rem; color: #cbd5e1; margin-top: 3px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(ev.desc)}</span>
+                        <h4 style="margin: 0; color: #ffffff !important; font-size: 1.25rem; font-weight:900; line-height: 1.25; text-shadow:0 2px 10px rgba(0,0,0,0.85), 0 0 5px rgba(0,0,0,0.5);">${escapeHtml(ev.title)}</h4>
+                        <span style="font-size: 0.85rem; color: #f8fafc; font-weight:600; margin-top: 3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-shadow:0 1px 4px rgba(0,0,0,0.9);">${escapeHtml(ev.desc)}</span>
                     </div>
                     `;
                 }).join('');
