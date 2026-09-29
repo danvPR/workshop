@@ -10,6 +10,7 @@
     <meta property="og:image" content="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" id="ogImage" />
     <meta property="og:url" content="https://turbows.pages.dev/" id="ogUrl" />
     <link rel="canonical" href="https://turbows.pages.dev/" />
+    <base href="/">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet"/>
@@ -3109,7 +3110,7 @@
             body { padding-bottom: 70px; } /* Tránh nội dung bị thanh bar che */
 
             /* Chỉ ẩn nút Studio trên Header Mobile cho đỡ chật (vì đã đưa vào trang Hồ sơ) */
-            .nav-actions a[href="#creator"] {
+            .nav-actions a[href*="creator"] {
                 display: none !important;
             }
             .nav-actions {
@@ -6691,16 +6692,16 @@
 
     <nav class="navbar">
         <div class="nav-left">
-            <a href="#home" class="navbar-brand">
+            <a href="/#home" class="navbar-brand">
                 <img src="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" alt="StudioDANV Logo" class="nav-logo-img">
             </a>
-            <a href="#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
-            <a href="#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
+            <a href="/#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
+            <a href="/#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
             <!-- Nút Sáng tạo nâng cấp thành CTA Button bắt mắt -->
-            <a href="#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
-            <a href="#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
-            <a href="#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
-            <a href="#leaderboard" class="nav-link nav-leaderboard"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> <span data-i18n="nav_leaderboard">Xếp hạng</span></a>
+            <a href="/#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
+            <a href="/#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
+            <a href="/#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
+            <a href="/#leaderboard" class="nav-link nav-leaderboard"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> <span data-i18n="nav_leaderboard">Xếp hạng</span></a>
         </div>
         <div class="nav-actions" id="navActions"></div>
     </nav>
@@ -6737,13 +6738,13 @@
 
     <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE (RÚT XUỐNG 5 TAB + NÚT SÁNG TẠO FAB CHÍNH GIỮA) -->
     <nav class="mobile-bottom-nav">
-        <a href="#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
-        <a href="#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
+        <a href="/#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
+        <a href="/#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
         <!-- Nút tròn FAB ở giữa -->
-        <a href="#create" class="mobile-nav-create-fab nav-create" title="Sáng tạo">
+        <a href="/#create" class="mobile-nav-create-fab nav-create" title="Sáng tạo">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
         </a>
-        <a href="#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
+        <a href="/#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
         <div id="mobileUserNav" style="display:contents;"></div>
     </nav>
 
@@ -7564,10 +7565,10 @@
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <div class="proj-dropdown-menu" id="profMoreDropdown">
-                                    <a href="#creator" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
+                                    <a href="/#creator" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
                                         <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
                                     </a>
-                                    <a href="#settings" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
+                                    <a href="/#settings" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
                                         <i class="fa-solid fa-gear"></i> <span>Cài đặt tài khoản</span>
                                     </a>
                                     <button type="button" class="proj-dropdown-item" onclick="closeProfMoreMenu(); copyProfileShareLink();">
@@ -8520,7 +8521,7 @@
                 <div style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;" data-i18n="footer_copyright">&copy; 2026 DANVworkshop. All rights reserved.</div>
             </div>
             <div class="footer-links">
-                <a href="#home" data-i18n="nav_explore">Khám phá</a>
+                <a href="/#home" data-i18n="nav_explore">Khám phá</a>
                 <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" data-i18n="settings_tos">Điều khoản sử dụng</a>
                 <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-Privacy-Policy.html" target="_blank" data-i18n="settings_privacy">Chính sách bảo mật</a>
                 <a href="javascript:void(0)" onclick="openModal('contactModal')" data-i18n="settings_support">Hỗ trợ</a>
@@ -10962,14 +10963,16 @@
             if (!href || a.getAttribute('target') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
 
             // 1. Chuyển đổi các link hash dự án/user sang URL sạch
-            if (href.startsWith('#project/')) {
+            if (href.startsWith('#project/') || href.startsWith('/#project/')) {
                 e.preventDefault();
-                navigateTo(href.replace('#project/', '/projects/'));
+                const clean = href.replace(/^\/?#project\//, '');
+                navigateTo('/projects/' + clean);
                 return;
             }
-            if (href.startsWith('#profile/')) {
+            if (href.startsWith('#profile/') || href.startsWith('/#profile/')) {
                 e.preventDefault();
-                navigateTo(href.replace('#profile/', '/users/'));
+                const clean = href.replace(/^\/?#profile\//, '');
+                navigateTo('/users/' + clean);
                 return;
             }
 
@@ -10980,20 +10983,22 @@
                 return;
             }
 
-            // 3. Xử lý các menu Hash (#home, #chat, #assets,...) mượt mà không bị nhảy trang
-            if (href.startsWith('#')) {
+            // 3. Xử lý các menu Hash (#home, #chat, #assets,... hoặc /#home, /#chat...) mượt mà không bị nhảy trang
+            if (href.startsWith('#') || href.startsWith('/#') || href.startsWith('./#') || (BASE_PATH && href.startsWith(BASE_PATH + '/#'))) {
                 e.preventDefault();
+                const targetHash = href.substring(href.indexOf('#'));
                 const currentPath = window.location.pathname;
                 const targetBasePath = BASE_PATH ? BASE_PATH + '/' : '/';
                 
-                // Nếu đang ở trong dự án/hồ sơ, phải lùi ra trang gốc rồi mới gán Hash
-                if (currentPath.includes('/projects/') || currentPath.includes('/users/')) {
-                    history.pushState(null, '', targetBasePath + href);
+                // Nếu đang ở trong dự án/hồ sơ/studio, phải lùi ra trang gốc rồi mới gán Hash
+                if (currentPath.includes('/projects/') || currentPath.includes('/users/') || currentPath.includes('/studio/')) {
+                    history.pushState(null, '', targetBasePath + targetHash);
                 } else {
                     // Nếu đã ở trang gốc, chỉ thay đổi Hash trên thanh địa chỉ
-                    history.pushState(null, '', href);
+                    history.pushState(null, '', targetHash);
                 }
                 handleRouting(); // Kích hoạt chuyển trang
+                return;
             }
         });
 
@@ -11166,7 +11171,7 @@
 
             if (currentUser) {
                 const adminIcon = currentUser.role === 'admin' 
-                    ? `<a href="#admin" class="nav-icon-btn admin-badge" title="Bảng Quản trị"><i class="fa-solid fa-shield-halved"></i></a>` 
+                    ? `<a href="/#admin" class="nav-icon-btn admin-badge" title="Bảng Quản trị"><i class="fa-solid fa-shield-halved"></i></a>` 
                     : '';
                 
                 nav.innerHTML = `
@@ -11176,20 +11181,20 @@
                     
                     ${adminIcon}
 
-                    <a href="#notifications" class="nav-icon-btn" title="Tin nhắn & Thông báo">
+                    <a href="/#notifications" class="nav-icon-btn" title="Tin nhắn & Thông báo">
                         <i class="fa-solid fa-bell"></i>
                         <span class="notif-badge" id="notifBadge" style="display:none; right: -4px; top: -4px; z-index: 10; min-width: 17px; height: 17px; padding: 0 4px; font-size: 0.68rem; line-height: 17px;">0</span>
                     </a>
                     
-                    <a href="#creator" class="nav-icon-btn" title="Trung tâm Nhà sáng tạo & Doanh thu">
+                    <a href="/#creator" class="nav-icon-btn" title="Trung tâm Nhà sáng tạo & Doanh thu">
                         <i class="fa-solid fa-chart-line" style="color: #10b981;"></i>
                     </a>
 
-                    <a href="#settings" class="nav-icon-btn" title="${t('settings_options') || 'Cài đặt'}">
+                    <a href="/#settings" class="nav-icon-btn" title="${t('settings_options') || 'Cài đặt'}">
                         <i class="fa-solid fa-gear"></i>
                     </a>
                     
-                    <a href="#profile/${currentUser.username}" class="nav-user-pill" title="Hồ sơ của bạn">
+                    <a href="/users/${encodeURIComponent(currentUser.username)}" class="nav-user-pill" title="Hồ sơ của bạn">
                         <div class="avt-wrapper" style="width: 28px; height: 28px;">
                             <img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" style="width:100%; height:100%;" onerror="this.src='${DEFAULT_AVATAR}'">
                             ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
@@ -11201,7 +11206,7 @@
                 // Đồng bộ Profile Icon lên thanh Mobile Nav ở đáy màn hình
                 if (mobileUserNav) {
                     mobileUserNav.innerHTML = `
-                        <a href="#profile/${currentUser.username}" class="mobile-nav-link nav-profile">
+                        <a href="/users/${encodeURIComponent(currentUser.username)}" class="mobile-nav-link nav-profile">
                             <img src="${getAvtUrl(currentUser.avt)}" class="mobile-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
                             <span data-i18n="nav_profile">${t('nav_profile') || 'Hồ sơ'}</span>
                         </a>
@@ -11551,8 +11556,9 @@
             updateSEO(pageTitle, pageDesc, pageThumb, window.location.href);
 
             document.getElementById('projPageTitle').innerHTML = escapeHtml(proj.title) + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
+            const authorCleanUrl = `/users/${encodeURIComponent(proj.author)}`;
             document.getElementById('projPageAuthor').innerText = proj.author; 
-            document.getElementById('projPageAuthor').href = `#profile/${encodeURIComponent(proj.author)}`;
+            document.getElementById('projPageAuthor').href = authorCleanUrl;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
             const embedUrl = `https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
@@ -11636,12 +11642,12 @@
             }
 
             // Cập nhật Mini Creator Card ở cột phải
-            document.getElementById('projPageAuthorLinkAvt').href = `#profile/${encodeURIComponent(proj.author)}`;
+            document.getElementById('projPageAuthorLinkAvt').href = authorCleanUrl;
             document.getElementById('projPageAuthorAvt').src = DEFAULT_AVATAR;
             document.getElementById('projSidebarAuthorAvt').src = DEFAULT_AVATAR;
             document.getElementById('projSidebarAuthorName').innerText = proj.author;
             document.getElementById('projSidebarAuthorUser').innerText = `@${proj.author}`;
-            document.getElementById('btnVisitAuthorProf').href = `#profile/${encodeURIComponent(proj.author)}`;
+            document.getElementById('btnVisitAuthorProf').href = authorCleanUrl;
             
             fetch(`${WORKER_URL}/api/user/${encodeURIComponent(proj.author)}`)
                 .then(r => r.json())
