@@ -180,26 +180,40 @@
             border-bottom-color: rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
-        /* BỐ CỤC 3 CỘT: CÂN ĐỐI 1 - 2 - 1 ĐỂ MENU GIỮA LUÔN NẰM TRUNG TÂM */
-        .nav-left { flex: 1; display: flex; align-items: center; justify-content: flex-start; }
+        /* BỐ CỤC NAVBAR TINH GỌN: CHỐNG CO ÉP, NÚT SÁNG TẠO TỎA SÁNG Ở GIỮA */
+        .nav-left { display: flex; align-items: center; flex-shrink: 0; }
         .navbar-brand { display: flex; align-items: center; text-decoration: none; margin-right: 0; }
-        .nav-logo-img { height: 38px; width: auto; object-fit: contain; vertical-align: middle; transition: transform 0.2s; }
+        .nav-logo-img { height: 36px; width: auto; object-fit: contain; vertical-align: middle; transition: transform 0.2s; }
         .nav-logo-img:hover { transform: scale(1.04); }
 
-        .nav-center { flex: 2; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .nav-center { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 4px; 
+            padding: 0 10px;
+        }
 
-        .nav-right { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+        .nav-right { 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-end; 
+            flex-shrink: 0; 
+            gap: 8px; 
+        }
         
         .nav-link { 
             color: var(--text-muted); 
             text-decoration: none; 
             font-weight: 700; 
-            font-size: 0.95rem; 
-            padding: 8px 14px; 
-            border-radius: 12px; 
+            font-size: 0.88rem; 
+            padding: 6px 11px; 
+            border-radius: 10px; 
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap !important;
             transition: all 0.2s ease; 
         }
         .nav-link:hover { 
@@ -212,7 +226,7 @@
         }
         .nav-link.active::after { display: none; }
         
-        .nav-actions { display: flex; gap: 8px; align-items: center; position: relative; }
+        .nav-actions { display: flex; gap: 6px; align-items: center; position: relative; flex-shrink: 0; }
         
         /* Cụm Icon Thao Tác Tròn Gọn Gàng */
         .nav-icon-btn {
@@ -249,21 +263,23 @@
             display: none !important;
         }
 
-        /* NÚT SÁNG TẠO NỔI BẬT (PRIMARY CTA DÀNH CHO HỌC SINH) */
+        /* NÚT SÁNG TẠO NẰM CHÍNH GIỮA MENU (CHỐNG GÃY CHỮ TUYỆT ĐỐI) */
         .nav-btn-create {
             background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
             color: #ffffff !important;
-            padding: 8px 20px;
-            border-radius: 24px;
-            font-size: 0.94rem;
+            padding: 7px 18px;
+            border-radius: 22px;
+            font-size: 0.9rem;
             font-weight: 800;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            margin: 0 6px 0 0; /* Tạo khoảng cách vừa vặn với các icon bên phải */
+            margin: 0 6px;
+            white-space: nowrap !important;
+            flex-shrink: 0;
         }
         .nav-btn-create i {
             color: #fef08a;
@@ -3137,8 +3153,7 @@
         }
         
         @media (max-width: 768px) {
-            .navbar .nav-center, 
-            .navbar .nav-right .nav-btn-create { display: none !important; }
+            .navbar .nav-center { display: none !important; }
             .mobile-bottom-nav { display: flex; }
             body { padding-bottom: 70px; } /* Tránh nội dung bị thanh bar che */
 
@@ -6733,13 +6748,13 @@
         <div class="nav-center">
             <a href="/#home" class="nav-link nav-home"><i class="fa-solid fa-compass"></i> <span data-i18n="nav_explore">Khám phá</span></a>
             <a href="/#chat" class="nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_chat">Giao lưu</span></a>
+            <!-- Nút Sáng tạo nằm ngay trung tâm của Menu điều hướng -->
+            <a href="/#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="/#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
             <a href="/#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
             <a href="/#leaderboard" class="nav-link nav-leaderboard"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> <span data-i18n="nav_leaderboard">Xếp hạng</span></a>
         </div>
         <div class="nav-right">
-            <!-- Chuyển nút Sáng tạo sang bên phải cạnh cụm User -->
-            <a href="/#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <div class="nav-actions" id="navActions"></div>
         </div>
     </nav>
