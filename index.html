@@ -1965,126 +1965,90 @@
             color: var(--text-main) !important;
         }
 
-        /* ================= GIAO DIỆN TRANG THÔNG BÁO AI-NEURAL INTERFACE ================= */
+        /* ================= GIAO DIỆN TRANG THÔNG BÁO HIỆN ĐẠI (CLEAN INBOX REDESIGN) ================= */
         .notif-hub-wrapper {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 26px;
+            border-radius: 22px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(99, 102, 241, 0.08);
-            backdrop-filter: blur(16px);
-            position: relative;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s ease;
         }
         [data-theme="dark"] .notif-hub-wrapper {
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 0 30px rgba(99, 102, 241, 0.12);
-            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
+        /* 1. Header Banner Thanh Thoát, Gọn Gàng */
         .notif-hero-banner {
-            background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, #0f172a 60%, #064e3b 100%);
-            padding: 30px 34px;
-            color: #ffffff;
+            background: linear-gradient(135deg, rgba(13, 165, 122, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+            padding: 24px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
+            border-bottom: 1px solid var(--border-color);
             position: relative;
-            overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .notif-hero-banner::before {
-            content: '';
-            position: absolute;
-            top: -50%; right: -20%;
-            width: 340px; height: 340px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, rgba(13, 165, 122, 0.2) 50%, transparent 75%);
-            filter: blur(30px);
-            pointer-events: none;
-            animation: pulseAura 4s infinite ease-in-out;
+        [data-theme="dark"] .notif-hero-banner {
+            background: linear-gradient(135deg, rgba(13, 165, 122, 0.18) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border-bottom-color: rgba(255, 255, 255, 0.08);
         }
         .notif-hero-left {
-            position: relative;
-            z-index: 2;
-        }
-        .notif-ai-badge-row {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .notif-ai-pill {
-            font-size: 0.68rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            background: rgba(99, 102, 241, 0.22);
-            color: #a5b4fc;
-            border: 1px solid rgba(129, 140, 248, 0.4);
-            padding: 3px 10px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .notif-ai-pulse {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 10px #10b981;
-            animation: pulseActiveSlot 1.5s infinite;
+            flex-direction: column;
+            gap: 4px;
         }
         .notif-hero-title {
-            font-size: 2rem;
+            font-size: 1.55rem;
             font-weight: 900;
             margin: 0;
-            color: #ffffff !important;
+            color: var(--text-title) !important;
             display: flex;
             align-items: center;
-            gap: 12px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+            gap: 10px;
+            letter-spacing: -0.4px;
         }
         .notif-hero-sub {
-            font-size: 0.88rem;
-            color: #cbd5e1;
-            margin-top: 6px;
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            margin: 0;
             font-weight: 500;
         }
         .btn-notif-mark-read {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.12) !important;
-            color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.28) !important;
-            backdrop-filter: blur(10px);
-            padding: 10px 22px;
-            border-radius: 24px;
-            font-weight: 800;
-            font-size: 0.88rem;
+            background: var(--bg-panel) !important;
+            color: var(--text-title) !important;
+            border: 1.5px solid var(--border-color) !important;
+            padding: 8px 18px;
+            border-radius: 18px;
+            font-weight: 700;
+            font-size: 0.84rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            gap: 7px;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            white-space: nowrap;
         }
         .btn-notif-mark-read:hover {
-            background: #ffffff !important;
-            color: #0f172a !important;
+            border-color: var(--primary) !important;
+            color: var(--primary) !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
+            box-shadow: 0 6px 16px rgba(13, 165, 122, 0.18);
         }
 
-        /* Thanh Phân Loại Thông Báo Cyber-Pills */
+        /* 2. Dải Phân Loại Thông Báo Dạng Viên Thuốc (Filter Ribbon) */
         .notif-filter-bar {
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
-            padding: 12px 24px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -2093,72 +2057,97 @@
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 7px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.82rem;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             white-space: nowrap;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.18s ease;
         }
         .notif-tab-pill:hover {
             color: var(--text-title);
             border-color: var(--primary);
-            transform: translateY(-1px);
+            background: var(--bg-panel);
         }
         .notif-tab-pill.active {
-            background: linear-gradient(135deg, #4f46e5 0%, #0da57a 100%) !important;
+            background: var(--primary) !important;
             color: #ffffff !important;
-            border-color: transparent !important;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            border-color: var(--primary) !important;
+            box-shadow: 0 3px 12px rgba(13, 165, 122, 0.35);
         }
         .notif-tab-counter {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 900;
-            padding: 2px 7px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.08);
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
         }
         .notif-tab-pill.active .notif-tab-counter {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.28);
             color: #ffffff;
         }
 
-        /* GIAO DIỆN THÔNG BÁO TINH GIẢN MÀ VẪN GIỮ BUBBLE CHAT CHỨC NĂNG */
+        /* 3. Thẻ Thông Báo (Card Rows & Unread Contrast Styling) */
         .notif-card-row {
-            padding: 16px 22px;
+            padding: 16px 24px;
             border-bottom: 1px solid var(--border-color);
             background: var(--bg-panel);
             display: flex;
             align-items: flex-start;
             gap: 14px;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
             cursor: pointer;
             text-decoration: none;
             position: relative;
+            border-left: 4px solid transparent;
         }
-        .notif-card-row:hover { background: var(--bg-secondary); }
-        .notif-card-row:last-child { border-bottom: none; }
-        .notif-card-row.unread { background: rgba(13, 165, 122, 0.04); }
+        .notif-card-row:hover {
+            background: var(--bg-secondary);
+        }
+        .notif-card-row:last-child {
+            border-bottom: none;
+        }
 
+        /* 🌟 NỔI BẬT THÔNG BÁO CHƯA ĐỌC (LIGHT MODE) */
+        .notif-card-row.unread {
+            background: #f0fdf9;
+            border-left: 4px solid var(--primary);
+        }
+        .notif-card-row.unread:hover {
+            background: #e6f9f3;
+        }
+
+        /* 🌙 NỔI BẬT THÔNG BÁO CHƯA ĐỌC (DARK MODE) */
+        [data-theme="dark"] .notif-card-row.unread {
+            background: rgba(13, 165, 122, 0.12) !important;
+            border-left: 4px solid #10b981 !important;
+        }
+        [data-theme="dark"] .notif-card-row.unread:hover {
+            background: rgba(13, 165, 122, 0.18) !important;
+        }
+
+        /* Avatar & Action Icon góc nhỏ */
         .notif-clean-avt-wrap {
             position: relative;
             flex-shrink: 0;
+            margin-top: 2px;
         }
         .notif-clean-avt {
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             background: var(--bg-secondary);
         }
         .notif-clean-icon {
             position: absolute;
-            bottom: -2px;
+            bottom: -3px;
             right: -4px;
             width: 22px;
             height: 22px;
@@ -2166,121 +2155,217 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.65rem;
-            color: white;
+            font-size: 0.68rem;
+            color: #ffffff;
             border: 2px solid var(--bg-panel);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
-        .notif-clean-icon.icon-like { background: #ef4444; }
+        .notif-clean-icon.icon-like { background: #ff4757; }
         .notif-clean-icon.icon-star { background: #f59e0b; }
         .notif-clean-icon.icon-comment { background: #0284c7; }
         .notif-clean-icon.icon-follow { background: #10b981; }
-        .notif-clean-icon.icon-system { background: #dc2626; }
+        .notif-clean-icon.icon-system { background: #ef4444; }
         .notif-clean-icon.icon-gift { background: #ea580c; }
 
+        /* Nội dung thông báo */
         .notif-clean-body {
             flex: 1;
             min-width: 0;
             display: flex;
             flex-direction: column;
             gap: 4px;
-            padding-top: 2px;
+        }
+        .notif-row-meta-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 2px;
+            flex-wrap: wrap;
         }
         .notif-clean-title {
-            font-size: 0.95rem;
+            font-size: 0.94rem;
             color: var(--text-main);
-            line-height: 1.45;
+            line-height: 1.5;
+            word-break: break-word;
         }
         .notif-clean-title b, .notif-clean-title a {
             color: var(--text-title);
             font-weight: 800;
             text-decoration: none;
         }
-        .notif-clean-title a:hover { text-decoration: underline; color: var(--primary); }
+        .notif-clean-title a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
         
         .notif-clean-time {
-            font-size: 0.8rem;
+            font-size: 0.76rem;
             color: var(--text-muted);
-            margin-top: 2px;
-            font-weight: 500;
-        }
-        .notif-clean-unread-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--primary);
-            flex-shrink: 0;
-            margin-top: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* KHÔI PHỤC PHẦN BUBBLE CHAT VÀ NÚT TRẢ LỜI */
+        /* Huy hiệu Chưa đọc (Pill & Pulse Dot) */
+        .notif-unread-tag-pill {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(13, 165, 122, 0.16);
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid rgba(13, 165, 122, 0.35);
+        }
+        [data-theme="dark"] .notif-unread-tag-pill {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6ee7b7;
+            border-color: rgba(16, 185, 129, 0.45);
+        }
+        .notif-unread-pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* 4. Bong bóng Chat Trích Dẫn & Phản Hồi */
         .notif-comment-bubble-box {
             display: flex;
             align-items: flex-start;
             margin-top: 6px;
+            width: 100%;
         }
         .notif-comment-speech {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 0 16px 16px 16px;
-            padding: 10px 16px;
-            font-size: 0.92rem;
+            border-radius: 0 14px 14px 14px;
+            padding: 9px 15px;
+            font-size: 0.9rem;
             color: var(--text-main);
-            line-height: 1.5;
+            line-height: 1.48;
             word-break: break-word;
             display: inline-block;
+            max-width: 100%;
         }
+        .notif-card-row.unread .notif-comment-speech {
+            background: var(--bg-panel);
+            border-color: rgba(13, 165, 122, 0.28);
+        }
+
         .notif-quick-reply-row {
             margin-top: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
-            max-width: 680px;
+            max-width: 580px;
         }
         .notif-quick-reply-input {
             flex: 1;
-            padding: 8px 14px;
-            border-radius: 20px;
+            padding: 7px 14px;
+            border-radius: 18px;
             border: 1.5px solid var(--border-color);
             background: var(--bg-input);
             color: var(--text-main);
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             outline: none;
             cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .notif-quick-reply-input:hover {
+            border-color: var(--primary);
         }
         .notif-quick-reply-btn {
             background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
             color: #ffffff;
             border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
+            padding: 7px 16px;
+            border-radius: 18px;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(13, 165, 122, 0.25);
+            transition: all 0.2s ease;
+        }
+        .notif-quick-reply-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.4);
         }
         
         .notif-tip-gift-box {
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.06) 100%) !important;
-            border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
-            border-radius: 18px !important;
-            padding: 14px 18px !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+            border-radius: 16px !important;
+            padding: 12px 16px !important;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
             margin-top: 6px;
         }
-        [data-theme="dark"] .notif-tip-gift-box {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(234, 88, 12, 0.1) 100%) !important;
-            border-color: rgba(245, 158, 11, 0.5) !important;
-        }
 
+        /* 5. Tối Ưu Triệt Để Cho Điện Thoại (Mobile Responsive) */
         @media (max-width: 768px) {
-            .notif-hero-banner { padding: 22px 18px; }
-            .notif-hero-title { font-size: 1.5rem; }
-            .notif-card-row { padding: 14px 16px; }
-            .notif-comment-bubble-box { padding-left: 0; }
+            .notif-hero-banner {
+                padding: 16px 18px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .notif-hero-title {
+                font-size: 1.3rem;
+            }
+            .btn-notif-mark-read {
+                width: 100%;
+                justify-content: center;
+                padding: 8px 14px;
+            }
+            .notif-filter-bar {
+                padding: 8px 14px;
+                gap: 5px;
+            }
+            .notif-tab-pill {
+                padding: 5px 12px;
+                font-size: 0.78rem;
+            }
+            .notif-card-row {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            .notif-clean-avt {
+                width: 38px;
+                height: 38px;
+            }
+            .notif-clean-icon {
+                width: 18px;
+                height: 18px;
+                font-size: 0.58rem;
+                bottom: -2px;
+                right: -2px;
+            }
+            .notif-clean-title {
+                font-size: 0.88rem;
+            }
+            .notif-comment-speech {
+                font-size: 0.84rem;
+                padding: 8px 12px;
+            }
+            .notif-quick-reply-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .notif-quick-reply-btn {
+                justify-content: center;
+            }
         }
 
         /* ================= CYBER VOICECHAT & SPEECH RECOGNITION STYLES ================= */
@@ -8076,38 +8161,34 @@
         </div>
     </div>
 
-    <!-- TRANG 6: TRUNG TÂM THÔNG BÁO CỘNG ĐỒNG PRO (AI-NEURAL MATRIX) -->
-    <div id="notificationsView" class="page-view" style="max-width: 1000px; padding: 10px 20px 50px 20px;">
+    <!-- TRANG 6: TRUNG TÂM THÔNG BÁO CỘNG ĐỒNG (CLEAN INBOX REDESIGN) -->
+    <div id="notificationsView" class="page-view" style="max-width: 980px; padding: 10px 18px 50px 18px;">
         <div class="notif-hub-wrapper">
-            <!-- Header Banner Nổi Bật Chuẩn AI -->
+            <!-- Header Banner Tinh Gọn -->
             <div class="notif-hero-banner">
                 <div class="notif-hero-left">
-                    <div class="notif-ai-badge-row">
-                        <span class="notif-ai-pill"><span class="notif-ai-pulse"></span> AI NEURAL HUB v2.6</span>
-                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Realtime Stream</span>
-                    </div>
                     <h1 class="notif-hero-title">
-                        <i class="fa-solid fa-satellite-dish" style="color:#38bdf8;"></i> <span data-i18n="notif_title">Hộp Thư Thông Báo</span>
+                        <i class="fa-solid fa-bell" style="color:var(--primary);"></i> <span data-i18n="notif_title">Hộp Thư Thông Báo</span>
                     </h1>
-                    <div class="notif-hero-sub">Trợ lý AI tổng hợp tương tác, bình luận và năng lượng WOW từ bạn bè</div>
+                    <p class="notif-hero-sub">Theo dõi tương tác, bình luận, quà tặng và cập nhật từ cộng đồng</p>
                 </div>
                 <button type="button" class="btn-notif-mark-read" onclick="markAllNotifsRead(event)">
-                    <i class="fa-solid fa-check-double"></i> <span data-i18n="notif_mark_read">Đánh dấu đã đọc tất cả</span>
+                    <i class="fa-solid fa-check-double" style="color:var(--primary);"></i> <span data-i18n="notif_mark_read">Đánh dấu đã đọc tất cả</span>
                 </button>
             </div>
 
-            <!-- Thanh Phân Loại Thông Báo Thông Minh (Filter Bar) -->
+            <!-- Thanh Phân Loại Thông Báo Dạng Viên Thuốc -->
             <div class="notif-filter-bar">
                 <button type="button" class="notif-tab-pill active" onclick="setNotifFilter('all', this)">
                     <i class="fa-solid fa-layer-group"></i> <span>Tất cả</span>
                     <span class="notif-tab-counter" id="cntNotifAll">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('unread', this)">
-                    <i class="fa-solid fa-envelope-open-text" style="color:#6366f1;"></i> <span>Chưa đọc</span>
+                    <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i> <span>Chưa đọc</span>
                     <span class="notif-tab-counter" id="cntNotifUnread">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('comment', this)">
-                    <i class="fa-solid fa-comments" style="color:#0284c7;"></i> <span>Bình luận</span>
+                    <i class="fa-solid fa-comment-dots" style="color:#0284c7;"></i> <span>Bình luận</span>
                     <span class="notif-tab-counter" id="cntNotifComment">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('tip', this)">
@@ -8125,7 +8206,7 @@
             </div>
 
             <!-- Danh sách hiển thị các thẻ thông báo -->
-            <div id="notifPageList" style="min-height: 420px;">
+            <div id="notifPageList" style="min-height: 400px;">
                 <!-- Dữ liệu render từ JS -->
             </div>
         </div>
@@ -15787,10 +15868,10 @@
 
             if (filteredNotifs.length === 0) {
                 container.innerHTML = `
-                    <div style="padding:60px 20px; text-align:center; color:var(--text-muted);">
-                        <i class="fa-solid fa-box-open" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>
-                        <b style="font-size:1.05rem; color:var(--text-title); display:block; margin-bottom:4px;">Không có thông báo trong mục này</b>
-                        <span style="font-size:0.88rem;">Hộp thư của bạn luôn được đồng bộ và cập nhật tự động.</span>
+                    <div style="padding:65px 20px; text-align:center; color:var(--text-muted);">
+                        <i class="fa-solid fa-inbox" style="font-size:3.2rem; margin-bottom:12px; opacity:0.3; display:block;"></i>
+                        <b style="font-size:1.05rem; color:var(--text-title); display:block; margin-bottom:4px;">Không có thông báo nào trong mục này</b>
+                        <span style="font-size:0.86rem;">Hộp thư sẽ tự động cập nhật khi có hoạt động mới từ bạn bè!</span>
                     </div>
                 `;
                 return;
@@ -15820,11 +15901,17 @@
                                 <div class="notif-clean-icon ${iconBgClass}"><i class="${visual.iconClass}"></i></div>
                             </div>
                             <div class="notif-clean-body">
+                                <div class="notif-row-meta-top">
+                                    <span class="notif-clean-time"><i class="fa-regular fa-clock"></i> ${timeAgo(n.time || '')}</span>
+                                    ${!isRead ? `
+                                        <span class="notif-unread-tag-pill">
+                                            <span class="notif-unread-pulse-dot"></span> Mới
+                                        </span>
+                                    ` : ''}
+                                </div>
                                 <div class="notif-clean-title">${actionHtml}</div>
-                                <div class="notif-clean-time">${timeAgo(n.time || '')}</div>
                                 ${bubbleHtml}
                             </div>
-                            ${!isRead ? '<div class="notif-clean-unread-dot"></div>' : ''}
                         </div>
                     `;
                 } catch(e) { return ""; }
@@ -15832,8 +15919,8 @@
 
             if (filteredNotifs.length > notifDisplayLimit) {
                 html += `
-                <div style="padding: 25px; text-align: center; border-top: 1px solid var(--border-color);">
-                    <button class="btn btn-primary" style="padding: 10px 30px; border-radius: 20px; font-weight: 800;" onclick="loadMoreNotifs()">
+                <div style="padding: 22px; text-align: center; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-primary" style="padding: 9px 28px; border-radius: 20px; font-weight: 800; font-size:0.86rem;" onclick="loadMoreNotifs()">
                         <i class="fa-solid fa-angle-down"></i> ${t('notif_load_more') || 'Xem thêm thông báo'}
                     </button>
                 </div>`;
