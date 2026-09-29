@@ -1113,21 +1113,132 @@
         .action-icon-btn:hover { opacity: 1; }
         [data-theme="dark"] .action-icon-btn { filter: invert(0.85); }
 
-        /* PROFILE */
-        /* PROFILE (ĐÃ THIẾT KẾ LẠI BỐ CỤC) */
+        /* ================= GIAO DIỆN PROFILE & BENTO GRID ENGINE PRO ================= */
+        .profile-hero { 
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color); 
+            border-radius: 24px; 
+            overflow: hidden; 
+            margin-bottom: 25px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.03); 
+            position: relative;
+        }
+        [data-theme="dark"] .profile-hero {
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .profile-cover-bg { 
+            height: 200px; 
+            background: linear-gradient(135deg, #064e3b 0%, #0d1e2b 50%, #0f172a 100%); 
+            position: relative; 
+            overflow: hidden;
+        }
+        .profile-cover-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
+            pointer-events: none;
+        }
         
+        .profile-main-content { padding: 0 32px 28px; position: relative; }
+        .profile-top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: -65px; margin-bottom: 18px; flex-wrap: wrap; gap: 16px; }
+        .profile-avt-wrapper { 
+            position: relative; 
+            width: 130px; 
+            height: 130px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-shrink: 0; 
+        }
+        .profile-avt-lg { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 4px solid var(--bg-panel); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+            background: var(--bg-panel); 
+            box-sizing: border-box; 
+        }
+        .profile-actions { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
+
+        .profile-info-body { margin-top: 4px; }
+        .profile-username-title { 
+            font-size: 1.75rem; 
+            font-weight: 900; 
+            color: var(--text-title); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 2px; 
+            letter-spacing: -0.4px;
+        }
+        .profile-handle-sub {
+            color: var(--text-muted); 
+            font-size: 0.95rem; 
+            margin-bottom: 14px; 
+            font-weight: 600;
+        }
+
+        .profile-meta-pills {
+            display: flex; 
+            gap: 8px; 
+            flex-wrap: wrap; 
+            align-items: center;
+        }
+        .profile-location, .profile-status-badge { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            font-size: 0.85rem; 
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-main);
+        }
+        .profile-status-badge { 
+            background: rgba(13, 165, 122, 0.1); 
+            color: var(--primary); 
+            border-color: rgba(13, 165, 122, 0.25);
+        }
+
+        /* TOOLTIP XÁC THỰC */
+        .verified-badge-wrap { position: relative; display: inline-flex; align-items: center; cursor: pointer; user-select: none; }
+        .custom-badge-tooltip {
+            position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(4px);
+            background: #0f172a; color: #ffffff !important; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+            white-space: nowrap; box-shadow: 0 8px 20px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; gap: 6px; opacity: 0; visibility: hidden;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none; z-index: 1000;
+        }
+        .custom-badge-tooltip b { color: #38bdf8 !important; font-weight: 700; }
+        .custom-badge-tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            border-width: 5px; border-style: solid; border-color: #0f172a transparent transparent transparent;
+        }
+        .verified-badge-wrap:hover .custom-badge-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
         /* BENTO GRID STYLES */
         .grid-stack-item-content {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .grid-stack-item-content:hover { border-color: var(--primary); }
+        .grid-stack-item-content:hover { 
+            border-color: var(--primary); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
         .bento-widget-inner { padding: 22px; width: 100%; height: 100%; overflow-y: auto; scrollbar-width: none; }
         .bento-widget-inner::-webkit-scrollbar { display: none; }
         
@@ -1136,7 +1247,7 @@
         .bento-stat-item { flex: 1; text-align: center; background: var(--bg-secondary); padding: 18px 5px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-color); transition: 0.2s; }
         .bento-stat-item:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.04); }
         .bento-stat-item b { display: block; font-size: 1.6rem; font-weight: 900; color: var(--text-title); margin-bottom: 6px; }
-        .bento-stat-item span { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .bento-stat-item span { font-size: 0.76rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         
         /* Featured Widget */
         .widget-featured-container { padding: 0 !important; position: relative; }
@@ -1145,23 +1256,14 @@
         .bento-featured-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.4s ease; }
         .grid-stack-item-content:hover .bento-featured-thumb img { transform: scale(1.05); opacity: 1; }
         .bento-featured-info { padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; color: #ffffff !important; }
-        /* 🛡️ ÉP CHỮ TIÊU ĐỀ & MÔ TẢ LUÔN MÀU TRẮNG KỂ CẢ KHI BỊ CSS KHÁC GHI ĐÈ BỞI !IMPORTANT */
         .bento-featured-banner h2, .bento-featured-info h2 { color: #ffffff !important; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
         .bento-featured-banner p, .bento-featured-info p { color: #cbd5e1 !important; }
-        
-        @media (max-width: 768px) {
-            .bento-featured-banner { flex-direction: column; }
-            .bento-featured-thumb { width: 100%; height: 180px; flex-shrink: 0; }
-            .bento-featured-info { padding: 20px; }
-            .widget-stats-container { flex-wrap: wrap; gap: 10px; }
-            .bento-stat-item { min-width: 45%; padding: 12px 5px; }
-            .bento-stat-item b { font-size: 1.3rem; }
-        }
-        /* BENTO GRID EDIT MODE & UI */
+
+        /* BENTO EDIT MODE */
         .bento-edit-mode {
             background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
             background-size: 30px 30px;
-            border-radius: 16px;
+            border-radius: 20px;
             min-height: 300px;
             padding-bottom: 60px;
         }
@@ -1178,25 +1280,26 @@
         }
         .bento-edit-mode .bento-btn-remove { display: flex; }
         
-        /* BENTO TOOLBAR ĐÁY MÀN HÌNH (TỐI ƯU CẢ DESKTOP & MOBILE) */
+        /* BENTO TOOLBAR DYNAMIC ISLAND */
         .bento-toolbar {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px);
-            background: var(--bg-panel); border: 1px solid var(--primary);
-            padding: 10px 20px; border-radius: 35px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
-            display: flex; gap: 10px; align-items: center; z-index: 9999;
+            background: var(--bg-panel); border: 1.5px solid var(--primary);
+            padding: 8px 18px; border-radius: 35px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+            display: flex; gap: 8px; align-items: center; z-index: 9999;
             opacity: 0; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(14px);
             max-width: 95vw;
         }
+        .bento-toolbar.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         .bento-count-pill {
-            font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 800; padding: 5px 12px; border-radius: 20px;
             background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-title);
         }
         .bento-count-pill.full {
             border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1);
         }
 
-        /* STYLES CÁC WIDGET MỚI */
+        /* CÁC WIDGET CON */
         .widget-user-box { display: flex; align-items: center; gap: 12px; height: 100%; padding: 14px; }
         .widget-user-box img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); flex-shrink: 0; }
         .widget-user-rel-tag { font-size: 0.72rem; font-weight: 800; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 6px; width: max-content; }
@@ -1205,14 +1308,11 @@
         .widget-mini-card-thumb { width: 100%; height: 55%; background: #000; position: relative; overflow: hidden; }
         .widget-mini-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .widget-mini-card-body { padding: 10px 14px; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
-        .bento-toolbar.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* WIDGET TRẠM (STATION BOX) */
         .widget-station-box { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
         .widget-station-thumb { width: 100%; height: 55%; background: #0f172a; position: relative; overflow: hidden; }
         .widget-station-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* WIDGET BGM ÂM THANH PROFILE */
         .widget-bgm-box {
             display: flex; align-items: center; justify-content: space-between;
             padding: 16px 20px; height: 100%; width: 100%;
@@ -1237,7 +1337,6 @@
         .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(4) { animation-delay: 0.2s; }
         .widget-bgm-box.is-playing .widget-bgm-bar:nth-child(5) { animation-delay: 0.4s; }
 
-        /* WIDGET LIÊN KẾT MẠNG XÃ HỘI */
         .widget-social-box {
             display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center;
             padding: 16px; height: 100%; width: 100%;
@@ -1255,9 +1354,7 @@
         .social-chip-facebook { background: #1877f2; }
         .social-chip-web { background: #0da57a; }
 
-        .bento-toolbar.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        
-        /* NGĂN KÉO CHỌN WIDGET */
+        /* BENTO DRAWER MODAL */
         .bento-drawer {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;
             max-height: 400px; overflow-y: auto; padding: 10px 5px;
@@ -1271,141 +1368,65 @@
         .bento-drawer-item b { display: block; font-size: 0.9rem; color: var(--text-title); margin-bottom: 4px; }
         .bento-drawer-item span { font-size: 0.72rem; color: var(--text-muted); }
 
-        /* TỐI ƯU ĐIỆN THOẠI: NÂNG TOOLBAR LÊN TRÊN THANH MOBILE NAV VÀ THU NHỎ NÚT */
-        @media (max-width: 768px) {
-            .bento-toolbar {
-                bottom: 72px !important; /* Đẩy lên trên thanh Mobile Bottom Nav */
-                padding: 8px 12px;
-                gap: 6px;
-                width: 94%;
-                justify-content: space-between;
-            }
-            .bento-toolbar .btn {
-                padding: 7px 11px !important;
-                font-size: 0.78rem !important;
-                border-radius: 14px !important;
-            }
-            .bento-toolbar div[style*="width:1px"] {
-                display: none; /* Ẩn vạch kẻ cho đỡ chật */
-            }
+        /* THANH TABS PROFILE MỚI DẠNG FLOATING SEGMENTED CAPSULE */
+        .profile-nav-tabs { 
+            display: inline-flex; 
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color); 
+            border-radius: 18px; 
+            padding: 4px; 
+            gap: 4px; 
+            margin-bottom: 24px; 
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
-
-
-        .profile-hero { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        .profile-cover-bg { height: 180px; background: linear-gradient(135deg, #0da57a 0%, #0f172a 100%); position: relative; }
-        
-        .profile-main-content { padding: 0 30px 25px; position: relative; }
-        .profile-top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: -60px; margin-bottom: 15px; }
-        .profile-avt-wrapper { position: relative; width: 130px; height: 130px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .profile-avt-lg { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #fff; box-sizing: border-box; }
-        .profile-actions { display: flex; gap: 10px; margin-bottom: 15px; }
-
-        .profile-info-body { margin-top: 10px; }
-        .profile-username-title { font-size: 1.8rem; font-weight: 800; color: #111; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-        .profile-location, .profile-status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; margin-top: 8px;}
-
-        /* TOOLTIP TÙY CHỈNH CHO HUY HIỆU XÁC THỰC */
-        .verified-badge-wrap {
-            position: relative;
+        .profile-nav-tabs::-webkit-scrollbar { display: none; }
+        .prof-tab-btn { 
+            background: none; 
+            border: none; 
+            padding: 8px 18px; 
+            font-weight: 700; 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            border-radius: 14px; 
+            font-size: 0.88rem; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
             display: inline-flex;
             align-items: center;
-            cursor: pointer;
-            user-select: none;
+            gap: 7px;
         }
-        .custom-badge-tooltip {
-            position: absolute;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%) translateY(4px);
-            background: #0f172a;
-            color: #ffffff !important;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            white-space: nowrap;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            border: 1px solid rgba(255,255,255,0.12);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            z-index: 1000;
+        .prof-tab-btn:hover { 
+            color: var(--text-title); 
         }
-        .custom-badge-tooltip b {
-            color: #38bdf8 !important;
-            font-weight: 700;
+        .prof-tab-btn.active { 
+            background: var(--bg-secondary); 
+            color: var(--primary) !important; 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
-        .custom-badge-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 5px;
-            border-style: solid;
-            border-color: #0f172a transparent transparent transparent;
-        }
-        .verified-badge-wrap:hover .custom-badge-tooltip {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .profile-location { color: #64748b; margin-right: 15px; }
-        .profile-status-badge { background: #e6f4ea; color: #0a8260; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
-        
-        .profile-bio-box { margin-top: 15px; margin-bottom: 20px; max-width: 800px;}
-        .profile-bio-box p { font-size: 1.05rem; color: #334155; line-height: 1.6; white-space: pre-line; }
-
-        /* GIAO DIỆN THỐNG KÊ CHIỀU NGANG */
-        .profile-stats-bar { display: flex; gap: 15px; margin-top: 10px; padding-top: 20px; border-top: 1px solid #f1f5f9; flex-wrap: wrap; justify-content: flex-start; }
-        .stat-badge { min-width: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 12px 20px; border-radius: 12px; border: 1px solid #e2e8f0; transition: 0.2s; cursor: pointer; }
-        .stat-badge:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .stat-badge b { color: #0f172a; font-weight: 800; font-size: 1.4rem; margin-bottom: 4px; line-height: 1;}
-        .stat-badge span { font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; text-align: center;}
-
-        /* UI Danh sách Follow */
-        .follow-user-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #333; transition: 0.2s; }
-        .follow-user-item:hover { background: #f8fafc; border-radius: 8px; border-bottom-color: transparent; }
-        .follow-user-avt-img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; background: #fff;}
-        .follow-user-name { font-weight: bold; font-size: 0.95rem; color: #0f172a; }
-        
-        /* GIAO DIỆN THỐNG KÊ MỚI (KIỂU TIKTOK/INSTA) */
-        .profile-stats-bar { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9; flex-wrap: wrap; }
-        .stat-badge { flex: 1; min-width: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 12px 10px; border-radius: 12px; border: 1px solid #e2e8f0; transition: 0.2s; cursor: pointer; }
-        .stat-badge:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .stat-badge b { color: #0f172a; font-weight: 800; font-size: 1.3rem; margin-bottom: 4px; line-height: 1;}
-        .stat-badge span { font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; text-align: center;}
-
-        .profile-bio-box { background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #eef2f6; margin-top: 15px; }
-        .profile-bio-box h4 { font-size: 0.8rem; text-transform: uppercase; color: #888; margin-bottom: 4px; letter-spacing: 0.5px; }
-        .profile-bio-box p { font-size: 0.95rem; color: #333; line-height: 1.5; white-space: pre-line; }
-
-        .profile-featured-banner { display: flex; background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--primary);}
-        .profile-bio-box p { font-size: 0.95rem; color: #333; line-height: 1.5; white-space: pre-line; }
-
-        /* UI Danh sách Follow */
-        .follow-user-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #333; transition: 0.2s; }
-        .follow-user-item:hover { background: #f8fafc; border-radius: 8px; border-bottom-color: transparent; }
-        .follow-user-avt-placeholder { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 1.2rem; }
-        .follow-user-name { font-weight: bold; font-size: 0.95rem; color: #0f172a; }
-
-        .profile-featured-banner { display: flex; background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--primary);}
-        .banner-thumb-area { width: 350px; background: #111; flex-shrink: 0; }
-        .banner-thumb-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s;}
-        .profile-featured-banner:hover .banner-thumb-area img { opacity: 1; transform: scale(1.02);}
-        .banner-info-area { padding: 30px; display: flex; flex-direction: column; justify-content: center; flex: 1;}
-        #profBannerTitle, .profile-featured-banner h2 { color: #ffffff !important; }
-
-        .profile-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
-        .prof-tab-btn { background: none; border: none; padding: 12px 20px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.95rem; transition: 0.2s;}
-        .prof-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
         .prof-tab-content { display: none; }
-        .prof-tab-content.active { display: block; }
+        .prof-tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+
+        @media (max-width: 768px) {
+            .profile-hero { border-radius: 18px; }
+            .profile-cover-bg { height: 160px; }
+            .profile-main-content { padding: 0 18px 20px; }
+            .profile-top-row { flex-direction: column; align-items: center; text-align: center; margin-top: -55px; }
+            .profile-actions { justify-content: center; }
+            .profile-username-title { justify-content: center; font-size: 1.45rem; }
+            .profile-meta-pills { justify-content: center; }
+            .bento-featured-banner { flex-direction: column; }
+            .bento-featured-thumb { width: 100%; height: 180px; flex-shrink: 0; }
+            .bento-featured-info { padding: 20px; }
+            .widget-stats-container { flex-wrap: wrap; gap: 10px; }
+            .bento-stat-item { min-width: 45%; padding: 12px 5px; }
+            .bento-stat-item b { font-size: 1.3rem; }
+            .profile-nav-tabs { width: 100%; border-radius: 14px; }
+            .prof-tab-btn { flex: 1; justify-content: center; padding: 8px 12px; font-size: 0.82rem; }
+        }
 
         /* UPLOAD & SETTINGS */
         .upload-card-wrapper { background: var(--bg-panel); border-radius: 16px; border: 1px solid var(--border-color); padding: 35px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); }
@@ -7731,16 +7752,16 @@
     </div>
 
     <!-- TRANG 3: PROFILE -->
-    <div id="profileView" class="page-view">
+    <div id="profileView" class="page-view" style="max-width: 1180px; width: 100%; margin: 0 auto; padding: 10px 20px 50px 20px;">
         <div id="profile404" style="display:none; text-align:center; padding:100px 20px;">
-            <i class="fa-solid fa-user-slash" style="font-size:5rem; color:#ccc; margin-bottom:20px;"></i>
-            <h2 style="color:#555; margin-bottom:10px;" data-i18n="prof_404_title">404 - Không tìm thấy người dùng</h2>
-            <button class="btn btn-primary" onclick="location.hash='#home'"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
+            <i class="fa-solid fa-user-slash" style="font-size:4.5rem; color:var(--text-muted); opacity:0.4; margin-bottom:16px;"></i>
+            <h2 style="color:var(--text-title); margin-bottom:10px; font-weight:800;" data-i18n="prof_404_title">404 - Không tìm thấy người dùng</h2>
+            <button class="btn btn-primary" style="border-radius:20px; padding:10px 24px; font-weight:700;" onclick="location.hash='#home'"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
         </div>
 
         <div id="profileContent">
 
-            <!-- CỐ ĐỊNH: BẢNG IDENTITY BOX (Hình nền, Avatar, Tên, Nút hành động) -->
+            <!-- CỐ ĐỊNH: BẢNG IDENTITY BOX HIỆN ĐẠI -->
             <div class="profile-hero">
                 <div class="profile-cover-bg"></div>
                 
@@ -7750,21 +7771,21 @@
                             <img id="profAvt" src="https://i.ibb.co/QFg1cVVD/image.png" class="profile-avt-lg" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                         </div>
                         <div class="profile-actions">
-                            <button id="btnFollowProf" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 20px; font-weight: 700;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
+                            <button id="btnFollowProf" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 22px; font-weight: 800;" onclick="toggleFollow()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="prof_btn_follow">Theo dõi</span></button>
                             <button id="btnReportProf" class="btn btn-danger" style="display:none; border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="openReportModal('user', viewingProfileUser)" data-i18n-title="prof_report_user_title" title="Báo cáo người dùng này"><i class="fa-solid fa-flag"></i></button>
-                            <button id="btnAdminWarn" class="btn btn-danger" style="display:none; border-radius: 20px;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
+                            <button id="btnAdminWarn" class="btn btn-danger" style="display:none; border-radius: 20px; font-weight:700;" onclick="openAdminWarnModal()"><i class="fa-solid fa-shield"></i> Warn</button>
                             
                             <!-- Nút hành động chính: Chỉnh sửa hồ sơ -->
-                            <button id="btnEditProfModal" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 18px; font-weight: 700;" onclick="openEditProfileModal()">
+                            <button id="btnEditProfModal" class="btn btn-primary" style="display:none; border-radius: 20px; padding: 8px 20px; font-weight: 800;" onclick="openEditProfileModal()">
                                 <i class="fa-solid fa-pen"></i> <span data-i18n="prof_btn_edit">Chỉnh sửa hồ sơ</span>
                             </button>
 
-                            <!-- Nút hành động phụ: Tùy biến giao diện Bento -->
-                            <button id="btnCustomizeBento" class="btn" style="display:none; border-radius: 20px; padding: 8px 16px; font-weight: 700;" onclick="toggleBentoEditMode()">
+                            <!-- Nút hành động phụ: Tùy biến Bento -->
+                            <button id="btnCustomizeBento" class="btn" style="display:none; border-radius: 20px; padding: 8px 18px; font-weight: 800;" onclick="toggleBentoEditMode()">
                                 <i class="fa-solid fa-shapes" style="color:var(--primary);"></i> <span data-i18n="prof_btn_customize">Tùy biến</span>
                             </button>
 
-                            <!-- Nút Menu 3 chấm gom gọn: Studio, Cài đặt, Chia sẻ link -->
+                            <!-- Nút Menu 3 chấm -->
                             <div class="proj-more-dropdown-wrap" id="profMoreMenuWrap" style="display:none;">
                                 <button type="button" class="btn" style="border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="toggleProfMoreMenu(event)" title="Tùy chọn khác">
                                     <i class="fa-solid fa-ellipsis"></i>
@@ -7786,24 +7807,24 @@
 
                     <div class="profile-info-body">
                         <!-- BANNER CẢNH BÁO TÀI KHOẢN ĐÃ BỊ KHÓA -->
-                        <div id="profBanAlert" style="display:none; background:rgba(239,68,68,0.12); border:1.5px solid #ef4444; color:#ef4444; padding:10px 16px; border-radius:12px; font-weight:700; font-size:0.92rem; margin-bottom:12px; align-items:center; gap:8px;">
-                            <i class="fa-solid fa-ban" style="font-size:1.1rem;"></i> <span>Tài khoản này đã bị khóa! <span id="profBanReasonText" style="font-weight:600; opacity:0.9;"></span></span>
+                        <div id="profBanAlert" style="display:none; background:rgba(239,68,68,0.12); border:1.5px solid #ef4444; color:#ef4444; padding:10px 16px; border-radius:14px; font-weight:700; font-size:0.92rem; margin-bottom:12px; align-items:center; gap:10px;">
+                            <i class="fa-solid fa-ban" style="font-size:1.15rem;"></i> <span>Tài khoản này đã bị khóa! <span id="profBanReasonText" style="font-weight:600; opacity:0.9;"></span></span>
                         </div>
 
                         <div class="profile-username-title">
                             <span id="profDisplayName">Display Name</span>
                             <div id="profScratchBadge" class="verified-badge-wrap" style="display:none;">
-                                <i class="fa-solid fa-circle-check" style="color:#3b82f6; font-size:1.3rem;"></i>
+                                <i class="fa-solid fa-circle-check" style="color:#3b82f6; font-size:1.35rem;"></i>
                                 <div class="custom-badge-tooltip">
                                     <img src="https://scratch.mit.edu/favicon.ico" style="width:14px; height:14px; border-radius: 2px;">
                                     <span><span data-i18n="prof_verified">Xác thực:</span> <b id="profScratchUsername">@username</b></span>
                                 </div>
                             </div>
                         </div>
-                        <div style="color:var(--text-muted); font-size:1rem; margin-bottom: 12px; font-weight: 500;">@<span id="profUsername">username</span></div>
+                        <div class="profile-handle-sub">@<span id="profUsername">username</span></div>
 
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 5px;">
-                            <div class="profile-location" id="profLocation"><i class="fa-solid fa-location-dot"></i> Đang cập nhật...</div>
+                        <div class="profile-meta-pills">
+                            <div class="profile-location" id="profLocation"><i class="fa-solid fa-location-dot" style="color:var(--text-muted);"></i> Đang cập nhật...</div>
                             <div class="profile-status-badge" id="profStatus"><i class="fa-solid fa-comment-dots"></i> ...</div>
                         </div>
                     </div>
@@ -7811,47 +7832,48 @@
             </div>
 
             <!-- CUSTOMIZED PROFILE: KHUNG LƯỚI BENTO GRID ĐỘNG -->
-            <div class="grid-stack" id="profileBentoGrid" style="margin-bottom: 35px; margin-top: 15px;"></div>
+            <div class="grid-stack" id="profileBentoGrid" style="margin-bottom: 30px; margin-top: 10px;"></div>
 
-            <!-- Bỏ style max-width ở các Tab đi để nội dung tràn đều đẹp hơn -->
-
-            <div class="profile-nav-tabs">
-                <button class="prof-tab-btn active" id="tabBtnProf-projects" onclick="switchProfTab('projects')"><i class="fa-solid fa-folder-open"></i> <span data-i18n="prof_projects">Tác phẩm</span></button>
-                <button class="prof-tab-btn" id="tabBtnProf-likes" onclick="switchProfTab('likes')"><i class="fa-solid fa-heart"></i> <span data-i18n="prof_liked">Đã thích</span></button>
-                <button class="prof-tab-btn" id="tabBtnProf-activities" onclick="switchProfTab('activities')"><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="prof_activities">Hoạt động</span></button>
-                <button class="prof-tab-btn" id="tabBtnProf-comments" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments"></i> <span data-i18n="prof_comments">Lời nhắn</span></button>
-                <button class="prof-tab-btn" id="tabBtnProf-playlists" onclick="switchProfTab('playlists')"><i class="fa-solid fa-bookmark"></i> <span data-i18n="prof_playlists">Bộ sưu tập</span></button>
+            <!-- THANH ĐIỀU HƯỚNG TAB PROFILE DẠNG VIÊN THUỐC FLOATING -->
+            <div style="display:flex; justify-content:center; width:100%;">
+                <div class="profile-nav-tabs">
+                    <button class="prof-tab-btn active" id="tabBtnProf-projects" onclick="switchProfTab('projects')"><i class="fa-solid fa-folder-open"></i> <span data-i18n="prof_projects">Tác phẩm</span></button>
+                    <button class="prof-tab-btn" id="tabBtnProf-likes" onclick="switchProfTab('likes')"><i class="fa-solid fa-heart" style="color:#ff4757;"></i> <span data-i18n="prof_liked">Đã thích</span></button>
+                    <button class="prof-tab-btn" id="tabBtnProf-activities" onclick="switchProfTab('activities')"><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="prof_activities">Hoạt động</span></button>
+                    <button class="prof-tab-btn" id="tabBtnProf-comments" onclick="switchProfTab('comments')"><i class="fa-solid fa-comments" style="color:var(--primary);"></i> <span data-i18n="prof_comments">Lời nhắn</span></button>
+                    <button class="prof-tab-btn" id="tabBtnProf-playlists" onclick="switchProfTab('playlists')"><i class="fa-solid fa-bookmark" style="color:#f59e0b;"></i> <span data-i18n="prof_playlists">Bộ sưu tập</span></button>
+                </div>
             </div>
 
             <div id="profTab-projects" class="prof-tab-content active">
                 <div class="project-grid" id="userProjectList"></div>
-                <div id="profLoadMore-projects" style="text-align: center; padding: 20px 0; display: none;">
-                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('projects', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_projects">Xem thêm tác phẩm</span></button>
+                <div id="profLoadMore-projects" style="text-align: center; padding: 22px 0; display: none;">
+                    <button class="btn" style="border-radius: 20px; padding: 9px 32px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadProfTab('projects', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_projects">Xem thêm tác phẩm</span></button>
                 </div>
             </div>
 
             <div id="profTab-likes" class="prof-tab-content">
                 <div class="project-grid" id="userLikedList"></div>
-                <div id="profLoadMore-likes" style="text-align: center; padding: 20px 0; display: none;">
-                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('likes', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_likes">Xem thêm lượt thích</span></button>
+                <div id="profLoadMore-likes" style="text-align: center; padding: 22px 0; display: none;">
+                    <button class="btn" style="border-radius: 20px; padding: 9px 32px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadProfTab('likes', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_likes">Xem thêm lượt thích</span></button>
                 </div>
             </div>
 
             <div id="profTab-activities" class="prof-tab-content">
-                <div id="userActivityList" style="max-width:750px;"></div>
-                <div id="profLoadMore-activities" style="text-align: center; padding: 20px 0; display: none;">
-                    <button class="btn" style="border-radius: 25px; padding: 10px 30px; font-weight: bold; border: 1px solid var(--border-color);" onclick="loadProfTab('activities', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_activities">Xem thêm hoạt động</span></button>
+                <div id="userActivityList" style="max-width:760px; margin: 0 auto;"></div>
+                <div id="profLoadMore-activities" style="text-align: center; padding: 22px 0; display: none;">
+                    <button class="btn" style="border-radius: 20px; padding: 9px 32px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-panel);" onclick="loadProfTab('activities', true)"><i class="fa-solid fa-angle-down"></i> <span data-i18n="prof_load_more_activities">Xem thêm hoạt động</span></button>
                 </div>
             </div>
 
-            <div id="profTab-comments" class="prof-tab-content" style="max-width:750px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h4 style="margin:0; font-size:1.15rem; color:var(--text-title);"><i class="fa-solid fa-comments" style="color:var(--primary);"></i> Lời nhắn</h4>
-                    <button id="btnLockProfComments" class="btn" style="display:none; border-radius: 12px; font-size: 0.85rem;" onclick="toggleLockComments('prof')">
+            <div id="profTab-comments" class="prof-tab-content" style="max-width:760px; margin: 0 auto;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h4 style="margin:0; font-size:1.15rem; color:var(--text-title); font-weight:800;"><i class="fa-solid fa-comments" style="color:var(--primary);"></i> Lời nhắn</h4>
+                    <button id="btnLockProfComments" class="btn" style="display:none; border-radius: 12px; font-size: 0.82rem; font-weight:700;" onclick="toggleLockComments('prof')">
                         <i class="fa-solid fa-lock"></i> Khóa
                     </button>
                 </div>
-                <div id="comment-area-prof" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow:0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;">
+                <div id="comment-area-prof" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:16px; padding:20px; margin-bottom:24px; box-shadow:0 4px 18px rgba(0,0,0,0.02); transition: all 0.3s ease;">
                     <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
                         <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
@@ -7863,17 +7885,17 @@
                     <form onsubmit="handlePostComment(event, 'prof')" id="profCommentForm" style="display:none;">
                         <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextProf" class="form-control" rows="3" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này..." autocomplete="off"></textarea></div>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; gap: 10px;">
-                            <label for="commentImgUploadProf" class="btn" style="cursor:pointer; background:#f1f5f9;"><i class="fa-solid fa-image"></i> <span data-i18n="comment_attach_image">Đính kèm ảnh</span></label>
-                            <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
-                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#855cd6;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-film"></i> GIF</button>
-                            <button type="button" class="btn" style="cursor:pointer; background:#f1f5f9; color:#f59e0b;" onclick="toggleEmojiPicker('prof', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
-                        </div>
-                            <button type="submit" class="btn btn-primary" id="btnSubmitCommentProf"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi bình luận</span></button>
+                            <div style="display:flex; gap: 8px;">
+                                <label for="commentImgUploadProf" class="btn" style="cursor:pointer; background:var(--bg-secondary); border-radius:12px; font-size:0.85rem;"><i class="fa-solid fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_attach_image">Ảnh</span></label>
+                                <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
+                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#855cd6; border-radius:12px; font-size:0.85rem;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-film"></i> GIF</button>
+                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#f59e0b; border-radius:12px; font-size:0.85rem;" onclick="toggleEmojiPicker('prof', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btnSubmitCommentProf" style="border-radius:14px; font-weight:800; padding:8px 20px;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi lời nhắn</span></button>
                         </div>
                     </form>
-                    <div id="loginPromptProf" style="text-align:center; color:#888; font-size:0.9rem;">
-                        <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login">Đăng nhập để bình luận</button>
+                    <div id="loginPromptProf" style="text-align:center; color:var(--text-muted); font-size:0.95rem;">
+                        <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login" style="border-radius:16px; padding:10px 22px; font-weight:800;">Đăng nhập để bình luận</button>
                     </div>
                 </div>
                 <div id="profCommentList" data-i18n="prof_no_comments">Chưa có lời nhắn nào.</div>
@@ -7881,28 +7903,28 @@
 
             <div id="profTab-playlists" class="prof-tab-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                    <h4 style="margin:0; font-size:1.15rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                    <h4 style="margin:0; font-size:1.15rem; color:var(--text-title); display:flex; align-items:center; gap:8px; font-weight:800;">
                         <i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> <span data-i18n="prof_playlists">Bộ sưu tập</span>
                     </h4>
-                    <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 7px 16px; font-weight:700;" onclick="openModal('createPlaylistModal')">
+                    <button id="btnCreatePlaylist" class="btn btn-primary" style="display:none; border-radius:20px; padding: 7px 18px; font-weight:800;" onclick="openModal('createPlaylistModal')">
                         <i class="fa-solid fa-plus"></i> <span data-i18n="prof_btn_create_playlist">Tạo bộ sưu tập</span>
                     </button>
                 </div>
                 <div class="project-grid" id="userPlaylistsList"></div>
             </div>
 
-            <!-- TOOLBAR NỔI DƯỚI ĐÁY KHI EDIT BENTO (KÈM BỘ ĐẾM SỨC CHỨA) -->
+            <!-- TOOLBAR NỔI DƯỚI ĐÁY KHI EDIT BENTO (DYNAMIC ISLAND) -->
             <div id="bentoToolbar" class="bento-toolbar">
                 <span class="bento-count-pill" id="bentoCountBadge" title="Tối đa 25 Widget">0 / 25 Ô</span>
-                <button class="btn btn-primary" style="border-radius:20px; font-weight:bold;" onclick="openBentoDrawer()">
+                <button class="btn btn-primary" style="border-radius:20px; font-weight:800; padding:7px 16px;" onclick="openBentoDrawer()">
                     <i class="fa-solid fa-plus"></i> Thêm Widget
                 </button>
-                <div style="width:1px; height:20px; background:var(--border-color);"></div>
-                <button class="btn" style="border-radius:20px; color:#ef4444;" onclick="resetBentoLayout()">
+                <div style="width:1px; height:18px; background:var(--border-color);"></div>
+                <button class="btn" style="border-radius:20px; color:#ef4444; font-weight:700;" onclick="resetBentoLayout()">
                     <i class="fa-solid fa-rotate-left"></i> Khôi phục
                 </button>
-                <button class="btn" style="border-radius:20px;" onclick="cancelBentoEdit()">Hủy</button>
-                <button class="btn btn-primary" style="border-radius:20px; background:#ea580c; font-weight:bold;" onclick="saveBentoLayout()" id="btnSaveBento">
+                <button class="btn" style="border-radius:20px; font-weight:700;" onclick="cancelBentoEdit()">Hủy</button>
+                <button class="btn btn-primary" style="border-radius:20px; background:#ea580c; font-weight:800; padding:7px 18px;" onclick="saveBentoLayout()" id="btnSaveBento">
                     <i class="fa-solid fa-floppy-disk"></i> Lưu Bố Cục
                 </button>
             </div>
