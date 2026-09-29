@@ -298,7 +298,12 @@
             box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.25), 0 6px 18px rgba(13, 165, 122, 0.45);
         }
 
-        /* Thẻ User Pill sang trọng */
+        /* Thẻ User Pill & Dropdown Menu tinh tế */
+        .nav-user-dropdown-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
         .nav-user-pill { 
             background: var(--bg-secondary); 
             color: var(--text-title) !important; 
@@ -311,15 +316,105 @@
             gap: 8px; 
             font-size: 0.88rem; 
             font-weight: 700; 
+            cursor: pointer;
             transition: all 0.2s ease; 
-            margin-left: 4px;
         }
-        .nav-user-pill:hover { 
+        .nav-user-pill:hover, .nav-user-dropdown-wrap.open .nav-user-pill { 
             border-color: var(--primary); 
             background: var(--bg-panel); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
+        .nav-user-pill .nav-user-chevron {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            transition: transform 0.25s ease;
+            margin-left: 2px;
+        }
+        .nav-user-dropdown-wrap.open .nav-user-chevron {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
         .nav-user-avt { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+
+        .nav-user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+            min-width: 230px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+            padding: 6px;
+            animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        [data-theme="dark"] .nav-user-dropdown-menu {
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .nav-user-dropdown-wrap.open .nav-user-dropdown-menu {
+            display: flex;
+        }
+        .nav-dropdown-item {
+            padding: 9px 12px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            border-radius: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            transition: all 0.15s ease;
+        }
+        .nav-dropdown-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .nav-dropdown-item:hover {
+            background: var(--bg-secondary);
+            color: var(--primary);
+        }
+        .nav-dropdown-item.danger {
+            color: #ef4444;
+        }
+        .nav-dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+        .nav-dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 6px;
+        }
+        .nav-dropdown-user-header {
+            padding: 8px 12px 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4px;
+        }
+        .nav-dropdown-user-name {
+            font-weight: 800;
+            color: var(--text-title);
+            font-size: 0.92rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .nav-dropdown-user-role {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
 
         .btn { background: #e2e8f0; border: none; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 0.9rem;}
         .btn:hover { background: #cbd5e1; }
@@ -1940,7 +2035,7 @@
             .nav-left { gap: 6px; }
             .nav-left > .nav-link { display: none !important; } /* Menu điều hướng đã có thanh dưới */
             .nav-actions { gap: 6px; }
-            .nav-actions .nav-user-pill { display: none !important; } /* Đã có nút Hồ sơ ở bottom bar */
+            .nav-actions .nav-user-dropdown-wrap { display: none !important; } /* Đã có nút Hồ sơ ở bottom bar */
             .nav-btn-upload span { display: none; } /* Nút đăng bài thu về dạng icon tròn */
             .nav-btn-upload { padding: 8px 12px; border-radius: 50%; }
             .WOW-balance-pill { padding: 4px 8px; font-size: 0.78rem; }
@@ -3617,8 +3712,36 @@
             max-height: none !important;
         }
         
-        .WOW-balance-pill { background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.3); cursor: pointer; transition: 0.2s; border: none; }
-        .WOW-balance-pill:hover { transform: scale(1.05); }
+        .WOW-balance-pill { 
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(234, 88, 12, 0.08) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #d97706; 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-weight: 800; 
+            font-size: 0.88rem; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 7px; 
+            cursor: pointer; 
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
+        }
+        [data-theme="dark"] .WOW-balance-pill {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(234, 88, 12, 0.12) 100%);
+            border-color: rgba(245, 158, 11, 0.45);
+            color: #fbbf24;
+        }
+        .WOW-balance-pill:hover { 
+            transform: translateY(-1px) scale(1.03); 
+            border-color: #ea580c;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+            color: #ea580c;
+        }
+        [data-theme="dark"] .WOW-balance-pill:hover {
+            color: #fef08a;
+            border-color: #f59e0b;
+        }
 
         /* ================= GIAO DIỆN PHÒNG THỬ KHUNG AVATAR PRO ================= */
         .frame-studio-layout {
@@ -6752,7 +6875,6 @@
             <a href="/#create" class="nav-btn-create nav-create"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_create">Sáng tạo</span></a>
             <a href="/#assets" class="nav-link nav-assets"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_assets">Tài nguyên</span></a>
             <a href="/#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
-            <a href="/#leaderboard" class="nav-link nav-leaderboard"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> <span data-i18n="nav_leaderboard">Xếp hạng</span></a>
         </div>
         <div class="nav-right">
             <div class="nav-actions" id="navActions"></div>
@@ -11224,37 +11346,54 @@
             checkEmailVerificationBanner();
 
             if (currentUser) {
-                const adminIcon = currentUser.role === 'admin' 
-                    ? `<a href="/#admin" class="nav-icon-btn admin-badge" title="Bảng Quản trị"><i class="fa-solid fa-shield-halved"></i></a>` 
+                const adminItem = currentUser.role === 'admin' 
+                    ? `<a href="/#admin" class="nav-dropdown-item" onclick="closeNavUserDropdown()"><i class="fa-solid fa-shield-halved" style="color:#f59e0b;"></i> <span>Bảng Quản trị</span></a>` 
                     : '';
                 
                 nav.innerHTML = `
                     <button class="WOW-balance-pill" onclick="openDailyRewardModal()" title="Phần thưởng điểm danh">
                         <span class="wow-icon"></span> <span id="navWOWBalance">${currentUser.WOW || 0}</span>
                     </button>
-                    
-                    ${adminIcon}
 
                     <a href="/#notifications" class="nav-icon-btn" title="Tin nhắn & Thông báo">
                         <i class="fa-solid fa-bell"></i>
                         <span class="notif-badge" id="notifBadge" style="display:none; right: -4px; top: -4px; z-index: 10; min-width: 17px; height: 17px; padding: 0 4px; font-size: 0.68rem; line-height: 17px;">0</span>
                     </a>
-                    
-                    <a href="/#creator" class="nav-icon-btn" title="Trung tâm Nhà sáng tạo & Doanh thu">
-                        <i class="fa-solid fa-chart-line" style="color: #10b981;"></i>
-                    </a>
 
-                    <a href="/#settings" class="nav-icon-btn" title="${t('settings_options') || 'Cài đặt'}">
-                        <i class="fa-solid fa-gear"></i>
-                    </a>
-                    
-                    <a href="/users/${encodeURIComponent(currentUser.username)}" class="nav-user-pill" title="Hồ sơ của bạn">
-                        <div class="avt-wrapper" style="width: 28px; height: 28px;">
-                            <img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" style="width:100%; height:100%;" onerror="this.src='${DEFAULT_AVATAR}'">
-                            ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
+                    <div class="nav-user-dropdown-wrap" id="navUserDropdownWrap">
+                        <button type="button" class="nav-user-pill" onclick="toggleNavUserDropdown(event)" title="Menu tài khoản">
+                            <div class="avt-wrapper" style="width: 28px; height: 28px;">
+                                <img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" style="width:100%; height:100%;" onerror="this.src='${DEFAULT_AVATAR}'">
+                                ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
+                            </div>
+                            <span>${escapeHtml(currentUser.username)}</span>
+                            <i class="fa-solid fa-chevron-down nav-user-chevron"></i>
+                        </button>
+
+                        <div class="nav-user-dropdown-menu" id="navUserDropdownMenu">
+                            <div class="nav-dropdown-user-header">
+                                <div class="nav-dropdown-user-name">${escapeHtml(currentUser.displayName || currentUser.username)}</div>
+                                <div class="nav-dropdown-user-role">@${escapeHtml(currentUser.username)}${currentUser.role === 'admin' ? ' • Admin' : ''}</div>
+                            </div>
+                            <a href="/users/${encodeURIComponent(currentUser.username)}" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-user" style="color:var(--primary);"></i> <span>Trang cá nhân</span>
+                            </a>
+                            <a href="/#leaderboard" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-crown" style="color:#f59e0b;"></i> <span>Bảng xếp hạng</span>
+                            </a>
+                            <a href="/#creator" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
+                            </a>
+                            <a href="/#settings" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-gear" style="color:var(--text-muted);"></i> <span>${t('settings_options') || 'Cài đặt'}</span>
+                            </a>
+                            ${adminItem}
+                            <div class="nav-dropdown-divider"></div>
+                            <button type="button" class="nav-dropdown-item danger" onclick="closeNavUserDropdown(); logout();">
+                                <i class="fa-solid fa-right-from-bracket"></i> <span>Đăng xuất</span>
+                            </button>
                         </div>
-                        <span>${escapeHtml(currentUser.username)}</span>
-                    </a>
+                    </div>
                 `;
                 
                 // Đồng bộ Profile Icon lên thanh Mobile Nav ở đáy màn hình
@@ -11830,8 +11969,23 @@
             });
         }
 
+        // Xử lý đóng/mở Dropdown người dùng ở Navbar
+        function toggleNavUserDropdown(e) {
+            if (e) e.stopPropagation();
+            const wrap = document.getElementById('navUserDropdownWrap');
+            if (wrap) wrap.classList.toggle('open');
+        }
+
+        function closeNavUserDropdown() {
+            const wrap = document.getElementById('navUserDropdownWrap');
+            if (wrap) wrap.classList.remove('open');
+        }
+
         // Tự động đóng dropdown khi click ra ngoài
         document.addEventListener('click', (e) => {
+            if (!e.target.closest('#navUserDropdownWrap')) {
+                closeNavUserDropdown();
+            }
             if (!e.target.closest('.proj-more-dropdown-wrap')) {
                 closeProjMoreMenu();
                 closeProfMoreMenu();
