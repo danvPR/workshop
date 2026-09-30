@@ -5783,23 +5783,312 @@
             flex-wrap: wrap;
         }
 
-        /* Thẻ Thành Viên / Phi Hành Đoàn */
+        /* ================= GIAO DIỆN THÀNH VIÊN / BAN ĐIỀU HÀNH TRẠM (ĐÃ FIX LỖI) ================= */
         .station-member-card {
             background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 14px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+            transition: all 0.22s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .station-member-card:hover {
             border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+            background: var(--bg-secondary);
+        }
+        .station-member-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none !important;
+            color: inherit;
+            min-width: 0;
+            flex: 1;
+        }
+        .station-member-avt-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            display: block;
+        }
+        .station-member-info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+            flex: 1;
+        }
+        .station-member-name {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .station-role-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            width: fit-content;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.2px;
+        }
+        .station-role-badge.leader {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(234, 88, 12, 0.12));
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+        [data-theme="dark"] .station-role-badge.leader {
+            color: #fbbf24;
+        }
+        .station-role-badge.manager {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+        .station-role-badge.member {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ================= GIAO DIỆN MODAL THEO DÕI ĐỘC ĐÁO (FOLLOWERS / FOLLOWING PRO) ================= */
+        .follow-modal-container {
+            max-width: 520px !important;
+            width: 92% !important;
+            border-radius: 26px !important;
+            overflow: hidden !important;
+            background: var(--bg-panel) !important;
+            border: 1.5px solid var(--border-color) !important;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.32), 0 0 35px rgba(13, 165, 122, 0.12) !important;
+            display: flex;
+            flex-direction: column;
+            max-height: 86vh;
+            animation: giftPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .follow-modal-hero {
+            padding: 20px 22px 14px 22px;
+            background: linear-gradient(135deg, rgba(13, 165, 122, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .follow-modal-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .follow-modal-title-cluster {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .follow-modal-icon-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.3);
+        }
+        .follow-nav-segments {
+            display: inline-flex;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 3px;
+            gap: 4px;
+            width: 100%;
+        }
+        .follow-seg-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.86rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+        }
+        .follow-seg-btn:hover {
+            color: var(--text-title);
+        }
+        .follow-seg-btn.active {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+            box-shadow: 0 3px 10px rgba(13, 165, 122, 0.35);
+        }
+        .follow-seg-counter {
+            font-size: 0.72rem;
+            font-weight: 900;
+            padding: 2px 7px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.06);
+            color: var(--text-main);
+        }
+        .follow-seg-btn.active .follow-seg-counter {
+            background: rgba(255, 255, 255, 0.28);
+            color: #ffffff;
+        }
+        .follow-search-box-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px 14px;
+            margin: 12px 20px 4px 20px;
+            transition: border-color 0.2s;
+        }
+        .follow-search-box-pill:focus-within {
+            border-color: var(--primary);
+            background: var(--bg-panel);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
+        }
+        .follow-search-box-pill input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            width: 100%;
+            padding: 6px 0;
+        }
+
+        /* Thẻ User hàng độc đáo */
+        .follow-card-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 12px 14px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .follow-card-row:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+            background: var(--bg-secondary);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        .follow-user-left-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+            text-decoration: none !important;
+            color: inherit;
+        }
+        .follow-user-avt {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+        .follow-card-row:hover .follow-user-avt {
+            transform: scale(1.06);
+            border-color: var(--primary);
+        }
+        .follow-user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            flex: 1;
+        }
+        .follow-user-display-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .follow-user-handle-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .btn-visit-prof-pill {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-decoration: none !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-visit-prof-pill:hover {
+            background: var(--primary);
+            color: #ffffff !important;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(13, 165, 122, 0.35);
+        }
+        .follow-load-more-btn {
+            width: 100%;
+            padding: 11px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 0.86rem;
+            background: var(--bg-secondary);
+            color: var(--text-title);
+            border: 1.5px dashed var(--border-color);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .follow-load-more-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-panel);
+            transform: translateY(-2px);
         }
 
         /* 5. CỬA SỔ MODAL STUDIO PRO (CHO UPLOAD ASSET & TẠO STATION) */
@@ -10536,15 +10825,46 @@
         </div>
     </div>
 
-    <!-- MODAL DANH SÁCH FOLLOW -->
+    <!-- MODAL DANH SÁCH THEO DÕI & NGƯỜI THEO DÕI (REDESIGN ĐỘC ĐÁO & LOAD 5 NGƯỜI) -->
     <div class="modal-overlay" id="followListModal">
-        <div class="modal" style="max-width:400px; display: flex; flex-direction: column; max-height: 80vh;">
-            <div class="modal-header">
-                <span id="followListTitle"><i class="fa-solid fa-users"></i> Danh sách</span>
-                <button class="btn-close" onclick="closeModal('followListModal')">&times;</button>
+        <div class="modal follow-modal-container">
+            <div class="follow-modal-hero">
+                <div class="follow-modal-top-row">
+                    <div class="follow-modal-title-cluster">
+                        <div class="follow-modal-icon-badge">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:1.15rem; font-weight:900; color:var(--text-title); line-height:1.2;">Mạng Lưới Kết Nối</div>
+                            <div style="font-size:0.76rem; color:var(--text-muted); font-weight:600;">Hồ sơ của <span id="followModalTargetUser" style="color:var(--primary);">@user</span></div>
+                        </div>
+                    </div>
+                    <button class="btn-close" onclick="closeModal('followListModal')">&times;</button>
+                </div>
+
+                <!-- Tab chuyển đổi trực tiếp trong modal -->
+                <div class="follow-nav-segments">
+                    <button type="button" class="follow-seg-btn active" id="btnFollowTabFollowers" onclick="switchFollowModalTab('followers')">
+                        <i class="fa-solid fa-heart" style="color:#ff4757;"></i>
+                        <span>Người theo dõi</span>
+                        <span class="follow-seg-counter" id="followModalCountFollowers">0</span>
+                    </button>
+                    <button type="button" class="follow-seg-btn" id="btnFollowTabFollowing" onclick="switchFollowModalTab('following')">
+                        <i class="fa-solid fa-user-check" style="color:#3b82f6;"></i>
+                        <span>Đang theo dõi</span>
+                        <span class="follow-seg-counter" id="followModalCountFollowing">0</span>
+                    </button>
+                </div>
             </div>
-            <div class="modal-body" style="overflow-y: auto; padding: 10px; background: #fff;" id="followListContainer">
-                <!-- Data đổ vào đây -->
+
+            <!-- Ô tìm kiếm nhanh thành viên -->
+            <div class="follow-search-box-pill">
+                <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.85rem;"></i>
+                <input type="text" id="followSearchInput" placeholder="Tìm kiếm theo username..." oninput="handleFollowModalSearch(this.value)">
+            </div>
+
+            <div class="modal-body" style="overflow-y:auto; padding:12px 20px 20px 20px; display:flex; flex-direction:column; gap:10px;" id="followListContainer">
+                <!-- Danh sách 5 người và nút Xem thêm render từ JS -->
             </div>
         </div>
     </div>
@@ -13873,67 +14193,111 @@
 
         function renderStudioMembers() {
             const list = document.getElementById('stdCuratorsList');
+            if (!list) return;
+
             const members = currentStudio.members || [];
             const managers = currentStudio.managers || [];
+            const creatorName = (currentStudio.creator || '').toLowerCase();
             const pureMembers = members.filter(m => !managers.map(x=>x.toLowerCase()).includes(m.toLowerCase()));
             
-            let html = `<h4 style="margin-bottom:14px; color:var(--text-title); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> Ban điều hành trạm (${managers.length})</h4>`;
-            html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 28px;">`;
-            html += managers.map(m => `
-                <div class="station-member-card">
-                    <a href="#profile/${encodeURIComponent(m)}" class="user-meta">
-                        <img src="${DEFAULT_AVATAR}" id="std-avt-${m}" alt="${m}">
-                        <div>
-                            <div>${escapeHtml(m)}</div>
-                            <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">${m.toLowerCase() === currentStudio.creator.toLowerCase() ? 'Trạm trưởng' : 'Quản trị viên'}</span>
-                        </div>
-                    </a>
-                    ${currentUser && currentStudio.creator.toLowerCase() === currentUser.username.toLowerCase() && m.toLowerCase() !== currentUser.username.toLowerCase() ? `
-                        <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 8px;" onclick="removeStudioMember('${m}')">Xóa</button>
-                    ` : ''}
-                </div>
-            `).join('');
-            html += `</div>`;
+            const isCreator = currentUser && creatorName === currentUser.username.toLowerCase();
+            const isManagerOrCreator = currentUser && (isCreator || managers.map(x=>x.toLowerCase()).includes(currentUser.username.toLowerCase()));
 
-            html += `<h4 style="margin-bottom:14px; color:var(--text-title); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-users"></i> Thành viên (${pureMembers.length})</h4>`;
-            if (pureMembers.length > 0) {
-                html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">`;
-                html += pureMembers.map(m => `
+            let html = `
+                <div style="margin-bottom: 24px;">
+                    <h4 style="margin: 0 0 14px 0; color:var(--text-title); display:flex; align-items:center; gap:8px; font-size:1.05rem;">
+                        <i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> 
+                        <span>Ban điều hành trạm</span>
+                        <span style="font-size:0.75rem; background:rgba(13,165,122,0.12); color:var(--primary); padding:2px 8px; border-radius:12px; font-weight:800;">${managers.length}</span>
+                    </h4>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">
+            `;
+
+            html += managers.map(m => {
+                const isLeader = m.toLowerCase() === creatorName;
+                const cachedAvt = globalUserCache[m] ? getAvtUrl(globalUserCache[m]) : DEFAULT_AVATAR;
+
+                return `
                     <div class="station-member-card">
-                        <a href="#profile/${encodeURIComponent(m)}" class="user-meta">
-                            <img src="${DEFAULT_AVATAR}" id="std-avt-${m}" alt="${m}">
-                            <div>
-                                <div>${escapeHtml(m)}</div>
-                                <span style="font-size:0.72rem; color:var(--text-muted);">Thành viên</span>
+                        <a href="/users/${encodeURIComponent(m)}" class="station-member-link">
+                            <img src="${cachedAvt}" id="std-avt-${m}" class="station-member-avt-box" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <div class="station-member-info-col">
+                                <div class="station-member-name" title="@${escapeHtml(m)}">@${escapeHtml(m)}</div>
+                                <span class="station-role-badge ${isLeader ? 'leader' : 'manager'}">
+                                    <i class="fa-solid ${isLeader ? 'fa-crown' : 'fa-shield-halved'}"></i>
+                                    <span>${isLeader ? 'Trạm trưởng' : 'Quản trị viên'}</span>
+                                </span>
                             </div>
                         </a>
-                        ${currentUser && (currentStudio.creator.toLowerCase() === currentUser.username.toLowerCase() || managers.map(x=>x.toLowerCase()).includes(currentUser.username.toLowerCase())) ? `
-                            <div style="display:flex; gap:6px;">
-                                ${currentStudio.creator.toLowerCase() === currentUser.username.toLowerCase() ? `<button class="btn btn-primary" style="font-size:0.72rem; padding:4px 8px;" onclick="promoteStudioMember('${m}')">Thăng cấp</button>` : ''}
-                                <button class="btn btn-danger" style="font-size:0.72rem; padding:4px 8px;" onclick="removeStudioMember('${m}')">Xóa</button>
-                            </div>
+                        ${isCreator && !isLeader ? `
+                            <button type="button" class="btn btn-danger" style="font-size:0.75rem; padding:5px 10px; border-radius:10px; font-weight:700;" onclick="removeStudioMember('${m}')" title="Xóa khỏi ban điều hành">
+                                <i class="fa-solid fa-user-minus"></i>
+                            </button>
                         ` : ''}
                     </div>
-                `).join('');
+                `;
+            }).join('');
+            html += `</div></div>`;
+
+            html += `
+                <div>
+                    <h4 style="margin: 0 0 14px 0; color:var(--text-title); display:flex; align-items:center; gap:8px; font-size:1.05rem;">
+                        <i class="fa-solid fa-users"></i> 
+                        <span>Phi hành đoàn / Thành viên</span>
+                        <span style="font-size:0.75rem; background:var(--bg-secondary); color:var(--text-muted); padding:2px 8px; border-radius:12px; font-weight:800;">${pureMembers.length}</span>
+                    </h4>
+            `;
+
+            if (pureMembers.length > 0) {
+                html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">`;
+                html += pureMembers.map(m => {
+                    const cachedAvt = globalUserCache[m] ? getAvtUrl(globalUserCache[m]) : DEFAULT_AVATAR;
+                    return `
+                        <div class="station-member-card">
+                            <a href="/users/${encodeURIComponent(m)}" class="station-member-link">
+                                <img src="${cachedAvt}" id="std-avt-${m}" class="station-member-avt-box" onerror="this.src='${DEFAULT_AVATAR}'">
+                                <div class="station-member-info-col">
+                                    <div class="station-member-name" title="@${escapeHtml(m)}">@${escapeHtml(m)}</div>
+                                    <span class="station-role-badge member">
+                                        <i class="fa-solid fa-user"></i> <span>Thành viên</span>
+                                    </span>
+                                </div>
+                            </a>
+                            ${isManagerOrCreator ? `
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    ${isCreator ? `
+                                        <button type="button" class="btn btn-primary" style="font-size:0.72rem; padding:5px 9px; border-radius:10px; font-weight:800;" onclick="promoteStudioMember('${m}')" title="Thăng cấp lên Quản trị viên">
+                                            <i class="fa-solid fa-arrow-up"></i>
+                                        </button>
+                                    ` : ''}
+                                    <button type="button" class="btn btn-danger" style="font-size:0.72rem; padding:5px 9px; border-radius:10px; font-weight:700;" onclick="removeStudioMember('${m}')" title="Xóa thành viên">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
                 html += `</div>`;
             } else {
-                html += `<p style="color:var(--text-muted); font-size: 0.92rem; padding: 10px 0;">Chưa có thêm thành viên nào.</p>`;
+                html += `
+                    <div style="background:var(--bg-panel); border:1.5px dashed var(--border-color); border-radius:16px; padding:30px; text-align:center; color:var(--text-muted);">
+                        <i class="fa-solid fa-user-plus" style="font-size:2.2rem; opacity:0.3; margin-bottom:8px; display:block;"></i>
+                        Chưa có thêm thành viên nào gia nhập trạm này.
+                    </div>
+                `;
             }
+            html += `</div>`;
 
             list.innerHTML = html;
 
-            // 🚀 TỐI ƯU TẢI AVATAR BẰNG BATCH QUEUE
+            // 🚀 BATCH FETCH AVATAR CHO CÁC USER CHƯA CÓ TRONG CACHE
             members.forEach(m => {
-                const img = document.getElementById(`std-avt-${m}`);
-                if (!img) return;
-
-                if (globalUserCache[m]) {
-                    img.src = getAvtUrl(globalUserCache[m]);
-                } else {
-                    queueFetchUserAvt(m, (avtCode) => {
-                        img.src = getAvtUrl(avtCode);
-                    });
-                }
+                if (!m || globalUserCache[m]) return;
+                queueFetchUserAvt(m, (avtCode) => {
+                    const img = document.getElementById(`std-avt-${m}`);
+                    if (img) img.src = getAvtUrl(avtCode);
+                });
             });
         }
 
@@ -17055,52 +17419,143 @@
                 if (sloganEl) sloganEl.innerText = "Beyond the Blocks • Sáng tạo không giới hạn";
             }
         }
-        // XỬ LÝ MỞ BẢNG DANH SÁCH FOLLOW
-        // XỬ LÝ MỞ BẢNG DANH SÁCH FOLLOW & TẢI AVATAR TỰ ĐỘNG
-        function openFollowListModal(type) {
+        // ================= XỬ LÝ MODAL THEO DÕI: LOAD SẴN 5 NGƯỜI, TÌM KIẾM & LOAD MORE =================
+        let followModalActiveType = 'followers';
+        let followModalDisplayLimit = 5; // Chỉ tải sẵn 5 người đầu tiên
+        let followModalSearchTerm = '';
+        let followModalRawList = [];
+
+        function openFollowListModal(type = 'followers') {
             if (!viewingProfileData) return;
-            const isFollowers = type === 'followers';
-            const list = isFollowers ? (viewingProfileData.followers || []) : (viewingProfileData.following || []);
 
-            // Set Title
-            document.getElementById('followListTitle').innerHTML = isFollowers 
-                ? `<i class="fa-solid fa-users" style="color:var(--primary);"></i> ${t('prof_followers')}` 
-                : `<i class="fa-solid fa-user-check" style="color:var(--primary);"></i> ${t('prof_following')}`;
+            followModalActiveType = type;
+            followModalDisplayLimit = 5;
+            followModalSearchTerm = '';
 
-            const container = document.getElementById('followListContainer');
+            const searchInput = document.getElementById('followSearchInput');
+            if (searchInput) searchInput.value = '';
 
-            // Render List
-            if (list.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:30px 10px; color:#888;"><i class="fa-solid fa-box-open" style="font-size:2rem; color:#cbd5e1; margin-bottom:10px;"></i><br>${t('prof_empty_list')}</div>`;
-            } else {
-                // Tạo sẵn HTML với ảnh Placeholder mặc định
-                container.innerHTML = list.map(username => `
-                    <a href="#profile/${username}" class="follow-user-item" onclick="closeModal('followListModal')">
-                        <img id="follow-avt-${username}" src="${DEFAULT_AVATAR}" class="follow-user-avt-img">
-                        <div style="flex:1;">
-                            <div class="follow-user-name">@${escapeHtml(username)}</div>
-                            <div style="font-size:0.8rem; color:#888;">${t('follow_member')}</div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;"></i>
-                    </a>
-                `).join('');
+            const targetUserEl = document.getElementById('followModalTargetUser');
+            if (targetUserEl) targetUserEl.innerText = `@${viewingProfileData.username || ''}`;
 
-                // 🚀 TỐI ƯU TẢI AVATAR FOLLOW BẰNG BATCH QUEUE
-                list.forEach(username => {
-                    const imgEl = document.getElementById(`follow-avt-${username}`);
-                    if (!imgEl) return;
-
-                    if (globalUserCache[username]) {
-                        imgEl.src = getAvtUrl(globalUserCache[username]);
-                    } else {
-                        queueFetchUserAvt(username, (avtCode) => {
-                            imgEl.src = getAvtUrl(avtCode);
-                        });
-                    }
-                });
-            }
+            const followersArr = viewingProfileData.followers || [];
+            const followingArr = viewingProfileData.following || [];
+            const cntFollowers = document.getElementById('followModalCountFollowers');
+            const cntFollowing = document.getElementById('followModalCountFollowing');
+            if (cntFollowers) cntFollowers.innerText = followersArr.length;
+            if (cntFollowing) cntFollowing.innerText = followingArr.length;
 
             openModal('followListModal');
+            switchFollowModalTab(type);
+        }
+
+        function switchFollowModalTab(type) {
+            followModalActiveType = type;
+            followModalDisplayLimit = 5; // Luôn nạp 5 người khi đổi tab
+
+            const btnFollowers = document.getElementById('btnFollowTabFollowers');
+            const btnFollowing = document.getElementById('btnFollowTabFollowing');
+
+            if (btnFollowers && btnFollowing) {
+                btnFollowers.classList.toggle('active', type === 'followers');
+                btnFollowing.classList.toggle('active', type === 'following');
+            }
+
+            followModalRawList = (type === 'followers') 
+                ? (viewingProfileData.followers || []) 
+                : (viewingProfileData.following || []);
+
+            renderFollowModalList();
+        }
+
+        function handleFollowModalSearch(val) {
+            followModalSearchTerm = (val || '').toLowerCase().trim();
+            followModalDisplayLimit = 5; // Reset về 5 người khi tìm kiếm
+            renderFollowModalList();
+        }
+
+        function renderFollowModalList() {
+            const container = document.getElementById('followListContainer');
+            if (!container) return;
+
+            let filtered = followModalRawList.filter(u => {
+                const uStr = String(u || '').toLowerCase();
+                return uStr.includes(followModalSearchTerm);
+            });
+
+            if (filtered.length === 0) {
+                if (followModalSearchTerm) {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:35px 15px; color:var(--text-muted);">
+                            <i class="fa-solid fa-magnifying-glass" style="font-size:2rem; opacity:0.3; margin-bottom:8px; display:block;"></i>
+                            Không tìm thấy tài khoản nào khớp với "<b>${escapeHtml(followModalSearchTerm)}</b>".
+                        </div>
+                    `;
+                } else {
+                    const isFollowers = followModalActiveType === 'followers';
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:40px 15px; color:var(--text-muted);">
+                            <i class="fa-solid ${isFollowers ? 'fa-heart-crack' : 'fa-user-clock'}" style="font-size:2.8rem; opacity:0.3; margin-bottom:12px; display:block;"></i>
+                            <b>${isFollowers ? 'Chưa có người theo dõi nào.' : 'Chưa theo dõi người dùng nào.'}</b>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            const visibleUsers = filtered.slice(0, followModalDisplayLimit);
+            const remainingCount = filtered.length - visibleUsers.length;
+
+            let html = visibleUsers.map(username => {
+                const safeName = String(username || '');
+                const cachedAvt = globalUserCache[safeName] ? getAvtUrl(globalUserCache[safeName]) : DEFAULT_AVATAR;
+
+                return `
+                    <div class="follow-card-row">
+                        <a href="/users/${encodeURIComponent(safeName)}" class="follow-user-left-cluster" onclick="closeModal('followListModal')">
+                            <img src="${cachedAvt}" id="follow-avt-${safeName}" class="follow-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <div class="follow-user-details">
+                                <div class="follow-user-display-name">@${escapeHtml(safeName)}</div>
+                                <div class="follow-user-handle-sub">
+                                    <i class="fa-solid fa-code" style="color:var(--primary); font-size:0.7rem; margin-right:3px;"></i>
+                                    <span>Nhà sáng tạo</span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/users/${encodeURIComponent(safeName)}" class="btn-visit-prof-pill" onclick="closeModal('followListModal')">
+                            <span>Ghé thăm</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.72rem;"></i>
+                        </a>
+                    </div>
+                `;
+            }).join('');
+
+            // Nút Load More 5 người tiếp theo
+            if (remainingCount > 0) {
+                html += `
+                    <button type="button" class="follow-load-more-btn" onclick="loadMoreFollowModal()">
+                        <i class="fa-solid fa-angle-down"></i>
+                        <span>Xem thêm 5 người tiếp theo (Còn ${remainingCount})</span>
+                    </button>
+                `;
+            }
+
+            container.innerHTML = html;
+
+            // 🚀 BATCH FETCH AVATAR CHO CÁC USER TRONG TRANG
+            visibleUsers.forEach(username => {
+                const safeName = String(username || '');
+                if (!safeName || globalUserCache[safeName]) return;
+                queueFetchUserAvt(safeName, (avtCode) => {
+                    const imgEl = document.getElementById(`follow-avt-${safeName}`);
+                    if (imgEl) imgEl.src = getAvtUrl(avtCode);
+                });
+            });
+        }
+
+        function loadMoreFollowModal() {
+            followModalDisplayLimit += 5;
+            renderFollowModalList();
         }
         // 🚀 BỘ NẠP AVATAR: TRẢ VỀ ĐÚNG DEFAULT_AVATAR GỐC CỦA APP & HỖ TRỢ LINK NGOÀI (BEABEA)
         function getAvtUrl(id) { 
