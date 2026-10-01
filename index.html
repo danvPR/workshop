@@ -9272,7 +9272,7 @@
                         <span>Phân chia doanh thu: <b>70%</b></span>
                         <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem; opacity:0.6;"></i>
                     </a>
-                    <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="creator-btn-editor">
+                    <a href="https://aftercode.pages.dev/editor.html" target="_blank" class="creator-btn-editor">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>Mở Trình Biên Tập Aftercode</span>
                     </a>
@@ -9494,7 +9494,7 @@
                             Xuất bản dự án lên DANVworkshop. Khi người chơi hoàn tất mua vật phẩm, 70% giá trị giao dịch sẽ được ghi nhận vào Doanh thu khả dụng.
                         </p>
                         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <a href="https://aftercode-web-wheat.vercel.app/editor.html" target="_blank" class="creator-btn-editor" style="padding:9px 18px;">
+                            <a href="https://aftercode.pages.dev/editor.html" target="_blank" class="creator-btn-editor" style="padding:9px 18px;">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Aftercode
                             </a>
                             <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="btn" style="border-radius:12px; font-weight:700; padding:9px 16px;">
@@ -12671,7 +12671,7 @@
             document.getElementById('projPageAuthor').href = authorCleanUrl;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            const embedUrl = `https://aftercode-web-wheat.vercel.app/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
+            const embedUrl = `https://aftercode.pages.dev/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
             const thumbSrc = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
 
             // GIAO DIỆN LAZY LOAD: Hiện ảnh nền mờ và nút Play, bấm vào mới Load Iframe
@@ -12686,7 +12686,7 @@
             `;
             
             const engineChoice = localStorage.getItem('engine') || 'aftercode';
-            const editorBaseUrl = engineChoice === 'turbowarp' ? 'https://turbowarp.org/editor?project_url=' : 'https://aftercode-web-wheat.vercel.app/editor.html?project_url=';
+            const editorBaseUrl = engineChoice === 'turbowarp' ? 'https://turbowarp.org/editor?project_url=' : 'https://aftercode.pages.dev/editor.html?project_url=';
             const btnSeeInside = document.getElementById('btnSeeInside');
             btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
             btnSeeInside.target = (engineChoice === 'aftercode') ? '_self' : '_blank';
@@ -18371,7 +18371,7 @@
             
             // 🚀 Nếu là Aftercode: Chuyển hướng trực tiếp trên tab hiện tại (Redirect thẳng)
             if (engineChoice === 'aftercode') {
-                window.location.href = 'https://aftercode-web-wheat.vercel.app/editor.html';
+                window.location.href = 'https://aftercode.pages.dev/editor.html';
                 return;
             }
 
@@ -18390,7 +18390,7 @@
             
             // Nếu là Aftercode: Redirect thẳng sang Aftercode trên tab hiện tại
             if (engineChoice === 'aftercode') {
-                window.location.href = 'https://aftercode-web-wheat.vercel.app/editor.html';
+                window.location.href = 'https://aftercode.pages.dev/editor.html';
                 return;
             }
 
