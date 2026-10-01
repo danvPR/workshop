@@ -19959,10 +19959,6 @@
                                 ${transBoxHtml}
                             </div>
 
-                            <!-- Floating Action Bar gắn gọn gàng góc phải -->
-                            ${transBoxHtml}
-                            </div>
-
                             ${renderReactionChipsHTML(c.reactions, messageId)}
 
                             <!-- Floating Action Bar gắn gọn gàng góc phải -->
@@ -19975,25 +19971,6 @@
                                     <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
                                         <i class="fa-solid fa-reply"></i>
                                     </button>` : ''}
-                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) && !getTikTokVideoId(c.text) ? `
-                                    <div class="trans-menu-wrapper">
-                                        <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
-                                            <i class="fa-solid fa-language"></i>
-                                        </button>
-                                    </div>` : ''}
-                                <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" title="Sao chép liên kết">
-                                    <i class="fa-solid fa-link"></i>
-                                </button>
-                                ${currentUser && !isMine ? `
-                                    <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo vi phạm">
-                                        <i class="fa-solid fa-flag"></i>
-                                    </button>` : ''}
-                                ${canDelete ? `
-                                    <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>` : ''}
-                            </div>
-                        </div>
                                 ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) && !getTikTokVideoId(c.text) ? `
                                     <div class="trans-menu-wrapper">
                                         <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
