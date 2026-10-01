@@ -3700,6 +3700,83 @@
             background: rgba(245, 158, 11, 0.12);
         }
 
+        /* 4.5. KHUNG REACTION TIN NHẮN (DISCORD STYLE) */
+        .chat-reactions-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+            padding-left: 2px;
+        }
+        .chat-reaction-pill {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 10px;
+            padding: 3px 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+        .chat-reaction-pill:hover {
+            border-color: var(--primary);
+            background: var(--bg-panel);
+            transform: scale(1.05);
+        }
+        .chat-reaction-pill.reacted {
+            background: rgba(13, 165, 122, 0.12) !important;
+            border-color: rgba(13, 165, 122, 0.35) !important;
+            color: var(--primary) !important;
+        }
+        .chat-reaction-pill.reacted:hover {
+            background: rgba(13, 165, 122, 0.2) !important;
+        }
+
+        /* POPUP QUICK REACTION PICKER */
+        .chat-quick-reaction-popup {
+            position: absolute;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 6px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 50;
+            animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chat-qr-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+        .chat-qr-btn:hover {
+            background: var(--bg-secondary);
+            transform: scale(1.15) translateY(-2px);
+        }
+        .chat-qr-btn.more-btn {
+            background: var(--bg-secondary);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .chat-qr-btn.more-btn:hover {
+            background: var(--border-color);
+            color: var(--text-title);
+        }
+
         /* 5. Khung Soạn Thảo Siêu Gọn (Zen Composer) */
         .chat-input-box {
             padding: 12px 18px 16px 18px;
@@ -19123,6 +19200,34 @@
                                 }
                             }
                         }
+                        
+                        // 1.5. CẬP NHẬT REACTION
+                        else if (eventType === "REACTION_UPDATE") {
+                            const row = document.getElementById(`chat-msg-${data.msgId}`);
+                            if (row) {
+                                const wrap = row.querySelector('.chat-reactions-wrap');
+                                const newHtml = renderReactionChipsHTML(data.reactions, data.msgId);
+                                
+                                if (wrap) {
+                                    wrap.outerHTML = newHtml;
+                                } else if (newHtml) {
+                                    const bubbleContainer = row.querySelector('.chat-bubble-container');
+                                    if (bubbleContainer) {
+                                        // Chèn vào giữa bubble và floating actions
+                                        const floatingActions = row.querySelector('.chat-floating-actions');
+                                        if (floatingActions) {
+                                            floatingActions.insertAdjacentHTML('beforebegin', newHtml);
+                                        } else {
+                                            bubbleContainer.insertAdjacentHTML('beforeend', newHtml);
+                                        }
+                                    }
+                                }
+                            }
+                            // Cập nhật RAM
+                            const ramMsg = chatRingBuffer.find(m => m.msgId === data.msgId);
+                            if (ramMsg) ramMsg.reactions = data.reactions;
+                        }
+
                         // 2. CẬP NHẬT TIN NHẮN (BÓC TÚI MÙ, POLL, AI TRẢ LỜI)
                         else if (eventType === "UPDATE_MESSAGE") {
                             // 🚀 TỐI ƯU REALTIME TỐI THƯỢNG: Trực tiếp thay đổi DOM, KHÔNG gọi API loadGlobalChat
@@ -19268,6 +19373,117 @@
             heartbeatDelay = 6000; // Ép hệ thống đập nhanh lại khi vừa vào phòng chat
             setupChatMentionAutocomplete();
             setupChatTextareaAutoBehavior();
+        }
+
+        // ================= HỆ THỐNG REACTION TIN NHẮN (DISCORD STYLE) =================
+        function renderReactionChipsHTML(reactionsJson, msgId) {
+            if (!reactionsJson) return '';
+            let reactions = {};
+            try { reactions = typeof reactionsJson === 'string' ? JSON.parse(reactionsJson) : reactionsJson; } catch(e) {}
+            
+            const emojis = Object.keys(reactions);
+            if (emojis.length === 0) return '';
+
+            const chipsHtml = emojis.map(emoji => {
+                const users = reactions[emoji] || [];
+                if (users.length === 0) return '';
+                
+                const isReacted = currentUser && users.includes(currentUser.username);
+                // Hiển thị danh sách user khi hover
+                let tooltip = users.map(u => u === (currentUser?.username) ? 'Bạn' : `@${u}`).join(', ');
+                if (users.length > 5) tooltip = `${users.slice(0, 5).join(', ')} và ${users.length - 5} người khác`;
+
+                return `
+                    <div class="chat-reaction-pill ${isReacted ? 'reacted' : ''}" onclick="toggleChatReaction('${msgId}', '${emoji}')" title="${escapeHtml(tooltip)}">
+                        <span>${emoji}</span>
+                        <span>${users.length}</span>
+                    </div>
+                `;
+            }).join('');
+
+            return chipsHtml ? `<div class="chat-reactions-wrap" id="react-wrap-${msgId}">${chipsHtml}</div>` : `<div class="chat-reactions-wrap" id="react-wrap-${msgId}" style="display:none;"></div>`;
+        }
+
+        function openQuickReactionPicker(msgId, e) {
+            e.stopPropagation();
+            
+            // Xóa popup cũ nếu có
+            const oldPopup = document.getElementById('quickReactionPopup');
+            if (oldPopup) oldPopup.remove();
+
+            const quickEmojis = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
+            const popup = document.createElement('div');
+            popup.id = 'quickReactionPopup';
+            popup.className = 'chat-quick-reaction-popup';
+            
+            const btns = quickEmojis.map(em => `
+                <button type="button" class="chat-qr-btn" onclick="toggleChatReaction('${msgId}', '${em}'); document.getElementById('quickReactionPopup').remove();">
+                    ${em}
+                </button>
+            `).join('');
+
+            // Nút (+) mở bảng Emoji Picker gốc
+            const moreBtn = `
+                <button type="button" class="chat-qr-btn more-btn" onclick="document.getElementById('quickReactionPopup').remove(); toggleEmojiPicker('react_${msgId}', event);" title="Thêm Emoji khác">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            `;
+
+            popup.innerHTML = btns + moreBtn;
+            document.body.appendChild(popup);
+
+            // Định vị popup bám theo nút (Hiện ở phía trên nút thả cảm xúc)
+            const rect = e.currentTarget.getBoundingClientRect();
+            popup.style.top = `${rect.top - 45 + window.scrollY}px`;
+            
+            let leftPos = rect.left - 100;
+            if (leftPos + popup.offsetWidth > window.innerWidth - 10) leftPos = window.innerWidth - popup.offsetWidth - 10;
+            if (leftPos < 10) leftPos = 10;
+            popup.style.left = `${leftPos}px`;
+        }
+
+        // Đóng Quick Picker khi bấm ra ngoài
+        document.addEventListener('click', (e) => {
+            const popup = document.getElementById('quickReactionPopup');
+            if (popup && !popup.contains(e.target) && !e.target.closest('.chat-float-btn')) {
+                popup.remove();
+            }
+        });
+
+        let reactionLocks = {};
+        async function toggleChatReaction(msgId, emoji) {
+            if (!currentUser) return openModal('loginModal');
+            if (reactionLocks[msgId]) return;
+            reactionLocks[msgId] = true;
+
+            // Optimistic UI: Đổi giao diện trước khi API trả về
+            const wrap = document.getElementById(`react-wrap-${msgId}`);
+            if (wrap) {
+                // Tạo hiệu ứng giật nhẹ
+                wrap.style.opacity = '0.7';
+            }
+
+            try {
+                const res = await apiFetch(`/api/chat/react`, {
+                    method: 'POST',
+                    body: JSON.stringify({ msgId, emoji })
+                });
+
+                if (res && res.success) {
+                    if (wrap) {
+                        wrap.style.opacity = '1';
+                        wrap.style.display = 'flex';
+                        wrap.outerHTML = renderReactionChipsHTML(res.reactions, msgId);
+                    }
+                } else {
+                    showToast(res?.error || "Lỗi tương tác", "error");
+                    if (wrap) wrap.style.opacity = '1';
+                }
+            } catch(e) {
+                if (wrap) wrap.style.opacity = '1';
+            } finally {
+                setTimeout(() => { reactionLocks[msgId] = false; }, 300); // Cooldown 300ms
+            }
         }
 
         // ⌨️ BỘ XỬ LÝ TEXTAREA THÔNG MINH (Enter để gửi, Shift+Enter để xuống dòng, Paste & Drag-Drop ảnh)
@@ -19744,11 +19960,40 @@
                             </div>
 
                             <!-- Floating Action Bar gắn gọn gàng góc phải -->
+                            ${transBoxHtml}
+                            </div>
+
+                            ${renderReactionChipsHTML(c.reactions, messageId)}
+
+                            <!-- Floating Action Bar gắn gọn gàng góc phải -->
                             <div class="chat-floating-actions">
+                                ${currentUser ? `
+                                    <button type="button" class="chat-float-btn" onclick="openQuickReactionPicker('${messageId}', event)" title="Thả cảm xúc">
+                                        <i class="fa-regular fa-face-smile"></i>
+                                    </button>` : ''}
                                 ${currentUser && !isMine ? `
                                     <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
                                         <i class="fa-solid fa-reply"></i>
                                     </button>` : ''}
+                                ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) && !getTikTokVideoId(c.text) ? `
+                                    <div class="trans-menu-wrapper">
+                                        <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
+                                            <i class="fa-solid fa-language"></i>
+                                        </button>
+                                    </div>` : ''}
+                                <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" title="Sao chép liên kết">
+                                    <i class="fa-solid fa-link"></i>
+                                </button>
+                                ${currentUser && !isMine ? `
+                                    <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo vi phạm">
+                                        <i class="fa-solid fa-flag"></i>
+                                    </button>` : ''}
+                                ${canDelete ? `
+                                    <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>` : ''}
+                            </div>
+                        </div>
                                 ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) && !getTikTokVideoId(c.text) ? `
                                     <div class="trans-menu-wrapper">
                                         <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
@@ -23965,8 +24210,20 @@
             if (previewEl) previewEl.innerText = code || ':emoji:';
         }
 
-        // Chèn Emoji vào đúng vị trí con trỏ của input đang chọn
+        // Chèn Emoji vào đúng vị trí con trỏ của input đang chọn HOẶC dùng để thả Reaction
         function insertSelectedEmoji(emojiChar) {
+            // Tự động đóng popover
+            const popover = document.getElementById('danvEmojiPickerPopover');
+            if (popover) popover.remove();
+
+            // Nếu đang trong chế độ chọn Emoji để thả Reaction
+            if (currentEmojiTargetType.startsWith('react_')) {
+                const msgId = currentEmojiTargetType.replace('react_', '');
+                toggleChatReaction(msgId, emojiChar);
+                return;
+            }
+
+            // Ghi Emoji vào khung nhập liệu Textarea
             const targetMap = {
                 chat: 'commentTextChat',
                 proj: 'commentTextProj',
@@ -23988,13 +24245,8 @@
                 const newCursor = startPos + emojiChar.length;
                 inputEl.setSelectionRange(newCursor, newCursor);
 
-                // Kích hoạt lại input event để tự resize textarea nếu ở chat
                 inputEl.dispatchEvent(new Event('input', { bubbles: true }));
             }
-
-            // Tự động đóng popover sau khi chọn
-            const popover = document.getElementById('danvEmojiPickerPopover');
-            if (popover) popover.remove();
         }
 
         // Đóng popover khi click ra ngoài
