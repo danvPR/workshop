@@ -15227,8 +15227,13 @@
                     });
                     
                     if (tab === 'projects' && !isLoadMore && res.total !== undefined) {
-                        document.getElementById('statProjectCount').innerText = res.total;
-                        document.getElementById('statLikeCount').innerText = items.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0) + (res.total > PROF_ITEMS_PER_PAGE ? '+' : '');
+                        const elProjectCount = document.getElementById('statProjectCount');
+                        if (elProjectCount) elProjectCount.innerText = res.total;
+                        
+                        const elLikeCount = document.getElementById('statLikeCount');
+                        if (elLikeCount) {
+                            elLikeCount.innerText = items.reduce((acc, curr) => acc + (curr.likes ? curr.likes.length : 0), 0) + (res.total > PROF_ITEMS_PER_PAGE ? '+' : '');
+                        }
                     }
                     
                     if (!isLoadMore && items.length === 0) {
