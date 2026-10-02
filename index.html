@@ -3635,6 +3635,44 @@
             max-width: 88%;
             word-wrap: break-word;
             transition: all 0.2s ease;
+            position: relative;
+        }
+
+        /* ===== CÁC HIỆU ỨNG KHUNG BONG BÓNG CHAT ĐẶC BIỆT ===== */
+        .chat-bubble.bubble-neon {
+            border: 1.5px solid #00f2fe !important;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(79, 172, 254, 0.06)) !important;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.35) !important;
+        }
+        .chat-bubble.bubble-gold {
+            border: 1.5px solid #f59e0b !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(234, 88, 12, 0.08)) !important;
+            box-shadow: 0 0 16px rgba(245, 158, 11, 0.4) !important;
+        }
+        .chat-bubble.bubble-sakura {
+            border: 1.5px solid #f472b6 !important;
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.14), rgba(251, 207, 232, 0.08)) !important;
+            box-shadow: 0 0 14px rgba(244, 114, 182, 0.35) !important;
+        }
+        .chat-bubble.bubble-void {
+            border: 1.5px solid #8b5cf6 !important;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(109, 40, 217, 0.08)) !important;
+            box-shadow: 0 0 16px rgba(139, 92, 246, 0.4) !important;
+        }
+        .chat-bubble.bubble-fire {
+            border: 1.5px solid #ef4444 !important;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.08)) !important;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
+        }
+        .chat-bubble.bubble-matrix {
+            border: 1.5px solid #10b981 !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 78, 59, 0.1)) !important;
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.35) !important;
+        }
+        .chat-bubble.bubble-rainbow {
+            border: 2px solid transparent !important;
+            background: linear-gradient(var(--bg-panel), var(--bg-panel)) padding-box, linear-gradient(135deg, #ff007f, #7928ca, #0070f3, #00dfd8) border-box !important;
+            box-shadow: 0 0 18px rgba(121, 40, 202, 0.35) !important;
         }
         .chat-msg-row.mine .chat-bubble {
             background: linear-gradient(135deg, rgba(13, 165, 122, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
@@ -9243,6 +9281,30 @@
                 </button>
             </div>
 
+            <!-- KHỐI QUẢN LÝ KHUNG BONG BÓNG CHAT -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-comment-dots" style="color: #8b5cf6;"></i> <span>Thêm Khung Chat Mới (Bong Bóng Chat WOW)</span>
+                </h4>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label>Tên Khung Chat:</label>
+                        <input type="text" id="adminChatFrameName" class="form-control" placeholder="VD: Neon Cyber, Sakura Pink...">
+                    </div>
+                    <div class="form-group" style="flex: 1.5; min-width: 180px;">
+                        <label>Mã Class CSS (Đã tạo trong code):</label>
+                        <input type="text" id="adminChatFrameClass" class="form-control" placeholder="VD: bubble-neon, bubble-gold, bubble-sakura...">
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 100px;">
+                        <label>Giá WOW:</label>
+                        <input type="number" id="adminChatFramePrice" class="form-control" placeholder="150">
+                    </div>
+                </div>
+                <button id="btnAdminAddChatFrame" class="btn btn-primary" onclick="adminAddChatFrame()" style="background: #8b5cf6; border: none; margin-top: 5px;">
+                    <i class="fa-solid fa-plus"></i> <span>Phát hành Khung Chat mới</span>
+                </button>
+            </div>
+
             <!-- KHỐI QUẢN LÝ SỰ KIỆN TRANG CHỦ -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
@@ -10946,22 +11008,28 @@
         </div>
     </div>
 
-    <!-- MODAL CỬA HÀNG KHUNG AVATAR PRO (LIVE TRY-ON STUDIO) -->
+    <!-- MODAL CỬA HÀNG KHUNG AVATAR & KHUNG CHAT PRO (LIVE TRY-ON STUDIO) -->
     <div class="modal-overlay" id="frameShopModal">
-        <div class="modal" style="max-width: 860px; max-height: 88vh; display: flex; flex-direction: column; border-radius: 24px;">
-            <div class="modal-header" style="padding: 16px 24px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color);">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(245, 158, 11, 0.12); display: flex; align-items: center; justify-content: center;">
-                        <span class="wow-icon" style="font-size: 1.2rem;"></span>
+        <div class="modal" style="max-width: 880px; max-height: 88vh; display: flex; flex-direction: column; border-radius: 24px;">
+            <div class="modal-header" style="padding: 14px 24px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="wow-icon" style="font-size: 1.3rem;"></span>
+                        <span style="font-size: 1.15rem; font-weight: 900; color: var(--text-title);">Studio Thời Trang WOW</span>
                     </div>
-                    <div>
-                        <div style="font-size: 1.15rem; font-weight: 900; color: var(--text-title); line-height: 1.2;" data-i18n="frame_shop_title">Studio Khung Đại Diện</div>
-                        <div style="font-size: 0.78rem; color: var(--text-muted);" data-i18n="frame_shop_subtitle">Thử và mở khóa các bộ khung độc quyền</div>
+                    
+                    <!-- Tab Chuyển đổi Khung Avatar / Khung Chat -->
+                    <div class="auth-nav-tabs" style="margin-left: 10px;">
+                        <button type="button" class="auth-nav-tab-btn active" id="tabShopAvatar" onclick="switchShopType('avatar')">
+                            <i class="fa-solid fa-crop-simple"></i> <span>Khung Avatar</span>
+                        </button>
+                        <button type="button" class="auth-nav-tab-btn" id="tabShopChat" onclick="switchShopType('chat')">
+                            <i class="fa-solid fa-comment-dots"></i> <span>Khung Chat</span>
+                        </button>
                     </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <!-- Số dư ví tích hợp -->
                     <div class="WOW-balance-pill" onclick="closeModal('frameShopModal'); openDailyRewardModal();" title="Bấm để nhận thêm WOW mỗi ngày">
                         <span class="wow-icon"></span> <span id="shopModalWOWBalance">0</span>
                     </div>
@@ -10976,9 +11044,18 @@
                     <div class="frame-tryon-booth">
                         <span class="tryon-badge-tag"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="frame_tryon_badge">Xem thử trực tiếp</span></span>
                         
-                        <div class="tryon-avt-stage">
+                        <!-- Bục thử Khung Avatar -->
+                        <div class="tryon-avt-stage" id="tryonAvatarStageWrap">
                             <img id="tryonBaseAvt" src="https://i.ibb.co/QFg1cVVD/image.png" class="stage-base-avt" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                             <img id="tryonFrameOverlay" src="" class="stage-frame-overlay" style="display:none;">
+                        </div>
+
+                        <!-- Bục thử Bong bóng Chat Xem trước -->
+                        <div id="tryonChatStageWrap" style="display:none; width: 100%; margin: 15px 0 20px 0; text-align: left;">
+                            <div class="chat-bubble" id="tryonChatBubblePreview" style="max-width: 100%; font-size: 0.88rem; width: 100%;">
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">Tin nhắn xem thử</div>
+                                <span>Chào bạn! Đây là khung chat phong cách của bạn ✨</span>
+                            </div>
                         </div>
 
                         <div id="tryonFrameName" class="tryon-info-title" data-i18n="frame_default_name">Khung Mặc định</div>
@@ -19964,7 +20041,7 @@
                         </div>
 
                         <div class="chat-bubble-container">
-                            <div class="chat-bubble">
+                            <div class="chat-bubble ${c.chatFrame ? escapeHtml(c.chatFrame) : ''}">
                                 ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
                                 ${renderChatContent(c.text || '', c.author, c)}
                                 ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : ''}
@@ -21303,318 +21380,61 @@
             }
         }
 
-        // ================= HỆ THỐNG STUDIO KHUNG AVATAR PRO & TỨC THÌ =================
-        let activeShopFilter = 'all';
-        let currentTryonFrame = null; // Khung đang được chọn để thử trên bục
+        async function adminAddFrame() {
+            const name = document.getElementById('adminFrameName').value;
+            const imgUrl = document.getElementById('adminFrameUrl').value;
+            const price = document.getElementById('adminFramePrice').value;
 
-        function openFrameShopModal() {
-            if (!currentUser) return openModal('loginModal');
-            openModal('frameShopModal');
+            if(!name || !imgUrl || !price) return showToast("Vui lòng điền đủ thông tin", "error");
             
-            // Cập nhật số dư tức thời
-            syncAllWOWDisplays();
+            const btn = document.getElementById('btnAdminAddFrame') || (window.event && window.event.currentTarget);
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang thêm...'; 
+                btn.disabled = true;
+            }
+
+            const res = await apiFetch(`/api/admin/add_frame`, { method: 'POST', body: JSON.stringify({ name, imgUrl, price: parseInt(price) }) });
+            if(res && res.success) {
+                showToast("Đã phát hành Khung mới!", "success");
+                document.getElementById('adminFrameName').value = "";
+                document.getElementById('adminFrameUrl').value = "";
+                document.getElementById('adminFramePrice').value = "";
+            }
             
-            // Set ảnh avatar người dùng lên bục thử
-            const baseAvt = document.getElementById('tryonBaseAvt');
-            if (baseAvt) baseAvt.src = getAvtUrl(currentUser.avt);
-
-            // Tải danh sách
-            loadAvatarFramesShop();
-        }
-
-        function syncAllWOWDisplays() {
-            const val = currentUser ? (currentUser.WOW || 0) : 0;
-            const setWOW = document.getElementById('settingsWOWBalance');
-            if (setWOW) setWOW.innerText = val;
-            const navWOW = document.getElementById('navWOWBalance');
-            if (navWOW) navWOW.innerText = val;
-            const shopWOW = document.getElementById('shopModalWOWBalance');
-            if (shopWOW) shopWOW.innerText = val;
-            const histWOW = document.getElementById('settingsWOWBalanceHist');
-            if (histWOW) histWOW.innerText = val;
-        }
-        
-        async function loadWowHistory() {
-            const listEl = document.getElementById('wowHistoryList');
-            listEl.innerHTML = '<div style="text-align: center; color: var(--primary); padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size: 2rem;"></i></div>';
-            
-            try {
-                const res = await apiFetch(`/api/user/wow_history?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`, { method: 'GET' });
-                if (res && res.success) {
-                    if (!res.history || res.history.length === 0) {
-                        listEl.innerHTML = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">Bạn chưa có giao dịch WOW nào.</div>';
-                        return;
-                    }
-                    
-                    listEl.innerHTML = res.history.map(item => {
-                        const isPos = item.amount > 0;
-                        const amtClass = isPos ? 'color: #10b981;' : 'color: #ef4444;';
-                        const sign = isPos ? '+' : '';
-                        const date = new Date(item.timestamp).toLocaleString('vi-VN');
-                        
-                        return `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px;">
-                            <div>
-                                <div style="font-weight: 700; color: var(--text-title); font-size: 0.95rem;">${escapeHtml(item.description)}</div>
-                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">${date}</div>
-                            </div>
-                            <div style="font-weight: 900; font-size: 1.1rem; ${amtClass}">
-                                ${sign}${item.amount} <span class="wow-icon" style="font-size: 0.9rem;"></span>
-                            </div>
-                        </div>
-                        `;
-                    }).join('');
-                } else {
-                    listEl.innerHTML = '<div style="text-align:center; color:#ef4444;">Lỗi tải dữ liệu</div>';
-                }
-            } catch (e) {
-                listEl.innerHTML = '<div style="text-align:center; color:#ef4444;">Lỗi kết nối máy chủ</div>';
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung mới'; 
+                btn.disabled = false;
             }
         }
 
-        async function loadAvatarFramesShop(forceServer = false) {
-            const container = document.getElementById('frameShopContainer');
-            if (!container) return;
+        async function adminAddChatFrame() {
+            const name = document.getElementById('adminChatFrameName').value.trim();
+            const cssClass = document.getElementById('adminChatFrameClass').value.trim();
+            const price = document.getElementById('adminChatFramePrice').value.trim();
 
-            if (availableFrames.length === 0 || forceServer) {
-                container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">Đang chuẩn bị phòng thử...</span></div>';
-                try {
-                    const framesRes = await fetch(`${WORKER_URL}/api/frames`);
-                    availableFrames = await framesRes.json();
-                } catch(e) {
-                    container.innerHTML = '<div style="grid-column: 1/-1; color:#ef4444; padding:20px; text-align:center;">Lỗi kết nối cửa hàng.</div>';
-                    return;
-                }
+            if(!name || !cssClass || !price) return showToast("Vui lòng điền đủ thông tin Khung Chat!", "error");
+
+            const btn = document.getElementById('btnAdminAddChatFrame') || (window.event && window.event.currentTarget);
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát hành...';
+                btn.disabled = true;
             }
 
-            // Đồng bộ thông tin sở hữu từ currentUser nếu có
-            if (currentUser.ownedFrames && Array.isArray(currentUser.ownedFrames)) {
-                myOwnedFrames = currentUser.ownedFrames;
-            }
-
-            // Nếu chưa có myOwnedFrames trong bộ nhớ, lấy 1 lần
-            if (myOwnedFrames.length === 0 || forceServer) {
-                try {
-                    const userRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
-                    const pData = await userRes.json();
-                    myOwnedFrames = pData.ownedFrames || [];
-                    currentUser.ownedFrames = myOwnedFrames;
-                    currentUser.WOW = pData.WOW !== undefined ? pData.WOW : (pData.omg || 0);
-                    currentUser.frame = pData.frame;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    syncAllWOWDisplays();
-                } catch(e) {}
-            }
-
-            // Mặc định chọn thử khung người dùng ĐANG ĐEO trên bục
-            if (!currentTryonFrame) {
-                if (currentUser.frame) {
-                    const equipped = availableFrames.find(f => f.url === currentUser.frame);
-                    currentTryonFrame = equipped || { id: 'none', name: 'Khung Mặc định', url: '', price: 0 };
-                } else {
-                    currentTryonFrame = { id: 'none', name: 'Khung Mặc định', url: '', price: 0 };
-                }
-            }
-
-            updateTryonBoothUI();
-            renderFrameGrid();
-        }
-
-        function filterFrameShop(tab, btnEl) {
-            activeShopFilter = tab;
-            document.querySelectorAll('.frame-tab-pill').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-            renderFrameGrid();
-        }
-
-        // Cập nhật bục thử khung bên trái
-        function updateTryonBoothUI() {
-            if (!currentTryonFrame) return;
-
-            const overlay = document.getElementById('tryonFrameOverlay');
-            const nameEl = document.getElementById('tryonFrameName');
-            const chipEl = document.getElementById('tryonStatusChip');
-            const actContainer = document.getElementById('tryonActionContainer');
-
-            nameEl.innerText = currentTryonFrame.name;
-
-            if (currentTryonFrame.id === 'none' || !currentTryonFrame.url) {
-                overlay.style.display = 'none';
-                overlay.src = '';
-            } else {
-                overlay.src = currentTryonFrame.url;
-                overlay.style.display = 'block';
-            }
-
-            const isNone = currentTryonFrame.id === 'none';
-            const isEquipped = isNone ? (!currentUser.frame) : (currentUser.frame === currentTryonFrame.url);
-            const isOwned = isNone || myOwnedFrames.includes(currentTryonFrame.id);
-
-            if (isEquipped) {
-                chipEl.className = 'tryon-status-chip status-equipped';
-                chipEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đang trang bị';
-                actContainer.innerHTML = `
-                    <button class="btn-tryon-main btn" disabled style="background:var(--bg-secondary); color:var(--text-muted); cursor:default;">
-                        <i class="fa-solid fa-check"></i> Đang sử dụng
-                    </button>
-                `;
-            } else if (isOwned) {
-                chipEl.className = 'tryon-status-chip status-owned';
-                chipEl.innerHTML = '<i class="fa-solid fa-box-archive"></i> Đã có trong tủ đồ';
-                actContainer.innerHTML = `
-                    <button class="btn-tryon-main btn btn-primary" onclick="equipFrameDirect('${currentTryonFrame.id}')">
-                        <i class="fa-solid fa-shirt"></i> Trang bị ngay
-                    </button>
-                `;
-            } else {
-                chipEl.className = 'tryon-status-chip status-unowned';
-                chipEl.innerHTML = `<span class="wow-icon"></span> Giá: ${currentTryonFrame.price} WOW`;
-                actContainer.innerHTML = `
-                    <button class="btn-tryon-main" style="background: linear-gradient(135deg, #f5b041, #ea580c); color: #fff; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);" onclick="buyFrameDirect('${currentTryonFrame.id}', ${currentTryonFrame.price})">
-                        <span class="wow-icon" style="filter: brightness(0) invert(1);"></span> Mở khóa với ${currentTryonFrame.price} WOW
-                    </button>
-                `;
-            }
-        }
-
-        // Chọn một khung để đưa lên bục thử
-        function selectFrameToTry(frameObj) {
-            currentTryonFrame = frameObj;
-            updateTryonBoothUI();
-            
-            // Đánh dấu active trong Grid
-            document.querySelectorAll('.frame-item-card').forEach(c => {
-                c.classList.toggle('is-selected', c.getAttribute('data-frame-id') === frameObj.id);
+            const res = await apiFetch(`/api/admin/add_chat_frame`, {
+                method: 'POST',
+                body: JSON.stringify({ name, cssClass, price: parseInt(price) })
             });
-        }
 
-        // Vẽ Grid các khung bên phải
-        function renderFrameGrid() {
-            const container = document.getElementById('frameShopContainer');
-            if (!container) return;
-
-            // Đếm số lượng theo danh mục
-            const allItems = [{ id: 'none', name: 'Khung Mặc định', url: '', price: 0 }, ...availableFrames];
-            const ownedItems = allItems.filter(f => f.id === 'none' || myOwnedFrames.includes(f.id));
-            const storeItems = allItems.filter(f => f.id !== 'none' && !myOwnedFrames.includes(f.id));
-
-            document.getElementById('countFrameAll').innerText = allItems.length;
-            document.getElementById('countFrameOwned').innerText = ownedItems.length;
-            document.getElementById('countFrameStore').innerText = storeItems.length;
-
-            let displayList = allItems;
-            if (activeShopFilter === 'owned') displayList = ownedItems;
-            if (activeShopFilter === 'store') displayList = storeItems;
-
-            if (displayList.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">Không có khung nào trong mục này.</div>';
-                return;
+            if(res && res.success) {
+                showToast("Đã phát hành Khung Chat mới!", "success");
+                document.getElementById('adminChatFrameName').value = "";
+                document.getElementById('adminChatFrameClass').value = "";
+                document.getElementById('adminChatFramePrice').value = "";
             }
 
-            container.innerHTML = displayList.map(f => {
-                const isNone = f.id === 'none';
-                const isEquipped = isNone ? (!currentUser.frame) : (currentUser.frame === f.url);
-                const isOwned = isNone || myOwnedFrames.includes(f.id);
-                const isSelected = currentTryonFrame && currentTryonFrame.id === f.id;
-
-                let badgeHtml = '';
-                if (isEquipped) badgeHtml = `<span class="frame-mini-badge equipped"><i class="fa-solid fa-check"></i> Đang dùng</span>`;
-                else if (isOwned) badgeHtml = `<span class="frame-mini-badge owned">Đã có</span>`;
-
-                let priceOrStatus = '';
-                if (isOwned) {
-                    priceOrStatus = `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-box"></i> Tủ đồ</span>`;
-                } else {
-                    priceOrStatus = `<span class="frame-card-price"><span class="wow-icon"></span> ${f.price}</span>`;
-                }
-
-                // Chuyển frame object thành chuỗi JSON an toàn để truyền vào onclick
-                const frameJsonEscaped = JSON.stringify(f).replace(/"/g, '&quot;');
-
-                return `
-                <div class="frame-item-card ${isSelected ? 'is-selected' : ''}" data-frame-id="${f.id}" onclick="selectFrameToTry(${frameJsonEscaped})">
-                    ${badgeHtml}
-                    <div class="frame-preview-box">
-                        <img src="${getAvtUrl(currentUser.avt)}" class="base-avt" onerror="this.src='${DEFAULT_AVATAR}'">
-                        ${f.url ? `<img src="${f.url}" class="frame-overlay">` : ''}
-                    </div>
-                    <div class="frame-item-title" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div>
-                    ${priceOrStatus}
-                </div>`;
-            }).join('');
-        }
-
-        // ================= CÁC HÀM XỬ LÝ MUA & TRANG BỊ TỨC THÌ (OPTIMISTIC UI) =================
-        async function buyFrameDirect(frameId, price) {
-            if ((currentUser.WOW || 0) < price) {
-                return showToast("Bạn không đủ điểm WOW! Hãy điểm danh nhận thưởng hàng ngày nhé.", "error");
-            }
-            if (!confirm(`Bạn có chắc chắn muốn mở khóa khung này với giá ${price} WOW?`)) return;
-
-            const actContainer = document.getElementById('tryonActionContainer');
-            const origAct = actContainer.innerHTML;
-            actContainer.innerHTML = '<button class="btn-tryon-main btn" disabled><i class="fa-solid fa-spinner fa-spin"></i> Đang kích hoạt khung...</button>';
-
-            const startTime = Date.now();
-            try {
-                const res = await apiFetch(`/api/store/buy`, { method: 'POST', body: JSON.stringify({ frameId }) });
-                if (res && res.success) {
-                    if (!myOwnedFrames.includes(frameId)) myOwnedFrames.push(frameId);
-                    currentUser.ownedFrames = myOwnedFrames;
-                    currentUser.WOW = res.newBalance !== undefined ? res.newBalance : (currentUser.WOW - price);
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    
-                    syncAllWOWDisplays();
-                    showToast("Đã mở khóa khung thành công!", "success");
-
-                    const elapsed = Date.now() - startTime;
-                    if (elapsed < 1500) await sleep(1500 - elapsed); // Giữ delay 1.5s
-                    equipFrameDirect(frameId);
-                } else {
-                    showToast((res && res.error) ? res.error : "Không thể thực hiện giao dịch", "error");
-                    actContainer.innerHTML = origAct;
-                }
-            } catch(e) {
-                actContainer.innerHTML = origAct;
-            }
-        }
-
-        async function equipFrameDirect(frameId) {
-            const actContainer = document.getElementById('tryonActionContainer');
-            const origAct = actContainer.innerHTML;
-            actContainer.innerHTML = '<button class="btn-tryon-main btn" disabled><i class="fa-solid fa-spinner fa-spin"></i> Đang trang bị...</button>';
-
-            const startTime = Date.now();
-            try {
-                const res = await apiFetch(`/api/store/equip`, { method: 'POST', body: JSON.stringify({ frameId }) });
-                if (res && res.success) {
-                    currentUser.frame = res.frameUrl || null;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-
-                    updateNav();
-
-                    if (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
-                        const profAvtWrapper = document.querySelector('.profile-avt-wrapper');
-                        if (profAvtWrapper) {
-                            profAvtWrapper.innerHTML = `
-                                <img id="profAvt" src="${getAvtUrl(currentUser.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
-                                ${currentUser.frame ? `<img src="${currentUser.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none; object-fit:contain; aspect-ratio:1/1;">` : ''}
-                            `;
-                        }
-                    }
-
-                    const elapsed = Date.now() - startTime;
-                    if (elapsed < 1200) await sleep(1200 - elapsed); // Giữ delay 1.2s
-
-                    updateTryonBoothUI();
-                    renderFrameGrid();
-                    showToast("Đã trang bị khung đại diện!", "success");
-                } else {
-                    showToast((res && res.error) ? res.error : "Không thể trang bị khung", "error");
-                    actContainer.innerHTML = origAct;
-                }
-            } catch(e) {
-                actContainer.innerHTML = origAct;
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung Chat mới';
+                btn.disabled = false;
             }
         }
 
@@ -21669,7 +21489,8 @@
                 try {
                     let bodyObj = JSON.parse(options.body);
                     if (endpoint.includes("/api/chat") || endpoint.includes("/api/comment") || endpoint.includes("/api/user/comment")) {
-                        bodyObj.frame = currentUser.frame || null; // Nạp frame vào tin nhắn
+                        bodyObj.frame = currentUser.frame || null; // Nạp frame avatar vào tin nhắn
+                        bodyObj.chatFrame = currentUser.chatFrame || null; // Nạp khung chat vào tin nhắn
                         options.body = JSON.stringify(bodyObj);
                     }
                 } catch(e){}
