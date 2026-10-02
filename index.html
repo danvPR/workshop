@@ -3644,6 +3644,13 @@
             background-clip: padding-box;
             background-color: var(--bg-panel);
         }
+
+        /* CỐ ĐỊNH MÀU CHỮ THEO CÀI ĐẶT CỦA ADMIN (CHỐNG CHÌM CHỮ TRÊN THEME SÁNG/TỐI) */
+        .chat-bubble[style*="--bubble-text-color"],
+        .chat-bubble[style*="--bubble-text-color"] .chat-text,
+        .comment-text-bubble[style*="--bubble-text-color"] {
+            color: var(--bubble-text-color) !important;
+        }
         .chat-bubble.bubble-neon, .comment-text-bubble.bubble-neon {
             border: 1.5px solid #00f2fe !important;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(79, 172, 254, 0.06)) !important;
@@ -4152,6 +4159,64 @@
         .tryon-status-chip.status-equipped { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
         .tryon-status-chip.status-owned { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
         .tryon-status-chip.status-unowned { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+
+        /* LỚP PHỦ MỜ KHI RÊ CHUỘT / CLICK AVATAR TRÊN PROFILE CỦA CHÍNH MÌNH */
+        .profile-avt-wrapper.is-owner {
+            cursor: pointer;
+        }
+        .profile-avt-overlay-btn {
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #ffffff;
+            opacity: 0;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 5;
+            user-select: none;
+        }
+        .profile-avt-wrapper.is-owner:hover .profile-avt-overlay-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .profile-avt-overlay-btn i {
+            font-size: 1.4rem;
+            color: #fef08a;
+        }
+        .profile-avt-overlay-btn span {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* MODAL TIỆN ÍCH AVATAR ACTION */
+        .avatar-action-tile {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            text-align: left;
+            width: 100%;
+        }
+        .avatar-action-tile:hover {
+            border-color: var(--primary);
+            background: var(--bg-panel);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
 
         .btn-tryon-main {
             width: 100%;
@@ -9286,13 +9351,13 @@
                 </button>
             </div>
 
-            <!-- KHỐI QUẢN LÝ KHUNG BONG BÓNG CHAT (HỖ TRỢ LINK ẢNH / GIF TRỰC TIẾP) -->
+            <!-- KHỐI QUẢN LÝ KHUNG BONG BÓNG CHAT (HỖ TRỢ LINK ẢNH / GIF TRỰC TIẾP & MÀU CHỮ) -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-comment-dots" style="color: #8b5cf6;"></i> <span>Thêm Khung Chat Mới (Bong Bóng Chat WOW)</span>
                 </h4>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                    <div class="form-group" style="flex: 1.2; min-width: 150px;">
                         <label>Tên Khung Chat:</label>
                         <input type="text" id="adminChatFrameName" class="form-control" placeholder="VD: Mèo May Mắn, Galaxy GIF, Rồng Lửa...">
                     </div>
@@ -9300,9 +9365,16 @@
                         <label>URL Hình Ảnh / GIF (ImgBB PNG/GIF trong suốt) hoặc Class CSS:</label>
                         <input type="text" id="adminChatFrameClass" class="form-control" placeholder="https://i.ibb.co/... hoặc bubble-neon">
                     </div>
-                    <div class="form-group" style="flex: 1; min-width: 100px;">
+                    <div class="form-group" style="flex: 0.8; min-width: 90px;">
                         <label>Giá WOW:</label>
                         <input type="number" id="adminChatFramePrice" class="form-control" placeholder="150">
+                    </div>
+                    <div class="form-group" style="flex: 1.2; min-width: 160px;">
+                        <label>Màu chữ hiển thị:</label>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="color" id="adminChatFrameColorPicker" value="#ffffff" style="width: 38px; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; padding: 2px; background: var(--bg-secondary);" oninput="document.getElementById('adminChatFrameTextColor').value = this.value">
+                            <input type="text" id="adminChatFrameTextColor" class="form-control" placeholder="Để trống nếu theo theme" style="font-size: 0.84rem;" oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('adminChatFrameColorPicker').value = this.value">
+                        </div>
                     </div>
                 </div>
                 <button id="btnAdminAddChatFrame" class="btn btn-primary" onclick="adminAddChatFrame()" style="background: #8b5cf6; border: none; margin-top: 5px;">
@@ -11009,6 +11081,105 @@
 
             <div class="modal-body" style="overflow-y:auto; padding:12px 20px 20px 20px; display:flex; flex-direction:column; gap:10px;" id="followListContainer">
                 <!-- Danh sách 5 người và nút Xem thêm render từ JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TÙY CHỌN NHANH KHI CLICK VÀO AVATAR PROFILE CỦA MÌNH -->
+    <div class="modal-overlay" id="avatarActionChoiceModal">
+        <div class="modal" style="max-width: 440px; border-radius: 24px; overflow: hidden;">
+            <div class="modal-header" style="align-items:center;">
+                <span style="font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-camera-retro" style="color:var(--primary);"></i> Tùy Chỉnh Avatar Của Bạn
+                </span>
+                <button class="btn-close" onclick="closeModal('avatarActionChoiceModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+                <!-- Tùy chọn 1: Đổi ảnh đại diện mới -->
+                <label for="directProfileAvtUpload" class="avatar-action-tile" style="margin: 0;">
+                    <div style="width: 46px; height: 46px; border-radius: 14px; background: rgba(13, 165, 122, 0.12); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; font-size: 1rem; color: var(--text-title);">Đổi ảnh đại diện mới</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Tải ảnh từ máy tính hoặc điện thoại (JPG, PNG)</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+                </label>
+                <input type="file" id="directProfileAvtUpload" accept="image/*" style="display:none;" onchange="handleDirectAvatarUpload(this)">
+
+                <!-- Tùy chọn 2: Mở Studio Khung Avatar & Khung Chat -->
+                <div class="avatar-action-tile" onclick="closeModal('avatarActionChoiceModal'); openFrameShopModal();">
+                    <div style="width: 46px; height: 46px; border-radius: 14px; background: rgba(245, 158, 11, 0.14); color: #ea580c; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                        <span class="wow-icon" style="font-size: 1.4rem;"></span>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; font-size: 1rem; color: var(--text-title);">Studio Thời Trang WOW</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Trang bị và mua Khung Avatar & Khung Chat độc quyền</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN MUA KHUNG HIỆN ĐẠI (CONFIRM PURCHASE MODAL) -->
+    <div class="modal-overlay" id="frameConfirmBuyModal" style="z-index: 10005;">
+        <div class="modal gamepay-modal-box" style="max-width: 440px;">
+            <div class="gamepay-header">
+                <div class="gamepay-header-title">
+                    <span class="wow-icon" style="font-size: 1.15rem;"></span>
+                    <span>Xác Nhận Mở Khóa</span>
+                </div>
+                <button class="btn-close" onclick="closeModal('frameConfirmBuyModal')">&times;</button>
+            </div>
+            
+            <div class="gamepay-body">
+                <div style="font-size: 0.88rem; color: var(--text-muted); text-align: center;">
+                    Bạn đang chuẩn bị mở khóa vật phẩm vĩnh viễn:
+                </div>
+
+                <div class="gamepay-item-card">
+                    <div class="gamepay-item-badge" id="confirmBuyItemBadge">
+                        <i class="fa-solid fa-crown"></i> KHUNG AVATAR ĐỘC QUYỀN
+                    </div>
+                    <div class="gamepay-item-name" id="confirmBuyItemName">Tên Khung</div>
+                    
+                    <!-- Khung preview vật phẩm nhỏ -->
+                    <div id="confirmBuyPreviewBox" style="width: 75px; height: 75px; margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center; position: relative;">
+                    </div>
+
+                    <div class="gamepay-item-price-pill">
+                        <span class="wow-icon"></span>
+                        <span id="confirmBuyItemPrice">0</span>
+                    </div>
+                </div>
+
+                <div class="gamepay-balance-grid">
+                    <div class="gamepay-balance-box">
+                        <span class="gamepay-balance-label">Ví hiện tại</span>
+                        <div class="gamepay-balance-val">
+                            <span class="wow-icon" style="font-size:1rem;"></span>
+                            <span id="confirmBuyCurrentBalance">0</span>
+                        </div>
+                    </div>
+                    <div class="gamepay-balance-box">
+                        <span class="gamepay-balance-label">Sau khi mua</span>
+                        <div class="gamepay-balance-val remaining">
+                            <span class="wow-icon" style="font-size:1rem;"></span>
+                            <span id="confirmBuyRemainingBalance">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gamepay-actions">
+                    <button type="button" class="btn-gamepay-cancel" onclick="closeModal('frameConfirmBuyModal')">
+                        Để sau
+                    </button>
+                    <button type="button" class="btn-gamepay-confirm" id="btnExecuteBuyItem" onclick="executeBuySelectedItem()">
+                        <i class="fa-solid fa-unlock"></i> <span>Xác nhận mua</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -21442,17 +21613,37 @@
             });
         }
 
-        // Tự động phân tích Khung Chat: Nếu là URL ảnh/GIF -> Áp dụng 9-Slice Border-Image tự co giãn; Nếu là class -> Áp class
+        // Tự động phân tích Khung Chat: Nếu là URL ảnh/GIF -> Áp dụng 9-Slice Border-Image tự co giãn; Áp dụng màu chữ nếu có
         function getChatBubbleFrameAttributes(chatFrameVal) {
             if (!chatFrameVal || chatFrameVal === 'none') return { classAttr: '', styleAttr: '' };
-            const clean = String(chatFrameVal).trim();
+            let clean = String(chatFrameVal).trim();
+            let textColor = '';
+
+            // Bóc tách nếu chuỗi có định dạng: url|||#màu_chữ
+            if (clean.includes('|||')) {
+                const parts = clean.split('|||');
+                clean = parts[0].trim();
+                textColor = parts[1].trim();
+            }
+
+            // Nếu chưa có màu trong chuỗi, tự động tra cứu từ danh sách khung đã nạp
+            if (!textColor && typeof availableChatFrames !== 'undefined' && Array.isArray(availableChatFrames)) {
+                const found = availableChatFrames.find(f => (f.cssClass && f.cssClass.trim() === clean) || (f.id && f.id === clean));
+                if (found && found.textColor) textColor = found.textColor.trim();
+            }
+
+            const colorCss = textColor ? `--bubble-text-color: ${escapeHtml(textColor)}; color: ${escapeHtml(textColor)} !important;` : '';
+
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
                 return {
                     classAttr: 'bubble-custom-frame',
-                    styleAttr: `style="border: 14px solid transparent; border-image: url('${escapeHtml(clean)}') 30 fill / 14px round; border-image-outset: 1px;"`
+                    styleAttr: `style="border: 14px solid transparent; border-image: url('${escapeHtml(clean)}') 30 fill / 14px round; border-image-outset: 1px; ${colorCss}"`
                 };
             }
-            return { classAttr: escapeHtml(clean), styleAttr: '' };
+            return { 
+                classAttr: escapeHtml(clean), 
+                styleAttr: colorCss ? `style="${colorCss}"` : '' 
+            };
         }
 
         // 🌟 HÀM MỞ CỬA HÀNG KHUNG (KHẮC PHỤC LỖI ẤN KHÔNG VÔ)
@@ -21581,25 +21772,25 @@
                     }
                 }
             } 
-            // Hiển thị bong bóng chat xem trước
-            else {
-                const previewBubble = document.getElementById('tryonChatBubblePreview');
-                if (previewBubble) {
-                    previewBubble.className = 'chat-bubble';
-                    previewBubble.removeAttribute('style');
-                    previewBubble.style.maxWidth = '100%';
-                    previewBubble.style.fontSize = '0.88rem';
-                    previewBubble.style.width = '100%';
+            // Hiển thị bong bóng chat xem trước (Kèm màu chữ custom)
+                else {
+                    const previewBubble = document.getElementById('tryonChatBubblePreview');
+                    if (previewBubble) {
+                        previewBubble.className = 'chat-bubble';
+                        previewBubble.removeAttribute('style');
+                        previewBubble.style.maxWidth = '100%';
+                        previewBubble.style.fontSize = '0.88rem';
+                        previewBubble.style.width = '100%';
 
-                    const fAttrs = getChatBubbleFrameAttributes(item.cssClass);
-                    if (fAttrs.classAttr) previewBubble.classList.add(fAttrs.classAttr);
-                    if (fAttrs.styleAttr) {
-                        previewBubble.style.border = '14px solid transparent';
-                        previewBubble.style.borderImage = `url('${item.cssClass}') 30 fill / 14px round`;
-                        previewBubble.style.borderImageOutset = '1px';
+                        const frameWithColor = item.cssClass + (item.textColor ? `|||${item.textColor}` : '');
+                        const fAttrs = getChatBubbleFrameAttributes(frameWithColor);
+                        if (fAttrs.classAttr) previewBubble.className = `chat-bubble ${fAttrs.classAttr}`;
+                        if (fAttrs.styleAttr) {
+                            const inlineStyle = fAttrs.styleAttr.replace(/^style=["']/, '').replace(/["']$/, '');
+                            previewBubble.style.cssText += '; ' + inlineStyle;
+                        }
                     }
                 }
-            }
 
             // Trạng thái Chip
             if (chipEl) {
@@ -21631,7 +21822,7 @@
                     `;
                 } else {
                     actionContainer.innerHTML = `
-                        <button type="button" class="btn btn-primary btn-tryon-main" style="background:#ea580c; border:none;" onclick="buySelectedShopItem()">
+                        <button type="button" class="btn btn-primary btn-tryon-main" style="background:#ea580c; border:none;" onclick="openFrameConfirmBuyModal()">
                             <span class="wow-icon"></span> Mua với ${item.price} WOW
                         </button>
                     `;
@@ -21725,13 +21916,63 @@
                         <div class="frame-item-title" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
                         <div class="frame-card-price">
                             ${isOwned 
-                                ? `<span style="color:#10b981; font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> Miễn phí</span>` 
+                                ? `<span style="color:#10b981; font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> ${item.id === 'none' ? 'Mặc định' : 'Đã sở hữu'}</span>` 
                                 : `<span class="wow-icon"></span> <span>${item.price}</span>`
                             }
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        // 🛍️ MỞ MODAL XÁC NHẬN MUA HIỆN ĐẠI
+        function openFrameConfirmBuyModal() {
+            if (!selectedShopItem || !currentUser) return;
+            const item = selectedShopItem;
+            const isAvatar = (currentShopType === 'avatar');
+
+            if ((currentUser.WOW || 0) < item.price) {
+                return showToast("Bạn không đủ điểm WOW! Hãy điểm danh hàng ngày nhé.", "error");
+            }
+
+            document.getElementById('confirmBuyItemBadge').innerHTML = isAvatar 
+                ? '<i class="fa-solid fa-crop-simple"></i> KHUNG AVATAR ĐỘC QUYỀN' 
+                : '<i class="fa-solid fa-comment-dots"></i> KHUNG CHAT PHONG CÁCH';
+            document.getElementById('confirmBuyItemName').innerText = item.name;
+            document.getElementById('confirmBuyItemPrice').innerText = item.price;
+
+            const curBal = currentUser.WOW || 0;
+            document.getElementById('confirmBuyCurrentBalance').innerText = curBal;
+            document.getElementById('confirmBuyRemainingBalance').innerText = curBal - item.price;
+
+            const previewBox = document.getElementById('confirmBuyPreviewBox');
+            if (previewBox) {
+                if (isAvatar) {
+                    previewBox.innerHTML = `
+                        <div style="position:relative; width:60px; height:60px;">
+                            <img src="${getAvtUrl(currentUser.avt)}" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:2px solid var(--border-color);">
+                            ${item.url ? `<img src="${item.url}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%,-50%); pointer-events:none; object-fit:contain;">` : ''}
+                        </div>
+                    `;
+                } else {
+                    const isImg = item.cssClass && (item.cssClass.startsWith('http://') || item.cssClass.startsWith('https://'));
+                    previewBox.innerHTML = `
+                        <div style="width:100%; display:flex; justify-content:center;">
+                            ${isImg 
+                                ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.75rem; padding:6px 12px; border:10px solid transparent; border-image:url('${item.cssClass}') 30 fill / 10px round;">Demo Chat ✨</div>`
+                                : `<div class="chat-bubble ${escapeHtml(item.cssClass)}" style="font-size:0.75rem; padding:6px 12px;">Demo Chat ✨</div>`
+                            }
+                        </div>
+                    `;
+                }
+            }
+
+            openModal('frameConfirmBuyModal');
+        }
+
+        async function executeBuySelectedItem() {
+            closeModal('frameConfirmBuyModal');
+            await buySelectedShopItem();
         }
 
         async function buySelectedShopItem() {
@@ -21857,6 +22098,7 @@
             const name = document.getElementById('adminChatFrameName').value.trim();
             const frameVal = document.getElementById('adminChatFrameClass').value.trim();
             const price = document.getElementById('adminChatFramePrice').value.trim();
+            const textColor = (document.getElementById('adminChatFrameTextColor')?.value || '').trim();
 
             if(!name || !frameVal || !price) return showToast("Vui lòng điền đủ thông tin Khung Chat!", "error");
 
@@ -21868,7 +22110,7 @@
 
             const res = await apiFetch(`/api/admin/add_chat_frame`, {
                 method: 'POST',
-                body: JSON.stringify({ name, cssClass: frameVal, imgUrl: frameVal, price: parseInt(price) })
+                body: JSON.stringify({ name, cssClass: frameVal, imgUrl: frameVal, price: parseInt(price), textColor: textColor })
             });
 
             if(res && res.success) {
@@ -21876,6 +22118,7 @@
                 document.getElementById('adminChatFrameName').value = "";
                 document.getElementById('adminChatFrameClass').value = "";
                 document.getElementById('adminChatFramePrice').value = "";
+                if (document.getElementById('adminChatFrameTextColor')) document.getElementById('adminChatFrameTextColor').value = "";
             }
 
             if (btn) {
@@ -21884,22 +22127,91 @@
             }
         }
 
-        // CẬP NHẬT ẢNH AVATAR PROFILE ĐỂ HIỆN KHUNG (GHI ĐÈ LOGIC CŨ)
+        // CẬP NHẬT ẢNH AVATAR PROFILE ĐỂ HIỆN KHUNG VÀ LỚP PHỦ TÙY CHỌN CHO CHÍNH CHỦ
         const originalOpenProfilePage = openProfilePage;
         openProfilePage = async function(username, urlParams = null) {
             archiveCommentPage.prof = 1;
             hasMoreArchiveComments.prof = true;
             await originalOpenProfilePage(username, urlParams);
             
-            // Xử lý chèn Frame vào Profile Avatar to
+            // Xử lý chèn Frame và Nút tùy chọn Avatar mờ ảo
             const avtWrapper = document.querySelector('.profile-avt-wrapper');
             if (avtWrapper && viewingProfileData) {
+                const isMe = currentUser && (currentUser.username.toLowerCase() === viewingProfileData.username.toLowerCase());
+                avtWrapper.className = `profile-avt-wrapper ${isMe ? 'is-owner' : ''}`;
+                
+                if (isMe) {
+                    avtWrapper.onclick = function() {
+                        openModal('avatarActionChoiceModal');
+                    };
+                } else {
+                    avtWrapper.onclick = null;
+                }
+
                 avtWrapper.innerHTML = `
                     <img id="profAvt" src="${getAvtUrl(viewingProfileData.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
                     ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none; object-fit:contain; aspect-ratio:1/1;">` : ''}
+                    ${isMe ? `
+                        <div class="profile-avt-overlay-btn" title="Chạm để đổi avatar hoặc chọn khung">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Tùy chỉnh</span>
+                        </div>
+                    ` : ''}
                 `;
             }
         };
+
+        // HÀM TẢI TRỰC TIẾP AVATAR TỪ POPUP TÙY CHỌN
+        async function handleDirectAvatarUpload(input) {
+            if (!input.files || !input.files[0] || !currentUser) return;
+            const file = input.files[0];
+            if (file.size > 5 * 1024 * 1024) return showToast("Ảnh vượt quá 5MB!", "error");
+
+            closeModal('avatarActionChoiceModal');
+            showToast("Đang tải ảnh đại diện lên...", "info");
+
+            const fData = new FormData(); 
+            fData.append("file", file); 
+            fData.append("username", currentUser.username); 
+            fData.append("sessionToken", currentUser.sessionToken);
+
+            try {
+                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { 
+                    method: 'POST', 
+                    body: fData, 
+                    headers: { "X-Client-Type": "StudioDANV-Web" } 
+                })).json();
+
+                if (upRes.success) {
+                    const newAvtId = upRes.file_id;
+                    const res = await apiFetch(`/api/user/update`, { 
+                        method: 'POST', 
+                        body: JSON.stringify({ avtId: newAvtId }) 
+                    });
+
+                    if (res && res.success) {
+                        currentUser.avt = newAvtId;
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        updateNav();
+
+                        if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                            delete profileCache[currentUser.username];
+                        }
+
+                        saveGlobalUserCache(currentUser.username, newAvtId);
+                        showToast("Đã đổi ảnh đại diện thành công!", "success");
+                        openProfilePage(currentUser.username);
+                    } else {
+                        showToast("Lỗi khi lưu ảnh đại diện!", "error");
+                    }
+                } else {
+                    showToast(upRes.error || "Không thể tải ảnh lên!", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+            input.value = '';
+        }
 
         // Ghi đè hàm gửi Chat/Comment để lưu cả frame đang dùng vào dữ liệu mới
         const originalApiFetch = apiFetch;
