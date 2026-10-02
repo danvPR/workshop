@@ -3639,6 +3639,10 @@
         }
 
         /* ===== CÁC HIỆU ỨNG KHUNG BONG BÓNG CHAT ĐẶC BIỆT ===== */
+        .chat-bubble.bubble-custom-frame {
+            background-clip: padding-box;
+            background-color: var(--bg-panel);
+        }
         .chat-bubble.bubble-neon {
             border: 1.5px solid #00f2fe !important;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(79, 172, 254, 0.06)) !important;
@@ -9281,7 +9285,7 @@
                 </button>
             </div>
 
-            <!-- KHỐI QUẢN LÝ KHUNG BONG BÓNG CHAT -->
+            <!-- KHỐI QUẢN LÝ KHUNG BONG BÓNG CHAT (HỖ TRỢ LINK ẢNH / GIF TRỰC TIẾP) -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-comment-dots" style="color: #8b5cf6;"></i> <span>Thêm Khung Chat Mới (Bong Bóng Chat WOW)</span>
@@ -9289,11 +9293,11 @@
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <div class="form-group" style="flex: 1; min-width: 150px;">
                         <label>Tên Khung Chat:</label>
-                        <input type="text" id="adminChatFrameName" class="form-control" placeholder="VD: Neon Cyber, Sakura Pink...">
+                        <input type="text" id="adminChatFrameName" class="form-control" placeholder="VD: Mèo May Mắn, Galaxy GIF, Rồng Lửa...">
                     </div>
-                    <div class="form-group" style="flex: 1.5; min-width: 180px;">
-                        <label>Mã Class CSS (Đã tạo trong code):</label>
-                        <input type="text" id="adminChatFrameClass" class="form-control" placeholder="VD: bubble-neon, bubble-gold, bubble-sakura...">
+                    <div class="form-group" style="flex: 2; min-width: 220px;">
+                        <label>URL Hình Ảnh / GIF (ImgBB PNG/GIF trong suốt) hoặc Class CSS:</label>
+                        <input type="text" id="adminChatFrameClass" class="form-control" placeholder="https://i.ibb.co/... hoặc bubble-neon">
                     </div>
                     <div class="form-group" style="flex: 1; min-width: 100px;">
                         <label>Giá WOW:</label>
@@ -20041,7 +20045,10 @@
                         </div>
 
                         <div class="chat-bubble-container">
-                            <div class="chat-bubble ${c.chatFrame ? escapeHtml(c.chatFrame) : ''}">
+                            ${(() => {
+                                const fAttrs = getChatBubbleFrameAttributes(c.chatFrame);
+                                return `<div class="chat-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr}>`;
+                            })()}
                                 ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
                                 ${renderChatContent(c.text || '', c.author, c)}
                                 ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : ''}
@@ -21407,43 +21414,415 @@
             }
         }
 
-        async function adminAddChatFrame() {
-            const name = document.getElementById('adminChatFrameName').value.trim();
-            const cssClass = document.getElementById('adminChatFrameClass').value.trim();
-            const price = document.getElementById('adminChatFramePrice').value.trim();
+        // =========================================================================
+        // 🎨 BỘ MÁY QUẢN LÝ THỜI TRANG WOW: KHUNG AVATAR & KHUNG CHAT (PRO STUDIO)
+        // =========================================================================
+        let availableChatFrames = [];
+        let currentShopType = 'avatar'; // 'avatar' | 'chat'
+        let currentShopFilter = 'all';  // 'all' | 'owned' | 'store'
+        let selectedShopItem = null;
+        let myOwnedChatFrames = [];
 
-            if(!name || !cssClass || !price) return showToast("Vui lòng điền đủ thông tin Khung Chat!", "error");
-
-            const btn = document.getElementById('btnAdminAddChatFrame') || (window.event && window.event.currentTarget);
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát hành...';
-                btn.disabled = true;
-            }
-
-            const res = await apiFetch(`/api/admin/add_chat_frame`, {
-                method: 'POST',
-                body: JSON.stringify({ name, cssClass, price: parseInt(price) })
+        // Đồng bộ số dư WOW trên mọi nhãn hiển thị
+        function syncAllWOWDisplays() {
+            const w = currentUser ? (currentUser.WOW || 0) : 0;
+            const ids = ['navWOWBalance', 'dailyCurrentWOWVal', 'settingsWOWBalance', 'settingsWOWBalanceHist', 'shopModalWOWBalance'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = w;
             });
+        }
 
-            if(res && res.success) {
-                showToast("Đã phát hành Khung Chat mới!", "success");
-                document.getElementById('adminChatFrameName').value = "";
-                document.getElementById('adminChatFrameClass').value = "";
-                document.getElementById('adminChatFramePrice').value = "";
+        // Tự động phân tích Khung Chat: Nếu là URL ảnh/GIF -> Áp dụng 9-Slice Border-Image tự co giãn; Nếu là class -> Áp class
+        function getChatBubbleFrameAttributes(chatFrameVal) {
+            if (!chatFrameVal || chatFrameVal === 'none') return { classAttr: '', styleAttr: '' };
+            const clean = String(chatFrameVal).trim();
+            if (clean.startsWith('http://') || clean.startsWith('https://')) {
+                return {
+                    classAttr: 'bubble-custom-frame',
+                    styleAttr: `style="border: 14px solid transparent; border-image: url('${escapeHtml(clean)}') 30 fill / 14px round; border-image-outset: 1px;"`
+                };
             }
+            return { classAttr: escapeHtml(clean), styleAttr: '' };
+        }
 
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung Chat mới';
-                btn.disabled = false;
+        // 🌟 HÀM MỞ CỬA HÀNG KHUNG (KHẮC PHỤC LỖI ẤN KHÔNG VÔ)
+        async function openFrameShopModal() {
+            if (!currentUser) return openModal('loginModal');
+            openModal('frameShopModal');
+
+            currentShopType = 'avatar';
+            currentShopFilter = 'all';
+
+            syncAllWOWDisplays();
+
+            const baseAvt = document.getElementById('tryonBaseAvt');
+            if (baseAvt) baseAvt.src = getAvtUrl(currentUser.avt);
+
+            const grid = document.getElementById('frameShopContainer');
+            if (grid) grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">Đang kết nối Studio thời trang...</span></div>';
+
+            await loadFrameShopData();
+            switchShopType('avatar');
+        }
+
+        async function loadFrameShopData() {
+            try {
+                const [framesRes, chatFramesRes, userRes] = await Promise.all([
+                    fetch(`${WORKER_URL}/api/frames`),
+                    fetch(`${WORKER_URL}/api/chat_frames`),
+                    fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`)
+                ]);
+
+                availableFrames = await framesRes.json() || [];
+                availableChatFrames = await chatFramesRes.json() || [];
+
+                const uData = await userRes.json();
+                if (uData && !uData.error) {
+                    currentUser.WOW = uData.WOW !== undefined ? uData.WOW : (uData.omg || 0);
+                    currentUser.frame = uData.frame || null;
+                    currentUser.chatFrame = uData.chatFrame || "";
+
+                    myOwnedFrames = Array.isArray(uData.ownedFrames) ? uData.ownedFrames : [];
+                    myOwnedChatFrames = Array.isArray(uData.ownedChatFrames) ? uData.ownedChatFrames : [];
+
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    syncAllWOWDisplays();
+                }
+            } catch(e) {
+                console.error("Lỗi nạp dữ liệu cửa hàng thời trang:", e);
             }
         }
 
-        async function adminAddFrame() {
-            const name = document.getElementById('adminFrameName').value;
-            const imgUrl = document.getElementById('adminFrameUrl').value;
-            const price = document.getElementById('adminFramePrice').value;
+        function switchShopType(type) {
+            currentShopType = type;
+            currentShopFilter = 'all';
 
-            if(!name || !imgUrl || !price) return showToast("Vui lòng điền đủ thông tin", "error");
+            const tabAvt = document.getElementById('tabShopAvatar');
+            const tabChat = document.getElementById('tabShopChat');
+            if (tabAvt) tabAvt.classList.toggle('active', type === 'avatar');
+            if (tabChat) tabChat.classList.toggle('active', type === 'chat');
+
+            const avtStage = document.getElementById('tryonAvatarStageWrap');
+            const chatStage = document.getElementById('tryonChatStageWrap');
+            if (avtStage) avtStage.style.display = (type === 'avatar') ? 'flex' : 'none';
+            if (chatStage) chatStage.style.display = (type === 'chat') ? 'block' : 'none';
+
+            // Đặt lại các nút lọc
+            document.querySelectorAll('.frame-tab-pill').forEach((btn, idx) => btn.classList.toggle('active', idx === 0));
+
+            // Mặc định chọn khung đang trang bị
+            if (type === 'avatar') {
+                const currentEquipped = availableFrames.find(f => f.url === currentUser.frame);
+                selectShopItemToTry(currentEquipped ? currentEquipped.id : 'none');
+            } else {
+                const currentEquipped = availableChatFrames.find(f => f.cssClass === currentUser.chatFrame);
+                selectShopItemToTry(currentEquipped ? currentEquipped.id : 'none');
+            }
+
+            renderShopGrid();
+        }
+
+        function filterFrameShop(filter, btnEl) {
+            currentShopFilter = filter;
+            document.querySelectorAll('.frame-tab-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            renderShopGrid();
+        }
+
+        function selectShopItemToTry(itemId) {
+            const isAvatar = (currentShopType === 'avatar');
+            const items = isAvatar ? availableFrames : availableChatFrames;
+            
+            let item = items.find(x => x.id === itemId);
+            if (!item) {
+                item = {
+                    id: 'none',
+                    name: isAvatar ? 'Khung Mặc định' : 'Bong bóng Mặc định',
+                    url: '',
+                    cssClass: '',
+                    price: 0
+                };
+            }
+            selectedShopItem = item;
+
+            // 1. Cập nhật Bục Thử Trực Tiếp (Live Try-on Booth)
+            const titleEl = document.getElementById('tryonFrameName');
+            if (titleEl) titleEl.innerText = item.name;
+
+            const chipEl = document.getElementById('tryonStatusChip');
+            const actionContainer = document.getElementById('tryonActionContainer');
+
+            const isEquipped = isAvatar 
+                ? ((currentUser.frame && currentUser.frame === item.url) || (!currentUser.frame && item.id === 'none'))
+                : ((currentUser.chatFrame && currentUser.chatFrame === item.cssClass) || (!currentUser.chatFrame && item.id === 'none'));
+
+            const isOwned = item.id === 'none' || (isAvatar ? myOwnedFrames.includes(item.id) : myOwnedChatFrames.includes(item.id));
+
+            // Hiển thị khung avatar
+            if (isAvatar) {
+                const overlay = document.getElementById('tryonFrameOverlay');
+                if (overlay) {
+                    if (item.url) {
+                        overlay.src = item.url;
+                        overlay.style.display = 'block';
+                    } else {
+                        overlay.src = '';
+                        overlay.style.display = 'none';
+                    }
+                }
+            } 
+            // Hiển thị bong bóng chat xem trước
+            else {
+                const previewBubble = document.getElementById('tryonChatBubblePreview');
+                if (previewBubble) {
+                    previewBubble.className = 'chat-bubble';
+                    previewBubble.removeAttribute('style');
+                    previewBubble.style.maxWidth = '100%';
+                    previewBubble.style.fontSize = '0.88rem';
+                    previewBubble.style.width = '100%';
+
+                    const fAttrs = getChatBubbleFrameAttributes(item.cssClass);
+                    if (fAttrs.classAttr) previewBubble.classList.add(fAttrs.classAttr);
+                    if (fAttrs.styleAttr) {
+                        previewBubble.style.border = '14px solid transparent';
+                        previewBubble.style.borderImage = `url('${item.cssClass}') 30 fill / 14px round`;
+                        previewBubble.style.borderImageOutset = '1px';
+                    }
+                }
+            }
+
+            // Trạng thái Chip
+            if (chipEl) {
+                if (isEquipped) {
+                    chipEl.className = 'tryon-status-chip status-equipped';
+                    chipEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Đang trang bị</span>';
+                } else if (isOwned) {
+                    chipEl.className = 'tryon-status-chip status-owned';
+                    chipEl.innerHTML = '<i class="fa-solid fa-box-archive"></i> <span>Đã sở hữu</span>';
+                } else {
+                    chipEl.className = 'tryon-status-chip status-unowned';
+                    chipEl.innerHTML = `<span class="wow-icon" style="font-size:0.9rem;"></span> <span>Chưa sở hữu • ${item.price} WOW</span>`;
+                }
+            }
+
+            // Nút thao tác
+            if (actionContainer) {
+                if (isEquipped) {
+                    actionContainer.innerHTML = `
+                        <button type="button" class="btn btn-tryon-main" disabled style="background:var(--bg-secondary); color:var(--text-muted); border:1px solid var(--border-color); cursor:default;">
+                            <i class="fa-solid fa-check"></i> Đang mặc
+                        </button>
+                    `;
+                } else if (isOwned) {
+                    actionContainer.innerHTML = `
+                        <button type="button" class="btn btn-primary btn-tryon-main" onclick="equipSelectedShopItem()">
+                            <i class="fa-solid fa-shirt"></i> Trang bị ngay
+                        </button>
+                    `;
+                } else {
+                    actionContainer.innerHTML = `
+                        <button type="button" class="btn btn-primary btn-tryon-main" style="background:#ea580c; border:none;" onclick="buySelectedShopItem()">
+                            <span class="wow-icon"></span> Mua với ${item.price} WOW
+                        </button>
+                    `;
+                }
+            }
+
+            // Highlight thẻ trong Grid
+            document.querySelectorAll('.frame-item-card').forEach(card => {
+                card.classList.toggle('is-selected', card.dataset.itemId === item.id);
+            });
+        }
+
+        function renderShopGrid() {
+            const grid = document.getElementById('frameShopContainer');
+            if (!grid) return;
+
+            const isAvatar = (currentShopType === 'avatar');
+            const items = isAvatar ? availableFrames : availableChatFrames;
+            const ownedList = isAvatar ? myOwnedFrames : myOwnedChatFrames;
+            const equippedVal = isAvatar ? currentUser.frame : currentUser.chatFrame;
+
+            // Mục mặc định (gỡ bỏ)
+            const defaultItem = {
+                id: 'none',
+                name: isAvatar ? 'Mặc định' : 'Mặc định',
+                url: '',
+                cssClass: '',
+                price: 0
+            };
+
+            const fullList = [defaultItem, ...items];
+
+            // Cập nhật bộ đếm
+            const countAll = fullList.length;
+            const countOwned = fullList.filter(x => x.id === 'none' || ownedList.includes(x.id)).length;
+            const countStore = countAll - countOwned;
+
+            const elAll = document.getElementById('countFrameAll'); if (elAll) elAll.innerText = countAll;
+            const elOwned = document.getElementById('countFrameOwned'); if (elOwned) elOwned.innerText = countOwned;
+            const elStore = document.getElementById('countFrameStore'); if (elStore) elStore.innerText = countStore;
+
+            // Lọc danh sách
+            let filtered = fullList.filter(x => {
+                const hasIt = (x.id === 'none' || ownedList.includes(x.id));
+                if (currentShopFilter === 'owned') return hasIt;
+                if (currentShopFilter === 'store') return !hasIt;
+                return true;
+            });
+
+            const baseAvtUrl = getAvtUrl(currentUser.avt);
+
+            grid.innerHTML = filtered.map(item => {
+                const isSelected = selectedShopItem && selectedShopItem.id === item.id;
+                const isEquipped = isAvatar 
+                    ? ((equippedVal && equippedVal === item.url) || (!equippedVal && item.id === 'none'))
+                    : ((equippedVal && equippedVal === item.cssClass) || (!equippedVal && item.id === 'none'));
+                const isOwned = item.id === 'none' || ownedList.includes(item.id);
+
+                let badgeHtml = '';
+                if (isEquipped) badgeHtml = `<span class="frame-mini-badge equipped"><i class="fa-solid fa-check"></i> Đang dùng</span>`;
+                else if (isOwned) badgeHtml = `<span class="frame-mini-badge owned">Đã có</span>`;
+
+                // Xem thử trên thẻ item
+                let previewHtml = '';
+                if (isAvatar) {
+                    previewHtml = `
+                        <div class="frame-preview-box">
+                            <img class="base-avt" src="${baseAvtUrl}" onerror="this.src='${DEFAULT_AVATAR}'">
+                            ${item.url ? `<img class="frame-overlay" src="${item.url}">` : ''}
+                        </div>
+                    `;
+                } else {
+                    const isImg = item.cssClass && (item.cssClass.startsWith('http://') || item.cssClass.startsWith('https://'));
+                    previewHtml = `
+                        <div style="width:100%; height:64px; display:flex; align-items:center; justify-content:center; margin:6px 0 10px 0; overflow:hidden;">
+                            ${item.id === 'none' 
+                                ? `<div class="chat-bubble" style="font-size:0.7rem; padding:4px 8px;">Mặc định</div>` 
+                                : (isImg 
+                                    ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.7rem; padding:4px 8px; border:10px solid transparent; border-image:url('${item.cssClass}') 30 fill / 10px round;">Chat</div>`
+                                    : `<div class="chat-bubble ${escapeHtml(item.cssClass)}" style="font-size:0.7rem; padding:4px 8px;">Chat</div>`
+                                  )
+                            }
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="frame-item-card ${isSelected ? 'is-selected' : ''}" data-item-id="${item.id}" onclick="selectShopItemToTry('${item.id}')">
+                        ${badgeHtml}
+                        ${previewHtml}
+                        <div class="frame-item-title" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+                        <div class="frame-card-price">
+                            ${isOwned 
+                                ? `<span style="color:#10b981; font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> Miễn phí</span>` 
+                                : `<span class="wow-icon"></span> <span>${item.price}</span>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function buySelectedShopItem() {
+            if (!selectedShopItem || !currentUser) return;
+            const item = selectedShopItem;
+            const isAvatar = (currentShopType === 'avatar');
+
+            if ((currentUser.WOW || 0) < item.price) {
+                return showToast("Bạn không đủ điểm WOW! Hãy điểm danh hàng ngày nhé.", "error");
+            }
+
+            const btn = document.querySelector('#tryonActionContainer button');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang mở khóa...'; }
+
+            try {
+                const endpoint = isAvatar ? '/api/store/buy' : '/api/store/buy_chat_frame';
+                const res = await apiFetch(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify({ frameId: item.id })
+                });
+
+                if (res && res.success) {
+                    showToast(`🎉 Mở khóa ${item.name} thành công!`, "success");
+                    currentUser.WOW = res.newBalance;
+                    
+                    if (isAvatar) {
+                        myOwnedFrames = res.ownedFrames || [];
+                    } else {
+                        myOwnedChatFrames = res.ownedChatFrames || [];
+                    }
+
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    syncAllWOWDisplays();
+
+                    // Tự động trang bị luôn sau khi mua
+                    await equipSelectedShopItem();
+                } else {
+                    showToast((res && res.error) ? res.error : "Không thể mua vật phẩm này!", "error");
+                    if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+            }
+        }
+
+        async function equipSelectedShopItem() {
+            if (!selectedShopItem || !currentUser) return;
+            const item = selectedShopItem;
+            const isAvatar = (currentShopType === 'avatar');
+
+            const btn = document.querySelector('#tryonActionContainer button');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang trang bị...'; }
+
+            try {
+                const endpoint = isAvatar ? '/api/store/equip' : '/api/store/equip_chat_frame';
+                const res = await apiFetch(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify({ frameId: item.id })
+                });
+
+                if (res && res.success) {
+                    showToast(`Đã trang bị ${item.name}!`, "success");
+                    
+                    if (isAvatar) {
+                        currentUser.frame = (item.id === 'none') ? null : (res.frameUrl || item.url);
+                    } else {
+                        currentUser.chatFrame = (item.id === 'none') ? "" : (res.chatFrame || item.cssClass);
+                    }
+
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    updateNav();
+
+                    // Cập nhật lại giao diện shop
+                    selectShopItemToTry(item.id);
+                    renderShopGrid();
+
+                    // Cập nhật trên trang cá nhân nếu đang mở
+                    if (viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
+                        openProfilePage(currentUser.username);
+                    }
+                } else {
+                    showToast((res && res.error) ? res.error : "Không thể trang bị!", "error");
+                    if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+            }
+        }
+
+        // ================= ADMIN TOOL: THÊM KHUNG VÀO CỬA HÀNG =================
+        async function adminAddFrame() {
+            const name = document.getElementById('adminFrameName').value.trim();
+            const imgUrl = document.getElementById('adminFrameUrl').value.trim();
+            const price = document.getElementById('adminFramePrice').value.trim();
+
+            if(!name || !imgUrl || !price) return showToast("Vui lòng điền đủ thông tin Khung Avatar!", "error");
             
             const btn = document.getElementById('btnAdminAddFrame') || (window.event && window.event.currentTarget);
             if (btn) {
@@ -21453,7 +21832,7 @@
 
             const res = await apiFetch(`/api/admin/add_frame`, { method: 'POST', body: JSON.stringify({ name, imgUrl, price: parseInt(price) }) });
             if(res && res.success) {
-                showToast("Đã phát hành Khung mới!", "success");
+                showToast("Đã phát hành Khung Avatar mới!", "success");
                 document.getElementById('adminFrameName').value = "";
                 document.getElementById('adminFrameUrl').value = "";
                 document.getElementById('adminFramePrice').value = "";
@@ -21461,6 +21840,37 @@
             
             if (btn) {
                 btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung mới'; 
+                btn.disabled = false;
+            }
+        }
+
+        async function adminAddChatFrame() {
+            const name = document.getElementById('adminChatFrameName').value.trim();
+            const frameVal = document.getElementById('adminChatFrameClass').value.trim();
+            const price = document.getElementById('adminChatFramePrice').value.trim();
+
+            if(!name || !frameVal || !price) return showToast("Vui lòng điền đủ thông tin Khung Chat!", "error");
+
+            const btn = document.getElementById('btnAdminAddChatFrame') || (window.event && window.event.currentTarget);
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát hành...';
+                btn.disabled = true;
+            }
+
+            const res = await apiFetch(`/api/admin/add_chat_frame`, {
+                method: 'POST',
+                body: JSON.stringify({ name, cssClass: frameVal, imgUrl: frameVal, price: parseInt(price) })
+            });
+
+            if(res && res.success) {
+                showToast("Đã phát hành Khung Chat mới thành công!", "success");
+                document.getElementById('adminChatFrameName').value = "";
+                document.getElementById('adminChatFrameClass').value = "";
+                document.getElementById('adminChatFramePrice').value = "";
+            }
+
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung Chat mới';
                 btn.disabled = false;
             }
         }
