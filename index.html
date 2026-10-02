@@ -3638,42 +3638,43 @@
             position: relative;
         }
 
-        /* ===== CÁC HIỆU ỨNG KHUNG BONG BÓNG CHAT ĐẶC BIỆT ===== */
-        .chat-bubble.bubble-custom-frame {
+        /* ===== CÁC HIỆU ỨNG KHUNG BONG BÓNG ÁP DỤNG CẢ CHAT LẪN BÌNH LUẬN ===== */
+        .chat-bubble.bubble-custom-frame,
+        .comment-text-bubble.bubble-custom-frame {
             background-clip: padding-box;
             background-color: var(--bg-panel);
         }
-        .chat-bubble.bubble-neon {
+        .chat-bubble.bubble-neon, .comment-text-bubble.bubble-neon {
             border: 1.5px solid #00f2fe !important;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(79, 172, 254, 0.06)) !important;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.35) !important;
         }
-        .chat-bubble.bubble-gold {
+        .chat-bubble.bubble-gold, .comment-text-bubble.bubble-gold {
             border: 1.5px solid #f59e0b !important;
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(234, 88, 12, 0.08)) !important;
             box-shadow: 0 0 16px rgba(245, 158, 11, 0.4) !important;
         }
-        .chat-bubble.bubble-sakura {
+        .chat-bubble.bubble-sakura, .comment-text-bubble.bubble-sakura {
             border: 1.5px solid #f472b6 !important;
             background: linear-gradient(135deg, rgba(244, 114, 182, 0.14), rgba(251, 207, 232, 0.08)) !important;
             box-shadow: 0 0 14px rgba(244, 114, 182, 0.35) !important;
         }
-        .chat-bubble.bubble-void {
+        .chat-bubble.bubble-void, .comment-text-bubble.bubble-void {
             border: 1.5px solid #8b5cf6 !important;
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(109, 40, 217, 0.08)) !important;
             box-shadow: 0 0 16px rgba(139, 92, 246, 0.4) !important;
         }
-        .chat-bubble.bubble-fire {
+        .chat-bubble.bubble-fire, .comment-text-bubble.bubble-fire {
             border: 1.5px solid #ef4444 !important;
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.08)) !important;
             box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
         }
-        .chat-bubble.bubble-matrix {
+        .chat-bubble.bubble-matrix, .comment-text-bubble.bubble-matrix {
             border: 1.5px solid #10b981 !important;
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 78, 59, 0.1)) !important;
             box-shadow: 0 0 14px rgba(16, 185, 129, 0.35) !important;
         }
-        .chat-bubble.bubble-rainbow {
+        .chat-bubble.bubble-rainbow, .comment-text-bubble.bubble-rainbow {
             border: 2px solid transparent !important;
             background: linear-gradient(var(--bg-panel), var(--bg-panel)) padding-box, linear-gradient(135deg, #ff007f, #7928ca, #0070f3, #00dfd8) border-box !important;
             box-shadow: 0 0 18px rgba(121, 40, 202, 0.35) !important;
@@ -13265,7 +13266,11 @@
                                 <div class="tip-badge-banner">
                                     <i class="fa-solid ${root.tipAmount >= 200 ? 'fa-crown' : 'fa-bolt'}"></i> Đã tặng ${root.tipAmount} WOW
                                 </div>` : ''}
-                                <div class="comment-text-bubble" data-raw-text="${encodeURIComponent(root.text || '')}">
+                                ${(() => {
+                                    const effectiveFrame = root.chatFrame || (currentUser && root.author.toLowerCase() === currentUser.username.toLowerCase() ? currentUser.chatFrame : '');
+                                    const fAttrs = (typeof getChatBubbleFrameAttributes === 'function') ? getChatBubbleFrameAttributes(effectiveFrame) : { classAttr: '', styleAttr: '' };
+                                    return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(root.text || '')}">`;
+                                })()}
                                     ${root.text ? formatCommentText(root.text) : (root.isTip ? `<i style="opacity:0.85;">Đã gửi tặng ${root.tipAmount} điểm năng lượng WOW ủng hộ tác giả!</i>` : '')}
                                     ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render">` : ''}
                                 </div>
@@ -13292,7 +13297,11 @@
                                                 <span class="comment-time" title="${rep.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(rep.time)}</span>
                                                 ${rep.isArchived ? '<span style="font-size:0.65rem; background:#f1f5f9; color:#888; padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i></span>' : ''}
                                             </div>
-                                            <div class="comment-text-bubble" data-raw-text="${encodeURIComponent(rep.text || '')}">
+                                            ${(() => {
+                                                const effectiveFrame = rep.chatFrame || (currentUser && rep.author.toLowerCase() === currentUser.username.toLowerCase() ? currentUser.chatFrame : '');
+                                                const fAttrs = (typeof getChatBubbleFrameAttributes === 'function') ? getChatBubbleFrameAttributes(effectiveFrame) : { classAttr: '', styleAttr: '' };
+                                                return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(rep.text || '')}">`;
+                                            })()}
                                                 ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
                                                 ${formatCommentText(rep.text)}
                                                 ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render">` : ''}
