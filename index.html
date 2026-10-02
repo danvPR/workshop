@@ -12023,7 +12023,9 @@
             if (isChatTab) url += `&since=${lastChatTimestamp}`;
 
             try {
-                const res = await fetch(url);
+                const res = await fetch(url, {
+                    headers: { "X-Client-Type": "StudioDANV-Web" }
+                });
                 const data = await res.json();
                 
                 // 1. XỬ LÝ GLOBAL PING
