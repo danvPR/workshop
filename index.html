@@ -9519,28 +9519,141 @@
                 <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="admin_btn_refresh">Làm mới</span></button>
             </div>
 
-            <!-- KHỐI QUẢN LÝ KHUNG AVATAR -->
-            <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-crop-simple" style="color: #3b82f6;"></i> <span data-i18n="admin_add_frame_title">Thêm Khung Avatar Mới (Cửa hàng WOW)</span>
-                </h4>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <div class="form-group" style="flex: 1; min-width: 150px;">
-                        <label data-i18n="admin_frame_name_label">Tên Khung:</label>
-                        <input type="text" id="adminFrameName" class="form-control" data-i18n-ph="admin_frame_name_ph" placeholder="VD: Rồng Lửa">
+            <!-- KHỐI QUẢN LÝ & CÂN CHỈNH KHUNG AVATAR TRỰC QUAN (LIVE CALIBRATOR STUDIO) -->
+            <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-left: 5px solid #3b82f6; border-radius: 18px; padding: 24px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <h4 style="margin: 0; color: var(--text-title); display: flex; align-items: center; gap: 9px; font-size: 1.15rem; font-weight: 900;">
+                        <i class="fa-solid fa-sliders" style="color: #3b82f6;"></i> <span>Phòng Cân Chỉnh Tọa Độ & Kích Thước Khung Avatar</span>
+                    </h4>
+                    <span style="font-size: 0.78rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 10px; border-radius: 14px;">
+                        <i class="fa-solid fa-eye"></i> Live Calibrator Pro
+                    </span>
+                </div>
+
+                <!-- Thanh chọn thao tác: Tạo mới hoặc chỉnh sửa khung có sẵn -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 14px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-box-open" style="color: var(--primary);"></i>
+                        <b style="font-size: 0.88rem; color: var(--text-title);">Chọn đối tượng:</b>
                     </div>
-                    <div class="form-group" style="flex: 2; min-width: 200px;">
-                        <label data-i18n="admin_frame_url_label">URL Hình Ảnh (Khuyên dùng ImgBB PNG trong suốt):</label>
-                        <input type="text" id="adminFrameUrl" class="form-control" placeholder="https://i.ibb.co/...">
+                    <select id="adminFrameSelect" class="form-control" style="max-width: 320px; font-weight: 700; border-radius: 10px; padding: 6px 12px;" onchange="onAdminSelectFrameChange(this.value)">
+                        <option value="new">➕ Thêm Khung Avatar Mới</option>
+                    </select>
+                </div>
+
+                <!-- Dòng nhập thông tin cơ bản -->
+                <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px;">
+                    <div class="form-group" style="flex: 1.2; min-width: 160px; margin-bottom: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700;">Tên Khung:</label>
+                        <input type="text" id="adminFrameName" class="form-control" placeholder="VD: Rồng Lửa Vàng" oninput="updateAdminFramePreview()">
                     </div>
-                    <div class="form-group" style="flex: 1; min-width: 100px;">
-                        <label data-i18n="admin_frame_price_label">Giá WOW:</label>
+                    <div class="form-group" style="flex: 2; min-width: 220px; margin-bottom: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700;">URL Hình Ảnh PNG (Khuyên dùng ImgBB):</label>
+                        <input type="text" id="adminFrameUrl" class="form-control" placeholder="https://i.ibb.co/..." oninput="updateAdminFramePreview()">
+                    </div>
+                    <div class="form-group" style="flex: 0.8; min-width: 90px; margin-bottom: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700;">Giá WOW:</label>
                         <input type="number" id="adminFramePrice" class="form-control" placeholder="100">
                     </div>
                 </div>
-                <button id="btnAdminAddFrame" class="btn btn-primary" onclick="adminAddFrame()" style="background: #3b82f6; border: none; margin-top: 5px;">
-                    <i class="fa-solid fa-plus"></i> <span data-i18n="admin_frame_btn_submit">Phát hành Khung mới</span>
-                </button>
+
+                <!-- BỐ CỤC 2 CỘT: CÂN CHỈNH TỌA ĐỘ VÀ SÂN KHẤU SOI LIVE -->
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; background: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: 16px; padding: 18px;">
+                    
+                    <!-- Cột trái: Bộ điều khiển thanh trượt & D-Pad điều hướng -->
+                    <div>
+                        <div style="font-size: 0.82rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+                            <i class="fa-solid fa-gamepad" style="color: var(--primary);"></i> Thanh điều khiển vi chỉnh
+                        </div>
+
+                        <!-- 1. Thanh trượt Kích thước Scale -->
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.84rem; font-weight: 700; margin-bottom: 4px;">
+                                <span>Kích thước (Scale):</span>
+                                <span id="adminScaleVal" style="color: #3b82f6; font-family: monospace; font-size: 0.95rem;">135%</span>
+                            </div>
+                            <input type="range" id="adminFrameScaleInput" min="90" max="220" step="1" value="135" style="width: 100%; accent-color: #3b82f6; cursor: pointer;" oninput="updateAdminFramePreview()">
+                        </div>
+
+                        <!-- 2. Thanh trượt Tọa độ Ngang X -->
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.84rem; font-weight: 700; margin-bottom: 4px;">
+                                <span>Dịch chuyển Ngang (Trục X):</span>
+                                <span id="adminXVal" style="color: #10b981; font-family: monospace; font-size: 0.95rem;">0%</span>
+                            </div>
+                            <input type="range" id="adminFrameXInput" min="-35" max="35" step="0.5" value="0" style="width: 100%; accent-color: #10b981; cursor: pointer;" oninput="updateAdminFramePreview()">
+                        </div>
+
+                        <!-- 3. Thanh trượt Tọa độ Dọc Y -->
+                        <div style="margin-bottom: 14px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.84rem; font-weight: 700; margin-bottom: 4px;">
+                                <span>Dịch chuyển Dọc (Trục Y):</span>
+                                <span id="adminYVal" style="color: #ea580c; font-family: monospace; font-size: 0.95rem;">0%</span>
+                            </div>
+                            <input type="range" id="adminFrameYInput" min="-35" max="35" step="0.5" value="0" style="width: 100%; accent-color: #ea580c; cursor: pointer;" oninput="updateAdminFramePreview()">
+                        </div>
+
+                        <!-- Cụm D-Pad nhích nhẹ 0.5% -->
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Vi chỉnh:</span>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0, -0.5)" title="Nhích lên trên 0.5%">⬆️ Lên</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0, 0.5)" title="Nhích xuống dưới 0.5%">⬇️ Xuống</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(-0.5, 0)" title="Nhích sang trái 0.5%">⬅️ Trái</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0.5, 0)" title="Nhích sang phải 0.5%">➡️ Phải</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem; color: #ef4444;" onclick="resetAdminFrameTransform()" title="Đặt lại thông số gốc">
+                                <i class="fa-solid fa-rotate-left"></i> Đặt lại
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cột phải: Bục soi Live 3 kích cỡ Avatar -->
+                    <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 14px; padding: 16px; text-align: center;">
+                        <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">
+                            Sân khấu kiểm tra thực tế (3 Cỡ)
+                        </div>
+
+                        <div style="display: flex; align-items: flex-end; justify-content: space-around; gap: 12px; padding: 10px 0;">
+                            <!-- Cỡ lớn (100px - Hồ sơ) -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <div style="position: relative; width: 88px; height: 88px; display: inline-flex; align-items: center; justify-content: center;">
+                                    <img src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border-color);">
+                                    <img id="adminPreviewLg" src="" style="display: none;">
+                                </div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Hồ sơ</span>
+                            </div>
+
+                            <!-- Cỡ vừa (48px - BXH) -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <div style="position: relative; width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
+                                    <img src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color);">
+                                    <img id="adminPreviewMd" src="" style="display: none;">
+                                </div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">BXH / Notif</span>
+                            </div>
+
+                            <!-- Cỡ nhỏ (32px - Chat) -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <div style="position: relative; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;">
+                                    <img src="https://i.ibb.co/QFg1cVVD/image.png" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--border-color);">
+                                    <img id="adminPreviewSm" src="" style="display: none;">
+                                </div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Chat</span>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">
+                            Khung sẽ xuất hiện với đúng tỉ lệ và độ lệch này trên toàn bộ giao diện website.
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Nút Lưu -->
+                <div style="margin-top: 16px; display: flex; gap: 10px;">
+                    <button id="btnAdminSaveFrame" class="btn btn-primary" onclick="saveAdminFrame()" style="flex: 1; justify-content: center; padding: 12px; font-weight: 800; font-size: 0.95rem; border-radius: 12px; background: #3b82f6; border: none;">
+                        <i class="fa-solid fa-plus"></i> <span id="adminSaveFrameBtnText">Phát hành Khung mới</span>
+                    </button>
+                </div>
             </div>
 
             <!-- KHỐI QUẢN LÝ KHUNG BONG BÓNG CHAT (HỖ TRỢ LINK ẢNH / GIF TRỰC TIẾP & MÀU CHỮ) -->
@@ -12157,6 +12270,7 @@
                     checkLegacyUser();
                 }
 
+                loadGlobalFramesConfig(); // Nạp tọa độ khung avatar đã lưu
                 await loadProjects(); updateNav(); handleRouting();
                 checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
                 // Kiểm tra nếu có user đăng nhập mà chưa xem Hướng dẫn tân thủ
@@ -12983,7 +13097,7 @@
                         <button type="button" class="nav-user-pill" onclick="toggleNavUserDropdown(event)" title="Menu tài khoản">
                             <div class="avt-wrapper" style="width: 28px; height: 28px;">
                                 <img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" style="width:100%; height:100%;" onerror="this.src='${DEFAULT_AVATAR}'">
-                                ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
+                                ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="${getFrameInlineStyle(currentUser.frame)}">` : ''}
                             </div>
                             <span>${escapeHtml(currentUser.username)}</span>
                             <i class="fa-solid fa-chevron-down nav-user-chevron"></i>
@@ -16841,6 +16955,7 @@
             document.getElementById('adminView').style.display = 'block';
             loadAdminReports();
             loadAdminEventsManager(); // <-- THÊM DÒNG NÀY VÀO ĐÂY
+            setupAdminFrameStudio(); // Tự động khởi tạo phòng cân chỉnh khung
         }
 
         // Hàm hỗ trợ tự động tìm vị trí của Báo cáo 
@@ -21531,13 +21646,51 @@
         let availableFrames = [];
         let myOwnedFrames = [];
 
+        // BỘ NHỚ ĐỆM TỌA ĐỘ VÀ KÍCH THƯỚC KHUNG AVATAR TOÀN CỤC
+        window.globalFramesMap = {};
+        try {
+            const savedFramesCache = localStorage.getItem('danv_frames_config_cache');
+            if (savedFramesCache) Object.assign(window.globalFramesMap, JSON.parse(savedFramesCache));
+        } catch(e) {}
+
+        // Hàm tính toán Style nội tuyến chuẩn xác từng % cho từng khung
+        function getFrameInlineStyle(frameUrl, fallbackConfig = null) {
+            if (!frameUrl || frameUrl === 'null' || frameUrl === 'undefined') return 'width: 135%; height: 135%;';
+            const cleanUrl = String(frameUrl).split('?')[0].trim();
+            const config = fallbackConfig || (window.globalFramesMap && (window.globalFramesMap[frameUrl] || window.globalFramesMap[cleanUrl])) || {};
+            const scale = config.scale !== undefined && config.scale !== "" ? parseFloat(config.scale) : 135;
+            const x = config.offsetX !== undefined && config.offsetX !== "" ? parseFloat(config.offsetX) : 0;
+            const y = config.offsetY !== undefined && config.offsetY !== "" ? parseFloat(config.offsetY) : 0;
+            return `width: ${scale}%; height: ${scale}%; transform: translate(calc(-50% + ${x}%), calc(-50% + ${y}%));`;
+        }
+
+        // Tự động kéo cấu hình khung mới nhất từ máy chủ ngầm để hiển thị tức thì
+        async function loadGlobalFramesConfig() {
+            try {
+                const res = await fetch(`${WORKER_URL}/api/frames`);
+                if (res.ok) {
+                    const frames = await res.json();
+                    if (Array.isArray(frames)) {
+                        availableFrames = frames;
+                        frames.forEach(f => {
+                            if (f.url) window.globalFramesMap[f.url] = f;
+                            if (f.id) window.globalFramesMap[f.id] = f;
+                        });
+                        try {
+                            localStorage.setItem('danv_frames_config_cache', JSON.stringify(window.globalFramesMap));
+                        } catch(e) {}
+                    }
+                }
+            } catch(e) {}
+        }
+
         // Hàm hỗ trợ Render Avatar có Khung trên toàn Website (Dùng DEFAULT_AVATAR gốc của app)
         function renderAvtWithFrame(avtUrl, frameUrl, sizeClass, imgId = '') {
             const hasFrame = frameUrl && frameUrl !== 'null' && frameUrl !== 'undefined';
             return `
                 <div class="avt-wrapper">
                     <img ${imgId ? `id="${imgId}"` : ''} src="${getAvtUrl(avtUrl)}" class="${sizeClass}" onerror="this.onerror=null; this.src=DEFAULT_AVATAR" loading="lazy">
-                    ${hasFrame ? `<img src="${frameUrl}" class="avt-frame" style="width: 135%; height: 135%;">` : ''}
+                    ${hasFrame ? `<img src="${frameUrl}" class="avt-frame" style="${getFrameInlineStyle(frameUrl)}">` : ''}
                 </div>
             `;
         }
@@ -22197,12 +22350,13 @@
                     if (item.url) {
                         overlay.src = item.url;
                         overlay.style.display = 'block';
+                        overlay.style.cssText = `position:absolute; top:50%; left:50%; pointer-events:none; object-fit:contain; aspect-ratio:1/1; ${getFrameInlineStyle(item.url, item)}`;
                     } else {
                         overlay.src = '';
                         overlay.style.display = 'none';
                     }
                 }
-            } 
+            }
             // Hiển thị bong bóng chat xem trước (Kèm màu chữ custom)
                 else {
                     const previewBubble = document.getElementById('tryonChatBubblePreview');
@@ -22322,7 +22476,7 @@
                     previewHtml = `
                         <div class="frame-preview-box">
                             <img class="base-avt" src="${baseAvtUrl}" onerror="this.src='${DEFAULT_AVATAR}'">
-                            ${item.url ? `<img class="frame-overlay" src="${item.url}">` : ''}
+                            ${item.url ? `<img class="frame-overlay" src="${item.url}" style="${getFrameInlineStyle(item.url, item)}">` : ''}
                         </div>
                     `;
                 } else {
@@ -22498,29 +22652,171 @@
         }
 
         // ================= ADMIN TOOL: THÊM KHUNG VÀO CỬA HÀNG =================
-        async function adminAddFrame() {
-            const name = document.getElementById('adminFrameName').value.trim();
-            const imgUrl = document.getElementById('adminFrameUrl').value.trim();
-            const price = document.getElementById('adminFramePrice').value.trim();
+        // ================= LOGIC PHÒNG CÂN CHỈNH KHUNG AVATAR TRỰC QUAN (ADMIN) =================
+        let adminEditingFrameId = "new";
 
-            if(!name || !imgUrl || !price) return showToast("Vui lòng điền đủ thông tin Khung Avatar!", "error");
-            
-            const btn = document.getElementById('btnAdminAddFrame') || (window.event && window.event.currentTarget);
+        async function setupAdminFrameStudio() {
+            await loadGlobalFramesConfig();
+            const selectEl = document.getElementById('adminFrameSelect');
+            if (!selectEl) return;
+
+            let optionsHtml = `<option value="new">➕ Thêm Khung Avatar Mới</option>`;
+            if (Array.isArray(availableFrames) && availableFrames.length > 0) {
+                optionsHtml += `<optgroup label="Khung đang có trong hệ thống">`;
+                optionsHtml += availableFrames.map(f => `
+                    <option value="${f.id}">${escapeHtml(f.name)} (${f.price || 0} WOW)</option>
+                `).join('');
+                optionsHtml += `</optgroup>`;
+            }
+            selectEl.innerHTML = optionsHtml;
+            onAdminSelectFrameChange(adminEditingFrameId || "new");
+        }
+
+        function onAdminSelectFrameChange(frameId) {
+            adminEditingFrameId = frameId;
+            const isNew = frameId === "new";
+            const btnText = document.getElementById('adminSaveFrameBtnText');
+            const btnSubmit = document.getElementById('btnAdminSaveFrame');
+
+            if (isNew) {
+                document.getElementById('adminFrameName').value = "";
+                document.getElementById('adminFrameUrl').value = "";
+                document.getElementById('adminFramePrice').value = "100";
+                resetAdminFrameTransform();
+                if (btnText) btnText.innerText = "Phát hành Khung mới";
+                if (btnSubmit) btnSubmit.style.background = "#3b82f6";
+            } else {
+                const found = availableFrames.find(f => f.id === frameId);
+                if (found) {
+                    document.getElementById('adminFrameName').value = found.name || "";
+                    document.getElementById('adminFrameUrl').value = found.url || "";
+                    document.getElementById('adminFramePrice').value = found.price || 100;
+                    document.getElementById('adminFrameScaleInput').value = found.scale !== undefined ? found.scale : 135;
+                    document.getElementById('adminFrameXInput').value = found.offsetX !== undefined ? found.offsetX : 0;
+                    document.getElementById('adminFrameYInput').value = found.offsetY !== undefined ? found.offsetY : 0;
+                    if (btnText) btnText.innerText = "Lưu tinh chỉnh khung này";
+                    if (btnSubmit) btnSubmit.style.background = "#10b981";
+                }
+            }
+            updateAdminFramePreview();
+        }
+
+        function updateAdminFramePreview() {
+            const scale = parseFloat(document.getElementById('adminFrameScaleInput')?.value) || 135;
+            const x = parseFloat(document.getElementById('adminFrameXInput')?.value) || 0;
+            const y = parseFloat(document.getElementById('adminFrameYInput')?.value) || 0;
+            const url = (document.getElementById('adminFrameUrl')?.value || "").trim();
+
+            const lblScale = document.getElementById('adminScaleVal');
+            const lblX = document.getElementById('adminXVal');
+            const lblY = document.getElementById('adminYVal');
+
+            if (lblScale) lblScale.innerText = `${scale}%`;
+            if (lblX) lblX.innerText = (x > 0 ? `+${x}%` : `${x}%`);
+            if (lblY) lblY.innerText = (y > 0 ? `+${y}%` : `${y}%`);
+
+            const styleStr = `width: ${scale}%; height: ${scale}%; transform: translate(calc(-50% + ${x}%), calc(-50% + ${y}%));`;
+
+            ['adminPreviewLg', 'adminPreviewMd', 'adminPreviewSm'].forEach(id => {
+                const img = document.getElementById(id);
+                if (img) {
+                    if (url) {
+                        img.src = url;
+                        img.style.cssText = `position:absolute; top:50%; left:50%; pointer-events:none; object-fit:contain; aspect-ratio:1/1; ${styleStr}`;
+                        img.style.display = 'block';
+                    } else {
+                        img.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function nudgeAdminFrame(dx, dy) {
+            const xInp = document.getElementById('adminFrameXInput');
+            const yInp = document.getElementById('adminFrameYInput');
+            if (xInp && dx !== 0) {
+                let curX = parseFloat(xInp.value) || 0;
+                curX = Math.round((curX + dx) * 10) / 10;
+                xInp.value = Math.max(-35, Math.min(35, curX));
+            }
+            if (yInp && dy !== 0) {
+                let curY = parseFloat(yInp.value) || 0;
+                curY = Math.round((curY + dy) * 10) / 10;
+                yInp.value = Math.max(-35, Math.min(35, curY));
+            }
+            updateAdminFramePreview();
+        }
+
+        function resetAdminFrameTransform() {
+            const sInp = document.getElementById('adminFrameScaleInput');
+            const xInp = document.getElementById('adminFrameXInput');
+            const yInp = document.getElementById('adminFrameYInput');
+            if (sInp) sInp.value = 135;
+            if (xInp) xInp.value = 0;
+            if (yInp) yInp.value = 0;
+            updateAdminFramePreview();
+        }
+
+        async function saveAdminFrame() {
+            const name = document.getElementById('adminFrameName')?.value.trim();
+            const imgUrl = document.getElementById('adminFrameUrl')?.value.trim();
+            const price = document.getElementById('adminFramePrice')?.value.trim();
+            const scale = parseFloat(document.getElementById('adminFrameScaleInput')?.value) || 135;
+            const offsetX = parseFloat(document.getElementById('adminFrameXInput')?.value) || 0;
+            const offsetY = parseFloat(document.getElementById('adminFrameYInput')?.value) || 0;
+
+            if (!name || !imgUrl || !price) {
+                return showToast("Vui lòng nhập đủ Tên, URL ảnh và Giá WOW!", "error");
+            }
+
+            const btn = document.getElementById('btnAdminSaveFrame');
+            const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang thêm...'; 
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
                 btn.disabled = true;
             }
 
-            const res = await apiFetch(`/api/admin/add_frame`, { method: 'POST', body: JSON.stringify({ name, imgUrl, price: parseInt(price) }) });
-            if(res && res.success) {
-                showToast("Đã phát hành Khung Avatar mới!", "success");
-                document.getElementById('adminFrameName').value = "";
-                document.getElementById('adminFrameUrl').value = "";
-                document.getElementById('adminFramePrice').value = "";
+            const isNew = (adminEditingFrameId === "new");
+            const endpoint = isNew ? "/api/admin/add_frame" : "/api/admin/update_frame";
+            const payload = {
+                frameId: adminEditingFrameId,
+                name,
+                imgUrl,
+                price: parseInt(price),
+                scale,
+                offsetX,
+                offsetY
+            };
+
+            const res = await apiFetch(endpoint, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (res && res.success) {
+                showToast(isNew ? "Đã phát hành Khung mới với tọa độ chuẩn!" : "Đã cập nhật tọa độ & kích thước khung thành công!", "success");
+
+                // Cập nhật bộ nhớ đệm
+                if (res.frame) {
+                    if (res.frame.url) window.globalFramesMap[res.frame.url] = res.frame;
+                    if (res.frame.id) window.globalFramesMap[res.frame.id] = res.frame;
+                    try {
+                        localStorage.setItem('danv_frames_config_cache', JSON.stringify(window.globalFramesMap));
+                    } catch(e) {}
+                }
+
+                await setupAdminFrameStudio();
+                if (isNew && res.frame) {
+                    const sel = document.getElementById('adminFrameSelect');
+                    if (sel) sel.value = res.frame.id;
+                    onAdminSelectFrameChange(res.frame.id);
+                }
+            } else {
+                showToast(res?.error || "Không thể lưu thông tin khung", "error");
             }
-            
+
             if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Phát hành Khung mới'; 
+                btn.innerHTML = origHtml;
                 btn.disabled = false;
             }
         }
@@ -22581,7 +22877,7 @@
 
                 avtWrapper.innerHTML = `
                     <img id="profAvt" src="${getAvtUrl(viewingProfileData.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
-                    ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%, -50%); pointer-events:none; object-fit:contain; aspect-ratio:1/1;">` : ''}
+                    ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" class="avt-frame" style="${getFrameInlineStyle(viewingProfileData.frame)}">` : ''}
                     ${isMe ? `
                         <div class="profile-avt-overlay-btn" title="Chạm để đổi avatar hoặc chọn khung">
                             <i class="fa-solid fa-camera"></i>
