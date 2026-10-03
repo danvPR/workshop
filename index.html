@@ -7815,7 +7815,7 @@
             align-items: center;
             justify-content: center;
             filter: drop-shadow(0 8px 16px rgba(0,0,0,0.12));
-            animation: breatheHole 3s infinite ease-in-out;
+            animation: floatMascot 3s infinite ease-in-out;
         }
         .banned-title {
             font-size: 1.6rem;
@@ -14426,14 +14426,19 @@
     
         // ================= XỬ LÝ TRANG TÀI KHOẢN BỊ KHÓA & KHÁNG CÁO =================
         function openBannedPage() {
-            document.getElementById('bannedView').style.display = 'block';
-
-            let bannedInfo = { username: "Tài khoản", reason: "Vi phạm tiêu chuẩn cộng đồng DANVworkshop" };
+            let bannedInfo = null;
             try {
                 const stored = sessionStorage.getItem('danv_banned_info');
                 if (stored) bannedInfo = JSON.parse(stored);
-                else if (currentUser) bannedInfo.username = currentUser.username;
             } catch(e) {}
+
+            // Nếu không có thông tin tài khoản bị khóa -> Chặn truy cập và tự động đẩy về Trang chủ
+            if (!bannedInfo || !bannedInfo.username) {
+                navigateTo('#home');
+                return;
+            }
+
+            document.getElementById('bannedView').style.display = 'block';
 
             const uEl = document.getElementById('bannedUsernameText');
             const rEl = document.getElementById('bannedReasonDetail');
