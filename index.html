@@ -3641,8 +3641,22 @@
         /* ===== CÁC HIỆU ỨNG KHUNG BONG BÓNG ÁP DỤNG CẢ CHAT LẪN BÌNH LUẬN ===== */
         .chat-bubble.bubble-custom-frame,
         .comment-text-bubble.bubble-custom-frame {
-            background-clip: padding-box;
-            background-color: var(--bg-panel);
+            background: transparent !important;
+            background-color: transparent !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            min-height: 56px;
+            min-width: 150px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.18));
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+        }
+        .chat-msg-row.mine .chat-bubble.bubble-custom-frame {
+            background: transparent !important;
+            background-color: transparent !important;
         }
 
         /* CỐ ĐỊNH MÀU CHỮ THEO CÀI ĐẶT CỦA ADMIN (CHỐNG CHÌM CHỮ TRÊN THEME SÁNG/TỐI) */
@@ -21637,7 +21651,7 @@
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
                 return {
                     classAttr: 'bubble-custom-frame',
-                    styleAttr: `style="border: 14px solid transparent; border-image: url('${escapeHtml(clean)}') 30 fill / 14px round; border-image-outset: 1px; ${colorCss}"`
+                    styleAttr: `style="border-style: solid; border-width: 18px 42px; border-color: transparent; border-image: url('${escapeHtml(clean)}') 26% 32% 26% 32% fill / 18px 42px stretch; padding: 6px 14px !important; ${colorCss}"`
                 };
             }
             return { 
@@ -21901,7 +21915,7 @@
                             ${item.id === 'none' 
                                 ? `<div class="chat-bubble" style="font-size:0.7rem; padding:4px 8px;">Mặc định</div>` 
                                 : (isImg 
-                                    ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.7rem; padding:4px 8px; border:10px solid transparent; border-image:url('${item.cssClass}') 30 fill / 10px round;">Chat</div>`
+                                    ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.7rem; border-style:solid; border-width:10px 20px; border-color:transparent; border-image:url('${item.cssClass}') 26% 32% 26% 32% fill / 10px 20px stretch; padding:2px 6px !important; min-width:auto; min-height:auto;">Chat</div>`
                                     : `<div class="chat-bubble ${escapeHtml(item.cssClass)}" style="font-size:0.7rem; padding:4px 8px;">Chat</div>`
                                   )
                             }
@@ -21959,7 +21973,7 @@
                     previewBox.innerHTML = `
                         <div style="width:100%; display:flex; justify-content:center;">
                             ${isImg 
-                                ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.75rem; padding:6px 12px; border:10px solid transparent; border-image:url('${item.cssClass}') 30 fill / 10px round;">Demo Chat ✨</div>`
+                                ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.75rem; border-style:solid; border-width:12px 24px; border-color:transparent; border-image:url('${item.cssClass}') 26% 32% 26% 32% fill / 12px 24px stretch; padding:4px 8px !important; min-width:auto; min-height:auto;">Demo Chat ✨</div>`
                                 : `<div class="chat-bubble ${escapeHtml(item.cssClass)}" style="font-size:0.75rem; padding:6px 12px;">Demo Chat ✨</div>`
                             }
                         </div>
