@@ -7775,6 +7775,184 @@
             }
         }
 
+        /* ================= GIAO DIỆN TÀI KHOẢN BỊ KHÓA (BANNED VIEW) ================= */
+        .banned-container {
+            max-width: 720px;
+            margin: 40px auto 60px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .banned-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        [data-theme="dark"] .banned-card {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .banned-hero-header {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
+            padding: 36px 24px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        .banned-mascot-wrap {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.12));
+            animation: breatheHole 3s infinite ease-in-out;
+        }
+        .banned-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #ef4444 !important;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.3px;
+        }
+        .banned-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 0;
+            max-width: 480px;
+            line-height: 1.5;
+        }
+        .banned-body {
+            padding: 28px 32px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .banned-reason-box {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1.5px solid rgba(239, 68, 68, 0.35);
+            border-left: 6px solid #ef4444;
+            border-radius: 14px;
+            padding: 16px 20px;
+        }
+        .banned-reason-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 6px;
+        }
+        .banned-reason-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-title);
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        .banned-guideline-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .banned-guide-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .banned-guide-item i {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .banned-guide-item b {
+            font-size: 0.9rem;
+            color: var(--text-title);
+            display: block;
+            margin-bottom: 2px;
+        }
+        .banned-guide-item p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.4;
+        }
+        .banned-actions-row {
+            display: flex;
+            gap: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+        .btn-appeal-action {
+            flex: 2;
+            padding: 13px 20px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #ffffff !important;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-appeal-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.45);
+        }
+        .btn-banned-logout {
+            flex: 1;
+            padding: 13px 16px;
+            border-radius: 14px;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.2s;
+        }
+        .btn-banned-logout:hover {
+            background: var(--border-color);
+            color: var(--text-title);
+        }
+        @media (max-width: 640px) {
+            .banned-guideline-grid {
+                grid-template-columns: 1fr;
+            }
+            .banned-actions-row {
+                flex-direction: column;
+            }
+            .banned-body {
+                padding: 20px 18px;
+            }
+        }
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -9736,6 +9914,146 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- ================= TRANG THÔNG BÁO TÀI KHOẢN BỊ KHÓA ================= -->
+    <div id="bannedView" class="page-view" style="max-width: 100%; padding: 10px 18px 50px 18px;">
+        <div class="banned-container">
+            <div class="banned-card">
+                
+                <div class="banned-hero-header">
+                    <!-- Minh họa Chú Gấu quy chuẩn & thiện cảm -->
+                    <div class="banned-mascot-wrap">
+                        <svg viewBox="0 0 160 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Tai gấu -->
+                            <circle cx="42" cy="46" r="20" fill="#92400e" />
+                            <circle cx="42" cy="46" r="11" fill="#fde68a" />
+                            <circle cx="118" cy="46" r="20" fill="#92400e" />
+                            <circle cx="118" cy="46" r="11" fill="#fde68a" />
+                            <!-- Đầu gấu -->
+                            <ellipse cx="80" cy="82" rx="54" ry="48" fill="#b45309" />
+                            <!-- Vùng mõm gấu -->
+                            <ellipse cx="80" cy="94" rx="26" ry="20" fill="#fef3c7" />
+                            <!-- Mũi gấu -->
+                            <ellipse cx="80" cy="86" rx="8" ry="6" fill="#1f2937" />
+                            <!-- Miệng gấu buồn nhỏ -->
+                            <path d="M74 98 Q80 93 86 98" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                            <!-- Đôi mắt tròn -->
+                            <ellipse cx="58" cy="74" rx="5" ry="6" fill="#1f2937" />
+                            <circle cx="56.5" cy="72" r="2" fill="#ffffff" />
+                            <ellipse cx="102" cy="74" rx="5" ry="6" fill="#1f2937" />
+                            <circle cx="100.5" cy="72" r="2" fill="#ffffff" />
+                            <!-- Hai má hồng nhẹ -->
+                            <circle cx="48" cy="85" r="7" fill="#fca5a5" opacity="0.65" />
+                            <circle cx="112" cy="85" r="7" fill="#fca5a5" opacity="0.65" />
+                            <!-- Hai tay giữ biển quy tắc -->
+                            <ellipse cx="44" cy="120" rx="14" ry="12" fill="#92400e" />
+                            <ellipse cx="116" cy="120" rx="14" ry="12" fill="#92400e" />
+                            <!-- Biển quy tắc an toàn -->
+                            <rect x="34" y="112" width="92" height="34" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5" />
+                            <path d="M52 129 L58 123 L55 129 L60 129 L54 137 L56 131 L52 131 Z" fill="#f59e0b" />
+                            <text x="66" y="132" fill="#ffffff" font-size="11" font-weight="bold" font-family="-apple-system, sans-serif">DANV RULES</text>
+                        </svg>
+                    </div>
+                    <h1 class="banned-title">Tài Khoản Đang Bị Đình Chỉ</h1>
+                    <p class="banned-subtitle">
+                        Tài khoản <b id="bannedUsernameText" style="color:var(--text-title);">@username</b> hiện không thể sử dụng các chức năng cộng đồng do ghi nhận vi phạm tiêu chuẩn.
+                    </p>
+                </div>
+
+                <div class="banned-body">
+                    <!-- Khung lý do đình chỉ cụ thể -->
+                    <div class="banned-reason-box">
+                        <div class="banned-reason-label">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>Lý do xử lý kỷ luật từ Quản trị viên</span>
+                        </div>
+                        <div class="banned-reason-text" id="bannedReasonDetail">
+                            Đang nạp dữ liệu lý do...
+                        </div>
+                    </div>
+
+                    <!-- Hướng dẫn và tài liệu quy định -->
+                    <div>
+                        <div style="font-size:0.88rem; font-weight:800; color:var(--text-title); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
+                            <i class="fa-solid fa-scale-balanced" style="color:var(--primary); margin-right:5px;"></i>
+                            <span>Quy chuẩn & Chính sách cộng đồng</span>
+                        </div>
+                        <div class="banned-guideline-grid">
+                            <div class="banned-guide-item">
+                                <i class="fa-solid fa-file-contract"></i>
+                                <div>
+                                    <b>Điều khoản dịch vụ</b>
+                                    <p>Các nguyên tắc vận hành, quyền sở hữu nội dung và quy định chung của hệ thống.</p>
+                                </div>
+                            </div>
+                            <div class="banned-guide-item">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <div>
+                                    <b>An toàn và văn minh</b>
+                                    <p>Không dùng ngôn từ xúc phạm, spam link quảng cáo hoặc chia sẻ nội dung độc hại.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="font-size:0.86rem; color:var(--text-muted); line-height:1.5;">
+                        Mọi thắc mắc hoặc yêu cầu xem xét lại quyết định đình chỉ, bạn có thể gửi đơn kháng cáo kèm các minh chứng liên quan đến hòm thư hỗ trợ của đội ngũ kiểm duyệt.
+                    </div>
+
+                    <!-- Nút thao tác -->
+                    <div class="banned-actions-row">
+                        <button type="button" class="btn-banned-logout" onclick="logoutFromBanned()">
+                            <i class="fa-solid fa-right-from-bracket"></i> <span>Đăng xuất</span>
+                        </button>
+                        <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" rel="noopener noreferrer" class="btn-banned-logout" style="text-decoration:none;">
+                            <i class="fa-solid fa-book-bookmark"></i> <span>Xem điều khoản</span>
+                        </a>
+                        <button type="button" class="btn-appeal-action" onclick="openAppealInstructionModal()">
+                            <i class="fa-solid fa-envelope-open-text"></i> <span>Gửi đơn kháng cáo</span>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỈ DẪN KHÁNG CÁO TỚI STUDIODANV@GMAIL.COM -->
+    <div class="modal-overlay" id="appealInstructionModal">
+        <div class="modal" style="max-width: 520px; border-radius: 22px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color);">
+            <div class="modal-header" style="align-items:center; background: linear-gradient(135deg, rgba(13, 165, 122, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);">
+                <span style="font-weight: 800; font-size: 1.12rem; display: flex; align-items: center; gap: 8px; color: var(--text-title);">
+                    <i class="fa-solid fa-envelope" style="color: var(--primary);"></i> Hướng Dẫn Soạn Thư Kháng Cáo
+                </span>
+                <button class="btn-close" onclick="closeModal('appealInstructionModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+                    Vui lòng gửi email trực tiếp tới bộ phận kiểm duyệt qua địa chỉ <b style="color: var(--primary);">studiodanv@gmail.com</b> theo đúng mẫu thông tin dưới đây để được hỗ trợ kiểm tra và phản hồi sớm:
+                </p>
+
+                <div style="background: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: 14px; padding: 14px 16px; font-size: 0.84rem; line-height: 1.6; color: var(--text-main);">
+                    <div><b>Tiêu đề thư:</b> <code id="appealMailSubject" style="background: var(--bg-panel); padding: 2px 6px; border-radius: 6px; color: var(--primary); font-family: monospace;">[Kháng cáo tài khoản] - Tên_tài_khoản</code></div>
+                    <div style="margin-top: 8px;"><b>Nội dung gồm có:</b></div>
+                    <ul style="margin: 4px 0 0 18px; padding: 0;">
+                        <li>Tên tài khoản (Username) cần xem xét</li>
+                        <li>Email dùng để đăng ký tài khoản</li>
+                        <li>Trình bày lý do bạn cho rằng quyết định khóa là nhầm lẫn hoặc cam kết khắc phục vi phạm</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 6px;">
+                    <button type="button" class="btn" style="flex: 1; justify-content: center; padding: 11px; border-radius: 12px; font-weight: 700;" onclick="copyAppealTemplate()">
+                        <i class="fa-solid fa-copy"></i> Sao chép mẫu thư
+                    </button>
+                    <a id="btnSendAppealMailClient" href="#" class="btn btn-primary" style="flex: 1.4; justify-content: center; padding: 11px; border-radius: 12px; font-weight: 800; text-decoration: none;">
+                        <i class="fa-solid fa-paper-plane"></i> Mở ứng dụng Mail
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -11857,6 +12175,17 @@
             const res = await apiFetch(`/api/user/${encodeURIComponent(currentUser.username)}`, { method:'GET' });
             if(res && res.needs_update) { openModal('legacyUpdateModal'); } 
             else if(res) { 
+                // TỰ ĐỘNG CHUYỂN HƯỚNG TRANG NẾU TÀI KHOẢN ĐÃ BỊ ĐÌNH CHỈ
+                if (res.isBanned) {
+                    const bannedData = {
+                        username: currentUser.username,
+                        reason: res.banReason || "Vi phạm tiêu chuẩn cộng đồng DANVworkshop"
+                    };
+                    sessionStorage.setItem('danv_banned_info', JSON.stringify(bannedData));
+                    navigateTo('#banned');
+                    return;
+                }
+
                 currentUser.role = res.role; 
                 currentUser.WOW = res.WOW !== undefined ? res.WOW : (res.omg !== undefined ? res.omg : (currentUser.WOW || 0));
                 currentUser.frame = res.frame || null;
@@ -12232,7 +12561,30 @@
                     body: JSON.stringify({ loginId, password: pw, deviceId, turnstileToken }) 
                 })).json();
 
+                // KIỂM TRA TÀI KHOẢN BỊ KHÓA NGAY KHI ĐĂNG NHẬP
+                if (res && (res.isBanned || res.banned || (res.error && String(res.error).toLowerCase().includes("khóa")))) {
+                    const bannedData = {
+                        username: res.username || loginId,
+                        reason: res.banReason || res.reason || res.error || "Vi phạm tiêu chuẩn cộng đồng DANVworkshop"
+                    };
+                    sessionStorage.setItem('danv_banned_info', JSON.stringify(bannedData));
+                    closeModal('authModal');
+                    navigateTo('#banned');
+                    return;
+                }
+
                 if(res.success) {
+                    if (res.isBanned) {
+                        const bannedData = {
+                            username: res.username || loginId,
+                            reason: res.banReason || "Vi phạm tiêu chuẩn cộng đồng DANVworkshop"
+                        };
+                        sessionStorage.setItem('danv_banned_info', JSON.stringify(bannedData));
+                        closeModal('authModal');
+                        navigateTo('#banned');
+                        return;
+                    }
+
                     currentUser = { 
                         username: res.username, 
                         sessionToken: res.sessionToken, 
@@ -12566,6 +12918,7 @@
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
             else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
             else if (hash === '#creator') document.title = "Studio Nhà Sáng Tạo | " + brandName;
+            else if (hash === '#banned') document.title = "Tài khoản bị đình chỉ | " + brandName;
             else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
 
             // Ẩn tất cả các trang
@@ -12581,7 +12934,8 @@
             }
 
             // Chạy hàm mở trang tương ứng (Display: block được gọi bên trong các hàm này)
-            if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
+            if (hash === '#banned') openBannedPage();
+            else if (hash.startsWith('#project/')) await openProjectPage(hash.replace('#project/', ''), urlParams);
             else if (hash.startsWith('#profile/')) await openProfilePage(decodeURIComponent(hash.replace('#profile/', '')), urlParams);
             else if (hash === '#upload') openUploadPage();
             else if (hash === '#settings') await openSettingsPage();
@@ -14070,6 +14424,64 @@
 
         // ================= PROFILE & SETTINGS =================
     
+        // ================= XỬ LÝ TRANG TÀI KHOẢN BỊ KHÓA & KHÁNG CÁO =================
+        function openBannedPage() {
+            document.getElementById('bannedView').style.display = 'block';
+
+            let bannedInfo = { username: "Tài khoản", reason: "Vi phạm tiêu chuẩn cộng đồng DANVworkshop" };
+            try {
+                const stored = sessionStorage.getItem('danv_banned_info');
+                if (stored) bannedInfo = JSON.parse(stored);
+                else if (currentUser) bannedInfo.username = currentUser.username;
+            } catch(e) {}
+
+            const uEl = document.getElementById('bannedUsernameText');
+            const rEl = document.getElementById('bannedReasonDetail');
+            const subCode = document.getElementById('appealMailSubject');
+            const btnMail = document.getElementById('btnSendAppealMailClient');
+
+            if (uEl) uEl.innerText = `@${bannedInfo.username}`;
+            if (rEl) rEl.innerText = bannedInfo.reason || "Vi phạm tiêu chuẩn cộng đồng DANVworkshop";
+
+            const subject = `[Kháng cáo tài khoản] - ${bannedInfo.username}`;
+            if (subCode) subCode.innerText = subject;
+
+            if (btnMail) {
+                const mailBody = `Kính gửi Ban Quản Trị DANVworkshop,%0D%0A%0D%0ATôi gửi thư này để yêu cầu xem xét lại quyết định đình chỉ tài khoản của tôi:%0D%0A- Tên tài khoản: ${bannedInfo.username}%0D%0A- Lý do ghi nhận: ${bannedInfo.reason}%0D%0A%0D%0ANội dung trình bày giải trình/cam kết:%0D%0A[Vui lòng nhập nội dung giải trình tại đây]`;
+                btnMail.href = `mailto:studiodanv@gmail.com?subject=${encodeURIComponent(subject)}&body=${mailBody}`;
+            }
+        }
+
+        function openAppealInstructionModal() {
+            openModal('appealInstructionModal');
+        }
+
+        function copyAppealTemplate() {
+            let uName = "Tài_khoản";
+            let uReason = "Vi phạm tiêu chuẩn cộng đồng";
+            try {
+                const stored = sessionStorage.getItem('danv_banned_info');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    uName = parsed.username || uName;
+                    uReason = parsed.reason || uReason;
+                }
+            } catch(e) {}
+
+            const template = `Kính gửi Ban Quản Trị DANVworkshop,\n\nTôi gửi thư này để yêu cầu xem xét lại quyết định đình chỉ tài khoản:\n- Tên tài khoản (Username): ${uName}\n- Email tài khoản:\n- Lý do ghi nhận đình chỉ: ${uReason}\n\nNội dung giải trình và cam kết tuân thủ quy chuẩn:\n[Nhập nội dung giải trình của bạn tại đây]`;
+
+            navigator.clipboard.writeText(template).then(() => {
+                showToast("Đã sao chép nội dung mẫu đơn kháng cáo!", "success");
+            }).catch(() => {
+                showToast("Vui lòng sao chép thủ công các mục trên màn hình", "error");
+            });
+        }
+
+        function logoutFromBanned() {
+            sessionStorage.removeItem('danv_banned_info');
+            logout();
+        }
+
         // ================= LEADERBOARD SYSTEM =================
         let lbCurrentType = 'wow';
         let lbCurrentPage = 1;
