@@ -1128,10 +1128,13 @@
             border-color: rgba(255, 255, 255, 0.08);
         }
         .profile-cover-bg { 
-            height: 200px; 
+            height: 220px; 
             background: linear-gradient(135deg, #064e3b 0%, #0d1e2b 50%, #0f172a 100%); 
+            background-size: cover;
+            background-position: center;
             position: relative; 
             overflow: hidden;
+            transition: background-image 0.3s ease;
         }
         .profile-cover-bg::before {
             content: '';
@@ -1140,6 +1143,35 @@
             background: radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
                         radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
             pointer-events: none;
+        }
+        .profile-cover-bg.has-custom-cover::before {
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%);
+        }
+        .btn-change-cover {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 7px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            z-index: 4;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        }
+        .btn-change-cover:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
         
         .profile-main-content { padding: 0 32px 28px; position: relative; }
@@ -1353,6 +1385,7 @@
         .social-chip-github { background: #24292e; }
         .social-chip-facebook { background: #1877f2; }
         .social-chip-web { background: #0da57a; }
+        .social-chip-chess { background: #7fa650; }
 
         /* BENTO DRAWER MODAL */
         .bento-drawer {
@@ -6667,16 +6700,129 @@
         }
         [data-theme="dark"] .bb-gift-msg { color: #e2e8f0; border-top-color: rgba(217, 70, 239, 0.4); }
 
-        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube / TikTok để không bị viền xấu */
+        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube / TikTok / Chess / Station / Asset để không bị viền xấu */
         .chat-msg-row .chat-bubble:has(.beabea-gift-card),
         .chat-msg-row .chat-bubble:has(.beabea-blindbag-card),
         .chat-msg-row .chat-bubble:has(.beabea-quiz-card),
         .chat-msg-row .chat-bubble:has(.chat-yt-embed-wrap:only-child),
-        .chat-msg-row .chat-bubble:has(.chat-tiktok-embed-wrap:only-child) {
+        .chat-msg-row .chat-bubble:has(.chat-tiktok-embed-wrap:only-child),
+        .chat-msg-row .chat-bubble:has(.chat-chess-card),
+        .chat-msg-row .chat-bubble:has(.chat-shared-station-card),
+        .chat-msg-row .chat-bubble:has(.chat-shared-asset-card) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+        }
+
+        /* ♟️ WIDGET CHESS.COM HIỆN ĐẠI */
+        .chat-chess-card {
+            background: var(--bg-panel) !important;
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            overflow: hidden;
+            width: 320px;
+            max-width: 100%;
+            margin-top: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .chat-chess-card:hover {
+            transform: translateY(-2px);
+            border-color: #7fa650;
+            box-shadow: 0 10px 28px rgba(127, 166, 80, 0.22);
+        }
+        .chat-chess-header {
+            padding: 12px 14px;
+            background: linear-gradient(135deg, #302e2b 0%, #21201d 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-chess-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(127, 166, 80, 0.28);
+            color: #a3d160;
+            border: 1px solid rgba(127, 166, 80, 0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.4px;
+        }
+        .chat-chess-body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-panel);
+        }
+        .btn-chess-cta {
+            background: linear-gradient(135deg, #81b64c 0%, #7fa650 100%) !important;
+            color: #ffffff !important;
+            padding: 9px 16px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            text-decoration: none !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(127, 166, 80, 0.35);
+            transition: all 0.2s ease;
+            margin-top: 4px;
+        }
+        .btn-chess-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(127, 166, 80, 0.5);
+            color: #ffffff !important;
+        }
+
+        /* 📡 WIDGET CHIA SẺ STATION VÀO KÊNH GIAO LƯU */
+        .chat-shared-station-card {
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            width: 300px;
+            max-width: 100%;
+            margin-top: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .chat-shared-station-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 28px rgba(13,165,122,0.18);
+        }
+
+        /* 📦 WIDGET CHIA SẺ ASSET TÀI NGUYÊN VÀO KÊNH GIAO LƯU */
+        .chat-shared-asset-card {
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            width: 290px;
+            max-width: 100%;
+            margin-top: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .chat-shared-asset-card:hover {
+            transform: translateY(-2px);
+            border-color: #ea580c;
+            box-shadow: 0 10px 28px rgba(234, 88, 12, 0.18);
         }
 
         /* 🎬 KHUNG NHÚNG VIDEO YOUTUBE AMBIENT GLOW & MINI-DOCK NỔI (CYBER-CINEMA) */
@@ -8463,10 +8609,10 @@
                             
                             <div class="chat-composer-bottom-bar">
                                 <div class="chat-composer-tools-left">
-                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" data-i18n-title="chat_attach_img_title" title="Đính kèm hình ảnh">
+                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" data-i18n-title="chat_attach_img_title" title="Đính kèm hình ảnh (PNG, JPG, WebP, GIF, APNG)">
                                         <i class="fa-solid fa-image" style="color: #0284c7;"></i>
                                     </label>
-                                    <input type="file" id="commentImgUploadChat" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
+                                    <input type="file" id="commentImgUploadChat" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
 
                                     <button type="button" class="chat-dock-icon-btn" onclick="openKlipyModal('chat')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
                                         <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
@@ -8654,6 +8800,9 @@
                             </button>
                             <button id="btnStdSettings" class="btn" style="display:none; border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="openStudioSettings()">
                                 <i class="fa-solid fa-gear"></i> <span data-i18n="station_btn_settings">Cài đặt</span>
+                            </button>
+                            <button type="button" class="btn" style="border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="shareStationToGlobalChat()" title="Chia sẻ Station vào Kênh Giao Lưu">
+                                <i class="fa-solid fa-earth-americas" style="color:var(--primary);"></i> <span>Giao lưu</span>
                             </button>
                             <button type="button" class="btn" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="copyCurrentStudioLink()" title="Sao chép link Station">
                                 <i class="fa-solid fa-link"></i>
@@ -9111,7 +9260,12 @@
 
             <!-- CỐ ĐỊNH: BẢNG IDENTITY BOX HIỆN ĐẠI -->
             <div class="profile-hero">
-                <div class="profile-cover-bg"></div>
+                <div class="profile-cover-bg" id="profCoverBg">
+                    <button type="button" id="btnChangeCover" class="btn-change-cover" style="display:none;" onclick="triggerCoverUpload()">
+                        <i class="fa-solid fa-camera"></i> <span>Đổi ảnh bìa</span>
+                    </button>
+                    <input type="file" id="directCoverUpload" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" style="display:none;" onchange="handleDirectCoverUpload(this)">
+                </div>
                 
                 <div class="profile-main-content">
                     <div class="profile-top-row">
@@ -9408,6 +9562,10 @@
                 <div class="form-group">
                     <label><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> Facebook Profile:</label>
                     <input type="text" id="bentoSocialFacebook" class="form-control" placeholder="https://facebook.com/...">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-chess" style="color:#7fa650;"></i> Chess.com Username / Profile:</label>
+                    <input type="text" id="bentoSocialChess" class="form-control" placeholder="https://chess.com/member/... hoặc username">
                 </div>
                 <div class="form-group">
                     <label><i class="fa-solid fa-globe" style="color:var(--primary);"></i> Website / Blog:</label>
@@ -10411,8 +10569,13 @@
                 <form id="editProfForm">
                     <div class="form-group">
                         <label data-i18n="settings_avatar">Đổi Ảnh đại diện:</label>
-                        <input type="file" id="editAvtFile" accept="image/*" class="form-control" style="padding:8px;">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hình ảnh sẽ hiển thị trên hồ sơ và bình luận.</div>
+                        <input type="file" id="editAvtFile" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" class="form-control" style="padding:8px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hỗ trợ PNG, JPG, WebP, GIF, APNG (Tối đa 5MB).</div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-panorama" style="color:var(--primary);"></i> Đổi Ảnh bìa trang cá nhân:</label>
+                        <input type="file" id="editCoverFile" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" class="form-control" style="padding:8px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">Ảnh nền lớn phía sau avatar (Tối đa 10MB).</div>
                     </div>
                     <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -10734,9 +10897,12 @@
                 <div id="quickViewTagsArea" class="asset-tags-wrapper" style="max-height:none; margin-bottom:18px;"></div>
 
                 <div style="display:flex; gap:10px; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;">
-                    <a id="quickViewDownloadBtn" href="#" target="_blank" download class="btn btn-primary" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;">
+                    <button type="button" id="quickViewDownloadBtn" class="btn btn-primary" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;" onclick="downloadCurrentQuickViewAsset()">
                         <i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Tải về máy</span>
-                    </a>
+                    </button>
+                    <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:var(--primary);" onclick="shareCurrentAssetToGlobalChat()" title="Chia sẻ vào Kênh Giao Lưu">
+                        <i class="fa-solid fa-earth-americas"></i>
+                    </button>
                     <button type="button" class="btn" id="quickViewCopyLinkBtn" style="flex:1; justify-content:center; padding:11px; font-weight:700; border-radius:12px;" onclick="copyCurrentAssetLink()">
                         <i class="fa-solid fa-link"></i> <span data-i18n="assets_qv_btn_copy">Chép link</span>
                     </button>
@@ -14504,16 +14670,36 @@
             }
         }
         
+        const ALLOWED_IMAGE_MIMES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/apng'];
+        const ALLOWED_IMAGE_EXTS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.apng'];
+
+        function isFileAllowedImage(file) {
+            if (!file) return false;
+            const name = (file.name || '').toLowerCase();
+            const hasValidExt = ALLOWED_IMAGE_EXTS.some(ext => name.endsWith(ext));
+            const hasValidMime = ALLOWED_IMAGE_MIMES.includes((file.type || '').toLowerCase());
+            return hasValidExt && (hasValidMime || file.type === '');
+        }
+
         function handleCommentImagePreview(input, type) { 
             attachedGifUrls[type] = null;
             const suffix = type.charAt(0).toUpperCase() + type.slice(1);
             if (input.files && input.files[0]) { 
+                const file = input.files[0];
+                if (!isFileAllowedImage(file)) {
+                    input.value = '';
+                    return showToast("Chỉ chấp nhận các định dạng ảnh: PNG, JPG, WebP, GIF, APNG!", "error");
+                }
+                if (file.size > 20 * 1024 * 1024) {
+                    input.value = '';
+                    return showToast("Dung lượng ảnh tối đa là 20MB!", "error");
+                }
                 const r = new FileReader(); 
                 r.onload = function(e) { 
                     document.getElementById('commentImgPreviewSrc' + suffix).src = e.target.result; 
                     document.getElementById('commentImgPreview' + suffix).style.display = 'flex'; 
                 }; 
-                r.readAsDataURL(input.files[0]); 
+                r.readAsDataURL(file); 
             } 
         }
         function removeCommentImage(type) { 
@@ -15970,6 +16156,21 @@
             const btnFollow = document.getElementById('btnFollowProf');
             const btnCustomize = document.getElementById('btnCustomizeBento');
             const profMoreWrap = document.getElementById('profMoreMenuWrap');
+            const btnChangeCover = document.getElementById('btnChangeCover');
+            const coverBgEl = document.getElementById('profCoverBg');
+
+            // Cập nhật hiển thị ảnh bìa Custom
+            if (coverBgEl) {
+                if (viewingProfileData.banner) {
+                    const coverUrl = viewingProfileData.banner.startsWith('http') ? viewingProfileData.banner : `${WORKER_URL}/api/project/${viewingProfileData.banner}`;
+                    coverBgEl.style.backgroundImage = `url('${coverUrl}')`;
+                    coverBgEl.classList.add('has-custom-cover');
+                } else {
+                    coverBgEl.style.backgroundImage = '';
+                    coverBgEl.classList.remove('has-custom-cover');
+                }
+            }
+            if (btnChangeCover) btnChangeCover.style.display = isCurrentUser ? 'inline-flex' : 'none';
             
             const isAdmin = currentUser && currentUser.role === 'admin';
             
@@ -15978,7 +16179,7 @@
                 if(btnCustomize) btnCustomize.style.display = 'inline-flex';
                 if(profMoreWrap) profMoreWrap.style.display = 'inline-flex';
                 if(btnFollow) btnFollow.style.display = 'none'; 
-            } else { 
+            } else {
                 if(btnEdit) btnEdit.style.display = 'none'; 
                 if(profMoreWrap) profMoreWrap.style.display = 'none';
                 if(btnCustomize) btnCustomize.style.display = isAdmin ? 'inline-flex' : 'none';
@@ -16591,6 +16792,64 @@
             openModal('editProfileModal');
         }
 
+        function triggerCoverUpload() {
+            const input = document.getElementById('directCoverUpload');
+            if (input) input.click();
+        }
+
+        async function handleDirectCoverUpload(input) {
+            if (!input.files || !input.files[0] || !currentUser) return;
+            const file = input.files[0];
+            if (!isFileAllowedImage(file)) {
+                input.value = '';
+                return showToast("Chỉ chấp nhận các định dạng ảnh: PNG, JPG, WebP, GIF, APNG!", "error");
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                input.value = '';
+                return showToast("Ảnh bìa tối đa 10MB!", "error");
+            }
+
+            showToast("Đang tải ảnh bìa mới lên...", "info");
+            const fData = new FormData(); 
+            fData.append("file", file); 
+            fData.append("username", currentUser.username); 
+            fData.append("sessionToken", currentUser.sessionToken);
+
+            try {
+                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { 
+                    method: 'POST', 
+                    body: fData, 
+                    headers: { "X-Client-Type": "StudioDANV-Web" } 
+                })).json();
+
+                if (upRes.success) {
+                    const newBannerId = upRes.file_id;
+                    const res = await apiFetch(`/api/user/update`, { 
+                        method: 'POST', 
+                        body: JSON.stringify({ bannerId: newBannerId }) 
+                    });
+
+                    if (res && res.success) {
+                        currentUser.banner = newBannerId;
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+
+                        if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                            delete profileCache[currentUser.username];
+                        }
+                        showToast("Đã cập nhật ảnh bìa trang cá nhân!", "success");
+                        openProfilePage(currentUser.username);
+                    } else {
+                        showToast("Lỗi khi lưu ảnh bìa!", "error");
+                    }
+                } else {
+                    showToast(upRes.error || "Không thể tải ảnh bìa!", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+            input.value = '';
+        }
+
         async function saveProfileInfoBtn() {
             const btn = document.getElementById('btnSaveProfSubmit'); 
             const origHtml = btn.innerHTML;
@@ -16600,14 +16859,26 @@
             const file = document.getElementById('editAvtFile').files[0]; 
             let newAvtId = undefined;
             if (file) {
+                if (!isFileAllowedImage(file)) { showToast("Ảnh đại diện chỉ nhận: PNG, JPG, WebP, GIF, APNG!", "error"); btn.innerHTML = origHtml; btn.disabled = false; return; }
                 if (file.size > 5 * 1024 * 1024) { showToast("Ảnh vượt quá 5MB!", "error"); btn.innerHTML = origHtml; btn.disabled = false; return; }
                 const fData = new FormData(); fData.append("file", file); fData.append("username", currentUser.username); fData.append("sessionToken", currentUser.sessionToken);
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fData, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (upRes.success) { newAvtId = upRes.file_id; currentUser.avt = newAvtId; localStorage.setItem('danv_user', JSON.stringify(currentUser)); updateNav(); }
             }
+
+            const coverFile = document.getElementById('editCoverFile')?.files[0];
+            let newBannerId = undefined;
+            if (coverFile) {
+                if (!isFileAllowedImage(coverFile)) { showToast("Ảnh bìa chỉ nhận: PNG, JPG, WebP, GIF, APNG!", "error"); btn.innerHTML = origHtml; btn.disabled = false; return; }
+                if (coverFile.size > 10 * 1024 * 1024) { showToast("Ảnh bìa vượt quá 10MB!", "error"); btn.innerHTML = origHtml; btn.disabled = false; return; }
+                const fCoverData = new FormData(); fCoverData.append("file", coverFile); fCoverData.append("username", currentUser.username); fCoverData.append("sessionToken", currentUser.sessionToken);
+                const upCoverRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fCoverData, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
+                if (upCoverRes.success) { newBannerId = upCoverRes.file_id; currentUser.banner = newBannerId; localStorage.setItem('danv_user', JSON.stringify(currentUser)); }
+            }
             
             const payload = { 
-                avtId: newAvtId, 
+                avtId: newAvtId,
+                bannerId: newBannerId,
                 display_name: document.getElementById('editDisplayNameInput').value.trim(), 
                 location: document.getElementById('editLocationInput').value.trim(), 
                 bio: document.getElementById('editBioInput').value.trim(), 
@@ -17123,6 +17394,68 @@
             if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             if (platform === 'messenger') shareUrl = `fb-messenger://share/?link=${url}`;
             window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        // 📡 CHIA SẺ STATION VÀO KÊNH GIAO LƯU
+        async function shareStationToGlobalChat() {
+            if (!currentUser) return openModal('loginModal');
+            if (!currentStudio) return;
+
+            const confirmShare = confirm(`Bạn có muốn chia sẻ Station "${currentStudio.title}" vào Kênh Giao Lưu không?`);
+            if (!confirmShare) return;
+
+            const stdId = currentStudio.id;
+            const stdTitle = encodeURIComponent(currentStudio.title || "Station");
+            const stdCreator = encodeURIComponent(currentStudio.creator || currentUser.username);
+            const stdThumb = currentStudio.thumbId || "";
+            const stdProjects = (currentStudio.projects || []).length;
+            const stdFollowers = (currentStudio.followers || []).length;
+
+            const text = `[DANV_STATION_SHARE:${stdId}:${stdTitle}:${stdCreator}:${stdThumb}:${stdProjects}:${stdFollowers}]`;
+            const payload = { text, replyTo: null, imageId: null };
+            
+            showToast("Đang chia sẻ Station...", "info");
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+            if (res && res.success) {
+                showToast("Đã chia sẻ Station vào Kênh Giao Lưu!", "success");
+                navigateTo('#chat');
+            } else {
+                showToast("Lỗi khi chia sẻ", "error");
+            }
+        }
+
+        // 📦 CHIA SẺ ASSET TÀI NGUYÊN VÀO KÊNH GIAO LƯU
+        async function shareAssetToGlobalChat(assetId) {
+            if (!currentUser) return openModal('loginModal');
+            const a = allAssets.find(x => x.assetId === assetId);
+            if (!a) return;
+
+            const confirmShare = confirm(`Chia sẻ tài nguyên "${a.title}" vào Kênh Giao Lưu?`);
+            if (!confirmShare) return;
+
+            const aId = a.assetId;
+            const aTitle = encodeURIComponent(a.title || "Tài nguyên");
+            const aAuthor = encodeURIComponent(a.author || currentUser.username);
+            const aType = a.fileType || "png";
+            const aSize = a.size || "0";
+            const aFileId = a.fileId || "";
+
+            const text = `[DANV_ASSET_SHARE:${aId}:${aTitle}:${aAuthor}:${aType}:${aSize}:${aFileId}]`;
+            const payload = { text, replyTo: null, imageId: null };
+
+            showToast("Đang chia sẻ tài nguyên...", "info");
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+            if (res && res.success) {
+                showToast("Đã chia sẻ Tài nguyên vào Kênh Giao Lưu!", "success");
+                navigateTo('#chat');
+            } else {
+                showToast("Lỗi khi chia sẻ", "error");
+            }
+        }
+
+        function shareCurrentAssetToGlobalChat() {
+            if (!activeQuickViewAsset) return;
+            shareAssetToGlobalChat(activeQuickViewAsset.assetId);
         }
 
         async function shareToGlobalChat() {
@@ -18825,7 +19158,65 @@
             return getYouTubeVideoId(text);
         }
 
-        // 🔍 BỘ NHẬN DIỆN THÔNG TIN TIKTOK TOÀN DIỆN (HỖ TRỢ LINK GỐC & LINK RÚT GỌN vt.tiktok.com, vm.tiktok.com)
+        // ♟️ BỘ PHÂN TÍCH VÀ NHẬN DIỆN URL CHESS.COM
+        function parseChessComUrl(text) {
+            if (!text) return null;
+            const str = text.trim();
+
+            // 1. Trận đấu (Game Live hoặc Daily hoặc Link ván cờ)
+            const gameMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/(?:game\/(live|daily)\/([0-9]+)|play\/online\/([0-9]+)|live#g=([0-9]+))/i);
+            if (gameMatch) {
+                const gameType = (gameMatch[1] || 'live').toUpperCase();
+                const gameId = gameMatch[2] || gameMatch[3] || gameMatch[4] || '';
+                return {
+                    category: 'game',
+                    type: gameType,
+                    id: gameId,
+                    url: `https://www.chess.com/game/${gameType.toLowerCase()}/${gameId}`
+                };
+            }
+
+            // 2. Câu lạc bộ (Club)
+            const clubMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/club\/([a-zA-Z0-9_\-]+)/i);
+            if (clubMatch) {
+                const clubSlug = clubMatch[1];
+                return {
+                    category: 'club',
+                    slug: clubSlug,
+                    url: `https://www.chess.com/club/${clubSlug}`
+                };
+            }
+
+            // 3. Đường dẫn xem trực tuyến (Live Broadcast / Events / TV / Streamers)
+            const liveMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/(events\/([a-zA-Z0-9_\-]+)|tv|streamers\/([a-zA-Z0-9_\-]+))/i);
+            if (liveMatch) {
+                let eventTitle = "Trực tiếp Chess.com";
+                let eventUrl = `https://www.chess.com/${liveMatch[1]}`;
+                if (liveMatch[1] === 'tv') eventTitle = "Chess.com TV";
+                else if (liveMatch[2]) eventTitle = `Sự kiện: ${liveMatch[2].replace(/[-_]/g, ' ')}`;
+                else if (liveMatch[3]) eventTitle = `Kênh Streamer: ${liveMatch[3]}`;
+                return {
+                    category: 'broadcast',
+                    title: eventTitle,
+                    url: eventUrl
+                };
+            }
+
+            // 4. Hồ sơ thành viên (Member / User)
+            const memberMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/(?:member|user)\/([a-zA-Z0-9_\-]+)/i);
+            if (memberMatch) {
+                const username = memberMatch[1];
+                return {
+                    category: 'member',
+                    username: username,
+                    url: `https://www.chess.com/member/${username}`
+                };
+            }
+
+            return null;
+        }
+
+        // 🔍 BỘ NHẬN DIỆN THÔNG TIN TIKTOK TOÀN DIỆN (HỖ TRỢ LINK GỐC VÀ LINK RÚT GỌN vt.tiktok.com, vm.tiktok.com)
         window.tiktokResolvedCache = window.tiktokResolvedCache || {};
         try {
             const savedTt = localStorage.getItem('danv_tiktok_cache');
@@ -18937,6 +19328,188 @@
         function renderChatContent(rawText, author = '', c = {}) {
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
+
+            // ♟️ WIDGET CHESS.COM THÔNG MINH KHI DÁN LINK
+            const chessInfo = parseChessComUrl(rawText);
+            if (chessInfo) {
+                const cleanMsg = rawText.replace(/(?:https?:\/\/)?(?:www\.)?chess\.com\/[^\s]+/gi, '').trim();
+                const commentHtml = cleanMsg ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(cleanMsg)}</div>` : '';
+
+                if (chessInfo.category === 'member') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge"><i class="fa-solid fa-chess-knight"></i> THÀNH VIÊN</span>
+                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Chess.com</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:50%; background:#272522; border:2px solid #7fa650; display:flex; align-items:center; justify-content:center; color:#81b64c; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-chess-pawn"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.1rem; color:var(--text-title); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@${escapeHtml(chessInfo.username)}</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">Kiện tướng cờ vua trên Chess.com</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
+                                    <i class="fa-solid fa-chess"></i> Xem hồ sơ & Khiêu chiến
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (chessInfo.category === 'game') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge"><i class="fa-solid fa-chess-board"></i> VÁN CỜ ${chessInfo.type}</span>
+                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;">Mã: #${chessInfo.id}</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #7fa650; display:flex; align-items:center; justify-content:center; color:#81b64c; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-chess"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">Ván cờ trực tuyến</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">Chế độ ${chessInfo.type === 'LIVE' ? 'Chớp / Nhanh (Live)' : 'Hàng ngày (Daily)'}</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
+                                    <i class="fa-solid fa-play"></i> Vào xem ván cờ / Phân tích
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (chessInfo.category === 'club') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge"><i class="fa-solid fa-chess-rook"></i> CÂU LẠC BỘ</span>
+                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;">Club</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #7fa650; display:flex; align-items:center; justify-content:center; color:#81b64c; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-people-group"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(chessInfo.slug.replace(/[-_]/g, ' '))}</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">Cộng đồng cờ vua Chess.com</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
+                                    <i class="fa-solid fa-user-plus"></i> Khám phá & Gia nhập CLB
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (chessInfo.category === 'broadcast') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge" style="background:rgba(239,68,68,0.25); color:#fca5a5; border-color:rgba(239,68,68,0.5);"><i class="fa-solid fa-tower-broadcast"></i> LIVE STREAM</span>
+                                <span style="font-size:0.75rem; color:#fca5a5; font-weight:800;">Đang phát</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #ef4444; display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-tv"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(chessInfo.title)}</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">Theo dõi giải đấu & Bình luận viên</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta" style="background:linear-gradient(135deg, #ef4444, #dc2626) !important;">
+                                    <i class="fa-solid fa-eye"></i> Xem trực tiếp trên Chess.com
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // 📡 WIDGET CHIA SẺ TRẠM KHÔNG GIAN (STATION SHARE)
+            const stationShareMatch = rawText.match(/\[DANV_STATION_SHARE:([^\]]+)\]/);
+            if (stationShareMatch) {
+                const parts = stationShareMatch[1].split(':');
+                const stdId = parts[0] || '';
+                const stdTitle = parts[1] ? decodeURIComponent(parts[1]) : 'Station';
+                const stdCreator = parts[2] ? decodeURIComponent(parts[2]) : '';
+                const stdThumb = parts[3] || '';
+                const stdProjects = parts[4] || '0';
+                const stdFollowers = parts[5] || '0';
+                const userMsg = rawText.replace(stationShareMatch[0], '').trim();
+                const thumbSrc = stdThumb ? `${WORKER_URL}/api/project/${stdThumb}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+
+                return (userMsg ? `<div class="chat-text">${formatCommentText(userMsg)}</div>` : '') + `
+                    <div class="chat-shared-station-card">
+                        <div style="position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden;">
+                            <img src="${thumbSrc}" style="width:100%; height:100%; object-fit:cover;">
+                            <span class="station-card-badge" style="position:absolute; top:8px; left:8px;"><i class="fa-solid fa-satellite-dish"></i> STATION</span>
+                        </div>
+                        <div style="padding:14px; display:flex; flex-direction:column; gap:6px;">
+                            <b style="font-size:1.05rem; color:var(--text-title); line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(stdTitle)}</b>
+                            <div style="font-size:0.78rem; color:var(--text-muted); display:flex; align-items:center; gap:8px;">
+                                <span>Trưởng trạm: <b style="color:var(--primary);">@${escapeHtml(stdCreator)}</b></span>
+                                <span>•</span>
+                                <span><i class="fa-solid fa-folder-open"></i> ${stdProjects}</span>
+                                <span>•</span>
+                                <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${stdFollowers}</span>
+                            </div>
+                            <a href="#studio/${stdId}" class="btn btn-primary" style="margin-top:6px; border-radius:10px; font-weight:800; justify-content:center; padding:8px;">
+                                <i class="fa-solid fa-compass"></i> Khám phá Station
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 📦 WIDGET CHIA SẺ ASSET TÀI NGUYÊN (ASSET SHARE)
+            const assetShareMatch = rawText.match(/\[DANV_ASSET_SHARE:([^\]]+)\]/);
+            if (assetShareMatch) {
+                const parts = assetShareMatch[1].split(':');
+                const aId = parts[0] || '';
+                const aTitle = parts[1] ? decodeURIComponent(parts[1]) : 'Tài nguyên';
+                const aAuthor = parts[2] ? decodeURIComponent(parts[2]) : '';
+                const aType = (parts[3] || 'file').toLowerCase();
+                const aSize = parts[4] || '0';
+                const aFileId = parts[5] || '';
+                const userMsg = rawText.replace(assetShareMatch[0], '').trim();
+                const fileUrl = `${WORKER_URL}/api/project/${aFileId}?ext=${aType}`;
+                const isAudio = ['mp3', 'wav', 'ogg'].includes(aType);
+
+                return (userMsg ? `<div class="chat-text">${formatCommentText(userMsg)}</div>` : '') + `
+                    <div class="chat-shared-asset-card">
+                        <div style="height:120px; background:var(--bg-secondary); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+                            <span class="asset-fmt-badge badge-default" style="position:absolute; top:8px; left:8px;">${aType.toUpperCase()}</span>
+                            ${isAudio 
+                                ? `<i class="fa-solid fa-music" style="font-size:3rem; color:#ea580c;"></i>`
+                                : `<img src="${fileUrl}" style="max-height:85%; max-width:85%; object-fit:contain;" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">`
+                            }
+                        </div>
+                        <div style="padding:14px; display:flex; flex-direction:column; gap:6px;">
+                            <b style="font-size:1rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(aTitle)}</b>
+                            <span style="font-size:0.78rem; color:var(--text-muted);">Bởi @${escapeHtml(aAuthor)} • ${aSize} MB</span>
+                            <div style="display:flex; gap:6px; margin-top:4px;">
+                                <button type="button" class="btn btn-primary" style="flex:1; border-radius:10px; font-weight:800; font-size:0.8rem; justify-content:center; padding:7px;" onclick="downloadAssetDirectly('${fileUrl}', '${escapeHtml(aTitle)}.${aType}')">
+                                    <i class="fa-solid fa-download"></i> Tải về
+                                </button>
+                                <a href="#assets?search=${aId}" class="btn" style="border-radius:10px; font-size:0.8rem; padding:7px 12px;" title="Xem trong Cửa hàng">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
 
             // 🎬 EMBED VIDEO YOUTUBE (HỖ TRỢ youtu.be, youtube.com VÀ KÈM LỜI NHẮN NẾU CÓ)
         const ytVideoId = getYouTubeVideoId(rawText);
@@ -19755,6 +20328,41 @@
             return true;
         }
 
+        // 📥 HÀM TẢI TRỰC TIẾP FILE ASSET KHÔNG MỞ TAB MỚI
+        async function downloadAssetDirectly(fileUrl, fileName) {
+            showToast("Đang chuẩn bị tải xuống...", "info");
+            try {
+                const res = await fetch(fileUrl);
+                if (!res.ok) throw new Error("HTTP error " + res.status);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = fileName || "asset_file";
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    a.remove();
+                    URL.revokeObjectURL(blobUrl);
+                }, 1000);
+            } catch(e) {
+                // Dự phòng nếu trình duyệt chặn CORS: dùng iframe ẩn
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = fileUrl;
+                document.body.appendChild(iframe);
+                setTimeout(() => iframe.remove(), 10000);
+            }
+        }
+
+        function downloadCurrentQuickViewAsset() {
+            if (!activeQuickViewAsset) return;
+            const fileExt = (activeQuickViewAsset.fileType || 'file').toLowerCase();
+            const fileUrl = `${WORKER_URL}/api/project/${activeQuickViewAsset.fileId}?ext=${fileExt}`;
+            const fileName = `${activeQuickViewAsset.title || 'asset'}.${fileExt}`;
+            downloadAssetDirectly(fileUrl, fileName);
+        }
+
         function renderAssetGrid() {
             const container = document.getElementById('assetGridList');
             const loadMoreBtn = document.getElementById('assetLoadMoreArea');
@@ -19909,15 +20517,18 @@
                             </div>
 
                             <div style="display:flex; gap:6px; align-items:center;">
+                                <button type="button" class="asset-action-btn-circle" onclick="shareAssetToGlobalChat('${a.assetId}')" title="Chia sẻ vào Kênh Giao Lưu">
+                                    <i class="fa-solid fa-earth-americas"></i>
+                                </button>
                                 <button type="button" class="asset-action-btn-circle" onclick="copyAssetDirectUrl('${fileUrl}')" title="Sao chép link tải trực tiếp">
                                     <i class="fa-solid fa-link"></i>
                                 </button>
                                 <button type="button" class="asset-action-btn-circle" style="color:#f59e0b;" onclick="openReportModal('asset', '${a.assetId}')" title="Báo cáo">
                                     <i class="fa-solid fa-flag"></i>
                                 </button>
-                                <a href="${fileUrl}" target="_blank" download class="asset-download-pill" title="Tải về">
+                                <button type="button" class="asset-download-pill" onclick="downloadAssetDirectly('${fileUrl}', '${escapeHtml(a.title)}.${fileExt}')" title="Tải trực tiếp">
                                     <i class="fa-solid fa-download"></i> <span>Tải</span>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -20675,8 +21286,8 @@
             // Hàm phụ trợ gán file ảnh vào input và hiển thị preview
             const attachImageFileToChat = (file) => {
                 if (!file) return;
-                if (!file.type || !file.type.startsWith('image/')) {
-                    showToast("Chỉ cho phép đính kèm tệp hình ảnh!", "error");
+                if (!isFileAllowedImage(file)) {
+                    showToast("Chỉ cho phép đính kèm các định dạng ảnh: PNG, JPG, WebP, GIF, APNG!", "error");
                     return;
                 }
                 if (file.size > 20 * 1024 * 1024) {
@@ -20893,7 +21504,7 @@
             }
 
             // 7. Widget Chia Sẻ Dự Án ([DANV_PROJECT_SHARE:id:title:author:...])
-            const shareMatch = raw.match(/\[DANV_PROJECT_SHARE:([^\]]+)\]/);
+            const shareMatch = rawText.match(/\[DANV_PROJECT_SHARE:([^\]]+)\]/);
             if (shareMatch) {
                 try {
                     const parts = shareMatch[1].split(':');
@@ -20906,6 +21517,19 @@
             }
             if (raw.includes('#project/')) {
                 return `🎮 Đã chia sẻ liên kết trải nghiệm tác phẩm`;
+            }
+
+            // 7.5. Widget Station và Asset Chia Sẻ
+            if (raw.includes('[DANV_STATION_SHARE:')) {
+                return `📡 Đã chia sẻ một Station Không Gian`;
+            }
+            if (raw.includes('[DANV_ASSET_SHARE:')) {
+                return `📦 Đã chia sẻ một Tài nguyên từ Store`;
+            }
+
+            // 7.8. Chess.com Link
+            if (raw.includes('chess.com/')) {
+                return `♟️ Đã chia sẻ liên kết cờ vua Chess.com`;
             }
 
             // 8. Video YouTube & TikTok Embed độc lập
@@ -23932,13 +24556,20 @@
             badge.classList.toggle('full', count >= 25);
         }
 
-        // Xuất HTML từng loại Widget (Có cache RAM, không gọi fetch thừa)
+        // Xuất HTML từng loại Widget (Bọc kiểm tra an toàn từng thuộc tính)
         function getBentoWidgetHTML(item, data) {
             const safeId = String(item.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
             if (!safeId) return '';
 
+            const safeX = Math.max(0, Math.min(11, parseInt(item.x) || 0));
+            const safeY = Math.max(0, Math.min(200, parseInt(item.y) || 0));
+            const safeW = Math.max(1, Math.min(12, parseInt(item.w) || 4));
+            const safeH = Math.max(1, Math.min(12, parseInt(item.h) || 3));
+            const minW = Math.max(1, Math.min(12, parseInt(item.minW) || 3));
+            const minH = Math.max(1, Math.min(12, parseInt(item.minH) || 2));
+
             let contentHtml = '';
-            let extraAttrs = `gs-id="${safeId}" gs-x="${item.x}" gs-y="${item.y}" gs-w="${item.w}" gs-h="${item.h}" gs-min-w="${item.minW || 3}" gs-min-h="${item.minH || 2}"`;
+            let extraAttrs = `gs-id="${safeId}" gs-x="${safeX}" gs-y="${safeY}" gs-w="${safeW}" gs-h="${safeH}" gs-min-w="${minW}" gs-min-h="${minH}"`;
 
             // 1. GIỚI THIỆU
             if (safeId === 'widget_bio') {
@@ -24091,15 +24722,20 @@
                     </div>
                 `;
             }
-            // 8. BGM / TRÌNH PHÁT ÂM THANH PROFILE (AUDIO PLAYER WIDGET)
+            // 8. BGM / TRÌNH PHÁT ÂM THANH PROFILE (AUDIO PLAYER WIDGET - AN TOÀN TUYỆT ĐỐI)
             else if (safeId.startsWith('widget_audio_')) {
                 const songTitle = item.audioTitle || 'Giai điệu hồ sơ';
-                const audioUrl = item.audioUrl || '';
+                let audioUrl = item.audioUrl || '';
+                // Chỉ chấp nhận link http hoặc https hợp lệ
+                if (!audioUrl.startsWith('http://') && !audioUrl.startsWith('https://')) {
+                    audioUrl = '';
+                }
                 extraAttrs += ` data-audio-url="${escapeHtml(audioUrl)}" data-audio-title="${escapeHtml(songTitle)}"`;
+                const encUrl = encodeURIComponent(audioUrl);
                 contentHtml = `
                     <div class="widget-bgm-box" id="bentoBgmBox-${safeId}">
                         <div class="widget-bgm-info">
-                            <button type="button" class="widget-bgm-btn" onclick="toggleBentoBGMPlay('${safeId}', '${audioUrl}', event)" title="Phát nhạc">
+                            <button type="button" class="widget-bgm-btn" onclick="toggleBentoBGMPlay('${safeId}', decodeURIComponent('${encUrl}'), event)" title="Phát nhạc">
                                 <i class="fa-solid fa-play" id="bentoBgmIcon-${safeId}"></i>
                             </button>
                             <div style="min-width:0; flex:1;">
@@ -24127,30 +24763,43 @@
                 } catch(e){}
                 extraAttrs += ` data-socials="${escapeHtml(JSON.stringify(socials))}"`;
 
+                // Helper lọc sạch URL mạng xã hội, ngăn chặn javascript:... hoặc chèn nháy kép phá vỡ href
+                const sanitizeSocialUrl = (url, prefix = '') => {
+                    if (!url) return '';
+                    const clean = String(url).trim().replace(/["'<>]/g, '');
+                    if (clean.toLowerCase().startsWith('javascript:') || clean.toLowerCase().startsWith('data:')) return '';
+                    if (clean.startsWith('http://') || clean.startsWith('https://')) return clean;
+                    return prefix + encodeURIComponent(clean);
+                };
+
                 let chips = [];
                 if (socials.scratch) {
-                    const scUrl = socials.scratch.startsWith('http') ? socials.scratch : `https://scratch.mit.edu/users/${encodeURIComponent(socials.scratch)}`;
-                    chips.push(`<a href="${scUrl}" target="_blank" class="social-chip-link social-chip-scratch"><i class="fa-solid fa-cat"></i> Scratch</a>`);
+                    const scUrl = sanitizeSocialUrl(socials.scratch, 'https://scratch.mit.edu/users/');
+                    if (scUrl) chips.push(`<a href="${escapeHtml(scUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-scratch"><i class="fa-solid fa-cat"></i> Scratch</a>`);
                 }
                 if (socials.youtube) {
-                    const ytUrl = socials.youtube.startsWith('http') ? socials.youtube : `https://youtube.com/@${encodeURIComponent(socials.youtube)}`;
-                    chips.push(`<a href="${ytUrl}" target="_blank" class="social-chip-link social-chip-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>`);
+                    const ytUrl = sanitizeSocialUrl(socials.youtube, 'https://youtube.com/@');
+                    if (ytUrl) chips.push(`<a href="${escapeHtml(ytUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>`);
                 }
                 if (socials.discord) {
-                    const dcUrl = socials.discord.startsWith('http') ? socials.discord : `https://discord.gg/${encodeURIComponent(socials.discord)}`;
-                    chips.push(`<a href="${dcUrl}" target="_blank" class="social-chip-link social-chip-discord"><i class="fa-brands fa-discord"></i> Discord</a>`);
+                    const dcUrl = sanitizeSocialUrl(socials.discord, 'https://discord.gg/');
+                    if (dcUrl) chips.push(`<a href="${escapeHtml(dcUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-discord"><i class="fa-brands fa-discord"></i> Discord</a>`);
                 }
                 if (socials.github) {
-                    const ghUrl = socials.github.startsWith('http') ? socials.github : `https://github.com/${encodeURIComponent(socials.github)}`;
-                    chips.push(`<a href="${ghUrl}" target="_blank" class="social-chip-link social-chip-github"><i class="fa-brands fa-github"></i> GitHub</a>`);
+                    const ghUrl = sanitizeSocialUrl(socials.github, 'https://github.com/');
+                    if (ghUrl) chips.push(`<a href="${escapeHtml(ghUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-github"><i class="fa-brands fa-github"></i> GitHub</a>`);
                 }
                 if (socials.facebook) {
-                    const fbUrl = socials.facebook.startsWith('http') ? socials.facebook : `https://facebook.com/${encodeURIComponent(socials.facebook)}`;
-                    chips.push(`<a href="${fbUrl}" target="_blank" class="social-chip-link social-chip-facebook"><i class="fa-brands fa-facebook"></i> Facebook</a>`);
+                    const fbUrl = sanitizeSocialUrl(socials.facebook, 'https://facebook.com/');
+                    if (fbUrl) chips.push(`<a href="${escapeHtml(fbUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-facebook"><i class="fa-brands fa-facebook"></i> Facebook</a>`);
+                }
+                if (socials.chess) {
+                    const chessUrl = sanitizeSocialUrl(socials.chess, 'https://www.chess.com/member/');
+                    if (chessUrl) chips.push(`<a href="${escapeHtml(chessUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-chess"><i class="fa-solid fa-chess"></i> Chess.com</a>`);
                 }
                 if (socials.web) {
-                    const wbUrl = socials.web.startsWith('http') ? socials.web : `https://${socials.web}`;
-                    chips.push(`<a href="${wbUrl}" target="_blank" class="social-chip-link social-chip-web"><i class="fa-solid fa-globe"></i> Website</a>`);
+                    const wbUrl = sanitizeSocialUrl(socials.web, 'https://');
+                    if (wbUrl) chips.push(`<a href="${escapeHtml(wbUrl)}" target="_blank" rel="noopener noreferrer" class="social-chip-link social-chip-web"><i class="fa-solid fa-globe"></i> Website</a>`);
                 }
 
                 if (chips.length === 0) {
@@ -24633,6 +25282,7 @@
             document.getElementById('bentoSocialDiscord').value = existingSocials.discord || '';
             document.getElementById('bentoSocialGithub').value = existingSocials.github || '';
             document.getElementById('bentoSocialFacebook').value = existingSocials.facebook || '';
+            document.getElementById('bentoSocialChess').value = existingSocials.chess || '';
             document.getElementById('bentoSocialWeb').value = existingSocials.web || '';
             
             openModal('bentoConfigSocialModal');
@@ -24644,13 +25294,14 @@
             const dc = document.getElementById('bentoSocialDiscord').value.trim();
             const gh = document.getElementById('bentoSocialGithub').value.trim();
             const fb = document.getElementById('bentoSocialFacebook').value.trim();
+            const ch = document.getElementById('bentoSocialChess').value.trim();
             const wb = document.getElementById('bentoSocialWeb').value.trim();
 
-            if (!sc && !yt && !dc && !gh && !fb && !wb) {
+            if (!sc && !yt && !dc && !gh && !fb && !ch && !wb) {
                 return showToast("Vui lòng nhập ít nhất một mạng xã hội!", "error");
             }
 
-            const socialsObj = { scratch: sc, youtube: yt, discord: dc, github: gh, facebook: fb, web: wb };
+            const socialsObj = { scratch: sc, youtube: yt, discord: dc, github: gh, facebook: fb, chess: ch, web: wb };
             closeModal('bentoConfigSocialModal');
 
             addBentoWidget(`widget_social_${Date.now()}`, {
