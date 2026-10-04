@@ -17120,13 +17120,15 @@
         let activeGamePayRequest = null;
 
         window.addEventListener('message', (event) => {
-            // Danh sách domain được phép giao tiếp
+            // Danh sách domain được phép giao tiếp (Đã bổ sung aftercode.pages.dev)
             const allowedOrigins = [
+                "https://aftercode.pages.dev",
                 "https://aftercode-web-wheat.vercel.app", 
                 "http://localhost:3000", 
                 "http://127.0.0.1:5500"
             ];
-            if (!allowedOrigins.includes(event.origin)) return;
+            const isAllowedOrigin = allowedOrigins.includes(event.origin) || (event.origin && event.origin.endsWith(".aftercode.pages.dev"));
+            if (!isAllowedOrigin) return;
 
             const data = event.data;
             if (!data || !data.type) return;
