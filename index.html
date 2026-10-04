@@ -9421,6 +9421,10 @@
                 <button class="btn btn-primary" style="border-radius:20px; font-weight:800; padding:7px 16px;" onclick="openBentoDrawer()">
                     <i class="fa-solid fa-plus"></i> Thêm Widget
                 </button>
+                <!-- NÚT BẬT / TẮT TRỌNG LỰC HÚT KHÍT -->
+                <button type="button" class="btn" id="btnToggleBentoFloat" style="border-radius:20px; font-weight:700; padding:7px 14px; background:var(--bg-secondary); border:1px solid var(--border-color);" onclick="toggleBentoFloatMode()" title="Bật/Tắt trọng lực tự động dồn ô lên trên">
+                    <i class="fa-solid fa-magnet" style="color:var(--primary);"></i> <span id="bentoFloatStatusText">Hút khít: BẬT</span>
+                </button>
                 <div style="width:1px; height:18px; background:var(--border-color);"></div>
                 <button class="btn" style="border-radius:20px; color:#ef4444; font-weight:700;" onclick="resetBentoLayout()">
                     <i class="fa-solid fa-rotate-left"></i> Khôi phục
@@ -19158,62 +19162,161 @@
             return getYouTubeVideoId(text);
         }
 
-        // ♟️ BỘ PHÂN TÍCH VÀ NHẬN DIỆN URL CHESS.COM
+        // ♟️ BỘ PHÂN TÍCH VÀ NHẬN DIỆN URL CHESS.COM TOÀN DIỆN
         function parseChessComUrl(text) {
             if (!text) return null;
             const str = text.trim();
 
-            // 1. Trận đấu (Game Live hoặc Daily hoặc Link ván cờ)
-            const gameMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/(?:game\/(live|daily)\/([0-9]+)|play\/online\/([0-9]+)|live#g=([0-9]+))/i);
-            if (gameMatch) {
-                const gameType = (gameMatch[1] || 'live').toUpperCase();
-                const gameId = gameMatch[2] || gameMatch[3] || gameMatch[4] || '';
+            // Quét bắt mọi định dạng link chess.com (hỗ trợ cả play.chess.com, m.chess.com, có hoặc không có https/www)
+            const urlMatch = str.match(/(?:https?:\/\/)?(?:[a-zA-Z0-9_\-]+\.)?chess\.com(?:\/[^\s<>"']*)?/i);
+            if (!urlMatch) return null;
+
+            let matchedUrl = urlMatch[0];
+            // Loại bỏ dấu câu dính ở đuôi URL nếu người dùng gõ kèm (như . , ! ? ; : ) ]
+            matchedUrl = matchedUrl.replace(/[.,!?;:)]+$/, '');
+            const fullUrl = matchedUrl.startsWith('http') ? matchedUrl : `https://${matchedUrl}`;
+
+            let parsed;
+            try {
+                parsed = new URL(fullUrl);
+            } catch (e) {
+                return null;
+            }
+
+            const hostname = parsed.hostname.toLowerCase();
+            if (!hostname.includes('chess.com')) return null;
+
+            const pathname = parsed.pathname;
+            const hash = parsed.hash;
+            const search = parsed.searchParams;
+
+            // 1. TRẬN ĐẤU / PHÂN TÍCH VÁN CỜ (Game / Analysis / Live / Daily / Computer)
+            // Ví dụ: /game/live/123, /game/daily/123, /game/123, /analysis/game/live/123, /live/game/123, /live#g=123
+            const gameRegex = /(?:\/(?:analysis\/)?game\/(?:(live|daily|computer)\/)?([0-9]+)|\/live\/game\/([0-9]+)|\/game\/([0-9]+))/i;
+            const gameMatch = pathname.match(gameRegex);
+            const hashGameMatch = hash.match(/#g=([0-9]+)/i);
+
+            if (gameMatch || hashGameMatch) {
+                let gameType = 'LIVE';
+                let gameId = '';
+
+                if (hashGameMatch) {
+                    gameId = hashGameMatch[1];
+                } else if (gameMatch) {
+                    gameType = (gameMatch[1] || 'live').toUpperCase();
+                    gameId = gameMatch[2] || gameMatch[3] || gameMatch[4] || '';
+                }
+
+                const isAnalysis = pathname.toLowerCase().includes('analysis');
+
                 return {
                     category: 'game',
                     type: gameType,
                     id: gameId,
-                    url: `https://www.chess.com/game/${gameType.toLowerCase()}/${gameId}`
+                    isAnalysis: isAnalysis,
+                    url: fullUrl,
+                    matchedUrl: matchedUrl
                 };
             }
 
-            // 2. Câu lạc bộ (Club)
-            const clubMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/club\/([a-zA-Z0-9_\-]+)/i);
-            if (clubMatch) {
-                const clubSlug = clubMatch[1];
+            // 2. THÁCH ĐẤU & PHÒNG ĐẤU BẠN BÈ (Challenges & Play Invites)
+            // Ví dụ: /play/online/new?id=..., /play/online?id=..., /play/online/friend, /play/friend, /play/online, /play, play.chess.com/..., /play/username
+            const isPlayHost = hostname.startsWith('play.');
+            const isPlayPath = pathname.startsWith('/play') || pathname.startsWith('/live');
+            
+            if (isPlayHost || isPlayPath) {
+                // Kiểm tra nếu là link khiêu chiến trực tiếp người dùng (/play/username)
+                const playUserMatch = pathname.match(/^\/play\/([a-zA-Z0-9_\-]+)$/i);
+                const excludedSlugs = ['online', 'computer', 'friend', 'friends', 'custom', 'tournaments', 'arena', 'new'];
+                
+                if (playUserMatch && !excludedSlugs.includes(playUserMatch[1].toLowerCase())) {
+                    return {
+                        category: 'challenge_user',
+                        username: playUserMatch[1],
+                        url: fullUrl,
+                        matchedUrl: matchedUrl
+                    };
+                }
+
+                const challengeId = search.get('id') || '';
                 return {
-                    category: 'club',
-                    slug: clubSlug,
-                    url: `https://www.chess.com/club/${clubSlug}`
+                    category: 'challenge',
+                    id: challengeId,
+                    url: fullUrl,
+                    matchedUrl: matchedUrl
                 };
             }
 
-            // 3. Đường dẫn xem trực tuyến (Live Broadcast / Events / TV / Streamers)
-            const liveMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/(events\/([a-zA-Z0-9_\-]+)|tv|streamers\/([a-zA-Z0-9_\-]+))/i);
-            if (liveMatch) {
-                let eventTitle = "Trực tiếp Chess.com";
-                let eventUrl = `https://www.chess.com/${liveMatch[1]}`;
-                if (liveMatch[1] === 'tv') eventTitle = "Chess.com TV";
-                else if (liveMatch[2]) eventTitle = `Sự kiện: ${liveMatch[2].replace(/[-_]/g, ' ')}`;
-                else if (liveMatch[3]) eventTitle = `Kênh Streamer: ${liveMatch[3]}`;
-                return {
-                    category: 'broadcast',
-                    title: eventTitle,
-                    url: eventUrl
-                };
-            }
-
-            // 4. Hồ sơ thành viên (Member / User)
-            const memberMatch = str.match(/(?:https?:\/\/)?(?:www\.)?chess\.com\/(?:member|user)\/([a-zA-Z0-9_\-]+)/i);
+            // 3. HỒ SƠ THÀNH VIÊN / KỲ THỦ (Member / User / Profile)
+            // Ví dụ: /member/username, /user/username, /u/username
+            const memberMatch = pathname.match(/^\/(?:member|user|u)\/([a-zA-Z0-9_\-]+)/i);
             if (memberMatch) {
                 const username = memberMatch[1];
                 return {
                     category: 'member',
                     username: username,
-                    url: `https://www.chess.com/member/${username}`
+                    url: `https://www.chess.com/member/${username}`,
+                    matchedUrl: matchedUrl
                 };
             }
 
-            return null;
+            // 4. CÂU LẠC BỘ (Club)
+            // Ví dụ: /club/slug, /clubs/slug
+            const clubMatch = pathname.match(/^\/club(?:s)?\/([a-zA-Z0-9_\-]+)/i);
+            if (clubMatch) {
+                const clubSlug = clubMatch[1];
+                return {
+                    category: 'club',
+                    slug: clubSlug,
+                    url: fullUrl,
+                    matchedUrl: matchedUrl
+                };
+            }
+
+            // 5. GIẢI ĐẤU & ĐẤU TRƯỜNG (Tournament & Arena)
+            // Ví dụ: /tournament/..., /tournaments/..., /play/arena/...
+            const tourMatch = pathname.match(/^\/(?:tournament(?:s)?|play\/arena)\/([a-zA-Z0-9_\-]+)/i);
+            if (tourMatch) {
+                return {
+                    category: 'tournament',
+                    id: tourMatch[1],
+                    url: fullUrl,
+                    matchedUrl: matchedUrl
+                };
+            }
+
+            // 6. CÂU ĐỐ THẾ CỜ (Puzzles / Puzzle Rush)
+            if (pathname.startsWith('/puzzle') || pathname.startsWith('/lessons')) {
+                const isRush = pathname.includes('rush') || pathname.includes('battle');
+                return {
+                    category: 'puzzle',
+                    isRush: isRush,
+                    url: fullUrl,
+                    matchedUrl: matchedUrl
+                };
+            }
+
+            // 7. SỰ KIỆN & TRỰC TIẾP (Broadcast / Events / TV / Streamers)
+            const liveMatch = pathname.match(/^\/(events(?:\/([a-zA-Z0-9_\-]+))?|tv|streamers(?:\/([a-zA-Z0-9_\-]+))?)/i);
+            if (liveMatch) {
+                let eventTitle = "Trực tiếp Chess.com";
+                if (pathname.includes('/tv')) eventTitle = "Chess.com TV";
+                else if (liveMatch[2]) eventTitle = `Sự kiện: ${liveMatch[2].replace(/[-_]/g, ' ')}`;
+                else if (liveMatch[3]) eventTitle = `Kênh Streamer: ${liveMatch[3]}`;
+                return {
+                    category: 'broadcast',
+                    title: eventTitle,
+                    url: fullUrl,
+                    matchedUrl: matchedUrl
+                };
+            }
+
+            // 8. TẤT CẢ CÁC ĐƯỜNG LINK CHESS.COM KHÁC (Fallback tổng quát)
+            return {
+                category: 'general',
+                url: fullUrl,
+                matchedUrl: matchedUrl
+            };
         }
 
         // 🔍 BỘ NHẬN DIỆN THÔNG TIN TIKTOK TOÀN DIỆN (HỖ TRỢ LINK GỐC VÀ LINK RÚT GỌN vt.tiktok.com, vm.tiktok.com)
@@ -19332,9 +19435,63 @@
             // ♟️ WIDGET CHESS.COM THÔNG MINH KHI DÁN LINK
             const chessInfo = parseChessComUrl(rawText);
             if (chessInfo) {
-                const cleanMsg = rawText.replace(/(?:https?:\/\/)?(?:www\.)?chess\.com\/[^\s]+/gi, '').trim();
+                // Tách phần lời nhắn (nếu người dùng gõ kèm lời nhắn bên cạnh link)
+                const cleanMsg = rawText.replace(chessInfo.matchedUrl, '').trim();
                 const commentHtml = cleanMsg ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(cleanMsg)}</div>` : '';
 
+                // A. THÁCH ĐẤU & PHÒNG ĐẤU BẠN BÈ (/play/online?id=..., /play/friend, /play/online...)
+                if (chessInfo.category === 'challenge') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge"><i class="fa-solid fa-handshake"></i> THÁCH ĐẤU BẠN BÈ</span>
+                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;"><i class="fa-solid fa-bolt"></i> Chess.com Play</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #7fa650; display:flex; align-items:center; justify-content:center; color:#81b64c; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-chess-board"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">Lời mời thi đấu cờ vua</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">${chessInfo.id ? `Phòng đấu: #${escapeHtml(chessInfo.id)}` : 'Vào bàn cờ giao lưu trực tuyến'}</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
+                                    <i class="fa-solid fa-play"></i> Chấp nhận & Vào bàn cờ
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // B. KHIÊU CHIẾN ĐÍCH DANH USERNAME (/play/username)
+                if (chessInfo.category === 'challenge_user') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge"><i class="fa-solid fa-user-plus"></i> KHIÊU CHIẾN</span>
+                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Chess.com</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #7fa650; display:flex; align-items:center; justify-content:center; color:#81b64c; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-chess-knight"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">Khiêu chiến @${escapeHtml(chessInfo.username)}</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">Mời người chơi này tham gia ván đấu</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
+                                    <i class="fa-solid fa-play"></i> Bắt đầu thách đấu
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // C. THÀNH VIÊN (/member/..., /user/...)
                 if (chessInfo.category === 'member') {
                     return commentHtml + `
                         <div class="chat-chess-card">
@@ -19349,7 +19506,7 @@
                                     </div>
                                     <div style="min-width:0; flex:1;">
                                         <b style="font-size:1.1rem; color:var(--text-title); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@${escapeHtml(chessInfo.username)}</b>
-                                        <span style="font-size:0.78rem; color:var(--text-muted);">Kiện tướng cờ vua trên Chess.com</span>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">Hồ sơ kỳ thủ trên Chess.com</span>
                                     </div>
                                 </div>
                                 <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
@@ -19360,12 +19517,17 @@
                     `;
                 }
 
+                // D. VÁN CỜ & PHÂN TÍCH VÁN ĐẤU (/game/..., /analysis/game/...)
                 if (chessInfo.category === 'game') {
+                    const badgeText = chessInfo.isAnalysis ? 'PHÂN TÍCH VÁN ĐẤU' : `VÁN CỜ ${chessInfo.type}`;
+                    const titleText = chessInfo.isAnalysis ? 'Phân tích ván cờ' : 'Ván cờ trực tuyến';
+                    const subText = chessInfo.isAnalysis ? 'Xem lại nước đi & phân tích thế cờ' : `Chế độ ${chessInfo.type === 'LIVE' ? 'Chớp / Nhanh (Live)' : 'Hàng ngày (Daily)'}`;
+
                     return commentHtml + `
                         <div class="chat-chess-card">
                             <div class="chat-chess-header">
-                                <span class="chat-chess-badge"><i class="fa-solid fa-chess-board"></i> VÁN CỜ ${chessInfo.type}</span>
-                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;">Mã: #${chessInfo.id}</span>
+                                <span class="chat-chess-badge"><i class="fa-solid fa-chess-board"></i> ${badgeText}</span>
+                                <span style="font-size:0.75rem; color:#a3d160; font-weight:700;">${chessInfo.id ? `Mã: #${chessInfo.id}` : 'Chess.com'}</span>
                             </div>
                             <div class="chat-chess-body">
                                 <div style="display:flex; align-items:center; gap:12px;">
@@ -19373,8 +19535,8 @@
                                         <i class="fa-solid fa-chess"></i>
                                     </div>
                                     <div style="min-width:0; flex:1;">
-                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">Ván cờ trực tuyến</b>
-                                        <span style="font-size:0.78rem; color:var(--text-muted);">Chế độ ${chessInfo.type === 'LIVE' ? 'Chớp / Nhanh (Live)' : 'Hàng ngày (Daily)'}</span>
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">${titleText}</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">${subText}</span>
                                     </div>
                                 </div>
                                 <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
@@ -19385,6 +19547,7 @@
                     `;
                 }
 
+                // E. CÂU LẠC BỘ (/club/...)
                 if (chessInfo.category === 'club') {
                     return commentHtml + `
                         <div class="chat-chess-card">
@@ -19410,6 +19573,59 @@
                     `;
                 }
 
+                // F. GIẢI ĐẤU & ĐẤU TRƯỜNG (/tournament/..., /play/arena/...)
+                if (chessInfo.category === 'tournament') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge" style="background:rgba(245,158,11,0.25); color:#fbbf24; border-color:rgba(245,158,11,0.5);"><i class="fa-solid fa-trophy"></i> GIẢI ĐẤU</span>
+                                <span style="font-size:0.75rem; color:#fbbf24; font-weight:800;">Tournament</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #f59e0b; display:flex; align-items:center; justify-content:center; color:#fbbf24; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-trophy"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">Giải đấu cờ vua trực tuyến</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">${chessInfo.id ? `Mã giải: #${escapeHtml(chessInfo.id)}` : 'Tranh tài cùng các kỳ thủ'}</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta" style="background:linear-gradient(135deg, #f59e0b, #d97706) !important;">
+                                    <i class="fa-solid fa-flag-checkered"></i> Tham gia giải đấu
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // G. THẾ CỜ & CÂU ĐỐ (/puzzles, /lessons)
+                if (chessInfo.category === 'puzzle') {
+                    return commentHtml + `
+                        <div class="chat-chess-card">
+                            <div class="chat-chess-header">
+                                <span class="chat-chess-badge" style="background:rgba(139,92,246,0.25); color:#c4b5fd; border-color:rgba(139,92,246,0.5);"><i class="fa-solid fa-puzzle-piece"></i> THẾ CỜ</span>
+                                <span style="font-size:0.75rem; color:#c4b5fd; font-weight:800;">Puzzles</span>
+                            </div>
+                            <div class="chat-chess-body">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #8b5cf6; display:flex; align-items:center; justify-content:center; color:#a78bfa; font-size:1.4rem; flex-shrink:0;">
+                                        <i class="fa-solid fa-puzzle-piece"></i>
+                                    </div>
+                                    <div style="min-width:0; flex:1;">
+                                        <b style="font-size:1.05rem; color:var(--text-title); display:block;">Câu đố cờ vua (Tactics)</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">${chessInfo.isRush ? 'Chế độ Puzzle Rush / Battle kịch tính' : 'Rèn luyện tư duy chiến thuật đỉnh cao'}</span>
+                                    </div>
+                                </div>
+                                <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta" style="background:linear-gradient(135deg, #8b5cf6, #7c3aed) !important;">
+                                    <i class="fa-solid fa-brain"></i> Giải thế cờ ngay
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // H. TRỰC TIẾP & STREAM (/tv, /events, /streamers)
                 if (chessInfo.category === 'broadcast') {
                     return commentHtml + `
                         <div class="chat-chess-card">
@@ -19434,6 +19650,30 @@
                         </div>
                     `;
                 }
+
+                // I. FALLBACK TỔNG QUÁT (Bất kỳ link Chess.com hợp lệ nào khác)
+                return commentHtml + `
+                    <div class="chat-chess-card">
+                        <div class="chat-chess-header">
+                            <span class="chat-chess-badge"><i class="fa-solid fa-chess"></i> CHESS.COM</span>
+                            <span style="font-size:0.75rem; color:#a3d160; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Chính thức</span>
+                        </div>
+                        <div class="chat-chess-body">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="width:48px; height:48px; border-radius:12px; background:#272522; border:2px solid #7fa650; display:flex; align-items:center; justify-content:center; color:#81b64c; font-size:1.4rem; flex-shrink:0;">
+                                    <i class="fa-solid fa-chess-knight"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <b style="font-size:1.05rem; color:var(--text-title); display:block;">Nền tảng cờ vua Chess.com</b>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Cộng đồng cờ vua trực tuyến hàng đầu</span>
+                                </div>
+                            </div>
+                            <a href="${chessInfo.url}" target="_blank" rel="noopener noreferrer" class="btn-chess-cta">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở liên kết trên Chess.com
+                            </a>
+                        </div>
+                    </div>
+                `;
             }
 
             // 📡 WIDGET CHIA SẺ TRẠM KHÔNG GIAN (STATION SHARE)
@@ -24573,7 +24813,9 @@
             } else {
                 safeW = Math.min(safeW, maxAllowedW); // Tuyệt đối không để x + w vượt quá 12
             }
-            const safeH = Math.max(1, Math.min(12, parseInt(item.h) || 3));
+            // Khôi phục chiều cao chuẩn: widget_user và widget_audio cao 2 hàng để không đè vào widget_stats ở hàng 8
+            const defaultH = (safeId.startsWith('widget_user_') || safeId.startsWith('widget_audio_')) ? 2 : 3;
+            const safeH = Math.max(1, Math.min(12, parseInt(item.h) || defaultH));
             const safeY = Math.max(0, Math.min(200, parseInt(item.y) || 0));
             const minW = Math.max(1, Math.min(safeW, parseInt(item.minW) || 1));
             const minH = Math.max(1, Math.min(safeH, parseInt(item.minH) || 1));
@@ -24873,6 +25115,32 @@
             `;
         }
 
+        let bentoFloatMode = false; // MẶC ĐỊNH FALSE = CÓ TRỌNG LỰC HÚT KHÍT LÊN TRÊN NHƯ BẢN CŨ
+
+        function updateBentoFloatButtonUI() {
+            const statusText = document.getElementById('bentoFloatStatusText');
+            const icon = document.querySelector('#btnToggleBentoFloat i');
+            if (bentoFloatMode) {
+                if (statusText) statusText.innerText = "Thả nổi: BẬT";
+                if (icon) { icon.className = "fa-solid fa-feather"; icon.style.color = "#ea580c"; }
+            } else {
+                if (statusText) statusText.innerText = "Hút khít: BẬT";
+                if (icon) { icon.className = "fa-solid fa-magnet"; icon.style.color = "var(--primary)"; }
+            }
+        }
+
+        function toggleBentoFloatMode() {
+            if (!profileGrid) return;
+            bentoFloatMode = !bentoFloatMode;
+            profileGrid.float(bentoFloatMode);
+            updateBentoFloatButtonUI();
+            if (bentoFloatMode) {
+                showToast("Đã bật chế độ Thả nổi tự do (Cho phép khoảng trống)", "info");
+            } else {
+                showToast("Đã bật Trọng lực tự động (Hút khít lên trên như cũ)", "info");
+            }
+        }
+
         // Render toàn bộ lưới từ dữ liệu DB
         function renderBentoGrid(data) {
             currentBentoData = data;
@@ -24890,8 +25158,10 @@
             }
 
             isBentoEditMode = false;
+            bentoFloatMode = false; // Luôn đặt lại về trạng thái có Trọng lực như bản cũ
             gridEl.classList.remove('bento-edit-mode');
             document.getElementById('bentoToolbar').classList.remove('show');
+            updateBentoFloatButtonUI();
             
             // Cấp quyền hiển thị nút Tùy biến cho Chủ sở hữu HOẶC Admin sau khi vẽ xong lưới
             const canEdit = currentUser && (currentUser.username.toLowerCase() === data.username.toLowerCase() || currentUser.role === 'admin');
@@ -24912,6 +25182,14 @@
                 }
             }
 
+            // SẮP XẾP TỪNG TẦNG TỪ TRÊN XUỐNG DƯỚI ĐỂ TRỌNG LỰC NÉN ĐÚNG VỊ TRÍ KHÔNG BỊ NHẢY Ô
+            layout.sort((a, b) => {
+                const yA = parseInt(a.y) || 0;
+                const yB = parseInt(b.y) || 0;
+                if (yA !== yB) return yA - yB;
+                return (parseInt(a.x) || 0) - (parseInt(b.x) || 0);
+            });
+
             // Giới hạn an toàn tối đa 25 node khi vẽ
             layout = layout.slice(0, 25);
 
@@ -24926,10 +25204,10 @@
             }
             gridEl.innerHTML = gridHtml;
 
-            // Khởi tạo Static View GridStack (Bật float: true để giữ nguyên tọa độ Y, chống bị hút lên trên)
+            // Khởi tạo Static View GridStack (float: false kích hoạt TRỌNG LỰC dồn ô khít lên trên như cũ)
             profileGrid = GridStack.init({
                 staticGrid: true,
-                float: true,
+                float: false,
                 margin: 15,
                 cellHeight: 70,
                 column: 12,
@@ -25008,11 +25286,13 @@
             profileGrid.setStatic(false);
             profileGrid.enableMove(true);
             profileGrid.enableResize(true);
+            profileGrid.float(bentoFloatMode); // Duy trì đúng chế độ Trọng lực hoặc Thả nổi khi kéo thả
 
             // BẬT TOOLBAR, CẬP NHẬT SỐ LƯỢNG & CHỤP SNAPSHOT DIRTY-CHECKING
             document.getElementById('bentoToolbar').classList.add('show');
             document.getElementById('btnCustomizeBento').style.display = 'none';
             updateBentoCountBadge();
+            updateBentoFloatButtonUI();
             initialBentoJSON = getNormalizedBentoJSON(); // Lưu trạng thái ban đầu
         }
 
