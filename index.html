@@ -17756,6 +17756,40 @@
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
+            // 1.2. Thẻ Lời Mời / Phản Hồi Khế Ước Cặp Đôi
+            if (mainText.startsWith("[COUPLE_INVITE:")) {
+                const uName = mainText.replace("[COUPLE_INVITE:", "").replace("]", "");
+                actionHtml = `<b style="color:#ec4899;">Lời Mời Khế Ước Cặp Đôi</b>`;
+                bubbleHtml = `
+                    <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border: 2px solid #f472b6; border-radius: 16px; padding: 14px 18px; margin-top: 8px; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.15);">
+                        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:#fbcfe8; color:#db2777; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+                            <div style="font-size:0.92rem; color:#be185d; font-weight:800; line-height:1.4;">
+                                @${escapeHtml(uName)} đã gửi cho bạn một lời mời lập Khế Ước Cặp Đôi!
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="width:100%; background:#ec4899; border:none; border-radius:12px; font-weight:800; padding:8px;" onclick="event.stopPropagation(); openDailyRewardModal(); setTimeout(()=>renderDailyTab('couple'), 200);">
+                            <i class="fa-solid fa-heart fa-beat"></i> Xem & Trả lời ngay
+                        </button>
+                    </div>
+                `;
+                return { actionHtml, bubbleHtml, link: "javascript:void(0)" };
+            }
+            if (mainText.startsWith("[COUPLE_ACCEPT:")) {
+                const uName = mainText.replace("[COUPLE_ACCEPT:", "").replace("]", "");
+                actionHtml = `<b style="color:#10b981;">Khế Ước Thành Công</b>`;
+                bubbleHtml = `<div style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #10b981;"><i class="fa-solid fa-handshake-angle"></i> @${escapeHtml(uName)} đã CHẤP NHẬN lời mời kết đôi của bạn! Hãy điểm danh ngay.</div>`;
+                return { actionHtml, bubbleHtml, link: linkWithTab };
+            }
+            if (mainText.startsWith("[COUPLE_REJECT:")) {
+                const uName = mainText.replace("[COUPLE_REJECT:", "").replace("]", "");
+                actionHtml = `<b style="color:#ef4444;">Khế Ước Bị Từ Chối</b>`;
+                bubbleHtml = `<div style="background: rgba(239, 68, 68, 0.1); color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444;"><i class="fa-solid fa-heart-crack"></i> @${escapeHtml(uName)} đã từ chối lời mời kết đôi của bạn.</div>`;
+                return { actionHtml, bubbleHtml, link: linkWithTab };
+            }
+
             // 1.5. Thông báo nhận quà Cặp Đôi thành công
             if (mainText.startsWith("[COUPLE_STREAK:")) {
                 const partsMatch = mainText.match(/^\[COUPLE_STREAK:(\d+):(\d+):([^:]+):([^\]]+)\]$/);
@@ -20567,6 +20601,23 @@
                 return `🎉 @${bagClaimed[1]} vừa nhanh tay xé trúng +${bagClaimed[2]} WOW từ túi mù!`;
             }
 
+            // 4.5. Widget Khế Ước Cặp Đôi
+            if (raw.startsWith('[COUPLE_INVITE:')) {
+                const uName = raw.replace('[COUPLE_INVITE:', '').replace(']', '');
+                return `💌 @${uName} vừa gửi cho bạn một lời mời Khế Ước Cặp Đôi!`;
+            }
+            if (raw.startsWith('[COUPLE_ACCEPT:')) {
+                const uName = raw.replace('[COUPLE_ACCEPT:', '').replace(']', '');
+                return `💖 @${uName} đã CHẤP NHẬN lời mời kết đôi của bạn!`;
+            }
+            if (raw.startsWith('[COUPLE_REJECT:')) {
+                const uName = raw.replace('[COUPLE_REJECT:', '').replace(']', '');
+                return `💔 @${uName} đã từ chối lời mời kết đôi của bạn.`;
+            }
+            if (raw.startsWith('[COUPLE_STREAK:')) {
+                return `🎉 Chúc mừng 2 bạn đã điểm danh Cặp Đôi thành công hôm nay!`;
+            }
+
             // 5. Widget Thử Thách Trí Tuệ / Đố Vui BeaBea ([BEABEA_QUIZ:...])
             if (raw.includes('[BEABEA_QUIZ:')) {
                 try {
@@ -22460,6 +22511,13 @@
                     } else {
                         showToast(`Bạn đã nhận được ${res.reward} WOW!`, 'success');
                         currentUser.WOW = res.newBalance;
+                        
+                        // FIX TẠI ĐÂY: Cập nhật lại bộ nhớ RAM ngay lập tức để Modal vẽ lại đúng trạng thái
+                        window.currentDailyInfo = res.dailyInfo; 
+                        if(res.dailyInfo) {
+                            currentUser.dailyLogin = res.dailyInfo;
+                        }
+                        
                         localStorage.setItem('danv_user', JSON.stringify(currentUser));
                         
                         const navWOW = document.getElementById('navWOWBalance');
