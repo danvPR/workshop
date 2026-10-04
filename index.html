@@ -24527,10 +24527,14 @@
         // Chuẩn hóa Layout thành chuỗi để so sánh thay đổi chính xác
         function getNormalizedBentoJSON() {
             if (!profileGrid) return "[]";
-            const raw = profileGrid.save() || [];
+            const raw = profileGrid.save(false) || [];
             const clean = raw.map(n => {
-                let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
                 const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"]`);
+                const xVal = n.x !== undefined ? n.x : (el ? parseInt(el.getAttribute('gs-x')) : 0);
+                const yVal = n.y !== undefined ? n.y : (el ? parseInt(el.getAttribute('gs-y')) : 0);
+                const wVal = n.w !== undefined ? n.w : (el ? parseInt(el.getAttribute('gs-w')) : 3);
+                const hVal = n.h !== undefined ? n.h : (el ? parseInt(el.getAttribute('gs-h')) : 2);
+                let obj = { id: n.id, x: xVal, y: yVal, w: wVal, h: hVal };
                 if (el) {
                     if (el.getAttribute('data-raw-note-title')) obj.noteTitle = el.getAttribute('data-raw-note-title');
                     if (el.getAttribute('data-raw-note-content')) obj.content = el.getAttribute('data-raw-note-content');
@@ -24562,11 +24566,17 @@
             if (!safeId) return '';
 
             const safeX = Math.max(0, Math.min(11, parseInt(item.x) || 0));
-            const safeY = Math.max(0, Math.min(200, parseInt(item.y) || 0));
-            const safeW = Math.max(1, Math.min(12, parseInt(item.w) || 4));
+            const maxAllowedW = Math.max(1, 12 - safeX);
+            let safeW = parseInt(item.w);
+            if (isNaN(safeW) || safeW < 1) {
+                safeW = Math.min(4, maxAllowedW); // Tự động co vừa cột còn trống nếu data cũ thiếu w
+            } else {
+                safeW = Math.min(safeW, maxAllowedW); // Tuyệt đối không để x + w vượt quá 12
+            }
             const safeH = Math.max(1, Math.min(12, parseInt(item.h) || 3));
-            const minW = Math.max(1, Math.min(12, parseInt(item.minW) || 3));
-            const minH = Math.max(1, Math.min(12, parseInt(item.minH) || 2));
+            const safeY = Math.max(0, Math.min(200, parseInt(item.y) || 0));
+            const minW = Math.max(1, Math.min(safeW, parseInt(item.minW) || 1));
+            const minH = Math.max(1, Math.min(safeH, parseInt(item.minH) || 1));
 
             let contentHtml = '';
             let extraAttrs = `gs-id="${safeId}" gs-x="${safeX}" gs-y="${safeY}" gs-w="${safeW}" gs-h="${safeH}" gs-min-w="${minW}" gs-min-h="${minH}"`;
@@ -24909,12 +24919,17 @@
             layout.forEach(item => {
                 gridHtml += getBentoWidgetHTML(item, data);
             });
+            // HỦY INSTANCE CŨ TRƯỚC KHI THAY THẾ DOM (Tránh lỗi kẹt Node cũ)
+            if (profileGrid) {
+                try { profileGrid.destroy(false); } catch(e){}
+                profileGrid = null;
+            }
             gridEl.innerHTML = gridHtml;
 
-            // Khởi tạo Static View GridStack
-            if (profileGrid) profileGrid.destroy(false);
+            // Khởi tạo Static View GridStack (Bật float: true để giữ nguyên tọa độ Y, chống bị hút lên trên)
             profileGrid = GridStack.init({
                 staticGrid: true,
+                float: true,
                 margin: 15,
                 cellHeight: 70,
                 column: 12,
@@ -25322,7 +25337,7 @@
                 return; // DỪNG NGAY TẠI ĐÂY, 0 GỬI REQUEST
             }
 
-            const rawLayout = profileGrid.save() || [];
+            const rawLayout = profileGrid.save(false) || [];
             if (rawLayout.length > 25) {
                 return showToast("Vượt quá giới hạn tối đa 25 Widget!", "error");
             }
@@ -25332,10 +25347,14 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
             btn.disabled = true;
 
-            // Nén dữ liệu tối giản nhất trước khi gửi
+            // Nén dữ liệu và đảm bảo luôn giữ số nguyên x, y, w, h
             const cleanLayout = rawLayout.map(n => {
-                let obj = { id: n.id, x: n.x, y: n.y, w: n.w, h: n.h };
                 const el = document.querySelector(`.grid-stack-item[gs-id="${n.id}"]`);
+                const xVal = n.x !== undefined ? n.x : (el ? parseInt(el.getAttribute('gs-x')) : 0);
+                const yVal = n.y !== undefined ? n.y : (el ? parseInt(el.getAttribute('gs-y')) : 0);
+                const wVal = n.w !== undefined ? n.w : (el ? parseInt(el.getAttribute('gs-w')) : 3);
+                const hVal = n.h !== undefined ? n.h : (el ? parseInt(el.getAttribute('gs-h')) : 2);
+                let obj = { id: n.id, x: xVal, y: yVal, w: wVal, h: hVal };
                 if (el) {
                     if (el.getAttribute('data-raw-note-title')) obj.noteTitle = el.getAttribute('data-raw-note-title');
                     if (el.getAttribute('data-raw-note-content')) obj.content = el.getAttribute('data-raw-note-content');
