@@ -22047,15 +22047,23 @@
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
-                } else if (partnerReq) {
+                } else if ((dailyInfo.partnerReqs && dailyInfo.partnerReqs.length > 0) || partnerReq) {
+                    const reqList = (dailyInfo.partnerReqs && dailyInfo.partnerReqs.length > 0) ? dailyInfo.partnerReqs : [partnerReq];
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">@${escapeHtml(partnerReq)} muốn lập Khế Ước với bạn!</div>
-                        <div style="display:flex; gap:8px; justify-content:center;">
-                            <button class="btn btn-danger" style="padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="respondDailyPartner('reject', '${escapeHtml(partnerReq)}')">Từ chối</button>
-                            <button class="btn btn-primary" style="background:#ec4899; border:none; padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="respondDailyPartner('accept', '${escapeHtml(partnerReq)}')">Đồng ý</button>
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Lời mời kết đôi đang chờ (${reqList.length}):</div>
+                        <div style="display:flex; flex-direction:column; gap:8px; max-height:160px; overflow-y:auto; padding-right:2px;">
+                            ${reqList.map(reqUser => `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(236,72,153,0.08); padding:8px 12px; border-radius:12px; border:1px solid #fbcfe8;">
+                                    <span style="font-weight:800; color:#be185d;">@${escapeHtml(reqUser)}</span>
+                                    <div style="display:flex; gap:6px;">
+                                        <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('reject', '${escapeHtml(reqUser)}')">Từ chối</button>
+                                        <button class="btn btn-primary" style="background:#ec4899; border:none; padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('accept', '${escapeHtml(reqUser)}')">Đồng ý</button>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Bạn có 1 lời mời Khế Ước Cặp Đôi đang chờ!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Bạn có lời mời Khế Ước Cặp Đôi đang chờ xác nhận!</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
