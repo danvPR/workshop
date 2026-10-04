@@ -10974,9 +10974,19 @@
                     Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.
                 </p>
 
-                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
-                    Nhận thưởng hôm nay
-                </button>
+                <div id="dailyActionButtonsWrap">
+                    <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
+                        Nhận thưởng hôm nay
+                    </button>
+                    
+                    <button type="button" class="btn-hold-send-wow" id="btnHoldCoupleDaily" style="display:none; border-radius:14px; background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); box-shadow: 0 6px 20px rgba(236,72,153,0.3);">
+                        <div class="hold-progress-fill" id="holdCoupleProgressFill" style="background: linear-gradient(90deg, #f472b6, #db2777, #9d174d);"></div>
+                        <div class="btn-inner-content" id="holdCoupleBtnText">
+                            <i class="fa-solid fa-heart fa-beat"></i>
+                            <span style="font-size: 1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -17746,6 +17756,36 @@
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
+            // 1.5. Thông báo nhận quà Cặp Đôi thành công
+            if (mainText.startsWith("[COUPLE_STREAK:")) {
+                const partsMatch = mainText.match(/^\[COUPLE_STREAK:(\d+):(\d+):([^:]+):([^\]]+)\]$/);
+                if (partsMatch) {
+                    const cStreak = partsMatch[1];
+                    const cReward = partsMatch[2];
+                    const userA = partsMatch[3];
+                    const userB = partsMatch[4];
+                    
+                    actionHtml = `<b style="color:#ec4899;">Khế Ước Cặp Đôi (Ngày ${cStreak})</b>`;
+                    bubbleHtml = `
+                        <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border: 2px solid #f472b6; border-radius: 16px; padding: 18px; margin-top: 8px; box-shadow: 0 6px 20px rgba(236, 72, 153, 0.25); text-align:center; position:relative; overflow:hidden;">
+                            <div style="position:absolute; top:-20px; left:-20px; font-size:4rem; opacity:0.1;"><i class="fa-solid fa-heart"></i></div>
+                            <div style="font-size:0.85rem; color:#be185d; font-weight:800; text-transform:uppercase; margin-bottom:8px; position:relative; z-index:2;">
+                                🎉 Chúc mừng 2 bạn đã cùng điểm danh
+                            </div>
+                            <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:12px; position:relative; z-index:2;">
+                                <div style="font-weight:900; font-size:1.1rem; color:#db2777;">@${userA}</div>
+                                <i class="fa-solid fa-heart fa-beat" style="color:#ec4899; font-size:1.4rem;"></i>
+                                <div style="font-weight:900; font-size:1.1rem; color:#db2777;">@${userB}</div>
+                            </div>
+                            <div style="display:inline-flex; align-items:center; gap:6px; background:#fff; padding:6px 16px; border-radius:20px; border:1px solid #fbcfe8; color:#ea580c; font-weight:900; font-size:1.1rem; position:relative; z-index:2; box-shadow:0 4px 10px rgba(236,72,153,0.15);">
+                                <span class="wow-icon"></span> MỖI NGƯỜI NHẬN +${cReward} WOW
+                            </div>
+                        </div>
+                    `;
+                    return { actionHtml, bubbleHtml, link: linkWithTab };
+                }
+            }
+
             // 2. Thông báo khẩn cấp từ Ban Quản Trị / Hệ Thống
             if (sender === "HỆ THỐNG") {
                 actionHtml = `<b style="color:#ef4444;">Thông báo từ Ban Quản Trị</b>`;
@@ -21893,20 +21933,39 @@
             }
             grid.innerHTML = html;
 
+            const holdBtn = document.getElementById('btnHoldCoupleDaily');
+            let isWaitingPartner = (tab === 'couple' && dailyInfo.coupleReadyDate === todayStr);
+
             if (isClaimedToday) {
+                btn.style.display = 'flex';
+                if(holdBtn) holdBtn.style.display = 'none';
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận thưởng hôm nay';
                 btn.className = 'btn';
+                btn.style.background = '';
+            } else if (isWaitingPartner) {
+                btn.style.display = 'flex';
+                if(holdBtn) holdBtn.style.display = 'none';
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-clock"></i> Đang chờ nửa kia cùng điểm danh...';
+                btn.className = 'btn';
+                btn.style.background = 'rgba(236, 72, 153, 0.1)';
+                btn.style.color = '#ec4899';
+                btn.style.border = '1px dashed #ec4899';
             } else {
-                btn.disabled = false;
-                btn.innerHTML = 'Nhận thưởng hôm nay';
-                btn.className = 'btn btn-primary';
-                if (tab === 'couple') {
-                    btn.style.background = 'linear-gradient(135deg, #ec4899, #d946ef)';
-                    btn.style.border = 'none';
+                if (tab === 'couple' && dailyInfo.partner && dailyInfo.partnerStatus === 'accepted') {
+                    btn.style.display = 'none';
+                    if(holdBtn) holdBtn.style.display = 'flex';
+                    setupCoupleHoldButtonListeners();
                 } else {
+                    if(holdBtn) holdBtn.style.display = 'none';
+                    btn.style.display = 'flex';
+                    btn.disabled = false;
+                    btn.innerHTML = 'Nhận thưởng hôm nay';
+                    btn.className = 'btn btn-primary';
                     btn.style.background = '';
                     btn.style.border = '';
+                    btn.style.color = '';
                 }
             }
         }
@@ -21919,6 +21978,82 @@
                 <b style="font-size: 0.85rem; color: var(--text-title);">+${reward}</b>
                 ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-check"></i> Đã nhận</span>' : ''}
             </div>`;
+        }
+
+        let holdCoupleTimer = null;
+        let holdCoupleProgress = 0;
+        let holdCoupleInterval = null;
+        let isCoupleSubmitting = false;
+
+        function setupCoupleHoldButtonListeners() {
+            const btn = document.getElementById('btnHoldCoupleDaily');
+            if (!btn || btn.dataset.bound === 'true') return;
+            btn.dataset.bound = 'true';
+
+            const startHold = (e) => {
+                if (isCoupleSubmitting) return;
+                holdCoupleProgress = 0;
+                const fillEl = document.getElementById('holdCoupleProgressFill');
+                const textEl = document.getElementById('holdCoupleBtnText');
+
+                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-heart fa-beat"></i> <span style="font-size:1.05rem;">ĐANG TRUYỀN TÌNH CẢM...</span>';
+
+                clearInterval(holdCoupleInterval);
+                holdCoupleInterval = setInterval(() => {
+                    // Tăng đều để 5 giây (5000ms) = 100% -> Mỗi 50ms tăng 1%
+                    holdCoupleProgress += 1; 
+                    if (fillEl) fillEl.style.width = `${Math.min(100, holdCoupleProgress)}%`;
+
+                    if (holdCoupleProgress >= 100) {
+                        clearInterval(holdCoupleInterval);
+                        isCoupleSubmitting = true;
+                        if (textEl) textEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>ĐANG NHẬN QUÀ...</span>';
+                        claimDailyReward(true).then(() => {
+                            isCoupleSubmitting = false;
+                        });
+                    }
+                }, 50);
+            };
+
+            const stopHold = () => {
+                if (isCoupleSubmitting) return;
+                clearInterval(holdCoupleInterval);
+                if (holdCoupleProgress < 100) {
+                    holdCoupleProgress = 0;
+                    const fillEl = document.getElementById('holdCoupleProgressFill');
+                    const textEl = document.getElementById('holdCoupleBtnText');
+                    if (fillEl) fillEl.style.width = '0%';
+                    if (textEl) textEl.innerHTML = '<i class="fa-solid fa-heart fa-beat"></i> <span style="font-size:1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>';
+                }
+            };
+
+            btn.addEventListener('mousedown', startHold);
+            window.addEventListener('mouseup', stopHold);
+            btn.addEventListener('touchstart', startHold, { passive: true });
+            window.addEventListener('touchend', stopHold);
+            window.addEventListener('touchcancel', stopHold);
+        }
+
+        // Hiệu ứng hạt trái tim
+        function spawnLoveBurst(originX, originY) {
+            const colors = ['#ec4899', '#db2777', '#f472b6', '#be185d', '#ff7eb3'];
+            for (let i = 0; i < 35; i++) {
+                const p = document.createElement('i');
+                p.className = 'fa-solid fa-heart wow-burst-particle';
+                p.style.color = colors[Math.floor(Math.random() * colors.length)];
+                p.style.fontSize = `${Math.random() * 1.2 + 0.8}rem`;
+                p.style.filter = `drop-shadow(0 0 8px ${p.style.color})`;
+                p.style.left = `${originX}px`;
+                p.style.top = `${originY}px`;
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 200 + 80;
+                p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 1100);
+            }
         }
 
         async function requestDailyPartner() {
@@ -22296,13 +22431,14 @@
             }
         }
 
-        async function claimDailyReward() {
+        async function claimDailyReward(isFromHold = false) {
             const btn = document.getElementById('btnClaimDaily');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...'; 
-            btn.disabled = true;
+            if (!isFromHold && btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...'; 
+                btn.disabled = true;
+            }
             
             try {
-                // Tự gọi fetch trực tiếp để không bị hàm apiFetch nuốt mất chi tiết lỗi
                 const payload = {
                     username: currentUser.username,
                     sessionToken: currentUser.sessionToken,
@@ -22318,37 +22454,40 @@
                 const res = await response.json();
                 
                 if (response.ok && res && res.success) {
-                    showToast(`Bạn đã nhận được ${res.reward} WOW!`, 'success');
-                    
-                    // Cập nhật số dư Real-time
-                    currentUser.WOW = res.newBalance;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    
-                    const navWOW = document.getElementById('navWOWBalance');
-                    if (navWOW) navWOW.innerText = currentUser.WOW;
-                    const setWOW = document.getElementById('settingsWOWBalance');
-                    if (setWOW) setWOW.innerText = currentUser.WOW;
-                    
+                    if (res.waitingPartner) {
+                        showToast(`Đã điểm danh! Hãy nhắc nửa kia vào nhận để nối chuỗi nhé!`, 'info');
+                        window.currentDailyInfo = res.dailyInfo;
+                    } else {
+                        showToast(`Bạn đã nhận được ${res.reward} WOW!`, 'success');
+                        currentUser.WOW = res.newBalance;
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        
+                        const navWOW = document.getElementById('navWOWBalance');
+                        if (navWOW) navWOW.innerText = currentUser.WOW;
+                        const setWOW = document.getElementById('settingsWOWBalance');
+                        if (setWOW) setWOW.innerText = currentUser.WOW;
+                        
+                        // Kích nổ hiệu ứng tình yêu nếu là cặp đôi
+                        if (window.currentDailyTab === 'couple') {
+                            const rect = document.getElementById('dailyRewardModal').getBoundingClientRect();
+                            spawnLoveBurst(window.innerWidth / 2, window.innerHeight / 2);
+                        }
+                    }
                     openDailyRewardModal(); // Tải lại giao diện modal
                 } else {
-                    // Hiển thị MÃ LỖI GỐC từ server để biết chính xác bị gì
                     const errMsg = res.details ? `${res.error}: ${res.details}` : (res.error || "Lỗi hệ thống");
-                    
-                    // Bỏ qua translation, ép hiển thị text gốc
-                    const container = document.getElementById('toastContainer');
-                    const toast = document.createElement('div'); 
-                    toast.className = `toast error`;
-                    toast.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="color:#ff4c4c"></i> <span style="word-break: break-word;">${errMsg}</span>`;
-                    container.appendChild(toast); 
-                    setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 4500);
-
-                    btn.innerHTML = 'Nhận thưởng hôm nay'; 
-                    btn.disabled = false;
+                    showToast(errMsg, "error");
+                    if (!isFromHold && btn) {
+                        btn.innerHTML = 'Nhận thưởng hôm nay'; 
+                        btn.disabled = false;
+                    }
                 }
             } catch (err) {
                 showToast("Lỗi mạng: Không thể kết nối đến máy chủ", 'error');
-                btn.innerHTML = 'Nhận thưởng hôm nay'; 
-                btn.disabled = false;
+                if (!isFromHold && btn) {
+                    btn.innerHTML = 'Nhận thưởng hôm nay'; 
+                    btn.disabled = false;
+                }
             }
         }
 
