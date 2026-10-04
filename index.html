@@ -12655,18 +12655,26 @@
             }
             try {
                 const res = await fetch(WORKER_URL + endpoint, options);
-                if(res.status === 401 || res.status === 403) { 
+                if (res.status === 401 || res.status === 403) { 
                     try {
                         const errData = await res.json();
-                        showToast(errData.error || "Phiên làm việc hết hạn hoặc bị chặn.", "error");
+                        // Chỉ đăng xuất nếu máy chủ thực sự trả về lỗi hết hạn phiên bản, không đăng xuất khi Cloudflare WAF chặn
+                        if (errData && (errData.error === "Phiên đăng nhập hết hạn" || errData.expired)) {
+                            showToast("Phiên làm việc hết hạn.", "error");
+                            logout(); 
+                            return null;
+                        }
                     } catch(jsonErr) {
-                        showToast("Phiên làm việc hết hạn hoặc bị chặn.", "error");
+                        // Phản hồi là HTML của Cloudflare chặn (Rate limit/WAF) -> Không reload trang
+                        console.warn("Máy chủ chính đang bị chặn hoặc giới hạn tốc độ (403/429).");
+                        return null;
                     }
-                    logout(); 
-                    return null; 
                 }
                 return await res.json();
-            } catch(e) { showToast("Lỗi kết nối máy chủ", "error"); return null; }
+            } catch(e) { 
+                console.warn("Lỗi kết nối Worker:", endpoint); 
+                return null; 
+            }
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -22086,19 +22094,41 @@
             try {
                 let response;
                 try {
-                    response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' });
+                    // Giới hạn thời gian chờ Worker chính tối đa 3 giây, nếu quá 3 giây tự động ngắt sang Render
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 3000);
+                    
+                    response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { 
+                        cache: 'no-store',
+                        signal: controller.signal 
+                    });
+                    clearTimeout(timeoutId);
+                    
                     if (!response.ok || response.status === 429 || response.status >= 500) throw new Error("Worker Down");
                     if (isChatFallbackMode) toggleChatFallbackUI(false);
                 } catch (e) {
+                    // Chuyển sang máy chủ Render
                     if (!isChatFallbackMode) toggleChatFallbackUI(true);
                     response = await fetch(`${FALLBACK_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' });
                 }
 
+                if (!response.ok) return;
                 const res = await response.json();
-                if (!response.ok || res.error) return;
+                if (!res || res.error) return;
 
-                const messages = Array.isArray(res) ? res : (res.messages || []);
+                let rawMessages = Array.isArray(res) ? res : (res.messages || []);
                 chatHasMore = res.hasMore !== undefined ? res.hasMore : false;
+
+                // Lọc bỏ các tin nhắn trùng ID để chống treo cây DOM
+                const seenMsgIds = new Set();
+                const messages = [];
+                for (const m of rawMessages) {
+                    const mid = String(m.msgId || m.id || m.chatId || m._id || '');
+                    if (mid && !seenMsgIds.has(mid)) {
+                        seenMsgIds.add(mid);
+                        messages.push(m);
+                    }
+                }
 
                 const liveWrapper = document.getElementById('chatLiveWrapper');
                 const topArea = document.getElementById('chatLoadMoreTopArea');
