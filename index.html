@@ -8609,10 +8609,10 @@
                             
                             <div class="chat-composer-bottom-bar">
                                 <div class="chat-composer-tools-left">
-                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" data-i18n-title="chat_attach_img_title" title="Đính kèm hình ảnh (PNG, JPG, WebP, GIF, APNG)">
+                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" data-i18n-title="chat_attach_img_title" title="Đính kèm hình ảnh (PNG, JPG, WebP, GIF, APNG, SVG)">
                                         <i class="fa-solid fa-image" style="color: #0284c7;"></i>
                                     </label>
-                                    <input type="file" id="commentImgUploadChat" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
+                                    <input type="file" id="commentImgUploadChat" accept="image/png, image/jpeg, image/webp, image/gif, image/apng, image/svg+xml, .svg" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
 
                                     <button type="button" class="chat-dock-icon-btn" onclick="openKlipyModal('chat')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
                                         <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
@@ -14674,8 +14674,8 @@
             }
         }
         
-        const ALLOWED_IMAGE_MIMES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/apng'];
-        const ALLOWED_IMAGE_EXTS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.apng'];
+        const ALLOWED_IMAGE_MIMES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/apng', 'image/svg+xml'];
+        const ALLOWED_IMAGE_EXTS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.apng', '.svg'];
 
         function isFileAllowedImage(file) {
             if (!file) return false;
@@ -14692,7 +14692,7 @@
                 const file = input.files[0];
                 if (!isFileAllowedImage(file)) {
                     input.value = '';
-                    return showToast("Chỉ chấp nhận các định dạng ảnh: PNG, JPG, WebP, GIF, APNG!", "error");
+                    return showToast("Chỉ chấp nhận các định dạng ảnh: PNG, JPG, WebP, GIF, APNG, SVG!", "error");
                 }
                 if (file.size > 20 * 1024 * 1024) {
                     input.value = '';
@@ -21527,7 +21527,7 @@
             const attachImageFileToChat = (file) => {
                 if (!file) return;
                 if (!isFileAllowedImage(file)) {
-                    showToast("Chỉ cho phép đính kèm các định dạng ảnh: PNG, JPG, WebP, GIF, APNG!", "error");
+                    showToast("Chỉ cho phép đính kèm các định dạng ảnh: PNG, JPG, WebP, GIF, APNG, SVG!", "error");
                     return;
                 }
                 if (file.size > 20 * 1024 * 1024) {
