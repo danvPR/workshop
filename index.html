@@ -9188,9 +9188,9 @@
                     <span>Ghim hồ sơ người khác</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_couple')">
-                    <i class="fa-solid fa-heart" style="color:#ec4899;"></i>
-                    <b>Khế ước Cặp đôi</b>
-                    <span>Khoe người ấy lên hồ sơ</span>
+                    <i class="fa-solid fa-user-group" style="color:#0284c7;"></i>
+                    <b>Đôi bạn cùng tiến</b>
+                    <span>Khoe bạn đồng hành và số ngày đồng hành lên hồ sơ</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoPickStationModal()">
                     <i class="fa-solid fa-satellite-dish" style="color:#0ea5e9;"></i>
@@ -11008,7 +11008,7 @@
                         <i class="fa-solid fa-user"></i> Cá nhân
                     </button>
                     <button class="auth-nav-tab-btn" id="tabDailyCouple" onclick="switchDailyTab('couple')" style="flex: 1; justify-content: center;">
-                        <i class="fa-solid fa-heart" style="color: #ec4899;"></i> Cặp đôi
+                        <i class="fa-solid fa-user-group" style="color: #0284c7;"></i> Đôi bạn
                     </button>
                 </div>
 
@@ -11043,10 +11043,10 @@
                         Nhận thưởng hôm nay
                     </button>
                     
-                    <button type="button" class="btn-hold-send-wow" id="btnHoldCoupleDaily" style="display:none; border-radius:14px; background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); box-shadow: 0 6px 20px rgba(236,72,153,0.3);">
-                        <div class="hold-progress-fill" id="holdCoupleProgressFill" style="background: linear-gradient(90deg, #f472b6, #db2777, #9d174d);"></div>
+                    <button type="button" class="btn-hold-send-wow" id="btnHoldCoupleDaily" style="display:none; border-radius:14px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);">
+                        <div class="hold-progress-fill" id="holdCoupleProgressFill" style="background: linear-gradient(90deg, #38bdf8, #0284c7, #0369a1);"></div>
                         <div class="btn-inner-content" id="holdCoupleBtnText">
-                            <i class="fa-solid fa-heart fa-beat"></i>
+                            <i class="fa-solid fa-handshake"></i>
                             <span style="font-size: 1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>
                         </div>
                     </button>
@@ -11089,35 +11089,35 @@
         </div>
     </div>
 
-    <!-- MODAL GỠ CẶP ĐÔI (HARDCORE DRAMA MODE) -->
+    <!-- MODAL GỠ ĐÔI BẠN (HARDCORE DRAMA MODE) -->
     <div class="modal-overlay" id="unpairCoupleModal" style="z-index: 10005; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);">
         <div class="modal unpair-modal-box" style="max-width: 480px;">
             <div class="modal-header" style="border-bottom: 1px solid #7f1d1d; background: transparent;">
-                <span style="color: #ef4444; font-weight: 900; font-size: 1.15rem;"><i class="fa-solid fa-heart-crack"></i> Phá Vỡ Khế Ước</span>
+                <span style="color: #ef4444; font-weight: 900; font-size: 1.15rem;"><i class="fa-solid fa-user-xmark"></i> Hủy Liên Kết Đôi Bạn</span>
                 <button class="btn-close" onclick="closeModal('unpairCoupleModal')" style="color:#f87171;">&times;</button>
             </div>
             <div class="modal-body" style="padding: 24px;">
                 <div style="font-size: 1.05rem; color: #fecaca; line-height: 1.5;">
-                    Bạn đang chuẩn bị cắt đứt Khế Ước Cặp Đôi với <b id="unpairTargetName" style="color: #fff;">@nguoi_ay</b>.
+                    Bạn đang chuẩn bị hủy liên kết Đôi Bạn với <b id="unpairTargetName" style="color: #fff;">@nguoi_ay</b>.
                 </div>
                 
-                <div id="unpairStatsLoading" style="padding: 30px; color: #f87171;"><i class="fa-solid fa-spinner fa-spin"></i> Đang trích xuất kỷ niệm...</div>
+                <div id="unpairStatsLoading" style="padding: 30px; color: #f87171;"><i class="fa-solid fa-spinner fa-spin"></i> Đang trích xuất dữ liệu đồng hành...</div>
                 
                 <div id="unpairStatsArea" style="display: none;">
                     <div class="unpair-stats-grid">
                         <div class="unpair-stat-item">
-                            <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Đã gắn bó</span>
+                            <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Đã đồng hành</span>
                             <div class="unpair-stat-num"><span id="unpairDaysCount">0</span></div>
                             <span style="font-size: 0.85rem;">Ngày điểm danh</span>
                         </div>
                         <div class="unpair-stat-item">
                             <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Tổng tài sản WOW</span>
                             <div class="unpair-stat-num" style="display:flex; align-items:center; gap:5px;"><span class="wow-icon" style="font-size: 1.4rem;"></span><span id="unpairWowCount">0</span></div>
-                            <span style="font-size: 0.85rem;">Của cả 2 người</span>
+                            <span style="font-size: 0.85rem;">Của cả 2 bạn</span>
                         </div>
                     </div>
                     <div style="background: rgba(220, 38, 38, 0.15); border: 1px dashed #ef4444; padding: 12px; border-radius: 12px; font-size: 0.85rem; color: #fecaca; margin-bottom: 20px;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> <b>Cảnh báo:</b> Sau khi gỡ, toàn bộ Chuỗi Ngày và danh hiệu Cặp Đôi sẽ <b>trở về con số 0 vĩnh viễn</b>. Sẽ không thể khôi phục lại.
+                        <i class="fa-solid fa-triangle-exclamation"></i> <b>Cảnh báo:</b> Sau khi gỡ, toàn bộ Chuỗi Ngày và danh hiệu Đôi Bạn sẽ <b>trở về con số 0 vĩnh viễn</b>. Sẽ không thể khôi phục lại.
                     </div>
 
                     <button type="button" class="btn-hold-unpair" id="btnHoldUnpair">
@@ -11128,7 +11128,7 @@
                     </button>
 
                     <div class="unpair-prompt-text" id="unpairEmotionalPrompt">
-                        "Mọi kỷ niệm sẽ biến mất..."
+                        "Mọi ngày tháng cùng học tập sẽ biến mất..."
                     </div>
                 </div>
             </div>
@@ -15806,13 +15806,13 @@
             const elBio = document.getElementById('profBio'); if(elBio) elBio.innerText = viewingProfileData.bio || t('prof_no_bio') || 'Chưa có tiểu sử.';
             const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || t('prof_no_status') || 'Đang rảnh rỗi')}`;
             
-            // Xử lý hiển thị huy hiệu Cặp đôi trên Profile
+            // Xử lý hiển thị huy hiệu Đôi bạn trên Profile
             const profCoupleBadge = document.getElementById('profCoupleBadge');
             if (profCoupleBadge) profCoupleBadge.remove(); // Xóa thẻ cũ nếu có
             try {
                 const pDaily = viewingProfileData.dailyLogin ? (typeof viewingProfileData.dailyLogin === 'string' ? JSON.parse(viewingProfileData.dailyLogin) : viewingProfileData.dailyLogin) : {};
                 if (pDaily.partner && pDaily.partnerStatus === 'accepted') {
-                    const badgeHtml = `<div id="profCoupleBadge" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1px solid #fbcfe8; background: #fdf2f8; color: #ec4899; margin-left: 8px; cursor: pointer;" onclick="navigateTo('/users/${encodeURIComponent(pDaily.partner)}')"><i class="fa-solid fa-heart fa-beat"></i> Khế ước cùng @${escapeHtml(pDaily.partner)}</div>`;
+                    const badgeHtml = `<div id="profCoupleBadge" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1px solid #bae6fd; background: #f0f9ff; color: #0284c7; margin-left: 8px; cursor: pointer;" onclick="navigateTo('/users/${encodeURIComponent(pDaily.partner)}')"><i class="fa-solid fa-user-group"></i> Đôi bạn cùng tiến: @${escapeHtml(pDaily.partner)}</div>`;
                     document.querySelector('.profile-meta-pills').insertAdjacentHTML('beforeend', badgeHtml);
                 }
             } catch(e) {}
@@ -17866,22 +17866,22 @@
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
-            // 1.2. Thẻ Lời Mời / Phản Hồi Khế Ước Cặp Đôi
+            // 1.2. Thẻ Lời Mời / Phản Hồi Liên Kết Đôi Bạn
             if (mainText.startsWith("[COUPLE_INVITE:")) {
                 const uName = mainText.replace("[COUPLE_INVITE:", "").replace("]", "");
-                actionHtml = `<b style="color:#ec4899;">Lời Mời Khế Ước Cặp Đôi</b>`;
+                actionHtml = `<b style="color:#0284c7;">Lời Mời Đôi Bạn Cùng Tiến</b>`;
                 bubbleHtml = `
-                    <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border: 2px solid #f472b6; border-radius: 16px; padding: 14px 18px; margin-top: 8px; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.15);">
+                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 16px; padding: 14px 18px; margin-top: 8px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.12);">
                         <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-                            <div style="width:40px; height:40px; border-radius:50%; background:#fbcfe8; color:#db2777; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">
-                                <i class="fa-solid fa-envelope-open-text"></i>
+                            <div style="width:40px; height:40px; border-radius:50%; background:#bae6fd; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">
+                                <i class="fa-solid fa-user-group"></i>
                             </div>
-                            <div style="font-size:0.92rem; color:#be185d; font-weight:800; line-height:1.4;">
-                                @${escapeHtml(uName)} đã gửi cho bạn một lời mời lập Khế Ước Cặp Đôi!
+                            <div style="font-size:0.92rem; color:#0369a1; font-weight:800; line-height:1.4;">
+                                @${escapeHtml(uName)} đã gửi cho bạn lời mời kết nối Đôi Bạn Cùng Tiến!
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary" style="width:100%; background:#ec4899; border:none; border-radius:12px; font-weight:800; padding:8px;" onclick="event.stopPropagation(); openDailyRewardModal(); setTimeout(()=>renderDailyTab('couple'), 200);">
-                            <i class="fa-solid fa-heart fa-beat"></i> Xem & Trả lời ngay
+                        <button type="button" class="btn btn-primary" style="width:100%; background:#0284c7; border:none; border-radius:12px; font-weight:800; padding:8px;" onclick="event.stopPropagation(); openDailyRewardModal(); setTimeout(()=>renderDailyTab('couple'), 200);">
+                            <i class="fa-solid fa-handshake"></i> Xem & Trả lời ngay
                         </button>
                     </div>
                 `;
@@ -17889,18 +17889,18 @@
             }
             if (mainText.startsWith("[COUPLE_ACCEPT:")) {
                 const uName = mainText.replace("[COUPLE_ACCEPT:", "").replace("]", "");
-                actionHtml = `<b style="color:#10b981;">Khế Ước Thành Công</b>`;
-                bubbleHtml = `<div style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #10b981;"><i class="fa-solid fa-handshake-angle"></i> @${escapeHtml(uName)} đã CHẤP NHẬN lời mời kết đôi của bạn! Hãy điểm danh ngay.</div>`;
+                actionHtml = `<b style="color:#10b981;">Kết Nối Đôi Bạn Thành Công</b>`;
+                bubbleHtml = `<div style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #10b981;"><i class="fa-solid fa-handshake-angle"></i> @${escapeHtml(uName)} đã CHẤP NHẬN làm Đôi Bạn Cùng Tiến với bạn! Hãy điểm danh ngay.</div>`;
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
             if (mainText.startsWith("[COUPLE_REJECT:")) {
                 const uName = mainText.replace("[COUPLE_REJECT:", "").replace("]", "");
-                actionHtml = `<b style="color:#ef4444;">Khế Ước Bị Từ Chối</b>`;
-                bubbleHtml = `<div style="background: rgba(239, 68, 68, 0.1); color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444;"><i class="fa-solid fa-heart-crack"></i> @${escapeHtml(uName)} đã từ chối lời mời kết đôi của bạn.</div>`;
+                actionHtml = `<b style="color:#ef4444;">Lời Mời Bị Từ Chối</b>`;
+                bubbleHtml = `<div style="background: rgba(239, 68, 68, 0.1); color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444;"><i class="fa-solid fa-user-xmark"></i> @${escapeHtml(uName)} đã từ chối lời mời Đôi Bạn.</div>`;
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
-            // 1.5. Thông báo nhận quà Cặp Đôi thành công
+            // 1.5. Thông báo nhận quà Đôi Bạn thành công
             if (mainText.startsWith("[COUPLE_STREAK:")) {
                 const partsMatch = mainText.match(/^\[COUPLE_STREAK:(\d+):(\d+):([^:]+):([^\]]+)\]$/);
                 if (partsMatch) {
@@ -17909,20 +17909,20 @@
                     const userA = partsMatch[3];
                     const userB = partsMatch[4];
                     
-                    actionHtml = `<b style="color:#ec4899;">Khế Ước Cặp Đôi (Ngày ${cStreak})</b>`;
+                    actionHtml = `<b style="color:#0284c7;">Đôi Bạn Cùng Tiến (Ngày ${cStreak})</b>`;
                     bubbleHtml = `
-                        <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border: 2px solid #f472b6; border-radius: 16px; padding: 18px; margin-top: 8px; box-shadow: 0 6px 20px rgba(236, 72, 153, 0.25); text-align:center; position:relative; overflow:hidden;">
-                            <div style="position:absolute; top:-20px; left:-20px; font-size:4rem; opacity:0.1;"><i class="fa-solid fa-heart"></i></div>
-                            <div style="font-size:0.85rem; color:#be185d; font-weight:800; text-transform:uppercase; margin-bottom:8px; position:relative; z-index:2;">
+                        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 16px; padding: 18px; margin-top: 8px; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.18); text-align:center; position:relative; overflow:hidden;">
+                            <div style="position:absolute; top:-20px; left:-20px; font-size:4rem; opacity:0.08;"><i class="fa-solid fa-user-group"></i></div>
+                            <div style="font-size:0.85rem; color:#0369a1; font-weight:800; text-transform:uppercase; margin-bottom:8px; position:relative; z-index:2;">
                                 🎉 Chúc mừng 2 bạn đã cùng điểm danh
                             </div>
                             <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:12px; position:relative; z-index:2;">
-                                <div style="font-weight:900; font-size:1.1rem; color:#db2777;">@${userA}</div>
-                                <i class="fa-solid fa-heart fa-beat" style="color:#ec4899; font-size:1.4rem;"></i>
-                                <div style="font-weight:900; font-size:1.1rem; color:#db2777;">@${userB}</div>
+                                <div style="font-weight:900; font-size:1.1rem; color:#0284c7;">@${userA}</div>
+                                <i class="fa-solid fa-handshake" style="color:#0284c7; font-size:1.4rem;"></i>
+                                <div style="font-weight:900; font-size:1.1rem; color:#0284c7;">@${userB}</div>
                             </div>
-                            <div style="display:inline-flex; align-items:center; gap:6px; background:#fff; padding:6px 16px; border-radius:20px; border:1px solid #fbcfe8; color:#ea580c; font-weight:900; font-size:1.1rem; position:relative; z-index:2; box-shadow:0 4px 10px rgba(236,72,153,0.15);">
-                                <span class="wow-icon"></span> MỖI NGƯỜI NHẬN +${cReward} WOW
+                            <div style="display:inline-flex; align-items:center; gap:6px; background:#fff; padding:6px 16px; border-radius:20px; border:1px solid #bae6fd; color:#ea580c; font-weight:900; font-size:1.1rem; position:relative; z-index:2; box-shadow:0 4px 10px rgba(2, 132, 199, 0.12);">
+                                <span class="wow-icon"></span> MỖI BẠN NHẬN +${cReward} WOW
                             </div>
                         </div>
                     `;
@@ -20711,21 +20711,21 @@
                 return `🎉 @${bagClaimed[1]} vừa nhanh tay xé trúng +${bagClaimed[2]} WOW từ túi mù!`;
             }
 
-            // 4.5. Widget Khế Ước Cặp Đôi
+            // 4.5. Widget Đôi Bạn Cùng Tiến
             if (raw.startsWith('[COUPLE_INVITE:')) {
                 const uName = raw.replace('[COUPLE_INVITE:', '').replace(']', '');
-                return `💌 @${uName} vừa gửi cho bạn một lời mời Khế Ước Cặp Đôi!`;
+                return `🤝 @${uName} vừa gửi cho bạn lời mời kết nối Đôi Bạn Cùng Tiến!`;
             }
             if (raw.startsWith('[COUPLE_ACCEPT:')) {
                 const uName = raw.replace('[COUPLE_ACCEPT:', '').replace(']', '');
-                return `💖 @${uName} đã CHẤP NHẬN lời mời kết đôi của bạn!`;
+                return `✨ @${uName} đã CHẤP NHẬN lời mời Đôi Bạn của bạn!`;
             }
             if (raw.startsWith('[COUPLE_REJECT:')) {
                 const uName = raw.replace('[COUPLE_REJECT:', '').replace(']', '');
-                return `💔 @${uName} đã từ chối lời mời kết đôi của bạn.`;
+                return `🤝 @${uName} đã từ chối lời mời Đôi Bạn của bạn.`;
             }
             if (raw.startsWith('[COUPLE_STREAK:')) {
-                return `🎉 Chúc mừng 2 bạn đã điểm danh Cặp Đôi thành công hôm nay!`;
+                return `🎉 Chúc mừng 2 bạn đã cùng điểm danh Đôi Bạn thành công hôm nay!`;
             }
 
             // 5. Widget Thử Thách Trí Tuệ / Đố Vui BeaBea ([BEABEA_QUIZ:...])
@@ -21967,13 +21967,13 @@
             document.getElementById('tabDailySingle').classList.toggle('active', tab === 'single');
             document.getElementById('tabDailyCouple').classList.toggle('active', tab === 'couple');
 
-            // 🚀 MỖI LẦN BẤM QUA TAB CẶP ĐÔI: ÉP TẢI MỚI 100% TỪ MÁY CHỦ, KHÔNG GIỮ NGUYÊN TRẠNG THÁI CŨ
+            // 🚀 MỖI LẦN BẤM QUA TAB ĐÔI BẠN: ÉP TẢI MỚI 100% TỪ MÁY CHỦ, KHÔNG GIỮ NGUYÊN TRẠNG THÁI CŨ
             if (tab === 'couple' && currentUser) {
                 const partnerArea = document.getElementById('partnerSetupArea');
                 const grid = document.getElementById('dailyRewardGrid');
                 if (partnerArea) {
                     partnerArea.style.display = 'block';
-                    partnerArea.innerHTML = '<div style="text-align:center; padding:12px; color:#ec4899; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải lại dữ liệu Cặp đôi...</div>';
+                    partnerArea.innerHTML = '<div style="text-align:center; padding:12px; color:#0284c7; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải lại dữ liệu Đôi bạn...</div>';
                 }
                 if (grid) {
                     grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:25px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i></div>';
@@ -22050,8 +22050,8 @@
                 }
             } else {
                 partnerArea.style.display = 'block';
-                streakLabel.innerText = 'Chuỗi Cặp đôi';
-                desc.innerHTML = 'Chuỗi điểm danh vô cực, nhận WOW vĩnh viễn không bị reset về mốc Ngày 1 (Mỗi chu kỳ 7 ngày). <b style="color:#ec4899;">Chỉ cần 1 người quên điểm danh, chuỗi sẽ bị đứt!</b>';
+                streakLabel.innerText = 'Chuỗi Đôi bạn';
+                desc.innerHTML = 'Chuỗi điểm danh vô cực, nhận WOW vĩnh viễn không bị reset về mốc Ngày 1 (Mỗi chu kỳ 7 ngày). <b style="color:#0284c7;">Chỉ cần 1 bạn quên điểm danh, chuỗi sẽ bị đứt!</b>';
                 
                 const partnerName = dailyInfo.partner || '';
                 const partnerReq = dailyInfo.partnerReq || '';
@@ -22060,52 +22060,52 @@
                 if (pStatus === 'accepted') {
                     partnerArea.innerHTML = `
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="font-size:0.95rem; color:#ec4899; font-weight:900; display:flex; align-items:center; gap:8px;">
-                                <i class="fa-solid fa-heart fa-beat"></i> Khế ước cùng @${escapeHtml(partnerName)}
+                            <div style="font-size:0.95rem; color:#0284c7; font-weight:900; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-user-group"></i> Đôi bạn cùng tiến: @${escapeHtml(partnerName)}
                             </div>
-                            <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 10px; border-radius:10px;" onclick="unpairDailyPartner()">Gỡ kết đôi</button>
+                            <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 10px; border-radius:10px;" onclick="unpairDailyPartner()">Hủy liên kết</button>
                         </div>
                     `;
                     btn.style.display = 'flex';
                 } else if (pStatus === 'pending_sent') {
                     partnerArea.innerHTML = `
                         <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Đã gửi lời mời đến @${escapeHtml(partnerName)}</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Đang chờ người ấy chấp nhận...</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Đang chờ bạn ấy đồng ý...</div>
                         <button class="btn" style="border:1px solid #ef4444; color:#ef4444; padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="unpairDailyPartner()">Hủy yêu cầu</button>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-clock" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Hãy đợi đối phương phản hồi lời mời nhé!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-clock" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Hãy đợi bạn đồng hành phản hồi lời mời nhé!</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
                 } else if ((dailyInfo.partnerReqs && dailyInfo.partnerReqs.length > 0) || partnerReq) {
                     const reqList = (dailyInfo.partnerReqs && dailyInfo.partnerReqs.length > 0) ? dailyInfo.partnerReqs : [partnerReq];
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Lời mời kết đôi đang chờ (${reqList.length}):</div>
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Lời mời Đôi Bạn đang chờ (${reqList.length}):</div>
                         <div style="display:flex; flex-direction:column; gap:8px; max-height:160px; overflow-y:auto; padding-right:2px;">
                             ${reqList.map(reqUser => `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(236,72,153,0.08); padding:8px 12px; border-radius:12px; border:1px solid #fbcfe8;">
-                                    <span style="font-weight:800; color:#be185d;">@${escapeHtml(reqUser)}</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(2,132,199,0.08); padding:8px 12px; border-radius:12px; border:1px solid #bae6fd;">
+                                    <span style="font-weight:800; color:#0369a1;">@${escapeHtml(reqUser)}</span>
                                     <div style="display:flex; gap:6px;">
                                         <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('reject', '${escapeHtml(reqUser)}')">Từ chối</button>
-                                        <button class="btn btn-primary" style="background:#ec4899; border:none; padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('accept', '${escapeHtml(reqUser)}')">Đồng ý</button>
+                                        <button class="btn btn-primary" style="background:#0284c7; border:none; padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('accept', '${escapeHtml(reqUser)}')">Đồng ý</button>
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Bạn có lời mời Khế Ước Cặp Đôi đang chờ xác nhận!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Bạn có lời mời Đôi Bạn Cùng Tiến đang chờ xác nhận!</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
                 } else {
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Bạn chưa kết đôi với ai cả!</div>
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Bạn chưa ghép Đôi bạn với ai cả!</div>
                         <div style="display:flex; gap:8px; justify-content:center;">
-                            <input type="text" id="partnerInput" placeholder="Nhập username người ấy..." class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
-                            <button class="btn btn-primary" style="background:#ec4899; border:none; padding:8px 16px; border-radius:12px;" onclick="requestDailyPartner()">Gửi Lời Mời</button>
+                            <input type="text" id="partnerInput" placeholder="Nhập username của bạn ấy..." class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
+                            <button class="btn btn-primary" style="background:#0284c7; border:none; padding:8px 16px; border-radius:12px;" onclick="requestDailyPartner()">Gửi Lời Mời</button>
                         </div>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-heart-crack" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Gửi lời mời và chờ đối phương chấp nhận để mở khóa chuỗi!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-user-group" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Gửi lời mời và chờ bạn ấy đồng ý để mở khóa chuỗi!</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
@@ -22146,11 +22146,11 @@
                 btn.style.display = 'flex';
                 if(holdBtn) holdBtn.style.display = 'none';
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-clock"></i> Đang chờ nửa kia cùng điểm danh...';
+                btn.innerHTML = '<i class="fa-solid fa-clock"></i> Đang chờ bạn đồng hành điểm danh...';
                 btn.className = 'btn';
-                btn.style.background = 'rgba(236, 72, 153, 0.1)';
-                btn.style.color = '#ec4899';
-                btn.style.border = '1px dashed #ec4899';
+                btn.style.background = 'rgba(2, 132, 199, 0.08)';
+                btn.style.color = '#0284c7';
+                btn.style.border = '1px dashed #0284c7';
             } else {
                 if (tab === 'couple' && dailyInfo.partner && dailyInfo.partnerStatus === 'accepted') {
                     btn.style.display = 'none';
@@ -22195,7 +22195,7 @@
                 const fillEl = document.getElementById('holdCoupleProgressFill');
                 const textEl = document.getElementById('holdCoupleBtnText');
 
-                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-heart fa-beat"></i> <span style="font-size:1.05rem;">ĐANG TRUYỀN TÌNH CẢM...</span>';
+                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-handshake"></i> <span style="font-size:1.05rem;">ĐANG TIẾP NĂNG LƯỢNG ĐỒNG HÀNH...</span>';
 
                 clearInterval(holdCoupleInterval);
                 holdCoupleInterval = setInterval(() => {
@@ -22222,7 +22222,7 @@
                     const fillEl = document.getElementById('holdCoupleProgressFill');
                     const textEl = document.getElementById('holdCoupleBtnText');
                     if (fillEl) fillEl.style.width = '0%';
-                    if (textEl) textEl.innerHTML = '<i class="fa-solid fa-heart fa-beat"></i> <span style="font-size:1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>';
+                    if (textEl) textEl.innerHTML = '<i class="fa-solid fa-handshake"></i> <span style="font-size:1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>';
                 }
             };
 
@@ -22233,12 +22233,14 @@
             window.addEventListener('touchcancel', stopHold);
         }
 
-        // Hiệu ứng hạt trái tim
+        // Hiệu ứng ngôi sao & tia sáng đồng đội
         function spawnLoveBurst(originX, originY) {
-            const colors = ['#ec4899', '#db2777', '#f472b6', '#be185d', '#ff7eb3'];
+            const colors = ['#0284c7', '#38bdf8', '#10b981', '#f59e0b', '#6366f1'];
+            const icons = ['fa-star', 'fa-sparkles', 'fa-thumbs-up', 'fa-award'];
             for (let i = 0; i < 35; i++) {
                 const p = document.createElement('i');
-                p.className = 'fa-solid fa-heart wow-burst-particle';
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)] || 'fa-star';
+                p.className = `fa-solid ${randomIcon} wow-burst-particle`;
                 p.style.color = colors[Math.floor(Math.random() * colors.length)];
                 p.style.fontSize = `${Math.random() * 1.2 + 0.8}rem`;
                 p.style.filter = `drop-shadow(0 0 8px ${p.style.color})`;
@@ -22257,7 +22259,7 @@
 
         async function requestDailyPartner() {
             const partnerName = document.getElementById('partnerInput').value.trim();
-            if (!partnerName) return showToast("Vui lòng nhập tên tài khoản của người ấy!", "error");
+            if (!partnerName) return showToast("Vui lòng nhập tên tài khoản của bạn ấy!", "error");
 
             const btn = document.querySelector('#partnerSetupArea button');
             if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; }
@@ -22268,7 +22270,7 @@
                     body: JSON.stringify({ partnerName: partnerName, action: 'request' })
                 });
                 if (res && res.success) {
-                    showToast("Đã gửi lời mời thành công! Chờ người ấy xác nhận nhé.", "success");
+                    showToast("Đã gửi lời mời thành công! Chờ bạn ấy đồng ý nhé.", "success");
                     window.currentDailyInfo = res.dailyInfo;
                     renderDailyTab('couple');
                 } else {
@@ -22291,7 +22293,7 @@
                     body: JSON.stringify({ partnerName: partnerName, action: action })
                 });
                 if (res && res.success) {
-                    showToast(action === 'accept' ? "Kết đôi thành công! Điểm danh ngay thôi." : "Đã từ chối lời mời.", "success");
+                    showToast(action === 'accept' ? "Đã liên kết Đôi Bạn thành công! Điểm danh cùng nhau thôi." : "Đã từ chối lời mời.", "success");
                     window.currentDailyInfo = res.dailyInfo;
                     renderDailyTab('couple');
                 } else {
@@ -22308,13 +22310,13 @@
         const UNPAIR_TARGET_TIME = 30000; // 30 Giây
 
         const unpairPrompts = [
-            { time: 0, text: '"Nhấn giữ 30 giây để xác nhận xóa khế ước..."' },
-            { time: 5000, text: '"Bạn thực sự muốn vứt bỏ mọi thứ sao?"' },
-            { time: 10000, text: '"Những ngày tháng cùng nhau điểm danh sẽ biến mất..."' },
-            { time: 15000, text: '"Toàn bộ chuỗi Streak sẽ trở về con số 0 tròn trĩnh."' },
+            { time: 0, text: '"Nhấn giữ 30 giây để xác nhận hủy liên kết Đôi Bạn..."' },
+            { time: 5000, text: '"Bạn thực sự muốn ngừng làm Đôi Bạn Cùng Tiến sao?"' },
+            { time: 10000, text: '"Những ngày tháng cùng nhau điểm danh học tập sẽ biến mất..."' },
+            { time: 15000, text: '"Toàn bộ chuỗi Streak đôi bạn sẽ trở về con số 0 tròn trĩnh."' },
             { time: 20000, text: '"Vẫn còn kịp để dừng lại. Hãy buông tay ra đi!"' },
-            { time: 25000, text: '"Người ấy sẽ rất buồn đấy..."' },
-            { time: 28500, text: '"Đang tiến hành xóa bỏ khế ước vĩnh viễn..."' }
+            { time: 25000, text: '"Bạn đồng hành sẽ rất hụt hẫng đấy..."' },
+            { time: 28500, text: '"Đang tiến hành hủy liên kết vĩnh viễn..."' }
         ];
 
         async function unpairDailyPartner() {
@@ -22396,7 +22398,7 @@
                 if (isUnpairing) return;
                 unpairHoldTimeMs = 0;
                 btn.style.borderColor = '#ef4444';
-                textEl.innerHTML = '<i class="fa-solid fa-heart-crack fa-beat"></i> ĐANG XÓA BỎ...';
+                textEl.innerHTML = '<i class="fa-solid fa-user-xmark"></i> ĐANG HỦY LIÊN KẾT...';
                 
                 clearInterval(unpairHoldInterval);
                 unpairHoldInterval = setInterval(() => {
@@ -22451,7 +22453,7 @@
                 });
                 if (res && res.success) {
                     closeModal('unpairCoupleModal');
-                    showToast("Khế ước đã bị xóa bỏ vĩnh viễn.", "info");
+                    showToast("Đã hủy liên kết Đôi Bạn.", "info");
                     window.currentDailyInfo = res.dailyInfo;
                     renderDailyTab('couple');
                 } else {
@@ -22798,7 +22800,7 @@
                 
                 if (response.ok && res && res.success) {
                     if (res.waitingPartner) {
-                        showToast(`Đã điểm danh! Hãy nhắc nửa kia vào nhận để nối chuỗi nhé!`, 'info');
+                        showToast(`Đã điểm danh! Hãy nhắc bạn đồng hành vào nhận để nối chuỗi nhé!`, 'info');
                         window.currentDailyInfo = res.dailyInfo;
                     } else {
                         showToast(`Bạn đã nhận được ${res.reward} WOW!`, 'success');
@@ -23895,7 +23897,7 @@
                 `;
             }
 
-            // 5.5 KHẾ ƯỚC CẶP ĐÔI (COUPLE WIDGET)
+            // 5.5 ĐÔI BẠN CÙNG TIẾN (BUDDY WIDGET)
             else if (safeId.startsWith('widget_couple')) {
                 let coupleData = {};
                 try { coupleData = typeof data.dailyLogin === 'string' ? JSON.parse(data.dailyLogin) : (data.dailyLogin || {}); } catch(e){}
@@ -23907,23 +23909,23 @@
                     const streak = parseInt(coupleData.coupleStreak) || 0;
                     
                     contentHtml = `
-                        <div class="bento-widget-inner" style="background:linear-gradient(135deg, #fdf2f8, #fce7f3); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:14px;">
-                            <span style="font-size:0.75rem; font-weight:800; color:#ec4899; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fa-solid fa-heart fa-beat"></i> Khế ước Cặp đôi</span>
+                        <div class="bento-widget-inner" style="background:linear-gradient(135deg, #f0f9ff, #e0f2fe); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:14px;">
+                            <span style="font-size:0.75rem; font-weight:800; color:#0284c7; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fa-solid fa-user-group"></i> Đôi bạn cùng tiến</span>
                             <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px;">
-                                <img src="${myAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #ec4899; object-fit:cover;">
-                                <i class="fa-solid fa-link" style="color:#f472b6;"></i>
-                                <img id="bentoCoupleAvt-${safeId}" src="${pAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #ec4899; object-fit:cover; cursor:pointer;" onclick="navigateTo('/users/${encodeURIComponent(pName)}')">
+                                <img src="${myAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #0284c7; object-fit:cover;">
+                                <i class="fa-solid fa-handshake" style="color:#0284c7;"></i>
+                                <img id="bentoCoupleAvt-${safeId}" src="${pAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #0284c7; object-fit:cover; cursor:pointer;" onclick="navigateTo('/users/${encodeURIComponent(pName)}')">
                             </div>
-                            <b style="color:#be185d; font-size:0.95rem;">@${escapeHtml(data.username)} & @${escapeHtml(pName)}</b>
-                            <span style="color:#db2777; font-size:0.8rem; font-weight:700; margin-top:2px;">Bên nhau: ${streak} ngày</span>
+                            <b style="color:#0369a1; font-size:0.95rem;">@${escapeHtml(data.username)} & @${escapeHtml(pName)}</b>
+                            <span style="color:#0284c7; font-size:0.8rem; font-weight:700; margin-top:2px;">Đồng hành: ${streak} ngày</span>
                         </div>
                     `;
-                    // Tự động kích hoạt Async Fetch để tải avatar người ấy nếu chưa có trong RAM
+                    // Tự động kích hoạt Async Fetch để tải avatar người bạn nếu chưa có trong RAM
                     if (!globalUserCache[pName]) {
                         setTimeout(() => loadBentoUserAvatar(`Couple_${safeId}`, pName), 100);
                     }
                 } else {
-                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 20px;">Tác giả chưa lập Khế Ước Cặp Đôi.</div>`;
+                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 20px;">Tác giả chưa liên kết Đôi Bạn Cùng Tiến.</div>`;
                 }
             }
 
