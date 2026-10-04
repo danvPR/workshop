@@ -5528,14 +5528,78 @@
             transition: width 0.05s linear;
             box-shadow: 0 0 20px #f59e0b;
         }
-        .btn-hold-send-wow .btn-inner-content {
+        /* ===== GIAO DIỆN GỠ CẶP ĐÔI (DRAMA UNPAIR) ===== */
+        .unpair-modal-box {
+            background: radial-gradient(circle at top, #2a0b0b 0%, #0f0505 100%) !important;
+            border: 2px solid #991b1b !important;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 50px rgba(220, 38, 38, 0.2) !important;
+            color: #f87171;
+            text-align: center;
+        }
+        .unpair-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .unpair-stat-item {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #7f1d1d;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .unpair-stat-num {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fca5a5;
+            text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+        }
+        .btn-hold-unpair {
+            position: relative;
+            width: 100%;
+            padding: 18px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            border-radius: 16px;
+            border: 2px solid #7f1d1d;
+            cursor: pointer;
+            overflow: hidden;
+            color: #fca5a5 !important;
+            background: #1a0505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            transition: all 0.3s;
+        }
+        .btn-hold-unpair .hold-unpair-fill {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 0%;
+            background: linear-gradient(90deg, #7f1d1d, #dc2626);
+            z-index: 1;
+        }
+        .btn-hold-unpair .unpair-inner-text {
             position: relative;
             z-index: 2;
+            pointer-events: none;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        }
+        .unpair-prompt-text {
+            min-height: 40px;
+            font-size: 0.9rem;
+            color: #fecaca;
+            font-style: italic;
+            margin-top: 15px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            pointer-events: none;
+            justify-content: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
         }
 
         /* HIỆU ỨNG TIA SÁNG VĂNG RỰC RỠ KHI TẶNG THÀNH CÔNG */
@@ -11021,6 +11085,52 @@
                 <button type="button" class="btn btn-primary" id="btnGachaDone" onclick="closeModal('blindBagModal')" style="display: none; width: 100%; justify-content: center; padding: 12px; border-radius: 14px; font-weight: 800;" data-i18n="blindbag_btn_done">
                     Tuyệt vời!
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GỠ CẶP ĐÔI (HARDCORE DRAMA MODE) -->
+    <div class="modal-overlay" id="unpairCoupleModal" style="z-index: 10005; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);">
+        <div class="modal unpair-modal-box" style="max-width: 480px;">
+            <div class="modal-header" style="border-bottom: 1px solid #7f1d1d; background: transparent;">
+                <span style="color: #ef4444; font-weight: 900; font-size: 1.15rem;"><i class="fa-solid fa-heart-crack"></i> Phá Vỡ Khế Ước</span>
+                <button class="btn-close" onclick="closeModal('unpairCoupleModal')" style="color:#f87171;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div style="font-size: 1.05rem; color: #fecaca; line-height: 1.5;">
+                    Bạn đang chuẩn bị cắt đứt Khế Ước Cặp Đôi với <b id="unpairTargetName" style="color: #fff;">@nguoi_ay</b>.
+                </div>
+                
+                <div id="unpairStatsLoading" style="padding: 30px; color: #f87171;"><i class="fa-solid fa-spinner fa-spin"></i> Đang trích xuất kỷ niệm...</div>
+                
+                <div id="unpairStatsArea" style="display: none;">
+                    <div class="unpair-stats-grid">
+                        <div class="unpair-stat-item">
+                            <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Đã gắn bó</span>
+                            <div class="unpair-stat-num"><span id="unpairDaysCount">0</span></div>
+                            <span style="font-size: 0.85rem;">Ngày điểm danh</span>
+                        </div>
+                        <div class="unpair-stat-item">
+                            <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Tổng tài sản WOW</span>
+                            <div class="unpair-stat-num" style="display:flex; align-items:center; gap:5px;"><span class="wow-icon" style="font-size: 1.4rem;"></span><span id="unpairWowCount">0</span></div>
+                            <span style="font-size: 0.85rem;">Của cả 2 người</span>
+                        </div>
+                    </div>
+                    <div style="background: rgba(220, 38, 38, 0.15); border: 1px dashed #ef4444; padding: 12px; border-radius: 12px; font-size: 0.85rem; color: #fecaca; margin-bottom: 20px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <b>Cảnh báo:</b> Sau khi gỡ, toàn bộ Chuỗi Ngày và danh hiệu Cặp Đôi sẽ <b>trở về con số 0 vĩnh viễn</b>. Sẽ không thể khôi phục lại.
+                    </div>
+
+                    <button type="button" class="btn-hold-unpair" id="btnHoldUnpair">
+                        <div class="hold-unpair-fill" id="unpairHoldFill"></div>
+                        <div class="unpair-inner-text" id="unpairHoldText">
+                            <i class="fa-solid fa-lock"></i> NHẤN GIỮ 30 GIÂY ĐỂ XÓA
+                        </div>
+                    </button>
+
+                    <div class="unpair-prompt-text" id="unpairEmotionalPrompt">
+                        "Mọi kỷ niệm sẽ biến mất..."
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -22153,22 +22263,166 @@
             if (btnArea) btnArea.style.opacity = '1';
         }
 
+        // BỘ CÔNG CỤ GỠ CẶP ĐÔI HARDCORE (30 GIÂY)
+        let unpairHoldInterval = null;
+        let unpairHoldTimeMs = 0;
+        let isUnpairing = false;
+        const UNPAIR_TARGET_TIME = 30000; // 30 Giây
+
+        const unpairPrompts = [
+            { time: 0, text: '"Nhấn giữ 30 giây để xác nhận xóa khế ước..."' },
+            { time: 5000, text: '"Bạn thực sự muốn vứt bỏ mọi thứ sao?"' },
+            { time: 10000, text: '"Những ngày tháng cùng nhau điểm danh sẽ biến mất..."' },
+            { time: 15000, text: '"Toàn bộ chuỗi Streak sẽ trở về con số 0 tròn trĩnh."' },
+            { time: 20000, text: '"Vẫn còn kịp để dừng lại. Hãy buông tay ra đi!"' },
+            { time: 25000, text: '"Người ấy sẽ rất buồn đấy..."' },
+            { time: 28500, text: '"Đang tiến hành xóa bỏ khế ước vĩnh viễn..."' }
+        ];
+
         async function unpairDailyPartner() {
-            if (!confirm("Bạn có chắc chắn muốn hủy / gỡ kết đôi không? Toàn bộ chuỗi Streak Cặp đôi sẽ bị Reset về 0 vĩnh viễn!")) return;
+            const pStatus = window.currentDailyInfo.partnerStatus;
             
+            // Nếu chỉ là HỦY LỜI MỜI (Chưa kết đôi thành công) -> Xóa luôn không cần Drama
+            if (pStatus === 'pending_sent') {
+                try {
+                    const res = await apiFetch(`/api/store/set_partner`, { method: 'POST', body: JSON.stringify({ partnerName: "", action: 'unpair' }) });
+                    if (res && res.success) {
+                        showToast("Đã hủy lời mời.", "info");
+                        window.currentDailyInfo = res.dailyInfo;
+                        renderDailyTab('couple');
+                    }
+                } catch(e) {}
+                return;
+            }
+
+            // NẾU LÀ CẶP ĐÔI ĐÃ GẮN BÓ -> MỞ CHẾ ĐỘ DRAMA
+            const partnerName = window.currentDailyInfo.partner;
+            const streak = parseInt(window.currentDailyInfo.coupleStreak) || 0;
+            if (!partnerName) return;
+
+            document.getElementById('unpairTargetName').innerText = `@${partnerName}`;
+            document.getElementById('unpairStatsLoading').style.display = 'block';
+            document.getElementById('unpairStatsArea').style.display = 'none';
+            openModal('unpairCoupleModal');
+
+            try {
+                // Trích xuất âm thầm số WOW của người kia để dọa
+                const partnerRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(partnerName)}`).then(r => r.json());
+                const pWow = partnerRes.WOW !== undefined ? partnerRes.WOW : (partnerRes.omg || 0);
+                const myWow = currentUser.WOW || 0;
+                
+                document.getElementById('unpairDaysCount').innerText = streak;
+                document.getElementById('unpairWowCount').innerText = (myWow + pWow);
+
+                document.getElementById('unpairStatsLoading').style.display = 'none';
+                document.getElementById('unpairStatsArea').style.display = 'block';
+
+                setupUnpairHoldButton();
+            } catch(e) {
+                // Fallback nếu lỗi mạng
+                document.getElementById('unpairDaysCount').innerText = streak;
+                document.getElementById('unpairWowCount').innerText = "???";
+                document.getElementById('unpairStatsLoading').style.display = 'none';
+                document.getElementById('unpairStatsArea').style.display = 'block';
+                setupUnpairHoldButton();
+            }
+        }
+
+        function setupUnpairHoldButton() {
+            const btn = document.getElementById('btnHoldUnpair');
+            if (!btn || btn.dataset.bound === 'true') return;
+            btn.dataset.bound = 'true';
+
+            const fillEl = document.getElementById('unpairHoldFill');
+            const textEl = document.getElementById('unpairHoldText');
+            const promptEl = document.getElementById('unpairEmotionalPrompt');
+
+            const updatePromptText = (timeMs) => {
+                let currentPrompt = unpairPrompts[0].text;
+                for (let i = unpairPrompts.length - 1; i >= 0; i--) {
+                    if (timeMs >= unpairPrompts[i].time) {
+                        currentPrompt = unpairPrompts[i].text;
+                        break;
+                    }
+                }
+                if (promptEl.innerText !== currentPrompt) {
+                    promptEl.style.opacity = 0;
+                    setTimeout(() => {
+                        promptEl.innerText = currentPrompt;
+                        promptEl.style.opacity = 1;
+                    }, 150);
+                }
+            };
+
+            const startHold = (e) => {
+                if (isUnpairing) return;
+                unpairHoldTimeMs = 0;
+                btn.style.borderColor = '#ef4444';
+                textEl.innerHTML = '<i class="fa-solid fa-heart-crack fa-beat"></i> ĐANG XÓA BỎ...';
+                
+                clearInterval(unpairHoldInterval);
+                unpairHoldInterval = setInterval(() => {
+                    unpairHoldTimeMs += 50; // Chạy mỗi 50ms
+                    
+                    const percent = Math.min(100, (unpairHoldTimeMs / UNPAIR_TARGET_TIME) * 100);
+                    fillEl.style.width = `${percent}%`;
+                    updatePromptText(unpairHoldTimeMs);
+
+                    // Hiệu ứng rung lắc mạnh dần khi về cuối
+                    if (unpairHoldTimeMs > 20000) {
+                        btn.style.transform = `translate(${Math.random()*4-2}px, ${Math.random()*4-2}px)`;
+                    }
+
+                    if (unpairHoldTimeMs >= UNPAIR_TARGET_TIME) {
+                        clearInterval(unpairHoldInterval);
+                        isUnpairing = true;
+                        btn.style.transform = 'none';
+                        textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ĐÃ CẮT ĐỨT...';
+                        executeActualUnpair();
+                    }
+                }, 50);
+            };
+
+            const stopHold = () => {
+                if (isUnpairing) return;
+                clearInterval(unpairHoldInterval);
+                btn.style.transform = 'none';
+                
+                if (unpairHoldTimeMs < UNPAIR_TARGET_TIME) {
+                    unpairHoldTimeMs = 0;
+                    fillEl.style.width = '0%';
+                    textEl.innerHTML = '<i class="fa-solid fa-lock"></i> NHẤN GIỮ 30 GIÂY ĐỂ XÓA';
+                    btn.style.borderColor = '#7f1d1d';
+                    updatePromptText(0);
+                }
+            };
+
+            // Gắn sự kiện cho cả Chuột và Cảm ứng
+            btn.addEventListener('mousedown', startHold);
+            window.addEventListener('mouseup', stopHold);
+            btn.addEventListener('touchstart', startHold, { passive: true });
+            window.addEventListener('touchend', stopHold);
+            window.addEventListener('touchcancel', stopHold);
+        }
+
+        async function executeActualUnpair() {
             try {
                 const res = await apiFetch(`/api/store/set_partner`, {
                     method: 'POST',
                     body: JSON.stringify({ partnerName: "", action: 'unpair' })
                 });
                 if (res && res.success) {
-                    showToast("Đã hủy Khế Ước Cặp Đôi.", "info");
+                    closeModal('unpairCoupleModal');
+                    showToast("Khế ước đã bị xóa bỏ vĩnh viễn.", "info");
                     window.currentDailyInfo = res.dailyInfo;
                     renderDailyTab('couple');
                 } else {
                     showToast(res.error || "Lỗi xử lý", "error");
                 }
-            } catch(e) { showToast("Lỗi kết nối", "error"); }
+            } catch(e) { 
+                showToast("Lỗi kết nối", "error"); 
+            }
+            isUnpairing = false;
         }
 
         function openAboutWOWModal() { openModal('aboutWOWModal'); }
