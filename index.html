@@ -10933,9 +10933,23 @@
             </div>
             
             <div class="modal-body" style="padding: 24px;">
+                <!-- Tabs Đăng nhập -->
+                <div class="auth-nav-tabs" style="justify-content: center; margin-bottom: 20px; width: 100%; display: flex;">
+                    <button class="auth-nav-tab-btn active" id="tabDailySingle" onclick="renderDailyTab('single')" style="flex: 1; justify-content: center;">
+                        <i class="fa-solid fa-user"></i> Cá nhân
+                    </button>
+                    <button class="auth-nav-tab-btn" id="tabDailyCouple" onclick="renderDailyTab('couple')" style="flex: 1; justify-content: center;">
+                        <i class="fa-solid fa-heart" style="color: #ec4899;"></i> Cặp đôi
+                    </button>
+                </div>
+
+                <div id="partnerSetupArea" style="display:none; background:rgba(236,72,153,0.08); border:1px dashed #f472b6; padding:12px; border-radius:12px; margin-bottom:15px; text-align:center;">
+                    <!-- Sẽ render UI kết đôi ở đây -->
+                </div>
+
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 5px;">
                     <div style="text-align:left;">
-                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" data-i18n="daily_streak_label">Chuỗi chuyên cần</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" id="dailyStreakLabel">Chuỗi chuyên cần</span>
                         <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> Ngày liên tiếp</h3>
                     </div>
                     <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-weight: 800; color:var(--text-title); font-size: 0.95rem;">
@@ -10944,18 +10958,18 @@
                 </div>
 
                 <div class="daily-streak-track">
-                    <div class="daily-progress-bar-fill" id="dailyProgressBar" style="background: var(--primary); box-shadow: 0 0 10px rgba(13,165,122,0.4);"></div>
+                    <div class="daily-progress-bar-fill" id="dailyProgressBar" style="background: var(--primary); box-shadow: 0 0 10px rgba(13,165,122,0.4); transition: width 0.4s ease;"></div>
                 </div>
 
                 <div class="daily-card-grid" id="dailyRewardGrid">
                     <!-- Render bằng JS -->
                 </div>
 
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;" data-i18n="daily_desc">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;" id="dailyDescText">
                     Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.
                 </p>
 
-                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;" data-i18n="daily_btn_claim">
+                <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
                     Nhận thưởng hôm nay
                 </button>
             </div>
@@ -21695,6 +21709,9 @@
             `;
         }
 
+        window.currentDailyInfo = {};
+        window.currentDailyTab = 'single';
+
         async function openDailyRewardModal() {
             if (!currentUser) return openModal('loginModal');
             openModal('dailyRewardModal');
@@ -21703,17 +21720,14 @@
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
             
             try {
-                // Chống Cache để luôn lấy số dư và dữ liệu điểm danh mới nhất
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
                 const pData = await res.json();
                 
-                // 🛡️ CHỐNG LỖI WIPING WOW: Chỉ ghi đè WOW nếu server trả về thành công
                 if (!pData.error) {
                     currentUser.WOW = pData.WOW !== undefined ? pData.WOW : (pData.omg || 0);
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 }
                 
-                // Cập nhật ngay các vị trí hiển thị số dư
                 const navWOW = document.getElementById('navWOWBalance');
                 if (navWOW) navWOW.innerText = currentUser.WOW;
                 const modalWOW = document.getElementById('dailyCurrentWOWVal');
@@ -21721,67 +21735,172 @@
                 const setWOW = document.getElementById('settingsWOWBalance');
                 if (setWOW) setWOW.innerText = currentUser.WOW;
 
-                // Xử lý dữ liệu chuỗi ngày an toàn (chống lỗi trả về mảng rỗng)
                 let dailyInfo = pData.dailyLogin || {};
                 if (Array.isArray(dailyInfo)) dailyInfo = {}; 
-                
-                const vnTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}));
-                const todayStr = `${String(vnTime.getDate()).padStart(2, '0')}/${String(vnTime.getMonth() + 1).padStart(2, '0')}/${vnTime.getFullYear()}`;
-                
-                let streak = parseInt(dailyInfo.streak) || 0;
-                const isClaimedToday = dailyInfo.lastClaim === todayStr;
+                window.currentDailyInfo = dailyInfo;
 
-                // Kiểm tra xem chuỗi có bị đứt quãng không
-                if (dailyInfo.lastClaim && !isClaimedToday) {
-                    try {
-                        const [ld, lm, ly] = String(dailyInfo.lastClaim).split('/');
-                        const [td, tm, ty] = todayStr.split('/');
-                        const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24)); 
-                        if (diffDays > 1 || isNaN(diffDays)) streak = 0;
-                    } catch(e) {
-                        streak = 0;
-                    }
-                }
+                renderDailyTab(window.currentDailyTab);
+            } catch (err) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">Lỗi tải dữ liệu. Vui lòng thử lại.</div>';
+            }
+        }
 
-                const streakEl = document.getElementById('dailyStreakDisplay');
-                if (streakEl) streakEl.innerText = streak;
+        function renderDailyTab(tab) {
+            window.currentDailyTab = tab;
+            document.getElementById('tabDailySingle').classList.toggle('active', tab === 'single');
+            document.getElementById('tabDailyCouple').classList.toggle('active', tab === 'couple');
+
+            const dailyInfo = window.currentDailyInfo || {};
+            const vnTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}));
+            const todayStr = `${String(vnTime.getDate()).padStart(2, '0')}/${String(vnTime.getMonth() + 1).padStart(2, '0')}/${vnTime.getFullYear()}`;
+
+            let streak = 0;
+            let isClaimedToday = false;
+            let lastClaimStr = tab === 'single' ? dailyInfo.lastClaim : dailyInfo.coupleLastClaim;
+
+            streak = parseInt(tab === 'single' ? dailyInfo.streak : dailyInfo.coupleStreak) || 0;
+            isClaimedToday = lastClaimStr === todayStr;
+
+            // Kiểm tra đứt chuỗi
+            if (lastClaimStr && !isClaimedToday) {
+                try {
+                    const [ld, lm, ly] = String(lastClaimStr).split('/');
+                    const [td, tm, ty] = todayStr.split('/');
+                    const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 1 || isNaN(diffDays)) streak = 0;
+                } catch(e) { streak = 0; }
+            }
+
+            const streakEl = document.getElementById('dailyStreakDisplay');
+            if (streakEl) streakEl.innerText = streak;
+
+            const grid = document.getElementById('dailyRewardGrid');
+            let html = '';
+
+            const btn = document.getElementById('btnClaimDaily');
+            const partnerArea = document.getElementById('partnerSetupArea');
+            const progress = document.getElementById('dailyProgressBar');
+            const desc = document.getElementById('dailyDescText');
+            const streakLabel = document.getElementById('dailyStreakLabel');
+
+            if (tab === 'single') {
+                partnerArea.style.display = 'none';
+                btn.style.display = 'flex';
+                streakLabel.innerText = 'Chuỗi chuyên cần';
+                desc.innerText = 'Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.';
                 
                 const progressPercent = Math.min(100, Math.round((streak / 7) * 100));
-                const progBar = document.getElementById('dailyProgressBar');
-                if (progBar) progBar.style.width = `${progressPercent}%`;
+                progress.style.width = `${progressPercent}%`;
 
                 const rewards = [10, 20, 30, 40, 50, 60, 150];
-                let html = '';
                 for (let i = 0; i < 7; i++) {
                     let statusClass = '';
                     if (i < streak) statusClass = 'claimed';
                     else if (i === streak && !isClaimedToday) statusClass = 'active';
 
                     const isFinalDay = (i === 6);
-                    html += `
-                    <div class="daily-card-slot ${statusClass} ${isFinalDay ? 'day-7' : ''}" style="border-color: ${statusClass==='active' ? 'var(--primary)' : ''};">
-                        <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">Ngày ${i+1}</span>
-                        <span class="wow-icon" style="font-size: 1.4rem; filter: ${statusClass==='claimed' ? 'grayscale(100%) opacity(0.5)' : 'none'};"></span>
-                        <b style="font-size: 0.85rem; color: var(--text-title);">+${rewards[i]}</b>
-                        ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-check"></i> Đã nhận</span>' : ''}
-                    </div>`;
+                    html += buildDailySlotHtml(i+1, rewards[i], statusClass, isFinalDay);
                 }
-                grid.innerHTML = html;
+            } else {
+                partnerArea.style.display = 'block';
+                streakLabel.innerText = 'Chuỗi Cặp đôi';
+                desc.innerHTML = 'Chuỗi điểm danh vô cực, nhận WOW vĩnh viễn không bị reset về mốc Ngày 1 (Mỗi chu kỳ 7 ngày). <b style="color:#ec4899;">Chỉ cần 1 người quên điểm danh, chuỗi sẽ bị đứt!</b>';
+                
+                const partnerName = dailyInfo.partner || '';
+                if (!partnerName) {
+                    partnerArea.innerHTML = `
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Bạn chưa kết đôi với ai cả!</div>
+                        <div style="display:flex; gap:8px; justify-content:center;">
+                            <input type="text" id="partnerInput" placeholder="Nhập username người ấy..." class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
+                            <button class="btn btn-primary" style="background:#ec4899; border:none; padding:8px 16px; border-radius:12px;" onclick="setDailyPartner()">Kết đôi</button>
+                        </div>
+                    `;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-heart-crack" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Hãy kết đôi để mở khóa chuỗi điểm danh vô cực!</div>`;
+                    btn.style.display = 'none';
+                    progress.style.width = '0%';
+                    return;
+                } else {
+                    partnerArea.innerHTML = `<div style="font-size:0.95rem; color:#ec4899; font-weight:900; display:flex; align-items:center; justify-content:center; gap:8px;"><i class="fa-solid fa-heart fa-beat"></i> Đang kết đôi cùng @${escapeHtml(partnerName)}</div>`;
+                    btn.style.display = 'flex';
+                }
 
-                const btn = document.getElementById('btnClaimDaily');
-                if (btn) {
-                    if (isClaimedToday) {
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận thưởng hôm nay';
-                        btn.className = 'btn';
-                    } else {
-                        btn.disabled = false;
-                        btn.innerHTML = 'Nhận thưởng hôm nay';
-                        btn.className = 'btn btn-primary';
-                    }
+                // Vị trí trong chu kỳ 7 ngày hiện tại
+                let currentCycleStart = Math.floor((streak - (isClaimedToday ? 1 : 0)) / 7) * 7;
+                if (currentCycleStart < 0) currentCycleStart = 0;
+
+                let cycleIndex = streak - currentCycleStart; 
+                const progressPercent = Math.min(100, Math.round((cycleIndex / 7) * 100));
+                progress.style.width = `${progressPercent}%`;
+
+                const rewards = [15, 25, 35, 45, 55, 65, 200];
+                for (let i = 0; i < 7; i++) {
+                    let statusClass = '';
+                    if (i < cycleIndex - (isClaimedToday ? 0 : 1) || (isClaimedToday && i < cycleIndex)) statusClass = 'claimed';
+                    else if (i === cycleIndex && !isClaimedToday) statusClass = 'active';
+
+                    const isFinalDay = (i === 6);
+                    let displayDay = currentCycleStart + i + 1;
+                    html += buildDailySlotHtml(displayDay, rewards[i], statusClass, isFinalDay);
                 }
-            } catch (err) {
-                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">Lỗi tải dữ liệu. Vui lòng thử lại.</div>';
+            }
+            grid.innerHTML = html;
+
+            if (isClaimedToday) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận thưởng hôm nay';
+                btn.className = 'btn';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = 'Nhận thưởng hôm nay';
+                btn.className = 'btn btn-primary';
+                if (tab === 'couple') {
+                    btn.style.background = 'linear-gradient(135deg, #ec4899, #d946ef)';
+                    btn.style.border = 'none';
+                } else {
+                    btn.style.background = '';
+                    btn.style.border = '';
+                }
+            }
+        }
+
+        function buildDailySlotHtml(dayNum, reward, statusClass, isFinalDay) {
+            return `
+            <div class="daily-card-slot ${statusClass} ${isFinalDay ? 'day-7' : ''}" style="border-color: ${statusClass==='active' ? 'var(--primary)' : ''};">
+                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">Ngày ${dayNum}</span>
+                <span class="wow-icon" style="font-size: 1.4rem; filter: ${statusClass==='claimed' ? 'grayscale(100%) opacity(0.5)' : 'none'};"></span>
+                <b style="font-size: 0.85rem; color: var(--text-title);">+${reward}</b>
+                ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-check"></i> Đã nhận</span>' : ''}
+            </div>`;
+        }
+
+        async function setDailyPartner() {
+            const partnerName = document.getElementById('partnerInput').value.trim();
+            if (!partnerName) return showToast("Vui lòng nhập tên tài khoản của người ấy!", "error");
+
+            const btn = document.querySelector('#partnerSetupArea button');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/store/set_partner`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
+                    body: JSON.stringify({
+                        username: currentUser.username,
+                        sessionToken: currentUser.sessionToken,
+                        partnerName: partnerName
+                    })
+                });
+                const res = await response.json();
+                if (response.ok && res.success) {
+                    showToast("Kết đôi thành công! Cùng nhau điểm danh mỗi ngày nhé.", "success");
+                    openDailyRewardModal();
+                } else {
+                    showToast(res.error || "Lỗi kết đôi", "error");
+                    if (btn) { btn.disabled = false; btn.innerHTML = 'Kết đôi'; }
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ", "error");
+                if (btn) { btn.disabled = false; btn.innerHTML = 'Kết đôi'; }
             }
         }
 
@@ -22105,7 +22224,8 @@
                 // Tự gọi fetch trực tiếp để không bị hàm apiFetch nuốt mất chi tiết lỗi
                 const payload = {
                     username: currentUser.username,
-                    sessionToken: currentUser.sessionToken
+                    sessionToken: currentUser.sessionToken,
+                    type: window.currentDailyTab || 'single'
                 };
                 
                 const response = await fetch(`${WORKER_URL}/api/store/daily`, {
