@@ -4791,6 +4791,139 @@
             font-weight: 700;
         }
 
+        /* 🏷️ THẺ NỀN CHỮ NHẬT BO TRÒN CHO @MENTION VÀ HYPERLINK (CHỐNG CHÌM MÀU) */
+        .chat-url-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(2, 132, 199, 0.12) !important;
+            color: #0284c7 !important;
+            border: 1px solid rgba(2, 132, 199, 0.35) !important;
+            padding: 1px 8px;
+            margin: 0 2px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none !important;
+            word-break: break-all;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .chat-url-pill:hover {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+            border-color: #0284c7 !important;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+            transform: translateY(-1px);
+        }
+        [data-theme="dark"] .chat-url-pill {
+            background: rgba(56, 189, 248, 0.18) !important;
+            color: #38bdf8 !important;
+            border-color: rgba(56, 189, 248, 0.45) !important;
+        }
+        [data-theme="dark"] .chat-url-pill:hover {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        .chat-mention-pill {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: #059669 !important;
+            border: 1px solid rgba(16, 185, 129, 0.38) !important;
+            padding: 1px 7px;
+            margin: 0 2px;
+            border-radius: 8px;
+            font-weight: 800;
+            text-decoration: none !important;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .chat-mention-pill:hover {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+            transform: translateY(-1px);
+        }
+        [data-theme="dark"] .chat-mention-pill {
+            background: rgba(16, 185, 129, 0.22) !important;
+            color: #34d399 !important;
+            border-color: rgba(52, 211, 153, 0.45) !important;
+        }
+        [data-theme="dark"] .chat-mention-pill:hover {
+            background: #10b981 !important;
+            color: #ffffff !important;
+        }
+
+        .chat-hashtag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(245, 158, 11, 0.12) !important;
+            color: #d97706 !important;
+            border: 1px solid rgba(245, 158, 11, 0.35) !important;
+            padding: 1px 7px;
+            margin: 0 2px;
+            border-radius: 8px;
+            font-weight: 800;
+            text-decoration: none !important;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .chat-hashtag-pill:hover {
+            background: #f59e0b !important;
+            color: #ffffff !important;
+            border-color: #f59e0b !important;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+            transform: translateY(-1px);
+        }
+        [data-theme="dark"] .chat-hashtag-pill {
+            background: rgba(245, 158, 11, 0.18) !important;
+            color: #fbbf24 !important;
+            border-color: rgba(245, 158, 11, 0.45) !important;
+        }
+        [data-theme="dark"] .chat-hashtag-pill:hover {
+            background: #f59e0b !important;
+            color: #ffffff !important;
+        }
+
+        .chat-mention-beabea {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(236, 72, 153, 0.15) !important;
+            color: #db2777 !important;
+            border: 1px solid rgba(236, 72, 153, 0.38) !important;
+            padding: 1px 8px;
+            margin: 0 2px;
+            border-radius: 8px;
+            font-weight: 800;
+            text-decoration: none !important;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .chat-mention-beabea:hover {
+            background: #ec4899 !important;
+            color: #ffffff !important;
+            border-color: #ec4899 !important;
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.35);
+            transform: translateY(-1px);
+        }
+        [data-theme="dark"] .chat-mention-beabea {
+            background: rgba(236, 72, 153, 0.22) !important;
+            color: #f472b6 !important;
+            border-color: rgba(244, 114, 182, 0.45) !important;
+        }
+        [data-theme="dark"] .chat-mention-beabea:hover {
+            background: #ec4899 !important;
+            color: #ffffff !important;
+        }
+
         /* 🛡️ CÂN BẰNG MÀU SẮC ĐỒNG NHẤT CHO STREAM MỚI (TỰ NHIÊN TRÊN LIGHT & DARK) */
         .chat-msg-row .chat-bubble .chat-project-card {
             background: var(--bg-panel);
@@ -13722,7 +13855,7 @@
                             document.getElementById('projSidebarAuthorAvt').src = avtUrl;
                         }
                         if (data.display_name) document.getElementById('projSidebarAuthorName').innerText = data.display_name;
-                        document.getElementById('projSidebarAuthorBio').innerText = data.bio || "Thành viên sáng tạo của DANVworkshop.";
+                        document.getElementById('projSidebarAuthorBio').innerHTML = data.bio ? formatCommentText(data.bio) : "Thành viên sáng tạo của DANVworkshop.";
                     }
                 }).catch(e=>{});
 
@@ -15011,7 +15144,7 @@
                 document.getElementById('stdDetailTitle').innerText = currentStudio.title;
                 document.getElementById('stdDetailCreator').innerText = '@' + currentStudio.creator;
                 document.getElementById('stdDetailCreator').href = `#profile/${currentStudio.creator}`;
-                document.getElementById('stdDetailDesc').innerText = currentStudio.description || 'Station này chưa có phần giới thiệu.';
+                document.getElementById('stdDetailDesc').innerHTML = currentStudio.description ? formatProjectDesc(currentStudio.description) : 'Chủ Stations này thật lười biến, chả chịu viết mô tả gì cả.';
                 document.getElementById('stdFollowersCount').innerText = (currentStudio.followers || []).length;
                 document.getElementById('stdProjCountBadge').innerText = (currentStudio.projects || []).length;
                 const memBadge = document.getElementById('stdMemberCountBadge');
@@ -15465,7 +15598,7 @@
                 currentStudio.thumbId = thumbId;
                 
                 document.getElementById('stdDetailTitle').innerText = title;
-                document.getElementById('stdDetailDesc').innerText = desc || 'Station này chưa có phần giới thiệu.';
+                document.getElementById('stdDetailDesc').innerHTML = desc ? formatProjectDesc(desc) : 'Chủ Stations này thật lười biến, chả chịu viết mô tả gì cả.';
                 document.getElementById('stdDetailThumb').src = thumbId ? `${WORKER_URL}/api/project/${thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             }
             btn.innerHTML = 'Lưu Cài đặt';
@@ -15803,8 +15936,8 @@
             const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || targetUsername;
             const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
             const elLoc = document.getElementById('profLocation'); if(elLoc) elLoc.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(viewingProfileData.location || t('prof_unknown_location') || 'Chưa rõ')}`;
-            const elBio = document.getElementById('profBio'); if(elBio) elBio.innerText = viewingProfileData.bio || t('prof_no_bio') || 'Chưa có tiểu sử.';
-            const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || t('prof_no_status') || 'Đang rảnh rỗi')}`;
+            const elBio = document.getElementById('profBio'); if(elBio) elBio.innerHTML = viewingProfileData.bio ? formatCommentText(viewingProfileData.bio) : escapeHtml(t('prof_no_bio') || 'Chưa có tiểu sử.');
+            const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${viewingProfileData.status ? formatCommentText(viewingProfileData.status) : escapeHtml(t('prof_no_status') || 'Đang rảnh rỗi')}`;
             
             // Xử lý hiển thị huy hiệu Đôi bạn trên Profile
             const profCoupleBadge = document.getElementById('profCoupleBadge');
@@ -19186,7 +19319,7 @@
             return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
         }
 
-        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME
+        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME (NỀN CHỮ NHẬT BO TRÒN)
         function formatCommentText(text) {
             if (!text) return '';
             let safeText = escapeHtml(text);
@@ -19198,7 +19331,7 @@
                 } catch(e) {}
             }
             
-            // 1. Highlight link trang web: Hỗ trợ mọi link http://, https:// và các domain quen thuộc không cần gõ https://
+            // 1. Highlight link trang web: Chuyển thành khối chữ nhật bo tròn màu xanh dương rõ nét, kèm icon liên kết
             const linkRegex = /(https?:\/\/[^\s<]+)|((?:^|\s)(?:turbows\.pages\.dev|scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
             safeText = safeText.replace(linkRegex, (match, p1, p2) => {
                 let raw = p1 || (p2 ? p2.trim() : '');
@@ -19211,29 +19344,29 @@
                     cleanUrl = cleanUrl.slice(0, -trailing.length);
                 }
                 const fullHref = cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`;
-                return `${prefix}<a href="${fullHref}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: bold; text-decoration: underline; word-break: break-all;">${cleanUrl}</a>${trailing}`;
+                return `${prefix}<a href="${fullHref}" target="_blank" rel="noopener noreferrer" class="chat-url-pill"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem; opacity:0.85;"></i><span>${cleanUrl}</span></a>${trailing}`;
             });
 
-            // 2. Highlight đặc biệt cho BeaBea (AI)
-            safeText = safeText.replace(/(^|\s)@BeaBea\s*\(AI\)/gi, '$1<span style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
-            safeText = safeText.replace(/(^|\s)@BeaBea(?!\s*\(AI\))/gi, '$1<span style="color:#ec4899; font-weight:800;"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
+            // 2. Highlight đặc biệt cho BeaBea (AI) dạng khối chữ nhật bo tròn màu hồng
+            safeText = safeText.replace(/(^|\s)@BeaBea\s*\(AI\)/gi, '$1<span class="chat-mention-beabea"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
+            safeText = safeText.replace(/(^|\s)@BeaBea(?!\s*\(AI\))/gi, '$1<span class="chat-mention-beabea"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
 
-            // 3. Highlight hyperlink cho tất cả @username của người dùng
+            // 3. Highlight hyperlink cho tất cả @username thành thẻ nền chữ nhật bo tròn màu xanh ngọc rõ ràng
             const mentionRegex = /(^|\s)@([a-zA-Z0-9_\-]{3,25})/g;
             safeText = safeText.replace(mentionRegex, (match, prefix, uname) => {
                 if (uname.toLowerCase() === 'beabea') return match;
-                return `${prefix}<a href="#profile/${encodeURIComponent(uname)}" style="color:var(--primary); font-weight:700; text-decoration:none; padding:1px 4px; border-radius:4px; background:rgba(13,165,122,0.1);">@${uname}</a>`;
+                return `${prefix}<a href="#profile/${encodeURIComponent(uname)}" class="chat-mention-pill">@${uname}</a>`;
             });
 
             return safeText;
         }
 
-        // 🔗 BỘ ĐỊNH DẠNG TOÀN DIỆN CHO MÔ TẢ & CREDITS DỰ ÁN (LINK + HASHTAG + MENTION)
+        // 🔗 BỘ ĐỊNH DẠNG TOÀN DIỆN CHO MÔ TẢ & CREDITS DỰ ÁN (LINK + HASHTAG + MENTION DẠNG PILL)
         function formatProjectDesc(rawText) {
             if (!rawText) return '';
             let formatted = formatCommentText(rawText);
             return formatted.replace(/(^|\s)#([^\s#<.,!?;:()]+)/g, (match, prefix, tag) => {
-                return `${prefix}<a href="javascript:void(0)" onclick="navigateToTagSearch('#${tag}')" style="color:var(--primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:6px; background:rgba(13,165,122,0.12);">#${tag}</a>`;
+                return `${prefix}<a href="javascript:void(0)" onclick="navigateToTagSearch('#${tag}')" class="chat-hashtag-pill"><i class="fa-solid fa-hashtag" style="font-size:0.7rem; opacity:0.85;"></i><span>${tag}</span></a>`;
             });
         }
 
@@ -23809,15 +23942,16 @@
 
             // 1. GIỚI THIỆU
             if (safeId === 'widget_bio') {
+                const bioFormatted = data.bio ? formatCommentText(data.bio) : escapeHtml(t('prof_no_bio') || 'Chưa có tiểu sử.');
                 contentHtml = `
                     <div class="bento-widget-inner widget-bio-container">
                         <h4 style="font-size: 0.88rem; color: var(--text-muted); text-transform: uppercase; margin: 0 0 10px 0; letter-spacing:0.5px;">
                             <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Giới thiệu
                         </h4>
-                        <p style="font-size: 0.98rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${escapeHtml(data.bio || t('prof_no_bio'))}</p>
+                        <p style="font-size: 0.98rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${bioFormatted}</p>
                     </div>
                 `;
-            } 
+            }
             // 2. CHỈ SỐ THỐNG KÊ
             else if (safeId === 'widget_stats') {
                 contentHtml = `
@@ -24039,8 +24173,8 @@
                 // Đóng gói data thuần để quá trình lưu không bị mất định dạng Markdown
                 extraAttrs += ` data-raw-note-title="${escapeHtml(titleText)}" data-raw-note-content="${escapeHtml(rawContent)}"`;
 
-                // Phân tích cú pháp Markdown cơ bản
-                let parsedContent = escapeHtml(rawContent);
+                // Phân tích cú pháp Markdown cơ bản + Link & Mention
+                let parsedContent = formatCommentText(rawContent);
                 parsedContent = parsedContent.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'); // In đậm
                 parsedContent = parsedContent.replace(/\*(.*?)\*/g, '<i>$1</i>'); // In nghiêng
                 parsedContent = parsedContent.replace(/__(.*?)__/g, '<u>$1</u>'); // Gạch chân
