@@ -11004,10 +11004,10 @@
             <div class="modal-body" style="padding: 24px;">
                 <!-- Tabs Đăng nhập -->
                 <div class="auth-nav-tabs" style="justify-content: center; margin-bottom: 20px; width: 100%; display: flex;">
-                    <button class="auth-nav-tab-btn active" id="tabDailySingle" onclick="renderDailyTab('single')" style="flex: 1; justify-content: center;">
+                    <button class="auth-nav-tab-btn active" id="tabDailySingle" onclick="switchDailyTab('single')" style="flex: 1; justify-content: center;">
                         <i class="fa-solid fa-user"></i> Cá nhân
                     </button>
-                    <button class="auth-nav-tab-btn" id="tabDailyCouple" onclick="renderDailyTab('couple')" style="flex: 1; justify-content: center;">
+                    <button class="auth-nav-tab-btn" id="tabDailyCouple" onclick="switchDailyTab('couple')" style="flex: 1; justify-content: center;">
                         <i class="fa-solid fa-heart" style="color: #ec4899;"></i> Cặp đôi
                     </button>
                 </div>
@@ -21960,6 +21960,36 @@
             } catch (err) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">Lỗi tải dữ liệu. Vui lòng thử lại.</div>';
             }
+        }
+
+        async function switchDailyTab(tab) {
+            window.currentDailyTab = tab;
+            document.getElementById('tabDailySingle').classList.toggle('active', tab === 'single');
+            document.getElementById('tabDailyCouple').classList.toggle('active', tab === 'couple');
+
+            // 🚀 MỖI LẦN BẤM QUA TAB CẶP ĐÔI: ÉP TẢI MỚI 100% TỪ MÁY CHỦ, KHÔNG GIỮ NGUYÊN TRẠNG THÁI CŨ
+            if (tab === 'couple' && currentUser) {
+                const partnerArea = document.getElementById('partnerSetupArea');
+                const grid = document.getElementById('dailyRewardGrid');
+                if (partnerArea) {
+                    partnerArea.style.display = 'block';
+                    partnerArea.innerHTML = '<div style="text-align:center; padding:12px; color:#ec4899; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải lại dữ liệu Cặp đôi...</div>';
+                }
+                if (grid) {
+                    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:25px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i></div>';
+                }
+
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
+                    const pData = await res.json();
+                    if (pData && !pData.error) {
+                        let dailyInfo = pData.dailyLogin || {};
+                        if (Array.isArray(dailyInfo)) dailyInfo = {};
+                        window.currentDailyInfo = dailyInfo;
+                    }
+                } catch(e) {}
+            }
+            renderDailyTab(tab);
         }
 
         function renderDailyTab(tab) {
