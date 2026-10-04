@@ -9123,6 +9123,11 @@
                     <b>Thẻ Bạn bè / Dev</b>
                     <span>Ghim hồ sơ người khác</span>
                 </div>
+                <div class="bento-drawer-item" onclick="addBentoWidget('widget_couple')">
+                    <i class="fa-solid fa-heart" style="color:#ec4899;"></i>
+                    <b>Khế ước Cặp đôi</b>
+                    <span>Khoe người ấy lên hồ sơ</span>
+                </div>
                 <div class="bento-drawer-item" onclick="openBentoPickStationModal()">
                     <i class="fa-solid fa-satellite-dish" style="color:#0ea5e9;"></i>
                     <b>Ghim Trạm (Station)</b>
@@ -15681,6 +15686,17 @@
             const elBio = document.getElementById('profBio'); if(elBio) elBio.innerText = viewingProfileData.bio || t('prof_no_bio') || 'Chưa có tiểu sử.';
             const elStatus = document.getElementById('profStatus'); if(elStatus) elStatus.innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${escapeHtml(viewingProfileData.status || t('prof_no_status') || 'Đang rảnh rỗi')}`;
             
+            // Xử lý hiển thị huy hiệu Cặp đôi trên Profile
+            const profCoupleBadge = document.getElementById('profCoupleBadge');
+            if (profCoupleBadge) profCoupleBadge.remove(); // Xóa thẻ cũ nếu có
+            try {
+                const pDaily = viewingProfileData.dailyLogin ? (typeof viewingProfileData.dailyLogin === 'string' ? JSON.parse(viewingProfileData.dailyLogin) : viewingProfileData.dailyLogin) : {};
+                if (pDaily.partner && pDaily.partnerStatus === 'accepted') {
+                    const badgeHtml = `<div id="profCoupleBadge" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1px solid #fbcfe8; background: #fdf2f8; color: #ec4899; margin-left: 8px; cursor: pointer;" onclick="navigateTo('/users/${encodeURIComponent(pDaily.partner)}')"><i class="fa-solid fa-heart fa-beat"></i> Khế ước cùng @${escapeHtml(pDaily.partner)}</div>`;
+                    document.querySelector('.profile-meta-pills').insertAdjacentHTML('beforeend', badgeHtml);
+                }
+            } catch(e) {}
+            
             const badge = document.getElementById('profScratchBadge');
             const scratchUserEl = document.getElementById('profScratchUsername');
             if(badge) {
@@ -21807,21 +21823,53 @@
                 desc.innerHTML = 'Chuỗi điểm danh vô cực, nhận WOW vĩnh viễn không bị reset về mốc Ngày 1 (Mỗi chu kỳ 7 ngày). <b style="color:#ec4899;">Chỉ cần 1 người quên điểm danh, chuỗi sẽ bị đứt!</b>';
                 
                 const partnerName = dailyInfo.partner || '';
-                if (!partnerName) {
+                const partnerReq = dailyInfo.partnerReq || '';
+                const pStatus = dailyInfo.partnerStatus || '';
+
+                if (pStatus === 'accepted') {
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Bạn chưa kết đôi với ai cả!</div>
-                        <div style="display:flex; gap:8px; justify-content:center;">
-                            <input type="text" id="partnerInput" placeholder="Nhập username người ấy..." class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
-                            <button class="btn btn-primary" style="background:#ec4899; border:none; padding:8px 16px; border-radius:12px;" onclick="setDailyPartner()">Kết đôi</button>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="font-size:0.95rem; color:#ec4899; font-weight:900; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-heart fa-beat"></i> Khế ước cùng @${escapeHtml(partnerName)}
+                            </div>
+                            <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 10px; border-radius:10px;" onclick="unpairDailyPartner()">Gỡ kết đôi</button>
                         </div>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-heart-crack" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Hãy kết đôi để mở khóa chuỗi điểm danh vô cực!</div>`;
+                    btn.style.display = 'flex';
+                } else if (pStatus === 'pending_sent') {
+                    partnerArea.innerHTML = `
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Đã gửi lời mời đến @${escapeHtml(partnerName)}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Đang chờ người ấy chấp nhận...</div>
+                        <button class="btn" style="border:1px solid #ef4444; color:#ef4444; padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="unpairDailyPartner()">Hủy yêu cầu</button>
+                    `;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-clock" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Hãy đợi đối phương phản hồi lời mời nhé!</div>`;
+                    btn.style.display = 'none';
+                    progress.style.width = '0%';
+                    return;
+                } else if (partnerReq) {
+                    partnerArea.innerHTML = `
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">@${escapeHtml(partnerReq)} muốn lập Khế Ước với bạn!</div>
+                        <div style="display:flex; gap:8px; justify-content:center;">
+                            <button class="btn btn-danger" style="padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="respondDailyPartner('reject', '${escapeHtml(partnerReq)}')">Từ chối</button>
+                            <button class="btn btn-primary" style="background:#ec4899; border:none; padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="respondDailyPartner('accept', '${escapeHtml(partnerReq)}')">Đồng ý</button>
+                        </div>
+                    `;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Bạn có 1 lời mời Khế Ước Cặp Đôi đang chờ!</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
                 } else {
-                    partnerArea.innerHTML = `<div style="font-size:0.95rem; color:#ec4899; font-weight:900; display:flex; align-items:center; justify-content:center; gap:8px;"><i class="fa-solid fa-heart fa-beat"></i> Đang kết đôi cùng @${escapeHtml(partnerName)}</div>`;
-                    btn.style.display = 'flex';
+                    partnerArea.innerHTML = `
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Bạn chưa kết đôi với ai cả!</div>
+                        <div style="display:flex; gap:8px; justify-content:center;">
+                            <input type="text" id="partnerInput" placeholder="Nhập username người ấy..." class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
+                            <button class="btn btn-primary" style="background:#ec4899; border:none; padding:8px 16px; border-radius:12px;" onclick="requestDailyPartner()">Gửi Lời Mời</button>
+                        </div>
+                    `;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-heart-crack" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Gửi lời mời và chờ đối phương chấp nhận để mở khóa chuỗi!</div>`;
+                    btn.style.display = 'none';
+                    progress.style.width = '0%';
+                    return;
                 }
 
                 // Vị trí trong chu kỳ 7 ngày hiện tại
@@ -21873,7 +21921,7 @@
             </div>`;
         }
 
-        async function setDailyPartner() {
+        async function requestDailyPartner() {
             const partnerName = document.getElementById('partnerInput').value.trim();
             if (!partnerName) return showToast("Vui lòng nhập tên tài khoản của người ấy!", "error");
 
@@ -21881,27 +21929,60 @@
             if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; }
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/store/set_partner`, {
+                const res = await apiFetch(`/api/store/set_partner`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'StudioDANV-Web' },
-                    body: JSON.stringify({
-                        username: currentUser.username,
-                        sessionToken: currentUser.sessionToken,
-                        partnerName: partnerName
-                    })
+                    body: JSON.stringify({ partnerName: partnerName, action: 'request' })
                 });
-                const res = await response.json();
-                if (response.ok && res.success) {
-                    showToast("Kết đôi thành công! Cùng nhau điểm danh mỗi ngày nhé.", "success");
-                    openDailyRewardModal();
+                if (res && res.success) {
+                    showToast("Đã gửi lời mời thành công! Chờ người ấy xác nhận nhé.", "success");
+                    window.currentDailyInfo = res.dailyInfo;
+                    renderDailyTab('couple');
                 } else {
-                    showToast(res.error || "Lỗi kết đôi", "error");
-                    if (btn) { btn.disabled = false; btn.innerHTML = 'Kết đôi'; }
+                    showToast(res.error || "Lỗi gửi lời mời", "error");
+                    if (btn) { btn.disabled = false; btn.innerHTML = 'Gửi Lời Mời'; }
                 }
             } catch(e) {
-                showToast("Lỗi kết nối máy chủ", "error");
-                if (btn) { btn.disabled = false; btn.innerHTML = 'Kết đôi'; }
+                showToast("Lỗi kết nối", "error");
+                if (btn) { btn.disabled = false; btn.innerHTML = 'Gửi Lời Mời'; }
             }
+        }
+
+        async function respondDailyPartner(action, partnerName) {
+            const btnArea = document.querySelector('#partnerSetupArea');
+            if (btnArea) btnArea.style.opacity = '0.5';
+
+            try {
+                const res = await apiFetch(`/api/store/set_partner`, {
+                    method: 'POST',
+                    body: JSON.stringify({ partnerName: partnerName, action: action })
+                });
+                if (res && res.success) {
+                    showToast(action === 'accept' ? "Kết đôi thành công! Điểm danh ngay thôi." : "Đã từ chối lời mời.", "success");
+                    window.currentDailyInfo = res.dailyInfo;
+                    renderDailyTab('couple');
+                } else {
+                    showToast(res.error || "Lỗi xử lý", "error");
+                }
+            } catch(e) { showToast("Lỗi kết nối", "error"); }
+            if (btnArea) btnArea.style.opacity = '1';
+        }
+
+        async function unpairDailyPartner() {
+            if (!confirm("Bạn có chắc chắn muốn hủy / gỡ kết đôi không? Toàn bộ chuỗi Streak Cặp đôi sẽ bị Reset về 0 vĩnh viễn!")) return;
+            
+            try {
+                const res = await apiFetch(`/api/store/set_partner`, {
+                    method: 'POST',
+                    body: JSON.stringify({ partnerName: "", action: 'unpair' })
+                });
+                if (res && res.success) {
+                    showToast("Đã hủy Khế Ước Cặp Đôi.", "info");
+                    window.currentDailyInfo = res.dailyInfo;
+                    renderDailyTab('couple');
+                } else {
+                    showToast(res.error || "Lỗi xử lý", "error");
+                }
+            } catch(e) { showToast("Lỗi kết nối", "error"); }
         }
 
         function openAboutWOWModal() { openModal('aboutWOWModal'); }
@@ -23324,6 +23405,39 @@
                     </div>
                 `;
             }
+
+            // 5.5 KHẾ ƯỚC CẶP ĐÔI (COUPLE WIDGET)
+            else if (safeId.startsWith('widget_couple')) {
+                let coupleData = {};
+                try { coupleData = typeof data.dailyLogin === 'string' ? JSON.parse(data.dailyLogin) : (data.dailyLogin || {}); } catch(e){}
+                
+                if (coupleData.partner && coupleData.partnerStatus === 'accepted') {
+                    const pName = coupleData.partner;
+                    const pAvt = globalUserCache[pName] ? getAvtUrl(globalUserCache[pName]) : DEFAULT_AVATAR;
+                    const myAvt = getAvtUrl(data.avt);
+                    const streak = parseInt(coupleData.coupleStreak) || 0;
+                    
+                    contentHtml = `
+                        <div class="bento-widget-inner" style="background:linear-gradient(135deg, #fdf2f8, #fce7f3); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:14px;">
+                            <span style="font-size:0.75rem; font-weight:800; color:#ec4899; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fa-solid fa-heart fa-beat"></i> Khế ước Cặp đôi</span>
+                            <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px;">
+                                <img src="${myAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #ec4899; object-fit:cover;">
+                                <i class="fa-solid fa-link" style="color:#f472b6;"></i>
+                                <img id="bentoCoupleAvt-${safeId}" src="${pAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #ec4899; object-fit:cover; cursor:pointer;" onclick="navigateTo('/users/${encodeURIComponent(pName)}')">
+                            </div>
+                            <b style="color:#be185d; font-size:0.95rem;">@${escapeHtml(data.username)} & @${escapeHtml(pName)}</b>
+                            <span style="color:#db2777; font-size:0.8rem; font-weight:700; margin-top:2px;">Bên nhau: ${streak} ngày</span>
+                        </div>
+                    `;
+                    // Tự động kích hoạt Async Fetch để tải avatar người ấy nếu chưa có trong RAM
+                    if (!globalUserCache[pName]) {
+                        setTimeout(() => loadBentoUserAvatar(`Couple_${safeId}`, pName), 100);
+                    }
+                } else {
+                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 20px;">Tác giả chưa lập Khế Ước Cặp Đôi.</div>`;
+                }
+            }
+
             // 6. THẺ BẠN BÈ / ĐỒNG TÁC GIẢ (USER CARD WIDGET)
             else if (safeId.startsWith('widget_user_')) {
                 const uName = item.targetUser || '';
@@ -24030,7 +24144,12 @@
         }
 
         async function loadBentoUserAvatar(widgetSafeId, username) {
-            const img = document.getElementById(`bentoUserAvt-${widgetSafeId}`);
+            // Hỗ trợ dùng chung hàm cho thẻ Bạn bè và thẻ Couple
+            let img = document.getElementById(`bentoUserAvt-${widgetSafeId}`);
+            if (!img && widgetSafeId.startsWith('Couple_')) {
+                const pureId = widgetSafeId.replace('Couple_', '');
+                img = document.getElementById(`bentoCoupleAvt-${pureId}`);
+            }
             if (!img) return;
             if (globalUserCache[username]) {
                 img.src = getAvtUrl(globalUserCache[username]);
