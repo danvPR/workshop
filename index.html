@@ -12277,8 +12277,6 @@
 
         const WIKI_CLIENT_ID = "70970406"; 
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
-        const FALLBACK_URL = "https://chat-du-phong.onrender.com"; 
-        let isChatFallbackMode = false;
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         const KLIPY_API_KEY = "u5fpMSE07ITa9E5Nxh9meqnGez7Km7PCC2mj3V6NviVocR7nBEThpAZQEFOn4S1S";
         
@@ -13211,10 +13209,6 @@
                 const res = await fetch(url, {
                     headers: { "X-Client-Type": "StudioDANV-Web" }
                 });
-
-                if (res.ok && isChatFallbackMode) {
-                    toggleChatFallbackUI(false);
-                }
 
                 const data = await res.json();
                 
@@ -21337,29 +21331,6 @@
             }
         });
 
-        function toggleChatFallbackUI(isFallback) {
-            isChatFallbackMode = isFallback;
-            const statusWrap = document.getElementById('chatHeaderStatusWrap');
-            if (!statusWrap) return;
-
-            if (isFallback) {
-                statusWrap.innerHTML = `
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #ea580c; background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.3); padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-server"></i> Máy chủ dự phòng
-                    </span>
-                    <span>•</span>
-                    <span style="color: #ea580c; font-weight: 600;">Chỉ hỗ trợ văn bản</span>
-                `;
-            } else {
-                statusWrap.innerHTML = `
-                    <span class="chat-online-pulse-pill">
-                        <span class="chat-online-dot"></span> <span data-i18n="chat_online">Trực tuyến</span>
-                    </span>
-                    <span>•</span>
-                    <span data-i18n="chat_subtitle">Thảo luận cùng cộng đồng</span>
-                `;
-            }
-        }
 
         // ================= THAO TÁC TIỆN ÍCH GIAO DIỆN CHAT =================
         function toggleChatSidebar() {
@@ -22092,25 +22063,9 @@
         // =========================================================================
         async function loadGlobalChat(forceScroll = false, isLoadMore = false) {
             try {
-                let response;
-                try {
-                    // Giới hạn thời gian chờ Worker chính tối đa 3 giây, nếu quá 3 giây tự động ngắt sang Render
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 3000);
-                    
-                    response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { 
-                        cache: 'no-store',
-                        signal: controller.signal 
-                    });
-                    clearTimeout(timeoutId);
-                    
-                    if (!response.ok || response.status === 429 || response.status >= 500) throw new Error("Worker Down");
-                    if (isChatFallbackMode) toggleChatFallbackUI(false);
-                } catch (e) {
-                    // Chuyển sang máy chủ Render
-                    if (!isChatFallbackMode) toggleChatFallbackUI(true);
-                    response = await fetch(`${FALLBACK_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { cache: 'no-store' });
-                }
+                const response = await fetch(`${WORKER_URL}/api/chat?limit=${chatDisplayLimit}&_t=${Date.now()}`, { 
+                    cache: 'no-store'
+                });
 
                 if (!response.ok) return;
                 const res = await response.json();
@@ -22574,40 +22529,7 @@
             }
 
             const payload = { text, replyTo: replyState.chat.user, imageId: imgId };
-            let res = null;
-
-            if (isChatFallbackMode) {
-                if (imgId || gifUrl) {
-                    showToast("Chế độ dự phòng: Máy chủ hiện chỉ hỗ trợ văn bản.", "error");
-                    isPosting.chat = false; submitBtn.innerHTML = origHtml; submitBtn.disabled = false;
-                    return;
-                }
-                try {
-                    const fallbackRes = await fetch(`${FALLBACK_URL}/api/chat`, {
-                        method: 'POST',
-                        headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                        body: JSON.stringify({ ...payload, username: currentUser.username, sessionToken: currentUser.sessionToken })
-                    });
-                    res = await fallbackRes.json();
-                } catch(e) { res = { error: "Máy chủ dự phòng lỗi" }; }
-            } else {
-                res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
-                
-                // Nếu Cloudflare Worker sập bất ngờ -> Tự động đẩy qua Render ngay lập tức
-                if (!res || !res.success) {
-                    toggleChatFallbackUI(true);
-                    if (!imgId && !gifUrl) {
-                        try {
-                            const fallbackRes = await fetch(`${FALLBACK_URL}/api/chat`, {
-                                method: 'POST',
-                                headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                                body: JSON.stringify({ ...payload, username: currentUser.username, sessionToken: currentUser.sessionToken })
-                            });
-                            res = await fallbackRes.json();
-                        } catch(e) { res = { error: "Máy chủ dự phòng lỗi" }; }
-                    }
-                }
-            }
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
             
             if (res && res.success) {
                 textInput.value = ''; 
