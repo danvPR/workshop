@@ -141,45 +141,157 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
         
+
+
+
+
         :root { 
-            --primary: #0da57a; --primary-dark: #0a8260;
-            --bg-body: #f3f4f6; --bg-panel: #ffffff;
-            --bg-secondary: #f8fafc; --bg-input: #ffffff;
-            --text-main: #374151; --text-muted: #6b7280; --text-title: #111827;
-            --border-color: #e5e7eb;
+            /* SCRATCH THEME COLORS */
+            --primary: #4d97ff; 
+            --primary-dark: #3373cc;
+            --bg-body: #f9f9f9; 
+            --bg-panel: #ffffff;
+            --bg-secondary: #e8eef2; 
+            --bg-input: #ffffff;
+            --text-main: #575e75; 
+            --text-muted: #757d96; 
+            --text-title: #2b2e38;
+            --border-color: #d9e1e8;
         }
         [data-theme="dark"] {
-            --primary: #10b981; --primary-dark: #34d399; /* Xanh ngọc sáng hơn */
-            --bg-body: #111827; --bg-panel: #1f2937; /* Đổi sang màu than chì Tailwind mềm mắt hơn */
-            --bg-secondary: #374151; --bg-input: #111827;
-            --text-main: #e5e7eb; --text-muted: #9ca3af; --text-title: #f9fafb;
-            --border-color: #374151;
+            --primary: #4d97ff; --primary-dark: #3373cc;
+            --bg-body: #111111; --bg-panel: #1e1e1e;
+            --bg-secondary: #2c2c2c; --bg-input: #1e1e1e;
+            --text-main: #d9e1e8; --text-muted: #a6a6a6; --text-title: #ffffff;
+            --border-color: #333333;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', "Segoe UI", ui-rounded, system-ui, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
         
-        /* NAVBAR HIỆN ĐẠI (GLASSMORPHISM & THEME ADAPTIVE) */
+        /* NAVBAR SCRATCH-STYLE (SOLID BLUE) */
         .navbar { 
-            background: rgba(255, 255, 255, 0.88); 
-            height: 60px; 
+            background: var(--primary); 
+            height: 50px; 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 0 28px; 
+            padding: 0 16px; 
             position: sticky; 
             top: 0; 
             z-index: 1000; 
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); 
-            transition: background-color 0.3s, border-color 0.3s;
+            border-bottom: none;
+            box-shadow: none; 
+            transition: background-color 0.3s;
         }
-        [data-theme="dark"] .navbar {
-            background: rgba(15, 23, 42, 0.88);
-            border-bottom-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        [data-theme="dark"] .navbar { background: #1e1e1e; border-bottom: 1px solid #333; }
+
+        /* ========================================================
+           🐱 GLOBAL SCRATCH OVERRIDES (FLAT UI, NO SHADOWS, SHARP BORDERS)
+           ======================================================== */
+        
+        /* 1. Tiêu diệt toàn bộ hiệu ứng bóng mờ (box-shadow), dập gradient và ép bo góc 4px-8px */
+        .card, .info-card, .proj-card-box, .grid-stack-item-content, .bento-widget-inner, 
+        .station-card, .asset-card, .collection-card, .modal, .auth-large-modal, 
+        .notif-hub-wrapper, .voice-bubble-card, .chat-main-card, .chat-side-card, 
+        .frame-tryon-booth, .creator-top-bar, .creator-vault-box, .creator-metric-panel,
+        .banned-card, .profile-hero, .lb-hero, .upload-card-wrapper, .daily-modal-box,
+        .tip-modal-box, .gamepay-modal-box, .assets-hero-card, .station-hero-banner,
+        .station-detail-banner, .chat-poll-card, .chat-chess-card, .chat-shared-station-card,
+        .chat-shared-asset-card, .beabea-gift-card, .beabea-blindbag-card, .beabea-quiz-card,
+        .comment-area-proj, .comment-input-area {
+            border-radius: 6px !important;
+            box-shadow: none !important;
+            border: 1px solid var(--border-color) !important;
+            background-image: none !important; /* Dập tắt gradient */
         }
+
+        /* 2. Hiệu ứng Hover dạng viền xanh phát sáng đặc trưng của Scratch (thay vì nâng nổi) */
+        .card:hover, .station-card:hover, .asset-card:hover, .collection-card:hover,
+        .gamepay-item-card:hover, .chat-chess-card:hover, .chat-shared-station-card:hover,
+        .chat-shared-asset-card:hover, .creator-data-row:hover, .creator-game-card:hover,
+        .station-member-card:hover, .follow-card-row:hover {
+            transform: none !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 4px rgba(77, 151, 255, 0.25) !important;
+            background: var(--bg-panel) !important;
+        }
+
+        /* 3. Phẳng hóa Nút bấm, Ô tìm kiếm, Thẻ phân loại */
+        .btn, .form-control, .home-search-pill-box, .station-search-capsule, 
+        .assets-search-capsule, .follow-search-box-pill, .creator-search-input-pill,
+        .home-cat-chip, .std-filter-pill, .prof-tab-btn, .asset-cat-chip, .notif-tab-pill,
+        .nav-link, .nav-btn-create, .btn-hold-send-wow, .vip-play-btn, .btn-tip-WOW,
+        .chat-input-textarea, .chat-jump-bottom-btn, .comment-input-wrapper,
+        .auth-nav-tab-btn {
+            border-radius: 4px !important;
+            box-shadow: none !important;
+            background-image: none !important;
+            transform: none !important;
+        }
+
+        /* Ép Nút Primary về 1 màu xanh duy nhất */
+        .btn-primary, .nav-btn-create, .btn-hold-send-wow, .vip-play-btn, .btn-tip-WOW, .asset-download-pill {
+            background-color: var(--primary) !important;
+            color: white !important;
+            border: 1px solid rgba(0,0,0,0.1) !important;
+        }
+        .btn-primary:hover, .nav-btn-create:hover, .btn-hold-send-wow:hover, .vip-play-btn:hover, .btn-tip-WOW:hover, .asset-download-pill:hover {
+            background-color: var(--primary-dark) !important;
+            box-shadow: none !important;
+        }
+
+        /* Ẩn thanh nạp năng lượng do nút đã thành thiết kế phẳng */
+        .hold-progress-fill, .hold-unpair-fill { display: none !important; }
+
+        /* 4. NAVBAR ĐỒNG BỘ: Chữ trắng, không nền xám, bỏ highlight dòng kẻ */
+        .navbar .nav-link, .navbar .nav-icon-btn, .WOW-balance-pill { color: #ffffff !important; border: none !important; background: transparent !important; box-shadow: none !important;}
+        .navbar .nav-link:hover, .navbar .nav-icon-btn:hover, .WOW-balance-pill:hover { background: rgba(0, 0, 0, 0.15) !important; color: #ffffff !important; box-shadow: none !important; transform: none !important; }
+        .nav-logo-img { filter: brightness(0) invert(1); height: 28px !important; } /* Đổi logo thành màu trắng */
+        .navbar .nav-user-pill { background: transparent !important; border: none !important; color: white !important; }
+        .navbar .nav-user-pill:hover { background: rgba(0,0,0,0.15) !important; box-shadow: none !important; }
+        .navbar .nav-user-chevron { color: white !important; }
+        .navbar .nav-link.active, .navbar .nav-icon-btn.active { background: rgba(0, 0, 0, 0.25) !important; color: #ffffff !important; }
+        .nav-link.active::after { display: none !important; }
+
+        /* Nút Sáng tạo trên Header */
+        .nav-btn-create { background: #ffffff !important; color: var(--primary) !important; font-weight: bold !important; padding: 5px 12px !important;}
+        .nav-btn-create i { color: var(--primary) !important; }
+        .nav-btn-create:hover { background: #f9f9f9 !important; }
+
+        /* 5. Typography: Sửa chữ đậm và triệt tiêu khoảng trống thừa ở ảnh bìa Card */
+        h1, h2, h3, h4, .card-title, .station-hero-title, .assets-hero-title, .banned-title, .auth-brand-title { 
+            font-weight: bold !important; 
+            letter-spacing: 0 !important; 
+        }
+        .card-thumb, .station-card-thumb, .asset-preview-stage { border-radius: 5px 5px 0 0 !important; }
+        .card-body, .station-card-body, .asset-body-content { background-color: var(--bg-panel); border-radius: 0 0 5px 5px !important; padding: 10px !important;}
+
+        /* 6. Bong bóng Chat & Thẻ Tags vuông vắn hơn */
+        .chat-bubble, .comment-text-bubble { border-radius: 6px !important; box-shadow: none !important; }
+        .badge-private, .col-overlay-badge, .station-card-badge, .asset-fmt-badge, .tip-badge-banner,
+        .station-tag-pill, .creator-badge-pill, .gamepay-item-badge, .bb-quiz-badge, .profile-location, .profile-status-badge {
+            border-radius: 4px !important;
+            text-transform: none !important;
+            letter-spacing: 0 !important;
+        }
+
+        /* 7. Xóa sổ Background Gradient của các Banner lớn (Auth, Banned, Profile, Studio) */
+        .profile-cover-bg, .station-banner-cover, .auth-showcase-panel, .banned-hero-header {
+            background: var(--primary-dark) !important;
+        }
+        .profile-cover-bg::before, .station-banner-cover::before, .auth-showcase-panel::before {
+            display: none !important;
+        }
+        .auth-brand-logo-frame { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;}
+
+
+
+
+
+
+
+
+
         /* BỐ CỤC NAVBAR TINH GỌN: CHỐNG CO ÉP, NÚT SÁNG TẠO TỎA SÁNG Ở GIỮA */
         .nav-left { display: flex; align-items: center; flex-shrink: 0; }
         .navbar-brand { display: flex; align-items: center; text-decoration: none; margin-right: 0; }
