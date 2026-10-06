@@ -9747,8 +9747,11 @@
                         <div class="g-recaptcha" id="recaptchaProjectUpload" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
                     </div>
 
-                    <button type="button" onclick="handleUploadBtn()" class="btn btn-primary" id="btnSubmitUpload" style="width:100%; justify-content:center; padding:14px; font-size:1.1rem; border-radius:10px;">
-                        <i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>
+                    <button type="button" class="btn-hold-send-wow" id="btnSubmitUpload" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);">
+                        <div class="hold-progress-fill" id="uploadHoldFill" style="background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);"></div>
+                        <div class="btn-inner-content" id="uploadHoldText">
+                            <i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>
+                        </div>
                     </button>
                 </div>
             </form>
@@ -10717,8 +10720,11 @@
                     <div class="g-recaptcha" id="recaptchaStudioCreate" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
                 </div>
 
-                <button type="button" id="btnCreateStudioSubmit" class="btn btn-primary" onclick="submitCreateStudio()" style="width:100%; justify-content:center; padding:12px; font-weight:800; font-size:0.95rem; border-radius:14px;" data-i18n="station_modal_btn_create">
-                    <i class="fa-solid fa-satellite-dish"></i> Tạo Station
+                <button type="button" class="btn-hold-send-wow" id="btnCreateStudioSubmit" style="background: linear-gradient(135deg, #10b981 0%, #0da57a 100%); box-shadow: 0 8px 25px rgba(13, 165, 122, 0.35);">
+                    <div class="hold-progress-fill" id="createStudioHoldFill" style="background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #8b5cf6 100%);"></div>
+                    <div class="btn-inner-content" id="createStudioHoldText">
+                        <i class="fa-solid fa-satellite-dish"></i> <span data-i18n="station_modal_btn_create">Tạo Station</span>
+                    </div>
                 </button>
             </div>
         </div>
@@ -10949,8 +10955,11 @@
                         <div class="g-recaptcha" id="recaptchaAssetUpload" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" id="btnSubmitUploadAsset" style="width:100%; justify-content:center; padding:12px; font-weight:800; font-size:0.95rem; border-radius:14px;">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>
+                    <button type="button" class="btn-hold-send-wow" id="btnSubmitUploadAsset" style="background: linear-gradient(135deg, #0da57a 0%, #0284c7 100%); box-shadow: 0 8px 25px rgba(13, 165, 122, 0.35);">
+                        <div class="hold-progress-fill" id="assetUploadHoldFill" style="background: linear-gradient(90deg, #0da57a 0%, #38bdf8 50%, #6366f1 100%);"></div>
+                        <div class="btn-inner-content" id="assetUploadHoldText">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>
+                        </div>
                     </button>
                 </form>
             </div>
@@ -11953,8 +11962,11 @@
                         <div class="g-recaptcha" id="recaptchaProjectUpdate" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
                     </div>
 
-                    <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content: center; background: #ea580c; color: #fff; padding: 12px; font-size: 1rem; border: none;">
-                        <i class="fa-solid fa-rocket"></i> Tải bản cập nhật lên
+                    <button type="button" class="btn-hold-send-wow" id="btnUpdateProjSubmit" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); box-shadow: 0 8px 25px rgba(234, 88, 12, 0.35);">
+                        <div class="hold-progress-fill" id="updateProjHoldFill" style="background: linear-gradient(90deg, #ea580c 0%, #f59e0b 50%, #e11d48 100%);"></div>
+                        <div class="btn-inner-content" id="updateProjHoldText">
+                            <i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>
+                        </div>
                     </button>
                 </div>
 
@@ -12831,8 +12843,157 @@
                 checkEmailVerificationBanner(); // Kiểm tra banner xác thực email
                 loadEvents(); // Tải Sự kiện Game Jam
                 startUnifiedHeartbeat(); // Kích hoạt luồng nhịp tim tổng hợp (Đợt 3)
+                setupAllActionHoldButtons(); // Kích hoạt hiệu ứng giữ nút cho Đăng dự án, Update, Asset, Station
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
+
+        // ================= BỘ ĐIỀU KHIỂN NHẤN GIỮ CHUNG CHO CÁC NÚT HÀNH ĐỘNG =================
+        function setupGenericHoldButton({ btnId, fillId, textId, defaultHtml, onValidate, onExecute, durationMs = 1000 }) {
+            const btn = document.getElementById(btnId);
+            const fillEl = document.getElementById(fillId);
+            const textEl = document.getElementById(textId);
+            if (!btn || !fillEl || !textEl || btn.dataset.holdBound === 'true') return;
+            btn.dataset.holdBound = 'true';
+
+            let holdProgress = 0;
+            let holdInterval = null;
+            let isHolding = false;
+
+            const resetBtnUI = () => {
+                holdProgress = 0;
+                isHolding = false;
+                btn.classList.remove('is-holding');
+                if (fillEl) fillEl.style.width = '0%';
+                if (textEl && !btn.disabled) textEl.innerHTML = defaultHtml;
+            };
+
+            const startHold = (e) => {
+                if (btn.disabled || isHolding) return;
+                if (onValidate && !onValidate()) return;
+
+                holdProgress = 0;
+                isHolding = true;
+                btn.classList.add('is-holding');
+                if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.15rem; color:#fef08a;"></i> <span>ĐANG NẠP 0%</span>`;
+
+                clearInterval(holdInterval);
+                const stepMs = 40;
+                const increment = (100 / (durationMs / stepMs));
+
+                holdInterval = setInterval(() => {
+                    holdProgress += increment;
+                    const curPct = Math.min(100, Math.round(holdProgress));
+                    if (fillEl) fillEl.style.width = `${curPct}%`;
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.15rem; color:#fef08a;"></i> <span>ĐANG NẠP ${curPct}%</span>`;
+
+                    if (holdProgress >= 100) {
+                        clearInterval(holdInterval);
+                        isHolding = false;
+                        if (textEl) textEl.innerHTML = `<i class="fa-solid fa-bolt fa-beat" style="font-size:1.2rem; color:#fff;"></i> <span>ĐANG TIẾN HÀNH...</span>`;
+                        Promise.resolve(onExecute()).finally(() => {
+                            resetBtnUI();
+                        });
+                    }
+                }, stepMs);
+            };
+
+            const stopHold = () => {
+                if (!isHolding) return;
+                clearInterval(holdInterval);
+                if (holdProgress < 100) {
+                    resetBtnUI();
+                }
+            };
+
+            btn.addEventListener('mousedown', startHold);
+            window.addEventListener('mouseup', stopHold);
+            btn.addEventListener('touchstart', startHold, { passive: true });
+            window.addEventListener('touchend', stopHold);
+            window.addEventListener('touchcancel', stopHold);
+        }
+
+        function setupAllActionHoldButtons() {
+            // 1. NÚT ĐĂNG DỰ ÁN MỚI
+            setupGenericHoldButton({
+                btnId: 'btnSubmitUpload',
+                fillId: 'uploadHoldFill',
+                textId: 'uploadHoldText',
+                defaultHtml: '<i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>',
+                durationMs: 1100,
+                onValidate: () => {
+                    const fileInput = document.getElementById('upFile')?.files[0];
+                    const title = document.getElementById('upTitle')?.value.trim();
+                    if (!fileInput || !title) { showToast("Điền đủ trường bắt buộc", "error"); return false; }
+                    if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error"); return false; }
+                    if (fileInput.size > 200 * 1024 * 1024) { showToast("Kích thước tải lên tối đa là 200MB.", "error"); return false; }
+                    const recaptchaEl = document.querySelector('#uploadNewFormStep [name="g-recaptcha-response"]');
+                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
+                    if (!token && typeof grecaptcha !== 'undefined') { try { token = grecaptcha.getResponse(0); } catch(e){} }
+                    if (!token) { showToast("Xác minh rô-bốt chưa hoàn tất.", "error"); return false; }
+                    return true;
+                },
+                onExecute: handleUploadBtn
+            });
+
+            // 2. NÚT CẬP NHẬT BẢN MỚI CHO DỰ ÁN
+            setupGenericHoldButton({
+                btnId: 'btnUpdateProjSubmit',
+                fillId: 'updateProjHoldFill',
+                textId: 'updateProjHoldText',
+                defaultHtml: '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>',
+                durationMs: 1100,
+                onValidate: () => {
+                    const fileInput = document.getElementById('updateProjFile')?.files[0];
+                    if (!fileInput) { showToast("Vui lòng chọn file .sb3", "error"); return false; }
+                    if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Chỉ cho phép tải file .sb3!", "error"); return false; }
+                    if (fileInput.size > 200 * 1024 * 1024) { showToast("File quá lớn! Tối đa 200MB.", "error"); return false; }
+                    const recaptchaEl = document.querySelector('#updateSectionContainer [name="g-recaptcha-response"]');
+                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
+                    if (!token) { showToast("Vui lòng xác minh reCAPTCHA trước khi cập nhật!", "error"); return false; }
+                    return true;
+                },
+                onExecute: handleUpdateProjectFileBtn
+            });
+
+            // 3. NÚT XUẤT BẢN TÀI NGUYÊN (ASSET STORE)
+            setupGenericHoldButton({
+                btnId: 'btnSubmitUploadAsset',
+                fillId: 'assetUploadHoldFill',
+                textId: 'assetUploadHoldText',
+                defaultHtml: '<i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>',
+                durationMs: 1100,
+                onValidate: () => {
+                    const fileInput = document.getElementById('assetUpFile')?.files[0];
+                    const title = document.getElementById('assetUpTitle')?.value.trim();
+                    const kw = document.getElementById('assetUpKeywords')?.value.trim();
+                    if (!fileInput || !title || !kw) { showToast("Vui lòng điền đủ các trường bắt buộc!", "error"); return false; }
+                    if (fileInput.size > 50 * 1024 * 1024) { showToast("Dung lượng tối đa là 50MB!", "error"); return false; }
+                    const recaptchaEl = document.querySelector('#uploadAssetModal [name="g-recaptcha-response"]');
+                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
+                    if (!token) { showToast("Vui lòng xác minh reCAPTCHA!", "error"); return false; }
+                    return true;
+                },
+                onExecute: handleUploadAssetSubmit
+            });
+
+            // 4. NÚT KHỞI TẠO STATION
+            setupGenericHoldButton({
+                btnId: 'btnCreateStudioSubmit',
+                fillId: 'createStudioHoldFill',
+                textId: 'createStudioHoldText',
+                defaultHtml: '<i class="fa-solid fa-satellite-dish"></i> <span data-i18n="station_modal_btn_create">Tạo Station</span>',
+                durationMs: 1100,
+                onValidate: () => {
+                    const title = document.getElementById('newStdTitle')?.value.trim();
+                    if (!title) { showToast("Vui lòng nhập tên Station", "error"); return false; }
+                    const recaptchaEl = document.querySelector('#createStudioModal [name="g-recaptcha-response"]');
+                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
+                    if (!token) { showToast("Vui lòng xác minh reCAPTCHA!", "error"); return false; }
+                    return true;
+                },
+                onExecute: submitCreateStudio
+            });
+        }
 
         // BẮT BUỘC UPDATE THÔNG TIN (CHO NICK SCRATCH CŨ) & ĐỒNG BỘ TRẠNG THÁI EMAIL
         async function checkLegacyUser() {
@@ -15833,8 +15994,8 @@
             };
 
             const btn = document.getElementById('btnCreateStudioSubmit');
-            const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...';
+            const textEl = document.getElementById('createStudioHoldText') || btn;
+            textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tạo Station...</span>';
             btn.disabled = true;
 
             let thumbId = "";
@@ -15860,7 +16021,7 @@
                 showToast(res.error, "error");
             }
 
-            btn.innerHTML = origHtml;
+            textEl.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> <span data-i18n="station_modal_btn_create">Tạo Station</span>';
             btn.disabled = false;
         }
 
@@ -17527,7 +17688,8 @@
                 return showToast("Xác minh rô-bốt chưa hoàn tất.", "error");
             }
             
-            const btn = document.getElementById('btnSubmitUpload'); 
+            const btn = document.getElementById('btnSubmitUpload');
+            const textEl = document.getElementById('uploadHoldText') || btn;
             btn.disabled = true;
             
             const CHUNK_SIZE = 18 * 1024 * 1024;
@@ -17537,7 +17699,7 @@
             try {
                 // Tải từng mảnh lên nối tiếp nhau, vượt rào 100MB Cloudflare
                 for (let i = 0; i < totalChunks; i++) {
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...`;
+                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `part_${i}.sb3`);
@@ -17549,11 +17711,11 @@
                     uploadedIds.push(res.file_id);
                 }
 
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu thông tin tác phẩm...';
+                textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang lưu thông tin tác phẩm...</span>';
                 
                 const finalForm = new FormData(); 
-                finalForm.append("preloadedFileId", uploadedIds.join(",")); // Truyền chùm fileId lên
-                if(document.getElementById('upThumb').files[0]) finalForm.append("thumb", document.getElementById('upThumb').files[0]);
+                finalForm.append("preloadedFileId", uploadedIds.join(",")); 
+                if (document.getElementById('upThumb').files[0]) finalForm.append("thumb", document.getElementById('upThumb').files[0]);
                 finalForm.append("title", document.getElementById('upTitle').value); 
                 finalForm.append("visibility", document.getElementById('upVisibility').value); 
                 finalForm.append("author", currentUser.username); 
@@ -17578,7 +17740,8 @@
                 if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
-            btn.innerHTML = `<i class="fa-solid fa-rocket"></i> ${t('upload_submit')}`; btn.disabled = false;
+            textEl.innerHTML = `<i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>`;
+            btn.disabled = false;
         }
 
         // ================= REPORT & ADMIN =================
@@ -20550,6 +20713,7 @@
             }
 
             const btn = document.getElementById('btnUpdateProjSubmit');
+            const textEl = document.getElementById('updateProjHoldText') || btn;
             btn.disabled = true;
 
             const resetUpdateRecaptcha = () => {
@@ -20565,7 +20729,7 @@
 
             try {
                 for (let i = 0; i < totalChunks; i++) {
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên bản cập nhật: Mảnh ${i + 1} / ${totalChunks}...`;
+                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `part_${i}.sb3`);
@@ -20577,7 +20741,7 @@
                     uploadedIds.push(res.file_id);
                 }
 
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang hoàn tất cập nhật...';
+                textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang hoàn tất cập nhật...</span>';
                 
                 const finalForm = new FormData();
                 finalForm.append("preloadedFileId", uploadedIds.join(","));
@@ -20602,7 +20766,8 @@
                 resetUpdateRecaptcha();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
-            btn.innerHTML = '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>'; btn.disabled = false;
+            textEl.innerHTML = '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>'; 
+            btn.disabled = false;
         }
 
         // HÀM XỬ LÝ XÓA DỰ ÁN VÀO THÙNG RÁC
@@ -21320,7 +21485,7 @@
         }
 
         async function handleUploadAssetSubmit(e) {
-            e.preventDefault();
+            if (e && e.preventDefault) e.preventDefault();
             const fileInput = document.getElementById('assetUpFile').files[0];
             if (!fileInput) return;
             
@@ -21341,6 +21506,7 @@
             };
             
             const btn = document.getElementById('btnSubmitUploadAsset');
+            const textEl = document.getElementById('assetUploadHoldText') || btn;
             btn.disabled = true;
 
             const CHUNK_SIZE = 18 * 1024 * 1024;
@@ -21350,7 +21516,7 @@
 
             try {
                 for (let i = 0; i < totalChunks; i++) {
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tải lên: Phần ${i + 1}/${totalChunks}...`;
+                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Phần ${i + 1}/${totalChunks}...</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `asset_part_${i}.${fileExt}`);
@@ -21365,7 +21531,7 @@
                     uploadedIds.push(res.file_id);
                 }
 
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu thông tin...';
+                textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang lưu thông tin...</span>';
                 
                 const fileSizeMB = (fileInput.size / (1024 * 1024)).toFixed(2);
 
@@ -21396,7 +21562,7 @@
                 resetAssetRecaptcha();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
-            btn.innerHTML = `<i class="fa-solid fa-upload"></i> Đăng Tài nguyên`;
+            textEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>`;
             btn.disabled = false;
         }
         
