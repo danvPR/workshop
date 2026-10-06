@@ -3800,44 +3800,43 @@
             box-shadow: 0 0 18px rgba(121, 40, 202, 0.35) !important;
         }
 
-        /* 4. Thanh Action Nổi Bật (Floating Action Pill) */
+        /* 4. Thanh Action Nổi Bật (Floating Action Pill - Thiết kế Discord/Telegram đỉnh cao, không che chữ) */
         .chat-floating-actions {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%) scale(0.9);
+            top: -15px;
             display: flex;
             align-items: center;
             gap: 2px;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--bg-panel);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 4px 6px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            padding: 2px 6px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 10;
+            transform: translateY(4px) scale(0.92);
+            transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 15;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            height: 32px;
         }
         [data-theme="dark"] .chat-floating-actions {
-            background: rgba(31, 41, 55, 0.9);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(31, 41, 55, 0.95);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
-        /* Others: Actions appear on the right */
-        .chat-msg-row:not(.mine) .chat-floating-actions { right: -60px; }
-        /* Mine: Actions appear on the left */
-        .chat-msg-row.mine .chat-floating-actions { left: -60px; flex-direction: row-reverse; }
+        /* Người khác: Nổi ở mép trên bên phải của bong bóng */
+        .chat-msg-row:not(.mine) .chat-floating-actions { right: 8px; }
+        /* Bản thân: Nổi ở mép trên bên trái của bong bóng */
+        .chat-msg-row.mine .chat-floating-actions { left: 8px; }
         
         .chat-msg-row:hover .chat-floating-actions,
         .chat-msg-row.active-actions .chat-floating-actions {
             opacity: 1;
             pointer-events: auto;
-            transform: translateY(-50%) scale(1);
+            transform: translateY(0) scale(1);
         }
-        /* Xử lý khoảng cách nếu bubble quá sát biên */
-        .chat-msg-row:not(.mine):hover .chat-floating-actions { right: -70px; }
-        .chat-msg-row.mine:hover .chat-floating-actions { left: -70px; }
 
         .chat-float-btn {
             background: none;
@@ -8808,49 +8807,70 @@
                 </div>
             </div>
 
-            <!-- CỘT PHỤ (SIDEBAR): TIỆN ÍCH CỘNG ĐỒNG TINH GỌN -->
+            <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN -->
             <div class="chat-sidebar-col">
-                <!-- Thẻ BeaBea AI Companion -->
-                <div class="chat-side-card" style="text-align: center; border-top: 3px solid #ec4899;">
-                    <div style="position:relative; width: 62px; height: 62px; margin: 2px auto 8px auto;">
-                        <img src="https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #f472b6;" onerror="this.onerror=null; this.src=DEFAULT_AVATAR">
-                        <span style="position: absolute; bottom: 0; right: 0; width: 13px; height: 13px; border-radius: 50%; background: #10b981; border: 2px solid var(--bg-panel);" title="Trực tuyến"></span>
-                    </div>
-                    <div style="font-weight: 800; font-size: 1rem; color: var(--text-title); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span>BeaBea</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 6px; border-radius: 8px; font-weight: 800;" data-i18n="chat_sidebar_bot_badge">BOT AI</span>
-                    </div>
-                    <p style="font-size: 0.78rem; color: var(--text-muted); margin: 6px 0 14px 0; line-height: 1.45;" data-i18n="chat_sidebar_beabea_desc">Trợ lý AI toàn tri của DANVworkshop. Gõ <b>@BeaBea</b> trong khung chat để trò chuyện hoặc xin ý tưởng làm game!</p>
-                    <button type="button" class="btn" style="width:100%; font-size:0.8rem; padding:8px; justify-content:center; border-radius:12px; border-color: rgba(236,72,153,0.3); color:#db2777; background:rgba(236,72,153,0.06); font-weight:800;" onclick="quickMentionBeaBea()">
-                        <i class="fa-solid fa-comments"></i> <span data-i18n="chat_sidebar_call_beabea">Gọi BeaBea trò chuyện</span>
-                    </button>
-                </div>
-
-                <!-- Thẻ Tiêu chuẩn cộng đồng -->
-                <div class="chat-side-card">
-                    <div class="chat-side-title">
-                        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> <span data-i18n="chat_sidebar_rules_title">Tiêu chuẩn cộng đồng</span>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
-                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 3px; font-size:0.75rem;"></i>
-                            <span data-i18n="chat_sidebar_rule_1">Tôn trọng mọi thành viên, giữ ngôn từ văn minh.</span>
+                <!-- 1. Trạm Năng Lượng & Điểm Danh Nhanh -->
+                <div class="chat-side-card" style="border-top: 3px solid #f59e0b;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
+                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Năng lượng của bạn
+                        </span>
+                        <div class="WOW-balance-pill" onclick="openDailyRewardModal()" style="padding: 2px 8px; font-size: 0.8rem;" title="Mở điểm danh hàng ngày">
+                            <span class="wow-icon" style="font-size: 1rem;"></span>
+                            <span id="chatSidebarWOWBalance">0</span>
                         </div>
-                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                            <i class="fa-solid fa-check" style="color: var(--primary); margin-top: 3px; font-size:0.75rem;"></i>
-                            <span data-i18n="chat_sidebar_rule_2">Không spam link quảng cáo thương mại.</span>
-                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button type="button" class="btn btn-primary" onclick="openDailyRewardModal()" style="padding: 7px 10px; font-size: 0.78rem; border-radius: 10px; justify-content: center; font-weight: 800;">
+                            <i class="fa-solid fa-calendar-check"></i> Điểm danh
+                        </button>
+                        <button type="button" class="btn" onclick="openFrameShopModal()" style="padding: 7px 10px; font-size: 0.78rem; border-radius: 10px; justify-content: center; font-weight: 800; background: var(--bg-panel); border: 1px solid var(--border-color);">
+                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> Đổi Skin Chat
+                        </button>
                     </div>
                 </div>
 
-                <!-- Thẻ Lối tắt Stations -->
-                <div class="chat-side-card">
-                    <div class="chat-side-title">
-                        <i class="fa-solid fa-satellite-dish" style="color: #3b82f6;"></i> <span data-i18n="chat_sidebar_stations_title">Không gian Stations</span>
+                <!-- 2. BeaBea AI Studio: Mẫu câu hỏi 1 chạm -->
+                <div class="chat-side-card" style="border-top: 3px solid #ec4899;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <div style="position: relative; width: 38px; height: 38px; flex-shrink: 0;">
+                            <img src="https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #f472b6;">
+                            <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background: #10b981; border: 1.5px solid var(--bg-panel);"></span>
+                        </div>
+                        <div style="min-width: 0; flex: 1;">
+                            <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-title); display: flex; align-items: center; gap: 6px;">
+                                <span>BeaBea AI</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 5px; border-radius: 6px; font-weight: 800;">PROMPT</span>
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">Trợ thủ lập trình 1 chạm</span>
+                        </div>
                     </div>
-                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;" data-i18n="chat_sidebar_stations_desc">Khám phá các trạm sáng tạo dự án, nhóm lập trình theo chủ đề.</p>
-                    <a href="#studios" class="btn" style="width: 100%; font-size: 0.82rem; font-weight:700; justify-content: center; border-radius: 12px; text-decoration: none; padding: 8px;">
-                        <i class="fa-solid fa-compass"></i> <span data-i18n="chat_sidebar_stations_btn">Vào xem Stations</span>
-                    </a>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <button type="button" class="btn" onclick="insertChatPrompt('Hãy gợi ý cho mình một ý tưởng cơ chế game thật độc lạ để làm trên Aftercode/Scratch nhé!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-lightbulb" style="color: #f59e0b; width: 16px;"></i> <span>🎲 Ý tưởng làm game độc lạ</span>
+                        </button>
+                        <button type="button" class="btn" onclick="insertChatPrompt('Cho mình hỏi cách tạo hiệu ứng vật lý nhảy nhảy (gravity physics) mượt mà bằng khối lệnh với!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-bug" style="color: #0284c7; width: 16px;"></i> <span>🐞 Hỏi thuật toán & sửa lỗi code</span>
+                        </button>
+                        <button type="button" class="btn" onclick="insertChatPrompt('Hãy viết giúp mình một đoạn kịch bản mở đầu cốt truyện RPG thật cuốn hút nhé!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-book-sparkles" style="color: #8b5cf6; width: 16px;"></i> <span>📜 Viết cốt truyện & hội thoại</span>
+                        </button>
+                        <button type="button" class="btn" onclick="insertChatPrompt('Hãy cho tụi mình một câu đố vui trắc nghiệm lập trình thú vị đi!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-brain" style="color: #ec4899; width: 16px;"></i> <span>🎯 Đố vui trắc nghiệm mini</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Tác Phẩm Đang Hot Trong Cộng Đồng -->
+                <div class="chat-side-card" id="chatSidebarTrendingCard" style="border-top: 3px solid #10b981;">
+                    <div class="chat-side-title" style="margin-bottom: 8px;">
+                        <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span>Game Hot Cùng Trải Nghiệm</span>
+                    </div>
+                    <div id="chatSidebarTrendingContent" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Đang tải tác phẩm hot...
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -13191,6 +13211,7 @@
                 currentUser.role = res.role; 
                 currentUser.WOW = res.WOW !== undefined ? res.WOW : (res.omg !== undefined ? res.omg : (currentUser.WOW || 0));
                 currentUser.frame = res.frame || null;
+                currentUser.chatFrame = res.chatFrame || res.chat_frame || currentUser.chatFrame || "";
                 
                 // Đồng bộ chính xác trạng thái xác thực từ CSDL máy chủ
                 if (res.emailVerified !== undefined) {
@@ -13611,7 +13632,8 @@
                         email: res.email || "",
                         emailVerified: res.emailVerified !== undefined ? res.emailVerified : true,
                         WOW: res.WOW !== undefined ? res.WOW : (res.omg || 0),
-                        frame: res.frame || null
+                        frame: res.frame || null,
+                        chatFrame: res.chatFrame || res.chat_frame || ""
                     };
                     localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
                     closeModal('authModal'); 
@@ -19409,7 +19431,8 @@
                         email: res.email,
                         emailVerified: res.emailVerified,
                         WOW: res.WOW,
-                        frame: res.frame
+                        frame: res.frame,
+                        chatFrame: res.chatFrame || res.chat_frame || ""
                     };
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
                     sessionStorage.removeItem('danv_forgot_user');
@@ -22618,7 +22641,9 @@
 
                         <div class="chat-bubble-container">
                             ${(() => {
-                                const fAttrs = getChatBubbleFrameAttributes(c.chatFrame);
+                                const myChatFrame = (isMine && currentUser) ? (currentUser.chatFrame || '') : '';
+                                const effectiveFrame = c.chatFrame || c.chat_frame || myChatFrame;
+                                const fAttrs = getChatBubbleFrameAttributes(effectiveFrame);
                                 return `<div class="chat-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr}>`;
                             })()}
                                 ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
