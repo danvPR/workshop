@@ -11864,6 +11864,12 @@
                     <div class="form-group">
                         <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 10px;">
                     </div>
+
+                    <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA KHI CẬP NHẬT DỰ ÁN -->
+                    <div style="display: flex; justify-content: center; margin: 15px 0 12px 0;">
+                        <div class="g-recaptcha" id="recaptchaProjectUpdate" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
+                    </div>
+
                     <button type="button" onclick="handleUpdateProjectFileBtn()" class="btn" id="btnUpdateProjSubmit" style="width: 100%; justify-content: center; background: #ea580c; color: #fff; padding: 12px; font-size: 1rem; border: none;">
                         <i class="fa-solid fa-rocket"></i> Tải bản cập nhật lên
                     </button>
@@ -17370,12 +17376,13 @@
             if(fileInput.size > 200 * 1024 * 1024) return showToast("Kích thước tải lên tối đa là 200MB.", "error");
 
             // 🛡️ KIỂM TRA XÁC MINH GOOGLE RECAPTCHA TRƯỚC KHI TẢI FILE
-            let recaptchaToken = "";
-            if (typeof grecaptcha !== 'undefined') {
-                recaptchaToken = grecaptcha.getResponse();
+            const uploadRecaptchaEl = document.querySelector('#uploadNewFormStep [name="g-recaptcha-response"]');
+            let recaptchaToken = uploadRecaptchaEl ? uploadRecaptchaEl.value.trim() : "";
+            if (!recaptchaToken && typeof grecaptcha !== 'undefined') {
+                try { recaptchaToken = grecaptcha.getResponse(0); } catch(e) {}
             }
             if (!recaptchaToken) {
-                return showToast("Xác minh rô-bốt chưa hoàn tất...", "error");
+                return showToast("Xác minh rô-bốt chưa hoàn tất.", "error");
             }
             
             const btn = document.getElementById('btnSubmitUpload'); 
@@ -20358,7 +20365,7 @@
             btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi'; btn.disabled = false;
         }
 
-        // 5. CẬP NHẬT FILE GAME
+        // 5. CẬP NHẬT FILE GAME (CÓ XÁC MINH RECAPTCHA)
         async function handleUpdateProjectFileBtn() {
             const fileInput = document.getElementById('updateProjFile').files[0];
             if (!fileInput) return showToast("Vui lòng chọn file .sb3", "error");
@@ -20366,8 +20373,23 @@
             if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Chỉ cho phép tải file .sb3!", "error"); document.getElementById('updateProjFile').value = ""; return; }
             if (fileInput.size > 200 * 1024 * 1024) { showToast("File quá lớn! Tối đa 200MB.", "error"); document.getElementById('updateProjFile').value = ""; return; }
 
+            // 🛡️ LẤY TOKEN RECAPTCHA CỦA KHUNG CẬP NHẬT
+            const recaptchaRespEl = document.querySelector('#updateSectionContainer [name="g-recaptcha-response"]');
+            const recaptchaToken = recaptchaRespEl ? recaptchaRespEl.value.trim() : '';
+
+            if (!recaptchaToken) {
+                return showToast("Vui lòng tích vào ô 'Tôi không phải là người máy' (reCAPTCHA) trước khi tải bản cập nhật!", "error");
+            }
+
             const btn = document.getElementById('btnUpdateProjSubmit');
             btn.disabled = true;
+
+            const resetUpdateRecaptcha = () => {
+                if (typeof grecaptcha !== 'undefined' && recaptchaRespEl) {
+                    const widgetId = parseInt(recaptchaRespEl.id.replace('g-recaptcha-response-', '')) || 0;
+                    try { grecaptcha.reset(widgetId); } catch(e) { grecaptcha.reset(); }
+                }
+            };
 
             const CHUNK_SIZE = 18 * 1024 * 1024;
             const totalChunks = Math.ceil(fileInput.size / CHUNK_SIZE);
@@ -20396,16 +20418,20 @@
                 finalForm.append("changelog", document.getElementById('updateProjChangelog').value.trim());
                 finalForm.append("username", currentUser.username); 
                 finalForm.append("sessionToken", currentUser.sessionToken);
+                finalForm.append("recaptchaToken", recaptchaToken); // ĐÍNH KÈM TOKEN LÊN BACKEND
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
                 if (finalRes.success) { 
+                    resetUpdateRecaptcha();
                     showToast("Cập nhật bản mới thành công!", "success"); 
                     closeModal('projSettingsModal'); 
                     setTimeout(() => { location.reload(); }, 1000); 
                 } else {
+                    resetUpdateRecaptcha();
                     showToast(finalRes.error || "Lỗi tải lên", "error");
                 }
             } catch (err) { 
+                resetUpdateRecaptcha();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
             btn.innerHTML = '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>'; btn.disabled = false;
