@@ -5659,40 +5659,102 @@
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        /* NÚT NHẤN GIỮ ĐỂ GỬI TẶNG WOW (HOLD TO CONFIRM) */
+        /* ================= HIỆU ỨNG NĂNG LƯỢNG SIÊU CẤP CHO NÚT GIỮ (HOLD TO CONFIRM) ================= */
         .btn-hold-send-wow {
             position: relative;
             width: 100%;
-            padding: 16px;
-            font-size: 1.15rem;
+            padding: 16px 20px;
+            font-size: 1.1rem;
             font-weight: 900;
-            border-radius: 16px;
-            border: none;
+            border-radius: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
             overflow: hidden;
             color: #ffffff !important;
-            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-            box-shadow: 0 8px 25px rgba(234, 88, 12, 0.45);
+            background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+            box-shadow: 0 8px 25px rgba(234, 88, 12, 0.35);
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
             user-select: none;
-            transition: all 0.2s;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+            outline: none;
         }
-        .btn-hold-send-wow:active {
-            transform: scale(0.98);
+        /* Hiệu ứng hào quang rực rỡ khi đang nhấn giữ */
+        .btn-hold-send-wow.is-holding {
+            transform: scale(1.025);
+            border-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 35px rgba(245, 158, 11, 0.7), 0 10px 30px rgba(0, 0, 0, 0.4);
         }
+        /* Phiên bản Đôi Bạn khi đang giữ */
+        #btnHoldCoupleDaily.is-holding {
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.8), 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+            border-color: rgba(186, 230, 253, 0.9) !important;
+        }
+        /* Thanh sóng năng lượng tích tụ (Energy Stream Fill) */
         .btn-hold-send-wow .hold-progress-fill {
             position: absolute;
             left: 0;
             top: 0;
             bottom: 0;
             width: 0%;
-            background: linear-gradient(90deg, #f59e0b, #e11d48, #9333ea);
+            background: linear-gradient(90deg, #ea580c 0%, #f59e0b 50%, #ec4899 100%);
             z-index: 1;
             transition: width 0.05s linear;
-            box-shadow: 0 0 20px #f59e0b;
+        }
+        /* Lớp vân sọc sóng điện năng chạy cuộn */
+        .btn-hold-send-wow .hold-progress-fill::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.25) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.25) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 26px 26px;
+            animation: holdEnergyStripes 0.75s linear infinite;
+            opacity: 0.85;
+        }
+        /* Đầu tia Plasma Laser chói lọi ở ngay đỉnh thanh tiến trình */
+        .btn-hold-send-wow .hold-progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: #ffffff;
+            box-shadow: 0 0 18px 4px #ffffff, 0 0 30px 8px #f59e0b;
+            border-radius: 4px;
+        }
+        /* Tùy chỉnh màu đầu Laser của Đôi Bạn */
+        #btnHoldCoupleDaily .hold-progress-fill::after {
+            box-shadow: 0 0 18px 4px #ffffff, 0 0 30px 8px #38bdf8 !important;
+        }
+        @keyframes holdEnergyStripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 26px 0; }
+        }
+        /* Chữ và biểu tượng luôn nổi bật bên trên thanh tiến trình */
+        .btn-hold-send-wow .btn-inner-content {
+            position: relative;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            transition: transform 0.15s ease;
+        }
+        .btn-hold-send-wow.is-holding .btn-inner-content {
+            transform: scale(1.02);
         }
         /* ===== GIAO DIỆN GỠ CẶP ĐÔI (DRAMA UNPAIR) ===== */
         .unpair-modal-box {
@@ -23427,23 +23489,29 @@
             const startHold = (e) => {
                 if (isCoupleSubmitting) return;
                 holdCoupleProgress = 0;
+                btn.classList.add('is-holding');
                 const fillEl = document.getElementById('holdCoupleProgressFill');
                 const textEl = document.getElementById('holdCoupleBtnText');
 
-                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-handshake"></i> <span style="font-size:1.05rem;">ĐANG TIẾP NĂNG LƯỢNG ĐỒNG HÀNH...</span>';
+                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-handshake fa-bounce"></i> <span style="font-size:1.05rem;">ĐỒNG HÀNH 0% (5.0s)</span>';
 
                 clearInterval(holdCoupleInterval);
                 holdCoupleInterval = setInterval(() => {
                     // Tăng đều để 5 giây (5000ms) = 100% -> Mỗi 50ms tăng 1%
                     holdCoupleProgress += 1; 
-                    if (fillEl) fillEl.style.width = `${Math.min(100, holdCoupleProgress)}%`;
+                    const curPct = Math.min(100, holdCoupleProgress);
+                    const remainingSec = Math.max(0, ((100 - curPct) * 0.05)).toFixed(1);
+                    
+                    if (fillEl) fillEl.style.width = `${curPct}%`;
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-handshake fa-bounce"></i> <span style="font-size:1.05rem;">ĐỒNG HÀNH ${curPct}% (${remainingSec}s)</span>`;
 
                     if (holdCoupleProgress >= 100) {
                         clearInterval(holdCoupleInterval);
                         isCoupleSubmitting = true;
-                        if (textEl) textEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>ĐANG NHẬN QUÀ...</span>';
+                        if (textEl) textEl.innerHTML = '<i class="fa-solid fa-sparkles fa-spin"></i> <span style="font-size:1.05rem;">ĐÃ KẾT NỐI! ĐANG NHẬN QUÀ...</span>';
                         claimDailyReward(true).then(() => {
                             isCoupleSubmitting = false;
+                            btn.classList.remove('is-holding');
                         });
                     }
                 }, 50);
@@ -23452,6 +23520,7 @@
             const stopHold = () => {
                 if (isCoupleSubmitting) return;
                 clearInterval(holdCoupleInterval);
+                btn.classList.remove('is-holding');
                 if (holdCoupleProgress < 100) {
                     holdCoupleProgress = 0;
                     const fillEl = document.getElementById('holdCoupleProgressFill');
@@ -23467,7 +23536,7 @@
             window.addEventListener('touchend', stopHold);
             window.addEventListener('touchcancel', stopHold);
         }
-
+        
         // Hiệu ứng ngôi sao & tia sáng đồng đội
         function spawnLoveBurst(originX, originY) {
             const colors = ['#0284c7', '#38bdf8', '#10b981', '#f59e0b', '#6366f1'];
@@ -23892,7 +23961,7 @@
             document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
         }
 
-        // BẮT SỰ KIỆN NHẤN GIỮ (HOLD TO TRANSMIT ENERGY)
+        // BẮT SỰ KIỆN NHẤN GIỮ (HOLD TO TRANSMIT ENERGY - PRO GLOW)
         function setupHoldButtonListeners() {
             const btn = document.getElementById('btnHoldSendTip');
             if (!btn || btn.dataset.bound === 'true') return;
@@ -23905,21 +23974,25 @@
                 if (amt > (currentUser.WOW || 0)) return showToast("Số dư WOW không đủ!", "error");
 
                 holdProgress = 0;
+                btn.classList.add('is-holding');
                 const fillEl = document.getElementById('holdProgressFill');
                 const textEl = document.getElementById('holdBtnTextContent');
                 const cardBox = document.getElementById('tipModalCardBox');
 
                 if (cardBox) cardBox.classList.add('shake-hyper');
-                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-atom fa-spin"></i> <span>ĐANG TÍCH TỤ NĂNG LƯỢNG...</span>';
+                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-atom fa-spin" style="font-size:1.25rem; color:#fef08a;"></i> <span>ĐANG NẠP 0%</span>';
 
                 clearInterval(holdInterval);
                 holdInterval = setInterval(() => {
                     holdProgress += 4; // Tăng dần theo mỗi 40ms (~1 giây đầy)
-                    if (fillEl) fillEl.style.width = `${Math.min(100, holdProgress)}%`;
+                    const curPct = Math.min(100, holdProgress);
+                    if (fillEl) fillEl.style.width = `${curPct}%`;
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.25rem; color:#fef08a;"></i> <span>ĐANG NẠP ${curPct}%</span>`;
 
                     if (holdProgress >= 100) {
                         clearInterval(holdInterval);
                         if (cardBox) cardBox.classList.remove('shake-hyper');
+                        if (textEl) textEl.innerHTML = '<i class="fa-solid fa-bolt fa-beat" style="font-size:1.3rem; color:#fff;"></i> <span>PHÓNG NĂNG LƯỢNG!</span>';
                         executeTipDispatch();
                     }
                 }, 40);
@@ -23928,6 +24001,7 @@
             const stopHold = () => {
                 if (isTipSubmitting) return;
                 clearInterval(holdInterval);
+                btn.classList.remove('is-holding');
                 const cardBox = document.getElementById('tipModalCardBox');
                 if (cardBox) cardBox.classList.remove('shake-hyper');
 
@@ -23948,6 +24022,8 @@
 
         function resetHoldButtonUI() {
             holdProgress = 0;
+            const btn = document.getElementById('btnHoldSendTip');
+            if (btn) btn.classList.remove('is-holding');
             const fillEl = document.getElementById('holdProgressFill');
             const textEl = document.getElementById('holdBtnTextContent');
             if (fillEl) fillEl.style.width = '0%';
