@@ -8299,6 +8299,8 @@
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- THÊM THƯ VIỆN GOOGLE RECAPTCHA V2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -9678,6 +9680,11 @@
                     </div>
                 </div>
                 <div style="margin-top:25px; padding-top:20px; border-top:1px solid var(--border-color);">
+                    <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA -->
+                    <div style="display:flex; justify-content:center; margin-bottom:18px;">
+                        <div class="g-recaptcha" id="recaptchaProjectUpload" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
+                    </div>
+
                     <button type="button" onclick="handleUploadBtn()" class="btn btn-primary" id="btnSubmitUpload" style="width:100%; justify-content:center; padding:14px; font-size:1.1rem; border-radius:10px;">
                         <i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>
                     </button>
@@ -17340,6 +17347,15 @@
             
             if(!fileInput.name.toLowerCase().endsWith('.sb3')) return showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error");
             if(fileInput.size > 200 * 1024 * 1024) return showToast("Kích thước tải lên tối đa là 200MB.", "error");
+
+            // 🛡️ KIỂM TRA XÁC MINH GOOGLE RECAPTCHA TRƯỚC KHI TẢI FILE
+            let recaptchaToken = "";
+            if (typeof grecaptcha !== 'undefined') {
+                recaptchaToken = grecaptcha.getResponse();
+            }
+            if (!recaptchaToken) {
+                return showToast("Xác minh rô-bốt chưa hoàn tất...", "error");
+            }
             
             const btn = document.getElementById('btnSubmitUpload'); 
             btn.disabled = true;
@@ -17375,17 +17391,21 @@
                 finalForm.append("credits", document.getElementById('upCredits').value);
                 finalForm.append("username", currentUser.username); 
                 finalForm.append("sessionToken", currentUser.sessionToken);
+                finalForm.append("recaptchaToken", recaptchaToken); // ĐÍNH KÈM TOKEN RECAPTCHA LÊN SERVER
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
+                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                     showToast("Xuất bản thành công!", "success"); 
                     clearUploadDraft(); // Xóa sạch dữ liệu tạm sau khi tải lên thành công
                     await loadProjects(); 
                     navigateTo(`/projects/${finalRes.file_id}`); 
                 } else {
+                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                     showToast(finalRes.error || "Lỗi tải lên", "error");
                 }
             } catch(err) { 
+                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
             btn.innerHTML = `<i class="fa-solid fa-rocket"></i> ${t('upload_submit')}`; btn.disabled = false;
