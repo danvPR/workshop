@@ -8399,7 +8399,7 @@
                 <button class="btn" onclick="openVerifyEmailModal()" style="background: #ffffff; color: #dc2626; padding: 7px 18px; border-radius: 20px; font-weight: 800; border: none; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                     <i class="fa-solid fa-circle-check"></i> <span data-i18n="banner_email_btn_verify">Xác minh ngay</span>
                 </button>
-                <button class="btn" id="btnBannerResendOtp" onclick="resendVerificationOtp(this)" style="background: rgba(0,0,0,0.25); color: white; padding: 7px 14px; border-radius: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; cursor: pointer;">
+                <button class="btn" id="btnBannerResendOtp" onclick="openVerifyEmailModal()" style="background: rgba(0,0,0,0.25); color: white; padding: 7px 14px; border-radius: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; cursor: pointer;">
                     <i class="fa-solid fa-rotate-right"></i> <span data-i18n="banner_email_btn_resend">Gửi lại mã</span>
                 </button>
             </div>
@@ -11253,6 +11253,11 @@
                     <input type="text" id="verifyEmailOtpInput" class="otp-digit-input" placeholder="------" maxlength="6" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
 
+                <!-- KHUNG BẢO VỆ TURNSTILE KHI GỬI LẠI MÃ OTP -->
+                <div style="display:flex; justify-content:center; margin-top:10px;">
+                    <div class="cf-turnstile" id="resendOtpTurnstileSlot" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto"></div>
+                </div>
+
                 <div class="otp-sub-actions" style="margin-top: 15px;">
                     <button type="button" class="btn-link-action" onclick="toggleChangeEmailForm()">
                         <i class="fa-solid fa-pen-to-square"></i> <span id="toggleChangeEmailBtnText" data-i18n="auth_verify_toggle_change">Đổi sang email khác</span>
@@ -12997,10 +13002,19 @@
             if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
         }
 
-        // GỬI LẠI MÃ OTP (CÓ COOLDOWN 60 GIÂY)
+        // GỬI LẠI MÃ OTP (CÓ COOLDOWN 60 GIÂY & TURNSTILE BẢO VỆ)
         async function resendVerificationOtp(btnTrigger) {
             if (!currentUser) return;
             if (otpCooldownSeconds > 0) return;
+
+            // 🛡️ LẤY TOKEN TURNSTILE TRONG MODAL
+            const turnstileInput = document.querySelector('#verifyEmailModal [name="cf-turnstile-response"]');
+            const turnstileToken = turnstileInput ? turnstileInput.value : '';
+
+            if (!turnstileToken) {
+                showToast("Vui lòng chờ xác thực chống Bot (Turnstile) hoàn tất trước khi gửi lại mã!", "error");
+                return;
+            }
 
             const origHtml = btnTrigger ? btnTrigger.innerHTML : '';
             if (btnTrigger) {
@@ -13012,19 +13026,26 @@
                 const res = await (await fetch(`${WORKER_URL}/api/auth/resend_otp`, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ username: currentUser.username, sessionToken: currentUser.sessionToken })
+                    body: JSON.stringify({ 
+                        username: currentUser.username, 
+                        sessionToken: currentUser.sessionToken,
+                        turnstileToken: turnstileToken
+                    })
                 })).json();
 
                 if (res.success) {
                     showToast("Đã gửi mã xác nhận mới vào email của bạn!", "success");
                     startOtpCountdown(60);
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 } else {
                     showToast(res.error || "Không thể gửi lại mã!", "error");
                     if (btnTrigger) { btnTrigger.disabled = false; btnTrigger.innerHTML = origHtml; }
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             } catch(e) {
                 showToast("Lỗi kết nối máy chủ!", "error");
                 if (btnTrigger) { btnTrigger.disabled = false; btnTrigger.innerHTML = origHtml; }
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             }
         }
 
