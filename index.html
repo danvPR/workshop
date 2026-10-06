@@ -3703,7 +3703,7 @@
             display: flex;
             flex-direction: column;
             width: fit-content;
-            max-width: 85%;
+            max-width: calc(100% - 190px);
         }
         .chat-msg-row.mine .chat-bubble-container {
             align-items: flex-end;
@@ -3800,10 +3800,10 @@
             box-shadow: 0 0 18px rgba(121, 40, 202, 0.35) !important;
         }
 
-        /* 4. Thanh Action Nổi Bật (Floating Action Pill - Thiết kế Discord/Telegram đỉnh cao, không che chữ) */
+        /* 4. Thanh Action Nổi Bật (Chuẩn Telegram/Messenger: Nằm bên hông bong bóng, không đè chữ) */
         .chat-floating-actions {
             position: absolute;
-            top: -15px;
+            top: 50%;
             display: flex;
             align-items: center;
             gap: 2px;
@@ -3814,28 +3814,59 @@
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
             opacity: 0;
             pointer-events: none;
-            transform: translateY(4px) scale(0.92);
+            transform: translateY(-50%) scale(0.92);
             transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 15;
+            z-index: 25;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             height: 32px;
+            white-space: nowrap;
         }
         [data-theme="dark"] .chat-floating-actions {
             background: rgba(31, 41, 55, 0.95);
             border-color: rgba(255, 255, 255, 0.15);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
-        /* Người khác: Nổi ở mép trên bên phải của bong bóng */
-        .chat-msg-row:not(.mine) .chat-floating-actions { right: 8px; }
-        /* Bản thân: Nổi ở mép trên bên trái của bong bóng */
-        .chat-msg-row.mine .chat-floating-actions { left: 8px; }
+        /* Người khác: Nằm ngay bên PHẢI bong bóng tin nhắn */
+        .chat-msg-row:not(.mine) .chat-floating-actions { 
+            left: calc(100% + 8px); 
+            right: auto; 
+        }
+        /* Bản thân: Nằm ngay bên TRÁI bong bóng tin nhắn */
+        .chat-msg-row.mine .chat-floating-actions { 
+            right: calc(100% + 8px); 
+            left: auto; 
+            flex-direction: row-reverse; 
+        }
         
         .chat-msg-row:hover .chat-floating-actions,
         .chat-msg-row.active-actions .chat-floating-actions {
             opacity: 1;
             pointer-events: auto;
-            transform: translateY(0) scale(1);
+            transform: translateY(-50%) scale(1);
+        }
+
+        /* Tối ưu riêng trên màn hình di động/máy tính bảng nhỏ khi không có khoảng trống bên hông */
+        @media (max-width: 768px) {
+            .chat-bubble-container {
+                max-width: 86% !important;
+            }
+            .chat-msg-row:not(.mine) .chat-floating-actions {
+                left: 0 !important;
+                right: auto !important;
+                top: -34px !important;
+                transform: none !important;
+            }
+            .chat-msg-row.mine .chat-floating-actions {
+                right: 0 !important;
+                left: auto !important;
+                top: -34px !important;
+                transform: none !important;
+            }
+            .chat-msg-row:hover .chat-floating-actions,
+            .chat-msg-row.active-actions .chat-floating-actions {
+                transform: none !important;
+            }
         }
 
         .chat-float-btn {
