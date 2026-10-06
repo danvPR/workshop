@@ -3313,10 +3313,35 @@
             cursor: pointer;
             box-shadow: 0 3px 10px rgba(13, 165, 122, 0.25);
             transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
         }
         .asset-download-pill:hover {
             transform: translateY(-1px);
             box-shadow: 0 5px 15px rgba(13, 165, 122, 0.4);
+        }
+        .asset-download-pill.is-holding {
+            transform: scale(1.05);
+            box-shadow: 0 0 16px rgba(13, 165, 122, 0.6);
+        }
+        .asset-download-pill .hold-progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0%;
+            background: rgba(255, 255, 255, 0.35);
+            z-index: 1;
+            transition: width 0.05s linear;
+        }
+        .asset-download-pill .btn-inner-content {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
         }
 
         /* 7. MODAL XEM NHANH LIGHTBOX PRO */
@@ -9715,7 +9740,7 @@
                 <button class="btn" onclick="resetUploadView()" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_title">Xuất bản tác phẩm mới</span></h2>
             </div>
-            <form id="uploadFormDOM">
+            <form id="uploadFormDOM" onsubmit="event.preventDefault();">
                 <div class="upload-grid">
                     <div>
                         <label style="font-weight:bold; color:var(--text-title); display:block; margin-bottom:8px;" data-i18n="upload_thumb_label">Ảnh bìa dự án</label>
@@ -10910,7 +10935,7 @@
             </div>
             
             <div class="modal-studio-body">
-                <form onsubmit="handleUploadAssetSubmit(event)">
+                <form id="uploadAssetFormDOM" onsubmit="event.preventDefault();">
                     
                     <!-- Khung Dropzone tương tác -->
                     <div class="form-group" style="margin-bottom: 12px;">
@@ -10994,8 +11019,11 @@
                 <div id="quickViewTagsArea" class="asset-tags-wrapper" style="max-height:none; margin-bottom:18px;"></div>
 
                 <div style="display:flex; gap:10px; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;">
-                    <button type="button" id="quickViewDownloadBtn" class="btn btn-primary" style="flex:2; justify-content:center; padding:11px; font-weight:800; border-radius:12px;" onclick="downloadCurrentQuickViewAsset()">
-                        <i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Tải về máy</span>
+                    <button type="button" id="quickViewDownloadBtn" class="btn-hold-send-wow" style="flex:2; padding:11px; font-size:0.92rem; border-radius:14px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 4px 14px rgba(13, 165, 122, 0.3);">
+                        <div class="hold-progress-fill" id="qvDownloadHoldFill" style="background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);"></div>
+                        <div class="btn-inner-content" id="qvDownloadHoldText">
+                            <i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Giữ để tải về máy</span>
+                        </div>
                     </button>
                     <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:var(--primary);" onclick="shareCurrentAssetToGlobalChat()" title="Chia sẻ vào Kênh Giao Lưu">
                         <i class="fa-solid fa-earth-americas"></i>
@@ -12847,13 +12875,21 @@
             } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         });
 
-        // ================= BỘ ĐIỀU KHIỂN NHẤN GIỮ CHUNG CHO CÁC NÚT HÀNH ĐỘNG =================
-        function setupGenericHoldButton({ btnId, fillId, textId, defaultHtml, onValidate, onExecute, durationMs = 1000 }) {
+        // ================= BỘ ĐIỀU KHIỂN NHẤN GIỮ CHUNG CHO CÁC NÚT HÀNH ĐỘNG (CHUẨN TẶNG WOW) =================
+        function setupGenericHoldButton({ btnId, fillId, textId, defaultHtml, onValidate, onExecute, durationMs = 1100 }) {
             const btn = document.getElementById(btnId);
             const fillEl = document.getElementById(fillId);
             const textEl = document.getElementById(textId);
-            if (!btn || !fillEl || !textEl || btn.dataset.holdBound === 'true') return;
+            if (!btn || !fillEl || !textEl) return;
+            if (btn.dataset.holdBound === 'true') return;
             btn.dataset.holdBound = 'true';
+
+            // CHẶN HOÀN TOÀN SỰ KIỆN CLICK TỰ NHIÊN (BẤM NHANH BUÔNG TAY SẼ KHÔNG BAO GIỜ CHẠY)
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            });
 
             let holdProgress = 0;
             let holdInterval = null;
@@ -12869,7 +12905,10 @@
 
             const startHold = (e) => {
                 if (btn.disabled || isHolding) return;
-                if (onValidate && !onValidate()) return;
+                if (onValidate && !onValidate()) {
+                    resetBtnUI();
+                    return;
+                }
 
                 holdProgress = 0;
                 isHolding = true;
@@ -12910,6 +12949,66 @@
             btn.addEventListener('touchstart', startHold, { passive: true });
             window.addEventListener('touchend', stopHold);
             window.addEventListener('touchcancel', stopHold);
+        }
+
+        // HÀM NHẤN GIỮ RIÊNG DÀNH CHO CÁC NÚT TẢI ASSET TRÊN THẺ (CARD PILL)
+        let activeHoldingAssetPill = null;
+        let assetPillHoldInterval = null;
+
+        function startAssetPillHold(btn, fileUrl, fileName, event) {
+            if (!btn) return;
+            btn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
+
+            const fillEl = btn.querySelector('.hold-progress-fill');
+            const textSpan = btn.querySelector('.btn-inner-content span');
+            let progress = 0;
+
+            btn.classList.add('is-holding');
+            if (fillEl) fillEl.style.width = '0%';
+            if (textSpan) textSpan.innerText = '0%';
+
+            clearInterval(assetPillHoldInterval);
+            activeHoldingAssetPill = btn;
+
+            const durationMs = 1000;
+            const stepMs = 40;
+            const inc = 100 / (durationMs / stepMs);
+
+            assetPillHoldInterval = setInterval(() => {
+                progress += inc;
+                const pct = Math.min(100, Math.round(progress));
+                if (fillEl) fillEl.style.width = `${pct}%`;
+                if (textSpan) textSpan.innerText = `${pct}%`;
+
+                if (progress >= 100) {
+                    clearInterval(assetPillHoldInterval);
+                    activeHoldingAssetPill = null;
+                    btn.classList.remove('is-holding');
+                    if (fillEl) fillEl.style.width = '0%';
+                    if (textSpan) textSpan.innerText = 'Đang tải...';
+                    downloadAssetDirectly(fileUrl, fileName);
+                    setTimeout(() => {
+                        if (textSpan) textSpan.innerText = 'Giữ để tải';
+                    }, 1200);
+                }
+            }, stepMs);
+
+            const stopPillHold = () => {
+                if (activeHoldingAssetPill === btn) {
+                    clearInterval(assetPillHoldInterval);
+                    activeHoldingAssetPill = null;
+                    btn.classList.remove('is-holding');
+                    if (fillEl) fillEl.style.width = '0%';
+                    if (textSpan && textSpan.innerText !== 'Đang tải...') textSpan.innerText = 'Giữ để tải';
+                }
+                window.removeEventListener('mouseup', stopPillHold);
+                window.removeEventListener('touchend', stopPillHold);
+                window.removeEventListener('touchcancel', stopPillHold);
+            };
+
+            window.addEventListener('mouseup', stopPillHold);
+            window.addEventListener('touchend', stopPillHold);
+            window.addEventListener('touchcancel', stopPillHold);
         }
 
         function setupAllActionHoldButtons() {
@@ -12992,6 +13091,20 @@
                     return true;
                 },
                 onExecute: submitCreateStudio
+            });
+
+            // 5. NÚT TẢI VỀ ASSET TRONG POPUP XEM TRƯỚC (QUICK VIEW)
+            setupGenericHoldButton({
+                btnId: 'quickViewDownloadBtn',
+                fillId: 'qvDownloadHoldFill',
+                textId: 'qvDownloadHoldText',
+                defaultHtml: '<i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Giữ để tải về máy</span>',
+                durationMs: 1000,
+                onValidate: () => {
+                    if (!activeQuickViewAsset) { showToast("Không tìm thấy tệp tài nguyên", "error"); return false; }
+                    return true;
+                },
+                onExecute: downloadCurrentQuickViewAsset
             });
         }
 
@@ -15970,6 +16083,7 @@
             }
 
             openModal('createStudioModal');
+            setTimeout(setupAllActionHoldButtons, 50);
         }
 
         async function submitCreateStudio() {
@@ -17278,6 +17392,7 @@
             document.getElementById('uploadChoiceStep').style.display = 'none';
             document.getElementById('uploadNewFormStep').style.display = 'block';
             document.getElementById('uploadUpdateStep').style.display = 'none';
+            setTimeout(setupAllActionHoldButtons, 50);
             
             // Tự động điền dữ liệu nếu đang có File chờ (nhận từ Extension)
             if (pendingImportedData) {
@@ -21177,8 +21292,9 @@
                                 <button type="button" class="asset-action-btn-circle" style="color:#f59e0b;" onclick="openReportModal('asset', '${a.assetId}')" title="Báo cáo">
                                     <i class="fa-solid fa-flag"></i>
                                 </button>
-                                <button type="button" class="asset-download-pill" onclick="downloadAssetDirectly('${fileUrl}', '${escapeHtml(a.title)}.${fileExt}')" title="Tải trực tiếp">
-                                    <i class="fa-solid fa-download"></i> <span>Tải</span>
+                                <button type="button" class="asset-download-pill" onmousedown="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" ontouchstart="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" title="Nhấn giữ 1s để tải về máy">
+                                    <div class="hold-progress-fill"></div>
+                                    <div class="btn-inner-content"><i class="fa-solid fa-download"></i> <span>Giữ để tải</span></div>
                                 </button>
                             </div>
                         </div>
@@ -21336,8 +21452,8 @@
             }
 
             openModal('quickViewAssetModal');
+            setTimeout(setupAllActionHoldButtons, 50);
         }
-
         function closeQuickViewModal() {
             const stage = document.getElementById('quickViewStage');
             if (stage) {
@@ -21412,6 +21528,7 @@
             }
 
             openModal('uploadAssetModal');
+            setTimeout(setupAllActionHoldButtons, 50);
         }
 
         // Bắt sự kiện chọn file tài nguyên để hiển thị tên và preview trực tiếp
