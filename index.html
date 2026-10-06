@@ -3512,67 +3512,104 @@
         .nav-link.active { color: var(--primary) !important; position: relative; }
         .nav-link.active::after { content: ''; position: absolute; bottom: 0; left: 10px; right: 10px; height: 3px; background: var(--primary); border-radius: 3px 3px 0 0; }
 
-        /* 📱 NAVIGATION BAR PHONE (5 TAB CHUẨN UX MOBILE VỚI NÚT SÁNG TẠO FAB Ở GIỮA) */
+
+
+
+        
+        /* 📱 NAVIGATION BAR PHONE (SCRATCH FLAT BLUE THEME) */
         .mobile-bottom-nav { 
             display: none; 
             position: fixed; 
             bottom: 0; 
             left: 0; 
             width: 100%; 
-            background: var(--bg-panel); 
-            border-top: 1px solid var(--border-color); 
+            background: var(--primary); /* Đổ màu Xanh Scratch */
+            border-top: none; 
             z-index: 2000; 
             align-items: center;
             justify-content: space-around; 
             padding: 6px 4px; 
             padding-bottom: env(safe-area-inset-bottom, 8px); 
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.06); 
+            box-shadow: none; 
         }
+        [data-theme="dark"] .mobile-bottom-nav { background: #1e1e1e; border-top: 1px solid #333; }
+        
         .mobile-nav-link { 
             flex: 1;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center;
-            color: var(--text-muted); 
+            color: rgba(255, 255, 255, 0.65); 
             text-decoration: none; 
             font-size: 0.72rem; 
             gap: 4px; 
-            font-weight: 700; 
-            transition: all 0.2s ease; 
+            font-weight: bold; 
+            transition: none; 
             min-height: 44px;
         }
         .mobile-nav-link i { font-size: 1.25rem; }
-        .mobile-nav-link.active { color: var(--primary); }
-        .mobile-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--border-color); }
+        .mobile-nav-link.active { color: #ffffff; background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
+        .mobile-user-avt { width: 24px; height: 24px; border-radius: 4px !important; object-fit: cover; border: none; }
 
-        /* Nút Sáng tạo FAB tròn nổi bật ở chính giữa */
+        /* Nút Sáng tạo FAB (Biến thành nút vuông dẹt, chìm vào thanh bar) */
         .mobile-nav-create-fab {
-            flex: 0 0 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
-            color: #ffffff !important;
+            flex: 0 0 36px;
+            width: 36px;
+            height: 36px;
+            border-radius: 4px !important;
+            background: #ffffff !important;
+            color: var(--primary) !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.45);
-            border: 3px solid var(--bg-panel);
-            margin-top: -16px; /* Nhô nhẹ lên trên thanh bar */
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: none !important;
+            border: none !important;
+            margin-top: 0;
+            padding: 0;
             text-decoration: none;
+            font-weight: bold;
         }
-        .mobile-nav-create-fab:active {
-            transform: scale(0.92);
+        .mobile-nav-create-fab:active { transform: none; background: #f9f9f9 !important; }
+        .mobile-nav-create-fab i { font-size: 1.1rem !important; color: var(--primary) !important; margin: 0; }
+        .mobile-nav-create-fab.active { background: #f0f0f0 !important; box-shadow: none !important; }
+
+        /* ================= SCRATCH PROJECT PAGE & AVATAR OVERRIDES ================= */
+        .player-container, .proj-action-bar, .proj-card-box, .info-card {
+            border-radius: 4px !important;
+            box-shadow: none !important;
+            border: 1px solid var(--border-color) !important;
+            background-image: none !important;
         }
-        .mobile-nav-create-fab i {
-            font-size: 1.35rem !important;
-            color: #ffffff !important;
-            margin: 0;
+        .proj-segmented-group {
+            border-radius: 4px !important;
+            border: 1px solid var(--border-color) !important;
         }
-        .mobile-nav-create-fab.active {
-            box-shadow: 0 0 0 4px rgba(13, 165, 122, 0.3), 0 8px 22px rgba(13, 165, 122, 0.6);
+        .proj-pill-btn {
+            border-radius: 4px !important;
+            box-shadow: none !important;
+            background: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
+            transform: none !important;
         }
+        .proj-pill-btn:hover {
+            background: var(--border-color) !important;
+            transform: none !important;
+        }
+        
+        /* 🐱 Scratch Avatars are Square! (Ép tất cả avatar toàn trang thành hình vuông bo góc 4px) */
+        .nav-user-avt, .lb-podium-avt, .lb-row-avt, .card-creator-avt, 
+        .profile-avt-lg, .notif-clean-avt, .chat-mention-avt, .follow-user-avt, 
+        .creator-buyer-avt-img, .avt-circle, .mobile-user-avt, .station-member-avt-box,
+        #projPageAuthorAvt, #projSidebarAuthorAvt, .widget-user-box img {
+            border-radius: 4px !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+
+
+
+
         
         @media (max-width: 768px) {
             .navbar .nav-center { display: none !important; }
