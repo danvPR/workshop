@@ -9211,6 +9211,10 @@
                     <button type="button" class="home-sort-seg-btn active" data-sort="foryou" onclick="changeHomeSort('foryou')">
                         <i class="fa-solid fa-star"></i> <span data-i18n="home_filter_foryou">Đề xuất</span>
                     </button>
+                    <!-- Nút Làm mới ngẫu nhiên (Chỉ hiện khi ở tab Đề xuất) -->
+                    <button type="button" id="btnRefreshForYou" class="home-sort-seg-btn" style="color: var(--primary); padding: 6px 12px; margin-right: 4px;" onclick="refreshForYou()" title="Refresh">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
                     <button type="button" class="home-sort-seg-btn" data-sort="recent" onclick="changeHomeSort('recent')">
                         <i class="fa-regular fa-clock"></i> <span data-i18n="home_filter_recent">Mới nhất</span>
                     </button>
@@ -14355,10 +14359,11 @@
             }
 
             try { 
-                let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
+                // Thêm &_t=Date.now() để ép trình duyệt luôn gọi dữ liệu xáo trộn mới nhất từ Worker
+                let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}&_t=${Date.now()}`;
                 if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                 
-                const res = await (await fetch(url)).json(); 
+                const res = await (await fetch(url)).json();
                 
                 if (res.projects) {
                     if (isLoadMore) {
@@ -14572,12 +14577,43 @@
             loadProjects(false);
         }
 
+        let foryouRefreshCooldown = false;
+        
+        async function refreshForYou() {
+            if (foryouRefreshCooldown) {
+                showToast("Vui lòng đợi 3 giây trước khi làm mới tiếp nhé!", "info");
+                return;
+            }
+            foryouRefreshCooldown = true;
+            
+            const btn = document.getElementById('btnRefreshForYou');
+            const icon = btn.querySelector('i');
+            if (icon) icon.classList.add('fa-spin');
+            
+            await loadProjects(false);
+            
+            // Mở khóa cooldown sau 3 giây và tắt xoay icon
+            setTimeout(() => {
+                if (icon) icon.classList.remove('fa-spin');
+                foryouRefreshCooldown = false;
+            }, 3000);
+        }
+
         function changeHomeSort(mode) {
             homeSortMode = mode;
             
+            // Ẩn/Hiện nút Refresh ngẫu nhiên tùy theo việc có đang ở tab Đề xuất hay không
+            const btnRefresh = document.getElementById('btnRefreshForYou');
+            if (btnRefresh) {
+                btnRefresh.style.display = (mode === 'foryou') ? 'inline-flex' : 'none';
+            }
+            
             // Cập nhật trạng thái nút Segmented
             document.querySelectorAll('.home-sort-seg-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.sort === mode);
+                // Bỏ qua nút làm mới khi đổi class active
+                if (b.id !== 'btnRefreshForYou') {
+                    b.classList.toggle('active', b.dataset.sort === mode);
+                }
             });
             
             loadProjects(false);
