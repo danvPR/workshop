@@ -11441,6 +11441,17 @@
                         </button>
                     </form>
 
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 12px 0;">
+                        <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                        <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700;">HOẶC</span>
+                        <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                    </div>
+
+                    <button type="button" class="btn" onclick="loginScratch()" style="width: 100%; justify-content: center; padding: 10px; border-radius: 11px; font-weight: 800; font-size: 0.88rem; background: #ea580c; color: #ffffff !important; border: none; gap: 8px;">
+                        <img src="https://scratch.mit.edu/favicon.ico" style="width: 16px; height: 16px; border-radius: 2px;">
+                        <span>Đăng nhập bằng Scratch Auth</span>
+                    </button>
+
                     <div style="text-align:center; font-size:0.84rem; color:var(--text-muted); margin-top:16px;">
                         <span data-i18n="auth_login_no_acc">Don't have an account?</span> 
                         <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color:var(--primary); font-weight:700; text-decoration:none; margin-left:4px;" data-i18n="auth_login_reg_now">Sign up now (+50 WOW)</a>
@@ -12745,7 +12756,7 @@
             });
         })();
 
-        const WIKI_CLIENT_ID = "70970406"; 
+        const SCRATCH_AUTH_URL = "https://auth.itinerary.eu.org";
         const WORKER_URL = "https://app.studiodanv.workers.dev"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
         const KLIPY_API_KEY = "u5fpMSE07ITa9E5Nxh9meqnGez7Km7PCC2mj3V6NviVocR7nBEThpAZQEFOn4S1S";
@@ -13194,23 +13205,56 @@
                         showToast(`Bạn được @${refCandidate.trim()} mời gia nhập! Đăng ký ngay để nhận 50 WOW.`, 'info');
                     }
                 }
-                if (urlParams.get('code')) {
+                const scratchAuthCode = urlParams.get('privateCode') || urlParams.get('code');
+                if (scratchAuthCode) {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
                     
-                    // NẾU CODE TỪ LINK SCRATCH MÀ ĐÃ CÓ CURRENTUSER => NGHĨA LÀ HỌ ĐANG LIÊN KẾT NICK
+                    // NẾU CODE TỪ LINK SCRATCH MÀ ĐÃ CÓ CURRENTUSER => LIÊN KẾT NICK
                     if (localStorage.getItem('is_linking_scratch') === 'true' && currentUser) {
                         localStorage.removeItem('is_linking_scratch');
-                        const res = await apiFetch(`/api/auth/link_scratch`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }) });
-                        if(res && res.success) { showToast("Đã liên kết Scratch thành công!", "success"); location.hash = `#settings`; }
+                        const res = await apiFetch(`/api/auth/link_scratch`, { method: 'POST', body: JSON.stringify({ privateCode: scratchAuthCode }) });
+                        if(res && res.success) { 
+                            showToast("Đã liên kết tài khoản Scratch thành công!", "success"); 
+                            location.hash = `#settings`; 
+                        } else if(res && res.error) {
+                            showToast(res.error, "error");
+                        }
                     } else {
-                        // NẾU LÀ ĐĂNG NHẬP SCRATCH THEO KIỂU CŨ
-                        const res = await (await fetch(`${WORKER_URL}/api/auth/verify`, { method: 'POST', body: JSON.stringify({ code: urlParams.get('code') }), headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
-                        if (res.success) {
-                            currentUser = { username: res.username, sessionToken: res.sessionToken, avt: res.avt };
-                            localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                            showToast(`Đăng nhập tạm thời thành công!`, 'success');
-                            // Check xem đã có mail chưa, chưa có thì ép cập nhật
-                            checkLegacyUser();
+                        // NẾU LÀ ĐĂNG NHẬP QUA SCRATCH AUTH (AUTH.ITINERARY.EU.ORG)
+                        try {
+                            const res = await (await fetch(`${WORKER_URL}/api/auth/verify`, { 
+                                method: 'POST', 
+                                headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
+                                body: JSON.stringify({ privateCode: scratchAuthCode }) 
+                            })).json();
+
+                            if (res && res.isBanned) {
+                                const bannedData = {
+                                    username: res.username || "User",
+                                    reason: res.banReason || "Vi phạm tiêu chuẩn cộng đồng DANVworkshop"
+                                };
+                                sessionStorage.setItem('danv_banned_info', JSON.stringify(bannedData));
+                                navigateTo('#banned');
+                            } else if (res && res.success) {
+                                currentUser = { 
+                                    username: res.username, 
+                                    sessionToken: res.sessionToken, 
+                                    avt: res.avt,
+                                    role: res.role || "user",
+                                    email: res.email || "",
+                                    emailVerified: res.emailVerified !== undefined ? res.emailVerified : true,
+                                    WOW: res.WOW !== undefined ? res.WOW : (res.omg || 0),
+                                    frame: res.frame || null,
+                                    chatFrame: res.chatFrame || ""
+                                };
+                                localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                                showToast(`Đăng nhập thành công với Scratch @${res.username}!`, 'success');
+                                checkLegacyUser();
+                            } else {
+                                showToast(res?.error || "Xác thực Scratch Auth thất bại!", "error");
+                            }
+                        } catch(err) {
+                            showToast("Lỗi kết nối khi xác thực tài khoản Scratch!", "error");
                         }
                     }
                 } else if(currentUser) {
@@ -13927,8 +13971,16 @@
                 btn.innerHTML = origHtml;
             }
         }
-        function loginScratch() { const state = Math.random().toString(36).substring(2); localStorage.setItem('oauth_state', state); window.location.href = `https://oauth2.scratch-wiki.info/wiki/Special:ScratchOAuth2/authorize?client_id=${WIKI_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&scopes=identify&state=${state}`; }
-        function linkScratchAuth() { localStorage.setItem('is_linking_scratch', 'true'); loginScratch(); }
+        function loginScratch() {
+            // Chuẩn hóa redirect URL về URL gốc sạch sẽ và mã hóa Base64
+            const redirectUrl = window.location.origin + window.location.pathname;
+            const redirectLocation = btoa(redirectUrl);
+            window.location.href = `${SCRATCH_AUTH_URL}/auth/?redirect=${encodeURIComponent(redirectLocation)}&name=DANVworkshop`;
+        }
+        function linkScratchAuth() {
+            localStorage.setItem('is_linking_scratch', 'true');
+            loginScratch();
+        }
         function logout() { localStorage.removeItem('danv_user'); currentUser = null; window.location.hash = '#home'; location.reload(); }
 
         // ================= ĐỢT 3: HEARTBEAT ENGINE (ROUTING & NAV) =================
