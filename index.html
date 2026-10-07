@@ -9536,7 +9536,7 @@
             <div class="profile-hero">
                 <div class="profile-cover-bg" id="profCoverBg">
                     <button type="button" id="btnChangeCover" class="btn-change-cover" style="display:none;" onclick="triggerCoverUpload()">
-                        <i class="fa-solid fa-camera"></i> <span>Đổi ảnh bìa</span>
+                        <i class="fa-solid fa-camera"></i> <span data-i18n="profile_change_cover">Đổi ảnh bìa</span>
                     </button>
                     <input type="file" id="directCoverUpload" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" style="display:none;" onchange="handleDirectCoverUpload(this)">
                 </div>
@@ -10019,7 +10019,7 @@
         <div class="modal" style="max-width: 540px; max-height: 85vh; display: flex; flex-direction: column; border-radius: 20px;">
             <div class="modal-header" style="padding: 16px 20px;">
                 <span style="font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-star" style="color: #f59e0b;"></i> Chọn Tác Phẩm Tâm Huyết
+                    <i class="fa-solid fa-star" style="color: #f59e0b;"></i> <span data-i18n="featured_project_modal_title">Chọn Tác Phẩm Tâm Huyết</span>
                 </span>
                 <button class="btn-close" onclick="closeModal('selectFeaturedProjModal')">&times;</button>
             </div>
@@ -10151,15 +10151,15 @@
 
                     <!-- THIẾT LẬP BẬT/TẮT THÔNG BÁO MÀN HÌNH KÊNH GIAO LƯU -->
                     <div class="form-group" style="margin-bottom: 25px;" id="chatNotifSettingCard">
-                        <label>Thông báo Kênh Giao Lưu (Desktop Notifications):</label>
+                        <label data-i18n="settings_chat_notif_title">Thông báo Kênh Giao Lưu (Desktop Notifications):</label>
                         <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; background:var(--bg-secondary); padding:16px 18px; border-radius:14px; border:1px solid var(--border-color); margin-top:8px;">
                             <div style="min-width:0; flex:1;">
                                 <div style="font-weight:800; font-size:0.95rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
                                     <i class="fa-solid fa-bell" style="color:var(--primary);"></i>
-                                    <span>Thông báo tin nhắn màn hình</span>
+                                    <span data-i18n="settings_chat_notif_name">Thông báo tin nhắn màn hình</span>
                                 </div>
                                 <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px; line-height:1.45;" id="chatNotifStatusDesc">
-                                    Nhận thông báo nổi từ trình duyệt khi có tin nhắn mới kèm avatar người gửi và nội dung tóm tắt.
+                                    <span data-i18n="settings_chat_notif_desc">Nhận thông báo nổi từ trình duyệt khi có tin nhắn mới kèm avatar người gửi và nội dung tóm tắt.</span>
                                 </div>
                             </div>
                             <div id="chatNotifControlArea" style="flex-shrink:0;">
@@ -10991,7 +10991,7 @@
                         <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hỗ trợ PNG, JPG, WebP, GIF, APNG (Tối đa 5MB).</div>
                     </div>
                     <div class="form-group">
-                        <label><i class="fa-solid fa-panorama" style="color:var(--primary);"></i> Đổi Ảnh bìa trang cá nhân:</label>
+                        <label><i class="fa-solid fa-panorama" style="color:var(--primary);"></i> <span data-i18n="settings_cover_label">Đổi Ảnh bìa trang cá nhân:</span></label>
                         <input type="file" id="editCoverFile" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" class="form-control" style="padding:8px;">
                         <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">Ảnh nền lớn phía sau avatar (Tối đa 10MB).</div>
                     </div>
@@ -11256,13 +11256,13 @@
                     
                     <!-- Khung Dropzone tương tác -->
                     <div class="form-group" style="margin-bottom: 12px;">
-                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;">Tệp tin đính kèm (Tối đa 50MB) *:</label>
+                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin-bottom:6px; display:block;" data-i18n="asset_upload_file">Tệp tin đính kèm (Tối đa 50MB) *:</label>
                         <label for="assetUpFile" class="interactive-dropzone" id="assetDropzoneBox">
                             <i class="fa-solid fa-cloud-arrow-up dropzone-icon" id="assetDropIcon"></i>
                             <img id="assetDropPreviewImg" class="preview-drop-img" alt="Xem thử">
                             <div id="assetDropTextWrap">
-                                <b style="font-size:0.92rem; color:var(--text-title); display:block;" id="assetDropMainText">Nhấp để chọn hoặc kéo thả tệp vào đây</b>
-                                <span style="font-size:0.76rem; color:var(--text-muted); margin-top:3px; display:block;">Hỗ trợ: PNG, JPG, GIF, SVG, MP3, WAV, OGG...</span>
+                                <b style="font-size:0.92rem; color:var(--text-title); display:block;" id="assetDropMainText" data-i18n="asset_upload_drop_label">Nhấp để chọn hoặc kéo thả tệp vào đây</b>
+                                <span style="font-size:0.76rem; color:var(--text-muted); margin-top:3px; display:block;" data-i18n="asset_upload_drop_hint">Hỗ trợ: PNG, JPG, GIF, SVG, MP3, WAV, OGG...</span>
                             </div>
                         </label>
                         <input type="file" id="assetUpFile" required style="display:none;" accept="image/*, audio/*, video/*, .svg" onchange="handleAssetFileSelected(this)">
@@ -11276,13 +11276,13 @@
                     <div class="form-group" style="margin-bottom: 16px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                             <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin:0;" data-i18n="asset_upload_tags">Từ khóa tìm kiếm (Tags) *:</label>
-                            <span style="font-size:0.74rem; color:var(--text-muted);">Cách nhau bằng dấu phẩy</span>
+                            <span style="font-size:0.74rem; color:var(--text-muted);" data-i18n="asset_upload_tag_separator">Cách nhau bằng dấu phẩy</span>
                         </div>
                         <input type="text" id="assetUpKeywords" class="form-control" required data-i18n-ph="asset_upload_tags_ph" placeholder="sprite, pixel, effect, bgm..." style="border-radius: 12px;">
                         
                         <!-- Gợi ý tag chọn nhanh -->
                         <div class="modal-tag-suggestions">
-                            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; align-self:center;">Gợi ý:</span>
+                            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; align-self:center;" data-i18n="asset_upload_tag_suggestions">Gợi ý:</span>
                             <span class="modal-suggest-tag" onclick="appendAssetKeyword('sprite')">#sprite</span>
                             <span class="modal-suggest-tag" onclick="appendAssetKeyword('pixel')">#pixel</span>
                             <span class="modal-suggest-tag" onclick="appendAssetKeyword('background')">#background</span>
@@ -12474,14 +12474,14 @@
             <div class="gamepay-header">
                 <div class="gamepay-header-title">
                     <span class="wow-icon" style="font-size: 1.15rem;"></span>
-                    <span>Xác Nhận Mở Khóa</span>
+                    <span data-i18n="frame_confirm_title">Xác Nhận Mở Khóa</span>
                 </div>
                 <button class="btn-close" onclick="closeModal('frameConfirmBuyModal')">&times;</button>
             </div>
             
             <div class="gamepay-body">
                 <div style="font-size: 0.88rem; color: var(--text-muted); text-align: center;">
-                    Bạn đang chuẩn bị mở khóa vật phẩm vĩnh viễn:
+                    <span data-i18n="frame_confirm_desc">Bạn đang chuẩn bị mở khóa vật phẩm vĩnh viễn:</span>
                 </div>
 
                 <div class="gamepay-item-card">
@@ -12502,14 +12502,14 @@
 
                 <div class="gamepay-balance-grid">
                     <div class="gamepay-balance-box">
-                        <span class="gamepay-balance-label">Ví hiện tại</span>
+                        <span class="gamepay-balance-label" data-i18n="frame_balance_current">Ví hiện tại</span>
                         <div class="gamepay-balance-val">
                             <span class="wow-icon" style="font-size:1rem;"></span>
                             <span id="confirmBuyCurrentBalance">0</span>
                         </div>
                     </div>
                     <div class="gamepay-balance-box">
-                        <span class="gamepay-balance-label">Sau khi mua</span>
+                        <span class="gamepay-balance-label" data-i18n="frame_balance_after">Sau khi mua</span>
                         <div class="gamepay-balance-val remaining">
                             <span class="wow-icon" style="font-size:1rem;"></span>
                             <span id="confirmBuyRemainingBalance">0</span>
@@ -12519,10 +12519,10 @@
 
                 <div class="gamepay-actions">
                     <button type="button" class="btn-gamepay-cancel" onclick="closeModal('frameConfirmBuyModal')">
-                        Để sau
+                        <span data-i18n="frame_confirm_cancel">Để sau</span>
                     </button>
                     <button type="button" class="btn-gamepay-confirm" id="btnExecuteBuyItem" onclick="executeBuySelectedItem()">
-                        <i class="fa-solid fa-unlock"></i> <span>Xác nhận mua</span>
+                        <i class="fa-solid fa-unlock"></i> <span data-i18n="frame_confirm_buy">Xác nhận mua</span>
                     </button>
                 </div>
             </div>
@@ -12536,16 +12536,16 @@
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="wow-icon" style="font-size: 1.3rem;"></span>
-                        <span style="font-size: 1.15rem; font-weight: 900; color: var(--text-title);">Studio Thời Trang WOW</span>
+                        <span style="font-size: 1.15rem; font-weight: 900; color: var(--text-title);" data-i18n="frame_shop_heading">Studio Thời Trang WOW</span>
                     </div>
                     
                     <!-- Tab Chuyển đổi Khung Avatar / Khung Chat -->
                     <div class="auth-nav-tabs" style="margin-left: 10px;">
                         <button type="button" class="auth-nav-tab-btn active" id="tabShopAvatar" onclick="switchShopType('avatar')">
-                            <i class="fa-solid fa-crop-simple"></i> <span>Khung Avatar</span>
+                            <i class="fa-solid fa-crop-simple"></i> <span data-i18n="frame_shop_avatar_tab">Khung Avatar</span>
                         </button>
                         <button type="button" class="auth-nav-tab-btn" id="tabShopChat" onclick="switchShopType('chat')">
-                            <i class="fa-solid fa-comment-dots"></i> <span>Khung Chat</span>
+                            <i class="fa-solid fa-comment-dots"></i> <span data-i18n="frame_shop_chat_tab">Khung Chat</span>
                         </button>
                     </div>
                 </div>
@@ -12574,8 +12574,8 @@
                         <!-- Bục thử Bong bóng Chat Xem trước -->
                         <div id="tryonChatStageWrap" style="display:none; width: 100%; margin: 15px 0 20px 0; text-align: left;">
                             <div class="chat-bubble" id="tryonChatBubblePreview" style="max-width: 100%; font-size: 0.88rem; width: 100%;">
-                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">Tin nhắn xem thử</div>
-                                <span>Chào bạn! Đây là khung chat phong cách của bạn ✨</span>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;" data-i18n="frame_shop_chat_preview_title">Tin nhắn xem thử</div>
+                                <span data-i18n="frame_shop_chat_preview_text">Chào bạn! Đây là khung chat phong cách của bạn ✨</span>
                             </div>
                         </div>
 
@@ -12588,8 +12588,8 @@
                             <!-- Nút thao tác tự đổi theo khung đang chọn -->
                         </div>
 
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 14px; line-height: 1.4;" data-i18n="frame_tryon_hint">
-                            <i class="fa-solid fa-circle-info"></i> Bấm vào bất kỳ khung nào bên phải để thử lên Avatar của bạn ngay lập tức.
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 14px; line-height: 1.4;">
+                            <i class="fa-solid fa-circle-info"></i> <span data-i18n="frame_tryon_hint">Bấm vào bất kỳ khung nào bên phải để thử lên Avatar của bạn ngay lập tức.</span>
                         </div>
                     </div>
 
@@ -12960,13 +12960,21 @@
 
                 updateStaticDOM();
                 updateNav();
+                if (document.getElementById('chatNotifControlArea')) updateChatNotifSettingUI();
 
                 if (document.getElementById('dailyRewardModal')?.style.display === 'flex') {
                     renderDailyTab(window.currentDailyTab || 'single');
                 }
+                if (document.getElementById('frameShopModal')?.style.display === 'flex') {
+                    renderShopGrid();
+                    if (selectedShopItem) selectShopItemToTry(selectedShopItem.id);
+                }
                 if (profileGrid) {
                     updateBentoCountBadge();
                     updateBentoFloatButtonUI();
+                    if (currentBentoData && !isBentoEditMode && document.getElementById('profileView')?.style.display === 'block') {
+                        renderBentoGrid(currentBentoData);
+                    }
                 }
                 if (document.getElementById('lbPodiumArea')?.children.length || document.getElementById('lbListArea')?.children.length) renderLeaderboard();
                 if (document.getElementById('assetGridList')?.children.length) renderAssetGrid();
@@ -13248,7 +13256,7 @@
                 holdProgress = 0;
                 isHolding = true;
                 btn.classList.add('is-holding');
-                if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.15rem; color:#fef08a;"></i> <span>ĐANG NẠP 0%</span>`;
+                if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.15rem; color:#fef08a;"></i> <span>${t('hold_progress', { percent: 0 })}</span>`;
 
                 clearInterval(holdInterval);
                 const stepMs = 40;
@@ -13258,12 +13266,12 @@
                     holdProgress += increment;
                     const curPct = Math.min(100, Math.round(holdProgress));
                     if (fillEl) fillEl.style.width = `${curPct}%`;
-                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.15rem; color:#fef08a;"></i> <span>ĐANG NẠP ${curPct}%</span>`;
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.15rem; color:#fef08a;"></i> <span>${t('hold_progress', { percent: curPct })}</span>`;
 
                     if (holdProgress >= 100) {
                         clearInterval(holdInterval);
                         isHolding = false;
-                        if (textEl) textEl.innerHTML = `<i class="fa-solid fa-bolt fa-beat" style="font-size:1.2rem; color:#fff;"></i> <span>ĐANG TIẾN HÀNH...</span>`;
+                        if (textEl) textEl.innerHTML = `<i class="fa-solid fa-bolt fa-beat" style="font-size:1.2rem; color:#fff;"></i> <span>${t('hold_processing')}</span>`;
                         Promise.resolve(onExecute()).finally(() => {
                             resetBtnUI();
                         });
@@ -13320,10 +13328,10 @@
                     activeHoldingAssetPill = null;
                     btn.classList.remove('is-holding');
                     if (fillEl) fillEl.style.width = '0%';
-                    if (textSpan) textSpan.innerText = 'Đang tải...';
+                    if (textSpan) textSpan.innerText = t('assets_downloading');
                     downloadAssetDirectly(fileUrl, fileName);
                     setTimeout(() => {
-                        if (textSpan) textSpan.innerText = 'Giữ để tải';
+                        if (textSpan) textSpan.innerText = t('assets_hold_download');
                     }, 1200);
                 }
             }, stepMs);
@@ -13334,7 +13342,7 @@
                     activeHoldingAssetPill = null;
                     btn.classList.remove('is-holding');
                     if (fillEl) fillEl.style.width = '0%';
-                    if (textSpan && textSpan.innerText !== 'Đang tải...') textSpan.innerText = 'Giữ để tải';
+                    if (textSpan && textSpan.innerText !== t('assets_downloading')) textSpan.innerText = t('assets_hold_download');
                 }
                 window.removeEventListener('mouseup', stopPillHold);
                 window.removeEventListener('touchend', stopPillHold);
@@ -19134,6 +19142,37 @@
             renderNotifList();
         }
 
+        function translateNotifActivity(text, sender, senderLink) {
+            const match = text.match(/^(@[a-zA-Z0-9_.-]+)\s+(.+)$/s);
+            if (!match) return null;
+
+            const actor = match[1];
+            const actorHtml = actor.slice(1).toLowerCase() === String(sender).toLowerCase()
+                ? senderLink
+                : `<b>${actor}</b>`;
+            const action = match[2].trim();
+            const projectTitle = (value) => value.trim().replace(/^&quot;|&quot;$/g, '').replace(/^"|"$/g, '').replace(/[.!]$/, '');
+
+            let result = action.match(/^đã đánh dấu sao dự án\s+(.+?)[.!]?$/i);
+            if (result) return t('notif_action_starred_project', { actor: actorHtml, project: projectTitle(result[1]) });
+
+            result = action.match(/^đã thích dự án\s+(.+?)[.!]?$/i);
+            if (result) return t('notif_action_liked_project', { actor: actorHtml, project: projectTitle(result[1]) });
+
+            result = action.match(/^đã trả lời bạn trong dự án\s+(.+?)[.!]?$/i);
+            if (result) return t('notif_action_replied_project', { actor: actorHtml, project: projectTitle(result[1]) });
+
+            result = action.match(/^đã bình luận(?:\s+(?:trong|về) dự án\s+(.+?))?[.!]?$/i);
+            if (result) {
+                return result[1]
+                    ? t('notif_action_commented_project', { actor: actorHtml, project: projectTitle(result[1]) })
+                    : t('notif_action_commented', { actor: actorHtml });
+            }
+
+            if (/^đã theo dõi bạn[.!]?$/i.test(action)) return t('notif_action_followed', { actor: actorHtml });
+            return null;
+        }
+
         // BỘ NHẬN DIỆN VÀ RENDER THÔNG BÁO TINH GIẢN (KẾT HỢP BUBBLE CHAT)
         function formatScratchNotif(n) {
             let sender = n.sender || "Hệ thống";
@@ -19260,18 +19299,23 @@
                 let textBeforeQuote = parts.slice(0, -1).join(': &quot;');
                 let commentSnippet = parts[parts.length - 1].replace(/&quot;$/, '');
 
-                textBeforeQuote = textBeforeQuote.replace(sender, senderLink);
+                const translatedPrefix = translateNotifActivity(textBeforeQuote, sender, senderLink);
+                if (translatedPrefix) {
+                    actionHtml = translatedPrefix;
+                } else {
+                    textBeforeQuote = textBeforeQuote.replace(sender, senderLink);
+                }
                 const projRegex = /(?:dự án|Station)\s+&quot;(.*?)&quot;/i;
 
-                if (projRegex.test(textBeforeQuote)) {
+                if (!translatedPrefix && projRegex.test(textBeforeQuote)) {
                     textBeforeQuote = textBeforeQuote.replace(projRegex, (match, p1) => {
                         return match.includes('Station') ? `trạm <b>${p1}</b>` : `dự án <b>${p1}</b>`;
                     });
-                } else if (textBeforeQuote.includes("hồ sơ của bạn")) {
+                } else if (!translatedPrefix && textBeforeQuote.includes("hồ sơ của bạn")) {
                     textBeforeQuote = textBeforeQuote.replace("hồ sơ của bạn", `<b>hồ sơ của bạn</b>`);
                 }
 
-                actionHtml = textBeforeQuote;
+                if (!translatedPrefix) actionHtml = textBeforeQuote;
                 
                 // Trả về bong bóng chat và thanh nút reply nhanh
                 bubbleHtml = `
@@ -19291,6 +19335,9 @@
                 `;
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
+
+            const translatedActivity = translateNotifActivity(mainText, sender, senderLink);
+            if (translatedActivity) return { actionHtml: translatedActivity, bubbleHtml, link: linkWithTab };
 
             // 4. Lượt thích, Yêu thích, Follow và các Action khác không có Quote
             actionHtml = mainText.replace(sender, senderLink);
@@ -21632,7 +21679,7 @@
                                 </button>
                                 <button type="button" class="asset-download-pill" onmousedown="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" ontouchstart="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" data-i18n-title="tooltip_asset_download_hold" title="${t('tooltip_asset_download_hold')}">
                                     <div class="hold-progress-fill"></div>
-                                    <div class="btn-inner-content"><i class="fa-solid fa-download"></i> <span>Giữ để tải</span></div>
+                                    <div class="btn-inner-content"><i class="fa-solid fa-download"></i> <span>${t('assets_hold_download')}</span></div>
                                 </button>
                             </div>
                         </div>
@@ -22750,8 +22797,8 @@
             if (!controlArea) return;
 
             if (!("Notification" in window)) {
-                controlArea.innerHTML = `<span style="font-size:0.8rem; color:#ef4444; font-weight:700;"><i class="fa-solid fa-ban"></i> Không hỗ trợ</span>`;
-                if (descEl) descEl.innerText = "Trình duyệt của bạn không hỗ trợ tính năng Web Notification.";
+                controlArea.innerHTML = `<span style="font-size:0.8rem; color:#ef4444; font-weight:700;"><i class="fa-solid fa-ban"></i> ${t('settings_chat_notif_unsupported')}</span>`;
+                if (descEl) descEl.innerText = t('settings_chat_notif_unsupported_desc');
                 return;
             }
 
@@ -22761,17 +22808,17 @@
             if (perm === "denied") {
                 controlArea.innerHTML = `
                     <span style="font-size:0.8rem; color:#ef4444; font-weight:700; display:inline-flex; align-items:center; gap:5px;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Bị chặn
+                        <i class="fa-solid fa-triangle-exclamation"></i> ${t('settings_chat_notif_blocked')}
                     </span>
                 `;
-                if (descEl) descEl.innerHTML = `Trình duyệt đang chặn thông báo. Vui lòng bấm vào <b>biểu tượng 🔒 ở thanh địa chỉ</b> để mở quyền cho trang web.`;
+                if (descEl) descEl.innerText = t('settings_chat_notif_blocked_desc');
             } else if (perm === "default") {
                 controlArea.innerHTML = `
                     <button type="button" class="btn btn-primary" onclick="handleRequestChatNotifPermission()" style="font-size:0.82rem; padding:6px 14px; border-radius:18px; font-weight:800;">
-                        <i class="fa-solid fa-key"></i> Cấp quyền
+                        <i class="fa-solid fa-key"></i> ${t('settings_chat_notif_permission')}
                     </button>
                 `;
-                if (descEl) descEl.innerText = "Bấm nút Cấp quyền để cho phép hiển thị thông báo tin nhắn mới trên màn hình.";
+                if (descEl) descEl.innerText = t('settings_chat_notif_permission_desc');
             } else {
                 // Đã được cấp quyền -> Hiển thị công tắc Switch
                 controlArea.innerHTML = `
@@ -22781,8 +22828,8 @@
                     </label>
                 `;
                 if (descEl) descEl.innerText = isEnabled 
-                    ? "Đang bật thông báo nổi màn hình khi có tin nhắn mới kèm avatar người gửi." 
-                    : "Đã tắt thông báo màn hình (bạn vẫn nhận thông báo trong hòm thư hệ thống).";
+                    ? t('settings_chat_notif_enabled')
+                    : t('settings_chat_notif_disabled');
             }
         }
 
@@ -22790,7 +22837,7 @@
         function handleToggleChatNotification(checked) {
             localStorage.setItem('danv_chat_desktop_notif', checked ? 'true' : 'false');
             updateChatNotifSettingUI();
-            showToast(checked ? "Đã bật thông báo Kênh Giao Lưu trên màn hình!" : "Đã tắt thông báo màn hình!", "success");
+            showToast(checked ? t('toast_chat_notif_enabled') : t('toast_chat_notif_disabled'), "success");
         }
 
         // XỬ LÝ BẤM NÚT XIN QUYỀN THÔNG BÁO
@@ -22800,16 +22847,16 @@
                 const perm = await Notification.requestPermission();
                 if (perm === "granted") {
                     localStorage.setItem('danv_chat_desktop_notif', 'true');
-                    showToast("Đã cấp quyền thông báo thành công!", "success");
+                    showToast(t('toast_chat_notif_permission_granted'), "success");
                     // Bắn một thông báo chào mừng kiểm thử
                     try {
-                        new Notification("Kênh Giao Lưu • DANVworkshop", {
-                            body: "🎉 Bạn đã kích hoạt thông báo tin nhắn thành công!",
+                        new Notification(t('chat_notif_welcome_title'), {
+                            body: t('chat_notif_welcome_body'),
                             icon: "https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png"
                         });
                     } catch(e) {}
                 } else if (perm === "denied") {
-                    showToast("Quyền thông báo đã bị từ chối!", "error");
+                    showToast(t('toast_chat_notif_permission_denied'), "error");
                 }
                 updateChatNotifSettingUI();
             } catch(e) {
@@ -24968,7 +25015,7 @@
             if (!item) {
                 item = {
                     id: 'none',
-                    name: isAvatar ? 'Khung Mặc định' : 'Bong bóng Mặc định',
+                    name: isAvatar ? t('frame_default_name') : t('frame_chat_default_name'),
                     url: '',
                     cssClass: '',
                     price: 0
@@ -25027,13 +25074,13 @@
             if (chipEl) {
                 if (isEquipped) {
                     chipEl.className = 'tryon-status-chip status-equipped';
-                    chipEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Đang trang bị</span>';
+                    chipEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${t('frame_status_equipped')}</span>`;
                 } else if (isOwned) {
                     chipEl.className = 'tryon-status-chip status-owned';
-                    chipEl.innerHTML = '<i class="fa-solid fa-box-archive"></i> <span>Đã sở hữu</span>';
+                    chipEl.innerHTML = `<i class="fa-solid fa-box-archive"></i> <span>${t('frame_status_owned')}</span>`;
                 } else {
                     chipEl.className = 'tryon-status-chip status-unowned';
-                    chipEl.innerHTML = `<span class="wow-icon" style="font-size:0.9rem;"></span> <span>Chưa sở hữu • ${item.price} WOW</span>`;
+                    chipEl.innerHTML = `<span class="wow-icon" style="font-size:0.9rem;"></span> <span>${t('frame_status_unowned', { price: item.price })}</span>`;
                 }
             }
 
@@ -25042,19 +25089,19 @@
                 if (isEquipped) {
                     actionContainer.innerHTML = `
                         <button type="button" class="btn btn-tryon-main" disabled style="background:var(--bg-secondary); color:var(--text-muted); border:1px solid var(--border-color); cursor:default;">
-                            <i class="fa-solid fa-check"></i> Đang mặc
+                            <i class="fa-solid fa-check"></i> ${t('frame_action_wearing')}
                         </button>
                     `;
                 } else if (isOwned) {
                     actionContainer.innerHTML = `
                         <button type="button" class="btn btn-primary btn-tryon-main" onclick="equipSelectedShopItem()">
-                            <i class="fa-solid fa-shirt"></i> Trang bị ngay
+                            <i class="fa-solid fa-shirt"></i> ${t('frame_btn_equip_now')}
                         </button>
                     `;
                 } else {
                     actionContainer.innerHTML = `
                         <button type="button" class="btn btn-primary btn-tryon-main" style="background:#ea580c; border:none;" onclick="openFrameConfirmBuyModal()">
-                            <span class="wow-icon"></span> Mua với ${item.price} WOW
+                            <span class="wow-icon"></span> ${t('frame_btn_unlock_with', { price: item.price })}
                         </button>
                     `;
                 }
@@ -25078,7 +25125,7 @@
             // Mục mặc định (gỡ bỏ)
             const defaultItem = {
                 id: 'none',
-                name: isAvatar ? 'Mặc định' : 'Mặc định',
+                name: isAvatar ? t('frame_default_name') : t('frame_chat_default_name'),
                 url: '',
                 cssClass: '',
                 price: 0
@@ -25113,8 +25160,8 @@
                 const isOwned = item.id === 'none' || ownedList.includes(item.id);
 
                 let badgeHtml = '';
-                if (isEquipped) badgeHtml = `<span class="frame-mini-badge equipped"><i class="fa-solid fa-check"></i> Đang dùng</span>`;
-                else if (isOwned) badgeHtml = `<span class="frame-mini-badge owned">Đã có</span>`;
+                if (isEquipped) badgeHtml = `<span class="frame-mini-badge equipped"><i class="fa-solid fa-check"></i> ${t('frame_btn_equipped')}</span>`;
+                else if (isOwned) badgeHtml = `<span class="frame-mini-badge owned">${t('frame_status_owned')}</span>`;
 
                 // Xem thử trên thẻ item
                 let previewHtml = '';
@@ -25130,7 +25177,7 @@
                     previewHtml = `
                         <div style="width:100%; height:64px; display:flex; align-items:center; justify-content:center; margin:6px 0 10px 0; overflow:hidden;">
                             ${item.id === 'none' 
-                                ? `<div class="chat-bubble" style="font-size:0.7rem; padding:4px 8px;">Mặc định</div>` 
+                                ? `<div class="chat-bubble" style="font-size:0.7rem; padding:4px 8px;">${t('frame_chat_default_name')}</div>`
                                 : (isImg 
                                     ? `<div class="chat-bubble bubble-custom-frame" style="font-size:0.7rem; border-style:solid; border-width:10px 20px; border-color:transparent; border-image:url('${item.cssClass}') 26% 32% 26% 32% fill / 10px 20px stretch; padding:2px 6px !important; min-width:auto; min-height:auto;">Chat</div>`
                                     : `<div class="chat-bubble ${escapeHtml(item.cssClass)}" style="font-size:0.7rem; padding:4px 8px;">Chat</div>`
@@ -25147,13 +25194,13 @@
                         <div class="frame-item-title" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
                         <div class="frame-card-price">
                             ${isOwned 
-                                ? `<span style="color:#10b981; font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> ${item.id === 'none' ? 'Mặc định' : 'Đã sở hữu'}</span>` 
+                                ? `<span style="color:#10b981; font-size:0.75rem;"><i class="fa-solid fa-circle-check"></i> ${item.id === 'none' ? t(isAvatar ? 'frame_default_name' : 'frame_chat_default_name') : t('frame_status_owned')}</span>`
                                 : `<span class="wow-icon"></span> <span>${item.price}</span>`
                             }
                         </div>
                     </div>
                 `;
-            }).join('');
+            }).join('') || `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--text-muted);">${t('frame_empty_tab')}</div>`;
         }
 
         // 🛍️ MỞ MODAL XÁC NHẬN MUA HIỆN ĐẠI
@@ -25166,9 +25213,9 @@
                 return showToast("Bạn không đủ điểm WOW! Hãy điểm danh hàng ngày nhé.", "error");
             }
 
-            document.getElementById('confirmBuyItemBadge').innerHTML = isAvatar 
-                ? '<i class="fa-solid fa-crop-simple"></i> KHUNG AVATAR ĐỘC QUYỀN' 
-                : '<i class="fa-solid fa-comment-dots"></i> KHUNG CHAT PHONG CÁCH';
+            document.getElementById('confirmBuyItemBadge').innerHTML = isAvatar
+                ? `<i class="fa-solid fa-crop-simple"></i> ${t('frame_item_badge_avatar')}`
+                : `<i class="fa-solid fa-comment-dots"></i> ${t('frame_item_badge_chat')}`;
             document.getElementById('confirmBuyItemName').innerText = item.name;
             document.getElementById('confirmBuyItemPrice').innerText = item.price;
 
@@ -25217,7 +25264,7 @@
 
             const btn = document.querySelector('#tryonActionContainer button');
             const origHtml = btn ? btn.innerHTML : '';
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang mở khóa...'; }
+            if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('frame_unlocking')}`; }
 
             try {
                 const endpoint = isAvatar ? '/api/store/buy' : '/api/store/buy_chat_frame';
@@ -25227,7 +25274,7 @@
                 });
 
                 if (res && res.success) {
-                    showToast(`🎉 Mở khóa ${item.name} thành công!`, "success");
+                    showToast(t('frame_unlocked_named', { name: item.name }), "success");
                     currentUser.WOW = res.newBalance;
                     
                     if (isAvatar) {
@@ -25242,11 +25289,11 @@
                     // Tự động trang bị luôn sau khi mua
                     await equipSelectedShopItem();
                 } else {
-                    showToast((res && res.error) ? res.error : "Không thể mua vật phẩm này!", "error");
+                    showToast((res && res.error) ? res.error : t('frame_purchase_error'), "error");
                     if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
                 }
             } catch(e) {
-                showToast("Lỗi kết nối máy chủ!", "error");
+                showToast(t('frame_connection_error'), "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
             }
         }
@@ -25258,7 +25305,7 @@
 
             const btn = document.querySelector('#tryonActionContainer button');
             const origHtml = btn ? btn.innerHTML : '';
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang trang bị...'; }
+            if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('frame_equipping')}`; }
 
             try {
                 const endpoint = isAvatar ? '/api/store/equip' : '/api/store/equip_chat_frame';
@@ -25268,7 +25315,7 @@
                 });
 
                 if (res && res.success) {
-                    showToast(`Đã trang bị ${item.name}!`, "success");
+                    showToast(t('frame_equipped_named', { name: item.name }), "success");
                     
                     if (isAvatar) {
                         currentUser.frame = (item.id === 'none') ? null : (res.frameUrl || item.url);
@@ -25288,11 +25335,11 @@
                         openProfilePage(currentUser.username);
                     }
                 } else {
-                    showToast((res && res.error) ? res.error : "Không thể trang bị!", "error");
+                    showToast((res && res.error) ? res.error : t('frame_equip_error'), "error");
                     if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
                 }
             } catch(e) {
-                showToast("Lỗi kết nối máy chủ!", "error");
+                showToast(t('frame_connection_error'), "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
             }
         }
@@ -27006,21 +27053,21 @@
                         </div>
                         <div class="bento-featured-info">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-                                <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff !important; padding:5px 12px; border-radius:8px; font-size:0.75rem; font-weight:800; width:max-content;">TÁC PHẨM TÂM HUYẾT</span>
+                                <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff !important; padding:5px 12px; border-radius:8px; font-size:0.75rem; font-weight:800; width:max-content;">${t('featured_project_badge')}</span>
                                 ${isOwner ? `
                                     <button type="button" class="btn" onclick="openSelectFeaturedProjectModal()" style="font-size:0.78rem; padding:4px 12px; border-radius:14px; background:rgba(255,255,255,0.15); color:#ffffff; border:1px solid rgba(255,255,255,0.25);">
-                                        <i class="fa-solid fa-arrows-rotate"></i> Đổi tác phẩm
+                                        <i class="fa-solid fa-arrows-rotate"></i> ${t('featured_project_change')}
                                     </button>
                                 ` : ''}
                             </div>
                             <h2 style="font-size:1.75rem; margin:0 0 10px 0; color:#ffffff !important; font-weight: 900; line-height: 1.25;">${escapeHtml(featProj.title)}</h2>
-                            <p style="color:#cbd5e1 !important; font-size:0.95rem; margin-bottom:24px; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(featProj.description || 'Chơi và trải nghiệm ngay tác phẩm này!')}</p>
-                            <a href="#project/${featProj.projectId || featProj.fileId}" class="btn btn-primary" style="width:max-content; padding:11px 26px; border-radius: 14px; font-weight: 800; font-size:0.95rem;"><i class="fa-solid fa-play"></i> Trải nghiệm ngay</a>
+                            <p style="color:#cbd5e1 !important; font-size:0.95rem; margin-bottom:24px; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(featProj.description || t('featured_project_default_desc'))}</p>
+                            <a href="#project/${featProj.projectId || featProj.fileId}" class="btn btn-primary" style="width:max-content; padding:11px 26px; border-radius: 14px; font-weight: 800; font-size:0.95rem;"><i class="fa-solid fa-play"></i> ${t('featured_project_play')}</a>
                         </div>
                     </div>
                 `;
             } else if (wrapper) {
-                wrapper.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted);">Dự án không tồn tại hoặc đã bị ẩn.</div>`;
+                wrapper.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted);">${t('featured_project_missing')}</div>`;
             }
         }
 
@@ -27028,7 +27075,7 @@
             if (!currentUser) return openModal('loginModal');
             openModal('selectFeaturedProjModal');
             const listEl = document.getElementById('selectFeaturedProjList');
-            listEl.innerHTML = '<div style="text-align:center; padding: 35px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">Đang nạp danh sách tác phẩm của bạn...</span></div>';
+            listEl.innerHTML = `<div style="text-align:center; padding: 35px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">${t('featured_project_loading')}</span></div>`;
 
             try {
                 let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`;
@@ -27041,9 +27088,9 @@
                     listEl.innerHTML = `
                         <div style="text-align:center; padding:35px 10px; color:var(--text-muted);">
                             <i class="fa-solid fa-folder-open" style="font-size:2.8rem; opacity:0.3; margin-bottom:12px; display:block;"></i>
-                            Bạn chưa có tác phẩm công khai nào.<br>
+                            ${t('featured_project_empty')}<br>
                             <a href="#upload" class="btn btn-primary" onclick="closeModal('selectFeaturedProjModal')" style="margin-top:14px; border-radius:20px; font-size:0.85rem;">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Đăng tác phẩm mới
+                                <i class="fa-solid fa-cloud-arrow-up"></i> ${t('featured_project_publish')}
                             </a>
                         </div>
                     `;
@@ -27064,18 +27111,18 @@
                                 <div style="min-width:0; flex:1;">
                                     <div style="font-weight:800; font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.title)}</div>
                                     <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
-                                        <i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes||[]).length} • <i class="fa-solid fa-play"></i> ${p.views||0} lượt chơi
+                                        <i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes||[]).length} ${t('featured_project_likes')} • <i class="fa-solid fa-play"></i> ${p.views||0} ${t('featured_project_views')}
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 ${isCurrent ? `
                                     <button class="btn" style="font-size:0.8rem; padding:6px 14px; border-radius:18px; color:var(--primary); font-weight:bold;" disabled>
-                                        <i class="fa-solid fa-check"></i> Đang chọn
+                                        <i class="fa-solid fa-check"></i> ${t('featured_project_selected')}
                                     </button>
                                 ` : `
                                     <button class="btn btn-primary" style="font-size:0.8rem; padding:6px 16px; border-radius:18px; font-weight:bold;" onclick="setFeaturedProjectDirect('${pid}', this)">
-                                        Chọn
+                                        ${t('featured_project_select')}
                                     </button>
                                 `}
                             </div>
@@ -27083,7 +27130,7 @@
                     `;
                 }).join('');
             } catch(e) {
-                listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444; font-size:0.9rem;">Lỗi tải danh sách tác phẩm.</div>';
+                listEl.innerHTML = `<div style="text-align:center; padding:20px; color:#ef4444; font-size:0.9rem;">${t('creator_connection_error')}</div>`;
             }
         }
 
@@ -27099,7 +27146,7 @@
             });
 
             if (res && res.success) {
-                showToast("Đã lưu Tác phẩm tâm huyết!", "success");
+                showToast(t('featured_project_save_success'), "success");
                 closeModal('selectFeaturedProjModal');
 
                 if (currentBentoData) currentBentoData.featuredProject = pid;
@@ -27117,7 +27164,7 @@
                     if (isBentoEditMode) toggleBentoEditMode();
                 }
             } else {
-                showToast("Không thể cập nhật tác phẩm. Thử lại sau!", "error");
+                showToast(t('featured_project_save_error'), "error");
                 btnEl.innerHTML = origHtml;
                 btnEl.disabled = false;
             }
