@@ -8755,7 +8755,7 @@
             <!-- HEADER PHÂN VÙNG LƯỚI & SỐ LƯỢNG HIỂN THỊ -->
             <div class="assets-items-header">
                 <h3 class="home-section-title" style="font-size:1.1rem;">
-                    <i class="fa-solid fa-boxes-stacked" style="color:var(--primary);"></i> <span>Tài nguyên cộng đồng</span>
+                    <i class="fa-solid fa-boxes-stacked" style="color:var(--primary);"></i> <span data-i18n="assets_community_title">Tài nguyên cộng đồng</span>
                 </h3>
                 <span class="assets-count-pill" id="assetCounterDisplay">0 tài nguyên</span>
             </div>
@@ -8827,13 +8827,13 @@
                 
                 <!-- Nút nhảy xuống tin nhắn mới nổi bật -->
                 <button type="button" id="btnChatJumpBottom" class="chat-jump-bottom-btn" onclick="scrollChatToBottom(true)">
-                    <i class="fa-solid fa-arrow-down"></i> <span>Có tin nhắn mới</span>
+                    <i class="fa-solid fa-arrow-down"></i> <span data-i18n="chat_new_message">Có tin nhắn mới</span>
                 </button>
 
                 <!-- Khu vực nhập tin nhắn (Zen Composer) -->
                 <div class="chat-input-box">
                     <div id="replyBannerChat" style="display:none; background:rgba(13, 165, 122, 0.08); border-left:3px solid var(--primary); padding:6px 12px; border-radius:8px; font-size:0.78rem; margin-bottom:8px; font-weight:700; color:var(--primary); align-items:center; justify-content:space-between;">
-                        <span><i class="fa-solid fa-reply"></i> Đang trả lời <b id="replyUserLabelChat" style="color:var(--text-title);"></b></span>
+                        <span><i class="fa-solid fa-reply"></i> <span data-i18n="chat_replying">Đang trả lời</span> <b id="replyUserLabelChat" style="color:var(--text-title);"></b></span>
                         <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-muted); padding:2px;" onclick="cancelReply('chat')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
 
@@ -8841,10 +8841,10 @@
                     <div id="voiceRecordingLiveBar" class="voice-recording-live-bar">
                         <div class="voice-rec-pill">
                             <span class="voice-rec-dot"></span>
-                            <span>Đang ghi âm & Nhận diện</span>
+                            <span data-i18n="chat_recording_recognition">Đang ghi âm & Nhận diện</span>
                         </div>
-                        <div class="voice-rec-preview-text" id="voiceLiveTranscriptPreview">Đang lắng nghe...</div>
-                        <button type="button" class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:12px;" onclick="cancelVoiceRecord()">Hủy</button>
+                        <div class="voice-rec-preview-text" id="voiceLiveTranscriptPreview" data-i18n="chat_listening">Đang lắng nghe...</div>
+                        <button type="button" class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:12px;" onclick="cancelVoiceRecord()" data-i18n="common_cancel">Hủy</button>
                     </div>
 
                     <div id="commentImgPreviewChat" class="comment-img-preview-box">
@@ -8915,7 +8915,7 @@
                 <div class="chat-side-card" style="border-top: 3px solid #f59e0b;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
-                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Năng lượng của bạn
+                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span data-i18n="chat_sidebar_energy">Năng lượng của bạn</span>
                         </span>
                         <div class="WOW-balance-pill" onclick="openDailyRewardModal()" style="padding: 2px 8px; font-size: 0.8rem;" data-i18n-title="tooltip_daily_checkin" title="Mở điểm danh hàng ngày">
                             <span class="wow-icon" style="font-size: 1rem;"></span>
@@ -8924,10 +8924,10 @@
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <button type="button" class="btn btn-primary" onclick="openDailyRewardModal()" style="padding: 7px 10px; font-size: 0.78rem; border-radius: 10px; justify-content: center; font-weight: 800;">
-                            <i class="fa-solid fa-calendar-check"></i> Điểm danh
+                            <i class="fa-solid fa-calendar-check"></i> <span data-i18n="chat_sidebar_checkin">Điểm danh</span>
                         </button>
                         <button type="button" class="btn" onclick="openFrameShopModal()" style="padding: 7px 10px; font-size: 0.78rem; border-radius: 10px; justify-content: center; font-weight: 800; background: var(--bg-panel); border: 1px solid var(--border-color);">
-                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> Đổi Skin Chat
+                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> <span data-i18n="chat_sidebar_chat_skin">Đổi Skin Chat</span>
                         </button>
                     </div>
                 </div>
@@ -8941,24 +8941,24 @@
                         </div>
                         <div style="min-width: 0; flex: 1;">
                             <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-title); display: flex; align-items: center; gap: 6px;">
-                                <span>BeaBea AI</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 5px; border-radius: 6px; font-weight: 800;">PROMPT</span>
+                                <span>BeaBea AI</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 5px; border-radius: 6px; font-weight: 800;" data-i18n="chat_sidebar_prompt_label">PROMPT</span>
                             </div>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">Trợ thủ lập trình 1 chạm</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="chat_sidebar_helper">Trợ thủ lập trình 1 chạm</span>
                         </div>
                     </div>
                     
                     <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <button type="button" class="btn" onclick="insertChatPrompt('Hãy gợi ý cho mình một ý tưởng cơ chế game thật độc lạ để làm trên Aftercode/Scratch nhé!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-lightbulb" style="color: #f59e0b; width: 16px;"></i> <span>🎲 Ý tưởng làm game độc lạ</span>
+                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_idea'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-lightbulb" style="color: #f59e0b; width: 16px;"></i> <span data-i18n="chat_sidebar_idea">🎲 Ý tưởng làm game độc lạ</span>
                         </button>
-                        <button type="button" class="btn" onclick="insertChatPrompt('Cho mình hỏi cách tạo hiệu ứng vật lý nhảy nhảy (gravity physics) mượt mà bằng khối lệnh với!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-bug" style="color: #0284c7; width: 16px;"></i> <span>🐞 Hỏi thuật toán & sửa lỗi code</span>
+                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_debug'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-bug" style="color: #0284c7; width: 16px;"></i> <span data-i18n="chat_sidebar_debug">🐞 Hỏi thuật toán & sửa lỗi code</span>
                         </button>
-                        <button type="button" class="btn" onclick="insertChatPrompt('Hãy viết giúp mình một đoạn kịch bản mở đầu cốt truyện RPG thật cuốn hút nhé!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-book-sparkles" style="color: #8b5cf6; width: 16px;"></i> <span>📜 Viết cốt truyện & hội thoại</span>
+                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_story'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-book-sparkles" style="color: #8b5cf6; width: 16px;"></i> <span data-i18n="chat_sidebar_story">📜 Viết cốt truyện & hội thoại</span>
                         </button>
-                        <button type="button" class="btn" onclick="insertChatPrompt('Hãy cho tụi mình một câu đố vui trắc nghiệm lập trình thú vị đi!')" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-brain" style="color: #ec4899; width: 16px;"></i> <span>🎯 Đố vui trắc nghiệm mini</span>
+                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_quiz'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
+                            <i class="fa-solid fa-brain" style="color: #ec4899; width: 16px;"></i> <span data-i18n="chat_sidebar_quiz">🎯 Đố vui trắc nghiệm mini</span>
                         </button>
                     </div>
                 </div>
@@ -8966,11 +8966,11 @@
                 <!-- 3. Tác Phẩm Đang Hot Trong Cộng Đồng -->
                 <div class="chat-side-card" id="chatSidebarTrendingCard" style="border-top: 3px solid #10b981;">
                     <div class="chat-side-title" style="margin-bottom: 8px;">
-                        <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span>Game Hot Cùng Trải Nghiệm</span>
+                        <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span data-i18n="chat_sidebar_hot_games">Game Hot Cùng Trải Nghiệm</span>
                     </div>
                     <div id="chatSidebarTrendingContent" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
-                            <i class="fa-solid fa-spinner fa-spin"></i> Đang tải tác phẩm hot...
+                            <i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_sidebar_loading_games">Đang tải tác phẩm hot...</span>
                         </div>
                     </div>
                 </div>
@@ -9287,11 +9287,11 @@
     <!-- TRANG BẢNG XẾP HẠNG (LEADERBOARD) -->
     <div id="leaderboardView" class="page-view">
         <div class="lb-hero">
-            <h1 class="lb-title"><i class="fa-solid fa-ranking-star" style="color: #fef08a;"></i> Bảng Vàng Vinh Danh</h1>
-            <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 20px;">Top những nhà sáng tạo xuất sắc nhất toàn máy chủ DANVworkshop.</p>
+            <h1 class="lb-title"><i class="fa-solid fa-ranking-star" style="color: #fef08a;"></i> <span data-i18n="lb_title">Bảng Vàng Vinh Danh</span></h1>
+            <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 20px;" data-i18n="lb_subtitle">Top những nhà sáng tạo xuất sắc nhất toàn máy chủ DANVworkshop.</p>
             <div class="lb-tabs">
-                <button class="lb-tab-btn active" id="lbTab-wow" onclick="switchLeaderboardTab('wow')"><i class="fa-solid fa-bolt"></i> Đại Gia WOW</button>
-                <button class="lb-tab-btn" id="lbTab-followers" onclick="switchLeaderboardTab('followers')"><i class="fa-solid fa-users"></i> Idol Theo Dõi</button>
+                <button class="lb-tab-btn active" id="lbTab-wow" onclick="switchLeaderboardTab('wow')"><i class="fa-solid fa-bolt"></i> <span data-i18n="lb_tab_wow">Đại Gia WOW</span></button>
+                <button class="lb-tab-btn" id="lbTab-followers" onclick="switchLeaderboardTab('followers')"><i class="fa-solid fa-users"></i> <span data-i18n="lb_tab_followers">Idol Theo Dõi</span></button>
             </div>
 
             <!-- Bục Podium Top 3 -->
@@ -9306,7 +9306,7 @@
 
         <div style="text-align: center; padding: 25px 0; display: none;" id="lbLoadMoreArea">
             <button class="btn" style="padding: 10px 30px; border-radius: 20px; font-weight: bold; background: var(--bg-panel); border: 1px solid var(--border-color);" onclick="loadMoreLeaderboard()">
-                <i class="fa-solid fa-angle-down"></i> Xem các thứ hạng tiếp theo
+                <i class="fa-solid fa-angle-down"></i> <span data-i18n="lb_load_more">Xem các thứ hạng tiếp theo</span>
             </button>
         </div>
     </div>
@@ -9693,19 +9693,19 @@
             <div id="bentoToolbar" class="bento-toolbar">
                 <span class="bento-count-pill" id="bentoCountBadge" data-i18n-title="tooltip_bento_limit" title="Tối đa 25 Widget">0 / 25 Ô</span>
                 <button class="btn btn-primary" style="border-radius:20px; font-weight:800; padding:7px 16px;" onclick="openBentoDrawer()">
-                    <i class="fa-solid fa-plus"></i> Thêm Widget
+                    <i class="fa-solid fa-plus"></i> <span data-i18n="bento_add_widget">Thêm Widget</span>
                 </button>
                 <!-- NÚT BẬT / TẮT TRỌNG LỰC HÚT KHÍT -->
                 <button type="button" class="btn" id="btnToggleBentoFloat" style="border-radius:20px; font-weight:700; padding:7px 14px; background:var(--bg-secondary); border:1px solid var(--border-color);" onclick="toggleBentoFloatMode()" data-i18n-title="tooltip_bento_float" title="Bật/Tắt trọng lực tự động dồn ô lên trên">
-                    <i class="fa-solid fa-magnet" style="color:var(--primary);"></i> <span id="bentoFloatStatusText">Hút khít: BẬT</span>
+                    <i class="fa-solid fa-magnet" style="color:var(--primary);"></i> <span id="bentoFloatStatusText" data-i18n="bento_pack_on">Hút khít: BẬT</span>
                 </button>
                 <div style="width:1px; height:18px; background:var(--border-color);"></div>
                 <button class="btn" style="border-radius:20px; color:#ef4444; font-weight:700;" onclick="resetBentoLayout()">
-                    <i class="fa-solid fa-rotate-left"></i> Khôi phục
+                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="bento_reset">Khôi phục</span>
                 </button>
-                <button class="btn" style="border-radius:20px; font-weight:700;" onclick="cancelBentoEdit()">Hủy</button>
+                <button class="btn" style="border-radius:20px; font-weight:700;" onclick="cancelBentoEdit()" data-i18n="bento_cancel">Hủy</button>
                 <button class="btn btn-primary" style="border-radius:20px; background:#ea580c; font-weight:800; padding:7px 18px;" onclick="saveBentoLayout()" id="btnSaveBento">
-                    <i class="fa-solid fa-floppy-disk"></i> Lưu Bố Cục
+                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="bento_save">Lưu Bố Cục</span>
                 </button>
             </div>
 
@@ -9717,70 +9717,70 @@
         <div class="modal" style="max-width: 540px;">
             <div class="modal-header">
                 <span style="display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-shapes" style="color:var(--primary);"></i> <b>Kho Widget Bento</b>
+                    <i class="fa-solid fa-shapes" style="color:var(--primary);"></i> <b data-i18n="bento_widget_library">Kho Widget Bento</b>
                 </span>
                 <button class="btn-close" onclick="closeModal('bentoWidgetModal')">&times;</button>
             </div>
             <div class="modal-body bento-drawer">
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_bio')">
                     <i class="fa-solid fa-address-card"></i>
-                    <b>Giới thiệu (Bio)</b>
-                    <span>Tiểu sử & Vị trí</span>
+                    <b data-i18n="bento_bio">Giới thiệu (Bio)</b>
+                    <span data-i18n="bento_bio_desc">Tiểu sử & Vị trí</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_stats')">
                     <i class="fa-solid fa-chart-pie" style="color:#f59e0b;"></i>
-                    <b>Chỉ số cá nhân</b>
-                    <span>Lượt thích, Theo dõi...</span>
+                    <b data-i18n="bento_stats">Chỉ số cá nhân</b>
+                    <span data-i18n="bento_stats_desc">Lượt thích, Theo dõi...</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_featured')">
                     <i class="fa-solid fa-star" style="color:#3b82f6;"></i>
-                    <b>Tác phẩm tâm huyết</b>
-                    <span>Banner lớn nổi bật</span>
+                    <b data-i18n="bento_featured">Tác phẩm tâm huyết</b>
+                    <span data-i18n="bento_featured_desc">Banner lớn nổi bật</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoPickPlaylistModal()">
                     <i class="fa-solid fa-layer-group" style="color:#10b981;"></i>
-                    <b>Ghim Bộ sưu tập</b>
-                    <span>Chọn 1 Playlist có sẵn</span>
+                    <b data-i18n="bento_collection">Ghim Bộ sưu tập</b>
+                    <span data-i18n="bento_collection_desc">Chọn 1 Playlist có sẵn</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoPickProjectModal()">
                     <i class="fa-solid fa-gamepad" style="color:#8b5cf6;"></i>
-                    <b>Ghim Tác phẩm nhỏ</b>
-                    <span>Thẻ game thu nhỏ</span>
+                    <b data-i18n="bento_project">Ghim Tác phẩm nhỏ</b>
+                    <span data-i18n="bento_project_desc">Thẻ game thu nhỏ</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoConfigUserModal()">
                     <i class="fa-solid fa-user-tag" style="color:#06b6d4;"></i>
-                    <b>Thẻ Bạn bè / Dev</b>
-                    <span>Ghim hồ sơ người khác</span>
+                    <b data-i18n="bento_user">Thẻ Bạn bè / Dev</b>
+                    <span data-i18n="bento_user_desc">Ghim hồ sơ người khác</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_couple')">
                     <i class="fa-solid fa-user-group" style="color:#0284c7;"></i>
-                    <b>Đôi bạn cùng tiến</b>
-                    <span>Khoe bạn đồng hành và số ngày đồng hành lên hồ sơ</span>
+                    <b data-i18n="bento_buddies">Đôi bạn cùng tiến</b>
+                    <span data-i18n="bento_buddies_desc">Khoe bạn đồng hành và số ngày đồng hành lên hồ sơ</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoPickStationModal()">
                     <i class="fa-solid fa-satellite-dish" style="color:#0ea5e9;"></i>
-                    <b>Ghim Trạm (Station)</b>
-                    <span>Quảng bá trạm của bạn</span>
+                    <b data-i18n="bento_station">Ghim Trạm (Station)</b>
+                    <span data-i18n="bento_station_desc">Quảng bá trạm của bạn</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoPickAudioModal()">
                     <i class="fa-solid fa-music" style="color:#f59e0b;"></i>
-                    <b>Nhạc nền (BGM)</b>
-                    <span>Phát âm thanh hồ sơ</span>
+                    <b data-i18n="bento_bgm">Nhạc nền (BGM)</b>
+                    <span data-i18n="bento_bgm_desc">Phát âm thanh hồ sơ</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoConfigSocialModal()">
                     <i class="fa-solid fa-share-nodes" style="color:#6366f1;"></i>
-                    <b>Mạng xã hội</b>
-                    <span>Scratch, YouTube, Discord...</span>
+                    <b data-i18n="bento_social">Mạng xã hội</b>
+                    <span data-i18n="bento_social_desc">Scratch, YouTube, Discord...</span>
                 </div>
                 <div class="bento-drawer-item" onclick="openBentoConfigNoteModal()">
                     <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i>
-                    <b>Ghi chú tự do</b>
-                    <span>Tin nhắn / Markdown</span>
+                    <b data-i18n="bento_note">Ghi chú tự do</b>
+                    <span data-i18n="bento_note_desc">Tin nhắn / Markdown</span>
                 </div>
                 <div class="bento-drawer-item" onclick="addBentoWidget('widget_frames')">
                     <i class="fa-solid fa-crop-simple" style="color:#10b981;"></i>
-                    <b>Tủ đồ Khung</b>
-                    <span>Khoe Khung Avatar</span>
+                    <b data-i18n="bento_frames">Tủ đồ Khung</b>
+                    <span data-i18n="bento_frames_desc">Khoe Khung Avatar</span>
                 </div>
             </div>
         </div>
@@ -9790,7 +9790,7 @@
     <div class="modal-overlay" id="bentoPickStationModal">
         <div class="modal" style="max-width: 480px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> Chọn Station để ghim</span>
+                <span><i class="fa-solid fa-satellite-dish" style="color:var(--primary);"></i> <span data-i18n="bento_pick_station_title">Chọn Station để ghim</span></span>
                 <button class="btn-close" onclick="closeModal('bentoPickStationModal')">&times;</button>
             </div>
             <div class="modal-body" id="bentoPickStationList" style="max-height: 400px; overflow-y: auto; padding: 15px;">
@@ -9803,7 +9803,7 @@
     <div class="modal-overlay" id="bentoPickAudioModal">
         <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-music" style="color:#f59e0b;"></i> Chọn Nhạc nền từ Cửa hàng Tài nguyên</span>
+                <span><i class="fa-solid fa-music" style="color:#f59e0b;"></i> <span data-i18n="bento_pick_audio_title">Chọn Nhạc nền từ Cửa hàng Tài nguyên</span></span>
                 <button class="btn-close" onclick="closeModal('bentoPickAudioModal')">&times;</button>
             </div>
             <div class="modal-body" id="bentoPickAudioList" style="max-height: 420px; overflow-y: auto; padding: 15px;">
@@ -9816,41 +9816,41 @@
     <div class="modal-overlay" id="bentoConfigSocialModal">
         <div class="modal" style="max-width: 460px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-share-nodes" style="color:var(--primary);"></i> Liên kết Mạng xã hội</span>
+                <span><i class="fa-solid fa-share-nodes" style="color:var(--primary);"></i> <span data-i18n="bento_social_config_title">Liên kết Mạng xã hội</span></span>
                 <button class="btn-close" onclick="closeModal('bentoConfigSocialModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">Nhập link hoặc username (để trống nếu không muốn hiển thị):</p>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;" data-i18n="bento_social_config_hint">Nhập link hoặc username (để trống nếu không muốn hiển thị):</p>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-cat" style="color:#f59e0b;"></i> Scratch Username / Link:</label>
-                    <input type="text" id="bentoSocialScratch" class="form-control" placeholder="Ví dụ: griffpatch">
+                    <label><i class="fa-solid fa-cat" style="color:#f59e0b;"></i> <span data-i18n="bento_social_scratch">Scratch Username / Link:</span></label>
+                    <input type="text" id="bentoSocialScratch" class="form-control" data-i18n-ph="bento_social_scratch_ph" placeholder="Ví dụ: griffpatch">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-brands fa-youtube" style="color:#ef4444;"></i> YouTube Link / Channel:</label>
-                    <input type="text" id="bentoSocialYoutube" class="form-control" placeholder="https://youtube.com/@...">
+                    <label><i class="fa-brands fa-youtube" style="color:#ef4444;"></i> <span data-i18n="bento_social_youtube">YouTube Link / Channel:</span></label>
+                    <input type="text" id="bentoSocialYoutube" class="form-control" data-i18n-ph="bento_social_youtube_ph" placeholder="https://youtube.com/@...">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-brands fa-discord" style="color:#5865f2;"></i> Discord Server / Tag:</label>
-                    <input type="text" id="bentoSocialDiscord" class="form-control" placeholder="Ví dụ: discord.gg/... hoặc user#1234">
+                    <label><i class="fa-brands fa-discord" style="color:#5865f2;"></i> <span data-i18n="bento_social_discord">Discord Server / Tag:</span></label>
+                    <input type="text" id="bentoSocialDiscord" class="form-control" data-i18n-ph="bento_social_discord_ph" placeholder="Ví dụ: discord.gg/... hoặc user#1234">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-brands fa-github" style="color:#333;"></i> GitHub Profile:</label>
-                    <input type="text" id="bentoSocialGithub" class="form-control" placeholder="https://github.com/...">
+                    <label><i class="fa-brands fa-github" style="color:#333;"></i> <span data-i18n="bento_social_github">GitHub Profile:</span></label>
+                    <input type="text" id="bentoSocialGithub" class="form-control" data-i18n-ph="bento_social_github_ph" placeholder="https://github.com/...">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> Facebook Profile:</label>
-                    <input type="text" id="bentoSocialFacebook" class="form-control" placeholder="https://facebook.com/...">
+                    <label><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> <span data-i18n="bento_social_facebook">Facebook Profile:</span></label>
+                    <input type="text" id="bentoSocialFacebook" class="form-control" data-i18n-ph="bento_social_facebook_ph" placeholder="https://facebook.com/...">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-chess" style="color:#7fa650;"></i> Chess.com Username / Profile:</label>
-                    <input type="text" id="bentoSocialChess" class="form-control" placeholder="https://chess.com/member/... hoặc username">
+                    <label><i class="fa-solid fa-chess" style="color:#7fa650;"></i> <span data-i18n="bento_social_chess">Chess.com Username / Profile:</span></label>
+                    <input type="text" id="bentoSocialChess" class="form-control" data-i18n-ph="bento_social_chess_ph" placeholder="https://chess.com/member/... hoặc username">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-globe" style="color:var(--primary);"></i> Website / Blog:</label>
-                    <input type="text" id="bentoSocialWeb" class="form-control" placeholder="https://...">
+                    <label><i class="fa-solid fa-globe" style="color:var(--primary);"></i> <span data-i18n="bento_social_website">Website / Blog:</span></label>
+                    <input type="text" id="bentoSocialWeb" class="form-control" data-i18n-ph="bento_social_website_ph" placeholder="https://...">
                 </div>
                 <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px; margin-top:8px;" onclick="saveSocialLinksToBento()">
-                    <i class="fa-solid fa-check"></i> Ghim lên Hồ sơ
+                    <i class="fa-solid fa-check"></i> <span data-i18n="bento_social_pin">Ghim lên Hồ sơ</span>
                 </button>
             </div>
         </div>
@@ -9861,32 +9861,32 @@
         <div class="modal" style="max-width: 520px;">
             <div class="modal-header">
                 <span style="display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i> <b>Tùy chỉnh Ghi chú tự do</b>
+                    <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i> <b data-i18n="bento_note_config_title">Tùy chỉnh Ghi chú tự do</b>
                 </span>
                 <button class="btn-close" onclick="closeModal('bentoConfigNoteModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 20px 22px;">
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label style="font-size:0.85rem; font-weight:700;">Tiêu đề ghi chú (Tùy chọn):</label>
-                    <input type="text" id="bentoNoteTitleInput" class="form-control" placeholder="Ví dụ: Lời nhắn, Châm ngôn, Thông báo..." oninput="updateBentoNoteLivePreview()">
+                    <label style="font-size:0.85rem; font-weight:700;" data-i18n="bento_note_title_label">Tiêu đề ghi chú (Tùy chọn):</label>
+                    <input type="text" id="bentoNoteTitleInput" class="form-control" data-i18n-ph="bento_note_title_ph" placeholder="Ví dụ: Lời nhắn, Châm ngôn, Thông báo..." oninput="updateBentoNoteLivePreview()">
                 </div>
                 
                 <div class="form-group" style="margin-bottom: 14px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <label style="font-size:0.85rem; font-weight:700; margin:0;">Nội dung ghi chú *:</label>
-                        <span style="font-size:0.75rem; color:var(--text-muted);">Hỗ trợ Markdown & Emoji</span>
+                        <label style="font-size:0.85rem; font-weight:700; margin:0;" data-i18n="bento_note_content_label">Nội dung ghi chú *:</label>
+                        <span style="font-size:0.75rem; color:var(--text-muted);" data-i18n="bento_note_markdown_hint">Hỗ trợ Markdown & Emoji</span>
                     </div>
 
                     <!-- Thanh Format Toolbar -->
                     <div class="bento-format-toolbar">
                         <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('bold')" data-i18n-title="tooltip_format_bold" title="In đậm">
-                            <i class="fa-solid fa-bold"></i> <span>Đậm</span>
+                            <i class="fa-solid fa-bold"></i> <span data-i18n="bento_note_bold">Đậm</span>
                         </button>
                         <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('italic')" data-i18n-title="tooltip_format_italic" title="In nghiêng">
-                            <i class="fa-solid fa-italic"></i> <span>Nghiêng</span>
+                            <i class="fa-solid fa-italic"></i> <span data-i18n="bento_note_italic">Nghiêng</span>
                         </button>
                         <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('underline')" data-i18n-title="tooltip_format_underline" title="Gạch chân">
-                            <i class="fa-solid fa-underline"></i> <span>Gạch chân</span>
+                            <i class="fa-solid fa-underline"></i> <span data-i18n="bento_note_underline">Gạch chân</span>
                         </button>
                         <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('mention')" data-i18n-title="tooltip_format_mention" title="Nhắc đến người dùng">
                             <i class="fa-solid fa-at" style="color:var(--primary);"></i> <span>@user</span>
@@ -9904,13 +9904,13 @@
                             🔥
                         </button>
                     </div>
-                    <textarea id="bentoNoteContentInput" class="form-control" rows="4" style="border-radius:0 0 12px 12px; font-size:0.95rem; line-height:1.5;" placeholder="Chào mừng bạn ghé thăm hồ sơ của mình! ✨" oninput="updateBentoNoteLivePreview()"></textarea>
+                    <textarea id="bentoNoteContentInput" class="form-control" rows="4" style="border-radius:0 0 12px 12px; font-size:0.95rem; line-height:1.5;" data-i18n-ph="bento_note_content_ph" placeholder="Chào mừng bạn ghé thăm hồ sơ của mình! ✨" oninput="updateBentoNoteLivePreview()"></textarea>
                 </div>
 
                 <!-- Khung xem trước Live Preview -->
                 <div style="margin-bottom: 16px;">
                     <div style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
-                        <i class="fa-solid fa-eye" style="color:var(--primary);"></i> Xem trước hiển thị trên widget
+                        <i class="fa-solid fa-eye" style="color:var(--primary);"></i> <span data-i18n="bento_note_preview">Xem trước hiển thị trên widget</span>
                     </div>
                     <div class="bento-live-preview-box" id="bentoNoteLivePreviewStage">
                         <!-- Render từ JS -->
@@ -9918,7 +9918,7 @@
                 </div>
 
                 <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px;" onclick="submitBentoNoteWidget()">
-                    <i class="fa-solid fa-check"></i> Ghim Ghi Chú Lên Hồ Sơ
+                    <i class="fa-solid fa-check"></i> <span data-i18n="bento_note_pin">Ghim Ghi Chú Lên Hồ Sơ</span>
                 </button>
             </div>
         </div>
@@ -9929,45 +9929,45 @@
         <div class="modal" style="max-width: 480px;">
             <div class="modal-header">
                 <span style="display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-user-tag" style="color:#06b6d4;"></i> <b>Ghim Thẻ Bạn Bè / Dev</b>
+                    <i class="fa-solid fa-user-tag" style="color:#06b6d4;"></i> <b data-i18n="bento_user_config_title">Ghim Thẻ Bạn Bè / Dev</b>
                 </span>
                 <button class="btn-close" onclick="closeModal('bentoConfigUserModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 20px 22px;">
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label style="font-size:0.85rem; font-weight:700;">Tên tài khoản (Username) *:</label>
+                    <label style="font-size:0.85rem; font-weight:700;" data-i18n="bento_user_username_label">Tên tài khoản (Username) *:</label>
                     <div class="auth-input-group" style="margin-bottom:0;">
                         <i class="fa-solid fa-at auth-input-icon"></i>
-                        <input type="text" id="bentoUserUsernameInput" class="auth-control-input" placeholder="Nhập username (không cần gõ @)..." oninput="handleBentoUserUsernameInput(this.value)">
+                        <input type="text" id="bentoUserUsernameInput" class="auth-control-input" data-i18n-ph="bento_user_username_ph" placeholder="Nhập username (không cần gõ @)..." oninput="handleBentoUserUsernameInput(this.value)">
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label style="font-size:0.85rem; font-weight:700;">Chọn vai trò / mối quan hệ:</label>
+                    <label style="font-size:0.85rem; font-weight:700;" data-i18n="bento_user_role_label">Chọn vai trò / mối quan hệ:</label>
                     <div class="bento-role-chip-group" id="bentoRoleChipsContainer">
-                        <span class="bento-role-chip active" onclick="selectBentoUserRole('Bạn bè', this)">Bạn bè</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Bạn thân', this)">Bạn thân</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Đồng tác giả', this)">Đồng tác giả</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Dev Team', this)">Dev Team</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Học trò', this)">Học trò</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Sư phụ', this)">Sư phụ</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Idol', this)">Idol</span>
-                        <span class="bento-role-chip" onclick="selectBentoUserRole('Đối thủ', this)">Đối thủ</span>
+                        <span class="bento-role-chip active" onclick="selectBentoUserRole('Bạn bè', this)" data-i18n="bento_role_friend">Bạn bè</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Bạn thân', this)" data-i18n="bento_role_close_friend">Bạn thân</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Đồng tác giả', this)" data-i18n="bento_role_collaborator">Đồng tác giả</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Dev Team', this)" data-i18n="bento_role_dev_team">Dev Team</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Học trò', this)" data-i18n="bento_role_student">Học trò</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Sư phụ', this)" data-i18n="bento_role_mentor">Sư phụ</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Idol', this)" data-i18n="bento_role_idol">Idol</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Đối thủ', this)" data-i18n="bento_role_rival">Đối thủ</span>
                         <span class="bento-role-chip" id="bentoRoleChipCustom" onclick="selectBentoUserRole('custom', this)">
-                            <i class="fa-solid fa-pen"></i> Tùy chỉnh...
+                            <i class="fa-solid fa-pen"></i> <span data-i18n="bento_role_custom">Tùy chỉnh...</span>
                         </span>
                     </div>
 
                     <!-- Ô nhập role tùy chỉnh nếu chọn chip Tùy chỉnh -->
                     <div id="bentoCustomRoleWrap" style="display:none; margin-top:10px;">
-                        <input type="text" id="bentoCustomRoleInput" class="form-control" placeholder="Nhập nhãn tùy chỉnh (VD: Tri kỷ, Thiết kế game, Producer...)" maxlength="25" oninput="updateBentoUserCardPreview()">
+                        <input type="text" id="bentoCustomRoleInput" class="form-control" data-i18n-ph="bento_role_custom_ph" placeholder="Nhập nhãn tùy chỉnh (VD: Tri kỷ, Thiết kế game, Producer...)" maxlength="25" oninput="updateBentoUserCardPreview()">
                     </div>
                 </div>
 
                 <!-- Khung xem trước thẻ Live Preview -->
                 <div style="margin-bottom: 16px;">
                     <div style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
-                        <i class="fa-solid fa-eye" style="color:var(--primary);"></i> Xem trước thẻ widget
+                        <i class="fa-solid fa-eye" style="color:var(--primary);"></i> <span data-i18n="bento_user_preview">Xem trước thẻ widget</span>
                     </div>
                     <div class="bento-live-preview-box" style="padding:8px; display:flex; align-items:center;">
                         <div class="widget-user-box" style="width:100%; padding:4px;">
@@ -9975,14 +9975,14 @@
                             <div style="flex:1; min-width:0;">
                                 <span class="widget-user-rel-tag" id="bentoPreviewUserRelTag">Bạn bè</span>
                                 <div style="font-weight:800; font-size:1.05rem; color:var(--text-title); margin:4px 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="bentoPreviewUserName">@username</div>
-                                <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ghé thăm hồ sơ</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="bento_visit_profile">Ghé thăm hồ sơ</span></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px;" onclick="submitBentoUserCardWidget()">
-                    <i class="fa-solid fa-check"></i> Ghim Thẻ Lên Hồ Sơ
+                    <i class="fa-solid fa-check"></i> <span data-i18n="bento_user_pin">Ghim Thẻ Lên Hồ Sơ</span>
                 </button>
             </div>
         </div>
@@ -9992,7 +9992,7 @@
     <div class="modal-overlay" id="bentoPickPlaylistModal">
         <div class="modal" style="max-width: 480px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> Chọn Bộ sưu tập để ghim</span>
+                <span><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> <span data-i18n="bento_pick_collection_title">Chọn Bộ sưu tập để ghim</span></span>
                 <button class="btn-close" onclick="closeModal('bentoPickPlaylistModal')">&times;</button>
             </div>
             <div class="modal-body" id="bentoPickPlaylistList" style="max-height: 400px; overflow-y: auto; padding: 15px;">
@@ -10005,7 +10005,7 @@
     <div class="modal-overlay" id="bentoPickProjectModal">
         <div class="modal" style="max-width: 480px;">
             <div class="modal-header">
-                <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> Chọn Tác phẩm để ghim</span>
+                <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="bento_pick_project_title">Chọn Tác phẩm để ghim</span></span>
                 <button class="btn-close" onclick="closeModal('bentoPickProjectModal')">&times;</button>
             </div>
             <div class="modal-body" id="bentoPickProjectList" style="max-height: 400px; overflow-y: auto; padding: 15px;">
@@ -10241,7 +10241,7 @@
                     <h1 class="notif-hero-title">
                         <i class="fa-solid fa-bell" style="color:var(--primary);"></i> <span data-i18n="notif_title">Hộp Thư Thông Báo</span>
                     </h1>
-                    <p class="notif-hero-sub">Theo dõi tương tác, bình luận, quà tặng và cập nhật từ cộng đồng</p>
+                    <p class="notif-hero-sub" data-i18n="notif_subtitle">Theo dõi tương tác, bình luận, quà tặng và cập nhật từ cộng đồng</p>
                 </div>
                 <button type="button" class="btn-notif-mark-read" onclick="markAllNotifsRead(event)">
                     <i class="fa-solid fa-check-double" style="color:var(--primary);"></i> <span data-i18n="notif_mark_read">Đánh dấu đã đọc tất cả</span>
@@ -10251,27 +10251,27 @@
             <!-- Thanh Phân Loại Thông Báo Dạng Viên Thuốc -->
             <div class="notif-filter-bar">
                 <button type="button" class="notif-tab-pill active" onclick="setNotifFilter('all', this)">
-                    <i class="fa-solid fa-layer-group"></i> <span>Tất cả</span>
+                    <i class="fa-solid fa-layer-group"></i> <span data-i18n="notif_filter_all">Tất cả</span>
                     <span class="notif-tab-counter" id="cntNotifAll">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('unread', this)">
-                    <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i> <span>Chưa đọc</span>
+                    <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i> <span data-i18n="notif_filter_unread">Chưa đọc</span>
                     <span class="notif-tab-counter" id="cntNotifUnread">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('comment', this)">
-                    <i class="fa-solid fa-comment-dots" style="color:#0284c7;"></i> <span>Bình luận</span>
+                    <i class="fa-solid fa-comment-dots" style="color:#0284c7;"></i> <span data-i18n="notif_filter_comment">Bình luận</span>
                     <span class="notif-tab-counter" id="cntNotifComment">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('tip', this)">
-                    <i class="fa-solid fa-gift" style="color:#ea580c;"></i> <span>Quà WOW</span>
+                    <i class="fa-solid fa-gift" style="color:#ea580c;"></i> <span data-i18n="notif_filter_tip">Quà WOW</span>
                     <span class="notif-tab-counter" id="cntNotifTip">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('reaction', this)">
-                    <i class="fa-solid fa-heart" style="color:#ff4757;"></i> <span>Thích & Sao</span>
+                    <i class="fa-solid fa-heart" style="color:#ff4757;"></i> <span data-i18n="notif_filter_reaction">Thích & Sao</span>
                     <span class="notif-tab-counter" id="cntNotifReaction">0</span>
                 </button>
                 <button type="button" class="notif-tab-pill" onclick="setNotifFilter('system', this)">
-                    <i class="fa-solid fa-shield-halved" style="color:#ef4444;"></i> <span>Hệ thống</span>
+                    <i class="fa-solid fa-shield-halved" style="color:#ef4444;"></i> <span data-i18n="notif_filter_system">Hệ thống</span>
                     <span class="notif-tab-counter" id="cntNotifSystem">0</span>
                 </button>
             </div>
@@ -10555,12 +10555,12 @@
                     </div>
                     <div>
                         <div class="creator-brand-title">
-                            <span>Trung Tâm Nhà Phát Triển</span>
+                            <span data-i18n="creator_title">Trung Tâm Nhà Phát Triển</span>
                             <span class="creator-badge-pill"><i class="fa-solid fa-code"></i> DEVELOPER CONSOLE</span>
                         </div>
                         <p class="creator-brand-subtitle">
                             <i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i>
-                            <span>Quản lý danh mục sản phẩm và doanh thu giao dịch</span>
+                            <span data-i18n="creator_subtitle">Quản lý danh mục sản phẩm và doanh thu giao dịch</span>
                         </p>
                     </div>
                 </div>
@@ -10568,12 +10568,12 @@
                 <div class="creator-top-actions">
                     <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="creator-btn-policy" data-i18n-title="tooltip_creator_policy" title="Chính sách phân chia doanh thu">
                         <i class="fa-solid fa-percent" style="color:var(--primary);"></i>
-                        <span>Phân chia doanh thu: <b>70%</b></span>
+                        <span><span data-i18n="creator_revenue_share">Phân chia doanh thu:</span> <b>70%</b></span>
                         <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem; opacity:0.6;"></i>
                     </a>
                     <a href="https://aftercode.pages.dev/editor.html" target="_blank" class="creator-btn-editor">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Mở Trình Biên Tập Aftercode</span>
+                        <span data-i18n="creator_open_editor">Mở Trình Biên Tập Aftercode</span>
                     </a>
                 </div>
             </div>
@@ -10586,10 +10586,10 @@
                     <div>
                         <div class="creator-vault-top">
                             <span class="creator-vault-label">
-                                <i class="fa-solid fa-vault"></i> Doanh Thu Khả Dụng
+                                <i class="fa-solid fa-vault"></i> <span data-i18n="creator_available_revenue">Doanh Thu Khả Dụng</span>
                             </span>
                             <span style="font-size:0.72rem; font-weight:800; color:var(--text-muted); background:var(--bg-secondary); border:1px solid var(--border-color); padding:3px 8px; border-radius:8px;">
-                                <i class="fa-solid fa-shield-check"></i> SẴN SÀNG
+                                <i class="fa-solid fa-shield-check"></i> <span data-i18n="creator_ready">SẴN SÀNG</span>
                             </span>
                         </div>
 
@@ -10598,12 +10598,12 @@
                         </div>
 
                         <div class="creator-vault-subtext" id="creatorMetricPendingSub">
-                            Đang kết nối số dư...
+                            <span data-i18n="creator_connecting">Đang kết nối số dư...</span>
                         </div>
                     </div>
 
                     <button type="button" class="creator-btn-withdraw-action" onclick="openCreatorWithdrawModal()" id="btnMasterWithdraw" disabled>
-                        <i class="fa-solid fa-wallet"></i> <span>Rút về ví chính</span>
+                        <i class="fa-solid fa-wallet"></i> <span data-i18n="creator_withdraw">Rút về ví chính</span>
                     </button>
                 </div>
 
@@ -10611,34 +10611,34 @@
                 <div class="creator-stats-triplet">
                     <div class="creator-metric-panel">
                         <div class="creator-metric-head">
-                            <span class="creator-metric-title">Tổng Doanh Thu</span>
+                            <span class="creator-metric-title" data-i18n="creator_gross_revenue">Tổng Doanh Thu</span>
                             <div class="creator-metric-ico gross"><i class="fa-solid fa-coins"></i></div>
                         </div>
                         <div>
                             <div class="creator-metric-num" id="creatorMetricGross">0</div>
-                            <div class="creator-metric-desc">Tổng giá trị giao dịch phát sinh</div>
+                            <div class="creator-metric-desc" data-i18n="creator_gross_desc">Tổng giá trị giao dịch phát sinh</div>
                         </div>
                     </div>
 
                     <div class="creator-metric-panel">
                         <div class="creator-metric-head">
-                            <span class="creator-metric-title">Đã Tất Toán</span>
+                            <span class="creator-metric-title" data-i18n="creator_settled">Đã Tất Toán</span>
                             <div class="creator-metric-ico claimed"><i class="fa-solid fa-circle-check"></i></div>
                         </div>
                         <div>
                             <div class="creator-metric-num" id="creatorMetricWithdrawn" style="color:#10b981;">0</div>
-                            <div class="creator-metric-desc">Điểm thực nhận đã chuyển về ví</div>
+                            <div class="creator-metric-desc" data-i18n="creator_settled_desc">Điểm thực nhận đã chuyển về ví</div>
                         </div>
                     </div>
 
                     <div class="creator-metric-panel">
                         <div class="creator-metric-head">
-                            <span class="creator-metric-title">Tổng Giao Dịch</span>
+                            <span class="creator-metric-title" data-i18n="creator_total_orders">Tổng Giao Dịch</span>
                             <div class="creator-metric-ico orders"><i class="fa-solid fa-bag-shopping"></i></div>
                         </div>
                         <div>
                             <div class="creator-metric-num" id="creatorMetricOrders">0</div>
-                            <div class="creator-metric-desc" id="creatorMetricTopItemSub">Chưa có giao dịch</div>
+                            <div class="creator-metric-desc" id="creatorMetricTopItemSub" data-i18n="creator_no_orders">Chưa có giao dịch</div>
                         </div>
                     </div>
                 </div>
@@ -10649,24 +10649,24 @@
             <div class="creator-action-dock">
                 <div class="creator-segmented-nav">
                     <button type="button" class="creator-nav-pill-btn active" id="btnCreatorTab-tx" onclick="switchCreatorTab('transactions')">
-                        <i class="fa-solid fa-receipt"></i> <span>Lịch sử giao dịch</span>
+                        <i class="fa-solid fa-receipt"></i> <span data-i18n="creator_tab_transactions">Lịch sử giao dịch</span>
                     </button>
                     <button type="button" class="creator-nav-pill-btn" id="btnCreatorTab-games" onclick="switchCreatorTab('games')">
-                        <i class="fa-solid fa-gamepad"></i> <span>Danh mục dự án</span>
+                        <i class="fa-solid fa-gamepad"></i> <span data-i18n="creator_tab_games">Danh mục dự án</span>
                     </button>
                     <button type="button" class="creator-nav-pill-btn" id="btnCreatorTab-toolkit" onclick="switchCreatorTab('toolkit')">
-                        <i class="fa-solid fa-puzzle-piece"></i> <span>Tích hợp thanh toán</span>
+                        <i class="fa-solid fa-puzzle-piece"></i> <span data-i18n="creator_tab_toolkit">Tích hợp thanh toán</span>
                     </button>
                 </div>
 
                 <div class="creator-filter-tools">
                     <div class="creator-search-input-pill">
                         <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.85rem;"></i>
-                        <input type="text" id="creatorSearchInput" placeholder="Tìm theo người mua, vật phẩm, mã đơn..." onkeyup="handleCreatorSearch(event)">
+                        <input type="text" id="creatorSearchInput" data-i18n-ph="creator_search_ph" placeholder="Tìm theo người mua, vật phẩm, mã đơn..." onkeyup="handleCreatorSearch(event)">
                     </div>
 
                     <select id="creatorProjectFilter" class="asset-select-filter" style="padding:6px 12px; font-size:0.84rem;" onchange="changeCreatorProjectFilter(this.value)">
-                        <option value="">Tất cả tác phẩm</option>
+                        <option value="" data-i18n="creator_all_projects">Tất cả tác phẩm</option>
                     </select>
 
                     <button type="button" class="btn" style="border-radius:10px; padding:6px 12px; font-size:0.84rem;" onclick="refreshCreatorData()" data-i18n-title="tooltip_refresh" title="Làm mới">
@@ -10683,7 +10683,7 @@
 
                 <div style="text-align: center; padding: 18px 0 10px 0; display: none;" id="creatorLoadMoreArea">
                     <button type="button" class="creator-load-more-btn" onclick="loadMoreCreatorTransactions()">
-                        <i class="fa-solid fa-clock-rotate-left"></i> <span>Tải thêm giao dịch cũ</span>
+                        <i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="creator_load_transactions">Tải thêm giao dịch cũ</span>
                     </button>
                 </div>
             </div>
@@ -10693,10 +10693,10 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
                     <div style="display:flex; gap:8px;">
                         <button type="button" class="btn std-filter-pill active" id="btnGameFilterAll" onclick="filterCreatorGames('all', this)">
-                            <i class="fa-solid fa-border-all"></i> Tất cả: <span id="creatorGamesCountAll">0</span>
+                            <i class="fa-solid fa-border-all"></i> <span data-i18n="creator_game_filter_all">Tất cả:</span> <span id="creatorGamesCountAll">0</span>
                         </button>
                         <button type="button" class="btn std-filter-pill" id="btnGameFilterSales" onclick="filterCreatorGames('sales', this)">
-                            <i class="fa-solid fa-coins" style="color:#f59e0b;"></i> Đang bán: <span id="creatorGamesCountSales">0</span>
+                            <i class="fa-solid fa-coins" style="color:#f59e0b;"></i> <span data-i18n="creator_game_filter_sales">Đang bán:</span> <span id="creatorGamesCountSales">0</span>
                         </button>
                     </div>
                     <span style="font-size:0.85rem; color:var(--text-muted);" id="creatorGamesProgressText"></span>
@@ -10708,7 +10708,7 @@
 
                 <div style="text-align: center; padding: 18px 0 10px 0; display: none;" id="creatorGamesLoadMoreArea">
                     <button type="button" class="creator-load-more-btn" onclick="loadMoreCreatorGames()">
-                        <i class="fa-solid fa-angle-down"></i> <span id="creatorGamesLoadMoreText">Xem thêm tác phẩm</span>
+                        <i class="fa-solid fa-angle-down"></i> <span id="creatorGamesLoadMoreText" data-i18n="creator_load_projects">Xem thêm tác phẩm</span>
                     </button>
                 </div>
             </div>
@@ -10719,10 +10719,10 @@
                     
                     <div>
                         <h3 style="margin:0 0 6px 0; font-size:1.25rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
-                            <i class="fa-solid fa-code" style="color:var(--primary);"></i> <span>Quy Trình Tích Hợp Giao Dịch</span>
+                            <i class="fa-solid fa-code" style="color:var(--primary);"></i> <span data-i18n="creator_toolkit_title">Quy Trình Tích Hợp Giao Dịch</span>
                         </h3>
                         <p style="font-size:0.88rem; color:var(--text-muted); margin:0;">
-                            Hệ sinh thái Aftercode và DANVworkshop hỗ trợ giao thức thanh toán trực tiếp qua 3 bước:
+                            <span data-i18n="creator_toolkit_desc">Hệ sinh thái Aftercode và DANVworkshop hỗ trợ giao thức thanh toán trực tiếp qua 3 bước:</span>
                         </p>
                     </div>
 
@@ -10730,15 +10730,15 @@
                     <div class="creator-ide-card">
                         <div class="creator-ide-step-header">
                             <span class="creator-ide-step-badge">1</span>
-                            <span>Khởi Tạo Môi Trường Lập Trình</span>
+                            <span data-i18n="creator_step1_title">Khởi Tạo Môi Trường Lập Trình</span>
                         </div>
                         <p style="font-size:0.88rem; color:var(--text-main); margin:0 0 8px 0; line-height:1.5;">
-                            Khối lệnh kinh tế được tích hợp mặc định trong Aftercode. Đối với TurboWarp, thêm tiện ích mở rộng qua liên kết:
+                            <span data-i18n="creator_step1_desc">Khối lệnh kinh tế được tích hợp mặc định trong Aftercode. Đối với TurboWarp, thêm tiện ích mở rộng qua liên kết:</span>
                         </p>
                         <div class="creator-code-box">
                             <code>https://raw.githubusercontent.com/danvPR/workshop/main/WOWtoken-extension.js</code>
                             <button type="button" class="btn" style="padding:5px 12px; font-size:0.78rem; font-weight:800; border-radius:8px;" onclick="copyCreatorCodeSnippet('https://raw.githubusercontent.com/danvPR/workshop/main/WOWtoken-extension.js', this)">
-                                <i class="fa-solid fa-copy"></i> Sao chép
+                                <i class="fa-solid fa-copy"></i> <span data-i18n="action_copy">Sao chép</span>
                             </button>
                         </div>
                     </div>
@@ -10747,10 +10747,10 @@
                     <div class="creator-ide-card">
                         <div class="creator-ide-step-header">
                             <span class="creator-ide-step-badge">2</span>
-                            <span>Thiết Lập Khối Lệnh Mua Vật Phẩm</span>
+                            <span data-i18n="creator_step2_title">Thiết Lập Khối Lệnh Mua Vật Phẩm</span>
                         </div>
                         <p style="font-size:0.88rem; color:var(--text-muted); margin:0 0 8px 0;">
-                            Gán khối lệnh thanh toán vào đối tượng cần bán. Hệ thống tự động kích hoạt hộp thoại xác nhận khi người chơi thao tác:
+                            <span data-i18n="creator_step2_desc">Gán khối lệnh thanh toán vào đối tượng cần bán. Hệ thống tự động kích hoạt hộp thoại xác nhận khi người chơi thao tác:</span>
                         </p>
 
                         <div class="scratch-block-stage">
@@ -10787,17 +10787,17 @@
                     <div class="creator-ide-card">
                         <div class="creator-ide-step-header">
                             <span class="creator-ide-step-badge">3</span>
-                            <span>Triển Khai Lên Nền Tảng</span>
+                            <span data-i18n="creator_step3_title">Triển Khai Lên Nền Tảng</span>
                         </div>
                         <p style="font-size:0.88rem; color:var(--text-main); margin:0 0 12px 0; line-height:1.5;">
-                            Xuất bản dự án lên DANVworkshop. Khi người chơi hoàn tất mua vật phẩm, 70% giá trị giao dịch sẽ được ghi nhận vào Doanh thu khả dụng.
+                            <span data-i18n="creator_step3_desc">Xuất bản dự án lên DANVworkshop. Khi người chơi hoàn tất mua vật phẩm, 70% giá trị giao dịch sẽ được ghi nhận vào Doanh thu khả dụng.</span>
                         </p>
                         <div style="display:flex; gap:10px; flex-wrap:wrap;">
                             <a href="https://aftercode.pages.dev/editor.html" target="_blank" class="creator-btn-editor" style="padding:9px 18px;">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Mở Aftercode
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="creator_open_aftercode">Mở Aftercode</span>
                             </a>
                             <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="btn" style="border-radius:12px; font-weight:700; padding:9px 16px;">
-                                <i class="fa-solid fa-circle-question"></i> Tài liệu chính sách
+                                <i class="fa-solid fa-circle-question"></i> <span data-i18n="creator_policy_docs">Tài liệu chính sách</span>
                             </a>
                         </div>
                     </div>
@@ -11751,10 +11751,10 @@
                 <!-- Tabs Đăng nhập -->
                 <div class="auth-nav-tabs" style="justify-content: center; margin-bottom: 20px; width: 100%; display: flex;">
                     <button class="auth-nav-tab-btn active" id="tabDailySingle" onclick="switchDailyTab('single')" style="flex: 1; justify-content: center;">
-                        <i class="fa-solid fa-user"></i> Cá nhân
+                        <i class="fa-solid fa-user"></i> <span data-i18n="daily_tab_single">Cá nhân</span>
                     </button>
                     <button class="auth-nav-tab-btn" id="tabDailyCouple" onclick="switchDailyTab('couple')" style="flex: 1; justify-content: center;">
-                        <i class="fa-solid fa-user-group" style="color: #0284c7;"></i> Đôi bạn
+                        <i class="fa-solid fa-user-group" style="color: #0284c7;"></i> <span data-i18n="daily_tab_couple">Đôi bạn</span>
                     </button>
                 </div>
 
@@ -11764,8 +11764,8 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 5px;">
                     <div style="text-align:left;">
-                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" id="dailyStreakLabel">Chuỗi chuyên cần</span>
-                        <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> Ngày liên tiếp</h3>
+                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" id="dailyStreakLabel" data-i18n="daily_streak_single">Chuỗi chuyên cần</span>
+                        <h3 style="margin:0; font-size:1.4rem; color:var(--text-title);"><span id="dailyStreakDisplay">0</span> <span data-i18n="daily_streak_days_label">Ngày liên tiếp</span></h3>
                     </div>
                     <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-weight: 800; color:var(--text-title); font-size: 0.95rem;">
                         <span class="wow-icon"></span> <span id="dailyCurrentWOWVal">0</span>
@@ -11781,19 +11781,19 @@
                 </div>
 
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;" id="dailyDescText">
-                    Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.
+                    <span data-i18n="daily_desc_single">Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.</span>
                 </p>
 
                 <div id="dailyActionButtonsWrap">
                     <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
-                        Nhận thưởng hôm nay
+                        <span data-i18n="daily_claim_today">Nhận thưởng hôm nay</span>
                     </button>
                     
                     <button type="button" class="btn-hold-send-wow" id="btnHoldCoupleDaily" style="display:none; border-radius:14px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);">
                         <div class="hold-progress-fill" id="holdCoupleProgressFill" style="background: linear-gradient(90deg, #38bdf8, #0284c7, #0369a1);"></div>
                         <div class="btn-inner-content" id="holdCoupleBtnText">
                             <i class="fa-solid fa-handshake"></i>
-                            <span style="font-size: 1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>
+                            <span style="font-size: 1.05rem;" data-i18n="daily_hold_to_checkin">GIỮ 5S ĐỂ ĐIỂM DANH</span>
                         </div>
                     </button>
                 </div>
@@ -12959,6 +12959,24 @@
                 updateAuthBrandVisuals();
 
                 updateStaticDOM();
+                updateNav();
+
+                if (document.getElementById('dailyRewardModal')?.style.display === 'flex') {
+                    renderDailyTab(window.currentDailyTab || 'single');
+                }
+                if (profileGrid) {
+                    updateBentoCountBadge();
+                    updateBentoFloatButtonUI();
+                }
+                if (document.getElementById('lbPodiumArea')?.children.length || document.getElementById('lbListArea')?.children.length) renderLeaderboard();
+                if (document.getElementById('assetGridList')?.children.length) renderAssetGrid();
+                if (document.getElementById('notifPageList')?.children.length) renderNotifList();
+                if (window.location.hash.split('?')[0] === '#chat') loadGlobalChat(false);
+                if (document.getElementById('creatorView')?.style.display === 'block') {
+                    updateCreatorSummaryTranslations();
+                    renderCreatorTransactionsList();
+                    if (creatorActiveTab === 'games') renderCreatorProjectsBreakdown();
+                }
                 
                 // Load lại dữ liệu dự án nếu đang ở trang chủ
                 if(allProjects && allProjects.length > 0) handleRouting(); 
@@ -14241,7 +14259,7 @@
 
             if (currentUser) {
                 const adminItem = currentUser.role === 'admin' 
-                    ? `<a href="/#admin" class="nav-dropdown-item" onclick="closeNavUserDropdown()"><i class="fa-solid fa-shield-halved" style="color:#f59e0b;"></i> <span>Bảng Quản trị</span></a>` 
+                    ? `<a href="/#admin" class="nav-dropdown-item" onclick="closeNavUserDropdown()"><i class="fa-solid fa-shield-halved" style="color:#f59e0b;"></i> <span>${t('nav_admin') || 'Admin Panel'}</span></a>`
                     : '';
                 
                 nav.innerHTML = `
@@ -14270,13 +14288,13 @@
                                 <div class="nav-dropdown-user-role">@${escapeHtml(currentUser.username)}${currentUser.role === 'admin' ? ' • Admin' : ''}</div>
                             </div>
                             <a href="/users/${encodeURIComponent(currentUser.username)}" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
-                                <i class="fa-solid fa-user" style="color:var(--primary);"></i> <span>Trang cá nhân</span>
+                                <i class="fa-solid fa-user" style="color:var(--primary);"></i> <span>${t('nav_profile') || 'Profile'}</span>
                             </a>
                             <a href="/#leaderboard" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
-                                <i class="fa-solid fa-crown" style="color:#f59e0b;"></i> <span>Bảng xếp hạng</span>
+                                <i class="fa-solid fa-crown" style="color:#f59e0b;"></i> <span>${t('nav_leaderboard') || 'Leaderboard'}</span>
                             </a>
                             <a href="/#creator" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
-                                <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
+                                <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>${t('nav_creator') || 'Creator Studio'}</span>
                             </a>
                             <a href="/#settings" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
                                 <i class="fa-solid fa-gear" style="color:var(--text-muted);"></i> <span>${t('settings_options') || 'Cài đặt'}</span>
@@ -14284,7 +14302,7 @@
                             ${adminItem}
                             <div class="nav-dropdown-divider"></div>
                             <button type="button" class="nav-dropdown-item danger" onclick="closeNavUserDropdown(); logout();">
-                                <i class="fa-solid fa-right-from-bracket"></i> <span>Đăng xuất</span>
+                                <i class="fa-solid fa-right-from-bracket"></i> <span>${t('settings_logout') || 'Log Out'}</span>
                             </button>
                         </div>
                     </div>
@@ -14976,7 +14994,7 @@
                 if (btnLock) {
                     if (currentUser && (currentUser.username.toLowerCase() === currentProj.author.toLowerCase() || currentUser.role === 'admin')) {
                         btnLock.style.display = 'inline-flex';
-                        btnLock.innerHTML = isLocked ? `<i class="fa-solid fa-unlock"></i> Mở khóa` : `<i class="fa-solid fa-lock"></i> Khóa`;
+                        btnLock.innerHTML = isLocked ? `<i class="fa-solid fa-unlock"></i> ${t('comments_unlock')}` : `<i class="fa-solid fa-lock"></i> ${t('comments_lock')}`;
                         btnLock.className = isLocked ? 'btn btn-primary' : 'btn';
                     } else {
                         btnLock.style.display = 'none';
@@ -14987,7 +15005,7 @@
                 if (btnLock) {
                     if (currentUser && (currentUser.username.toLowerCase() === viewingProfileUser.toLowerCase() || currentUser.role === 'admin')) {
                         btnLock.style.display = 'inline-flex';
-                        btnLock.innerHTML = isLocked ? `<i class="fa-solid fa-unlock"></i> Mở khóa` : `<i class="fa-solid fa-lock"></i> Khóa`;
+                        btnLock.innerHTML = isLocked ? `<i class="fa-solid fa-unlock"></i> ${t('comments_unlock')}` : `<i class="fa-solid fa-lock"></i> ${t('comments_lock')}`;
                         btnLock.className = isLocked ? 'btn btn-primary' : 'btn';
                     } else {
                         btnLock.style.display = 'none';
@@ -15004,7 +15022,7 @@
                     if (!document.getElementById(`lock-msg-${type}`)) {
                         const lockMsg = document.createElement('div');
                         lockMsg.id = `lock-msg-${type}`;
-                        lockMsg.innerHTML = '<div style="text-align:center; padding:15px; color:var(--text-muted); background:var(--bg-secondary); border-radius:12px; margin-bottom:20px; border: 1px dashed var(--border-color);"><i class="fa-solid fa-lock"></i> Tính năng bình luận đã bị chủ sở hữu đóng.</div>';
+                        lockMsg.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-muted); background:var(--bg-secondary); border-radius:12px; margin-bottom:20px; border: 1px dashed var(--border-color);"><i class="fa-solid fa-lock"></i> ${t('comments_locked_notice')}</div>`;
                         areaEl.parentNode.insertBefore(lockMsg, areaEl);
                     }
                 } else {
@@ -15132,7 +15150,7 @@
                                         </div>
                                     </div>
                                 `).join('')}
-                                ${hasMore ? `<button class="btn-view-more-replies" onclick="toggleExpandReplies('${type}', '${root.id}')"><i class="fa-solid ${isExpanded ? 'fa-angle-up' : 'fa-reply'}"></i> ${isExpanded ? 'Thu gọn' : `Xem thêm ${replies.length - 3} phản hồi`}</button>` : ''}
+                                ${hasMore ? `<button class="btn-view-more-replies" onclick="toggleExpandReplies('${type}', '${root.id}')"><i class="fa-solid ${isExpanded ? 'fa-angle-up' : 'fa-reply'}"></i> ${isExpanded ? t('comments_collapse_replies') : t('comments_more_replies', { count: replies.length - 3 })}</button>` : ''}
                             </div>
                         ` : ''}
                     </div>
@@ -15155,7 +15173,7 @@
             container.innerHTML = visibleRoots.join('') + (hasMoreRoots ? `
                 <div style="text-align: center; margin-top: 15px; padding-bottom: 10px;">
                     <button class="btn" style="border-radius: 20px; font-weight: bold; padding: 8px 25px;" onclick="loadMoreComments('${type}')">
-                        <i class="fa-solid fa-angle-down"></i> Xem thêm bình luận
+                        <i class="fa-solid fa-angle-down"></i> ${t('comments_load_more')}
                     </button>
                 </div>
             ` : '');
@@ -15198,7 +15216,7 @@
                 let origHtml = "";
                 if (btn) {
                     origHtml = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải từ máy chủ...';
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('comments_loading_archive')}`;
                 }
 
                 let targetType = type === 'proj' ? 'PROJECT' : (type === 'std' ? 'STUDIO' : 'PROFILE');
@@ -15276,7 +15294,7 @@
                 reason = prompt("[Quản trị viên] Xác nhận XÓA?\nVui lòng nhập lý do để hệ thống gửi thông báo cho người dùng:", "Vi phạm tiêu chuẩn cộng đồng");
                 if (reason === null) return; // Hủy thao tác
             } else {
-                if(!confirm(t('confirm_delete') || "Xác nhận xóa bình luận này?")) return;
+                if(!confirm(t('confirm_delete_comment'))) return;
             }
 
             let endpoint = `/api/user/comment`;
@@ -15813,7 +15831,7 @@
             if (isLoadMore) lbCurrentPage++;
             const btnMore = document.querySelector('#lbLoadMoreArea button');
             if (isLoadMore && btnMore) {
-                btnMore.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+                btnMore.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('lb_loading')}`;
                 btnMore.disabled = true;
             }
 
@@ -15828,11 +15846,11 @@
                     renderLeaderboard();
                 }
             } catch (e) {
-                document.getElementById('lbListArea').innerHTML = '<div style="text-align:center; color:#ef4444; padding:20px;">Lỗi tải dữ liệu.</div>';
+                document.getElementById('lbListArea').innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px;">${t('lb_error')}</div>`;
             }
 
             if (isLoadMore && btnMore) {
-                btnMore.innerHTML = '<i class="fa-solid fa-angle-down"></i> Xem các thứ hạng tiếp theo';
+                btnMore.innerHTML = `<i class="fa-solid fa-angle-down"></i> <span data-i18n="lb_load_more">${t('lb_load_more')}</span>`;
                 btnMore.disabled = false;
             }
         }
@@ -15844,7 +15862,7 @@
 
             if (lbAllData.length === 0) {
                 podiumArea.innerHTML = '';
-                listArea.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px;">Hệ thống đang cập nhật dữ liệu.</div>';
+                listArea.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px;">${t('lb_updating')}</div>`;
                 loadMoreArea.style.display = 'none';
                 return;
             }
@@ -19090,23 +19108,23 @@
             const text = (n.text || '').toLowerCase();
 
             if (cat === 'tip') {
-                return { iconClass: 'fa-solid fa-gift', wrapClass: 'icon-like', label: 'Quà tặng WOW' };
+                return { iconClass: 'fa-solid fa-gift', wrapClass: 'icon-like', label: t('notif_filter_tip') };
             }
             if (cat === 'system') {
-                return { iconClass: 'fa-solid fa-triangle-exclamation', wrapClass: 'icon-system', label: 'Hệ thống' };
+                return { iconClass: 'fa-solid fa-triangle-exclamation', wrapClass: 'icon-system', label: t('notif_filter_system') };
             }
             if (cat === 'reaction') {
-                if (text.includes('sao')) return { iconClass: 'fa-solid fa-star', wrapClass: 'icon-star', label: 'Yêu thích' };
-                return { iconClass: 'fa-solid fa-heart', wrapClass: 'icon-like', label: 'Lượt thích' };
+                if (text.includes('sao')) return { iconClass: 'fa-solid fa-star', wrapClass: 'icon-star', label: t('tooltip_favorites') };
+                return { iconClass: 'fa-solid fa-heart', wrapClass: 'icon-like', label: t('tooltip_likes') };
             }
             if (cat === 'comment') {
-                if (text.includes('trả lời')) return { iconClass: 'fa-solid fa-reply', wrapClass: 'icon-comment', label: 'Phản hồi' };
-                return { iconClass: 'fa-solid fa-comment-dots', wrapClass: 'icon-comment', label: 'Bình luận' };
+                if (text.includes('trả lời')) return { iconClass: 'fa-solid fa-reply', wrapClass: 'icon-comment', label: t('proj_reply') };
+                return { iconClass: 'fa-solid fa-comment-dots', wrapClass: 'icon-comment', label: t('notif_filter_comment') };
             }
             if (text.includes('theo dõi')) {
-                return { iconClass: 'fa-solid fa-user-plus', wrapClass: 'icon-follow', label: 'Theo dõi' };
+                return { iconClass: 'fa-solid fa-user-plus', wrapClass: 'icon-follow', label: t('prof_btn_follow') };
             }
-            return { iconClass: 'fa-solid fa-bell', wrapClass: '', label: 'Thông báo' };
+            return { iconClass: 'fa-solid fa-bell', wrapClass: '', label: t('notif_title') };
         }
 
         function setNotifFilter(cat, btnEl) {
@@ -19135,8 +19153,8 @@
             // 1. Quà tặng năng lượng WOW
             if (mainText.startsWith("[WOW_TIP:") || mainText.startsWith("[OMG_TIP:")) {
                 const splitParts = mainText.split(/\]:\s*(?:&quot;|")/);
-                let tipAmount = "nhiều";
-                let projTitle = "tác phẩm của bạn";
+                let tipAmount = t('notif_wow_default_amount');
+                let projTitle = t('notif_wow_default_project');
                 let tipMsg = "";
 
                 if (splitParts.length > 1) {
@@ -19145,7 +19163,7 @@
                     tipMsg = splitParts.slice(1).join(']: &quot;').replace(/(?:&quot;|")$/, '');
                 }
 
-                actionHtml = `${senderLink} đã tặng <b style="color:#ea580c;">+${tipAmount} WOW</b> cho tác phẩm <b>${projTitle}</b>`;
+                actionHtml = t('notif_wow_tip_action', { sender: senderLink, amount: tipAmount, project: projTitle });
                 
                 if (tipMsg) {
                     bubbleHtml = `
@@ -19163,7 +19181,7 @@
             // 1.2. Thẻ Lời Mời / Phản Hồi Liên Kết Đôi Bạn
             if (mainText.startsWith("[COUPLE_INVITE:")) {
                 const uName = mainText.replace("[COUPLE_INVITE:", "").replace("]", "");
-                actionHtml = `<b style="color:#0284c7;">Lời Mời Đôi Bạn Cùng Tiến</b>`;
+                actionHtml = `<b style="color:#0284c7;">${t('notif_couple_invite_action')}</b>`;
                 bubbleHtml = `
                     <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 16px; padding: 14px 18px; margin-top: 8px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.12);">
                         <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
@@ -19171,11 +19189,11 @@
                                 <i class="fa-solid fa-user-group"></i>
                             </div>
                             <div style="font-size:0.92rem; color:#0369a1; font-weight:800; line-height:1.4;">
-                                @${escapeHtml(uName)} đã gửi cho bạn lời mời kết nối Đôi Bạn Cùng Tiến!
+                                ${t('notif_couple_invite_text', { user: escapeHtml(uName) })}
                             </div>
                         </div>
                         <button type="button" class="btn btn-primary" style="width:100%; background:#0284c7; border:none; border-radius:12px; font-weight:800; padding:8px;" onclick="event.stopPropagation(); openDailyRewardModal(); setTimeout(()=>renderDailyTab('couple'), 200);">
-                            <i class="fa-solid fa-handshake"></i> Xem & Trả lời ngay
+                            <i class="fa-solid fa-handshake"></i> ${t('notif_couple_invite_button')}
                         </button>
                     </div>
                 `;
@@ -19183,14 +19201,14 @@
             }
             if (mainText.startsWith("[COUPLE_ACCEPT:")) {
                 const uName = mainText.replace("[COUPLE_ACCEPT:", "").replace("]", "");
-                actionHtml = `<b style="color:#10b981;">Kết Nối Đôi Bạn Thành Công</b>`;
-                bubbleHtml = `<div style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #10b981;"><i class="fa-solid fa-handshake-angle"></i> @${escapeHtml(uName)} đã CHẤP NHẬN làm Đôi Bạn Cùng Tiến với bạn! Hãy điểm danh ngay.</div>`;
+                actionHtml = `<b style="color:#10b981;">${t('notif_couple_accept_action')}</b>`;
+                bubbleHtml = `<div style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #10b981;"><i class="fa-solid fa-handshake-angle"></i> ${t('notif_couple_accept_text', { user: escapeHtml(uName) })}</div>`;
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
             if (mainText.startsWith("[COUPLE_REJECT:")) {
                 const uName = mainText.replace("[COUPLE_REJECT:", "").replace("]", "");
-                actionHtml = `<b style="color:#ef4444;">Lời Mời Bị Từ Chối</b>`;
-                bubbleHtml = `<div style="background: rgba(239, 68, 68, 0.1); color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444;"><i class="fa-solid fa-user-xmark"></i> @${escapeHtml(uName)} đã từ chối lời mời Đôi Bạn.</div>`;
+                actionHtml = `<b style="color:#ef4444;">${t('notif_couple_reject_action')}</b>`;
+                bubbleHtml = `<div style="background: rgba(239, 68, 68, 0.1); color: #b91c1c; padding: 12px 16px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444;"><i class="fa-solid fa-user-xmark"></i> ${t('notif_couple_reject_text', { user: escapeHtml(uName) })}</div>`;
                 return { actionHtml, bubbleHtml, link: linkWithTab };
             }
 
@@ -19203,12 +19221,12 @@
                     const userA = partsMatch[3];
                     const userB = partsMatch[4];
                     
-                    actionHtml = `<b style="color:#0284c7;">Đôi Bạn Cùng Tiến (Ngày ${cStreak})</b>`;
+                    actionHtml = `<b style="color:#0284c7;">${t('notif_couple_streak_action', { day: cStreak })}</b>`;
                     bubbleHtml = `
                         <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 16px; padding: 18px; margin-top: 8px; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.18); text-align:center; position:relative; overflow:hidden;">
                             <div style="position:absolute; top:-20px; left:-20px; font-size:4rem; opacity:0.08;"><i class="fa-solid fa-user-group"></i></div>
                             <div style="font-size:0.85rem; color:#0369a1; font-weight:800; text-transform:uppercase; margin-bottom:8px; position:relative; z-index:2;">
-                                🎉 Chúc mừng 2 bạn đã cùng điểm danh
+                                ${t('notif_couple_streak_celebrate')}
                             </div>
                             <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:12px; position:relative; z-index:2;">
                                 <div style="font-weight:900; font-size:1.1rem; color:#0284c7;">@${userA}</div>
@@ -19216,7 +19234,7 @@
                                 <div style="font-weight:900; font-size:1.1rem; color:#0284c7;">@${userB}</div>
                             </div>
                             <div style="display:inline-flex; align-items:center; gap:6px; background:#fff; padding:6px 16px; border-radius:20px; border:1px solid #bae6fd; color:#ea580c; font-weight:900; font-size:1.1rem; position:relative; z-index:2; box-shadow:0 4px 10px rgba(2, 132, 199, 0.12);">
-                                <span class="wow-icon"></span> MỖI BẠN NHẬN +${cReward} WOW
+                                <span class="wow-icon"></span> ${t('notif_couple_reward', { reward: cReward })}
                             </div>
                         </div>
                     `;
@@ -19226,7 +19244,7 @@
 
             // 2. Thông báo khẩn cấp từ Ban Quản Trị / Hệ Thống
             if (sender === "HỆ THỐNG") {
-                actionHtml = `<b style="color:#ef4444;">Thông báo từ Ban Quản Trị</b>`;
+                actionHtml = `<b style="color:#ef4444;">${t('notif_admin_broadcast')}</b>`;
                 bubbleHtml = `
                     <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 14px 18px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444; display:flex; align-items:center; gap:10px;">
                         <i class="fa-solid fa-triangle-exclamation" style="font-size:1.3rem; flex-shrink:0;"></i>
@@ -19263,9 +19281,9 @@
                                 <span>${commentSnippet}</span>
                             </div>
                             <div class="notif-quick-reply-row">
-                                <input type="text" class="notif-quick-reply-input" placeholder="Nhấn để chuyển đến bình luận..." readonly onclick="event.stopPropagation(); navigateTo('${linkWithTab}')">
+                                <input type="text" class="notif-quick-reply-input" placeholder="${t('notif_comment_jump_ph')}" readonly onclick="event.stopPropagation(); navigateTo('${linkWithTab}')">
                                 <button type="button" class="notif-quick-reply-btn" onclick="event.stopPropagation(); navigateTo('${linkWithTab}')">
-                                    <i class="fa-solid fa-reply"></i> <span>Trả lời</span>
+                                    <i class="fa-solid fa-reply"></i> <span>${t('notif_reply')}</span>
                                 </button>
                             </div>
                         </div>
@@ -19289,10 +19307,10 @@
             if(!currentUser) return;
             const btn = event.currentTarget;
             const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('notif_processing')}`;
             
             await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) });
-            showToast("Đã đánh dấu đọc tất cả", "success");
+            showToast(t('toast_all_notifs_read'), "success");
             
             const badge = document.getElementById('notifBadge');
             if(badge) {
@@ -19341,7 +19359,7 @@
             currentNotifFilter = 'all';
             
             const container = document.getElementById('notifPageList');
-            container.innerHTML = '<div style="padding:50px; text-align:center; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">Đang tải hộp thư...</span></div>';
+            container.innerHTML = `<div style="padding:50px; text-align:center; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">${t('notif_loading')}</span></div>`;
 
             try {
                 const data = await apiFetch(`/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`);
@@ -19386,8 +19404,8 @@
                 container.innerHTML = `
                     <div style="padding:65px 20px; text-align:center; color:var(--text-muted);">
                         <i class="fa-solid fa-inbox" style="font-size:3.2rem; margin-bottom:12px; opacity:0.3; display:block;"></i>
-                        <b style="font-size:1.05rem; color:var(--text-title); display:block; margin-bottom:4px;">Không có thông báo nào trong mục này</b>
-                        <span style="font-size:0.86rem;">Hộp thư sẽ tự động cập nhật khi có hoạt động mới từ bạn bè!</span>
+                        <b style="font-size:1.05rem; color:var(--text-title); display:block; margin-bottom:4px;">${t('notif_empty_filter')}</b>
+                        <span style="font-size:0.86rem;">${t('notif_empty_desc')}</span>
                     </div>
                 `;
                 return;
@@ -19421,7 +19439,7 @@
                                     <span class="notif-clean-time"><i class="fa-regular fa-clock"></i> ${timeAgo(n.time || '')}</span>
                                     ${!isRead ? `
                                         <span class="notif-unread-tag-pill">
-                                            <span class="notif-unread-pulse-dot"></span> Mới
+                                            <span class="notif-unread-pulse-dot"></span> ${t('notif_new')}
                                         </span>
                                     ` : ''}
                                 </div>
@@ -21489,7 +21507,7 @@
             });
 
             if (counterEl) {
-                counterEl.innerText = `${filtered.length} tài nguyên`;
+                counterEl.innerText = t('assets_count', { count: filtered.length });
             }
 
             const visibleAssets = filtered.slice(0, displayedAssetsCount);
@@ -21498,11 +21516,11 @@
                 container.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align:center; padding:65px 20px; color:var(--text-muted); background:var(--bg-panel); border-radius:20px; border:1.5px dashed var(--border-color);">
                         <i class="fa-solid fa-box-open" style="font-size:3.5rem; margin-bottom:14px; opacity:0.3; display:block;"></i>
-                        <b style="font-size:1.15rem; color:var(--text-title); display:block; margin-bottom:6px;">Không tìm thấy tài nguyên nào</b>
-                        <span style="font-size:0.88rem;">Hãy thử từ khóa khác hoặc bấm nút bên dưới để xóa toàn bộ bộ lọc.</span>
+                        <b style="font-size:1.15rem; color:var(--text-title); display:block; margin-bottom:6px;">${t('assets_empty_title')}</b>
+                        <span style="font-size:0.88rem;">${t('assets_empty_desc')}</span>
                         <div style="margin-top:16px;">
                             <button type="button" class="btn btn-primary" onclick="resetAssetFilters()" style="border-radius:20px; padding:8px 22px; font-weight:800;">
-                                <i class="fa-solid fa-rotate-left"></i> Đặt lại bộ lọc
+                                <i class="fa-solid fa-rotate-left"></i> ${t('assets_btn_reset')}
                             </button>
                         </div>
                     </div>
@@ -21588,7 +21606,7 @@
                         </div>
 
                         <div class="asset-tags-track">
-                            ${tagsHtml || '<span style="font-size:0.75rem; color:var(--text-muted); opacity:0.6;">Không có tag</span>'}
+                            ${tagsHtml || `<span style="font-size:0.75rem; color:var(--text-muted); opacity:0.6;">${t('assets_no_tags')}</span>`}
                         </div>
 
                         <div class="asset-card-bottom">
@@ -22964,7 +22982,7 @@
                 // TH1: Phòng chat rỗng hoàn toàn
                 if (!messages || messages.length === 0) {
                     if (liveWrapper.children.length === 0) {
-                        liveWrapper.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>Chưa có tin nhắn nào. Hãy mở đầu cuộc trò chuyện!</div>`;
+                        liveWrapper.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fa-solid fa-comments" style="font-size:3rem; margin-bottom:12px; opacity:0.3; display:block;"></i>${t('chat_empty_start')}</div>`;
                     }
                     return;
                 }
@@ -23096,7 +23114,7 @@
                     topArea.innerHTML = `
                         <div style="text-align:center; padding: 0 0 15px 0;">
                             <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
-                                <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm tin nhắn cũ
+                                <i class="fa-solid fa-clock-rotate-left"></i> ${t('chat_load_older')}
                             </button>
                         </div>
                     `;
@@ -23104,7 +23122,7 @@
                     topArea.innerHTML = `
                         <div style="text-align:center; padding: 0 0 15px 0;">
                             <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
-                                <i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ
+                                <i class="fa-solid fa-box-archive"></i> ${t('chat_load_archive')}
                             </button>
                         </div>
                     `;
@@ -23189,7 +23207,7 @@
 
             isChatLoadingMore = true;
             const btn = document.getElementById('btnLoadMoreChat');
-            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tìm...';
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('chat_searching')}`;
 
             if (chatHasMore) {
                 chatDisplayLimit += 20;
@@ -23211,7 +23229,7 @@
                 const topArea = document.getElementById('chatLoadMoreTopArea');
 
                 if (messages.length === 0) {
-                    if (topArea) topArea.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding-bottom: 10px;">Đã tải hết lịch sử trò chuyện.</div>';
+                    if (topArea) topArea.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding-bottom: 10px;">${t('chat_history_end')}</div>`;
                     isAutoFindingMessage = false;
                     return;
                 }
@@ -23229,10 +23247,10 @@
                         <div class="chat-msg-wrapper">
                             <div class="chat-meta-header">
                                 <a href="#profile/${encodeURIComponent(c.author)}" class="chat-author-name">${escapeHtml(c.author)}</a>
-                                ${isMine ? `<span class="chat-author-you-badge">Bạn</span>` : ''}
+                                ${isMine ? `<span class="chat-author-you-badge">${t('chat_you')}</span>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>${t('chat_action_reply')} <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : ''}</div>
                         </div>
                     </div>
                     `;
@@ -23249,13 +23267,13 @@
                     topArea.innerHTML = `
                         <div style="text-align:center; padding: 0 0 15px 0;">
                             <button class="btn" onclick="loadMoreChatMessages()" id="btnLoadMoreChat" style="border-radius: 20px; font-size: 0.82rem; padding: 6px 18px; border: 1px dashed var(--border-color); background: var(--bg-secondary); color: var(--text-muted); font-weight: 600;">
-                                <i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ
+                                <i class="fa-solid fa-box-archive"></i> ${t('chat_load_archive')}
                             </button>
                         </div>
                     `;
                     archiveChatPage++;
                 } else {
-                    topArea.innerHTML = '<div style="text-align:center; padding: 0 0 15px 0; color:var(--text-muted); font-size:0.85rem;">Đã tải hết lịch sử trò chuyện.</div>';
+                    topArea.innerHTML = `<div style="text-align:center; padding: 0 0 15px 0; color:var(--text-muted); font-size:0.85rem;">${t('chat_history_end')}</div>`;
                 }
 
                 if (!isAutoFind) {
@@ -23280,9 +23298,9 @@
                 }
 
             } catch (e) {
-                showToast("Lỗi tải lịch sử trò chuyện", "error");
+                showToast(t('chat_archive_error'), "error");
                 const btn = document.getElementById('btnLoadMoreChat');
-                if (btn) btn.innerHTML = '<i class="fa-solid fa-box-archive"></i> Tải thêm lịch sử cũ từ máy chủ';
+                if (btn) btn.innerHTML = `<i class="fa-solid fa-box-archive"></i> ${t('chat_load_archive')}`;
                 isAutoFindingMessage = false;
             }
         }
@@ -23826,7 +23844,7 @@
             openModal('dailyRewardModal');
             
             const grid = document.getElementById('dailyRewardGrid');
-            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${t('daily_loading')}</div>`;
             
             try {
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
@@ -23850,7 +23868,7 @@
 
                 renderDailyTab(window.currentDailyTab);
             } catch (err) {
-                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">Lỗi tải dữ liệu. Vui lòng thử lại.</div>';
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">${t('daily_load_error')}</div>`;
             }
         }
 
@@ -23865,7 +23883,7 @@
                 const grid = document.getElementById('dailyRewardGrid');
                 if (partnerArea) {
                     partnerArea.style.display = 'block';
-                    partnerArea.innerHTML = '<div style="text-align:center; padding:12px; color:#0284c7; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải lại dữ liệu Đôi bạn...</div>';
+                    partnerArea.innerHTML = `<div style="text-align:center; padding:12px; color:#0284c7; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> ${t('daily_loading_buddy')}</div>`;
                 }
                 if (grid) {
                     grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:25px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i></div>';
@@ -23925,8 +23943,8 @@
             if (tab === 'single') {
                 partnerArea.style.display = 'none';
                 btn.style.display = 'flex';
-                streakLabel.innerText = 'Chuỗi chuyên cần';
-                desc.innerText = 'Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.';
+                streakLabel.innerText = t('daily_streak_single');
+                desc.innerHTML = t('daily_desc_single');
                 
                 const progressPercent = Math.min(100, Math.round((streak / 7) * 100));
                 progress.style.width = `${progressPercent}%`;
@@ -23942,8 +23960,8 @@
                 }
             } else {
                 partnerArea.style.display = 'block';
-                streakLabel.innerText = 'Chuỗi Đôi bạn';
-                desc.innerHTML = 'Chuỗi điểm danh vô cực, nhận WOW vĩnh viễn không bị reset về mốc Ngày 1 (Mỗi chu kỳ 7 ngày). <b style="color:#0284c7;">Chỉ cần 1 bạn quên điểm danh, chuỗi sẽ bị đứt!</b>';
+                streakLabel.innerText = t('daily_streak_couple');
+                desc.innerHTML = t('daily_desc_couple');
                 
                 const partnerName = dailyInfo.partner || '';
                 const partnerReq = dailyInfo.partnerReq || '';
@@ -23953,52 +23971,52 @@
                     partnerArea.innerHTML = `
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="font-size:0.95rem; color:#0284c7; font-weight:900; display:flex; align-items:center; gap:8px;">
-                                <i class="fa-solid fa-user-group"></i> Đôi bạn cùng tiến: @${escapeHtml(partnerName)}
+                                <i class="fa-solid fa-user-group"></i> ${t('daily_pair_together', { user: escapeHtml(partnerName) })}
                             </div>
-                            <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 10px; border-radius:10px;" onclick="unpairDailyPartner()">Hủy liên kết</button>
+                            <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 10px; border-radius:10px;" onclick="unpairDailyPartner()">${t('daily_unpair')}</button>
                         </div>
                     `;
                     btn.style.display = 'flex';
                 } else if (pStatus === 'pending_sent') {
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Đã gửi lời mời đến @${escapeHtml(partnerName)}</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Đang chờ bạn ấy đồng ý...</div>
-                        <button class="btn" style="border:1px solid #ef4444; color:#ef4444; padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="unpairDailyPartner()">Hủy yêu cầu</button>
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">${t('daily_invite_sent', { user: escapeHtml(partnerName) })}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">${t('daily_wait_accept')}</div>
+                        <button class="btn" style="border:1px solid #ef4444; color:#ef4444; padding:6px 16px; border-radius:12px; font-size:0.85rem;" onclick="unpairDailyPartner()">${t('daily_cancel_request')}</button>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-clock" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Hãy đợi bạn đồng hành phản hồi lời mời nhé!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-clock" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>${t('daily_wait_response')}</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
                 } else if ((dailyInfo.partnerReqs && dailyInfo.partnerReqs.length > 0) || partnerReq) {
                     const reqList = (dailyInfo.partnerReqs && dailyInfo.partnerReqs.length > 0) ? dailyInfo.partnerReqs : [partnerReq];
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Lời mời Đôi Bạn đang chờ (${reqList.length}):</div>
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">${t('daily_pending_invites', { count: reqList.length })}</div>
                         <div style="display:flex; flex-direction:column; gap:8px; max-height:160px; overflow-y:auto; padding-right:2px;">
                             ${reqList.map(reqUser => `
                                 <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(2,132,199,0.08); padding:8px 12px; border-radius:12px; border:1px solid #bae6fd;">
                                     <span style="font-weight:800; color:#0369a1;">@${escapeHtml(reqUser)}</span>
                                     <div style="display:flex; gap:6px;">
-                                        <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('reject', '${escapeHtml(reqUser)}')">Từ chối</button>
-                                        <button class="btn btn-primary" style="background:#0284c7; border:none; padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('accept', '${escapeHtml(reqUser)}')">Đồng ý</button>
+                                        <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('reject', '${escapeHtml(reqUser)}')">${t('daily_reject')}</button>
+                                        <button class="btn btn-primary" style="background:#0284c7; border:none; padding:4px 10px; font-size:0.75rem; border-radius:8px;" onclick="respondDailyPartner('accept', '${escapeHtml(reqUser)}')">${t('daily_accept')}</button>
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Bạn có lời mời Đôi Bạn Cùng Tiến đang chờ xác nhận!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-envelope-open-text" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>${t('daily_invite_received_notice')}</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     return;
                 } else {
                     partnerArea.innerHTML = `
-                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">Bạn chưa ghép Đôi bạn với ai cả!</div>
+                        <div style="font-weight:bold; color:var(--text-title); margin-bottom:8px;">${t('daily_no_partner')}</div>
                         <div style="display:flex; gap:8px; justify-content:center; margin-bottom:10px;">
-                            <input type="text" id="partnerInput" placeholder="Nhập username của bạn ấy..." class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
-                            <button class="btn btn-primary" style="background:#0284c7; border:none; padding:8px 16px; border-radius:12px;" onclick="requestDailyPartner()">Gửi Lời Mời</button>
+                            <input type="text" id="partnerInput" placeholder="${t('daily_partner_username_ph')}" class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
+                            <button class="btn btn-primary" style="background:#0284c7; border:none; padding:8px 16px; border-radius:12px;" onclick="requestDailyPartner()">${t('daily_send_invite')}</button>
                         </div>
                         <div id="partnerTurnstileSlot" style="display:flex; justify-content:center;"></div>
                     `;
-                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-user-group" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>Gửi lời mời và chờ bạn ấy đồng ý để mở khóa chuỗi!</div>`;
+                    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-user-group" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>${t('daily_wait_invite')}</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
                     setTimeout(() => {
@@ -24045,14 +24063,14 @@
                 btn.style.display = 'flex';
                 if(holdBtn) holdBtn.style.display = 'none';
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận thưởng hôm nay';
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${t('daily_claimed_today')}`;
                 btn.className = 'btn';
                 btn.style.background = '';
             } else if (isWaitingPartner) {
                 btn.style.display = 'flex';
                 if(holdBtn) holdBtn.style.display = 'none';
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-clock"></i> Đang chờ bạn đồng hành điểm danh...';
+                btn.innerHTML = `<i class="fa-solid fa-clock"></i> ${t('daily_wait_partner')}`;
                 btn.className = 'btn';
                 btn.style.background = 'rgba(2, 132, 199, 0.08)';
                 btn.style.color = '#0284c7';
@@ -24066,7 +24084,7 @@
                     if(holdBtn) holdBtn.style.display = 'none';
                     btn.style.display = 'flex';
                     btn.disabled = false;
-                    btn.innerHTML = 'Nhận thưởng hôm nay';
+                    btn.innerHTML = `<span>${t('daily_claim_today')}</span>`;
                     btn.className = 'btn btn-primary';
                     btn.style.background = '';
                     btn.style.border = '';
@@ -24078,10 +24096,10 @@
         function buildDailySlotHtml(dayNum, reward, statusClass, isFinalDay) {
             return `
             <div class="daily-card-slot ${statusClass} ${isFinalDay ? 'day-7' : ''}" style="border-color: ${statusClass==='active' ? 'var(--primary)' : ''};">
-                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">Ngày ${dayNum}</span>
+                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">${t('daily_day', { day: dayNum })}</span>
                 <span class="wow-icon" style="font-size: 1.4rem; filter: ${statusClass==='claimed' ? 'grayscale(100%) opacity(0.5)' : 'none'};"></span>
                 <b style="font-size: 0.85rem; color: var(--text-title);">+${reward}</b>
-                ${statusClass === 'claimed' ? '<span style="font-size:0.65rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-check"></i> Đã nhận</span>' : ''}
+                ${statusClass === 'claimed' ? `<span style="font-size:0.65rem; color:var(--primary); font-weight:800;"><i class="fa-solid fa-check"></i> ${t('daily_badge_claimed_short')}</span>` : ''}
             </div>`;
         }
 
@@ -24102,7 +24120,7 @@
                 const fillEl = document.getElementById('holdCoupleProgressFill');
                 const textEl = document.getElementById('holdCoupleBtnText');
 
-                if (textEl) textEl.innerHTML = '<i class="fa-solid fa-handshake fa-bounce"></i> <span style="font-size:1.05rem;">ĐỒNG HÀNH 0% (5.0s)</span>';
+                if (textEl) textEl.innerHTML = `<i class="fa-solid fa-handshake fa-bounce"></i> <span style="font-size:1.05rem;">${t('daily_hold_progress', { percent: 0, seconds: '5.0' })}</span>`;
 
                 clearInterval(holdCoupleInterval);
                 holdCoupleInterval = setInterval(() => {
@@ -24112,12 +24130,12 @@
                     const remainingSec = Math.max(0, ((100 - curPct) * 0.05)).toFixed(1);
                     
                     if (fillEl) fillEl.style.width = `${curPct}%`;
-                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-handshake fa-bounce"></i> <span style="font-size:1.05rem;">ĐỒNG HÀNH ${curPct}% (${remainingSec}s)</span>`;
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-handshake fa-bounce"></i> <span style="font-size:1.05rem;">${t('daily_hold_progress', { percent: curPct, seconds: remainingSec })}</span>`;
 
                     if (holdCoupleProgress >= 100) {
                         clearInterval(holdCoupleInterval);
                         isCoupleSubmitting = true;
-                        if (textEl) textEl.innerHTML = '<i class="fa-solid fa-sparkles fa-spin"></i> <span style="font-size:1.05rem;">ĐÃ KẾT NỐI! ĐANG NHẬN QUÀ...</span>';
+                        if (textEl) textEl.innerHTML = `<i class="fa-solid fa-sparkles fa-spin"></i> <span style="font-size:1.05rem;">${t('daily_hold_success')}</span>`;
                         claimDailyReward(true).then(() => {
                             isCoupleSubmitting = false;
                             btn.classList.remove('is-holding');
@@ -24135,7 +24153,7 @@
                     const fillEl = document.getElementById('holdCoupleProgressFill');
                     const textEl = document.getElementById('holdCoupleBtnText');
                     if (fillEl) fillEl.style.width = '0%';
-                    if (textEl) textEl.innerHTML = '<i class="fa-solid fa-handshake"></i> <span style="font-size:1.05rem;">GIỮ 5S ĐỂ ĐIỂM DANH</span>';
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-handshake"></i> <span style="font-size:1.05rem;">${t('daily_hold_to_checkin')}</span>`;
                 }
             };
 
@@ -25735,8 +25753,23 @@
             const badge = document.getElementById('bentoCountBadge');
             if (!badge || !profileGrid) return;
             const count = (profileGrid.engine && profileGrid.engine.nodes) ? profileGrid.engine.nodes.length : 0;
-            badge.innerText = `${count} / 25 Ô`;
+            badge.innerText = t('bento_count', { count });
             badge.classList.toggle('full', count >= 25);
+        }
+
+        function getBentoRoleLabel(role) {
+            const roleKeys = {
+                'Bạn bè': 'bento_role_friend',
+                'Bạn thân': 'bento_role_close_friend',
+                'Đồng tác giả': 'bento_role_collaborator',
+                'Dev Team': 'bento_role_dev_team',
+                'Học trò': 'bento_role_student',
+                'Sư phụ': 'bento_role_mentor',
+                'Idol': 'bento_role_idol',
+                'Đối thủ': 'bento_role_rival',
+                'Tùy chỉnh': 'bento_role_custom'
+            };
+            return roleKeys[role] ? t(roleKeys[role]) : role;
         }
 
         // Xuất HTML từng loại Widget (Bọc kiểm tra an toàn từng thuộc tính)
@@ -25768,7 +25801,7 @@
                 contentHtml = `
                     <div class="bento-widget-inner widget-bio-container">
                         <h4 style="font-size: 0.88rem; color: var(--text-muted); text-transform: uppercase; margin: 0 0 10px 0; letter-spacing:0.5px;">
-                            <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> Giới thiệu
+                            <i class="fa-solid fa-address-card" style="color:var(--primary);"></i> ${t('bento_bio')}
                         </h4>
                         <p style="font-size: 0.98rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${bioFormatted}</p>
                     </div>
@@ -25778,10 +25811,10 @@
             else if (safeId === 'widget_stats') {
                 contentHtml = `
                     <div class="bento-widget-inner widget-stats-container">
-                        <div class="bento-stat-item"><b id="statProjectCount">...</b><span>Tác phẩm</span></div>
-                        <div class="bento-stat-item"><b id="statLikeCount">...</b><span>Lượt thích</span></div>
-                        <div class="bento-stat-item" onclick="openFollowListModal('following')"><b id="statFollowingCount">${(data.following||[]).length}</b><span>Đang theo dõi</span></div>
-                        <div class="bento-stat-item" onclick="openFollowListModal('followers')"><b id="statFollowersCount">${(data.followers||[]).length}</b><span>Người theo dõi</span></div>
+                        <div class="bento-stat-item"><b id="statProjectCount">...</b><span>${t('prof_projects')}</span></div>
+                        <div class="bento-stat-item"><b id="statLikeCount">...</b><span>${t('prof_liked')}</span></div>
+                        <div class="bento-stat-item" onclick="openFollowListModal('following')"><b id="statFollowingCount">${(data.following||[]).length}</b><span>${t('prof_following')}</span></div>
+                        <div class="bento-stat-item" onclick="openFollowListModal('followers')"><b id="statFollowersCount">${(data.followers||[]).length}</b><span>${t('prof_followers')}</span></div>
                     </div>
                 `;
             } 
@@ -25799,11 +25832,11 @@
                     contentHtml = `
                         <div class="bento-widget-inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:25px;">
                             <i class="fa-solid fa-star" style="font-size:2.8rem; margin-bottom:10px; color:#f59e0b; opacity:0.8;"></i>
-                            <b style="font-size:1.05rem; color:var(--text-title); margin-bottom:4px;">Chưa chọn tác phẩm tâm huyết</b>
-                            <span style="font-size:0.85rem; color:var(--text-muted); max-width:280px; line-height:1.45;">${isOwner ? 'Ghim tác phẩm bạn tự hào nhất lên đầu trang cá nhân!' : 'Tác giả chưa cài đặt tác phẩm tâm huyết nào.'}</span>
+                            <b style="font-size:1.05rem; color:var(--text-title); margin-bottom:4px;">${t('bento_no_featured')}</b>
+                            <span style="font-size:0.85rem; color:var(--text-muted); max-width:280px; line-height:1.45;">${isOwner ? t('bento_pin_featured_owner') : t('bento_pin_featured_other')}</span>
                             ${isOwner ? `
                                 <button type="button" class="btn btn-primary" style="margin-top:14px; border-radius:20px; font-weight:800; padding:8px 22px;" onclick="openSelectFeaturedProjectModal()">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Chọn tác phẩm ngay
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> ${t('bento_choose_now')}
                                 </button>
                             ` : ''}
                         </div>
@@ -25823,23 +25856,23 @@
                         <div class="widget-mini-card" onclick="openCollectionDetail('${col.id}')" style="cursor:pointer;">
                             <div style="background:linear-gradient(135deg, #0da57a, #0f172a); padding:16px; color:#fff; display:flex; justify-content:space-between; align-items:center;">
                                 <span style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; opacity:0.9;">
-                                    <i class="fa-solid fa-layer-group"></i> Bộ sưu tập
+                                    <i class="fa-solid fa-layer-group"></i> ${t('bento_collection_label')}
                                 </span>
-                                <span style="font-size:0.75rem; background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:10px;">${(col.projects||[]).length} tác phẩm</span>
+                                <span style="font-size:0.75rem; background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:10px;">${t('bento_projects_count', { count: (col.projects||[]).length })}</span>
                             </div>
                             <div class="widget-mini-card-body">
                                 <div>
                                     <h4 style="margin:0 0 6px 0; font-size:1.1rem; color:var(--text-title); line-height:1.3;">${escapeHtml(col.title)}</h4>
-                                    <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-regular fa-clock"></i> ${col.createdAt || 'Gần đây'}</span>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-regular fa-clock"></i> ${col.createdAt || t('bento_recent')}</span>
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                                    <span style="color:var(--primary); font-size:0.82rem; font-weight:800;"><i class="fa-solid fa-play"></i> Xem bộ sưu tập</span>
+                                    <span style="color:var(--primary); font-size:0.82rem; font-weight:800;"><i class="fa-solid fa-play"></i> ${t('bento_view_collection')}</span>
                                 </div>
                             </div>
                         </div>
                     `;
                 } else {
-                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted);">Bộ sưu tập không còn tồn tại hoặc đã bị ẩn.</div>`;
+                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted);">${t('bento_collection_missing')}</div>`;
                 }
             }
             // 5. GHIM 1 DỰ ÁN NHỎ (PROJECT CARD WIDGET)
@@ -25866,14 +25899,14 @@
                     
                     contentHtml = `
                         <div class="bento-widget-inner" style="background:linear-gradient(135deg, #f0f9ff, #e0f2fe); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:14px;">
-                            <span style="font-size:0.75rem; font-weight:800; color:#0284c7; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fa-solid fa-user-group"></i> Đôi bạn cùng tiến</span>
+                            <span style="font-size:0.75rem; font-weight:800; color:#0284c7; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fa-solid fa-user-group"></i> ${t('bento_buddies')}</span>
                             <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px;">
                                 <img src="${myAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #0284c7; object-fit:cover;">
                                 <i class="fa-solid fa-handshake" style="color:#0284c7;"></i>
                                 <img id="bentoCoupleAvt-${safeId}" src="${pAvt}" style="width:40px; height:40px; border-radius:50%; border:2px solid #0284c7; object-fit:cover; cursor:pointer;" onclick="navigateTo('/users/${encodeURIComponent(pName)}')">
                             </div>
                             <b style="color:#0369a1; font-size:0.95rem;">@${escapeHtml(data.username)} & @${escapeHtml(pName)}</b>
-                            <span style="color:#0284c7; font-size:0.8rem; font-weight:700; margin-top:2px;">Đồng hành: ${streak} ngày</span>
+                            <span style="color:#0284c7; font-size:0.8rem; font-weight:700; margin-top:2px;">${t('bento_buddy_streak', { count: streak })}</span>
                         </div>
                     `;
                     // Tự động kích hoạt Async Fetch để tải avatar người bạn nếu chưa có trong RAM
@@ -25881,7 +25914,7 @@
                         setTimeout(() => loadBentoUserAvatar(`Couple_${safeId}`, pName), 100);
                     }
                 } else {
-                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 20px;">Tác giả chưa liên kết Đôi Bạn Cùng Tiến.</div>`;
+                    contentHtml = `<div class="bento-widget-inner" style="display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 20px;">${t('bento_no_buddy')}</div>`;
                 }
             }
 
@@ -25896,9 +25929,9 @@
                     <div class="widget-user-box" onclick="navigateTo('/users/${encodeURIComponent(uName)}')" style="cursor:pointer;">
                         <img src="${avtSrc}" id="bentoUserAvt-${safeId}" onerror="this.src='${DEFAULT_AVATAR}'">
                         <div style="flex:1; min-width:0;">
-                            <span class="widget-user-rel-tag">${escapeHtml(rel)}</span>
+                            <span class="widget-user-rel-tag">${escapeHtml(getBentoRoleLabel(rel))}</span>
                             <div style="font-weight:800; font-size:1.05rem; color:var(--text-title); margin:4px 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@${escapeHtml(uName)}</div>
-                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ghé thăm hồ sơ</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${t('bento_visit_profile')}</span>
                         </div>
                     </div>
                 `;
@@ -25915,7 +25948,7 @@
             }
             // 8. BGM / TRÌNH PHÁT ÂM THANH PROFILE (AUDIO PLAYER WIDGET - AN TOÀN TUYỆT ĐỐI)
             else if (safeId.startsWith('widget_audio_')) {
-                const songTitle = item.audioTitle || 'Giai điệu hồ sơ';
+                const songTitle = item.audioTitle || t('bento_profile_music');
                 let audioUrl = item.audioUrl || '';
                 // Chỉ chấp nhận link http hoặc https hợp lệ
                 if (!audioUrl.startsWith('http://') && !audioUrl.startsWith('https://')) {
@@ -25994,7 +26027,7 @@
                 }
 
                 if (chips.length === 0) {
-                    chips.push(`<span style="font-size:0.85rem; color:var(--text-muted);"><i class="fa-solid fa-link-slash"></i> Chưa thiết lập liên kết</span>`);
+                    chips.push(`<span style="font-size:0.85rem; color:var(--text-muted);"><i class="fa-solid fa-link-slash"></i> ${t('bento_no_socials')}</span>`);
                 }
 
                 contentHtml = `
@@ -26008,7 +26041,7 @@
             // 10. GHI CHÚ TỰ DO (MARKDOWN CƠ BẢN & TIÊU ĐỀ)
             else if (safeId.startsWith('widget_note')) {
                 const titleText = item.noteTitle || "";
-                let rawContent = item.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
+                let rawContent = item.content || t('bento_note_content_ph');
                 
                 // Đóng gói data thuần để quá trình lưu không bị mất định dạng Markdown
                 extraAttrs += ` data-raw-note-title="${escapeHtml(titleText)}" data-raw-note-content="${escapeHtml(rawContent)}"`;
@@ -26033,7 +26066,7 @@
                 contentHtml = `
                     <div class="bento-widget-inner" style="display:flex; flex-direction:column; padding:18px;">
                         <h4 style="font-size: 0.88rem; color: var(--text-muted); text-transform: uppercase; margin: 0 0 12px 0; letter-spacing:0.5px;">
-                            <i class="fa-solid fa-crop-simple" style="color:var(--primary);"></i> Khung Avatar Sở Hữu
+                            <i class="fa-solid fa-crop-simple" style="color:var(--primary);"></i> ${t('bento_frames_owned')}
                         </h4>
                         <div id="bentoFramesBox-${safeId}" style="flex:1; display:flex; align-items:center; justify-content:center;">
                             <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary); font-size:1.5rem;"></i>
@@ -26060,10 +26093,10 @@
             const statusText = document.getElementById('bentoFloatStatusText');
             const icon = document.querySelector('#btnToggleBentoFloat i');
             if (bentoFloatMode) {
-                if (statusText) statusText.innerText = "Thả nổi: BẬT";
+                if (statusText) statusText.innerText = t('bento_float_on');
                 if (icon) { icon.className = "fa-solid fa-feather"; icon.style.color = "#ea580c"; }
             } else {
-                if (statusText) statusText.innerText = "Hút khít: BẬT";
+                if (statusText) statusText.innerText = t('bento_pack_on');
                 if (icon) { icon.className = "fa-solid fa-magnet"; icon.style.color = "var(--primary)"; }
             }
         }
@@ -26280,7 +26313,7 @@
                 newItem.minW = 3; 
                 newItem.minH = 2;
                 newItem.noteTitle = (customProps.noteTitle || "").trim();
-                newItem.content = (customProps.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨").trim();
+                newItem.content = (customProps.content || t('bento_note_content_ph')).trim();
             }
             else if (widgetId === 'widget_frames') {
                 newItem.id = 'widget_frames_' + Date.now();
@@ -26314,15 +26347,15 @@
             const listEl = document.getElementById('bentoPickPlaylistList');
             let playlists = currentBentoData ? (typeof currentBentoData.playlists === 'string' ? JSON.parse(currentBentoData.playlists) : currentBentoData.playlists) : [];
             if (!playlists || playlists.length === 0) {
-                listEl.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:2.5rem; opacity:0.3; margin-bottom:10px; display:block;"></i>Bạn chưa tạo Bộ sưu tập nào. Hãy tạo ở mục "Bộ sưu tập" trước nhé!</div>`;
+                listEl.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:2.5rem; opacity:0.3; margin-bottom:10px; display:block;"></i>${t('bento_no_collections')}</div>`;
             } else {
                 listEl.innerHTML = playlists.map(pl => `
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-secondary); border:1.5px solid var(--border-color); border-radius:12px; margin-bottom:10px; cursor:pointer;" onclick="selectPlaylistToBento('${pl.id}')">
                         <div>
                             <b style="font-size:0.95rem; color:var(--text-title);">${escapeHtml(pl.title)}</b>
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${(pl.projects||[]).length} tác phẩm</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${t('bento_projects_count', { count: (pl.projects||[]).length })}</div>
                         </div>
-                        <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:18px;">Ghim</button>
+                        <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:18px;">${t('bento_pin')}</button>
                     </div>
                 `).join('');
             }
@@ -26341,7 +26374,7 @@
         function openBentoPickProjectModal() {
             closeModal('bentoWidgetModal');
             const listEl = document.getElementById('bentoPickProjectList');
-            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang nạp danh sách...</div>';
+            listEl.innerHTML = `<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> ${t('bento_loading_projects')}</div>`;
             openModal('bentoPickProjectModal');
 
             fetch(`${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`)
@@ -26349,7 +26382,7 @@
                 .then(res => {
                     const myProjs = (res && res.projects) ? res.projects : [];
                     if (myProjs.length === 0) {
-                        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Bạn chưa có tác phẩm nào để ghim.</div>';
+                        listEl.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">${t('bento_no_projects_to_pin')}</div>`;
                         return;
                     }
                     listEl.innerHTML = myProjs.map(p => {
@@ -26361,15 +26394,15 @@
                                     <img src="${thumb}" style="width:54px; aspect-ratio:16/9; border-radius:6px; object-fit:cover; background:#000;">
                                     <div style="min-width:0; flex:1;">
                                         <b style="font-size:0.9rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(p.title)}</b>
-                                        <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views||0} lượt chơi</span>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views||0} ${t('creator_views')}</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary" style="padding:5px 12px; font-size:0.8rem; border-radius:16px;">Ghim</button>
+                                <button class="btn btn-primary" style="padding:5px 12px; font-size:0.8rem; border-radius:16px;">${t('bento_pin')}</button>
                             </div>
                         `;
                     }).join('');
                 }).catch(() => {
-                    listEl.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">Lỗi tải dự án.</div>';
+                    listEl.innerHTML = `<div style="color:#ef4444; text-align:center; padding:20px;">${t('bento_project_error')}</div>`;
                 });
         }
 
@@ -26386,7 +26419,7 @@
         function openBentoConfigNoteModal() {
             closeModal('bentoWidgetModal');
             document.getElementById('bentoNoteTitleInput').value = '';
-            document.getElementById('bentoNoteContentInput').value = 'Chào mừng bạn ghé thăm hồ sơ của mình! ✨';
+            document.getElementById('bentoNoteContentInput').value = t('bento_note_content_ph');
             updateBentoNoteLivePreview();
             openModal('bentoConfigNoteModal');
         }
@@ -26404,15 +26437,15 @@
 
             switch(type) {
                 case 'bold':
-                    insertion = `**${selected || 'in đậm'}**`;
+                    insertion = `**${selected || t('bento_note_bold').toLowerCase()}**`;
                     newCursorPos = start + (selected ? insertion.length : 2);
                     break;
                 case 'italic':
-                    insertion = `*${selected || 'in nghiêng'}*`;
+                    insertion = `*${selected || t('bento_note_italic').toLowerCase()}*`;
                     newCursorPos = start + (selected ? insertion.length : 1);
                     break;
                 case 'underline':
-                    insertion = `__${selected || 'gạch chân'}__`;
+                    insertion = `__${selected || t('bento_note_underline').toLowerCase()}__`;
                     newCursorPos = start + (selected ? insertion.length : 2);
                     break;
                 case 'mention':
@@ -26448,7 +26481,7 @@
             if (!stage) return;
             const title = (document.getElementById('bentoNoteTitleInput')?.value || '').trim();
             let content = document.getElementById('bentoNoteContentInput')?.value || '';
-            if (!content.trim()) content = "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
+            if (!content.trim()) content = t('bento_note_content_ph');
 
             let parsedContent = formatCommentText(content);
             parsedContent = parsedContent.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
@@ -26468,7 +26501,7 @@
             const title = (document.getElementById('bentoNoteTitleInput')?.value || '').trim();
             const content = (document.getElementById('bentoNoteContentInput')?.value || '').trim();
             if (!content) {
-                showToast("Vui lòng nhập nội dung ghi chú!", "error");
+                showToast(t('bento_note_required'), "error");
                 return;
             }
             closeModal('bentoConfigNoteModal');
@@ -26552,7 +26585,7 @@
             const avtEl = document.getElementById('bentoPreviewUserAvt');
 
             if (nameEl) nameEl.innerText = `@${username}`;
-            if (roleEl) roleEl.innerText = effectiveRole;
+            if (roleEl) roleEl.innerText = getBentoRoleLabel(effectiveRole);
             if (avtEl && (!rawUsername || !globalUserCache[rawUsername])) {
                 avtEl.src = DEFAULT_AVATAR;
             }
@@ -26561,7 +26594,7 @@
         function submitBentoUserCardWidget() {
             const rawUsername = document.getElementById('bentoUserUsernameInput')?.value.trim();
             if (!rawUsername) {
-                showToast("Vui lòng nhập Username người bạn muốn ghim!", "error");
+                showToast(t('bento_user_required'), "error");
                 return;
             }
             const cleanUser = rawUsername.replace(/@/g, '').trim();
@@ -26584,7 +26617,7 @@
         function openBentoPickStationModal() {
             closeModal('bentoWidgetModal');
             const listEl = document.getElementById('bentoPickStationList');
-            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải Station...</div>';
+            listEl.innerHTML = `<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> ${t('bento_loading_station')}</div>`;
             openModal('bentoPickStationModal');
 
             fetch(`${WORKER_URL}/api/studios`)
@@ -26592,7 +26625,7 @@
                 .then(studios => {
                     allStudios = Array.isArray(studios) ? studios : [];
                     if (allStudios.length === 0) {
-                        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Chưa có Station nào được tạo.</div>';
+                        listEl.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">${t('bento_no_stations')}</div>`;
                         return;
                     }
                     listEl.innerHTML = allStudios.map(s => {
@@ -26603,15 +26636,15 @@
                                     <img src="${thumb}" style="width:58px; aspect-ratio:16/9; border-radius:6px; object-fit:cover; background:#000;">
                                     <div style="min-width:0; flex:1;">
                                         <b style="font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(s.title)}</b>
-                                        <span style="font-size:0.75rem; color:var(--text-muted);">Trưởng trạm: @${escapeHtml(s.creator)}</span>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);">${t('bento_station_creator')} @${escapeHtml(s.creator)}</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:18px;">Ghim</button>
+                                <button class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem; border-radius:18px;">${t('bento_pin')}</button>
                             </div>
                         `;
                     }).join('');
                 }).catch(() => {
-                    listEl.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">Lỗi kết nối Station.</div>';
+                    listEl.innerHTML = `<div style="color:#ef4444; text-align:center; padding:20px;">${t('bento_station_error')}</div>`;
                 });
         }
 
@@ -26628,7 +26661,7 @@
         function openBentoPickAudioModal() {
             closeModal('bentoWidgetModal');
             const listEl = document.getElementById('bentoPickAudioList');
-            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải kho âm thanh...</div>';
+            listEl.innerHTML = `<div style="text-align:center; padding:25px; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin"></i> ${t('bento_loading_audio')}</div>`;
             openModal('bentoPickAudioModal');
 
             fetch(`${WORKER_URL}/api/assets`)
@@ -26638,7 +26671,7 @@
                     const audioAssets = allAssets.filter(a => ['mp3', 'wav', 'ogg'].includes((a.fileType || '').toLowerCase()));
 
                     if (audioAssets.length === 0) {
-                        listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--text-muted);">Chưa có tệp âm thanh nào trong Cửa hàng Tài nguyên. Hãy đóng góp 1 file âm thanh nhé!</div>';
+                        listEl.innerHTML = `<div style="text-align:center; padding:25px; color:var(--text-muted);">${t('bento_no_audio')}</div>`;
                         return;
                     }
 
@@ -26653,17 +26686,17 @@
                                     </div>
                                     <div style="min-width:0; flex:1;">
                                         <b style="font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(a.title)}</b>
-                                        <span style="font-size:0.75rem; color:var(--text-muted);">Bởi @${escapeHtml(a.author)} • ${a.size || 0} MB</span>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);">${t('bento_audio_by')} @${escapeHtml(a.author)} • ${a.size || 0} MB</span>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary" style="padding:6px 16px; font-size:0.8rem; border-radius:18px;" onclick="selectAudioToBento('${a.assetId}', '${escapeHtml(a.title)}', '${fileUrl}')">
-                                    Chọn BGM
+                                    ${t('bento_choose_bgm')}
                                 </button>
                             </div>
                         `;
                     }).join('');
                 }).catch(() => {
-                    listEl.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">Lỗi tải danh sách âm thanh.</div>';
+                    listEl.innerHTML = `<div style="color:#ef4444; text-align:center; padding:20px;">${t('bento_audio_error')}</div>`;
                 });
         }
 
@@ -26714,7 +26747,7 @@
             const wb = document.getElementById('bentoSocialWeb').value.trim();
 
             if (!sc && !yt && !dc && !gh && !fb && !ch && !wb) {
-                return showToast("Vui lòng nhập ít nhất một mạng xã hội!", "error");
+                return showToast(t('bento_social_required'), "error");
             }
 
             const socialsObj = { scratch: sc, youtube: yt, discord: dc, github: gh, facebook: fb, chess: ch, web: wb };
@@ -26883,7 +26916,7 @@
                     <div class="widget-mini-card-body">
                         <div>
                             <b style="font-size:0.95rem; color:var(--text-title); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(s.title)}</b>
-                            <span style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; display:block;">Trưởng trạm: @${escapeHtml(s.creator)}</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; display:block;">${t('bento_station_creator')} @${escapeHtml(s.creator)}</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
                             <span><i class="fa-solid fa-folder"></i> ${(s.projects||[]).length} tác phẩm</span>
@@ -27108,6 +27141,30 @@
         let creatorGamesDisplayLimit = 6;
         let creatorGamesFilter = "all";
 
+        function updateCreatorSummaryTranslations() {
+            if (!creatorCurrentSummary) return;
+            const summary = creatorCurrentSummary;
+            const pendingNet = summary.estimatedNet || 0;
+            const pendingSub = document.getElementById('creatorMetricPendingSub');
+            const withdrawButton = document.getElementById('btnMasterWithdraw');
+            const topItem = document.getElementById('creatorMetricTopItemSub');
+
+            if (pendingSub) pendingSub.innerHTML = t('creator_pending_sub', {
+                orders: summary.pendingOrders || 0,
+                gross: summary.pendingGross || 0
+            });
+            if (withdrawButton) {
+                withdrawButton.innerHTML = pendingNet >= 1
+                    ? `<i class="fa-solid fa-wallet"></i> ${t('creator_withdraw_amount', { amount: pendingNet })}`
+                    : `<i class="fa-solid fa-vault"></i> ${t('creator_no_available_balance')}`;
+            }
+            if (topItem) {
+                topItem.innerHTML = summary.topItem?.name
+                    ? `<i class="fa-solid fa-crown" style="color:#f59e0b; margin-right:4px;"></i> ${t('creator_top_item_count', { name: escapeHtml(summary.topItem.name), count: summary.topItem.count })}`
+                    : t('creator_no_orders');
+            }
+        }
+
         function switchCreatorTab(tab) {
             creatorActiveTab = tab;
             // Gỡ bỏ trạng thái active của tất cả các nút tab và các phân vùng nội dung
@@ -27168,7 +27225,7 @@
                 const res = await (await fetch(projUrl)).json();
                 creatorProjectsCache = (res && res.projects) ? res.projects : (Array.isArray(res) ? res : []);
 
-                let optionsHtml = `<option value="">Tất cả tác phẩm (${creatorProjectsCache.length})</option>`;
+                let optionsHtml = `<option value="">${t('creator_all_projects')} (${creatorProjectsCache.length})</option>`;
                 optionsHtml += creatorProjectsCache.map(p => {
                     const pid = String(p.projectId || p.fileId);
                     return `<option value="${pid}">${escapeHtml(p.title)}</option>`;
@@ -27184,7 +27241,7 @@
             if (!listContainer) return;
 
             if (!isLoadMore) {
-                listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--primary);"><i class="fa-solid fa-circle-notch fa-spin" style="font-size: 2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">Đang kết nối Két Sắt & Dữ liệu doanh thu...</span></div>';
+                listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--primary);"><i class="fa-solid fa-circle-notch fa-spin" style="font-size: 2rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">${t('creator_loading_analytics')}</span></div>`;
             }
 
             try {
@@ -27194,7 +27251,7 @@
                 const res = await (await fetch(apiUrl)).json();
 
                 if (!res || !res.success) {
-                    listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.8rem; margin-bottom:8px; display:block;"></i>${escapeHtml(res?.error || "Không thể tải dữ liệu đơn hàng")}</div>`;
+                    listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.8rem; margin-bottom:8px; display:block;"></i>${escapeHtml(res?.error || t('creator_orders_load_error'))}</div>`;
                     return;
                 }
 
@@ -27208,7 +27265,7 @@
                 
                 const pendingSubEl = document.getElementById('creatorMetricPendingSub');
                 if (pendingSubEl) {
-                    pendingSubEl.innerHTML = `Tích lũy từ <b>${sum.pendingOrders || 0}</b> giao dịch • Tổng thu ${sum.pendingGross || 0} WOW • Tỷ lệ 70%`;
+                    pendingSubEl.innerHTML = t('creator_pending_sub', { orders: sum.pendingOrders || 0, gross: sum.pendingGross || 0 });
                 }
 
                 // 2. Kích hoạt nút chuyển vào ví
@@ -27216,8 +27273,8 @@
                 if (btnMasterWithdraw) {
                     btnMasterWithdraw.disabled = (pendingNetVal < 1);
                     btnMasterWithdraw.innerHTML = pendingNetVal >= 1 
-                        ? `<i class="fa-solid fa-wallet"></i> Rút +${pendingNetVal} WOW về ví chính` 
-                        : `<i class="fa-solid fa-vault"></i> Chưa có số dư khả dụng`;
+                        ? `<i class="fa-solid fa-wallet"></i> ${t('creator_withdraw_amount', { amount: pendingNetVal })}`
+                        : `<i class="fa-solid fa-vault"></i> ${t('creator_no_available_balance')}`;
                 }
 
                 // 3. Cập nhật 3 Thẻ chỉ số phụ
@@ -27233,9 +27290,9 @@
                 const topItemSubEl = document.getElementById('creatorMetricTopItemSub');
                 if (topItemSubEl) {
                     if (sum.topItem && sum.topItem.name) {
-                        topItemSubEl.innerHTML = `<i class="fa-solid fa-crown" style="color:#f59e0b; margin-right:4px;"></i> Hot: <b>${escapeHtml(sum.topItem.name)}</b> (${sum.topItem.count} lượt)`;
+                        topItemSubEl.innerHTML = `<i class="fa-solid fa-crown" style="color:#f59e0b; margin-right:4px;"></i> ${t('creator_top_item_count', { name: escapeHtml(sum.topItem.name), count: sum.topItem.count })}`;
                     } else {
-                        topItemSubEl.innerText = "Chưa có lượt mua";
+                        topItemSubEl.innerText = t('creator_no_orders');
                     }
                 }
 
@@ -27255,7 +27312,7 @@
                 }
 
             } catch (err) {
-                listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;">Lỗi kết nối máy chủ!</div>`;
+                listContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#ef4444;">${t('creator_connection_error')}</div>`;
             }
         }
 
@@ -27284,17 +27341,17 @@
                             <div style="width:54px; height:54px; border-radius:50%; background:var(--bg-secondary); display:flex; align-items:center; justify-content:center; margin:0 auto 14px auto; color:var(--text-muted); font-size:1.5rem;">
                                 <i class="fa-solid fa-receipt"></i>
                             </div>
-                            <div style="font-size:1.15rem; font-weight:800; color:var(--text-title); margin-bottom:6px;">Chưa phát sinh giao dịch</div>
+                            <div style="font-size:1.15rem; font-weight:800; color:var(--text-title); margin-bottom:6px;">${t('creator_no_transactions')}</div>
                             <div style="max-width:480px; margin:0 auto 16px auto; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
-                                Khi người chơi mua vật phẩm trong các dự án đã tích hợp khối lệnh WOW, dữ liệu đơn hàng sẽ được hiển thị tại đây.
+                                ${t('creator_no_transactions_desc')}
                             </div>
                             <button type="button" class="btn btn-primary" style="border-radius:12px; padding:9px 20px; font-weight:800;" onclick="switchCreatorTab('toolkit')">
-                                <i class="fa-solid fa-puzzle-piece"></i> Xem tài liệu khối lệnh
+                                <i class="fa-solid fa-puzzle-piece"></i> ${t('creator_view_toolkit')}
                             </button>
                         </div>
                     `;
                 } else {
-                    listContainer.innerHTML = `<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="font-size:1.8rem; margin-bottom:8px; opacity:0.4; display:block;"></i>Không tìm thấy giao dịch nào khớp với từ khóa "${escapeHtml(creatorSearchQuery)}".</div>`;
+                    listContainer.innerHTML = `<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="font-size:1.8rem; margin-bottom:8px; opacity:0.4; display:block;"></i>${t('creator_no_matching_transactions', { query: escapeHtml(creatorSearchQuery) })}</div>`;
                 }
                 return;
             }
@@ -27331,15 +27388,15 @@
                             </a>
                             <div class="creator-buyer-info">
                                 <a href="#profile/${encodeURIComponent(tx.buyer)}" class="creator-buyer-name">${escapeHtml(tx.buyer)}</a>
-                                <span class="creator-buyer-sub">Người ủng hộ</span>
+                                <span class="creator-buyer-sub">${t('creator_buyer_supporter')}</span>
                             </div>
                         </div>
 
                         <!-- Cột 2: Món đồ & Tác phẩm -->
                         <div class="creator-col-item">
-                            <div class="creator-item-badge" title="${escapeHtml(tx.itemName || "Vật phẩm")}">
+                            <div class="creator-item-badge" title="${escapeHtml(tx.itemName || t('creator_item_default'))}">
                                 <i class="fa-solid fa-cube" style="color:var(--primary); font-size:0.8rem; margin-right:4px;"></i>
-                                ${escapeHtml(tx.itemName || "Vật phẩm")}
+                                ${escapeHtml(tx.itemName || t('creator_item_default'))}
                             </div>
                             <a href="#project/${encodeURIComponent(tx.projectId)}" class="creator-proj-link" data-i18n-title="tooltip_project_open" title="${t('tooltip_project_open')}">
                                 <i class="fa-solid fa-gamepad" style="font-size:0.75rem; margin-right:3px;"></i>
@@ -27380,7 +27437,7 @@
             if (!grid) return;
 
             if (!creatorProjectsCache || creatorProjectsCache.length === 0) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">Bạn chưa xuất bản tác phẩm nào.</div>`;
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">${t('creator_no_projects')}</div>`;
                 if (loadMoreArea) loadMoreArea.style.display = 'none';
                 if (progressText) progressText.innerText = '';
                 return;
@@ -27418,7 +27475,7 @@
             }
 
             if (filteredGames.length === 0) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-muted); background:var(--bg-panel); border-radius:18px; border:1px dashed var(--border-color);"><i class="fa-solid fa-gamepad" style="font-size:2.2rem; opacity:0.3; margin-bottom:10px; display:block;"></i>Chưa có game nào phát sinh lượt mua. Hãy tích hợp khối lệnh bán đồ vào tác phẩm của bạn nhé!</div>`;
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-muted); background:var(--bg-panel); border-radius:18px; border:1px dashed var(--border-color);"><i class="fa-solid fa-gamepad" style="font-size:2.2rem; opacity:0.3; margin-bottom:10px; display:block;"></i>${t('creator_no_sales')}</div>`;
                 if (loadMoreArea) loadMoreArea.style.display = 'none';
                 if (progressText) progressText.innerText = '';
                 return;
@@ -27427,7 +27484,7 @@
             const visibleGames = filteredGames.slice(0, creatorGamesDisplayLimit);
 
             if (progressText) {
-                progressText.innerText = `Hiển thị ${visibleGames.length} / ${filteredGames.length} tác phẩm`;
+                progressText.innerText = t('creator_showing_projects', { shown: visibleGames.length, total: filteredGames.length });
             }
 
             grid.innerHTML = visibleGames.map(p => {
@@ -27446,7 +27503,7 @@
                         <div class="creator-game-thumb">
                             <img src="${thumb}" loading="lazy" alt="${escapeHtml(p.title)}">
                             <span style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.75); color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px;">
-                                ${p.visibility === 'private' ? 'Riêng tư' : 'Công khai'}
+                                ${p.visibility === 'private' ? t('creator_visibility_private') : t('creator_visibility_public')}
                             </span>
                         </div>
                         <div class="creator-game-card-body">
@@ -27454,31 +27511,31 @@
                                 <b style="font-size:1.02rem; color:var(--text-title); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;" title="${escapeHtml(p.title)}">
                                     ${escapeHtml(p.title)}
                                 </b>
-                                <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views || 0} lượt trải nghiệm</span>
+                                <span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-play"></i> ${p.views || 0} ${t('creator_views')}</span>
                             </div>
 
                             <div class="creator-game-stats-pill">
                                 <div>
-                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">Doanh Thu Gốc</div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">${t('creator_gross_label')}</div>
                                     <div style="font-size:1.1rem; font-weight:900; color:var(--text-title); display:flex; align-items:center; gap:5px; margin-top:2px;">
                                         <span class="wow-icon"></span> ${st.gross} WOW
                                     </div>
                                 </div>
                                 <div style="text-align:right;">
-                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">Đã Bán</div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800;">${t('creator_sold')}</div>
                                     <div style="font-size:1.1rem; font-weight:900; color:var(--primary); margin-top:2px;">
-                                        ${st.orders} món
+                                        ${st.orders} ${t('creator_items_count')}
                                     </div>
                                 </div>
                             </div>
 
                             <div style="font-size:0.8rem; color:var(--text-muted);">
-                                <b>Món bán chạy:</b> <span style="color:var(--text-title); font-weight:700;">${escapeHtml(bestItemName)}</span>
+                                <b>${t('creator_best_seller')}</b> <span style="color:var(--text-title); font-weight:700;">${escapeHtml(bestItemName)}</span>
                             </div>
 
                             <div style="display:flex; gap:8px; margin-top:auto; padding-top:6px;">
                                 <button type="button" class="btn btn-primary" style="flex:1; font-size:0.82rem; border-radius:10px; justify-content:center; padding:8px;" onclick="filterCreatorTransactionsByGame('${pid}')">
-                                    <i class="fa-solid fa-receipt"></i> Xem đơn hàng
+                                    <i class="fa-solid fa-receipt"></i> ${t('creator_view_orders')}
                                 </button>
                                 <a href="#project/${pid}" class="btn" style="border-radius:10px; font-size:0.82rem; padding:8px 12px;" data-i18n-title="tooltip_game_open" title="${t('tooltip_game_open')}">
                                     <i class="fa-solid fa-play"></i>
@@ -27493,7 +27550,7 @@
                 const remaining = filteredGames.length - visibleGames.length;
                 if (remaining > 0) {
                     loadMoreArea.style.display = 'block';
-                    if (loadMoreText) loadMoreText.innerHTML = `Xem thêm tác phẩm (Còn ${remaining} game) <i class="fa-solid fa-angle-down"></i>`;
+                    if (loadMoreText) loadMoreText.innerHTML = `${t('creator_load_more_count', { count: remaining })} <i class="fa-solid fa-angle-down"></i>`;
                 } else {
                     loadMoreArea.style.display = 'none';
                 }
