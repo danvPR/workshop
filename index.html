@@ -8472,6 +8472,77 @@
                 padding: 20px 18px;
             }
         }
+
+        /* ================= BENTO CONFIG NOTE & USER CARD MODALS ================= */
+        .bento-format-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 8px 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px 12px 0 0;
+            border-bottom: none;
+        }
+        .bento-format-btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .bento-format-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-secondary);
+        }
+        .bento-role-chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .bento-role-chip {
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .bento-role-chip:hover {
+            border-color: var(--primary);
+            color: var(--text-title);
+        }
+        .bento-role-chip.active {
+            background: rgba(13, 165, 122, 0.12);
+            color: var(--primary) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 2px 8px rgba(13, 165, 122, 0.15);
+        }
+        .bento-live-preview-box {
+            background: var(--bg-panel);
+            border: 1.5px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            min-height: 80px;
+            margin-top: 8px;
+        }
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -8587,7 +8658,7 @@
         <a href="/#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
         <a href="/#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
         <!-- Nút tròn FAB ở giữa -->
-        <a href="/#create" class="mobile-nav-create-fab nav-create" title="Sáng tạo">
+        <a href="/#create" class="mobile-nav-create-fab nav-create" data-i18n-title="nav_create" title="Sáng tạo">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
         </a>
         <a href="/#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
@@ -8632,8 +8703,8 @@
                         <div class="assets-search-capsule">
                             <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.9rem;"></i>
                             <input type="text" id="assetSearchInput" data-i18n-ph="assets_search_ph" placeholder="Tìm tên tài nguyên, tag, tác giả..." onkeyup="handleAssetSearch(event)" oninput="toggleAssetClearSearchBtn()">
-                            <button id="assetSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0 6px; font-size:1.15rem; line-height:1;" onclick="clearAssetSearch()" title="Xóa">&times;</button>
-                            <button type="button" class="home-search-submit-icon" onclick="searchAssets()" title="Tìm kiếm">
+                            <button id="assetSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0 6px; font-size:1.15rem; line-height:1;" onclick="clearAssetSearch()" data-i18n-title="tooltip_search_clear" title="Xóa">&times;</button>
+                            <button type="button" class="home-search-submit-icon" onclick="searchAssets()" data-i18n-title="tooltip_search" title="Tìm kiếm">
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
                         </div>
@@ -8763,7 +8834,7 @@
                 <div class="chat-input-box">
                     <div id="replyBannerChat" style="display:none; background:rgba(13, 165, 122, 0.08); border-left:3px solid var(--primary); padding:6px 12px; border-radius:8px; font-size:0.78rem; margin-bottom:8px; font-weight:700; color:var(--primary); align-items:center; justify-content:space-between;">
                         <span><i class="fa-solid fa-reply"></i> Đang trả lời <b id="replyUserLabelChat" style="color:var(--text-title);"></b></span>
-                        <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-muted); padding:2px;" onclick="cancelReply('chat')" title="Hủy trả lời"></i>
+                        <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-muted); padding:2px;" onclick="cancelReply('chat')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
 
                     <!-- Thanh nhận diện giọng nói khi ghi âm -->
@@ -8779,7 +8850,7 @@
                     <div id="commentImgPreviewChat" class="comment-img-preview-box">
                         <img id="commentImgPreviewSrcChat" src="" alt="preview">
                         <span style="font-size:0.78rem; color:var(--text-main);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" title="Gỡ ảnh">&times;</button>
+                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
                     </div>
 
                     <!-- Gợi ý @mention -->
@@ -8800,7 +8871,7 @@
                                         <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
                                     </button>
 
-                                    <button type="button" class="chat-dock-icon-btn" onclick="toggleEmojiPicker('chat', event)" title="Chèn biểu tượng Emoji">
+                                    <button type="button" class="chat-dock-icon-btn" onclick="toggleEmojiPicker('chat', event)" data-i18n-title="tooltip_emoji" title="Chèn biểu tượng Emoji">
                                         <i class="fa-regular fa-face-smile" style="color: #f59e0b;"></i>
                                     </button>
 
@@ -8820,7 +8891,7 @@
 
                                 <div class="chat-composer-tools-right">
                                     <span id="voiceRecordTimer" style="display:none; font-size:0.82rem; color:#ef4444; font-weight:900; margin-right:4px; font-family:monospace;">0:00</span>
-                                    <button type="button" id="btnVoiceChat" class="chat-dock-icon-btn" onclick="toggleVoiceRecord()" title="Gửi tin nhắn thoại">
+                                    <button type="button" id="btnVoiceChat" class="chat-dock-icon-btn" onclick="toggleVoiceRecord()" data-i18n-title="tooltip_voice_message" title="Gửi tin nhắn thoại">
                                         <i class="fa-solid fa-microphone"></i>
                                     </button>
                                     <span class="chat-kbd-hint">Enter ↵</span>
@@ -8846,7 +8917,7 @@
                         <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
                             <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Năng lượng của bạn
                         </span>
-                        <div class="WOW-balance-pill" onclick="openDailyRewardModal()" style="padding: 2px 8px; font-size: 0.8rem;" title="Mở điểm danh hàng ngày">
+                        <div class="WOW-balance-pill" onclick="openDailyRewardModal()" style="padding: 2px 8px; font-size: 0.8rem;" data-i18n-title="tooltip_daily_checkin" title="Mở điểm danh hàng ngày">
                             <span class="wow-icon" style="font-size: 1rem;"></span>
                             <span id="chatSidebarWOWBalance">0</span>
                         </div>
@@ -9004,10 +9075,10 @@
                             <button id="btnStdSettings" class="btn" style="display:none; border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="openStudioSettings()">
                                 <i class="fa-solid fa-gear"></i> <span data-i18n="station_btn_settings">Cài đặt</span>
                             </button>
-                            <button type="button" class="btn" style="border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="shareStationToGlobalChat()" title="Chia sẻ Station vào Kênh Giao Lưu">
+                            <button type="button" class="btn" style="border-radius: 20px; font-weight: 700; padding: 8px 16px;" onclick="shareStationToGlobalChat()" data-i18n-title="tooltip_station_share" title="Chia sẻ Station vào Kênh Giao Lưu">
                                 <i class="fa-solid fa-earth-americas" style="color:var(--primary);"></i> <span>Giao lưu</span>
                             </button>
-                            <button type="button" class="btn" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="copyCurrentStudioLink()" title="Sao chép link Station">
+                            <button type="button" class="btn" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center;" onclick="copyCurrentStudioLink()" data-i18n-title="tooltip_station_copy" title="Sao chép link Station">
                                 <i class="fa-solid fa-link"></i>
                             </button>
                         </div>
@@ -9084,7 +9155,7 @@
                     <div id="commentImgPreviewStd" class="comment-img-preview-box">
                         <img id="commentImgPreviewSrcStd" src="" alt="preview">
                         <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" title="&times;">&times;</button>
+                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
                     </div>
                     <form onsubmit="handlePostComment(event, 'std')" id="stdCommentForm" style="display:none;">
                         <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" data-i18n-ph="station_comment_ph" placeholder="Viết thảo luận trong Station..." autocomplete="off" style="border-radius:14px;"></textarea></div>
@@ -9118,10 +9189,10 @@
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> <span data-i18n="home_events">Sự kiện & Tranh tài</span>
                 </h3>
                 <div style="display: flex; gap: 6px;">
-                    <button type="button" class="home-slider-arrow" onclick="scrollEventsSlider(-1)" title="Cuộn trước">
+                    <button type="button" class="home-slider-arrow" onclick="scrollEventsSlider(-1)" data-i18n-title="tooltip_slider_previous" title="Cuộn trước">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    <button type="button" class="home-slider-arrow" onclick="scrollEventsSlider(1)" title="Cuộn sau">
+                    <button type="button" class="home-slider-arrow" onclick="scrollEventsSlider(1)" data-i18n-title="tooltip_slider_next" title="Cuộn sau">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
@@ -9141,8 +9212,8 @@
                 <div class="home-search-pill-box">
                     <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.9rem;"></i>
                     <input type="text" id="homeSearchInput" data-i18n-ph="home_search_ph" placeholder="Tìm tác phẩm, tác giả, tag..." onkeyup="if(event.key==='Enter') execHomeSearch()" oninput="toggleClearSearchBtn()">
-                    <button id="homeSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding: 0 6px; font-size: 1.15rem; line-height: 1;" onclick="clearHomeSearch()" title="Xóa">&times;</button>
-                    <button type="button" class="home-search-submit-icon" onclick="execHomeSearch()" title="Tìm kiếm">
+                    <button id="homeSearchClearBtn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding: 0 6px; font-size: 1.15rem; line-height: 1;" onclick="clearHomeSearch()" data-i18n-title="tooltip_search_clear" title="Xóa">&times;</button>
+                    <button type="button" class="home-search-submit-icon" onclick="execHomeSearch()" data-i18n-title="tooltip_search" title="Tìm kiếm">
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
@@ -9340,7 +9411,7 @@
                             <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
                                 <span><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> <span data-i18n="proj_instructions">Hướng dẫn vận hành</span></span>
                                 <div class="trans-menu-wrapper">
-                                    <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projDesc')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                    <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projDesc')" data-i18n-title="tooltip_translate" title="Dịch"><i class="fa-solid fa-language"></i></button>
                                 </div>
                             </div>
                             <div class="info-body" id="projDesc">Chưa có hướng dẫn.</div>
@@ -9350,7 +9421,7 @@
                             <div class="info-header" style="display:flex; justify-content:space-between; align-items:center;">
                                 <span><i class="fa-solid fa-users" style="color:var(--primary);"></i> <span data-i18n="proj_credits">Đội ngũ sáng tạo / Credits</span></span>
                                 <div class="trans-menu-wrapper">
-                                    <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projCredits')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                    <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projCredits')" data-i18n-title="tooltip_translate" title="Dịch"><i class="fa-solid fa-language"></i></button>
                                 </div>
                             </div>
                             <div class="info-body" id="projCredits">Tác giả gốc.</div>
@@ -9376,7 +9447,7 @@
                             <div id="commentImgPreviewProj" class="comment-img-preview-box">
                                 <img id="commentImgPreviewSrcProj" src="" alt="preview">
                                 <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" title="&times;">&times;</button>
+                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
                             </div>
                             <form onsubmit="handlePostComment(event, 'proj')" id="commentFormProj" style="display:none;">
                                 <div class="comment-input-wrapper" style="padding: 8px 16px;">
@@ -9388,10 +9459,10 @@
                                     <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
                                         <i class="fa-solid fa-film" style="font-size: 1.3rem; color: #855cd6;"></i>
                                     </button>
-                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="toggleEmojiPicker('proj', event)" title="Chèn biểu tượng Emoji">
+                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="toggleEmojiPicker('proj', event)" data-i18n-title="tooltip_emoji" title="Chèn biểu tượng Emoji">
                                         <i class="fa-regular fa-face-smile" style="font-size: 1.3rem; color: #f59e0b;"></i>
                                     </button>
-                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openTipModal()" title="Tặng WOW">
+                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openTipModal()" data-i18n-title="tooltip_gift_wow" title="Tặng WOW">
                                         <span class="wow-icon" style="font-size: 1.3rem; filter: none;"></span>
                                     </button>
                                     <button type="submit" id="btnSubmitCommentProj" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.2rem; margin-left: 12px;">
@@ -9492,7 +9563,7 @@
 
                             <!-- Nút Menu 3 chấm -->
                             <div class="proj-more-dropdown-wrap" id="profMoreMenuWrap" style="display:none;">
-                                <button type="button" class="btn" style="border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="toggleProfMoreMenu(event)" title="Tùy chọn khác">
+                                <button type="button" class="btn" style="border-radius: 50%; width: 38px; height: 38px; padding: 0; justify-content: center;" onclick="toggleProfMoreMenu(event)" data-i18n-title="tooltip_profile_more" title="Tùy chọn khác">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <div class="proj-dropdown-menu" id="profMoreDropdown">
@@ -9585,7 +9656,7 @@
                     <div id="commentImgPreviewProf" class="comment-img-preview-box">
                         <img id="commentImgPreviewSrcProf" src="" alt="preview">
                         <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" title="&times;">&times;</button>
+                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
                     </div>
                     <form onsubmit="handlePostComment(event, 'prof')" id="profCommentForm" style="display:none;">
                         <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextProf" class="form-control" rows="3" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này..." autocomplete="off"></textarea></div>
@@ -9620,12 +9691,12 @@
 
             <!-- TOOLBAR NỔI DƯỚI ĐÁY KHI EDIT BENTO (DYNAMIC ISLAND) -->
             <div id="bentoToolbar" class="bento-toolbar">
-                <span class="bento-count-pill" id="bentoCountBadge" title="Tối đa 25 Widget">0 / 25 Ô</span>
+                <span class="bento-count-pill" id="bentoCountBadge" data-i18n-title="tooltip_bento_limit" title="Tối đa 25 Widget">0 / 25 Ô</span>
                 <button class="btn btn-primary" style="border-radius:20px; font-weight:800; padding:7px 16px;" onclick="openBentoDrawer()">
                     <i class="fa-solid fa-plus"></i> Thêm Widget
                 </button>
                 <!-- NÚT BẬT / TẮT TRỌNG LỰC HÚT KHÍT -->
-                <button type="button" class="btn" id="btnToggleBentoFloat" style="border-radius:20px; font-weight:700; padding:7px 14px; background:var(--bg-secondary); border:1px solid var(--border-color);" onclick="toggleBentoFloatMode()" title="Bật/Tắt trọng lực tự động dồn ô lên trên">
+                <button type="button" class="btn" id="btnToggleBentoFloat" style="border-radius:20px; font-weight:700; padding:7px 14px; background:var(--bg-secondary); border:1px solid var(--border-color);" onclick="toggleBentoFloatMode()" data-i18n-title="tooltip_bento_float" title="Bật/Tắt trọng lực tự động dồn ô lên trên">
                     <i class="fa-solid fa-magnet" style="color:var(--primary);"></i> <span id="bentoFloatStatusText">Hút khít: BẬT</span>
                 </button>
                 <div style="width:1px; height:18px; background:var(--border-color);"></div>
@@ -9676,7 +9747,7 @@
                     <b>Ghim Tác phẩm nhỏ</b>
                     <span>Thẻ game thu nhỏ</span>
                 </div>
-                <div class="bento-drawer-item" onclick="addBentoUserCardWidget()">
+                <div class="bento-drawer-item" onclick="openBentoConfigUserModal()">
                     <i class="fa-solid fa-user-tag" style="color:#06b6d4;"></i>
                     <b>Thẻ Bạn bè / Dev</b>
                     <span>Ghim hồ sơ người khác</span>
@@ -9701,7 +9772,7 @@
                     <b>Mạng xã hội</b>
                     <span>Scratch, YouTube, Discord...</span>
                 </div>
-                <div class="bento-drawer-item" onclick="addBentoWidget('widget_note')">
+                <div class="bento-drawer-item" onclick="openBentoConfigNoteModal()">
                     <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i>
                     <b>Ghi chú tự do</b>
                     <span>Tin nhắn / Markdown</span>
@@ -9780,6 +9851,138 @@
                 </div>
                 <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px; margin-top:8px;" onclick="saveSocialLinksToBento()">
                     <i class="fa-solid fa-check"></i> Ghim lên Hồ sơ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CẤU HÌNH GHI CHÚ TỰ DO (FORMAT TOOLBAR & LIVE PREVIEW) -->
+    <div class="modal-overlay" id="bentoConfigNoteModal">
+        <div class="modal" style="max-width: 520px;">
+            <div class="modal-header">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-note-sticky" style="color:#ec4899;"></i> <b>Tùy chỉnh Ghi chú tự do</b>
+                </span>
+                <button class="btn-close" onclick="closeModal('bentoConfigNoteModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px 22px;">
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label style="font-size:0.85rem; font-weight:700;">Tiêu đề ghi chú (Tùy chọn):</label>
+                    <input type="text" id="bentoNoteTitleInput" class="form-control" placeholder="Ví dụ: Lời nhắn, Châm ngôn, Thông báo..." oninput="updateBentoNoteLivePreview()">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label style="font-size:0.85rem; font-weight:700; margin:0;">Nội dung ghi chú *:</label>
+                        <span style="font-size:0.75rem; color:var(--text-muted);">Hỗ trợ Markdown & Emoji</span>
+                    </div>
+
+                    <!-- Thanh Format Toolbar -->
+                    <div class="bento-format-toolbar">
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('bold')" data-i18n-title="tooltip_format_bold" title="In đậm">
+                            <i class="fa-solid fa-bold"></i> <span>Đậm</span>
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('italic')" data-i18n-title="tooltip_format_italic" title="In nghiêng">
+                            <i class="fa-solid fa-italic"></i> <span>Nghiêng</span>
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('underline')" data-i18n-title="tooltip_format_underline" title="Gạch chân">
+                            <i class="fa-solid fa-underline"></i> <span>Gạch chân</span>
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('mention')" data-i18n-title="tooltip_format_mention" title="Nhắc đến người dùng">
+                            <i class="fa-solid fa-at" style="color:var(--primary);"></i> <span>@user</span>
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('tag')" data-i18n-title="tooltip_format_tag" title="Thẻ hashtag">
+                            <i class="fa-solid fa-hashtag" style="color:#f59e0b;"></i> <span>#tag</span>
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('sparkles')" data-i18n-title="tooltip_format_sparkles" title="Icon lấp lánh">
+                            ✨
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('heart')" data-i18n-title="tooltip_format_heart" title="Icon trái tim">
+                            ❤️
+                        </button>
+                        <button type="button" class="bento-format-btn" onclick="insertNoteFormatting('fire')" data-i18n-title="tooltip_format_fire" title="Icon ngọn lửa">
+                            🔥
+                        </button>
+                    </div>
+                    <textarea id="bentoNoteContentInput" class="form-control" rows="4" style="border-radius:0 0 12px 12px; font-size:0.95rem; line-height:1.5;" placeholder="Chào mừng bạn ghé thăm hồ sơ của mình! ✨" oninput="updateBentoNoteLivePreview()"></textarea>
+                </div>
+
+                <!-- Khung xem trước Live Preview -->
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+                        <i class="fa-solid fa-eye" style="color:var(--primary);"></i> Xem trước hiển thị trên widget
+                    </div>
+                    <div class="bento-live-preview-box" id="bentoNoteLivePreviewStage">
+                        <!-- Render từ JS -->
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px;" onclick="submitBentoNoteWidget()">
+                    <i class="fa-solid fa-check"></i> Ghim Ghi Chú Lên Hồ Sơ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CẤU HÌNH THẺ BẠN BÈ / DEV (ROLE SELECTOR & LIVE PREVIEW) -->
+    <div class="modal-overlay" id="bentoConfigUserModal">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-user-tag" style="color:#06b6d4;"></i> <b>Ghim Thẻ Bạn Bè / Dev</b>
+                </span>
+                <button class="btn-close" onclick="closeModal('bentoConfigUserModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px 22px;">
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label style="font-size:0.85rem; font-weight:700;">Tên tài khoản (Username) *:</label>
+                    <div class="auth-input-group" style="margin-bottom:0;">
+                        <i class="fa-solid fa-at auth-input-icon"></i>
+                        <input type="text" id="bentoUserUsernameInput" class="auth-control-input" placeholder="Nhập username (không cần gõ @)..." oninput="handleBentoUserUsernameInput(this.value)">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label style="font-size:0.85rem; font-weight:700;">Chọn vai trò / mối quan hệ:</label>
+                    <div class="bento-role-chip-group" id="bentoRoleChipsContainer">
+                        <span class="bento-role-chip active" onclick="selectBentoUserRole('Bạn bè', this)">Bạn bè</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Bạn thân', this)">Bạn thân</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Đồng tác giả', this)">Đồng tác giả</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Dev Team', this)">Dev Team</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Học trò', this)">Học trò</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Sư phụ', this)">Sư phụ</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Idol', this)">Idol</span>
+                        <span class="bento-role-chip" onclick="selectBentoUserRole('Đối thủ', this)">Đối thủ</span>
+                        <span class="bento-role-chip" id="bentoRoleChipCustom" onclick="selectBentoUserRole('custom', this)">
+                            <i class="fa-solid fa-pen"></i> Tùy chỉnh...
+                        </span>
+                    </div>
+
+                    <!-- Ô nhập role tùy chỉnh nếu chọn chip Tùy chỉnh -->
+                    <div id="bentoCustomRoleWrap" style="display:none; margin-top:10px;">
+                        <input type="text" id="bentoCustomRoleInput" class="form-control" placeholder="Nhập nhãn tùy chỉnh (VD: Tri kỷ, Thiết kế game, Producer...)" maxlength="25" oninput="updateBentoUserCardPreview()">
+                    </div>
+                </div>
+
+                <!-- Khung xem trước thẻ Live Preview -->
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+                        <i class="fa-solid fa-eye" style="color:var(--primary);"></i> Xem trước thẻ widget
+                    </div>
+                    <div class="bento-live-preview-box" style="padding:8px; display:flex; align-items:center;">
+                        <div class="widget-user-box" style="width:100%; padding:4px;">
+                            <img id="bentoPreviewUserAvt" src="https://i.ibb.co/QFg1cVVD/image.png" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
+                            <div style="flex:1; min-width:0;">
+                                <span class="widget-user-rel-tag" id="bentoPreviewUserRelTag">Bạn bè</span>
+                                <div style="font-weight:800; font-size:1.05rem; color:var(--text-title); margin:4px 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="bentoPreviewUserName">@username</div>
+                                <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ghé thăm hồ sơ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-weight:800; border-radius:14px;" onclick="submitBentoUserCardWidget()">
+                    <i class="fa-solid fa-check"></i> Ghim Thẻ Lên Hồ Sơ
                 </button>
             </div>
         </div>
@@ -10171,11 +10374,11 @@
                         <!-- Cụm D-Pad nhích nhẹ 0.5% -->
                         <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                             <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Vi chỉnh:</span>
-                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0, -0.5)" title="Nhích lên trên 0.5%">⬆️ Lên</button>
-                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0, 0.5)" title="Nhích xuống dưới 0.5%">⬇️ Xuống</button>
-                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(-0.5, 0)" title="Nhích sang trái 0.5%">⬅️ Trái</button>
-                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0.5, 0)" title="Nhích sang phải 0.5%">➡️ Phải</button>
-                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem; color: #ef4444;" onclick="resetAdminFrameTransform()" title="Đặt lại thông số gốc">
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0, -0.5)" data-i18n-title="tooltip_admin_nudge_up" title="Nhích lên trên 0.5%">⬆️ Lên</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0, 0.5)" data-i18n-title="tooltip_admin_nudge_down" title="Nhích xuống dưới 0.5%">⬇️ Xuống</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(-0.5, 0)" data-i18n-title="tooltip_admin_nudge_left" title="Nhích sang trái 0.5%">⬅️ Trái</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="nudgeAdminFrame(0.5, 0)" data-i18n-title="tooltip_admin_nudge_right" title="Nhích sang phải 0.5%">➡️ Phải</button>
+                            <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.78rem; color: #ef4444;" onclick="resetAdminFrameTransform()" data-i18n-title="tooltip_admin_reset" title="Đặt lại thông số gốc">
                                 <i class="fa-solid fa-rotate-left"></i> Đặt lại
                             </button>
                         </div>
@@ -10363,7 +10566,7 @@
                 </div>
 
                 <div class="creator-top-actions">
-                    <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="creator-btn-policy" title="Chính sách phân chia doanh thu">
+                    <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="creator-btn-policy" data-i18n-title="tooltip_creator_policy" title="Chính sách phân chia doanh thu">
                         <i class="fa-solid fa-percent" style="color:var(--primary);"></i>
                         <span>Phân chia doanh thu: <b>70%</b></span>
                         <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem; opacity:0.6;"></i>
@@ -10466,7 +10669,7 @@
                         <option value="">Tất cả tác phẩm</option>
                     </select>
 
-                    <button type="button" class="btn" style="border-radius:10px; padding:6px 12px; font-size:0.84rem;" onclick="refreshCreatorData()" title="Làm mới">
+                    <button type="button" class="btn" style="border-radius:10px; padding:6px 12px; font-size:0.84rem;" onclick="refreshCreatorData()" data-i18n-title="tooltip_refresh" title="Làm mới">
                         <i class="fa-solid fa-rotate-right"></i>
                     </button>
                 </div>
@@ -11027,7 +11230,7 @@
                 </div>
                 <!-- 🛡️ GHI NGUỒN CHÍNH THỨC (ATTRIBUTION GUIDELINES) -->
                 <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 5px;">
-                    <a href="https://klipy.com" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; gap:6px; text-decoration:none; font-size:0.85rem; color:var(--text-muted);" title="Xem thư viện Klipy">
+                    <a href="https://klipy.com" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; gap:6px; text-decoration:none; font-size:0.85rem; color:var(--text-muted);" data-i18n-title="tooltip_klipy_library" title="Xem thư viện Klipy">
                         <span>Powered by</span>
                         <b style="color: #855cd6; font-size: 0.95rem; letter-spacing: 0.5px;">KLIPY</b>
                     </a>
@@ -11139,7 +11342,7 @@
                             <i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Giữ để tải về máy</span>
                         </div>
                     </button>
-                    <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:var(--primary);" onclick="shareCurrentAssetToGlobalChat()" title="Chia sẻ vào Kênh Giao Lưu">
+                    <button type="button" class="btn" style="border-radius:12px; padding:11px 14px; color:var(--primary);" onclick="shareCurrentAssetToGlobalChat()" data-i18n-title="tooltip_asset_share" title="Chia sẻ vào Kênh Giao Lưu">
                         <i class="fa-solid fa-earth-americas"></i>
                     </button>
                     <button type="button" class="btn" id="quickViewCopyLinkBtn" style="flex:1; justify-content:center; padding:11px; font-weight:700; border-radius:12px;" onclick="copyCurrentAssetLink()">
@@ -11186,7 +11389,7 @@
                         </button>
                     </div>
 
-                    <button class="btn-close" onclick="closeModal('authModal')" title="&times;">&times;</button>
+                    <button class="btn-close" onclick="closeModal('authModal')" data-i18n-title="tooltip_modal_close" title="Đóng">&times;</button>
                 </div>
 
                 <!-- PANE 1: FORM ĐĂNG NHẬP (2 Ô DUY NHẤT) -->
@@ -11213,7 +11416,7 @@
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-lock auth-input-icon"></i>
                                 <input type="password" id="loginPw" class="auth-control-input" required data-i18n-ph="auth_login_pw_ph" placeholder="Nhập mật khẩu..." autocomplete="current-password">
-                                <button type="button" class="auth-pwd-toggle" onclick="toggleLoginPassword()" title="eye">
+                                <button type="button" class="auth-pwd-toggle" onclick="toggleLoginPassword()" data-i18n-title="tooltip_password_toggle" title="Hiện hoặc ẩn mật khẩu">
                                     <i class="fa-solid fa-eye" id="loginEyeIcon"></i>
                                 </button>
                             </div>
@@ -11270,7 +11473,7 @@
                             <div class="auth-input-group">
                                 <i class="fa-solid fa-lock auth-input-icon"></i>
                                 <input type="password" id="regPw" class="auth-control-input" required minlength="6" data-i18n-ph="auth_reg_pw_ph" placeholder="Tối thiểu 6 ký tự">
-                                <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" title="eye">
+                                <button type="button" class="auth-pwd-toggle" onclick="toggleRegPassword()" data-i18n-title="tooltip_password_toggle" title="Hiện hoặc ẩn mật khẩu">
                                     <i class="fa-solid fa-eye" id="regEyeIcon"></i>
                                 </button>
                             </div>
@@ -11714,7 +11917,7 @@
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span>Mua Vật Phẩm</span>
                 </div>
-                <button class="btn-close" onclick="handleGamePayCancel()" title="Hủy bỏ">&times;</button>
+                <button class="btn-close" onclick="handleGamePayCancel()" data-i18n-title="tooltip_cancel" title="Hủy bỏ">&times;</button>
             </div>
             
             <div class="gamepay-body">
@@ -12348,7 +12551,7 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="WOW-balance-pill" onclick="closeModal('frameShopModal'); openDailyRewardModal();" title="Bấm để nhận thêm WOW mỗi ngày">
+                    <div class="WOW-balance-pill" onclick="closeModal('frameShopModal'); openDailyRewardModal();" data-i18n-title="tooltip_wow_reward" title="Bấm để nhận thêm WOW mỗi ngày">
                         <span class="wow-icon"></span> <span id="shopModalWOWBalance">0</span>
                     </div>
                     <button class="btn-close" onclick="closeModal('frameShopModal')">&times;</button>
@@ -12472,7 +12675,7 @@
     <!-- MODAL LIGHTBOX XEM ẢNH GIAO LƯU PHÓNG TO -->
     <div id="chatImageLightboxOverlay" class="chat-image-lightbox-overlay" onclick="closeChatImageLightbox(event)">
         <div class="chat-lightbox-wrapper" onclick="event.stopPropagation()">
-            <button type="button" class="chat-lightbox-close-btn" onclick="closeChatImageLightbox()" title="Đóng (Esc)">&times;</button>
+            <button type="button" class="chat-lightbox-close-btn" onclick="closeChatImageLightbox()" data-i18n-title="tooltip_modal_close" title="Đóng (Esc)">&times;</button>
             <img id="chatLightboxImg" src="" class="chat-lightbox-img" alt="Zoom Preview">
             <div class="chat-lightbox-bottom-bar">
                 <a id="chatLightboxOpenTabLink" href="#" target="_blank" rel="noopener noreferrer" class="chat-lightbox-action-link">
@@ -14042,17 +14245,17 @@
                     : '';
                 
                 nav.innerHTML = `
-                    <button class="WOW-balance-pill" onclick="openDailyRewardModal()" title="Phần thưởng điểm danh">
+                    <button class="WOW-balance-pill" onclick="openDailyRewardModal()" data-i18n-title="tooltip_daily_checkin" title="${t('tooltip_daily_checkin')}">
                         <span class="wow-icon"></span> <span id="navWOWBalance">${currentUser.WOW || 0}</span>
                     </button>
 
-                    <a href="/#notifications" class="nav-icon-btn" title="Tin nhắn & Thông báo">
+                    <a href="/#notifications" class="nav-icon-btn" data-i18n-title="tooltip_notifications" title="${t('tooltip_notifications')}">
                         <i class="fa-solid fa-bell"></i>
                         <span class="notif-badge" id="notifBadge" style="display:none; right: -4px; top: -4px; z-index: 10; min-width: 17px; height: 17px; padding: 0 4px; font-size: 0.68rem; line-height: 17px;">0</span>
                     </a>
 
                     <div class="nav-user-dropdown-wrap" id="navUserDropdownWrap">
-                        <button type="button" class="nav-user-pill" onclick="toggleNavUserDropdown(event)" title="Menu tài khoản">
+                        <button type="button" class="nav-user-pill" onclick="toggleNavUserDropdown(event)" data-i18n-title="tooltip_account_menu" title="${t('tooltip_account_menu')}">
                             <div class="avt-wrapper" style="width: 28px; height: 28px;">
                                 <img src="${getAvtUrl(currentUser.avt)}" class="nav-user-avt" style="width:100%; height:100%;" onerror="this.src='${DEFAULT_AVATAR}'">
                                 ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="${getFrameInlineStyle(currentUser.frame)}">` : ''}
@@ -14232,10 +14435,10 @@
 
                         <div class="card-stats-row">
                             <div class="card-stats-left">
-                                <span class="card-stat-item likes" title="Lượt thích"><i class="fa-solid fa-heart"></i> ${likesCount}</span>
-                                <span class="card-stat-item stars" title="Yêu thích"><i class="fa-solid fa-star"></i> ${starsCount}</span>
+                                <span class="card-stat-item likes" data-i18n-title="tooltip_likes" title="${t('tooltip_likes')}"><i class="fa-solid fa-heart"></i> ${likesCount}</span>
+                                <span class="card-stat-item stars" data-i18n-title="tooltip_favorites" title="${t('tooltip_favorites')}"><i class="fa-solid fa-star"></i> ${starsCount}</span>
                             </div>
-                            <span class="card-stat-item views" title="Lượt chơi"><i class="fa-solid fa-play"></i> ${viewsCount}</span>
+                            <span class="card-stat-item views" data-i18n-title="tooltip_plays" title="${t('tooltip_plays')}"><i class="fa-solid fa-play"></i> ${viewsCount}</span>
                         </div>
                     </div>
                 </div>
@@ -14889,7 +15092,7 @@
                                     ${currentUser && !root.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${root.author}')">${t('proj_reply')}</button>` : ''}
                                     ${root.text ? `
                                     <div class="trans-menu-wrapper">
-                                        <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${root.id}')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                        <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${root.id}')" data-i18n-title="tooltip_translate" title="${t('tooltip_translate')}"><i class="fa-solid fa-language"></i></button>
                                     </div>` : ''}
                                     ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${root.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
                                     ${canDelete(root) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${root.id}')">${t('proj_delete')}</button>` : ''}
@@ -14921,7 +15124,7 @@
                                                 ${currentUser && !rep.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">${t('proj_reply')}</button>` : ''}
                                                 ${rep.text ? `
                                                 <div class="trans-menu-wrapper">
-                                                    <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${rep.id}')" title="Dịch"><i class="fa-solid fa-language"></i></button>
+                                                    <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${rep.id}')" data-i18n-title="tooltip_translate" title="${t('tooltip_translate')}"><i class="fa-solid fa-language"></i></button>
                                                 </div>` : ''}
                                                 ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${rep.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
                                                 ${canDelete(rep) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${rep.id}')">${t('proj_delete')}</button>` : ''}
@@ -15815,8 +16018,8 @@
                                     <span>@${escapeHtml(s.creator)}</span>
                                 </span>
                                 <div class="station-card-stats">
-                                    <span title="Tác phẩm"><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> ${projCount}</span>
-                                    <span title="Người theo dõi"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${followCount}</span>
+                                    <span data-i18n-title="tooltip_station_projects" title="${t('tooltip_station_projects')}"><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> ${projCount}</span>
+                                    <span data-i18n-title="tooltip_station_followers" title="${t('tooltip_station_followers')}"><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${followCount}</span>
                                 </div>
                             </div>
                         </div>
@@ -16093,7 +16296,7 @@
                             </div>
                         </a>
                         ${isCreator && !isLeader ? `
-                            <button type="button" class="btn btn-danger" style="font-size:0.75rem; padding:5px 10px; border-radius:10px; font-weight:700;" onclick="removeStudioMember('${m}')" title="Xóa khỏi ban điều hành">
+                            <button type="button" class="btn btn-danger" style="font-size:0.75rem; padding:5px 10px; border-radius:10px; font-weight:700;" onclick="removeStudioMember('${m}')" data-i18n-title="tooltip_station_remove_manager" title="${t('tooltip_station_remove_manager')}">
                                 <i class="fa-solid fa-user-minus"></i>
                             </button>
                         ` : ''}
@@ -16129,11 +16332,11 @@
                             ${isManagerOrCreator ? `
                                 <div style="display:flex; gap:6px; align-items:center;">
                                     ${isCreator ? `
-                                        <button type="button" class="btn btn-primary" style="font-size:0.72rem; padding:5px 9px; border-radius:10px; font-weight:800;" onclick="promoteStudioMember('${m}')" title="Thăng cấp lên Quản trị viên">
+                                        <button type="button" class="btn btn-primary" style="font-size:0.72rem; padding:5px 9px; border-radius:10px; font-weight:800;" onclick="promoteStudioMember('${m}')" data-i18n-title="tooltip_station_promote" title="${t('tooltip_station_promote')}">
                                             <i class="fa-solid fa-arrow-up"></i>
                                         </button>
                                     ` : ''}
-                                    <button type="button" class="btn btn-danger" style="font-size:0.72rem; padding:5px 9px; border-radius:10px; font-weight:700;" onclick="removeStudioMember('${m}')" title="Xóa thành viên">
+                                    <button type="button" class="btn btn-danger" style="font-size:0.72rem; padding:5px 9px; border-radius:10px; font-weight:700;" onclick="removeStudioMember('${m}')" data-i18n-title="tooltip_station_remove_member" title="${t('tooltip_station_remove_member')}">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
                                 </div>
@@ -18274,7 +18477,7 @@
                         <span style="color:var(--primary); font-family:monospace; background:#eef2f6; padding:3px 8px; border-radius:6px; max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border:1px solid #cbd5e1;" title="${escapeHtml(r.targetId)}">
                             ${escapeHtml(r.targetId)}
                         </span>
-                        <button class="btn" style="padding:3px 8px; font-size:0.75rem; background:#e2e8f0;" onclick="navigator.clipboard.writeText('${escapeHtml(r.targetId)}'); showToast('Đã chép ID vào bộ nhớ!', 'success')" title="Sao chép toàn bộ ID"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        <button class="btn" style="padding:3px 8px; font-size:0.75rem; background:#e2e8f0;" onclick="navigator.clipboard.writeText('${escapeHtml(r.targetId)}'); showToast('Đã chép ID vào bộ nhớ!', 'success')" data-i18n-title="tooltip_copy_id" title="${t('tooltip_copy_id')}"><i class="fa-regular fa-copy"></i> Sao chép</button>
                     </div>
 
                     <div style="background:#fffbeb; padding:10px 14px; border-radius:6px; color:#b45309; font-size:0.9rem; margin-bottom:15px; border:1px solid #fde68a; line-height:1.5;">
@@ -18682,7 +18885,7 @@
                             <i class="fa-solid fa-play"></i> Chơi
                         </button>
                         ${isOwner ? `
-                        <button class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem; border-radius:20px;" onclick="removeProjectFromInsideCollection('${pid}')" title="Gỡ khỏi bộ sưu tập">
+                        <button class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem; border-radius:20px;" onclick="removeProjectFromInsideCollection('${pid}')" data-i18n-title="tooltip_collection_remove" title="${t('tooltip_collection_remove')}">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                         ` : ''}
@@ -20364,7 +20567,7 @@
                                 <button type="button" class="btn btn-primary" style="flex:1; border-radius:10px; font-weight:800; font-size:0.8rem; justify-content:center; padding:7px;" onclick="downloadAssetDirectly('${fileUrl}', '${escapeHtml(aTitle)}.${aType}')">
                                     <i class="fa-solid fa-download"></i> Tải về
                                 </button>
-                                <a href="#assets?search=${aId}" class="btn" style="border-radius:10px; font-size:0.8rem; padding:7px 12px;" title="Xem trong Cửa hàng">
+                                <a href="#assets?search=${aId}" class="btn" style="border-radius:10px; font-size:0.8rem; padding:7px 12px;" data-i18n-title="tooltip_asset_open_store" title="${t('tooltip_asset_open_store')}">
                                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 </a>
                             </div>
@@ -20383,12 +20586,12 @@
             return commentHtml + `
                 <div class="chat-yt-embed-wrap" id="yt-dock-${ytVideoId}">
                     <div class="chat-yt-toolbar">
-                        <button type="button" class="chat-yt-btn-tool" onclick="toggleYouTubeMiniDock('yt-dock-${ytVideoId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                        <button type="button" class="chat-yt-btn-tool" onclick="toggleYouTubeMiniDock('yt-dock-${ytVideoId}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
                             <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                         </button>
                     </div>
                     <div class="chat-yt-inner-box">
-                        <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${ytVideoId}?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${ytVideoId}?enablejsapi=1" data-i18n-title="tooltip_youtube_player" title="${t('tooltip_youtube_player')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
             `;
@@ -20404,12 +20607,12 @@
                 return commentHtml + `
                     <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${ttInfo.id}">
                         <div class="chat-tiktok-toolbar">
-                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${ttInfo.id}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${ttInfo.id}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
                                 <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                             </button>
                         </div>
                         <div class="chat-tiktok-inner-box">
-                            <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${ttInfo.id}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                            <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${ttInfo.id}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen data-i18n-title="tooltip_tiktok_player" title="${t('tooltip_tiktok_player')}"></iframe>
                         </div>
                     </div>
                 `;
@@ -20421,12 +20624,12 @@
                     return commentHtml + `
                         <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
                             <div class="chat-tiktok-toolbar">
-                                <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                                <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
                                     <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                                 </button>
                             </div>
                             <div class="chat-tiktok-inner-box">
-                                <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${cachedId}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                                <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${cachedId}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen data-i18n-title="tooltip_tiktok_player" title="${t('tooltip_tiktok_player')}"></iframe>
                             </div>
                         </div>
                     `;
@@ -20438,7 +20641,7 @@
                 return commentHtml + `
                     <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
                         <div class="chat-tiktok-toolbar">
-                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" title="Ghim nổi cửa sổ Mini để vừa xem vừa chat">
+                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
                                 <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                             </button>
                         </div>
@@ -20447,7 +20650,7 @@
                                 <i class="fa-brands fa-tiktok fa-bounce" style="font-size:2.8rem; color:#fe2c55;"></i>
                                 <span style="font-size:0.85rem; color:#cbd5e1; font-weight:600;">Đang nạp video TikTok...</span>
                             </div>
-                            <iframe class="chat-tiktok-iframe" id="tiktok-iframe-${dockId}" style="display:none;" allow="fullscreen; autoplay; encrypted-media" allowfullscreen title="TikTok video player"></iframe>
+                            <iframe class="chat-tiktok-iframe" id="tiktok-iframe-${dockId}" style="display:none;" allow="fullscreen; autoplay; encrypted-media" allowfullscreen data-i18n-title="tooltip_tiktok_player" title="${t('tooltip_tiktok_player')}"></iframe>
                         </div>
                     </div>
                 `;
@@ -20727,15 +20930,15 @@
                             </div>
                             
                             <div class="vip-stats-grid">
-                                <div class="vip-stat-pill" title="Lượt chơi">
+                                <div class="vip-stat-pill" data-i18n-title="tooltip_plays" title="${t('tooltip_plays')}">
                                     <i class="fa-solid fa-play" style="color:#3b82f6 !important;"></i>
                                     <span>${views}</span>
                                 </div>
-                                <div class="vip-stat-pill" title="Lượt thích">
+                                <div class="vip-stat-pill" data-i18n-title="tooltip_likes" title="${t('tooltip_likes')}">
                                     <i class="fa-solid fa-heart" style="color:#ef4444 !important;"></i>
                                     <span>${likes}</span>
                                 </div>
-                                <div class="vip-stat-pill" title="Yêu thích">
+                                <div class="vip-stat-pill" data-i18n-title="tooltip_favorites" title="${t('tooltip_favorites')}">
                                     <i class="fa-solid fa-star" style="color:#f5b041 !important;"></i>
                                     <span>${stars}</span>
                                 </div>
@@ -21324,7 +21527,7 @@
                 if (isAudio) {
                     previewHtml = `
                         <div class="audio-player-booth" id="audioBooth-${a.assetId}">
-                            <button type="button" class="audio-play-round-btn" onclick="toggleAudioCardPlay('${a.assetId}', '${fileUrl}', event)" title="Nghe thử">
+                            <button type="button" class="audio-play-round-btn" onclick="toggleAudioCardPlay('${a.assetId}', '${fileUrl}', event)" data-i18n-title="tooltip_asset_listen" title="${t('tooltip_asset_listen')}">
                                 <i class="fa-solid fa-play" id="audioIcon-${a.assetId}"></i>
                             </button>
                             <div class="audio-wave-bars">
@@ -21344,7 +21547,7 @@
                 } else {
                     previewHtml = `
                         <img src="${fileUrl}" loading="lazy" alt="${escapeHtml(a.title)}" onerror="this.outerHTML='<i class=\\\'fa-solid fa-image\\\' style=\\\'font-size:3rem; color:var(--text-muted); opacity:0.3;\\\'></i>'">
-                        <button type="button" class="asset-quick-inspect-btn" onclick="openAssetQuickView('${a.assetId}', event)" title="Xem phóng to">
+                        <button type="button" class="asset-quick-inspect-btn" onclick="openAssetQuickView('${a.assetId}', event)" data-i18n-title="tooltip_asset_preview" title="${t('tooltip_asset_preview')}">
                             <i class="fa-solid fa-expand"></i>
                         </button>
                     `;
@@ -21390,26 +21593,26 @@
 
                         <div class="asset-card-bottom">
                             <div class="asset-segmented-vote">
-                                <button type="button" class="asset-vote-btn up ${upActive}" onclick="toggleAssetVote('${a.assetId}', 'upvote')" title="Hữu ích">
+                                <button type="button" class="asset-vote-btn up ${upActive}" onclick="toggleAssetVote('${a.assetId}', 'upvote')" data-i18n-title="tooltip_asset_helpful" title="${t('tooltip_asset_helpful')}">
                                     <i class="fa-solid fa-caret-up"></i>
                                 </button>
                                 <span class="asset-vote-score">${netScore}</span>
-                                <button type="button" class="asset-vote-btn down ${downActive}" onclick="toggleAssetVote('${a.assetId}', 'downvote')" title="Không thích">
+                                <button type="button" class="asset-vote-btn down ${downActive}" onclick="toggleAssetVote('${a.assetId}', 'downvote')" data-i18n-title="tooltip_asset_dislike" title="${t('tooltip_asset_dislike')}">
                                     <i class="fa-solid fa-caret-down"></i>
                                 </button>
                             </div>
 
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <button type="button" class="asset-action-btn-circle" onclick="shareAssetToGlobalChat('${a.assetId}')" title="Chia sẻ vào Kênh Giao Lưu">
+                                <button type="button" class="asset-action-btn-circle" onclick="shareAssetToGlobalChat('${a.assetId}')" data-i18n-title="tooltip_asset_share" title="${t('tooltip_asset_share')}">
                                     <i class="fa-solid fa-earth-americas"></i>
                                 </button>
-                                <button type="button" class="asset-action-btn-circle" onclick="copyAssetDirectUrl('${fileUrl}')" title="Sao chép link tải trực tiếp">
+                                <button type="button" class="asset-action-btn-circle" onclick="copyAssetDirectUrl('${fileUrl}')" data-i18n-title="tooltip_asset_copy_direct" title="${t('tooltip_asset_copy_direct')}">
                                     <i class="fa-solid fa-link"></i>
                                 </button>
-                                <button type="button" class="asset-action-btn-circle" style="color:#f59e0b;" onclick="openReportModal('asset', '${a.assetId}')" title="Báo cáo">
+                                <button type="button" class="asset-action-btn-circle" style="color:#f59e0b;" onclick="openReportModal('asset', '${a.assetId}')" data-i18n-title="tooltip_asset_report" title="${t('tooltip_asset_report')}">
                                     <i class="fa-solid fa-flag"></i>
                                 </button>
-                                <button type="button" class="asset-download-pill" onmousedown="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" ontouchstart="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" title="Nhấn giữ 1s để tải về máy">
+                                <button type="button" class="asset-download-pill" onmousedown="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" ontouchstart="startAssetPillHold(this, '${fileUrl}', '${escapeHtml(a.title)}.${fileExt}', event)" data-i18n-title="tooltip_asset_download_hold" title="${t('tooltip_asset_download_hold')}">
                                     <div class="hold-progress-fill"></div>
                                     <div class="btn-inner-content"><i class="fa-solid fa-download"></i> <span>Giữ để tải</span></div>
                                 </button>
@@ -22113,7 +22316,7 @@
 
             // Nút (+) mở bảng Emoji Picker gốc
             const moreBtn = `
-                <button type="button" class="chat-qr-btn more-btn" onclick="document.getElementById('quickReactionPopup').remove(); toggleEmojiPicker('react_${msgId}', event);" title="Thêm Emoji khác">
+                <button type="button" class="chat-qr-btn more-btn" onclick="document.getElementById('quickReactionPopup').remove(); toggleEmojiPicker('react_${msgId}', event);" data-i18n-title="tooltip_chat_more_emoji" title="${t('tooltip_chat_more_emoji')}">
                     <i class="fa-solid fa-plus"></i>
                 </button>
             `;
@@ -22605,7 +22808,9 @@
                 btn.innerHTML = isDocked 
                     ? '<i class="fa-solid fa-compress"></i>' 
                     : '<i class="fa-solid fa-up-right-and-down-left-from-center"></i>';
-                btn.title = isDocked ? 'Ghim lại vào tin nhắn' : 'Ghim nổi ra góc màn hình';
+                const titleKey = isDocked ? 'tooltip_pin_media_return' : 'tooltip_pin_media';
+                btn.setAttribute('data-i18n-title', titleKey);
+                btn.title = t(titleKey);
             }
         }
 
@@ -22618,7 +22823,9 @@
                 btn.innerHTML = isDocked 
                     ? '<i class="fa-solid fa-compress"></i>' 
                     : '<i class="fa-solid fa-up-right-and-down-left-from-center"></i>';
-                btn.title = isDocked ? 'Ghim lại vào tin nhắn' : 'Ghim nổi ra góc màn hình';
+                const titleKey = isDocked ? 'tooltip_pin_media_return' : 'tooltip_pin_media';
+                btn.setAttribute('data-i18n-title', titleKey);
+                btn.title = t(titleKey);
             }
         }
 
@@ -22649,7 +22856,7 @@
                 <div class="trans-result-box">
                     <div class="trans-header">
                         <span><i class="fa-solid fa-language"></i> ${escapeHtml(savedTrans.langName)}</span>
-                        <button type="button" class="trans-btn-close" onclick="closeChatTranslation('${messageId}')" title="Đóng">&times;</button>
+                        <button type="button" class="trans-btn-close" onclick="closeChatTranslation('${messageId}')" data-i18n-title="tooltip_modal_close" title="${t('tooltip_modal_close')}">&times;</button>
                     </div>
                     <div class="trans-content" style="white-space:pre-line;">${escapeHtml(savedTrans.translatedText)}</div>
                 </div>
@@ -22679,7 +22886,7 @@
                             })()}
                                 ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
                                 ${renderChatContent(c.text || '', c.author, c)}
-                                ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : ''}
+                                ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : ''}
                                 ${transBoxHtml}
                             </div>
 
@@ -22688,28 +22895,28 @@
                             <!-- Floating Action Bar gắn gọn gàng góc phải -->
                             <div class="chat-floating-actions">
                                 ${currentUser ? `
-                                    <button type="button" class="chat-float-btn" onclick="openQuickReactionPicker('${messageId}', event)" title="Thả cảm xúc">
+                                    <button type="button" class="chat-float-btn" onclick="openQuickReactionPicker('${messageId}', event)" data-i18n-title="tooltip_chat_reaction" title="${t('tooltip_chat_reaction')}">
                                         <i class="fa-regular fa-face-smile"></i>
                                     </button>` : ''}
                                 ${currentUser && !isMine ? `
-                                    <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" title="Trả lời">
+                                    <button type="button" class="chat-float-btn" onclick="startReply('chat', '${messageId}', '${escapeHtml(c.author)}')" data-i18n-title="tooltip_chat_reply" title="${t('tooltip_chat_reply')}">
                                         <i class="fa-solid fa-reply"></i>
                                     </button>` : ''}
                                 ${c.text && !c.text.startsWith('[DANV_POLL]') && !getYouTubeIdIfOnly(c.text) && !getTikTokVideoId(c.text) ? `
                                     <div class="trans-menu-wrapper">
-                                        <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" title="Dịch tin nhắn">
+                                        <button type="button" class="chat-float-btn ${savedTrans ? 'trans-active' : ''}" onclick="openTranslateMenu(this, 'chat', '${messageId}', event)" data-i18n-title="tooltip_chat_translate" title="${t('tooltip_chat_translate')}">
                                             <i class="fa-solid fa-language"></i>
                                         </button>
                                     </div>` : ''}
-                                <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" title="Sao chép liên kết">
+                                <button type="button" class="chat-float-btn" onclick="copyChatLink('${messageId}')" data-i18n-title="tooltip_chat_copy" title="${t('tooltip_chat_copy')}">
                                     <i class="fa-solid fa-link"></i>
                                 </button>
                                 ${currentUser && !isMine ? `
-                                    <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" title="Báo cáo vi phạm">
+                                    <button type="button" class="chat-float-btn report" onclick="openReportModal('chat', '${messageId}')" data-i18n-title="tooltip_chat_report" title="${t('tooltip_chat_report')}">
                                         <i class="fa-solid fa-flag"></i>
                                     </button>` : ''}
                                 ${canDelete ? `
-                                    <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" title="Xóa tin nhắn">
+                                    <button type="button" class="chat-float-btn delete" onclick="adminDeleteChat('${messageId}')" data-i18n-title="tooltip_chat_delete" title="${t('tooltip_chat_delete')}">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>` : ''}
                             </div>
@@ -22832,7 +23039,7 @@
                             if (bubbleContainer) {
                                 const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
                                 const replyHtml = c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : '';
-                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : '';
+                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : '';
                                 bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(c.text || '', c.author, c)}${imgHtml}`;
                             }
                         }
@@ -23025,7 +23232,7 @@
                                 ${isMine ? `<span class="chat-author-you-badge">Bạn</span>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onclick="openChatImageLightbox(this.src)" title="Nhấn để phóng to ảnh">` : ''}</div>
+                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : ''}</div>
                         </div>
                     </div>
                     `;
@@ -25300,7 +25507,7 @@
                     <img id="profAvt" src="${getAvtUrl(viewingProfileData.avt)}" class="profile-avt-lg" onerror="this.src='${DEFAULT_AVATAR}'">
                     ${viewingProfileData.frame ? `<img src="${viewingProfileData.frame}" class="avt-frame" style="${getFrameInlineStyle(viewingProfileData.frame)}">` : ''}
                     ${isMe ? `
-                        <div class="profile-avt-overlay-btn" title="Chạm để đổi avatar hoặc chọn khung">
+                        <div class="profile-avt-overlay-btn" data-i18n-title="tooltip_profile_avatar" title="${t('tooltip_profile_avatar')}">
                             <i class="fa-solid fa-camera"></i>
                             <span>Tùy chỉnh</span>
                         </div>
@@ -25472,7 +25679,7 @@
                     box.innerHTML = `
                         <div class="trans-header">
                             <span><i class="fa-solid fa-language"></i> ${escapeHtml(langName)}</span>
-                            <button type="button" class="trans-btn-close" onclick="${contextType === 'chat' ? `closeChatTranslation('${targetId}')` : `this.closest('.trans-result-box').remove()`}" title="Đóng">&times;</button>
+                            <button type="button" class="trans-btn-close" onclick="${contextType === 'chat' ? `closeChatTranslation('${targetId}')` : `this.closest('.trans-result-box').remove()`}" data-i18n-title="tooltip_modal_close" title="${t('tooltip_modal_close')}">&times;</button>
                         </div>
                         <div class="trans-content" style="white-space:pre-line;">${escapeHtml(data.translatedText)}</div>
                     `;
@@ -25719,7 +25926,7 @@
                 contentHtml = `
                     <div class="widget-bgm-box" id="bentoBgmBox-${safeId}">
                         <div class="widget-bgm-info">
-                            <button type="button" class="widget-bgm-btn" onclick="toggleBentoBGMPlay('${safeId}', decodeURIComponent('${encUrl}'), event)" title="Phát nhạc">
+                            <button type="button" class="widget-bgm-btn" onclick="toggleBentoBGMPlay('${safeId}', decodeURIComponent('${encUrl}'), event)" data-i18n-title="tooltip_bgm_play" title="${t('tooltip_bgm_play')}">
                                 <i class="fa-solid fa-play" id="bentoBgmIcon-${safeId}"></i>
                             </button>
                             <div style="min-width:0; flex:1;">
@@ -25840,7 +26047,7 @@
             return `
                 <div class="grid-stack-item" ${extraAttrs}>
                     <div class="grid-stack-item-content">
-                        <button class="bento-btn-remove" onclick="removeBentoWidget('${safeId}', this)" title="Xóa Box này"><i class="fa-solid fa-xmark"></i></button>
+                        <button class="bento-btn-remove" onclick="removeBentoWidget('${safeId}', this)" data-i18n-title="tooltip_bento_remove" title="${t('tooltip_bento_remove')}"><i class="fa-solid fa-xmark"></i></button>
                         ${contentHtml}
                     </div>
                 </div>
@@ -26068,13 +26275,12 @@
             else if (widgetId === 'widget_featured') { newItem.w = 12; newItem.h = 5; newItem.minW = 6; newItem.minH = 4; }
             else if (widgetId === 'widget_note') {
                 newItem.id = 'widget_note_' + Date.now();
-                newItem.w = 4; newItem.h = 3; newItem.minW = 3; newItem.minH = 2;
-                const noteTitle = prompt("Nhập TIÊU ĐỀ ghi chú (Có thể để trống):", "");
-                if (noteTitle === null) return; // Hủy
-                const userText = prompt("Nhập NỘI DUNG Ghi chú (Hỗ trợ Emoji, Markdown **in đậm**, *nghiêng*, __gạch chân__):", "Chào mừng ghé thăm hồ sơ! ✨");
-                if (!userText) return;
-                newItem.noteTitle = noteTitle.trim();
-                newItem.content = userText.trim();
+                newItem.w = customProps.w || 4; 
+                newItem.h = customProps.h || 3; 
+                newItem.minW = 3; 
+                newItem.minH = 2;
+                newItem.noteTitle = (customProps.noteTitle || "").trim();
+                newItem.content = (customProps.content || "Chào mừng bạn ghé thăm hồ sơ của mình! ✨").trim();
             }
             else if (widgetId === 'widget_frames') {
                 newItem.id = 'widget_frames_' + Date.now();
@@ -26176,17 +26382,200 @@
             setTimeout(() => loadBentoMiniProjectCard(`widget_proj_${Date.now()}`, pid), 100);
         }
 
-        // 3. Thêm Widget Thẻ Bạn bè / Dev
-        function addBentoUserCardWidget() {
+        // ================= XỬ LÝ MODAL GHI CHÚ TỰ DO VỚI FORMAT TOOLBAR =================
+        function openBentoConfigNoteModal() {
             closeModal('bentoWidgetModal');
-            const targetUser = prompt("Nhập Username của người bạn muốn ghim thẻ hồ sơ:");
-            if (!targetUser) return;
-            const cleanUser = targetUser.trim().replace(/@/g, '');
-            const rel = prompt("Nhãn vai trò / quan hệ (Ví dụ: Bạn thân, Đồng tác giả, Dev Team...):", "Bạn bè") || "Bạn bè";
+            document.getElementById('bentoNoteTitleInput').value = '';
+            document.getElementById('bentoNoteContentInput').value = 'Chào mừng bạn ghé thăm hồ sơ của mình! ✨';
+            updateBentoNoteLivePreview();
+            openModal('bentoConfigNoteModal');
+        }
+
+        function insertNoteFormatting(type) {
+            const textarea = document.getElementById('bentoNoteContentInput');
+            if (!textarea) return;
+            const start = textarea.selectionStart || 0;
+            const end = textarea.selectionEnd || 0;
+            const val = textarea.value;
+            const selected = val.substring(start, end);
+
+            let insertion = '';
+            let newCursorPos = start;
+
+            switch(type) {
+                case 'bold':
+                    insertion = `**${selected || 'in đậm'}**`;
+                    newCursorPos = start + (selected ? insertion.length : 2);
+                    break;
+                case 'italic':
+                    insertion = `*${selected || 'in nghiêng'}*`;
+                    newCursorPos = start + (selected ? insertion.length : 1);
+                    break;
+                case 'underline':
+                    insertion = `__${selected || 'gạch chân'}__`;
+                    newCursorPos = start + (selected ? insertion.length : 2);
+                    break;
+                case 'mention':
+                    insertion = `@username `;
+                    newCursorPos = start + insertion.length;
+                    break;
+                case 'tag':
+                    insertion = `#hashtag `;
+                    newCursorPos = start + insertion.length;
+                    break;
+                case 'sparkles':
+                    insertion = `✨`;
+                    newCursorPos = start + insertion.length;
+                    break;
+                case 'heart':
+                    insertion = `❤️`;
+                    newCursorPos = start + insertion.length;
+                    break;
+                case 'fire':
+                    insertion = `🔥`;
+                    newCursorPos = start + insertion.length;
+                    break;
+            }
+
+            textarea.value = val.substring(0, start) + insertion + val.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(newCursorPos, newCursorPos);
+            updateBentoNoteLivePreview();
+        }
+
+        function updateBentoNoteLivePreview() {
+            const stage = document.getElementById('bentoNoteLivePreviewStage');
+            if (!stage) return;
+            const title = (document.getElementById('bentoNoteTitleInput')?.value || '').trim();
+            let content = document.getElementById('bentoNoteContentInput')?.value || '';
+            if (!content.trim()) content = "Chào mừng bạn ghé thăm hồ sơ của mình! ✨";
+
+            let parsedContent = formatCommentText(content);
+            parsedContent = parsedContent.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            parsedContent = parsedContent.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            parsedContent = parsedContent.replace(/__(.*?)__/g, '<u>$1</u>');
+            parsedContent = parsedContent.replace(/\n/g, '<br>');
+
+            stage.innerHTML = `
+                <div class="bento-widget-inner widget-note-container" style="display:flex; flex-direction:column; justify-content:center; text-align:center; background:var(--bg-secondary); border-radius:12px; padding:12px;">
+                    ${title ? `<h4 style="font-size:1.05rem; color:var(--primary); margin:0 0 6px 0; font-weight:900;">${escapeHtml(title)}</h4>` : ''}
+                    <div style="font-size: 0.95rem; color:var(--text-main); line-height:1.5; word-wrap:break-word;">${parsedContent}</div>
+                </div>
+            `;
+        }
+
+        function submitBentoNoteWidget() {
+            const title = (document.getElementById('bentoNoteTitleInput')?.value || '').trim();
+            const content = (document.getElementById('bentoNoteContentInput')?.value || '').trim();
+            if (!content) {
+                showToast("Vui lòng nhập nội dung ghi chú!", "error");
+                return;
+            }
+            closeModal('bentoConfigNoteModal');
+            addBentoWidget(`widget_note`, {
+                noteTitle: title,
+                content: content,
+                w: 4, h: 3, minW: 3, minH: 2
+            });
+        }
+
+        // ================= XỬ LÝ MODAL THẺ BẠN BÈ / DEV CÓ ROLE CHIPS & LIVE PREVIEW =================
+        let bentoSelectedUserRole = 'Bạn bè';
+
+        function openBentoConfigUserModal() {
+            closeModal('bentoWidgetModal');
+            document.getElementById('bentoUserUsernameInput').value = '';
+            bentoSelectedUserRole = 'Bạn bè';
+            document.getElementById('bentoCustomRoleWrap').style.display = 'none';
+            document.getElementById('bentoCustomRoleInput').value = '';
+            
+            // Đặt lại active chip đầu tiên
+            document.querySelectorAll('#bentoRoleChipsContainer .bento-role-chip').forEach((chip, idx) => {
+                chip.classList.toggle('active', idx === 0);
+            });
+
+            updateBentoUserCardPreview();
+            openModal('bentoConfigUserModal');
+        }
+
+        // Tương thích ngược nếu còn vị trí nào gọi tên hàm cũ
+        function addBentoUserCardWidget() {
+            openBentoConfigUserModal();
+        }
+
+        function selectBentoUserRole(role, btnEl) {
+            document.querySelectorAll('#bentoRoleChipsContainer .bento-role-chip').forEach(c => c.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            const customWrap = document.getElementById('bentoCustomRoleWrap');
+            if (role === 'custom') {
+                customWrap.style.display = 'block';
+                const customInput = document.getElementById('bentoCustomRoleInput');
+                customInput.focus();
+                bentoSelectedUserRole = customInput.value.trim() || 'Tùy chỉnh';
+            } else {
+                customWrap.style.display = 'none';
+                bentoSelectedUserRole = role;
+            }
+            updateBentoUserCardPreview();
+        }
+
+        function handleBentoUserUsernameInput(val) {
+            let clean = (val || '').replace(/@/g, '').trim();
+            document.getElementById('bentoUserUsernameInput').value = clean;
+            updateBentoUserCardPreview();
+            
+            if (clean) {
+                if (globalUserCache[clean]) {
+                    const previewAvt = document.getElementById('bentoPreviewUserAvt');
+                    if (previewAvt) previewAvt.src = getAvtUrl(globalUserCache[clean]);
+                } else {
+                    queueFetchUserAvt(clean, (avt) => {
+                        const previewAvt = document.getElementById('bentoPreviewUserAvt');
+                        if (previewAvt) previewAvt.src = getAvtUrl(avt);
+                    });
+                }
+            }
+        }
+
+        function updateBentoUserCardPreview() {
+            const rawUsername = document.getElementById('bentoUserUsernameInput')?.value.trim();
+            const username = rawUsername || 'username';
+            
+            let effectiveRole = bentoSelectedUserRole;
+            if (effectiveRole === 'custom' || document.getElementById('bentoRoleChipCustom')?.classList.contains('active')) {
+                effectiveRole = document.getElementById('bentoCustomRoleInput')?.value.trim() || 'Tùy chỉnh';
+            }
+
+            const nameEl = document.getElementById('bentoPreviewUserName');
+            const roleEl = document.getElementById('bentoPreviewUserRelTag');
+            const avtEl = document.getElementById('bentoPreviewUserAvt');
+
+            if (nameEl) nameEl.innerText = `@${username}`;
+            if (roleEl) roleEl.innerText = effectiveRole;
+            if (avtEl && (!rawUsername || !globalUserCache[rawUsername])) {
+                avtEl.src = DEFAULT_AVATAR;
+            }
+        }
+
+        function submitBentoUserCardWidget() {
+            const rawUsername = document.getElementById('bentoUserUsernameInput')?.value.trim();
+            if (!rawUsername) {
+                showToast("Vui lòng nhập Username người bạn muốn ghim!", "error");
+                return;
+            }
+            const cleanUser = rawUsername.replace(/@/g, '').trim();
+
+            let effectiveRole = bentoSelectedUserRole;
+            if (effectiveRole === 'custom' || document.getElementById('bentoRoleChipCustom')?.classList.contains('active')) {
+                effectiveRole = document.getElementById('bentoCustomRoleInput')?.value.trim() || 'Bạn bè';
+            }
+
+            closeModal('bentoConfigUserModal');
 
             addBentoWidget(`widget_user_${Date.now()}`, {
                 targetUser: cleanUser,
-                relation: rel.trim(),
+                relation: effectiveRole,
                 w: 4, h: 2, minW: 3, minH: 2
             });
         }
@@ -26919,14 +27308,14 @@
                 let revenueChipHtml = '';
                 if (isWithdrawn) {
                     revenueChipHtml = `
-                        <div class="creator-revenue-chip withdrawn" title="Đã chuyển vào ví chính">
+                        <div class="creator-revenue-chip withdrawn" data-i18n-title="tooltip_revenue_withdrawn" title="${t('tooltip_revenue_withdrawn')}">
                             <i class="fa-solid fa-circle-check"></i>
                             <span>+${tx.netAmount} WOW</span>
                         </div>
                     `;
                 } else {
                     revenueChipHtml = `
-                        <div class="creator-revenue-chip vault" title="Đang lưu giữ trong Két Sắt khả dụng">
+                        <div class="creator-revenue-chip vault" data-i18n-title="tooltip_revenue_available" title="${t('tooltip_revenue_available')}">
                             <span class="wow-icon"></span>
                             <span>+${tx.netAmount} WOW</span>
                         </div>
@@ -26952,7 +27341,7 @@
                                 <i class="fa-solid fa-cube" style="color:var(--primary); font-size:0.8rem; margin-right:4px;"></i>
                                 ${escapeHtml(tx.itemName || "Vật phẩm")}
                             </div>
-                            <a href="#project/${encodeURIComponent(tx.projectId)}" class="creator-proj-link" title="Đến trang tác phẩm">
+                            <a href="#project/${encodeURIComponent(tx.projectId)}" class="creator-proj-link" data-i18n-title="tooltip_project_open" title="${t('tooltip_project_open')}">
                                 <i class="fa-solid fa-gamepad" style="font-size:0.75rem; margin-right:3px;"></i>
                                 ${escapeHtml(tx.projectTitle || "Tác phẩm")}
                             </a>
@@ -26961,7 +27350,7 @@
                         <!-- Cột 3: Thời gian & Mã hash -->
                         <div class="creator-col-meta">
                             <span title="${tx.time}"><i class="fa-regular fa-clock"></i> ${formattedTime}</span>
-                            <span class="creator-tx-hash-badge" onclick="copyCreatorTxId('${tx.txId}')" title="Bấm để sao chép mã đơn">
+                            <span class="creator-tx-hash-badge" onclick="copyCreatorTxId('${tx.txId}')" data-i18n-title="tooltip_copy_transaction" title="${t('tooltip_copy_transaction')}">
                                 <i class="fa-regular fa-copy"></i> <code>${tx.txId}</code>
                             </span>
                         </div>
@@ -27091,7 +27480,7 @@
                                 <button type="button" class="btn btn-primary" style="flex:1; font-size:0.82rem; border-radius:10px; justify-content:center; padding:8px;" onclick="filterCreatorTransactionsByGame('${pid}')">
                                     <i class="fa-solid fa-receipt"></i> Xem đơn hàng
                                 </button>
-                                <a href="#project/${pid}" class="btn" style="border-radius:10px; font-size:0.82rem; padding:8px 12px;" title="Vào trang game">
+                                <a href="#project/${pid}" class="btn" style="border-radius:10px; font-size:0.82rem; padding:8px 12px;" data-i18n-title="tooltip_game_open" title="${t('tooltip_game_open')}">
                                     <i class="fa-solid fa-play"></i>
                                 </a>
                             </div>
