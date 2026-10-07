@@ -2107,6 +2107,40 @@
             
             .modal { max-width: 95vw; margin: 10px; }
         }
+        /* ================= CHẾ ĐỘ MÁY YẾU / TIẾT KIỆM PIN (LOW-SPEC MODE) ================= */
+        [data-lowspec="true"] * {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        [data-lowspec="true"] .navbar {
+            background: var(--bg-panel) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+        }
+        [data-lowspec="true"] .card, 
+        [data-lowspec="true"] .chat-bubble, 
+        [data-lowspec="true"] .modal, 
+        [data-lowspec="true"] .chat-main-card,
+        [data-lowspec="true"] .profile-hero,
+        [data-lowspec="true"] .station-card,
+        [data-lowspec="true"] .asset-card {
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+        }
+        [data-lowspec="true"] .chat-yt-embed-wrap::before,
+        [data-lowspec="true"] .chat-tiktok-embed-wrap::before,
+        [data-lowspec="true"] .beabea-gift-card::before,
+        [data-lowspec="true"] .tip-balance-hud::before {
+            display: none !important;
+        }
+        [data-lowspec="true"] .fa-spin,
+        [data-lowspec="true"] .fa-beat,
+        [data-lowspec="true"] .fa-bounce,
+        [data-lowspec="true"] .pulseActiveSlot,
+        [data-lowspec="true"] .pulseGoldDay,
+        [data-lowspec="true"] .shake-hyper,
+        [data-lowspec="true"] .breatheHole {
+            animation: none !important;
+        }
+
         /* ẨN TOÀN BỘ TRANG WEB KHI ĐANG XÁC MINH CLOUDFLARE */
         body.is-verifying > *:not(#cfVerifyScreen) {
             display: none !important;
@@ -10124,6 +10158,28 @@
                             <button type="button" class="btn" onclick="toggleTheme('dark')" style="flex:1; justify-content:center; padding: 12px;"><i class="fa-solid fa-moon"></i> <span data-i18n="settings_theme_dark">Tối</span></button>
                         </div>
                     </div>
+
+                    <!-- THIẾT LẬP CHẾ ĐỘ MÁY YẾU / TIẾT KIỆM PIN -->
+                    <div class="form-group" style="margin-bottom: 25px;">
+                        <label>Performance & Battery Optimization:</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; background:var(--bg-secondary); padding:16px 18px; border-radius:14px; border:1px solid var(--border-color); margin-top:8px;">
+                            <div style="min-width:0; flex:1;">
+                                <div style="font-weight:800; font-size:0.95rem; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                                    <i class="fa-solid fa-battery-half" style="color:var(--primary);"></i>
+                                    <span>Lite mode</span>
+                                </div>
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px; line-height:1.45;">
+                                    Disabling the blur effect, reducing drop shadows, and eliminating infinite animations ensures smooth scrolling and prevents the device from overheating.
+                                </div>
+                            </div>
+                            <div style="flex-shrink:0;">
+                                <label class="modern-toggle-switch">
+                                    <input type="checkbox" id="lowSpecToggleCheckbox" onchange="handleToggleLowSpec(this.checked)">
+                                    <span class="modern-toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="form-group" style="margin-bottom: 25px;">
                         <label data-i18n="settings_lang">Ngôn ngữ [Language]:</label>
@@ -13189,6 +13245,10 @@
             // Khởi tạo Theme ngay lập tức
             const savedTheme = localStorage.getItem('danv_theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
+
+            // Khởi tạo Chế độ máy yếu ngay lập tức
+            const isLowSpec = localStorage.getItem('danv_lowspec') === 'true';
+            document.documentElement.setAttribute('data-lowspec', isLowSpec ? 'true' : 'false');
 
             try {
                 // Kích hoạt đa ngôn ngữ
@@ -17618,6 +17678,8 @@
             if (langEl) langEl.value = localStorage.getItem('lang') || 'vi';
             renderDefaultTransLangSelect();
             updateChatNotifSettingUI(); // Đồng bộ trạng thái công tắc thông báo màn hình
+            const lowSpecChk = document.getElementById('lowSpecToggleCheckbox');
+            if (lowSpecChk) lowSpecChk.checked = (localStorage.getItem('danv_lowspec') === 'true');
 
             // 2. Nếu chưa đăng nhập: tự động chuyển sang tab Tùy chọn (Theme / Ngôn ngữ / Engine) mà không đá về Home
             if (!currentUser) {
@@ -20306,6 +20368,30 @@
             }
         }
 
+        function loadLazyYouTubeIframe(triggerContainer, videoId) {
+            triggerContainer.parentElement.innerHTML = `
+                <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            `;
+        }
+
+        async function loadLazyTikTokIframe(dockId, directVideoId, shortUrl) {
+            const box = document.getElementById(`tiktok-box-${dockId}`);
+            if (!box) return;
+            box.innerHTML = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#000; color:#fe2c55;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>';
+
+            let vid = directVideoId;
+            if (!vid && shortUrl) {
+                await resolveTikTokShortUrl(shortUrl, dockId);
+                vid = window.tiktokResolvedCache && window.tiktokResolvedCache[shortUrl];
+            }
+
+            if (vid) {
+                box.innerHTML = `
+                    <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${vid}?autoplay=1" allow="fullscreen; autoplay; encrypted-media" allowfullscreen></iframe>
+                `;
+            }
+        }
+
         function applyResolvedTikTokId(videoId, dockId) {
             const loader = document.getElementById(`tiktok-loader-${dockId}`);
             const iframe = document.getElementById(`tiktok-iframe-${dockId}`);
@@ -20640,10 +20726,9 @@
                 `;
             }
 
-            // 🎬 EMBED VIDEO YOUTUBE (HỖ TRỢ youtu.be, youtube.com VÀ KÈM LỜI NHẮN NẾU CÓ)
+            // 🎬 EMBED VIDEO YOUTUBE (TỐI ƯU LAZY-LOAD BẰNG THUMBNAIL)
         const ytVideoId = getYouTubeVideoId(rawText);
         if (ytVideoId) {
-            // Tách phần chữ nếu người dùng nhắn kèm lời bình cạnh link
             const textWithoutYt = rawText.replace(/(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^\s&]*&)*v=|shorts\/|live\/|embed\/)|youtu\.be\/)[a-zA-Z0-9_\-]+(?:\/[^\s]*|\?[^\s]*)?/gi, '').trim();
             const commentHtml = textWithoutYt ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(textWithoutYt)}</div>` : '';
 
@@ -20655,70 +20740,45 @@
                         </button>
                     </div>
                     <div class="chat-yt-inner-box">
-                            <iframe class="chat-yt-iframe" src="https://www.youtube-nocookie.com/embed/${ytVideoId}?enablejsapi=1" data-i18n-title="tooltip_youtube_player" title="${t('tooltip_youtube_player')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <div style="position:relative; width:100%; height:100%; background:#000; cursor:pointer; display:flex; align-items:center; justify-content:center;" onclick="loadLazyYouTubeIframe(this, '${ytVideoId}')">
+                            <img src="https://i.ytimg.com/vi/${ytVideoId}/hqdefault.jpg" style="position:absolute; width:100%; height:100%; object-fit:cover; opacity:0.85;" loading="lazy">
+                            <div style="position:relative; z-index:2; width:52px; height:52px; border-radius:50%; background:rgba(239,68,68,0.9); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 4px 20px rgba(0,0,0,0.5); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                                <i class="fa-solid fa-play" style="margin-left:3px;"></i>
+                            </div>
+                            <span style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.75); color:#fff; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800; z-index:2;">YouTube</span>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
-        // 🎵 EMBED VIDEO TIKTOK (HỖ TRỢ CẢ LINK GỐC VÀ vt.tiktok.com, vm.tiktok.com)
+        // 🎵 EMBED VIDEO TIKTOK (TỐI ƯU LAZY-LOAD TIẾT KIỆM RAM)
         const ttInfo = getTikTokInfo(rawText);
         if (ttInfo) {
             const textWithoutTt = rawText.replace(/(?:https?:\/\/)?(?:(?:vt|vm|v)\.tiktok\.com\/[a-zA-Z0-9_\-]+|www\.tiktok\.com\/(?:t\/[a-zA-Z0-9_\-]+|@[^\/\s?#]+\/video\/\d{15,22}))(?:\/[^\s]*|\?[^\s]*)?/gi, '').trim();
             const commentHtml = textWithoutTt ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(textWithoutTt)}</div>` : '';
 
-            if (ttInfo.type === 'id') {
-                return commentHtml + `
-                    <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${ttInfo.id}">
-                        <div class="chat-tiktok-toolbar">
-                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${ttInfo.id}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
-                                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+            const videoId = (ttInfo.type === 'id') ? ttInfo.id : (window.tiktokResolvedCache && window.tiktokResolvedCache[ttInfo.url]);
+            const dockId = videoId || `short-${ttInfo.shortCode}`;
+
+            return commentHtml + `
+                <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
+                    <div class="chat-tiktok-toolbar">
+                        <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
+                            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                        </button>
+                    </div>
+                    <div class="chat-tiktok-inner-box" id="tiktok-box-${dockId}">
+                        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#0f172a; color:#fff; gap:12px; padding:20px; text-align:center;">
+                            <i class="fa-brands fa-tiktok" style="font-size:3rem; color:#fe2c55;"></i>
+                            <b style="font-size:0.95rem; color:#fff;">Video TikTok</b>
+                            <button type="button" class="btn" style="background:#fe2c55; color:#fff; border-radius:20px; font-weight:800; padding:8px 20px; border:none; cursor:pointer;" onclick="loadLazyTikTokIframe('${dockId}', '${videoId || ''}', '${ttInfo.url || ''}')">
+                                <i class="fa-solid fa-play"></i> Xem video
                             </button>
                         </div>
-                        <div class="chat-tiktok-inner-box">
-                            <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${ttInfo.id}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen data-i18n-title="tooltip_tiktok_player" title="${t('tooltip_tiktok_player')}"></iframe>
-                        </div>
                     </div>
-                `;
-            } else if (ttInfo.type === 'short') {
-                const cachedId = window.tiktokResolvedCache && window.tiktokResolvedCache[ttInfo.url];
-                const dockId = cachedId || `short-${ttInfo.shortCode}`;
-
-                if (cachedId) {
-                    return commentHtml + `
-                        <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
-                            <div class="chat-tiktok-toolbar">
-                                <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
-                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-                                </button>
-                            </div>
-                            <div class="chat-tiktok-inner-box">
-                                <iframe class="chat-tiktok-iframe" src="https://www.tiktok.com/player/v1/${cachedId}" allow="fullscreen; autoplay; encrypted-media" allowfullscreen data-i18n-title="tooltip_tiktok_player" title="${t('tooltip_tiktok_player')}"></iframe>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Nếu chưa có trong cache -> Render khung chờ và kích hoạt giải mã link ngầm
-                setTimeout(() => resolveTikTokShortUrl(ttInfo.url, dockId), 60);
-
-                return commentHtml + `
-                    <div class="chat-tiktok-embed-wrap" id="tiktok-dock-${dockId}">
-                        <div class="chat-tiktok-toolbar">
-                            <button type="button" class="chat-tiktok-btn-tool" onclick="toggleTikTokMiniDock('tiktok-dock-${dockId}', this)" data-i18n-title="tooltip_pin_media" title="${t('tooltip_pin_media')}">
-                                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-                            </button>
-                        </div>
-                        <div class="chat-tiktok-inner-box" id="tiktok-box-${dockId}">
-                            <div id="tiktok-loader-${dockId}" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#fff; gap:12px; padding:20px; text-align:center;">
-                                <i class="fa-brands fa-tiktok fa-bounce" style="font-size:2.8rem; color:#fe2c55;"></i>
-                                <span style="font-size:0.85rem; color:#cbd5e1; font-weight:600;">Đang nạp video TikTok...</span>
-                            </div>
-                            <iframe class="chat-tiktok-iframe" id="tiktok-iframe-${dockId}" style="display:none;" allow="fullscreen; autoplay; encrypted-media" allowfullscreen data-i18n-title="tooltip_tiktok_player" title="${t('tooltip_tiktok_player')}"></iframe>
-                        </div>
-                    </div>
-                `;
-            }
+                </div>
+            `;
         }
 
             // 🎤 CYBER VOICE MESSAGE (CÓ WEB SPEECH API & TỰ ĐỘNG HỦY MỜ CHỮ THEO TIẾN TRÌNH ÂM THANH)
@@ -22084,6 +22144,12 @@
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('danv_theme', theme);
             showToast(`Đã chuyển sang chế độ ${theme === 'dark' ? 'Tối' : 'Sáng'}`, "success");
+        }
+
+        function handleToggleLowSpec(enabled) {
+            document.documentElement.setAttribute('data-lowspec', enabled ? 'true' : 'false');
+            localStorage.setItem('danv_lowspec', enabled ? 'true' : 'false');
+            showToast(enabled ? "Đã bật chế độ mượt mà cho máy yếu!" : "Đã tắt chế độ máy yếu, khôi phục hiệu ứng đầy đủ.", "success");
         }
 
         // ================= HỆ THỐNG GLOBAL CHAT (ADAPTIVE POLLING THÔNG MINH) =================
@@ -24210,28 +24276,74 @@
             window.addEventListener('touchcancel', stopHold);
         }
         
-        // Hiệu ứng ngôi sao & tia sáng đồng đội
+        // BỘ MÁY NỔ HẠT CANVAS SIÊU NHẸ & KHÔNG LÀM NẶNG CÂY DOM
+        function runCanvasParticleBurst(originX, originY, colors, particleCount = 35) {
+            // Nếu bật chế độ máy yếu thì bỏ qua luôn để tiết kiệm pin
+            if (document.documentElement.getAttribute('data-lowspec') === 'true') return;
+
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'fixed';
+            canvas.style.inset = '0';
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '999999';
+            document.body.appendChild(canvas);
+
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+
+            const particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 3;
+                particles.push({
+                    x: originX,
+                    y: originY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 5 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    decay: Math.random() * 0.02 + 0.015
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                let alive = false;
+                for (let p of particles) {
+                    if (p.alpha > 0) {
+                        alive = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.12; // Trọng lực nhẹ
+                        p.alpha -= p.decay;
+                        ctx.save();
+                        ctx.globalAlpha = Math.max(0, p.alpha);
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                }
+                if (alive) {
+                    requestAnimationFrame(animate);
+                } else {
+                    canvas.remove();
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // Hiệu ứng ngôi sao & tia sáng đồng đội (Sử dụng Canvas)
         function spawnLoveBurst(originX, originY) {
             const colors = ['#0284c7', '#38bdf8', '#10b981', '#f59e0b', '#6366f1'];
-            const icons = ['fa-star', 'fa-sparkles', 'fa-thumbs-up', 'fa-award'];
-            for (let i = 0; i < 35; i++) {
-                const p = document.createElement('i');
-                const randomIcon = icons[Math.floor(Math.random() * icons.length)] || 'fa-star';
-                p.className = `fa-solid ${randomIcon} wow-burst-particle`;
-                p.style.color = colors[Math.floor(Math.random() * colors.length)];
-                p.style.fontSize = `${Math.random() * 1.2 + 0.8}rem`;
-                p.style.filter = `drop-shadow(0 0 8px ${p.style.color})`;
-                p.style.left = `${originX}px`;
-                p.style.top = `${originY}px`;
-
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 200 + 80;
-                p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-                p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-
-                document.body.appendChild(p);
-                setTimeout(() => p.remove(), 1100);
-            }
+            runCanvasParticleBurst(originX, originY, colors, 35);
         }
 
         async function requestDailyPartner() {
@@ -24703,28 +24815,10 @@
             if (textEl) textEl.innerHTML = '<i class="fa-solid fa-fire fa-bounce"></i> <span>NHẤN GIỮ ĐỂ TRUYỀN WOW</span>';
         }
 
-        // PHÓNG TIA SÁNG BÙNG NỔ NĂNG LƯỢNG WOW (CONFETTI / PARTICLE BURST)
+        // PHÓNG TIA SÁNG BÙNG NỔ NĂNG LƯỢNG WOW (Sử dụng Canvas)
         function spawnWOWEnergyBurst(originX, originY) {
             const colors = ['#f59e0b', '#ea580c', '#10b981', '#3b82f6', '#ec4899', '#fbbf24'];
-            for (let i = 0; i < 40; i++) {
-                const p = document.createElement('div');
-                p.className = 'wow-burst-particle';
-                const size = Math.random() * 12 + 6;
-                p.style.width = `${size}px`;
-                p.style.height = `${size}px`;
-                p.style.background = colors[Math.floor(Math.random() * colors.length)];
-                p.style.boxShadow = `0 0 12px ${p.style.background}`;
-                p.style.left = `${originX}px`;
-                p.style.top = `${originY}px`;
-
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 260 + 80;
-                p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-                p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-
-                document.body.appendChild(p);
-                setTimeout(() => p.remove(), 1100);
-            }
+            runCanvasParticleBurst(originX, originY, colors, 40);
         }
 
         async function executeTipDispatch() {
