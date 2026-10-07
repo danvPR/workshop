@@ -12860,6 +12860,7 @@
         let homeSearchQuery = "";
         let homeSortMode = "foryou";
         let homeHasMore = false;
+        let homeForYouSeed = Math.floor(Math.random() * 999999); // Seed trộn mảng
         const HOME_ITEMS_PER_PAGE = 16; // Tải 4 dòng (mỗi dòng 4 dự án tùy màn hình)
 
         // --- Assets Store State ---
@@ -14359,9 +14360,12 @@
             }
 
             try { 
-                // Thêm &_t=Date.now() để ép trình duyệt luôn gọi dữ liệu xáo trộn mới nhất từ Worker
-                let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}&_t=${Date.now()}`;
+                let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
                 if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                
+                // Cấu hình Cache theo yêu cầu: Recent bỏ Cache, ForYou dùng Seed ngẫu nhiên (có cache theo seed), các tab khác dùng Cache trình duyệt
+                if (homeSortMode === "recent") url += `&_t=${Date.now()}`;
+                if (homeSortMode === "foryou") url += `&seed=${homeForYouSeed}`;
                 
                 const res = await (await fetch(url)).json();
                 
@@ -14590,6 +14594,8 @@
             const icon = btn.querySelector('i');
             if (icon) icon.classList.add('fa-spin');
             
+            // Đổi Seed để xáo trộn lại toàn bộ danh sách Đề xuất ngẫu nhiên
+            homeForYouSeed = Math.floor(Math.random() * 999999);
             await loadProjects(false);
             
             // Mở khóa cooldown sau 3 giây và tắt xoay icon
