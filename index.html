@@ -12456,6 +12456,55 @@
         </div>
     </div>
 
+    
+
+    <!-- MODAL XÁC NHẬN CHIA SẺ GAME VÀO KÊNH GIAO LƯU -->
+    <div class="modal-overlay" id="shareGamePreviewModal">
+        <div class="modal" style="max-width: 440px; border-radius: 22px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.25);">
+            <div class="modal-header" style="background: linear-gradient(135deg, rgba(13, 165, 122, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); padding: 16px 20px;">
+                <span style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; color: var(--text-title);">
+                    <i class="fa-solid fa-share-nodes" style="color: var(--primary);"></i> Chia Sẻ Vào Kênh Giao Lưu
+                </span>
+                <button class="btn-close" onclick="closeModal('shareGamePreviewModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0; line-height: 1.45;">
+                    Bạn chuẩn bị chia sẻ thẻ tác phẩm này lên Kênh Giao Lưu để mọi người cùng trải nghiệm:
+                </p>
+
+                <!-- KHUNG PREVIEW THẺ GAME -->
+                <div style="background: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
+                    <div style="width: 100%; aspect-ratio: 16 / 9; background: #0f172a; position: relative; overflow: hidden;">
+                        <img id="sharePreviewThumb" src="" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
+                        <span style="position: absolute; top: 8px; left: 8px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(6px); color: #10b981; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.15);">
+                            <i class="fa-solid fa-gamepad"></i> GAME
+                        </span>
+                    </div>
+                    <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+                        <div id="sharePreviewTitle" style="font-weight: 900; font-size: 1rem; color: var(--text-title); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">
+                            Bởi <b id="sharePreviewAuthor" style="color: var(--primary);">@author</b>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--border-color);">
+                            <span><i class="fa-solid fa-play" style="color: #3b82f6;"></i> <span id="sharePreviewViews">0</span> lượt chơi</span>
+                            <span><i class="fa-solid fa-heart" style="color: #ff4c4c;"></i> <span id="sharePreviewLikes">0</span> thích</span>
+                            <span><i class="fa-solid fa-star" style="color: #f5b041;"></i> <span id="sharePreviewStars">0</span> sao</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 4px;">
+                    <button type="button" class="btn" style="flex: 1; padding: 11px; border-radius: 12px; font-weight: 700; justify-content: center;" onclick="closeModal('shareGamePreviewModal')">
+                        Hủy
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmShareGameToChat" style="flex: 1.6; padding: 11px; border-radius: 12px; font-weight: 800; justify-content: center; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 4px 14px rgba(13, 165, 122, 0.3);" onclick="executeConfirmShareGameToChat()">
+                        <i class="fa-solid fa-paper-plane"></i> <span>Xác nhận chia sẻ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL CHIA SẺ -->
     <div class="modal-overlay" id="shareModal">
         <div class="modal" style="max-width:400px;">
@@ -22680,7 +22729,7 @@
                             </div>
                         </div>
                         <div class="chat-trending-actions">
-                            <button type="button" class="chat-trending-btn" onclick="quickShareGameToChat('${pid}')" title="Chia sẻ thẻ game vào phòng chat">
+                            <button type="button" class="chat-trending-btn" onclick="openShareGameToChatModal('${pid}')" title="Chia sẻ thẻ game vào phòng chat">
                                 <i class="fa-solid fa-share-nodes"></i>
                             </button>
                             <a href="/projects/${pid}" class="chat-trending-btn" title="Chơi game">
@@ -22692,25 +22741,90 @@
             }).join('');
         }
 
-        // Chia sẻ nhanh game từ thanh bên vào ô chat
-        function quickShareGameToChat(pid) {
-            const p = allProjects.find(item => (item.projectId === pid || item.fileId === pid));
-            if (!p) return;
+        // Mở popup preview game và xác nhận chia sẻ trực tiếp vào kênh giao lưu
+        let pendingShareGameObj = null;
 
+        async function openShareGameToChatModal(pid) {
+            if (!currentUser) return openModal('loginModal');
+
+            let p = allProjects.find(item => (item.projectId === pid || item.fileId === pid));
+            if (!p) {
+                try {
+                    const res = await (await fetch(`${WORKER_URL}/api/projects?id=${encodeURIComponent(pid)}&limit=1`)).json();
+                    if (res && res.projects && res.projects[0]) {
+                        p = res.projects[0];
+                        allProjects.push(p);
+                    }
+                } catch(e) {}
+            }
+
+            if (!p) return showToast("Không tìm thấy thông tin tác phẩm!", "error");
+            pendingShareGameObj = p;
+
+            // Đổ dữ liệu vào popup preview
+            const thumbSrc = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+            document.getElementById('sharePreviewThumb').src = thumbSrc;
+            document.getElementById('sharePreviewTitle').innerText = p.title || "Tác phẩm";
+            document.getElementById('sharePreviewAuthor').innerText = `@${p.author || "Cộng đồng"}`;
+            document.getElementById('sharePreviewViews').innerText = p.views || 0;
+            document.getElementById('sharePreviewLikes').innerText = (p.likes || []).length;
+            document.getElementById('sharePreviewStars').innerText = (p.stars || []).length;
+
+            const btnConfirm = document.getElementById('btnConfirmShareGameToChat');
+            if (btnConfirm) {
+                btnConfirm.disabled = false;
+                btnConfirm.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Xác nhận chia sẻ</span>';
+            }
+
+            openModal('shareGamePreviewModal');
+        }
+
+        async function executeConfirmShareGameToChat() {
+            if (!currentUser) return openModal('loginModal');
+            if (!pendingShareGameObj) return;
+
+            const btn = document.getElementById('btnConfirmShareGameToChat');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang chia sẻ...</span>';
+            }
+
+            const p = pendingShareGameObj;
+            const pid = p.projectId || p.fileId;
             const pTitle = encodeURIComponent(p.title || "Tác phẩm");
-            const pAuthor = encodeURIComponent(p.author || "Cộng đồng");
+            const pAuthor = encodeURIComponent(p.author || currentUser.username);
             const pThumb = p.thumbId || "";
             const pViews = p.views || 0;
             const pLikes = (p.likes || []).length;
             const pStars = (p.stars || []).length;
 
             const shareTag = `[DANV_PROJECT_SHARE:${pid}:${pTitle}:${pAuthor}:${pThumb}:${pViews}:${pLikes}:${pStars}]`;
+            const payload = { text: shareTag, replyTo: null, imageId: null };
 
-            const input = document.getElementById('commentTextChat');
-            if (input) {
-                input.value = (input.value ? input.value + ' ' : '') + shareTag;
-                input.focus();
-                showToast("Đã chèn thẻ tác phẩm vào ô chat! Bấm gửi để chia sẻ.", "info");
+            try {
+                const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+                if (res && res.success) {
+                    showToast("Shared the work to the Global Channel.", "success");
+                    closeModal('shareGamePreviewModal');
+                    pendingShareGameObj = null;
+
+                    // Cập nhật lại khung chat và cuộn xuống dưới cùng
+                    lastChatJSONStr = "";
+                    await loadGlobalChat(true);
+                } else {
+                    showToast((res && res.error) ? res.error : "Unable to share the project", "error");
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = origHtml;
+                    }
+                }
+            } catch(err) {
+                showToast("Connection error when sharing the projects.", "error");
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
             }
         }
 
