@@ -3524,19 +3524,39 @@
             grid-template-columns: 1fr;
         }
 
+        /* LỚP PHỦ DRAWER MOBILE MẶC ĐỊNH ẨN HOÀN TOÀN TRÊN DESKTOP */
+        .chat-sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 10004;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .chat-sidebar-backdrop.show {
+            display: block;
+            opacity: 1;
+        }
+
         .chat-main-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(229, 231, 235, 0.8);
             border-radius: 24px;
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             overflow: hidden;
             position: relative;
         }
         [data-theme="dark"] .chat-main-card {
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+            background: rgba(31, 41, 55, 0.55);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.25);
             border-color: rgba(255, 255, 255, 0.08);
         }
 
@@ -3547,14 +3567,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.55);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             flex-shrink: 0;
             z-index: 20;
         }
         [data-theme="dark"] .chat-header-bar {
-            background: rgba(31, 41, 55, 0.85);
+            background: rgba(31, 41, 55, 0.5);
         }
         .chat-header-left {
             display: flex;
@@ -3647,7 +3667,7 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
-            background: var(--bg-body);
+            background: transparent;
             scrollbar-width: thin;
             scrollbar-color: var(--border-color) transparent;
         }
@@ -3999,10 +4019,15 @@
         /* 5. Khung Soạn Thảo Siêu Gọn (Zen Composer) */
         .chat-input-box {
             padding: 16px 24px 24px 24px;
-            background: var(--bg-panel);
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-top: 1px solid var(--border-color);
             flex-shrink: 0;
             z-index: 20;
+        }
+        [data-theme="dark"] .chat-input-box {
+            background: rgba(31, 41, 55, 0.4);
         }
         .chat-composer-dock {
             background: var(--bg-input);
@@ -4153,8 +4178,10 @@
         }
 
         .chat-side-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
             border-radius: 18px;
             padding: 16px;
             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
@@ -4167,6 +4194,7 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
         }
         [data-theme="dark"] .chat-side-card {
+            background: rgba(31, 41, 55, 0.55);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
             border-color: rgba(255, 255, 255, 0.08);
         }
@@ -9172,137 +9200,11 @@
     </style>
     <!-- TRANG GLOBAL CHAT (BỐ CỤC MODERN COMMUNITY STREAM) -->
     <div id="chatView" class="page-view chat-page-wrapper" style="max-width: 1220px; width: 100%; margin: 0 auto;">
+        <!-- LỚP PHỦ MỜ KHI MỞ DRAWER TRÊN MOBILE (ĐẶT NGOÀI GRID ĐỂ KHÔNG LỖI CỘT MÁY TÍNH) -->
+        <div id="chatSidebarBackdrop" class="chat-sidebar-backdrop" onclick="closeChatSidebarMobile()"></div>
         <div class="chat-layout-grid" id="chatLayoutGrid">
             
-            <!-- CỘT CHÍNH: KHUNG TRÒ CHUYỆN -->
-            <div class="chat-main-card">
-                <!-- Header phòng chat -->
-                <div class="chat-header-bar">
-                    <div class="chat-header-left">
-                        <div class="chat-header-icon">
-                            <i class="fa-solid fa-comments"></i>
-                        </div>
-                        <div>
-                            <h3 class="chat-header-title" data-i18n="chat_title">Kênh Giao Lưu Toàn Cầu</h3>
-                            <div class="chat-header-sub" id="chatHeaderStatusWrap">
-                                <span class="chat-online-pulse-pill" id="chatHeaderOnlineBadge">
-                                    <span class="chat-online-dot"></span> <span id="chatHeaderOnlineCountText">1 trực tuyến</span>
-                                </span>
-                                <span>•</span>
-                                <span data-i18n="chat_subtitle">Thảo luận cùng cộng đồng</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <button type="button" class="btn" id="btnToggleChatSidebar" onclick="toggleChatSidebar()" data-i18n-title="chat_toggle_sidebar_title" title="Ẩn/Hiện cột tiện ích bên phải" style="padding: 6px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700;">
-                            <i class="fa-solid fa-table-columns"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Thanh thông báo ghim đỉnh phòng chat -->
-                <div class="chat-pinned-banner" id="chatPinnedBanner">
-                    <div style="display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0;">
-                        <i class="fa-solid fa-bullhorn" style="color:var(--primary); font-size: 0.95rem;"></i>
-                        <span style="line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="chat_pinned_notice">Chào mừng bạn đến với <b>DANVworkshop</b>! Hãy giao lưu văn minh và tôn trọng bạn bè lập trình.</span>
-                    </div>
-                    <button type="button" class="chat-pinned-close-btn" onclick="dismissChatPinnedBanner()" data-i18n-title="chat_dismiss_notice_title" title="Đóng thông báo">&times;</button>
-                </div>
-                
-                <!-- Danh sách tin nhắn Stream -->
-                <div id="chatMessageList">
-                    <div style="text-align:center; color:var(--text-muted); padding:35px;"><i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_loading">Đang tải dữ liệu chat...</span></div>
-                </div>
-                
-                <!-- Nút nhảy xuống tin nhắn mới nổi bật -->
-                <button type="button" id="btnChatJumpBottom" class="chat-jump-bottom-btn" onclick="scrollChatToBottom(true)">
-                    <i class="fa-solid fa-arrow-down"></i> <span data-i18n="chat_new_message">Có tin nhắn mới</span>
-                </button>
-
-                <!-- Khu vực nhập tin nhắn (Zen Composer) -->
-                <div class="chat-input-box">
-                    <div id="replyBannerChat" style="display:none; background:rgba(13, 165, 122, 0.08); border-left:3px solid var(--primary); padding:6px 12px; border-radius:8px; font-size:0.78rem; margin-bottom:8px; font-weight:700; color:var(--primary); align-items:center; justify-content:space-between;">
-                        <span><i class="fa-solid fa-reply"></i> <span data-i18n="chat_replying">Đang trả lời</span> <b id="replyUserLabelChat" style="color:var(--text-title);"></b></span>
-                        <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-muted); padding:2px;" onclick="cancelReply('chat')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
-                    </div>
-
-                    <!-- Thanh nhận diện giọng nói khi ghi âm -->
-                    <div id="voiceRecordingLiveBar" class="voice-recording-live-bar">
-                        <div class="voice-rec-pill">
-                            <span class="voice-rec-dot"></span>
-                            <span data-i18n="chat_recording_recognition">Đang ghi âm & Nhận diện</span>
-                        </div>
-                        <div class="voice-rec-preview-text" id="voiceLiveTranscriptPreview" data-i18n="chat_listening">Đang lắng nghe...</div>
-                        <button type="button" class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem; border-radius:12px;" onclick="cancelVoiceRecord()" data-i18n="common_cancel">Hủy</button>
-                    </div>
-
-                    <div id="commentImgPreviewChat" class="comment-img-preview-box">
-                        <img id="commentImgPreviewSrcChat" src="" alt="preview">
-                        <span style="font-size:0.78rem; color:var(--text-main);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('chat')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
-                    </div>
-
-                    <!-- Gợi ý @mention -->
-                    <div id="chatMentionDropdown" style="display:none; margin-bottom: 8px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; box-shadow: 0 -8px 25px rgba(0,0,0,0.08); max-height: 200px; overflow-y: auto; padding: 6px;"></div>
-
-                    <form onsubmit="handlePostChat(event)" id="chatForm" style="display:none;">
-                        <div class="chat-composer-dock">
-                            <textarea id="commentTextChat" class="chat-input-textarea" rows="1" data-i18n-ph="chat_input_ph" placeholder="Nhập tin nhắn giao lưu..." autocomplete="off"></textarea>
-                            
-                            <div class="chat-composer-bottom-bar">
-                                <div class="chat-composer-tools-left">
-                                    <label for="commentImgUploadChat" class="chat-dock-icon-btn" data-i18n-title="chat_attach_img_title" title="Đính kèm hình ảnh (PNG, JPG, WebP, GIF, APNG, SVG)">
-                                        <i class="fa-solid fa-image" style="color: #0284c7;"></i>
-                                    </label>
-                                    <input type="file" id="commentImgUploadChat" accept="image/png, image/jpeg, image/webp, image/gif, image/apng, image/svg+xml, .svg" style="display:none;" onchange="handleCommentImagePreview(this, 'chat')">
-
-                                    <button type="button" class="chat-dock-icon-btn" onclick="openKlipyModal('chat')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
-                                        <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
-                                    </button>
-
-                                    <button type="button" class="chat-dock-icon-btn" onclick="toggleEmojiPicker('chat', event)" data-i18n-title="tooltip_emoji" title="Chèn biểu tượng Emoji">
-                                        <i class="fa-regular fa-face-smile" style="color: #f59e0b;"></i>
-                                    </button>
-
-                                    <button type="button" id="btnCreatePollChat" class="chat-dock-icon-btn" style="display:none;" onclick="openCreatePollModal()" data-i18n-title="chat_create_poll_title" title="Tạo bình chọn">
-                                        <i class="fa-solid fa-square-poll-vertical" style="color: #ea580c;"></i>
-                                    </button>
-
-                                    <div style="width: 1px; height: 16px; background: var(--border-color); margin: 0 4px;"></div>
-
-                                    <button type="button" class="chat-beabea-dock-pill" onclick="quickMentionBeaBea()" data-i18n-title="chat_ask_beabea_title" title="Gõ nhanh @BeaBea (AI)">
-                                        <i class="fa-solid fa-robot"></i> <span data-i18n="chat_btn_beabea">Hỏi BeaBea</span>
-                                    </button>
-                                    <button type="button" class="chat-dock-icon-btn" onclick="quickAskBeaBeaIdea()" data-i18n-title="chat_idea_title" title="Gợi ý ý tưởng làm game" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #ea580c;">
-                                        <i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 4px;"></i> <span data-i18n="chat_btn_idea">Ý tưởng</span>
-                                    </button>
-                                </div>
-
-                                <div class="chat-composer-tools-right">
-                                    <span id="voiceRecordTimer" style="display:none; font-size:0.82rem; color:#ef4444; font-weight:900; margin-right:4px; font-family:monospace;">0:00</span>
-                                    <button type="button" id="btnVoiceChat" class="chat-dock-icon-btn" onclick="toggleVoiceRecord()" data-i18n-title="tooltip_voice_message" title="Gửi tin nhắn thoại">
-                                        <i class="fa-solid fa-microphone"></i>
-                                    </button>
-                                    <span class="chat-kbd-hint">Enter ↵</span>
-                                    <button type="submit" id="btnSubmitChat" class="chat-btn-send" data-i18n-title="chat_send_title" title="Gửi tin nhắn">
-                                        <i class="fa-solid fa-paper-plane"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div id="chatLoginPrompt" style="text-align:center; color:var(--text-muted); font-size:0.95rem; padding: 8px 0;">
-                        <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="chat_login_prompt" style="border-radius:16px; font-weight:800; padding:10px 22px;">Đăng nhập để tham gia trò chuyện</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- LỚP PHỦ MỜ KHI MỞ DRAWER TRÊN MOBILE -->
-            <div id="chatSidebarBackdrop" class="chat-sidebar-backdrop" onclick="closeChatSidebarMobile()"></div>
-
-            <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN MỚI (SLIDE DRAWER TRÊN MOBILE) -->
+                <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN MỚI (SLIDE DRAWER TRÊN MOBILE) -->
             <div class="chat-sidebar-col" id="chatSidebarCol">
                 
                 <!-- Header riêng khi mở trên điện thoại -->
