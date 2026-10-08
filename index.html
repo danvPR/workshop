@@ -4163,6 +4163,90 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.05);
         }
+
+        /* DANH SÁCH THÀNH VIÊN ONLINE TRONG CHAT */
+        .chat-online-user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 10px;
+            border-radius: 12px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .chat-online-user-item:hover {
+            border-color: var(--primary);
+            background: rgba(13, 165, 122, 0.08);
+            transform: translateX(3px);
+        }
+        .chat-online-user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+        }
+        .chat-online-user-avt-wrap {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-online-user-avt {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+        .chat-online-status-dot {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 1.5px solid var(--bg-panel);
+            box-shadow: 0 0 6px #10b981;
+        }
+        .chat-online-user-name {
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-online-user-tag {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-online-mention-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            opacity: 0.6;
+            transition: all 0.15s ease;
+        }
+        .chat-online-user-item:hover .chat-online-mention-btn {
+            opacity: 1;
+            color: var(--primary);
+        }
         .chat-side-title {
             font-size: 0.88rem;
             font-weight: 900;
@@ -8817,8 +8901,8 @@
                         <div>
                             <h3 class="chat-header-title" data-i18n="chat_title">Kênh Giao Lưu Toàn Cầu</h3>
                             <div class="chat-header-sub" id="chatHeaderStatusWrap">
-                                <span class="chat-online-pulse-pill">
-                                    <span class="chat-online-dot"></span> <span data-i18n="chat_online">Trực tuyến</span>
+                                <span class="chat-online-pulse-pill" id="chatHeaderOnlineBadge">
+                                    <span class="chat-online-dot"></span> <span id="chatHeaderOnlineCountText">1 trực tuyến</span>
                                 </span>
                                 <span>•</span>
                                 <span data-i18n="chat_subtitle">Thảo luận cùng cộng đồng</span>
@@ -8954,34 +9038,19 @@
                     </div>
                 </div>
 
-                <!-- 2. BeaBea AI Studio: Mẫu câu hỏi 1 chạm -->
-                <div class="chat-side-card" style="border-top: 3px solid #ec4899;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <div style="position: relative; width: 38px; height: 38px; flex-shrink: 0;">
-                            <img src="https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #f472b6;">
-                            <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background: #10b981; border: 1.5px solid var(--bg-panel);"></span>
-                        </div>
-                        <div style="min-width: 0; flex: 1;">
-                            <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-title); display: flex; align-items: center; gap: 6px;">
-                                <span>BeaBea AI</span> <span style="font-size: 0.65rem; background: #fce7f3; color: #ec4899; padding: 1px 5px; border-radius: 6px; font-weight: 800;" data-i18n="chat_sidebar_prompt_label">PROMPT</span>
-                            </div>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="chat_sidebar_helper">Trợ thủ lập trình 1 chạm</span>
-                        </div>
+                <!-- 2. Danh sách thành viên đang kết nối (Realtime Presence) -->
+                <div class="chat-side-card" style="border-top: 3px solid #10b981; display: flex; flex-direction: column; max-height: 380px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                            <span class="chat-online-dot"></span> <span>Đang kết nối</span>
+                        </span>
+                        <span id="chatOnlineUsersCount" style="font-size: 0.75rem; font-weight: 800; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 12px;">0 online</span>
                     </div>
                     
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_idea'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-lightbulb" style="color: #f59e0b; width: 16px;"></i> <span data-i18n="chat_sidebar_idea">🎲 Ý tưởng làm game độc lạ</span>
-                        </button>
-                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_debug'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-bug" style="color: #0284c7; width: 16px;"></i> <span data-i18n="chat_sidebar_debug">🐞 Hỏi thuật toán & sửa lỗi code</span>
-                        </button>
-                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_story'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-book-sparkles" style="color: #8b5cf6; width: 16px;"></i> <span data-i18n="chat_sidebar_story">📜 Viết cốt truyện & hội thoại</span>
-                        </button>
-                        <button type="button" class="btn" onclick="insertChatPrompt(t('chat_prompt_quiz'))" style="font-size: 0.78rem; padding: 7px 10px; justify-content: flex-start; border-radius: 10px; background: var(--bg-panel); border: 1px solid var(--border-color); text-align: left;">
-                            <i class="fa-solid fa-brain" style="color: #ec4899; width: 16px;"></i> <span data-i18n="chat_sidebar_quiz">🎯 Đố vui trắc nghiệm mini</span>
-                        </button>
+                    <div id="chatOnlineUsersList" style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; padding-right: 2px; flex: 1;">
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px 0;">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ...
+                        </div>
                     </div>
                 </div>
 
@@ -22169,6 +22238,91 @@
         var supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
         var globalChatChannel = null;
 
+        // BỘ RENDER VÀ ĐỒNG BỘ DANH SÁCH ONLINE REALTIME
+        function renderOnlineUsersList(presenceState) {
+            const listContainer = document.getElementById('chatOnlineUsersList');
+            const countBadge = document.getElementById('chatOnlineUsersCount');
+            const headerCountText = document.getElementById('chatHeaderOnlineCountText');
+            if (!listContainer) return;
+
+            const userMap = new Map();
+
+            // Duyệt và khử trùng lặp (trường hợp 1 tài khoản mở nhiều tab)
+            Object.values(presenceState || {}).forEach(presences => {
+                (presences || []).forEach(p => {
+                    if (p && p.username) {
+                        const key = p.username.toLowerCase();
+                        if (!userMap.has(key)) {
+                            userMap.set(key, p);
+                        }
+                    }
+                });
+            });
+
+            const onlineUsers = Array.from(userMap.values());
+            const totalCount = onlineUsers.length;
+
+            if (countBadge) countBadge.innerText = `${totalCount} online`;
+            if (headerCountText) headerCountText.innerText = `${totalCount} trực tuyến`;
+
+            if (totalCount === 0) {
+                listContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px 0;">Chưa có ai kết nối</div>';
+                return;
+            }
+
+            // Sắp xếp: Admin lên đầu -> Thành viên đăng nhập -> Khách vãng lai
+            onlineUsers.sort((a, b) => {
+                if (a.role === 'admin' && b.role !== 'admin') return -1;
+                if (b.role === 'admin' && a.role !== 'admin') return 1;
+                if (!a.isGuest && b.isGuest) return -1;
+                if (a.isGuest && !b.isGuest) return 1;
+                return a.displayName.localeCompare(b.displayName);
+            });
+
+            listContainer.innerHTML = onlineUsers.map(u => {
+                const isMe = currentUser && u.username.toLowerCase() === currentUser.username.toLowerCase();
+                const avtUrl = u.avt ? getAvtUrl(u.avt) : DEFAULT_AVATAR;
+                const safeName = escapeHtml(u.displayName || u.username);
+                const safeUser = escapeHtml(u.username);
+                const isGuest = !!u.isGuest;
+
+                return `
+                    <div class="chat-online-user-item" onclick="quickMentionOnlineUser('${isGuest ? '' : safeUser}')" title="${isGuest ? 'Khách vãng lai' : `@${safeUser} (Bấm để nhắc tên)`}">
+                        <div class="chat-online-user-info">
+                            <div class="chat-online-user-avt-wrap">
+                                <img src="${avtUrl}" class="chat-online-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                                ${u.frame ? `<img src="${u.frame}" class="avt-frame" style="${getFrameInlineStyle(u.frame)}">` : ''}
+                                <span class="chat-online-status-dot"></span>
+                            </div>
+                            <div style="min-width: 0; flex: 1;">
+                                <div class="chat-online-user-name">${safeName}${isMe ? ' <span style="font-size:0.7rem; color:var(--primary);">(Bạn)</span>' : ''}</div>
+                                <div class="chat-online-user-tag">${isGuest ? 'Khách ghé thăm' : `@${safeUser}`}</div>
+                            </div>
+                        </div>
+                        ${!isGuest ? `
+                            <button type="button" class="chat-online-mention-btn" onclick="event.stopPropagation(); quickMentionOnlineUser('${safeUser}')" title="Nhắc đến @${safeUser}">
+                                <i class="fa-solid fa-at"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Bấm vào người online để điền nhanh @tên vào khung chat
+        function quickMentionOnlineUser(username) {
+            if (!username) return;
+            const input = document.getElementById('commentTextChat');
+            if (!input) return;
+            const mentionStr = `@${username} `;
+            if (!input.value.includes(mentionStr)) {
+                input.value = mentionStr + input.value;
+            }
+            input.focus();
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        }
+
         function connectGlobalChatWebSocket() {
             if (!supabaseClient) {
                 console.error("Supabase client chưa được tải!");
@@ -22178,10 +22332,23 @@
             // Nếu đang kết nối rồi thì bỏ qua
             if (globalChatChannel && globalChatChannel.state === 'joined') return;
 
-            // Lắng nghe kênh Broadcast từ Backend
-            globalChatChannel = supabaseClient.channel('realtime:global_chat');
+            // Đăng ký Presence Key để tránh trùng lặp
+            const presenceKey = currentUser 
+                ? currentUser.username.toLowerCase() 
+                : ('guest_' + Math.random().toString(36).substring(2, 8));
 
+            globalChatChannel = supabaseClient.channel('realtime:global_chat', {
+                config: {
+                    presence: { key: presenceKey }
+                }
+            });
+
+            // Lắng nghe sự kiện đồng bộ danh sách online qua WebSocket
             globalChatChannel
+                .on('presence', { event: 'sync' }, () => {
+                    const state = globalChatChannel.presenceState();
+                    renderOnlineUsersList(state);
+                })
                 .on('broadcast', { event: '*' }, (payload) => {
                     try {
                         const eventType = payload.event;
@@ -22288,7 +22455,21 @@
                         }
                     } catch(e) { console.error("Lỗi đồng bộ Realtime:", e); }
                 })
-                .subscribe((status) => {
+                .subscribe(async (status) => {
+                    if (status === 'SUBSCRIBED') {
+                        // Gửi danh tính của mình vào Presence phòng chat
+                        const myTrackData = {
+                            username: currentUser ? currentUser.username : ('guest_' + Math.random().toString(36).substring(2, 6)),
+                            displayName: currentUser ? (currentUser.displayName || currentUser.username) : 'Khách vãng lai',
+                            avt: currentUser ? (currentUser.avt || '') : '',
+                            frame: currentUser ? (currentUser.frame || '') : '',
+                            role: currentUser ? (currentUser.role || 'user') : 'guest',
+                            isGuest: !currentUser
+                        };
+                        try {
+                            await globalChatChannel.track(myTrackData);
+                        } catch(trackErr) {}
+                    }
                     if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
                         // Tự động kết nối lại sau 3 giây nếu rớt mạng
                         if (window.location.hash.split('?')[0] === '#chat') {
