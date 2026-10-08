@@ -4492,14 +4492,62 @@
             transform: scale(1.08);
         }
 
-        /* Responsive Mobile View - Full screen edge-to-edge chat */
+        /* Responsive Mobile View - Full screen edge-to-edge chat & Off-canvas Drawer */
         @media (max-width: 960px) {
             .chat-layout-grid { 
                 grid-template-columns: 1fr !important; 
                 height: calc(100dvh - 120px); /* Adjust for mobile nav */
                 gap: 0; 
+                position: relative;
+                overflow: hidden;
             }
-            .chat-sidebar-col { display: none !important; }
+            /* BIẾN PANEL PHẢI THÀNH SLIDE-OUT DRAWER TRÊN MOBILE */
+            .chat-sidebar-col { 
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 320px;
+                max-width: 86vw;
+                height: 100dvh;
+                background: var(--bg-panel);
+                border-left: 1px solid var(--border-color);
+                box-shadow: -10px 0 35px rgba(0, 0, 0, 0.35);
+                z-index: 10005;
+                padding: 16px;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                transform: translateX(105%);
+                transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .chat-sidebar-col.mobile-open {
+                transform: translateX(0);
+            }
+            .chat-sidebar-backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.55);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                z-index: 10004;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+            }
+            .chat-sidebar-backdrop.show {
+                display: block;
+                opacity: 1;
+            }
+            .chat-sidebar-mobile-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 12px;
+                margin-bottom: 6px;
+                border-bottom: 1px solid var(--border-color);
+                flex-shrink: 0;
+            }
             .chat-kbd-hint { display: none; }
             .chat-main-card { border-radius: 0; border-left: none; border-right: none; border-top: none; }
             .chat-header-bar { padding: 12px 16px; }
@@ -4508,6 +4556,9 @@
             .chat-bubble { max-width: 90%; font-size: 0.94rem; padding: 10px 14px; }
             .chat-msg-row { gap: 10px; }
             .chat-msg-row .avt-circle { width: 34px; height: 34px; }
+        }
+        .chat-sidebar-mobile-header {
+            display: none;
         }
 
         /* AVATAR FRAME & WOW SHOP CSS */
@@ -9248,9 +9299,21 @@
                 </div>
             </div>
 
-            <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN MỚI -->
-            <div class="chat-sidebar-col">
+            <!-- LỚP PHỦ MỜ KHI MỞ DRAWER TRÊN MOBILE -->
+            <div id="chatSidebarBackdrop" class="chat-sidebar-backdrop" onclick="closeChatSidebarMobile()"></div>
+
+            <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN MỚI (SLIDE DRAWER TRÊN MOBILE) -->
+            <div class="chat-sidebar-col" id="chatSidebarCol">
                 
+                <!-- Header riêng khi mở trên điện thoại -->
+                <div class="chat-sidebar-mobile-header">
+                    <div style="font-weight: 900; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-table-columns" style="color: var(--primary);"></i>
+                        <span>Tiện Ích & Thành Viên</span>
+                    </div>
+                    <button type="button" class="btn-close" onclick="closeChatSidebarMobile()" title="Đóng panel">&times;</button>
+                </div>
+
                 <!-- 1. Trạm Năng Lượng & Cá Nhân Hóa (Dynamic HUD) -->
                 <div class="chat-side-card" id="chatSideUserHUDCard">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -22831,6 +22894,10 @@
         // Bấm vào người online để điền nhanh @tên vào khung chat
         function quickMentionOnlineUser(username) {
             if (!username) return;
+            // Tự động đóng sidebar drawer nếu đang mở trên điện thoại
+            if (window.innerWidth <= 960) {
+                closeChatSidebarMobile();
+            }
             const input = document.getElementById('commentTextChat');
             if (!input) return;
             const mentionStr = `@${username} `;
@@ -23031,10 +23098,26 @@
 
         // ================= THAO TÁC TIỆN ÍCH GIAO DIỆN CHAT =================
         function toggleChatSidebar() {
-            const grid = document.getElementById('chatLayoutGrid');
-            if (!grid) return;
-            const isCollapsed = grid.classList.toggle('sidebar-collapsed');
-            localStorage.setItem('danv_chat_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+            const isMobile = window.innerWidth <= 960;
+            if (isMobile) {
+                const sidebar = document.getElementById('chatSidebarCol');
+                const backdrop = document.getElementById('chatSidebarBackdrop');
+                if (!sidebar) return;
+                const isOpen = sidebar.classList.toggle('mobile-open');
+                if (backdrop) backdrop.classList.toggle('show', isOpen);
+            } else {
+                const grid = document.getElementById('chatLayoutGrid');
+                if (!grid) return;
+                const isCollapsed = grid.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('danv_chat_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+            }
+        }
+
+        function closeChatSidebarMobile() {
+            const sidebar = document.getElementById('chatSidebarCol');
+            const backdrop = document.getElementById('chatSidebarBackdrop');
+            if (sidebar) sidebar.classList.remove('mobile-open');
+            if (backdrop) backdrop.classList.remove('show');
         }
 
         function dismissChatPinnedBanner() {
