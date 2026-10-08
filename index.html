@@ -14718,9 +14718,13 @@
         }
 
         function changeHomeSort(mode) {
+            // Nếu người dùng bấm vào tab Đề xuất, tự động đổi seed để xáo trộn danh sách mới luôn
+            if (mode === 'foryou') {
+                homeForYouSeed = Math.floor(Math.random() * 999999);
+            }
+
             homeSortMode = mode;
             
-            // Ẩn/Hiện nút Refresh ngẫu nhiên tùy theo việc có đang ở tab Đề xuất hay không
             const btnRefresh = document.getElementById('btnRefreshForYou');
             if (btnRefresh) {
                 btnRefresh.style.display = (mode === 'foryou') ? 'inline-flex' : 'none';
@@ -22149,7 +22153,7 @@
         function handleToggleLowSpec(enabled) {
             document.documentElement.setAttribute('data-lowspec', enabled ? 'true' : 'false');
             localStorage.setItem('danv_lowspec', enabled ? 'true' : 'false');
-            showToast(enabled ? "Đã bật chế độ mượt mà cho máy yếu!" : "Đã tắt chế độ máy yếu, khôi phục hiệu ứng đầy đủ.", "success");
+            showToast(enabled ? "I've enabled lite mode for low-end devices." : "Low-performance mode disabled; full effects restored.", "success");
         }
 
         // ================= HỆ THỐNG GLOBAL CHAT (ADAPTIVE POLLING THÔNG MINH) =================
