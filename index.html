@@ -4135,64 +4135,228 @@
             box-shadow: 0 6px 18px rgba(13, 165, 122, 0.45);
         }
 
-        /* 6. Sidebar Cột Phải Hiện Đại */
+        /* 6. Sidebar Cột Phải Hiện Đại - Cyber Stream Redesign */
         .chat-sidebar-col {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
             height: 100%;
             overflow-y: auto;
-            scrollbar-width: none;
-            padding-right: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+            padding-right: 4px;
         }
-        .chat-sidebar-col::-webkit-scrollbar { display: none; }
+        .chat-sidebar-col::-webkit-scrollbar { width: 5px; }
+        .chat-sidebar-col::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         .chat-layout-grid.sidebar-collapsed .chat-sidebar-col {
             display: none;
         }
 
         .chat-side-card {
-            background: var(--bg-secondary);
+            background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
         }
         .chat-side-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border-color: rgba(13, 165, 122, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="dark"] .chat-side-card {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
-        /* DANH SÁCH THÀNH VIÊN ONLINE TRONG CHAT */
+        .chat-side-title {
+            font-size: 0.84rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+
+        /* 1. Profile HUD Mini Card */
+        .chat-side-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            margin-bottom: 12px;
+        }
+        .chat-side-profile-avt-wrap {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-side-profile-avt {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            background: var(--bg-panel);
+        }
+        .chat-side-profile-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-side-profile-name {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.25;
+        }
+        .chat-side-profile-user {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .chat-side-balance-badge {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(234, 88, 12, 0.08) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 3px 10px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 900;
+            font-size: 0.88rem;
+            color: #d97706;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.1);
+        }
+        [data-theme="dark"] .chat-side-balance-badge { color: #fbbf24; }
+        .chat-side-balance-badge:hover {
+            transform: scale(1.04);
+            border-color: #ea580c;
+        }
+
+        .chat-side-quick-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .chat-side-pill-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-title);
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 8px 10px;
+            border-radius: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+            text-decoration: none;
+        }
+        .chat-side-pill-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-panel);
+            transform: translateY(-1px);
+        }
+
+        /* 2. Thành Viên Trực Tuyến & Thanh Lọc */
+        .chat-presence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .chat-presence-search {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .chat-presence-search input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 6px 10px 6px 30px;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s;
+        }
+        .chat-presence-search input:focus {
+            border-color: var(--primary);
+            background: var(--bg-panel);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
+        }
+        .chat-presence-search i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            pointer-events: none;
+        }
+
+        .chat-online-users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+        .chat-online-users-list::-webkit-scrollbar { width: 4px; }
+        .chat-online-users-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
         .chat-online-user-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            padding: 7px 10px;
+            padding: 6px 10px;
             border-radius: 12px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border: 1px solid transparent;
             cursor: pointer;
             transition: all 0.18s ease;
         }
         .chat-online-user-item:hover {
             border-color: var(--primary);
-            background: rgba(13, 165, 122, 0.08);
+            background: var(--bg-panel);
             transform: translateX(3px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
         }
         .chat-online-user-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
             min-width: 0;
             flex: 1;
         }
         .chat-online-user-avt-wrap {
             position: relative;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -4204,17 +4368,17 @@
             border-radius: 50%;
             object-fit: cover;
             border: 1.5px solid var(--border-color);
-            background: var(--bg-secondary);
+            background: var(--bg-panel);
         }
         .chat-online-status-dot {
             position: absolute;
             bottom: -1px;
             right: -1px;
-            width: 8px;
-            height: 8px;
+            width: 8.5px;
+            height: 8.5px;
             border-radius: 50%;
             background: #10b981;
-            border: 1.5px solid var(--bg-panel);
+            border: 2px solid var(--bg-panel);
             box-shadow: 0 0 6px #10b981;
         }
         .chat-online-user-name {
@@ -4224,6 +4388,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.25;
         }
         .chat-online-user-tag {
             font-size: 0.72rem;
@@ -4240,23 +4405,91 @@
             cursor: pointer;
             padding: 4px;
             border-radius: 6px;
-            opacity: 0.6;
+            opacity: 0.45;
             transition: all 0.15s ease;
         }
         .chat-online-user-item:hover .chat-online-mention-btn {
             opacity: 1;
             color: var(--primary);
         }
-        .chat-side-title {
-            font-size: 0.88rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
+
+        /* 3. Trending Games Widget */
+        .chat-trending-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .chat-trending-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-panel);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .chat-trending-thumb {
+            width: 58px;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0f172a;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .chat-trending-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .chat-trending-title {
+            font-size: 0.84rem;
+            font-weight: 800;
             color: var(--text-title);
-            margin-bottom: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-decoration: none;
+            line-height: 1.25;
+        }
+        .chat-trending-title:hover {
+            color: var(--primary);
+        }
+        .chat-trending-meta {
+            font-size: 0.72rem;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+        .chat-trending-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .chat-trending-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+        .chat-trending-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.08);
         }
 
         /* Responsive Mobile View - Full screen edge-to-edge chat */
@@ -9015,56 +9248,83 @@
                 </div>
             </div>
 
-            <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN -->
+            <!-- CỘT PHỤ (SIDEBAR): TRUNG TÂM TIỆN ÍCH THỰC CHIẾN MỚI -->
             <div class="chat-sidebar-col">
-                <!-- 1. Trạm Năng Lượng & Điểm Danh Nhanh -->
-                <div class="chat-side-card" style="border-top: 3px solid #f59e0b;">
+                
+                <!-- 1. Trạm Năng Lượng & Cá Nhân Hóa (Dynamic HUD) -->
+                <div class="chat-side-card" id="chatSideUserHUDCard">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
-                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span data-i18n="chat_sidebar_energy">Năng lượng của bạn</span>
+                        <span class="chat-side-title">
+                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span>Năng Lượng & Ví</span>
                         </span>
-                        <div class="WOW-balance-pill" onclick="openDailyRewardModal()" style="padding: 2px 8px; font-size: 0.8rem;" data-i18n-title="tooltip_daily_checkin" title="Mở điểm danh hàng ngày">
-                            <span class="wow-icon" style="font-size: 1rem;"></span>
+                        <div class="chat-side-balance-badge" onclick="openDailyRewardModal()" title="Nhấn để mở điểm danh & nạp WOW">
+                            <span class="wow-icon"></span>
                             <span id="chatSidebarWOWBalance">0</span>
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <button type="button" class="btn btn-primary" onclick="openDailyRewardModal()" style="padding: 7px 10px; font-size: 0.78rem; border-radius: 10px; justify-content: center; font-weight: 800;">
-                            <i class="fa-solid fa-calendar-check"></i> <span data-i18n="chat_sidebar_checkin">Điểm danh</span>
+
+                    <div id="chatSideUserProfileWrap">
+                        <!-- Render bởi updateChatSidebarProfile() -->
+                    </div>
+
+                    <div class="chat-side-quick-btns">
+                        <button type="button" class="chat-side-pill-btn" onclick="openDailyRewardModal()">
+                            <i class="fa-solid fa-calendar-check" style="color:#10b981;"></i> <span>Điểm danh</span>
                         </button>
-                        <button type="button" class="btn" onclick="openFrameShopModal()" style="padding: 7px 10px; font-size: 0.78rem; border-radius: 10px; justify-content: center; font-weight: 800; background: var(--bg-panel); border: 1px solid var(--border-color);">
-                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> <span data-i18n="chat_sidebar_chat_skin">Đổi Skin Chat</span>
+                        <button type="button" class="chat-side-pill-btn" onclick="openFrameShopModal()">
+                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> <span>Skin Chat</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 2. Danh sách thành viên đang kết nối (Realtime Presence) -->
-                <div class="chat-side-card" style="border-top: 3px solid #10b981; display: flex; flex-direction: column; max-height: 380px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                            <span class="chat-online-dot"></span> <span>Đang kết nối</span>
+                <!-- 2. Danh Sách Thành Viên Đang Kết Nối (Realtime Presence Hub) -->
+                <div class="chat-side-card" style="display: flex; flex-direction: column;">
+                    <div class="chat-presence-header">
+                        <span class="chat-side-title">
+                            <span class="chat-online-dot"></span> <span>Đang Kết Nối</span>
                         </span>
-                        <span id="chatOnlineUsersCount" style="font-size: 0.75rem; font-weight: 800; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 12px;">0 online</span>
+                        <span id="chatOnlineUsersCount" style="font-size: 0.74rem; font-weight: 800; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 12px;">0 online</span>
+                    </div>
+
+                    <!-- Thanh tìm kiếm nhanh thành viên đang online -->
+                    <div class="chat-presence-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="chatPresenceSearchInput" placeholder="Tìm thành viên online..." oninput="handlePresenceFilter(this.value)">
                     </div>
                     
-                    <div id="chatOnlineUsersList" style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; padding-right: 2px; flex: 1;">
-                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px 0;">
+                    <div id="chatOnlineUsersList" class="chat-online-users-list">
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;">
                             <i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ...
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Tác Phẩm Đang Hot Trong Cộng Đồng -->
-                <div class="chat-side-card" id="chatSidebarTrendingCard" style="border-top: 3px solid #10b981;">
-                    <div class="chat-side-title" style="margin-bottom: 8px;">
-                        <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span data-i18n="chat_sidebar_hot_games">Game Hot Cùng Trải Nghiệm</span>
+                <!-- 3. Tác Phẩm Hot Đang Chơi Nhiều (Trending Games Hub - Đã nạp dữ liệu động) -->
+                <div class="chat-side-card" id="chatSidebarTrendingCard">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span class="chat-side-title">
+                            <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span>Game Hot Cộng Đồng</span>
+                        </span>
+                        <a href="/#home" class="btn" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 10px; text-decoration: none;">Xem tất cả</a>
                     </div>
                     <div id="chatSidebarTrendingContent" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
-                            <i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_sidebar_loading_games">Đang tải tác phẩm hot...</span>
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 0;">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Đang quét game hot...
                         </div>
                     </div>
                 </div>
+
+                <!-- 4. Mẹo Nhanh Phòng Chat (Quick Tips) -->
+                <div class="chat-side-card" style="background: linear-gradient(135deg, rgba(13, 165, 122, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%); border-style: dashed;">
+                    <div style="font-size: 0.78rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-lightbulb"></i> <span>Mẹo Giao Lưu Nhanh</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+                        • Gõ <b>@BeaBea</b> để nhờ AI giải đáp thắc mắc hoặc gợi ý ý tưởng.<br>
+                        • Dán link <b>youtube.com</b> hoặc <b>tiktok.com</b> để nhúng video xem chung trực tiếp.
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -22238,7 +22498,10 @@
         var supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
         var globalChatChannel = null;
 
-        // BỘ RENDER VÀ ĐỒNG BỘ DANH SÁCH ONLINE REALTIME
+        // BỘ RENDER VÀ ĐỒNG BỘ DANH SÁCH ONLINE REALTIME (ĐÃ NÂNG CẤP TÌM KIẾM NHANH)
+        window.cachedPresenceUsers = [];
+        window.presenceSearchTerm = '';
+
         function renderOnlineUsersList(presenceState) {
             const listContainer = document.getElementById('chatOnlineUsersList');
             const countBadge = document.getElementById('chatOnlineUsersCount');
@@ -22259,35 +22522,58 @@
                 });
             });
 
-            const onlineUsers = Array.from(userMap.values());
-            const totalCount = onlineUsers.length;
+            window.cachedPresenceUsers = Array.from(userMap.values());
+            const totalCount = window.cachedPresenceUsers.length;
 
             if (countBadge) countBadge.innerText = `${totalCount} online`;
             if (headerCountText) headerCountText.innerText = `${totalCount} trực tuyến`;
 
-            if (totalCount === 0) {
-                listContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px 0;">Chưa có ai kết nối</div>';
-                return;
-            }
-
             // Sắp xếp: Admin lên đầu -> Thành viên đăng nhập -> Khách vãng lai
-            onlineUsers.sort((a, b) => {
+            window.cachedPresenceUsers.sort((a, b) => {
                 if (a.role === 'admin' && b.role !== 'admin') return -1;
                 if (b.role === 'admin' && a.role !== 'admin') return 1;
                 if (!a.isGuest && b.isGuest) return -1;
                 if (a.isGuest && !b.isGuest) return 1;
-                return a.displayName.localeCompare(b.displayName);
+                return (a.displayName || a.username).localeCompare(b.displayName || b.username);
             });
 
-            listContainer.innerHTML = onlineUsers.map(u => {
+            displayFilteredPresenceList();
+        }
+
+        function handlePresenceFilter(searchTerm) {
+            window.presenceSearchTerm = (searchTerm || '').trim().toLowerCase();
+            displayFilteredPresenceList();
+        }
+
+        function displayFilteredPresenceList() {
+            const listContainer = document.getElementById('chatOnlineUsersList');
+            if (!listContainer) return;
+
+            let users = window.cachedPresenceUsers || [];
+
+            if (window.presenceSearchTerm) {
+                users = users.filter(u => {
+                    const uName = (u.username || '').toLowerCase();
+                    const dName = (u.displayName || '').toLowerCase();
+                    return uName.includes(window.presenceSearchTerm) || dName.includes(window.presenceSearchTerm);
+                });
+            }
+
+            if (users.length === 0) {
+                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;">${window.presenceSearchTerm ? 'Không tìm thấy kết quả' : 'Chưa có ai kết nối'}</div>`;
+                return;
+            }
+
+            listContainer.innerHTML = users.map(u => {
                 const isMe = currentUser && u.username.toLowerCase() === currentUser.username.toLowerCase();
                 const avtUrl = u.avt ? getAvtUrl(u.avt) : DEFAULT_AVATAR;
                 const safeName = escapeHtml(u.displayName || u.username);
                 const safeUser = escapeHtml(u.username);
                 const isGuest = !!u.isGuest;
+                const isAdmin = u.role === 'admin';
 
                 return `
-                    <div class="chat-online-user-item" onclick="quickMentionOnlineUser('${isGuest ? '' : safeUser}')" title="${isGuest ? 'Khách vãng lai' : `@${safeUser} (Bấm để nhắc tên)`}">
+                    <div class="chat-online-user-item" onclick="quickMentionOnlineUser('${isGuest ? '' : safeUser}')" title="${isGuest ? 'Khách ghé thăm' : `@${safeUser} (Bấm để nhắc tên)`}">
                         <div class="chat-online-user-info">
                             <div class="chat-online-user-avt-wrap">
                                 <img src="${avtUrl}" class="chat-online-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
@@ -22295,8 +22581,12 @@
                                 <span class="chat-online-status-dot"></span>
                             </div>
                             <div style="min-width: 0; flex: 1;">
-                                <div class="chat-online-user-name">${safeName}${isMe ? ' <span style="font-size:0.7rem; color:var(--primary);">(Bạn)</span>' : ''}</div>
-                                <div class="chat-online-user-tag">${isGuest ? 'Khách ghé thăm' : `@${safeUser}`}</div>
+                                <div class="chat-online-user-name">
+                                    ${safeName}
+                                    ${isAdmin ? ' <span style="font-size:0.65rem; background:rgba(245,158,11,0.2); color:#f59e0b; padding:1px 5px; border-radius:6px; font-weight:800;">ADMIN</span>' : ''}
+                                    ${isMe ? ' <span style="font-size:0.7rem; color:var(--primary); font-weight:800;">(Bạn)</span>' : ''}
+                                </div>
+                                <div class="chat-online-user-tag">${isGuest ? 'Khách vãng lai' : `@${safeUser}`}</div>
                             </div>
                         </div>
                         ${!isGuest ? `
@@ -22307,6 +22597,121 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // CẬP NHẬT THẺ MINI PROFILE BÊN TRONG SIDEBAR CHAT
+        function updateChatSidebarProfile() {
+            const wrap = document.getElementById('chatSideUserProfileWrap');
+            if (!wrap) return;
+
+            if (currentUser) {
+                const avtUrl = getAvtUrl(currentUser.avt);
+                const displayName = escapeHtml(currentUser.displayName || currentUser.username);
+                const username = escapeHtml(currentUser.username);
+                
+                wrap.innerHTML = `
+                    <div class="chat-side-profile-box">
+                        <div class="chat-side-profile-avt-wrap">
+                            <img src="${avtUrl}" class="chat-side-profile-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            ${currentUser.frame ? `<img src="${currentUser.frame}" class="avt-frame" style="${getFrameInlineStyle(currentUser.frame)}">` : ''}
+                        </div>
+                        <div class="chat-side-profile-info">
+                            <div class="chat-side-profile-name">${displayName}</div>
+                            <div class="chat-side-profile-user">@${username}${currentUser.role === 'admin' ? ' • <span style="color:#f59e0b; font-weight:800;">Admin</span>' : ''}</div>
+                        </div>
+                        <a href="/users/${encodeURIComponent(currentUser.username)}" class="btn" style="padding:5px 9px; font-size:0.75rem; border-radius:10px;" title="Xem hồ sơ của bạn">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                `;
+            } else {
+                wrap.innerHTML = `
+                    <div style="background:var(--bg-secondary); border:1px dashed var(--border-color); border-radius:14px; padding:12px; text-align:center; margin-bottom:12px;">
+                        <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:8px;">Bạn đang xem với tư cách Khách</span>
+                        <button type="button" class="btn btn-primary" onclick="openModal('loginModal')" style="font-size:0.78rem; padding:6px 14px; border-radius:16px; font-weight:800;">
+                            <i class="fa-solid fa-user"></i> Đăng nhập ngay
+                        </button>
+                    </div>
+                `;
+            }
+
+            syncAllWOWDisplays();
+        }
+
+        // NẠP DỮ LIỆU GAME HOT CỘNG ĐỒNG (KHẮC PHỤC LỖI KẸT LOADING VĨNH VIỄN)
+        async function renderChatTrendingGames() {
+            const container = document.getElementById('chatSidebarTrendingContent');
+            if (!container) return;
+
+            // Nếu allProjects chưa có, fetch nhanh 15 game
+            if (!allProjects || allProjects.length === 0) {
+                try {
+                    const res = await (await fetch(`${WORKER_URL}/api/projects?limit=15&sort=popular`)).json();
+                    if (res && res.projects) allProjects = res.projects;
+                } catch(e) {}
+            }
+
+            if (!allProjects || allProjects.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">Chưa có tác phẩm nào</div>`;
+                return;
+            }
+
+            // Lấy Top 3 tác phẩm có lượt chơi / lượt thích cao nhất
+            const topGames = [...allProjects]
+                .filter(p => p.visibility !== 'private')
+                .sort((a, b) => ((b.views || 0) + (b.likes ? b.likes.length * 3 : 0)) - ((a.views || 0) + (a.likes ? a.likes.length * 3 : 0)))
+                .slice(0, 3);
+
+            container.innerHTML = topGames.map((p, idx) => {
+                const pid = p.projectId || p.fileId;
+                const thumb = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const rankColor = idx === 0 ? '#f59e0b' : (idx === 1 ? '#94a3b8' : '#b45309');
+
+                return `
+                    <div class="chat-trending-item">
+                        <img src="${thumb}" class="chat-trending-thumb" onclick="navigateTo('/projects/${pid}')" title="Nhấn để mở chơi" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
+                        <div class="chat-trending-info">
+                            <a href="/projects/${pid}" class="chat-trending-title" title="${escapeHtml(p.title)}">
+                                <i class="fa-solid fa-trophy" style="color:${rankColor}; font-size:0.7rem; margin-right:2px;"></i> ${escapeHtml(p.title)}
+                            </a>
+                            <div class="chat-trending-meta">
+                                <span><i class="fa-solid fa-play"></i> ${p.views || 0}</span>
+                                <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes || []).length}</span>
+                            </div>
+                        </div>
+                        <div class="chat-trending-actions">
+                            <button type="button" class="chat-trending-btn" onclick="quickShareGameToChat('${pid}')" title="Chia sẻ thẻ game vào phòng chat">
+                                <i class="fa-solid fa-share-nodes"></i>
+                            </button>
+                            <a href="/projects/${pid}" class="chat-trending-btn" title="Chơi game">
+                                <i class="fa-solid fa-play"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Chia sẻ nhanh game từ thanh bên vào ô chat
+        function quickShareGameToChat(pid) {
+            const p = allProjects.find(item => (item.projectId === pid || item.fileId === pid));
+            if (!p) return;
+
+            const pTitle = encodeURIComponent(p.title || "Tác phẩm");
+            const pAuthor = encodeURIComponent(p.author || "Cộng đồng");
+            const pThumb = p.thumbId || "";
+            const pViews = p.views || 0;
+            const pLikes = (p.likes || []).length;
+            const pStars = (p.stars || []).length;
+
+            const shareTag = `[DANV_PROJECT_SHARE:${pid}:${pTitle}:${pAuthor}:${pThumb}:${pViews}:${pLikes}:${pStars}]`;
+
+            const input = document.getElementById('commentTextChat');
+            if (input) {
+                input.value = (input.value ? input.value + ' ' : '') + shareTag;
+                input.focus();
+                showToast("Đã chèn thẻ tác phẩm vào ô chat! Bấm gửi để chia sẻ.", "info");
+            }
         }
 
         // Bấm vào người online để điền nhanh @tên vào khung chat
@@ -22555,6 +22960,8 @@
 
             // 🚀 BẬT KẾT NỐI WEBSOCKET KHI VÀO PHÒNG CHAT
             connectGlobalChatWebSocket();
+            updateChatSidebarProfile();
+            renderChatTrendingGames();
             
             const list = document.getElementById('chatMessageList');
             list.innerHTML = `
@@ -25161,7 +25568,7 @@
         // Đồng bộ số dư WOW trên mọi nhãn hiển thị
         function syncAllWOWDisplays() {
             const w = currentUser ? (currentUser.WOW || 0) : 0;
-            const ids = ['navWOWBalance', 'dailyCurrentWOWVal', 'settingsWOWBalance', 'settingsWOWBalanceHist', 'shopModalWOWBalance'];
+            const ids = ['navWOWBalance', 'dailyCurrentWOWVal', 'settingsWOWBalance', 'settingsWOWBalanceHist', 'shopModalWOWBalance', 'chatSidebarWOWBalance'];
             ids.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.innerText = w;
