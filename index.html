@@ -15138,7 +15138,9 @@
             document.getElementById('projPageAuthor').href = authorCleanUrl;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            const engineChoice = localStorage.getItem('engine') || 'turboshare';
+            // Ưu tiên đọc engine từ metadata của dự án, fallback sang sau đó
+            const engineChoice = proj.engine || 'aftercode';
+            
             let embedUrl = `https://editor.turboshare.org.uk/embed?project_url=${encodeURIComponent(fileUrl)}`;
             if (engineChoice === 'aftercode') {
                 embedUrl = `https://aftercode.pages.dev/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
@@ -18664,6 +18666,7 @@
                 finalForm.append("username", currentUser.username); 
                 finalForm.append("sessionToken", currentUser.sessionToken);
                 finalForm.append("recaptchaToken", recaptchaToken); // ĐÍNH KÈM TOKEN RECAPTCHA LÊN SERVER
+                finalForm.append("engine", localStorage.getItem('engine') || 'turboshare'); // ĐÍNH KÈM ENGINE HIỆN TẠI
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
@@ -21626,6 +21629,7 @@
                 finalForm.append("username", currentUser.username); 
                 finalForm.append("sessionToken", currentUser.sessionToken);
                 finalForm.append("recaptchaToken", recaptchaToken); // ĐÍNH KÈM TOKEN LÊN BACKEND
+                finalForm.append("engine", localStorage.getItem('engine') || 'turboshare'); // CẬP NHẬT ENGINE MỚI
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
                 if (finalRes.success) { 
