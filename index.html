@@ -8,8 +8,8 @@
     <meta property="og:title" content="DANVworkshop - Coding community" id="ogTitle" />
     <meta property="og:description" content="Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu." id="ogDesc" />
     <meta property="og:image" content="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Logo-Vi.png" id="ogImage" />
-    <meta property="og:url" content="https://turbows.pages.dev/" id="ogUrl" />
-    <link rel="canonical" href="https://turbows.pages.dev/" />
+    <meta property="og:url" content="https://turboshare.org.uk/" id="ogUrl" />
+    <link rel="canonical" href="https://turboshare.org.uk/" />
     <base href="/">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -66,17 +66,18 @@
         }
 
         // =====================================================================
-        // 🚀 BỘ CHUYỂN HƯỚNG THÔNG MINH & DI CƯ TỰ ĐỘNG TOKEN SANG TURBOWS.PAGES.DEV
+        // 🚀 BỘ CHUYỂN HƯỚNG THÔNG MINH & DI CƯ TỰ ĐỘNG TOKEN SANG TURBOSHARE.ORG.UK
         // =====================================================================
         
-        // BƯỚC A: NẾU ĐANG Ở GITHUB PAGES -> ĐÓNG GÓI TOKEN & CHUYỂN HƯỚNG TỨC THÌ
-        if (window.location.hostname.endsWith('github.io')) {
+        // BƯỚC A: NẾU ĐANG Ở GITHUB PAGES HOẶC TURBOWS.PAGES.DEV -> ĐÓNG GÓI TOKEN & CHUYỂN HƯỚNG TỨC THÌ
+        if (window.location.hostname.endsWith('github.io') || window.location.hostname === 'turbows.pages.dev') {
             var authBundle = {};
             try {
                 if (localStorage.getItem('danv_user')) authBundle.danv_user = localStorage.getItem('danv_user');
                 if (localStorage.getItem('danv_theme')) authBundle.danv_theme = localStorage.getItem('danv_theme');
                 if (localStorage.getItem('lang')) authBundle.lang = localStorage.getItem('lang');
                 if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
+                if (localStorage.getItem('cf_human_verified_until')) authBundle.cf_human_verified_until = localStorage.getItem('cf_human_verified_until');
             } catch(e) {}
 
             var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
@@ -106,11 +107,11 @@
             }
 
             var finalQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
-            var targetUrl = 'https://turbows.pages.dev' + cleanPath + finalQuery + window.location.hash;
+            var targetUrl = 'https://turboshare.org.uk' + cleanPath + finalQuery + window.location.hash;
             window.location.replace(targetUrl);
         }
 
-        // BƯỚC B: NẾU ĐANG Ở CLOUDFLARE PAGES -> TIẾP NHẬN TOKEN VÀ LÀM SẠCH THANH ĐỊA CHỈ
+        // BƯỚC B: NẾU ĐANG Ở TÊN MIỀN CHÍNH -> TIẾP NHẬN TOKEN VÀ LÀM SẠCH THANH ĐỊA CHỈ
         (function() {
             var params = new URLSearchParams(window.location.search);
             var migAuth = params.get('_mig_auth');
@@ -128,6 +129,9 @@
                     }
                     if (authData.engine && !localStorage.getItem('engine')) {
                         localStorage.setItem('engine', authData.engine);
+                    }
+                    if (authData.cf_human_verified_until && !localStorage.getItem('cf_human_verified_until')) {
+                        localStorage.setItem('cf_human_verified_until', authData.cf_human_verified_until);
                     }
                 } catch(err) {}
                 
@@ -8959,7 +8963,7 @@
             })();
         </script>
         <div class="cf-verify-card">
-            <div class="cf-verify-domain">turbows.pages.dev</div>
+            <div class="cf-verify-domain">turboshare.org.uk</div>
             <h1 class="cf-verify-title">Verify you are human</h1>
             <p class="cf-verify-desc">This may take a few seconds. Check if the connection is secure.</p>
             
