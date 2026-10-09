@@ -9065,7 +9065,7 @@
     <div id="createView" class="page-view" style="text-align:center; padding: 120px 20px;">
         <i class="fa-solid fa-wand-magic-sparkles fa-bounce" style="font-size: 5rem; color: var(--primary); margin-bottom: 25px;"></i>
         <h2 style="color: #111; margin-bottom: 12px; font-size: 2rem;" data-i18n="create_title">Đã mở Trình chỉnh sửa!</h2>
-        <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;"><span data-i18n="create_desc_start">Chúng tôi đã mở</span> <b id="createEngineName" style="color:var(--primary);">Aftercode</b> <span data-i18n="create_desc_end">trong một tab mới để bạn thỏa sức sáng tạo.</span></p>
+        <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;"><span data-i18n="create_desc_start">Chúng tôi đã mở</span> <b id="createEngineName" style="color:var(--primary);">Turbo IDE</b> <span data-i18n="create_desc_end">trong một tab mới để bạn thỏa sức sáng tạo.</span></p>
         <button class="btn btn-primary" onclick="reopenEditor()" style="padding: 12px 30px; font-size: 1.05rem; border-radius: 25px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="create_btn_reopen">Mở lại tab</span></button>
         <button class="btn" onclick="location.hash='#home'" style="margin-left: 15px; padding: 12px 30px; font-size: 1.05rem; border-radius: 25px;"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
     </div>
@@ -9927,7 +9927,7 @@
                         <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--text-muted);" data-i18n="proj_specs_engine">Trình khởi chạy:</span>
-                                <b id="projMetaEngine" style="color:var(--text-title);">Aftercode / SB3</b>
+                                <b id="projMetaEngine" style="color:var(--text-title);">Turbo IDE / SB3</b>
                             </div>
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--text-muted);" data-i18n="proj_specs_vis">Hiển thị:</span>
@@ -10617,11 +10617,15 @@
                     <div class="form-group" style="margin-bottom: 25px;">
                         <label data-i18n="settings_engine">Engine Lập trình (Trình chỉnh sửa):</label>
                         <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
-                            <button type="button" id="btnEngineAftercode" onclick="changeEngine('aftercode')" style="flex:1; min-width: 150px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--primary); border-radius:12px; background:var(--bg-secondary); cursor:pointer; transition:0.2s;">
-                                <img src="https://i.ibb.co/7dLkRJKZ/ezgif-1f45d90f66f6c39a.png" width="38" style="border-radius:8px;">
-                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Aftercode </br><span data-i18n="settings_engine_default">(Mặc định)</span></span>
+                            <button type="button" id="btnEngineTurboshare" onclick="changeEngine('turboshare')" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--primary); border-radius:12px; background:var(--bg-secondary); cursor:pointer; transition:0.2s;">
+                                <img src="https://editor.turboshare.org.uk/assets/Turbo-IDE-Dewc6i7p.png" width="38" style="border-radius:8px;">
+                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Turbo IDE </br><span data-i18n="settings_engine_default">(Mặc định)</span></span>
                             </button>
-                            <button type="button" id="btnEngineTurbowarp" onclick="changeEngine('turbowarp')" style="flex:1; min-width: 150px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s;">
+                            <button type="button" id="btnEngineAftercode" onclick="changeEngine('aftercode')" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s;">
+                                <img src="https://i.ibb.co/7dLkRJKZ/ezgif-1f45d90f66f6c39a.png" width="38" style="border-radius:8px;">
+                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Aftercode</span>
+                            </button>
+                            <button type="button" id="btnEngineTurbowarp" onclick="changeEngine('turbowarp')" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s;">
                                 <img src="https://i.ibb.co/b5s3qVDx/ezgif-1f45d90f66f6c39a.png" width="38" style="border-radius:8px;">
                                 <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">TurboWarp</span>
                             </button>
@@ -15285,7 +15289,13 @@
             document.getElementById('projPageAuthor').href = authorCleanUrl;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            const embedUrl = `https://aftercode.pages.dev/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
+            const engineChoice = localStorage.getItem('engine') || 'turboshare';
+            let embedUrl = `https://editor.turboshare.org.uk/embed?project_url=${encodeURIComponent(fileUrl)}`;
+            if (engineChoice === 'aftercode') {
+                embedUrl = `https://aftercode.pages.dev/embed.html?project_url=${encodeURIComponent(fileUrl)}`;
+            } else if (engineChoice === 'turbowarp') {
+                embedUrl = `https://turbowarp.org/embed?project_url=${encodeURIComponent(fileUrl)}`;
+            }
             const thumbSrc = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
 
             // GIAO DIỆN LAZY LOAD: Hiện ảnh nền mờ và nút Play, bấm vào mới Load Iframe
@@ -15299,11 +15309,15 @@
                 </div>
             `;
             
-            const engineChoice = localStorage.getItem('engine') || 'aftercode';
-            const editorBaseUrl = engineChoice === 'turbowarp' ? 'https://turbowarp.org/editor?project_url=' : 'https://aftercode.pages.dev/editor.html?project_url=';
+            let editorBaseUrl = 'https://editor.turboshare.org.uk/?project_url=';
+            if (engineChoice === 'aftercode') {
+                editorBaseUrl = 'https://aftercode.pages.dev/editor.html?project_url=';
+            } else if (engineChoice === 'turbowarp') {
+                editorBaseUrl = 'https://turbowarp.org/editor?project_url=';
+            }
             const btnSeeInside = document.getElementById('btnSeeInside');
             btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
-            btnSeeInside.target = (engineChoice === 'aftercode') ? '_self' : '_blank';
+            btnSeeInside.target = (engineChoice === 'turbowarp') ? '_blank' : '_self';
             document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
             document.getElementById('projCredits').innerHTML = proj.credits ? formatProjectDesc(proj.credits) : "Tác giả gốc.";
             
@@ -15324,6 +15338,8 @@
             if (viewCountEl) viewCountEl.innerText = proj.views || 0;
             const metaVis = document.getElementById('projMetaVis');
             if (metaVis) metaVis.innerText = proj.visibility === 'private' ? 'Riêng tư' : 'Công khai';
+            const metaEngine = document.getElementById('projMetaEngine');
+            if (metaEngine) metaEngine.innerText = (engineChoice === 'turbowarp') ? 'TurboWarp / SB3' : ((engineChoice === 'aftercode') ? 'Aftercode / SB3' : 'Turbo IDE / SB3');
             const metaDate = document.getElementById('projMetaDate');
             if (metaDate) metaDate.innerText = proj.date ? proj.date.split(' ')[0] : 'Không rõ';
 
@@ -18123,7 +18139,7 @@
             document.getElementById('settingsView').style.display = 'block';
             
             // 1. Luôn đồng bộ Engine và Ngôn ngữ kể cả khi chưa đăng nhập
-            const currentEngine = localStorage.getItem('engine') || 'aftercode';
+            const currentEngine = localStorage.getItem('engine') || 'turboshare';
             updateEngineUI(currentEngine);
             const langEl = document.getElementById('langSelect');
             if (langEl) langEl.value = localStorage.getItem('lang') || 'vi';
@@ -21822,31 +21838,46 @@
             updateEngineUI(engine);
             // Cập nhật tên Engine hiển thị ngay lập tức
             const engineLabel = document.getElementById('createEngineName');
+            let engineDisplayName = 'Turbo IDE';
+            if (engine === 'turbowarp') engineDisplayName = 'TurboWarp';
+            else if (engine === 'aftercode') engineDisplayName = 'Aftercode';
+
             if (engineLabel) {
-                engineLabel.innerText = engine === 'turbowarp' ? 'TurboWarp' : 'Aftercode';
+                engineLabel.innerText = engineDisplayName;
             }
-            showToast(`Đã chuyển Engine sang ${engine === 'aftercode' ? 'Aftercode' : 'TurboWarp'}`, "success");
+            showToast(`Đã chuyển Engine sang ${engineDisplayName}`, "success");
         }
 
         function updateEngineUI(engine) {
+            const btnS = document.getElementById('btnEngineTurboshare');
             const btnA = document.getElementById('btnEngineAftercode');
             const btnT = document.getElementById('btnEngineTurbowarp');
-            if(btnA && btnT) {
-                if(engine === 'turbowarp') {
-                    btnT.style.borderColor = 'var(--primary)'; btnT.style.background = '#f0fdf4';
-                    btnA.style.borderColor = '#cbd5e1'; btnA.style.background = '#fff';
-                } else {
-                    btnA.style.borderColor = 'var(--primary)'; btnA.style.background = '#f0fdf4';
-                    btnT.style.borderColor = '#cbd5e1'; btnT.style.background = '#fff';
+            const allBtns = [btnS, btnA, btnT];
+            allBtns.forEach(b => {
+                if (b) {
+                    b.style.borderColor = 'var(--border-color)';
+                    b.style.background = 'var(--bg-panel)';
                 }
+            });
+
+            if (engine === 'turbowarp' && btnT) {
+                btnT.style.borderColor = 'var(--primary)'; btnT.style.background = 'var(--bg-secondary)';
+            } else if (engine === 'aftercode' && btnA) {
+                btnA.style.borderColor = 'var(--primary)'; btnA.style.background = 'var(--bg-secondary)';
+            } else if (btnS) {
+                btnS.style.borderColor = 'var(--primary)'; btnS.style.background = 'var(--bg-secondary)';
             }
         }
 
         // Hàm mở trang Sáng tạo editor
         function openCreatePage() {
-            const engineChoice = localStorage.getItem('engine') || 'aftercode';
+            const engineChoice = localStorage.getItem('engine') || 'turboshare';
             
-            // 🚀 Nếu là Aftercode: Chuyển hướng trực tiếp trên tab hiện tại (Redirect thẳng)
+            // 🚀 Nếu là Turbo IDE hoặc Aftercode: Chuyển hướng trực tiếp trên tab hiện tại (Redirect thẳng)
+            if (engineChoice === 'turboshare') {
+                window.location.href = 'https://editor.turboshare.org.uk/';
+                return;
+            }
             if (engineChoice === 'aftercode') {
                 window.location.href = 'https://aftercode.pages.dev/editor.html';
                 return;
@@ -21861,17 +21892,20 @@
             reopenEditor();
         }
 
-        // HÀM MỞ TRÌNH CHỈNH SỬA (AFTERCODE / TURBOWARP)
+        // HÀM MỞ TRÌNH CHỈNH SỬA (TURBO IDE / AFTERCODE / TURBOWARP)
         function reopenEditor() {
-            const engineChoice = localStorage.getItem('engine') || 'aftercode';
+            const engineChoice = localStorage.getItem('engine') || 'turboshare';
             
-            // Nếu là Aftercode: Redirect thẳng sang Aftercode trên tab hiện tại
+            if (engineChoice === 'turboshare') {
+                window.location.href = 'https://editor.turboshare.org.uk/';
+                return;
+            }
             if (engineChoice === 'aftercode') {
                 window.location.href = 'https://aftercode.pages.dev/editor.html';
                 return;
             }
 
-            // Nếu là TurboWarp: Giữ nguyên hành vi mở tab mới
+            // Nếu là TurboWarp: Mở tab mới
             const editorUrl = 'https://turbowarp.org/editor?project_url=https://api.turboshare.org.uk/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ';
             const newWindow = window.open(editorUrl, '_blank');
             
