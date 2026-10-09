@@ -10618,7 +10618,7 @@
                         <label data-i18n="settings_engine">Engine Lập trình (Trình chỉnh sửa):</label>
                         <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
                             <button type="button" id="btnEngineTurboshare" onclick="changeEngine('turboshare')" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--primary); border-radius:12px; background:var(--bg-secondary); cursor:pointer; transition:0.2s;">
-                                <img src="https://editor.turboshare.org.uk/assets/Turbo-IDE-Dewc6i7p.png" width="38" style="border-radius:8px;">
+                                <img src="https://editor.turboshare.org.uk/assets/Turbo-IDE-Dewc6i7p.png" style="height:38px; width:auto; max-width:125px; object-fit:contain;">
                                 <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Turbo IDE </br><span data-i18n="settings_engine_default">(Mặc định)</span></span>
                             </button>
                             <button type="button" id="btnEngineAftercode" onclick="changeEngine('aftercode')" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s;">
@@ -13700,6 +13700,14 @@
             // Khởi tạo Chế độ máy yếu ngay lập tức
             const isLowSpec = localStorage.getItem('danv_lowspec') === 'true';
             document.documentElement.setAttribute('data-lowspec', isLowSpec ? 'true' : 'false');
+
+            // ĐẶT LẠI ENGINE MẶC ĐỊNH 1 LẦN DUY NHẤT CHO TOÀN BỘ USER SANG TURBO-IDE
+            try {
+                if (localStorage.getItem('danv_engine_migrated_turboshare_v1') !== 'true') {
+                    localStorage.setItem('engine', 'turboshare');
+                    localStorage.setItem('danv_engine_migrated_turboshare_v1', 'true');
+                }
+            } catch(e) {}
 
             try {
                 // Kích hoạt đa ngôn ngữ
