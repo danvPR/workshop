@@ -66,20 +66,19 @@
         }
 
         // =====================================================================
-        // 🚀 BỘ CHUYỂN HƯỚNG THÔNG MINH & DI CƯ TỰ ĐỘNG TOKEN SANG TURBOSHARE.ORG.UK
+        // 🚀 BỘ CHUYỂN HƯỚNG SẠCH SẼ SANG TURBOSHARE.ORG.UK (KHÔNG CHUYỂN TOKEN CŨ)
         // =====================================================================
         
-        // BƯỚC A: NẾU ĐANG Ở GITHUB PAGES HOẶC TURBOWS.PAGES.DEV -> ĐÓNG GÓI TOKEN & CHUYỂN HƯỚNG TỨC THÌ
+        // BƯỚC A: NẾU ĐANG Ở GITHUB PAGES HOẶC TURBOWS.PAGES.DEV -> CHUYỂN HƯỚNG NGAY (GIỮ NGUYÊN PHIÊN ĐĂNG NHẬP Ở DOMAIN MỚI)
         if (window.location.hostname.endsWith('github.io') || window.location.hostname === 'turbows.pages.dev') {
-            var authBundle = {};
+            var settingsBundle = {};
             try {
-                if (localStorage.getItem('danv_user')) authBundle.danv_user = localStorage.getItem('danv_user');
-                if (localStorage.getItem('danv_theme')) authBundle.danv_theme = localStorage.getItem('danv_theme');
-                if (localStorage.getItem('lang')) authBundle.lang = localStorage.getItem('lang');
-                if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
-                if (localStorage.getItem('cf_human_verified_until')) authBundle.cf_human_verified_until = localStorage.getItem('cf_human_verified_until');
+                // CHỈ CHUYỂN CÀI ĐẶT GIAO DIỆN / NGÔN NGỮ - TUYỆT ĐỐI KHÔNG CHUYỂN TOKEN ĐỂ TRÁNH LỖI 401
+                if (localStorage.getItem('danv_theme')) settingsBundle.danv_theme = localStorage.getItem('danv_theme');
+                if (localStorage.getItem('lang')) settingsBundle.lang = localStorage.getItem('lang');
+                if (localStorage.getItem('engine')) settingsBundle.engine = localStorage.getItem('engine');
                 
-                // 🧹 XÓA SẠCH TOKEN TRÊN DOMAIN CŨ: Tránh gửi lại token cũ nhiều lần gây ghi đè phiên đăng nhập mới
+                // Xóa luôn token cũ còn sót trên domain này
                 localStorage.removeItem('danv_user');
             } catch(e) {}
 
@@ -102,10 +101,10 @@
                 searchParams.delete('q');
             }
 
-            // Gói token an toàn vào URL param tạm thời
-            if (Object.keys(authBundle).length > 0) {
+            // Gói cài đặt vào URL nếu có
+            if (Object.keys(settingsBundle).length > 0) {
                 try {
-                    searchParams.set('_mig_auth', btoa(unescape(encodeURIComponent(JSON.stringify(authBundle)))));
+                    searchParams.set('_mig_settings', btoa(unescape(encodeURIComponent(JSON.stringify(settingsBundle)))));
                 } catch(e) {}
             }
 
@@ -114,35 +113,20 @@
             window.location.replace(targetUrl);
         }
 
-        // BƯỚC B: NẾU ĐANG Ở TÊN MIỀN CHÍNH -> TIẾP NHẬN TOKEN VÀ LÀM SẠCH THANH ĐỊA CHỈ
+        // BƯỚC B: TIẾP NHẬN CÀI ĐẶT GIAO DIỆN (NẾU CHƯA CÓ) VÀ DỌN SẠCH URL
         (function() {
             var params = new URLSearchParams(window.location.search);
-            var migAuth = params.get('_mig_auth');
-            if (migAuth) {
+            var migSettings = params.get('_mig_settings') || params.get('_mig_auth');
+            if (migSettings) {
                 try {
-                    var authData = JSON.parse(decodeURIComponent(escape(atob(migAuth))));
-                    
-                    // 🛡️ CHỈ NẠP TOKEN NẾU TRÊN TURBOSHARE.ORG.UK CHƯA CÓ PHIÊN ĐĂNG NHẬP (TRÁNH GHI ĐÈ PHIÊN MỚI)
-                    var existingUser = localStorage.getItem('danv_user');
-                    if (!existingUser && authData.danv_user) {
-                        localStorage.setItem('danv_user', authData.danv_user);
-                    }
-                    
-                    if (authData.danv_theme && !localStorage.getItem('danv_theme')) {
-                        localStorage.setItem('danv_theme', authData.danv_theme);
-                    }
-                    if (authData.lang && !localStorage.getItem('lang')) {
-                        localStorage.setItem('lang', authData.lang);
-                    }
-                    if (authData.engine && !localStorage.getItem('engine')) {
-                        localStorage.setItem('engine', authData.engine);
-                    }
-                    if (authData.cf_human_verified_until) {
-                        localStorage.setItem('cf_human_verified_until', authData.cf_human_verified_until);
-                    }
+                    var data = JSON.parse(decodeURIComponent(escape(atob(migSettings))));
+                    if (data.danv_theme && !localStorage.getItem('danv_theme')) localStorage.setItem('danv_theme', data.danv_theme);
+                    if (data.lang && !localStorage.getItem('lang')) localStorage.setItem('lang', data.lang);
+                    if (data.engine && !localStorage.getItem('engine')) localStorage.setItem('engine', data.engine);
                 } catch(err) {}
                 
-                // Xóa param tạm thời để URL sạch đẹp như chưa từng có gì xảy ra
+                // Xóa param tạm thời để thanh địa chỉ luôn sạch đẹp
+                params.delete('_mig_settings');
                 params.delete('_mig_auth');
                 var cleanQuery = params.toString() ? '?' + params.toString() : '';
                 window.history.replaceState(null, null, window.location.pathname + cleanQuery + window.location.hash);
