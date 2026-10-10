@@ -118,19 +118,19 @@
             if (migAuth) {
                 try {
                     var authData = JSON.parse(decodeURIComponent(escape(atob(migAuth))));
-                    if (authData.danv_user && !localStorage.getItem('danv_user')) {
+                    if (authData.danv_user) {
                         localStorage.setItem('danv_user', authData.danv_user);
                     }
-                    if (authData.danv_theme && !localStorage.getItem('danv_theme')) {
+                    if (authData.danv_theme) {
                         localStorage.setItem('danv_theme', authData.danv_theme);
                     }
-                    if (authData.lang && !localStorage.getItem('lang')) {
+                    if (authData.lang) {
                         localStorage.setItem('lang', authData.lang);
                     }
-                    if (authData.engine && !localStorage.getItem('engine')) {
+                    if (authData.engine) {
                         localStorage.setItem('engine', authData.engine);
                     }
-                    if (authData.cf_human_verified_until && !localStorage.getItem('cf_human_verified_until')) {
+                    if (authData.cf_human_verified_until) {
                         localStorage.setItem('cf_human_verified_until', authData.cf_human_verified_until);
                     }
                 } catch(err) {}
@@ -13518,6 +13518,7 @@
                             logout(); 
                             return null;
                         }
+                        return errData; // SỬA LỖI: Trả về luôn data báo lỗi để không bị đọc lại body lần thứ 2 gây crash
                     } catch(jsonErr) {
                         // Phản hồi là HTML của Cloudflare chặn (Rate limit/WAF) -> Không reload trang
                         console.warn("Máy chủ chính đang bị chặn hoặc giới hạn tốc độ (403/429).");
