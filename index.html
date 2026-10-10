@@ -13512,13 +13512,15 @@
                 if (res.status === 401 || res.status === 403) { 
                     try {
                         const errData = await res.json();
-                        // Chỉ đăng xuất nếu máy chủ thực sự trả về lỗi hết hạn phiên bản, không đăng xuất khi Cloudflare WAF chặn
-                        if (errData && (errData.error === "Phiên đăng nhập hết hạn" || errData.expired)) {
-                            showToast("Phiên làm việc hết hạn.", "error");
+                        const errMsg = (errData && errData.error) ? String(errData.error).toLowerCase() : "";
+                        
+                        // TỰ ĐỘNG ĐĂNG XUẤT NẾU: Mã lỗi là 401 (Sai Token), hoặc server trả về cờ expired, hoặc câu lỗi có chữ "hết hạn" / "token"
+                        if (res.status === 401 || (errData && errData.expired) || errMsg.includes("hết hạn") || errMsg.includes("token")) {
+                            showToast("Phiên đăng nhập không hợp lệ hoặc đã hết hạn.", "error");
                             logout(); 
                             return null;
                         }
-                        return errData; // SỬA LỖI: Trả về luôn data báo lỗi để không bị đọc lại body lần thứ 2 gây crash
+                        return errData;
                     } catch(jsonErr) {
                         // Phản hồi là HTML của Cloudflare chặn (Rate limit/WAF) -> Không reload trang
                         console.warn("Máy chủ chính đang bị chặn hoặc giới hạn tốc độ (403/429).");
