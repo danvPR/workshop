@@ -78,6 +78,9 @@
                 if (localStorage.getItem('lang')) authBundle.lang = localStorage.getItem('lang');
                 if (localStorage.getItem('engine')) authBundle.engine = localStorage.getItem('engine');
                 if (localStorage.getItem('cf_human_verified_until')) authBundle.cf_human_verified_until = localStorage.getItem('cf_human_verified_until');
+                
+                // 🧹 XÓA SẠCH TOKEN TRÊN DOMAIN CŨ: Tránh gửi lại token cũ nhiều lần gây ghi đè phiên đăng nhập mới
+                localStorage.removeItem('danv_user');
             } catch(e) {}
 
             var cleanPath = window.location.pathname.replace(/^\/workshop/, '');
@@ -118,16 +121,20 @@
             if (migAuth) {
                 try {
                     var authData = JSON.parse(decodeURIComponent(escape(atob(migAuth))));
-                    if (authData.danv_user) {
+                    
+                    // 🛡️ CHỈ NẠP TOKEN NẾU TRÊN TURBOSHARE.ORG.UK CHƯA CÓ PHIÊN ĐĂNG NHẬP (TRÁNH GHI ĐÈ PHIÊN MỚI)
+                    var existingUser = localStorage.getItem('danv_user');
+                    if (!existingUser && authData.danv_user) {
                         localStorage.setItem('danv_user', authData.danv_user);
                     }
-                    if (authData.danv_theme) {
+                    
+                    if (authData.danv_theme && !localStorage.getItem('danv_theme')) {
                         localStorage.setItem('danv_theme', authData.danv_theme);
                     }
-                    if (authData.lang) {
+                    if (authData.lang && !localStorage.getItem('lang')) {
                         localStorage.setItem('lang', authData.lang);
                     }
-                    if (authData.engine) {
+                    if (authData.engine && !localStorage.getItem('engine')) {
                         localStorage.setItem('engine', authData.engine);
                     }
                     if (authData.cf_human_verified_until) {
