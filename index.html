@@ -13895,8 +13895,8 @@
         function startMaintenanceCountdown() {
             function getNext7AMTarget() {
                 const target = new Date();
-                target.setDate(target.getDate() + 1);
-                target.setHours(7, 0, 0, 0);
+                target.setUTCDate(target.getUTCDate() + 1);
+                target.setUTCHours(0, 0, 0, 0);
                 return target.getTime();
             }
 
