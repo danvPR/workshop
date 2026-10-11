@@ -16035,8 +16035,8 @@
             document.getElementById('projPageAuthor').href = authorCleanUrl;
             
             const fileUrl = `${WORKER_URL}/api/project/${proj.fileId}`; 
-            // Ưu tiên đọc engine từ metadata của dự án, fallback sang sau đó
-            const engineChoice = proj.engine || 'aftercode';
+            // Ưu tiên đọc engine từ metadata của dự án, mặc định là Turbo IDE cho các dự án cũ
+            const engineChoice = proj.engine || 'turboshare';
             
             let embedUrl = `https://editor.turboshare.org.uk/embed?project_url=${encodeURIComponent(fileUrl)}`;
             if (engineChoice === 'aftercode') {
@@ -19301,18 +19301,24 @@
             }
         });
 
-        // ================= HỆ THỐNG GIAO TIẾP VỚI AFTERCODE (WOW ECONOMY) =================
+        // ================= HỆ THỐNG GIAO TIẾP VỚI TURBO-IDE & AFTERCODE (WOW ECONOMY) =================
         let activeGamePayRequest = null;
 
         window.addEventListener('message', (event) => {
-            // Danh sách domain được phép giao tiếp (Đã bổ sung aftercode.pages.dev)
+            // Danh sách domain được phép giao tiếp (Đã bổ sung turboshare.org.uk và editor.turboshare.org.uk)
             const allowedOrigins = [
+                "https://editor.turboshare.org.uk",
+                "https://turboshare.org.uk",
                 "https://aftercode.pages.dev",
                 "https://aftercode-web-wheat.vercel.app", 
                 "http://localhost:3000", 
                 "http://127.0.0.1:5500"
             ];
-            const isAllowedOrigin = allowedOrigins.includes(event.origin) || (event.origin && event.origin.endsWith(".aftercode.pages.dev"));
+            const isAllowedOrigin = allowedOrigins.includes(event.origin) || 
+                (event.origin && (
+                    event.origin.endsWith(".turboshare.org.uk") ||
+                    event.origin.endsWith(".aftercode.pages.dev")
+                ));
             if (!isAllowedOrigin) return;
 
             const data = event.data;
