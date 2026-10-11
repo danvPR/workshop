@@ -7199,61 +7199,56 @@
             padding: 0 !important;
         }
 
-        /* KHUNG THẺ TÀI TRỢ QUẢNG CÁO CHUẨN 300x250 */
+        /* KHUNG THẺ TÀI TRỢ QUẢNG CÁO CHUẨN 300x250 (FLAT & MINIMALIST) */
         .chat-sponsor-card {
             background: var(--bg-panel) !important;
-            border: 1.5px solid var(--border-color);
-            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             overflow: hidden;
-            width: 320px;
+            width: 310px;
             max-width: 100%;
-            margin-top: 6px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            margin-top: 4px;
+            box-shadow: none;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-        .chat-sponsor-card:hover {
-            transform: translateY(-2px);
-            border-color: #10b981;
-            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.18);
         }
         .chat-sponsor-header {
-            padding: 10px 14px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+            padding: 6px 10px;
+            background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
         .chat-sponsor-badge {
-            font-size: 0.72rem;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: rgba(16, 185, 129, 0.18);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.35);
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: var(--bg-panel);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            letter-spacing: 0.5px;
+            gap: 4px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
         }
         .chat-sponsor-ad-frame {
             width: 100%;
             min-height: 250px;
-            background: var(--bg-secondary);
+            background: var(--bg-panel);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 0;
+            padding: 4px 0;
             overflow: hidden;
         }
         .chat-sponsor-footer {
-            padding: 8px 14px;
+            padding: 5px 10px;
             border-top: 1px solid var(--border-color);
-            background: var(--bg-panel);
-            font-size: 0.75rem;
+            background: var(--bg-secondary);
+            font-size: 0.72rem;
             color: var(--text-muted);
             display: flex;
             align-items: center;
@@ -21694,7 +21689,7 @@
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
 
-            // THẺ TÀI TRỢ QUẢNG CÁO (SPONSORED AD CARD)
+            // THẺ TÀI TRỢ QUẢNG CÁO (SPONSORED AD CARD - FLAT & FORMAL)
             if (rawText.includes('[DANV_SPONSOR_AD]')) {
                 const userMsg = rawText.replace('[DANV_SPONSOR_AD]', '').trim();
                 const adSrcDoc = `<!DOCTYPE html><html><head><base target="_blank"><style>body{margin:0;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;overflow:hidden;}</style></head><body><script>(function(hfbok){var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1]; s.settings = hfbok || {}; s.src = "\\/\\/unfoldedtrade.com\\/bRXTV.s\\/dIG\\/l\\/0PYjWvcV\\/vecmK9eu\\/ZvU-lXk\\/PETCcw1-M\\/DKgOw-M\\/TDMWtVNLzGUMwwO\\/DnA\\/xlNTwv"; s.async = true; s.referrerPolicy = 'no-referrer-when-downgrade'; l.parentNode.insertBefore(s, l);})({})<\/script></body></html>`;
@@ -21703,18 +21698,18 @@
                     <div class="chat-sponsor-card">
                         <div class="chat-sponsor-header">
                             <span class="chat-sponsor-badge">
-                                <i class="fa-solid fa-rectangle-ad"></i> THẺ TÀI TRỢ
+                                <i class="fa-solid fa-rectangle-ad"></i> TÀI TRỢ
                             </span>
-                            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">
-                                <i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> Tiếp sức cộng đồng
+                            <span style="font-size:0.72rem; color:var(--text-muted);">
+                                Nội dung quảng cáo
                             </span>
                         </div>
                         <div class="chat-sponsor-ad-frame">
                             <iframe srcdoc="${escapeHtml(adSrcDoc)}" style="width:300px; height:250px; border:none; display:block; margin:0 auto; overflow:hidden;" scrolling="no"></iframe>
                         </div>
                         <div class="chat-sponsor-footer">
-                            <span>Người gửi: <b style="color:var(--primary);">@${escapeHtml(author || 'Thành viên')}</b></span>
-                            <span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-shield-halved"></i> Đã duyệt</span>
+                            <span>Người đăng: <b style="color:var(--text-title);">@${escapeHtml(author || 'Thành viên')}</b></span>
+                            <span style="font-size:0.7rem; color:var(--text-muted);">ID: Ads</span>
                         </div>
                     </div>
                 `;
@@ -24351,7 +24346,7 @@
                 return;
             }
 
-            const isConfirmed = confirm("Bạn có muốn gửi thẻ tài trợ vào kênh Giao lưu để tiếp sức cộng đồng không?");
+            const isConfirmed = confirm("Bạn có muốn gửi thẻ tài trợ vào kênh Giao lưu không? Mỗi thẻ tài trợ sẽ giúp TurboShare duy trì một nền tảng miễn phí.");
             if (!isConfirmed) return;
 
             const textarea = document.getElementById('commentTextChat');
