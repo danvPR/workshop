@@ -7,7 +7,7 @@
     <meta name="description" content="DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN." id="metaDesc" />
     <meta property="og:title" content="DANVworkshop - Coding community" id="ogTitle" />
     <meta property="og:description" content="Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu." id="ogDesc" />
-    <meta property="og:image" content="https://files.catbox.moe/akk75b.png" id="ogImage" /> <!-- logo vi-->
+    <meta property="og:image" content="https://files.catbox.moe/suarwr.png" id="ogImage" /> <!-- logo vi-->
     <meta property="og:url" content="https://turboshare.org.uk/" id="ogUrl" />
     <meta name="google-adsense-account" content="ca-pub-6459018010825989">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6459018010825989" crossorigin="anonymous"></script>
@@ -7183,7 +7183,7 @@
         }
         [data-theme="dark"] .bb-gift-msg { color: #e2e8f0; border-top-color: rgba(217, 70, 239, 0.4); }
 
-        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube / TikTok / Chess / Station / Asset để không bị viền xấu */
+        /* Bỏ background của bong bóng chat chứa thẻ quà tặng / thẻ câu đố / embed YouTube / TikTok / Chess / Station / Asset / Tài trợ để không bị viền xấu */
         .chat-msg-row .chat-bubble:has(.beabea-gift-card),
         .chat-msg-row .chat-bubble:has(.beabea-blindbag-card),
         .chat-msg-row .chat-bubble:has(.beabea-quiz-card),
@@ -7191,11 +7191,73 @@
         .chat-msg-row .chat-bubble:has(.chat-tiktok-embed-wrap:only-child),
         .chat-msg-row .chat-bubble:has(.chat-chess-card),
         .chat-msg-row .chat-bubble:has(.chat-shared-station-card),
-        .chat-msg-row .chat-bubble:has(.chat-shared-asset-card) {
+        .chat-msg-row .chat-bubble:has(.chat-shared-asset-card),
+        .chat-msg-row .chat-bubble:has(.chat-sponsor-card) {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+        }
+
+        /* KHUNG THẺ TÀI TRỢ QUẢNG CÁO CHUẨN 300x250 */
+        .chat-sponsor-card {
+            background: var(--bg-panel) !important;
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            overflow: hidden;
+            width: 320px;
+            max-width: 100%;
+            margin-top: 6px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .chat-sponsor-card:hover {
+            transform: translateY(-2px);
+            border-color: #10b981;
+            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.18);
+        }
+        .chat-sponsor-header {
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-sponsor-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.18);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.5px;
+        }
+        .chat-sponsor-ad-frame {
+            width: 100%;
+            min-height: 250px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            overflow: hidden;
+        }
+        .chat-sponsor-footer {
+            padding: 8px 14px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         /* ♟️ WIDGET CHESS.COM HIỆN ĐẠI */
@@ -9416,7 +9478,7 @@
     <nav class="navbar">
         <div class="nav-left">
             <a href="/#home" class="navbar-brand">
-                <img src="https://files.catbox.moe/akk75b.png" alt="StudioDANV Logo" class="nav-logo-img"> <!-- Logo-vi-->
+                <img src="https://files.catbox.moe/suarwr.png" alt="StudioDANV Logo" class="nav-logo-img"> <!-- Logo-vi-->
             </a>
         </div>
         <div class="nav-center">
@@ -9698,6 +9760,9 @@
                                     </button>
                                     <button type="button" class="chat-dock-icon-btn" onclick="quickAskBeaBeaIdea()" data-i18n-title="chat_idea_title" title="Gợi ý ý tưởng làm game" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #ea580c;">
                                         <i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 4px;"></i> <span data-i18n="chat_btn_idea">Ý tưởng</span>
+                                    </button>
+                                    <button type="button" id="btnSponsorAdChat" class="chat-dock-icon-btn" onclick="sendSponsorAdChat()" data-i18n-title="chat_sponsor_btn_title" title="Gửi thẻ tài trợ tiếp sức cộng đồng" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #10b981;">
+                                        <i class="fa-solid fa-rectangle-ad" style="color: #10b981; margin-right: 4px;"></i> <span>Tài trợ</span>
                                     </button>
                                 </div>
 
@@ -11815,7 +11880,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-left">
-                <img src="https://files.catbox.moe/akk75b.png" alt="Logo" class="footer-logo-img" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));"> <!-- logo vi-->
+                <img src="https://files.catbox.moe/suarwr.png" alt="Logo" class="footer-logo-img" style="height: 35px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));"> <!-- logo vi-->
                 <p data-i18n="footer_desc" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 5px;">Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu.</p>
                 <div style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;" data-i18n="footer_copyright">&copy; 2026 DANVworkshop. All rights reserved.</div>
             </div>
@@ -13658,7 +13723,7 @@
                 <!-- Bong bóng lời thoại của Gấu Gấu khi được tặng tim -->
                 <div id="bearSpeechBubble" class="bear-speech-bubble">Cảm ơn bạn nha! 🧹</div>
                 <img 
-                    src="https://files.catbox.moe/akk75b.png"
+                    src="https://files.catbox.moe/suarwr.png"
                     alt="Gấu Gấu dọn dẹp thành phố" 
                     class="bear-img"
                     id="maintBearMascotImg"
@@ -21629,6 +21694,32 @@
             if (!rawText) return '';
             const isBeaBea = (author === 'BeaBea (AI)');
 
+            // THẺ TÀI TRỢ QUẢNG CÁO (SPONSORED AD CARD)
+            if (rawText.includes('[DANV_SPONSOR_AD]')) {
+                const userMsg = rawText.replace('[DANV_SPONSOR_AD]', '').trim();
+                const adSrcDoc = `<!DOCTYPE html><html><head><base target="_blank"><style>body{margin:0;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;overflow:hidden;}</style></head><body><script>(function(hfbok){var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1]; s.settings = hfbok || {}; s.src = "\\/\\/unfoldedtrade.com\\/bRXTV.s\\/dIG\\/l\\/0PYjWvcV\\/vecmK9eu\\/ZvU-lXk\\/PETCcw1-M\\/DKgOw-M\\/TDMWtVNLzGUMwwO\\/DnA\\/xlNTwv"; s.async = true; s.referrerPolicy = 'no-referrer-when-downgrade'; l.parentNode.insertBefore(s, l);})({})<\/script></body></html>`;
+
+                return (userMsg ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(userMsg)}</div>` : '') + `
+                    <div class="chat-sponsor-card">
+                        <div class="chat-sponsor-header">
+                            <span class="chat-sponsor-badge">
+                                <i class="fa-solid fa-rectangle-ad"></i> THẺ TÀI TRỢ
+                            </span>
+                            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">
+                                <i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> Tiếp sức cộng đồng
+                            </span>
+                        </div>
+                        <div class="chat-sponsor-ad-frame">
+                            <iframe srcdoc="${escapeHtml(adSrcDoc)}" style="width:300px; height:250px; border:none; display:block; margin:0 auto; overflow:hidden;" scrolling="no"></iframe>
+                        </div>
+                        <div class="chat-sponsor-footer">
+                            <span>Người gửi: <b style="color:var(--primary);">@${escapeHtml(author || 'Thành viên')}</b></span>
+                            <span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-shield-halved"></i> Đã duyệt</span>
+                        </div>
+                    </div>
+                `;
+            }
+
             // ♟️ WIDGET CHESS.COM THÔNG MINH KHI DÁN LINK
             const chessInfo = parseChessComUrl(rawText);
             if (chessInfo) {
@@ -24247,6 +24338,45 @@
             textarea.setSelectionRange(len, len);
         }
 
+        // GỬI THẺ TÀI TRỢ QUẢNG CÁO TIẾP SỨC CỘNG ĐỒNG
+        let lastSponsorAdSentTime = 0;
+        async function sendSponsorAdChat() {
+            if (!currentUser) return openModal('loginModal');
+
+            // Giới hạn 45 giây để chống spam
+            const now = Date.now();
+            if (now - lastSponsorAdSentTime < 45000) {
+                const waitSec = Math.ceil((45000 - (now - lastSponsorAdSentTime)) / 1000);
+                showToast(`Bạn vừa gửi thẻ tài trợ rồi, vui lòng đợi ${waitSec} giây để gửi tiếp nhé!`, "info");
+                return;
+            }
+
+            const isConfirmed = confirm("Bạn có muốn gửi thẻ tài trợ vào kênh Giao lưu để tiếp sức cộng đồng không?");
+            if (!isConfirmed) return;
+
+            const textarea = document.getElementById('commentTextChat');
+            let userMsg = textarea ? textarea.value.trim() : "";
+            const messageToSend = userMsg ? `[DANV_SPONSOR_AD] ${userMsg}` : `[DANV_SPONSOR_AD]`;
+
+            lastSponsorAdSentTime = now;
+            showToast("Đang gửi thẻ tài trợ tiếp sức...", "info");
+
+            const payload = { text: messageToSend, replyTo: null, imageId: null };
+            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+
+            if (res && res.success) {
+                if (textarea) {
+                    textarea.value = '';
+                    textarea.style.height = 'auto';
+                }
+                showToast("Cảm ơn bạn đã gửi thẻ tài trợ tiếp sức cho cộng đồng!", "success");
+                lastChatJSONStr = "";
+                await loadGlobalChat(true);
+            } else {
+                showToast((res && res.error) ? res.error : "Không thể gửi thẻ tài trợ lúc này", "error");
+            }
+        }
+
 
         // BỘ BIẾN HỖ TRỢ TÌM KIẾM TIN NHẮN DEEP LINKING
         let isAutoFindingMessage = false;
@@ -24355,6 +24485,11 @@
             }
             if (raw.includes('[DANV_ASSET_SHARE:')) {
                 return `📦 Đã chia sẻ một Tài nguyên từ Store`;
+            }
+
+            // 7.6. Thẻ tài trợ quảng cáo
+            if (raw.includes('[DANV_SPONSOR_AD]')) {
+                return `Đã gửi một thẻ tài trợ tiếp sức cộng đồng`;
             }
 
             // 7.8. Chess.com Link
