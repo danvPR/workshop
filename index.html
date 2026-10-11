@@ -14856,12 +14856,16 @@
                 currentUser.frame = res.frame || null;
                 currentUser.chatFrame = res.chatFrame || res.chat_frame || currentUser.chatFrame || "";
                 
+                if (res.banner !== undefined) {
+                    currentUser.banner = res.banner;
+                }
+
                 // Đồng bộ chính xác trạng thái xác thực từ CSDL máy chủ
                 if (res.emailVerified !== undefined) {
                     currentUser.emailVerified = (res.emailVerified === true || res.emailVerified === "true");
                 }
 
-                localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 updateNav(); 
                 checkEmailVerificationBanner();
             }
@@ -15276,9 +15280,10 @@
                         emailVerified: res.emailVerified !== undefined ? res.emailVerified : true,
                         WOW: res.WOW !== undefined ? res.WOW : (res.omg || 0),
                         frame: res.frame || null,
-                        chatFrame: res.chatFrame || res.chat_frame || ""
+                        chatFrame: res.chatFrame || res.chat_frame || "",
+                        banner: res.banner || ""
                     };
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser)); 
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
                     closeModal('authModal'); 
                     showToast("Đăng nhập thành công!", "success"); 
                     location.reload(); 
