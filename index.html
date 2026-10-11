@@ -13762,10 +13762,33 @@
         const WORKER_URL = "https://api.turboshare.org.uk"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
 
-        // ================= HỆ THỐNG PHÁT HIỆN LỖI SERVER & KÍCH HOẠT BẢO TRÌ =================
+        // ================= HỆ THỐNG PHÁT HIỆN LỖI SERVER & KÍCH HOẠT BẢO TRÌ CHÍNH XÁC =================
         let apiConsecutiveFailures = 0;
         let isMaintenanceModeActive = false;
+        let isVerifyingServerHealth = false;
         let maintenanceCountdownInterval = null;
+        let maintenanceRecoveryInterval = null;
+
+        // Hàm kiểm tra độc lập tình trạng máy chủ kèm đúng Header nhận diện
+        async function checkServerAliveDirectly() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 4000); // Giới hạn 4s
+                const check = await _systemOriginalFetch(`${WORKER_URL}/api/heartbeat?_check=${Date.now()}`, {
+                    method: 'GET',
+                    headers: { 
+                        "X-Client-Type": "StudioDANV-Web",
+                        "Cache-Control": "no-cache"
+                    },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                // 200 OK hoặc bất kỳ mã phản hồi hợp lệ nào dưới 500 đều chứng tỏ Server Backend đang chạy
+                return check && check.status < 500;
+            } catch(e) {
+                return false;
+            }
+        }
 
         // Bắt lỗi toàn cục qua Fetch Interceptor đối với các yêu cầu đến WORKER_URL
         const _systemOriginalFetch = window.fetch;
@@ -13774,14 +13797,23 @@
             try {
                 const response = await _systemOriginalFetch.apply(this, args);
                 if (reqUrl.includes(WORKER_URL)) {
-                    if (response.status >= 500) {
+                    // Chỉ tính lỗi sập máy chủ khi trả về mã 502, 503, 504, 521, 522, 523 (Cloudflare Server Down)
+                    if (response.status >= 502 && response.status <= 530) {
                         registerApiNetworkFailure();
-                    } else if (response.ok) {
-                        apiConsecutiveFailures = Math.max(0, apiConsecutiveFailures - 1);
+                    } else if (response.ok || (response.status >= 200 && response.status < 500)) {
+                        // Server vẫn phản hồi bình thường (kể cả 400, 401, 404) -> Reset biến lỗi
+                        apiConsecutiveFailures = 0;
+                        if (isMaintenanceModeActive) {
+                            dismissCityCleanupMaintenance();
+                        }
                     }
                 }
                 return response;
             } catch (networkError) {
+                // Bỏ qua nếu lỗi là do hủy request chủ động từ trình duyệt (AbortError)
+                if (networkError && networkError.name === 'AbortError') {
+                    throw networkError;
+                }
                 if (reqUrl.includes(WORKER_URL)) {
                     registerApiNetworkFailure();
                 }
@@ -13789,10 +13821,28 @@
             }
         };
 
-        function registerApiNetworkFailure() {
+        async function registerApiNetworkFailure() {
             apiConsecutiveFailures++;
-            if (apiConsecutiveFailures >= 3 && !isMaintenanceModeActive) {
-                triggerCityCleanupMaintenance();
+            // Chỉ bắt đầu kiểm tra khi ghi nhận liên tiếp 3 lần lỗi và không trong lúc đang kiểm chứng
+            if (apiConsecutiveFailures >= 3 && !isMaintenanceModeActive && !isVerifyingServerHealth) {
+                isVerifyingServerHealth = true;
+                // Ping kiểm chứng trực tiếp xem Server có thực sự chết hay chỉ do đường truyền tạm thời
+                const isAlive = await checkServerAliveDirectly();
+                if (isAlive) {
+                    apiConsecutiveFailures = 0;
+                    isVerifyingServerHealth = false;
+                } else {
+                    // Xác thực lần 2 sau 1.5 giây để tránh phán đoán nhầm
+                    setTimeout(async () => {
+                        const confirmAlive = await checkServerAliveDirectly();
+                        if (!confirmAlive && !isMaintenanceModeActive) {
+                            triggerCityCleanupMaintenance();
+                        } else {
+                            apiConsecutiveFailures = 0;
+                        }
+                        isVerifyingServerHealth = false;
+                    }, 1500);
+                }
             }
         }
 
@@ -13805,16 +13855,26 @@
             startMaintenanceCountdown();
             initBearCheerCounter();
 
-            // Tiến trình ngầm kiểm tra xem server đã phục hồi chưa mỗi 45s
-            const recoveryCheckInterval = setInterval(async () => {
-                try {
-                    const check = await _systemOriginalFetch(`${WORKER_URL}/api/heartbeat?_check=${Date.now()}`);
-                    if (check && check.ok) {
-                        clearInterval(recoveryCheckInterval);
-                        location.reload();
-                    }
-                } catch(e) {}
-            }, 45000);
+            // Quét kiểm tra phục hồi mỗi 6 giây (Kèm Header xác thực chuẩn)
+            clearInterval(maintenanceRecoveryInterval);
+            maintenanceRecoveryInterval = setInterval(async () => {
+                const isBackOnline = await checkServerAliveDirectly();
+                if (isBackOnline) {
+                    dismissCityCleanupMaintenance();
+                }
+            }, 6000);
+        }
+
+        function dismissCityCleanupMaintenance() {
+            isMaintenanceModeActive = false;
+            apiConsecutiveFailures = 0;
+            clearInterval(maintenanceRecoveryInterval);
+            clearInterval(maintenanceCountdownInterval);
+            const modal = document.getElementById('cityCleanupModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            showToast("Máy chủ đã hoạt động bình thường trở lại!", "success");
         }
 
         // ================= HÀM TẶNG TIM & LỜI THOẠI ĐỘNG VIÊN GẤU GẤU =================
