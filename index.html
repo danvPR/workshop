@@ -2042,38 +2042,61 @@
             
             .modal { max-width: 95vw; margin: 10px; }
         }
-        /* ================= CHẾ ĐỘ MÁY YẾU / TIẾT KIỆM PIN (LOW-SPEC MODE) ================= */
+        /* ================= CHẾ ĐỘ MÁY YẾU / TIẾT KIỆM PIN (LOW-SPEC MODE - TRULY LITE) ================= */
+        /* Ở chế độ này, chúng ta vô hiệu hóa hoàn toàn Bóng đổ, Gradients, Filters, và Animations để giải phóng GPU */
+        [data-lowspec="true"],
         [data-lowspec="true"] * {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            filter: none !important;
+            transition: none !important; /* Tắt chuyển động làm mượt */
+            border-image: none !important; /* Gỡ Custom Frame hình ảnh gây nặng RAM */
         }
+        
         [data-lowspec="true"] .navbar {
             background: var(--bg-panel) !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+            border-bottom: 1px solid var(--border-color) !important;
         }
-        [data-lowspec="true"] .card, 
-        [data-lowspec="true"] .chat-bubble, 
-        [data-lowspec="true"] .modal, 
-        [data-lowspec="true"] .chat-main-card,
-        [data-lowspec="true"] .profile-hero,
-        [data-lowspec="true"] .station-card,
-        [data-lowspec="true"] .asset-card {
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+        
+        /* Thay thế toàn bộ Gradients bằng màu solid cơ bản */
+        [data-lowspec="true"] .btn-primary,
+        [data-lowspec="true"] .nav-btn-create,
+        [data-lowspec="true"] .btn-tip-WOW,
+        [data-lowspec="true"] .chat-msg-row.mine .chat-bubble {
+            background: var(--primary) !important;
+            background-image: none !important;
+            border-color: var(--primary) !important;
         }
+        
+        /* Tắt vĩnh viễn mọi nguồn sáng / Aura giả lập phía sau */
         [data-lowspec="true"] .chat-yt-embed-wrap::before,
         [data-lowspec="true"] .chat-tiktok-embed-wrap::before,
         [data-lowspec="true"] .beabea-gift-card::before,
-        [data-lowspec="true"] .tip-balance-hud::before {
+        [data-lowspec="true"] .tip-balance-hud::before,
+        [data-lowspec="true"] .tryon-avt-stage::before,
+        [data-lowspec="true"] .assets-hero-card::before,
+        [data-lowspec="true"] .station-hero-banner::before,
+        [data-lowspec="true"] .beabea-blindbag-card::before {
             display: none !important;
         }
+        
+        /* Tắt toàn bộ Animation HTML/CSS quay, nhấp nháy, nảy */
         [data-lowspec="true"] .fa-spin,
         [data-lowspec="true"] .fa-beat,
         [data-lowspec="true"] .fa-bounce,
+        [data-lowspec="true"] .fa-fade,
+        [data-lowspec="true"] .fa-shake,
         [data-lowspec="true"] .pulseActiveSlot,
         [data-lowspec="true"] .pulseGoldDay,
         [data-lowspec="true"] .shake-hyper,
-        [data-lowspec="true"] .breatheHole {
+        [data-lowspec="true"] .shake-wild,
+        [data-lowspec="true"] .shake-gentle,
+        [data-lowspec="true"] .breatheHole,
+        [data-lowspec="true"] .bag-icon-anim {
             animation: none !important;
+            transform: none !important;
         }
 
         /* --- BẢN VÁ LỖI MÀU CHỮ (DARK/LIGHT MODE TEXT FIX) --- */
@@ -3439,10 +3462,10 @@
         .chat-layout-grid {
             display: grid;
             grid-template-columns: 1fr 320px;
-            gap: 20px;
+            gap: 16px;
             width: 100%;
             height: clamp(600px, calc(100dvh - 90px), 940px);
-            transition: grid-template-columns 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: grid-template-columns 0.2s ease;
         }
         .chat-layout-grid.sidebar-collapsed {
             grid-template-columns: 1fr;
@@ -3451,51 +3474,49 @@
         .chat-main-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
+            border-radius: 12px; /* Làm phẳng, giảm độ bo tròn */
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.04);
+            box-shadow: none; /* Bỏ toàn bộ shadow gây nặng */
             overflow: hidden;
             position: relative;
         }
         [data-theme="dark"] .chat-main-card {
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         /* 1. Header Bar Tối Giản & Thanh Lịch */
         .chat-header-bar {
-            padding: 14px 24px;
+            padding: 14px 20px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--bg-panel); /* Đổi sang màu trơn, gỡ kính mờ blur */
             flex-shrink: 0;
             z-index: 20;
         }
         [data-theme="dark"] .chat-header-bar {
-            background: rgba(31, 41, 55, 0.85);
+            background: var(--bg-panel);
         }
         .chat-header-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
         .chat-header-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(13, 165, 122, 0.16) 0%, rgba(59, 130, 246, 0.1) 100%);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(13, 165, 122, 0.1); /* Màu nền phẳng */
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--primary);
             font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(13, 165, 122, 0.1);
+            box-shadow: none; /* Bỏ shadow */
         }
         .chat-header-title {
             margin: 0;
@@ -3659,27 +3680,27 @@
         .chat-bubble { 
             background: var(--bg-panel); 
             color: var(--text-main); 
-            padding: 12px 16px;
+            padding: 10px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 20px 20px 20px 4px; /* Bo nhọn góc trái dưới */
-            font-size: 0.96rem; 
-            line-height: 1.5; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            border-radius: 12px; /* Gọn gàng, vuông vức hơn */
+            font-size: 0.95rem; 
+            line-height: 1.45; 
+            box-shadow: none; /* Bỏ shadow hoàn toàn */
             width: fit-content;
             word-wrap: break-word;
-            transition: all 0.2s ease;
             position: relative;
         }
         /* Bong bóng của TÔI */
         .chat-msg-row.mine .chat-bubble:not(.bubble-custom-frame):not([class*="bubble-"]) {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary); /* Đổi Gradient thành màu Solid phẳng */
             color: #ffffff !important;
-            border-color: transparent;
-            border-radius: 20px 20px 4px 20px; /* Bo nhọn góc phải dưới */
-            box-shadow: 0 4px 15px rgba(13, 165, 122, 0.25);
+            border-color: var(--primary);
+            border-radius: 12px;
+            box-shadow: none;
         }
         [data-theme="dark"] .chat-msg-row.mine .chat-bubble:not(.bubble-custom-frame):not([class*="bubble-"]) {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: var(--primary);
+            border-color: var(--primary);
         }
         /* Ép màu text bên trong bong bóng Mine */
         .chat-msg-row.mine .chat-bubble:not(.bubble-custom-frame):not([class*="bubble-"]) .chat-text,
@@ -3922,7 +3943,7 @@
 
         /* 5. Khung Soạn Thảo Siêu Gọn (Zen Composer) */
         .chat-input-box {
-            padding: 16px 24px 24px 24px;
+            padding: 16px;
             background: var(--bg-panel);
             border-top: 1px solid var(--border-color);
             flex-shrink: 0;
@@ -3931,19 +3952,19 @@
         .chat-composer-dock {
             background: var(--bg-input);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 12px 18px;
+            border-radius: 12px; /* Gọn gàng hơn */
+            padding: 10px 14px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: none; /* Không đổ bóng */
+            transition: border-color 0.2s;
         }
         .chat-composer-dock:focus-within {
             background: var(--bg-panel);
             border-color: var(--primary);
-            box-shadow: 0 8px 30px rgba(13, 165, 122, 0.15);
-            transform: translateY(-2px);
+            box-shadow: none; /* Tắt phóng to, tắt bóng khi focus */
+            transform: none;
         }
         .chat-input-textarea {
             width: 100%;
@@ -4079,20 +4100,18 @@
         .chat-side-card {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
-            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 12px; /* Vừa vặn, không quá bo tròn */
+            padding: 14px;
+            box-shadow: none; /* Bỏ shadow */
             position: relative;
             overflow: hidden;
         }
         .chat-side-card:hover {
-            border-color: rgba(13, 165, 122, 0.4);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary); /* Đơn giản hóa khi hover, không rung/bóng */
         }
         [data-theme="dark"] .chat-side-card {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            border-color: var(--border-color);
         }
 
         .chat-side-title {
@@ -22762,7 +22781,7 @@
             }
 
             // Nếu là TurboWarp: Mở tab mới
-            const editorUrl = 'https://turbowarp.org/editor?project_url=https://api.turboshare.org.uk/api/project/BQACAgUAAyEGAAMBAm7g1wADWWqaA9XCFAa2PZvJLk9gR6LFYg7aAAL4HwAC1VPQVNAurUwM2LD8PQQ';
+            const editorUrl = 'https://turbowarp.org/editor?project_url=https://files.catbox.moe/gg2k7i.sb3';
             const newWindow = window.open(editorUrl, '_blank');
             
             if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
