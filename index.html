@@ -15458,20 +15458,33 @@
         const BASE_PATH = window.location.pathname.includes('/workshop') ? '/workshop' : '';
         let previousHash = window.location.pathname + window.location.hash; 
 
+        // ĐIỀU HƯỚNG TẢI LẠI TRANG THẬT (RELOAD TOÀN BỘ TRANG)
         window.navigateTo = function(url) {
+            if (!url) return;
             if (url.startsWith('/') && !url.startsWith(BASE_PATH)) url = BASE_PATH + url;
-            history.pushState(null, '', url);
-            handleRouting();
+            if (url.startsWith('#')) url = (BASE_PATH || '/') + url;
+
+            const target = new URL(url, window.location.origin);
+            // Nếu cùng URL hoàn toàn thì ép reload, nếu khác URL thì điều hướng thật
+            if (window.location.href !== target.href) {
+                window.location.href = target.href;
+                // Nếu chỉ đổi hashtag trên cùng 1 trang, trình duyệt không tự quay vòng -> ép reload ngay
+                if (window.location.pathname === target.pathname && window.location.search === target.search) {
+                    window.location.reload();
+                }
+            } else {
+                window.location.reload();
+            }
         };
 
-        // BỘ ĐÁNH CHẶN (INTERCEPTOR): Đảm bảo điều hướng luôn thông suốt từ mọi trang
+        // BỘ ĐIỀU HƯỚNG CLICK: MỌI LIÊN KẾT ĐỀU TẢI LẠI TRANG THẬT
         document.addEventListener('click', function(e) {
             const a = e.target.closest('a');
             if (!a) return;
             const href = a.getAttribute('href');
             if (!href || a.getAttribute('target') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
 
-            // 1. Chuyển đổi các link hash dự án/user sang URL sạch
+            // 1. Chuyển đổi các link hash cũ sang URL sạch và tải lại trang thật
             if (href.startsWith('#project/') || href.startsWith('/#project/')) {
                 e.preventDefault();
                 const clean = href.replace(/^\/?#project\//, '');
@@ -15484,29 +15497,26 @@
                 navigateTo('/users/' + clean);
                 return;
             }
+            if (href.startsWith('#studio/') || href.startsWith('/#studio/')) {
+                e.preventDefault();
+                const clean = href.replace(/^\/?#studio\//, '');
+                navigateTo('/studio/' + clean);
+                return;
+            }
 
-            // 2. Bắt link URL sạch trực tiếp (/projects/... hoặc /users/...)
+            // 2. Click vào các đường dẫn URL sạch (/projects/..., /users/..., /studio/..., /studios)
             if (href.startsWith('/projects/') || href.startsWith('/users/') || href.startsWith('/studio/') || href.startsWith('/studios')) {
                 e.preventDefault();
                 navigateTo(href);
                 return;
             }
 
-            // 3. Xử lý các menu Hash (#home, #chat, #assets,... hoặc /#home, /#chat...) mượt mà không bị nhảy trang
+            // 3. Click vào các menu hashtag (#home, #chat, #assets,...) -> Tải lại trang thật
             if (href.startsWith('#') || href.startsWith('/#') || href.startsWith('./#') || (BASE_PATH && href.startsWith(BASE_PATH + '/#'))) {
                 e.preventDefault();
                 const targetHash = href.substring(href.indexOf('#'));
-                const currentPath = window.location.pathname;
-                const targetBasePath = BASE_PATH ? BASE_PATH + '/' : '/';
-                
-                // Nếu đang ở trong dự án/hồ sơ/studio, phải lùi ra trang gốc rồi mới gán Hash
-                if (currentPath.includes('/projects/') || currentPath.includes('/users/') || currentPath.includes('/studio/')) {
-                    history.pushState(null, '', targetBasePath + targetHash);
-                } else {
-                    // Nếu đã ở trang gốc, chỉ thay đổi Hash trên thanh địa chỉ
-                    history.pushState(null, '', targetHash);
-                }
-                handleRouting(); // Kích hoạt chuyển trang
+                const targetUrl = (BASE_PATH || '/') + targetHash;
+                navigateTo(targetUrl);
                 return;
             }
         });
@@ -15664,7 +15674,7 @@
             else if (hash === '#creator') await openCreatorPage(urlParams);
             else if (hash === '#chat') openChatPage();
             else if (hash.startsWith('#assets')) openAssetsPage(urlParams); 
-            else openHomePage();
+            else openHomePage(urlParams);
 
             // ⚡ FIX TRIỆT ĐỂ LỖI KHOẢNG TRẮNG SCROLL:
             // Đợi 10ms để trình duyệt render xong CSS display: block của trang mới rồi mới ép cuộn lên đầu và tính toán lại Layout
@@ -15815,12 +15825,9 @@
             };
         }
 
-        // Điều hướng thông minh: Bấm vào hashtag ở bất kỳ đâu sẽ tự động chuyển về trang chủ và tìm kiếm
+        // Điều hướng thông minh: Tải lại trang chủ kèm tham số tag trên URL
         window.navigateToTagSearch = function(tag) {
-            navigateTo('#home');
-            setTimeout(() => {
-                applySearchTag(tag);
-            }, 120);
+            navigateTo('/#home?tag=' + encodeURIComponent(tag));
         };
 
         // Render HTML cho danh sách dự án hiện đại (kèm Avatar, Tag chips, Stats)
@@ -15911,8 +15918,14 @@
             });
         }
 
-        function openHomePage() {
+        function openHomePage(urlParams = null) {
             document.getElementById('homeView').style.display = 'block';
+            if (urlParams) {
+                const searchTag = urlParams.get('tag');
+                if (searchTag) {
+                    setTimeout(() => applySearchTag(searchTag), 250);
+                }
+            }
             
             // Cập nhật ngày đếm ngược cho Banner Trung Thu ngoài Trang Chủ
             const cdEl = document.getElementById('homeMidAutumnCountdown');
@@ -16268,7 +16281,7 @@
             }
 
             // Mở tự động khung cập nhật nếu được kích hoạt
-            if (window.autoOpenSettingsForUpdate) {
+            if (window.autoOpenSettingsForUpdate || (urlParams && urlParams.get('update') === '1')) {
                 window.autoOpenSettingsForUpdate = false;
                 openProjSettingsModal();
                 setTimeout(() => {
@@ -19235,14 +19248,11 @@
             }
         }
 
-        // Hàm xử lý việc Click chọn dự án để Update
+        // Hàm xử lý việc Click chọn dự án để Update (Tải lại trang kèm cờ hiệu ?update=1)
         window.handleSelectProjectToUpdate = function(id) {
             window.isNavigatingToUpdate = true;
-            window.autoOpenSettingsForUpdate = true; // Cờ hiệu chờ tải xong
-            
             showToast("Đang tải dữ liệu dự án...", "info");
-            navigateTo('/projects/' + id); 
-            setTimeout(() => { window.isNavigatingToUpdate = false; }, 1500); 
+            navigateTo('/projects/' + id + '?update=1'); 
         };
 
         async function showUploadUpdate() {
