@@ -25251,11 +25251,18 @@
             const drop = document.getElementById('chatMentionDropdown');
             if (drop) drop.style.display = 'none';
 
-            const text = textInput.value.trim();
+            let text = textInput.value.trim();
             const imgFile = document.getElementById('commentImgUploadChat').files[0];
             const gifUrl = attachedGifUrls.chat;
             
             if (!text && !imgFile && !gifUrl) return;
+
+            if (text.includes('[DANV_SPONSOR_AD]')) {
+                showToast("Vui lòng dùng nút 'Tài trợ' trên thanh công cụ để gửi thẻ tài trợ!", "error");
+                text = text.replace(/\[DANV_SPONSOR_AD\]/g, '').trim();
+                textInput.value = text;
+                if (!text && !imgFile && !gifUrl) return;
+            }
             
             // Giới hạn dung lượng ảnh 20MB
             if (imgFile && imgFile.size > 20 * 1024 * 1024) {
