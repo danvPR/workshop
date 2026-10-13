@@ -1956,8 +1956,7 @@
             border-color: var(--primary);
         }
 
-        #globalLoader { position: fixed; inset: 0; background: var(--bg-panel); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; opacity: 1; transition: opacity 0.5s ease; }
-
+        #globalLoader { display: none !important; }
         
         /* CẬP NHẬT MÀU NỀN THEO THEME CHO CÁC ELEMENT CỐ ĐỊNH */
         .form-control { background: var(--bg-input); color: var(--text-main); }
@@ -9477,10 +9476,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div id="globalLoader">
-        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
-        <h3 style="color: #666; font-weight:normal;" id="loaderText" data-i18n="loader_text">Thank you!</h3>
-    </div>
 
     <div id="toastContainer"></div>
 
@@ -14517,8 +14512,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const loader = document.getElementById('globalLoader');
-            
             // Khởi tạo Theme ngay lập tức
             const savedTheme = localStorage.getItem('danv_theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -14617,7 +14610,7 @@
                 loadEvents(); // Tải Sự kiện Game Jam
                 startUnifiedHeartbeat(); // Kích hoạt luồng nhịp tim tổng hợp (Đợt 3)
                 setupAllActionHoldButtons(); // Kích hoạt hiệu ứng giữ nút cho Đăng dự án, Update, Asset, Station
-            } catch (e) {} finally { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
+            } catch (e) {} finally {}
         });
 
         // ================= BỘ ĐIỀU KHIỂN NHẤN GIỮ CHUNG CHO CÁC NÚT HÀNH ĐỘNG (CHUẨN TẶNG WOW) =================
