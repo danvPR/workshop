@@ -14775,10 +14775,10 @@
             if (!force && (!enabled || volume === 0)) return;
 
             try {
-                // Áp dụng đường cong logarit cảm nhận âm học (Perceptual Volume Curve)
-                // Giúp mức 10% - 30% thực sự nhỏ dịu tai, không bị chói gắt
-                const perceptualVolume = Math.pow(volume, 2);
-                chatPingAudio.volume = force ? (volume === 0 ? 0.64 : perceptualVolume) : perceptualVolume;
+                // Sử dụng đường cong âm học bậc 3 (Cubic Curve)
+                // Giúp các mức 10%, 20%, 30% thực sự nhỏ dịu và không bị giật mình
+                const realGain = Math.pow(volume, 3);
+                chatPingAudio.volume = Math.max(0, Math.min(1, realGain));
                 chatPingAudio.currentTime = 0;
                 chatPingAudio.play().catch(() => {});
             } catch(e) {}
@@ -24800,9 +24800,9 @@
                                 if (!chatNotifiedMsgIds.has(msgId)) {
                                     chatNotifiedMsgIds.add(msgId);
                                     triggerChatBrowserNotification(data.message, msgId);
-                                    // Phát âm thanh Ping nếu có tin nhắn từ người khác
+                                    // Phát âm thanh Pop đúng theo âm lượng đã cài đặt
                                     if (!isMine) {
-                                        playChatPopSound();
+                                     playChatPopSound();
                                     }
                                 }
                             }
@@ -25471,6 +25471,11 @@
 
         // PHÁT THÔNG BÁO RA MÀN HÌNH TRÌNH DUYỆT (NATIVE DESKTOP NOTIFICATION)
         function triggerChatBrowserNotification(c, msgId) {
+            // Nếu đang mở tab chat và màn hình đang sáng thì KHÔNG kích hoạt Notification của máy tính
+            // Triệt tiêu hoàn toàn tiếng chuông pop 100% của Windows đè lên âm thanh web
+            const isChatTabActive = (window.location.hash.split('?')[0] === '#chat') && !document.hidden;
+            if (isChatTabActive) return;
+
             // Kiểm tra tùy chọn bật/tắt của người dùng trong cài đặt
             const isEnabled = localStorage.getItem('danv_chat_desktop_notif') !== 'false';
             if (!isEnabled) return;
@@ -25817,6 +25822,10 @@
                             if (!chatNotifiedMsgIds.has(msgId)) {
                                 chatNotifiedMsgIds.add(msgId);
                                 triggerChatBrowserNotification(c, msgId);
+                                const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
+                                if (!isMine) {
+                                    playChatPopSound();
+                                }
                             }
                         }
                     } else {
