@@ -13844,6 +13844,42 @@
         </div>
     </div>
 
+    <!-- POP-UP THÔNG BÁO YÊU CẦU LÀM MỚI TRANG DO SỰ CỐ TRUY CẬP TÀI NGUYÊN (CORS / 403) -->
+    <div class="modal-overlay" id="corsReloadModal" style="z-index: 1000008; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+        <div class="modal" style="max-width: 520px; border-radius: 22px; overflow: hidden; background: var(--bg-panel); border: 1.5px solid var(--border-color); box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);">
+            <div class="modal-header" style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.12) 0%, rgba(239, 68, 68, 0.08) 100%); border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
+                <span style="font-weight: 800; font-size: 1.12rem; color: var(--text-title); display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c; font-size: 1.25rem;"></i>
+                    <span>Yêu Cầu Làm Mới Phiên Làm Việc</span>
+                </span>
+                <button class="btn-close" onclick="closeModal('corsReloadModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="font-size: 0.92rem; color: var(--text-main); line-height: 1.6;">
+                    Hệ thống ghi nhận sự cố gián đoạn quyền truy cập nguồn tài nguyên liên kết (Access-Control-Allow-Origin). Yêu cầu đã được tự động gửi lại lần thứ hai nhưng máy chủ chưa thể phản hồi thành công.
+                </div>
+
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-left: 4px solid #ea580c; border-radius: 12px; padding: 14px 16px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.55;">
+                    <div style="font-weight: 700; color: var(--text-title); margin-bottom: 4px;">Nguyên nhân kỹ thuật</div>
+                    <div>Phiên kết nối giữa trình biên tập và máy chủ lưu trữ dự án bị giới hạn hoặc chứng chỉ phân phối tạm thời chưa đồng bộ.</div>
+                </div>
+
+                <div style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                    Quý người dùng vui lòng tải lại trang web để làm mới toàn bộ bộ nhớ đệm và tái thiết lập quyền kết nối dữ liệu.
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 6px;">
+                    <button type="button" class="btn" style="flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; justify-content: center;" onclick="closeModal('corsReloadModal')">
+                        <i class="fa-solid fa-xmark"></i> <span>Đóng thông báo</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" style="flex: 1.8; padding: 12px; border-radius: 12px; font-weight: 800; justify-content: center; background: linear-gradient(135deg, #0da57a 0%, #0a8260 100%);" onclick="window.location.reload()">
+                        <i class="fa-solid fa-rotate-right"></i> <span>Tải lại trang web</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
         const SCRATCH_AUTH_URL = "https://auth.itinerary.eu.org";
@@ -13878,12 +13914,39 @@
             }
         }
 
-        // Bắt lỗi toàn cục qua Fetch Interceptor đối với các yêu cầu đến WORKER_URL
+        // Hàm mở Pop-up yêu cầu tải lại trang do sự cố CORS hoặc lỗi kết nối máy chủ
+        let isCorsModalTriggered = false;
+        function showCorsReloadModal() {
+            if (isCorsModalTriggered) return;
+            isCorsModalTriggered = true;
+            const modal = document.getElementById('corsReloadModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        // Bắt lỗi toàn cục qua Fetch Interceptor: Tự động thử lại lần 2 khi lỗi CORS/403
         const _systemOriginalFetch = window.fetch;
         window.fetch = async function(...args) {
             const reqUrl = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
+            const isResourceTarget = reqUrl.includes(WORKER_URL) || reqUrl.includes('/api/project/') || reqUrl.includes('turboshare.org.uk');
+            const isSecondAttempt = Boolean(args[1] && args[1]._isCorsRetry);
+
             try {
                 const response = await _systemOriginalFetch.apply(this, args);
+
+                // Nếu gặp lỗi 403 Forbidden (nguyên nhân gây thiếu Access-Control-Allow-Origin header)
+                if (isResourceTarget && response.status === 403 && !isSecondAttempt) {
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    const retryArgs = [...args];
+                    retryArgs[1] = Object.assign({}, retryArgs[1] || {}, { _isCorsRetry: true });
+                    const retryResponse = await _systemOriginalFetch.apply(this, retryArgs);
+                    if (retryResponse.status === 403) {
+                        showCorsReloadModal();
+                    }
+                    return retryResponse;
+                }
+
                 if (reqUrl.includes(WORKER_URL)) {
                     // Chỉ tính lỗi sập máy chủ khi trả về mã 502, 503, 504, 521, 522, 523 (Cloudflare Server Down)
                     if (response.status >= 502 && response.status <= 530) {
@@ -13902,6 +13965,34 @@
                 if (networkError && networkError.name === 'AbortError') {
                     throw networkError;
                 }
+
+                // Khi trình duyệt chặn CORS, fetch sẽ ném ra lỗi TypeError: Failed to fetch
+                if (isResourceTarget && !isSecondAttempt) {
+                    try {
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                        const retryArgs = [...args];
+                        retryArgs[1] = Object.assign({}, retryArgs[1] || {}, { _isCorsRetry: true });
+                        const secondResponse = await _systemOriginalFetch.apply(this, retryArgs);
+                        if (secondResponse.status === 403) {
+                            showCorsReloadModal();
+                        } else if (secondResponse.ok || (secondResponse.status >= 200 && secondResponse.status < 500)) {
+                            apiConsecutiveFailures = 0;
+                            if (isMaintenanceModeActive) {
+                                dismissCityCleanupMaintenance();
+                            }
+                        }
+                        return secondResponse;
+                    } catch (secondError) {
+                        if (secondError && secondError.name !== 'AbortError') {
+                            showCorsReloadModal();
+                        }
+                        if (reqUrl.includes(WORKER_URL)) {
+                            registerApiNetworkFailure();
+                        }
+                        throw secondError;
+                    }
+                }
+
                 if (reqUrl.includes(WORKER_URL)) {
                     registerApiNetworkFailure();
                 }
@@ -19416,6 +19507,12 @@
 
             const data = event.data;
             if (!data || !data.type) return;
+
+            // Tiếp nhận sự cố tải dự án hoặc chặn quyền từ iframe trình biên tập
+            if (data.type === "DANV_PROJECT_LOAD_ERROR" || data.type === "CORS_ERROR" || data.type === "FETCH_PROJECT_FAILED") {
+                showCorsReloadModal();
+                return;
+            }
 
             // 1. HANDSHAKE: Trả trạng thái đăng nhập và số dư (Không lộ sessionToken)
             if (data.type === "DANV_WOW_HANDSHAKE") {
