@@ -16118,6 +16118,11 @@
                     window.globalChatChannel = null; 
                 }
             }
+            
+            // Xóa kênh WebSocket Comments nếu rời khỏi các trang có bình luận
+            if (!hash.startsWith('#project/') && !hash.startsWith('#profile/') && !hash.startsWith('#studio/')) {
+                unsubscribeCommentChannel();
+            }
 
             // 🎯 XỬ LÝ HIGHLIGHT TAB & TITLE ĐỘNG CHO TỪNG TRANG (SEO TITLE FORMAT)
             const brandName = langData['brand_name'] || "DANVworkshop";
@@ -16684,6 +16689,7 @@
             
             // 5. RENDER ĐÚNG BÌNH LUẬN CỦA DỰ ÁN HIỆN TẠI (BỎ setTimeout CHỐNG XUNG ĐỘT)
             renderCommentList('proj', currentProj.comments);
+            subscribeToCommentChannel('project', currentProj.projectId || currentProj.fileId);
 
             if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
                 switchProjTab('comments');
@@ -18224,6 +18230,8 @@
                 renderCommentList('std', currentStudio.comments || []);
                 removeCommentImage('std');
                 cancelReply('std');
+                
+                subscribeToCommentChannel('studio', currentStudio.id);
 
                 if (urlParams && (urlParams.get('tab') === 'comments' || urlParams.get('c'))) {
                     switchStdTab('comments');
@@ -19050,6 +19058,9 @@
 
             // KHỞI TẠO BENTO GRID
             if(typeof renderBentoGrid === 'function') renderBentoGrid(viewingProfileData);
+            
+            // Kích hoạt WebSocket
+            subscribeToCommentChannel('profile', viewingProfileUser);
 
             // Xử lý nút Follow / Edit / Customize / Menu 3 chấm
             const btnEdit = document.getElementById('btnEditProfModal'); 
@@ -24175,6 +24186,83 @@
         var SUPABASE_ANON_KEY = "sb_publishable_i8vUGhuAEzTwdb75ewHQOg_uBn2cA0Z"; 
         var supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
         var globalChatChannel = null;
+
+        // 🚀 BỘ QUẢN LÝ DYNAMIC WEBSOCKET CHO COMMENTS
+        let activeCommentChannel = null;
+
+        function subscribeToCommentChannel(targetType, targetId) {
+            if (!supabaseClient) return;
+            unsubscribeCommentChannel(); // Dọn kênh cũ trước khi đăng ký
+            if (!targetId) return;
+
+            const topicName = `realtime:comments:${targetType}:${String(targetId).toLowerCase()}`;
+            activeCommentChannel = supabaseClient.channel(topicName);
+            
+            activeCommentChannel
+                .on('broadcast', { event: '*' }, (payload) => {
+                    handleIncomingRealtimeComment(payload.event, payload.payload, targetType);
+                })
+                .subscribe();
+        }
+
+        function unsubscribeCommentChannel() {
+            if (activeCommentChannel && supabaseClient) {
+                supabaseClient.removeChannel(activeCommentChannel);
+                activeCommentChannel = null;
+            }
+        }
+
+        function handleIncomingRealtimeComment(eventType, data, contextType) {
+            let list = [];
+            if (contextType === 'project' && currentProj) list = currentProj.comments;
+            else if (contextType === 'profile' && viewingProfileData) list = viewingProfileData.comments;
+            else if (contextType === 'studio' && currentStudio) list = currentStudio.comments;
+            if (!list) return;
+
+            const shortType = contextType === 'project' ? 'proj' : (contextType === 'profile' ? 'prof' : 'std');
+
+            if (eventType === 'NEW_COMMENT') {
+                const c = data.comment;
+                if (document.getElementById(`comment-box-${c.id}`)) return; // Chống duplicate
+                
+                list.push(c);
+                if (c.parentId) {
+                    if (!expandedThreads[shortType]) expandedThreads[shortType] = {};
+                    expandedThreads[shortType][c.parentId] = true;
+                }
+                
+                renderCommentList(shortType, list);
+                
+                // Highlight nhẹ báo hiệu tin mới
+                setTimeout(() => {
+                    const box = document.getElementById(`comment-box-${c.id}`);
+                    if (box) {
+                        box.style.boxShadow = "0 0 0 2px var(--primary)";
+                        setTimeout(() => box.style.boxShadow = "none", 1500);
+                    }
+                }, 100);
+            } 
+            else if (eventType === 'DELETE_COMMENT') {
+                const cId = String(data.commentId);
+                const idx = list.findIndex(c => String(c.id) === cId);
+                if (idx !== -1) {
+                    // Xóa bình luận cha và tất cả bình luận con của nó
+                    const updated = list.filter(c => String(c.id) !== cId && String(c.parentId) !== cId);
+                    if (contextType === 'project') currentProj.comments = updated;
+                    else if (contextType === 'profile') viewingProfileData.comments = updated;
+                    else if (contextType === 'studio') currentStudio.comments = updated;
+                    renderCommentList(shortType, updated);
+                }
+            } 
+            else if (eventType === 'LOCK_COMMENTS') {
+                if (data.isLocked) {
+                    if (!list.some(c => c.id === "SYSTEM_LOCK")) list.unshift({ id: "SYSTEM_LOCK", isSystem: true });
+                } else {
+                    if (list.length > 0 && list[0].id === "SYSTEM_LOCK") list.shift();
+                }
+                renderCommentList(shortType, list);
+            }
+        }
 
         // BỘ RENDER VÀ ĐỒNG BỘ DANH SÁCH ONLINE REALTIME (ĐÃ NÂNG CẤP TÌM KIẾM NHANH)
         window.cachedPresenceUsers = [];
