@@ -1089,48 +1089,337 @@
             .proj-btn-cluster { justify-content: flex-start; }
         }
 
-        /* SỬA LỖI BỐ CỤC COMMENTS TẠI ĐÂY */
+        /* ================= GIAO DIỆN BÌNH LUẬN HIỆN ĐẠI & FORMAT ENGINE ================= */
         .highlight-permanent {
-            background-color: #fef08a !important;
-            border: 1px solid #facc15;
-            border-radius: 12px;
-            padding: 5px;
-            margin: -5px;
+            background-color: rgba(250, 204, 21, 0.18) !important;
+            border-color: #eab308 !important;
+            box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.35);
             transition: all 0.3s ease;
         }
-        .comment-thread { margin-bottom: 20px; }
-        .comment-box { display: flex; gap: 12px; margin-bottom: 8px; }
-        .avt-circle { width: 38px; height: 38px; border-radius: 50%; background: #ddd; object-fit: cover; flex-shrink: 0;}
-        .comment-content-area { flex: 1; min-width: 0; }
-        .comment-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
-        .comment-author-name { font-weight: bold; color: #111; text-decoration: none; font-size: 0.95rem; }
-        .comment-time { font-size: 0.75rem; color: var(--text-muted); }
-        .scratch-badge { color: #0da57a; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 3px; background: #e6f4ea; padding: 2px 6px; border-radius: 10px;}
+        .comment-thread { margin-bottom: 16px; position: relative; }
         
-        .comment-text-bubble { display: inline-block; background: #f1f5f9; padding: 10px 14px; border-radius: 0 14px 14px 14px; font-size: 0.95rem; color: #111; word-wrap: break-word; border: 1px solid #e2e8f0; line-height: 1.4; max-width: 100%;}
-        .comment-img-render { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd; object-fit: contain; display: block;}
-        
-        .replies-container { margin-left: 50px; border-left: 2px solid #e2e8f0; padding-left: 12px; margin-top: 8px; }
-        .replies-container .avt-circle { width: 28px; height: 28px; }
-        .replies-container .comment-text-bubble { padding: 8px 12px; font-size: 0.85rem; }
-        
-        .btn-action-cmt { background: none; border: none; font-size: 0.8rem; cursor: pointer; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;}
-        .btn-action-cmt.reply { color: #888; } .btn-action-cmt.reply:hover { color: var(--primary); }
-        .btn-action-cmt.delete { color: #ff4c4c; opacity: 0.7;} .btn-action-cmt.delete:hover { opacity: 1; }
-        .btn-action-cmt.report { color: #f5b041; opacity: 0.7;} .btn-action-cmt.report:hover { opacity: 1; }
-        
-        .comment-input-area { border-top: 1px solid var(--border-color); padding: 12px 15px; background: var(--bg-panel); }
-        .comment-img-preview-box { display: none; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 6px 10px; border-radius: 8px; margin-bottom: 8px; width: fit-content; border: 1px solid var(--border-color); color: var(--text-main); }
-        .comment-img-preview-box img { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color); }
-        .btn-remove-preview { background: #ff4c4c; color: #fff; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* Thẻ bình luận */
+        .comment-box { 
+            display: flex; 
+            gap: 14px; 
+            padding: 14px 16px; 
+            border-radius: 16px; 
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color); 
+            transition: border-color 0.2s, background-color 0.2s; 
+            position: relative;
+        }
+        .comment-box:hover { border-color: var(--primary); }
 
-        .comment-input-wrapper { display: flex; gap: 8px; align-items: center; background: var(--bg-input); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color); }
-        .comment-input-wrapper input { background: none; border: none; color: var(--text-main) !important; flex: 1; outline: none; font-size: 0.9rem;}
-        .comment-input-wrapper input::placeholder { color: var(--text-muted); opacity: 0.8; }
+        .avt-circle { 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            background: var(--bg-secondary); 
+            object-fit: cover; 
+            flex-shrink: 0;
+            border: 1.5px solid var(--border-color);
+        }
+        .comment-content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+        .comment-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; line-height: 1.3; }
+        .comment-author-name { font-weight: 800; color: var(--text-title); text-decoration: none; font-size: 0.93rem; }
+        .comment-author-name:hover { color: var(--primary); }
+        .comment-time { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; margin-left: auto; }
         
-        .action-icon-btn { cursor: pointer; width: 22px; height: 22px; opacity: 0.6; transition: 0.2s; }
-        .action-icon-btn:hover { opacity: 1; }
-        [data-theme="dark"] .action-icon-btn { filter: invert(0.85); }
+        /* Huy hiệu tác giả */
+        .comment-author-badge {
+            background: rgba(13, 165, 122, 0.12);
+            color: var(--primary);
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            border: 1px solid rgba(13, 165, 122, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        /* Nội dung chữ bình luận */
+        .comment-text-bubble { 
+            font-size: 0.93rem; 
+            line-height: 1.55; 
+            color: var(--text-main); 
+            word-wrap: break-word; 
+            margin-top: 2px;
+        }
+        .comment-text-bubble code {
+            font-family: monospace;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: var(--primary);
+        }
+        .comment-img-render { 
+            max-width: 100%; 
+            max-height: 250px; 
+            border-radius: 12px; 
+            margin-top: 8px; 
+            border: 1px solid var(--border-color); 
+            object-fit: contain; 
+            display: block;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .comment-img-render:hover { transform: scale(1.015); }
+        
+        /* Cây phản hồi con (Threaded Replies) */
+        .replies-container { 
+            margin-left: 52px; 
+            border-left: 2px solid var(--border-color); 
+            padding-left: 14px; 
+            margin-top: 8px; 
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .replies-container .avt-circle { width: 30px; height: 30px; }
+        .replies-container .comment-box { padding: 10px 12px; }
+
+        /* Nút thao tác dưới bình luận (Pill Style) */
+        .btn-action-cmt { 
+            background: transparent; 
+            border: 1px solid transparent; 
+            color: var(--text-muted); 
+            font-size: 0.78rem; 
+            font-weight: 700; 
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+        .btn-action-cmt:hover { 
+            background: var(--bg-secondary); 
+            color: var(--text-title);
+            border-color: var(--border-color);
+        }
+        .btn-action-cmt.reply:hover { color: var(--primary); }
+        .btn-action-cmt.delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); }
+        .btn-action-cmt.report:hover { color: #f59e0b; }
+
+        .btn-view-more-replies {
+            align-self: flex-start;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 5px 14px;
+            border-radius: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            transition: all 0.15s ease;
+        }
+        .btn-view-more-replies:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: var(--bg-panel);
+        }
+
+        /* KHUNG SOẠN THẢO BÌNH LUẬN COMPOSER MỚI */
+        .comment-composer-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin-bottom: 22px;
+        }
+        .comment-composer-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.12);
+        }
+
+        /* Thanh Format Bar (In đậm, nghiêng, màu, cỡ chữ) */
+        .comment-format-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .cmt-fmt-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.88rem;
+            font-weight: 800;
+            transition: all 0.15s ease;
+        }
+        .cmt-fmt-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-title);
+        }
+
+        /* Bộ chọn cỡ chữ */
+        .cmt-size-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        /* Nút chọn màu chữ */
+        .cmt-color-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .cmt-color-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            inset: 0;
+        }
+        .cmt-color-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        .cmt-color-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+            display: inline-block;
+        }
+
+        .comment-composer-textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 54px;
+            font-family: inherit;
+        }
+        .comment-composer-textarea::placeholder { color: var(--text-muted); opacity: 0.8; }
+
+        /* Khung xem trước ảnh tải lên */
+        .comment-img-preview-box {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            width: fit-content;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        .comment-img-preview-box img { width: 38px; height: 38px; border-radius: 6px; object-fit: cover; }
+        .btn-remove-preview {
+            background: #ef4444; color: #fff; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Thanh bottom bar: Ảnh, GIF, Emoji, Gửi */
+        .comment-composer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .comment-composer-tools {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cmt-tool-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+        .cmt-tool-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-title);
+        }
+        .cmt-submit-btn {
+            background: var(--primary);
+            color: #ffffff !important;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(13, 165, 122, 0.3);
+            transition: all 0.2s ease;
+        }
+        .cmt-submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 640px) {
+            .comment-box { padding: 10px 12px; gap: 10px; }
+            .avt-circle { width: 34px; height: 34px; }
+            .replies-container { margin-left: 20px; padding-left: 10px; border-left-width: 1.5px; }
+            .replies-container .avt-circle { width: 26px; height: 26px; }
+            .comment-actions-bar { gap: 2px; }
+            .btn-action-cmt { font-size: 0.74rem; padding: 3px 6px; }
+            .comment-composer-box { padding: 10px 12px; }
+        }
 
         /* ================= GIAO DIỆN PROFILE & BENTO GRID ENGINE PRO ================= */
         .profile-hero { 
@@ -10069,27 +10358,72 @@
 
             <!-- TAB 4: THẢO LUẬN TRONG TRẠM (COMMENTS) -->
             <div id="stdTab-comments" class="prof-tab-content" style="max-width: 850px; margin: 0 auto;">
-                <div id="comment-area-std" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:18px; padding:20px; margin-bottom:25px; box-shadow:0 4px 20px rgba(0,0,0,0.02); transition: all 0.3s ease;">
-                    <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
+                <div id="comment-area-std" class="comment-composer-box">
+                    <div id="replyBannerStd" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold; background:rgba(13,165,122,0.1); padding:6px 12px; border-radius:8px; border-left:3px solid var(--primary);">
                         <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelStd"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('std')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
-                    <div id="commentImgPreviewStd" class="comment-img-preview-box">
-                        <img id="commentImgPreviewSrcStd" src="" alt="preview">
-                        <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
-                    </div>
+
                     <form onsubmit="handlePostComment(event, 'std')" id="stdCommentForm" style="display:none;">
-                        <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextStd" class="form-control" rows="3" data-i18n-ph="station_comment_ph" placeholder="Viết thảo luận trong Station..." autocomplete="off" style="border-radius:14px;"></textarea></div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                            <div style="display:flex; gap: 8px;">
-                                <label for="commentImgUploadStd" class="btn" style="cursor:pointer; background:var(--bg-secondary); border-radius:12px; font-size:0.84rem;"><i class="fa-solid fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_attach_image">Ảnh</span></label>
-                                <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
-                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#855cd6; border-radius:12px; font-size:0.84rem;" onclick="openKlipyModal('std')"><i class="fa-solid fa-film"></i> GIF</button>
-                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#f59e0b; border-radius:12px; font-size:0.84rem;" onclick="toggleEmojiPicker('std', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
+                        <!-- Thanh công cụ Format & Phím tắt -->
+                        <div class="comment-format-toolbar">
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('std', 'bold')" title="In đậm (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('std', 'italic')" title="In nghiêng (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('std', 'underline')" title="Gạch chân (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('std', 'strike')" title="Gạch ngang"><i class="fa-solid fa-strikethrough"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('std', 'code')" title="Mã code (Ctrl+E)"><i class="fa-solid fa-code"></i></button>
+                            
+                            <div style="width:1px; height:18px; background:var(--border-color); margin:0 4px;"></div>
+
+                            <!-- 5 Kích thước chữ -->
+                            <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('std', 'size', this.value); this.selectedIndex=0; }">
+                                <option value="">Cỡ chữ</option>
+                                <option value="1">1 - Cực nhỏ</option>
+                                <option value="2">2 - Nhỏ</option>
+                                <option value="3">3 - Vừa (Mặc định)</option>
+                                <option value="4">4 - Lớn</option>
+                                <option value="5">5 - Tiêu đề</option>
+                            </select>
+
+                            <!-- Đổi màu chữ -->
+                            <div class="cmt-color-wrap">
+                                <button type="button" class="cmt-color-btn" title="Chọn màu chữ">
+                                    <span class="cmt-color-circle" id="cmtColorCircleStd"></span>
+                                    <span>Màu</span>
+                                </button>
+                                <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('std', 'color', this.value); document.getElementById('cmtColorCircleStd').style.background=this.value;">
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btnSubmitCommentStd" style="border-radius:14px; font-weight:800; padding:8px 20px;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi thảo luận</span></button>
+                        </div>
+
+                        <textarea id="commentTextStd" class="comment-composer-textarea" rows="2" data-i18n-ph="station_comment_ph" placeholder="Viết thảo luận trong Station... (Ctrl+Enter để gửi)"></textarea>
+
+                        <div id="commentImgPreviewStd" class="comment-img-preview-box">
+                            <img id="commentImgPreviewSrcStd" src="" alt="preview">
+                            <span style="font-size:0.8rem; color:var(--text-muted);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                            <button type="button" class="btn-remove-preview" onclick="removeCommentImage('std')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
+                        </div>
+
+                        <div class="comment-composer-bottom">
+                            <div class="comment-composer-tools">
+                                <label for="commentImgUploadStd" class="cmt-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
+                                    <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span>Ảnh</span>
+                                </label>
+                                <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
+
+                                <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('std')" title="Chèn GIF">
+                                    <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                </button>
+
+                                <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('std', event)" title="Chèn Emoji">
+                                    <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
+                                </button>
+                            </div>
+
+                            <button type="submit" id="btnSubmitCommentStd" class="cmt-submit-btn">
+                                <i class="fa-solid fa-paper-plane"></i> <span>Gửi thảo luận</span>
+                            </button>
                         </div>
                     </form>
+
                     <div id="loginPromptStd" style="text-align:center; color:var(--text-muted); font-size:0.92rem;">
                         <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="station_login_prompt" style="border-radius:18px; font-weight:800; padding:9px 24px;">Đăng nhập để tham gia thảo luận</button>
                     </div>
@@ -10365,36 +10699,76 @@
                         </div>
 
                         <!-- Khung viết bình luận to rõ phía trên danh sách -->
-                        <div id="comment-area-proj" class="comment-input-area" style="border:1px solid var(--border-color); border-radius:14px; padding:16px; margin-bottom:24px; background:var(--bg-secondary);">
-                            <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
+                        <div id="comment-area-proj" class="comment-composer-box">
+                            <div id="replyBannerProj" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold; background:rgba(13,165,122,0.1); padding:6px 12px; border-radius:8px; border-left:3px solid var(--primary);">
                                 <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProj"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('proj')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                             </div>
-                            <div id="commentImgPreviewProj" class="comment-img-preview-box">
-                                <img id="commentImgPreviewSrcProj" src="" alt="preview">
-                                <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
-                            </div>
+
                             <form onsubmit="handlePostComment(event, 'proj')" id="commentFormProj" style="display:none;">
-                                <div class="comment-input-wrapper" style="padding: 8px 16px;">
-                                    <input type="text" id="commentTextProj" data-i18n-ph="proj_comment_ph" placeholder="Chia sẻ suy nghĩ hoặc phản hồi của bạn..." autocomplete="off">
-                                    <label for="commentImgUploadProj" style="margin:0; display:flex;">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/4538/4538560.png" class="action-icon-btn" data-i18n-title="comment_attach_image" title="Đính kèm ảnh">
-                                    </label>
-                                    <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
-                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openKlipyModal('proj')" data-i18n-title="chat_attach_gif_title" title="Chèn GIF">
-                                        <i class="fa-solid fa-film" style="font-size: 1.3rem; color: #855cd6;"></i>
-                                    </button>
-                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="toggleEmojiPicker('proj', event)" data-i18n-title="tooltip_emoji" title="Chèn biểu tượng Emoji">
-                                        <i class="fa-regular fa-face-smile" style="font-size: 1.3rem; color: #f59e0b;"></i>
-                                    </button>
-                                    <button type="button" class="action-icon-btn" style="background:none; border:none; margin-left:8px; cursor:pointer;" onclick="openTipModal()" data-i18n-title="tooltip_gift_wow" title="Tặng WOW">
-                                        <span class="wow-icon" style="font-size: 1.3rem; filter: none;"></span>
-                                    </button>
-                                    <button type="submit" id="btnSubmitCommentProj" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:1.2rem; margin-left: 12px;">
-                                        <i class="fa-solid fa-paper-plane"></i>
+                                <!-- Thanh công cụ Format & Phím tắt -->
+                                <div class="comment-format-toolbar">
+                                    <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('proj', 'bold')" title="In đậm (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+                                    <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('proj', 'italic')" title="In nghiêng (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+                                    <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('proj', 'underline')" title="Gạch chân (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+                                    <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('proj', 'strike')" title="Gạch ngang"><i class="fa-solid fa-strikethrough"></i></button>
+                                    <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('proj', 'code')" title="Mã code (Ctrl+E)"><i class="fa-solid fa-code"></i></button>
+                                    
+                                    <div style="width:1px; height:18px; background:var(--border-color); margin:0 4px;"></div>
+
+                                    <!-- 5 Kích thước chữ -->
+                                    <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('proj', 'size', this.value); this.selectedIndex=0; }">
+                                        <option value="">Cỡ chữ</option>
+                                        <option value="1">1 - Cực nhỏ</option>
+                                        <option value="2">2 - Nhỏ</option>
+                                        <option value="3">3 - Vừa (Mặc định)</option>
+                                        <option value="4">4 - Lớn</option>
+                                        <option value="5">5 - Tiêu đề</option>
+                                    </select>
+
+                                    <!-- Đổi màu chữ -->
+                                    <div class="cmt-color-wrap">
+                                        <button type="button" class="cmt-color-btn" title="Chọn màu chữ">
+                                            <span class="cmt-color-circle" id="cmtColorCircleProj"></span>
+                                            <span>Màu</span>
+                                        </button>
+                                        <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('proj', 'color', this.value); document.getElementById('cmtColorCircleProj').style.background=this.value;">
+                                    </div>
+                                </div>
+
+                                <textarea id="commentTextProj" class="comment-composer-textarea" rows="2" data-i18n-ph="proj_comment_ph" placeholder="Chia sẻ suy nghĩ hoặc phản hồi của bạn... (Ctrl+Enter để gửi)"></textarea>
+
+                                <div id="commentImgPreviewProj" class="comment-img-preview-box">
+                                    <img id="commentImgPreviewSrcProj" src="" alt="preview">
+                                    <span style="font-size:0.8rem; color:var(--text-muted);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                                    <button type="button" class="btn-remove-preview" onclick="removeCommentImage('proj')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
+                                </div>
+
+                                <div class="comment-composer-bottom">
+                                    <div class="comment-composer-tools">
+                                        <label for="commentImgUploadProj" class="cmt-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
+                                            <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span>Ảnh</span>
+                                        </label>
+                                        <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
+
+                                        <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('proj')" title="Chèn GIF">
+                                            <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                        </button>
+
+                                        <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('proj', event)" title="Chèn Emoji">
+                                            <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
+                                        </button>
+
+                                        <button type="button" class="cmt-tool-btn" onclick="openTipModal()" title="Tặng WOW">
+                                            <span class="wow-icon" style="font-size:1rem;"></span> <span>Tặng WOW</span>
+                                        </button>
+                                    </div>
+
+                                    <button type="submit" id="btnSubmitCommentProj" class="cmt-submit-btn">
+                                        <i class="fa-solid fa-paper-plane"></i> <span>Gửi</span>
                                     </button>
                                 </div>
                             </form>
+
                             <div id="loginPromptProj" style="text-align:center; color:#888; font-size:0.95rem; padding: 6px 0;">
                                 <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login">Đăng nhập để tham gia thảo luận</button>
                             </div>
@@ -10574,27 +10948,72 @@
                         <i class="fa-solid fa-lock"></i> Khóa
                     </button>
                 </div>
-                <div id="comment-area-prof" style="background:var(--bg-panel); border:1px solid var(--border-color); border-radius:16px; padding:20px; margin-bottom:24px; box-shadow:0 4px 18px rgba(0,0,0,0.02); transition: all 0.3s ease;">
-                    <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold;">
+                <div id="comment-area-prof" class="comment-composer-box">
+                    <div id="replyBannerProf" style="display:none; color:var(--primary); font-size:0.85rem; margin-bottom:10px; font-weight:bold; background:rgba(13,165,122,0.1); padding:6px 12px; border-radius:8px; border-left:3px solid var(--primary);">
                         <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
-                    <div id="commentImgPreviewProf" class="comment-img-preview-box">
-                        <img id="commentImgPreviewSrcProf" src="" alt="preview">
-                        <span style="font-size:0.8rem; color:#555;" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                        <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
-                    </div>
+
                     <form onsubmit="handlePostComment(event, 'prof')" id="profCommentForm" style="display:none;">
-                        <div class="form-group" style="margin-bottom:10px;"><textarea id="commentTextProf" class="form-control" rows="3" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này..." autocomplete="off"></textarea></div>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; gap: 8px;">
-                                <label for="commentImgUploadProf" class="btn" style="cursor:pointer; background:var(--bg-secondary); border-radius:12px; font-size:0.85rem;"><i class="fa-solid fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_attach_image">Ảnh</span></label>
-                                <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
-                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#855cd6; border-radius:12px; font-size:0.85rem;" onclick="openKlipyModal('prof')"><i class="fa-solid fa-film"></i> GIF</button>
-                                <button type="button" class="btn" style="cursor:pointer; background:var(--bg-secondary); color:#f59e0b; border-radius:12px; font-size:0.85rem;" onclick="toggleEmojiPicker('prof', event)"><i class="fa-regular fa-face-smile"></i> Emoji</button>
+                        <!-- Thanh công cụ Format & Phím tắt -->
+                        <div class="comment-format-toolbar">
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'bold')" title="In đậm (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'italic')" title="In nghiêng (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'underline')" title="Gạch chân (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'strike')" title="Gạch ngang"><i class="fa-solid fa-strikethrough"></i></button>
+                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'code')" title="Mã code (Ctrl+E)"><i class="fa-solid fa-code"></i></button>
+                            
+                            <div style="width:1px; height:18px; background:var(--border-color); margin:0 4px;"></div>
+
+                            <!-- 5 Kích thước chữ -->
+                            <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('prof', 'size', this.value); this.selectedIndex=0; }">
+                                <option value="">Cỡ chữ</option>
+                                <option value="1">1 - Cực nhỏ</option>
+                                <option value="2">2 - Nhỏ</option>
+                                <option value="3">3 - Vừa (Mặc định)</option>
+                                <option value="4">4 - Lớn</option>
+                                <option value="5">5 - Tiêu đề</option>
+                            </select>
+
+                            <!-- Đổi màu chữ -->
+                            <div class="cmt-color-wrap">
+                                <button type="button" class="cmt-color-btn" title="Chọn màu chữ">
+                                    <span class="cmt-color-circle" id="cmtColorCircleProf"></span>
+                                    <span>Màu</span>
+                                </button>
+                                <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('prof', 'color', this.value); document.getElementById('cmtColorCircleProf').style.background=this.value;">
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btnSubmitCommentProf" style="border-radius:14px; font-weight:800; padding:8px 20px;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="comment_submit">Gửi lời nhắn</span></button>
+                        </div>
+
+                        <textarea id="commentTextProf" class="comment-composer-textarea" rows="2" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này... (Ctrl+Enter để gửi)"></textarea>
+
+                        <div id="commentImgPreviewProf" class="comment-img-preview-box">
+                            <img id="commentImgPreviewSrcProf" src="" alt="preview">
+                            <span style="font-size:0.8rem; color:var(--text-muted);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                            <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
+                        </div>
+
+                        <div class="comment-composer-bottom">
+                            <div class="comment-composer-tools">
+                                <label for="commentImgUploadProf" class="cmt-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
+                                    <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span>Ảnh</span>
+                                </label>
+                                <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
+
+                                <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('prof')" title="Chèn GIF">
+                                    <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                </button>
+
+                                <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('prof', event)" title="Chèn Emoji">
+                                    <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
+                                </button>
+                            </div>
+
+                            <button type="submit" id="btnSubmitCommentProf" class="cmt-submit-btn">
+                                <i class="fa-solid fa-paper-plane"></i> <span>Gửi lời nhắn</span>
+                            </button>
                         </div>
                     </form>
+
                     <div id="loginPromptProf" style="text-align:center; color:var(--text-muted); font-size:0.95rem;">
                         <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login" style="border-radius:16px; padding:10px 22px; font-weight:800;">Đăng nhập để bình luận</button>
                     </div>
@@ -13844,35 +14263,43 @@
         </div>
     </div>
 
-    <!-- POP-UP THÔNG BÁO YÊU CẦU LÀM MỚI TRANG DO SỰ CỐ TRUY CẬP TÀI NGUYÊN (CORS / 403) -->
-    <div class="modal-overlay" id="corsReloadModal" style="z-index: 1000008; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-        <div class="modal" style="max-width: 520px; border-radius: 22px; overflow: hidden; background: var(--bg-panel); border: 1.5px solid var(--border-color); box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);">
-            <div class="modal-header" style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.12) 0%, rgba(239, 68, 68, 0.08) 100%); border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
-                <span style="font-weight: 800; font-size: 1.12rem; color: var(--text-title); display: flex; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c; font-size: 1.25rem;"></i>
-                    <span>Yêu Cầu Làm Mới Phiên Làm Việc</span>
-                </span>
-                <button class="btn-close" onclick="closeModal('corsReloadModal')">&times;</button>
+    <!-- POP-UP THÔNG BÁO YÊU CẦU TẢI LẠI TRANG DO SỰ CỐ KẾT NỐI -->
+    <div class="modal-overlay" id="corsReloadModal" style="z-index: 1000008; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
+        <div class="modal" style="max-width: 480px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2); background: var(--bg-panel); color: var(--text-main);">
+            <!-- Đầu mục -->
+            <div style="padding: 20px 24px 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div style="font-size: 1.12rem; font-weight: 800; color: var(--text-title); letter-spacing: -0.2px;">Yêu Cầu Tải Lại Trang</div>
+                </div>
+                <button type="button" class="btn-close" onclick="closeModal('corsReloadModal')" title="Đóng thông báo">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-            <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
-                <div style="font-size: 0.92rem; color: var(--text-main); line-height: 1.6;">
-                    Hệ thống ghi nhận sự cố gián đoạn quyền truy cập nguồn tài nguyên liên kết (Access-Control-Allow-Origin). Yêu cầu đã được tự động gửi lại lần thứ hai nhưng máy chủ chưa thể phản hồi thành công.
+
+            <!-- Thân nội dung -->
+            <div style="padding: 20px 24px 24px 24px; display: flex; flex-direction: column; gap: 14px;">
+                <div style="font-size: 0.94rem; color: var(--text-main); line-height: 1.6;">
+                    Trình duyệt không thể nạp tệp dự án sau hai lần tự động kết nối đến máy chủ. Phiên làm việc hiện tại có thể chưa được đồng bộ hoặc dữ liệu tạm thời bị gián đoạn.
                 </div>
 
-                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-left: 4px solid #ea580c; border-radius: 12px; padding: 14px 16px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.55;">
-                    <div style="font-weight: 700; color: var(--text-title); margin-bottom: 4px;">Nguyên nhân kỹ thuật</div>
-                    <div>Phiên kết nối giữa trình biên tập và máy chủ lưu trữ dự án bị giới hạn hoặc chứng chỉ phân phối tạm thời chưa đồng bộ.</div>
+                <div style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">
+                    Vui lòng tải lại trang web để làm mới quyền truy cập và tiếp tục sử dụng.
                 </div>
 
-                <div style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
-                    Quý người dùng vui lòng tải lại trang web để làm mới toàn bộ bộ nhớ đệm và tái thiết lập quyền kết nối dữ liệu.
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                    <span>Mã tham chiếu kết nối</span>
+                    <span style="font-family: monospace; color: var(--text-title); font-weight: 700;">ERR_CONNECTION_FAILED</span>
                 </div>
 
+                <!-- Cụm nút thao tác -->
                 <div style="display: flex; gap: 10px; margin-top: 6px;">
-                    <button type="button" class="btn" style="flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; justify-content: center;" onclick="closeModal('corsReloadModal')">
-                        <i class="fa-solid fa-xmark"></i> <span>Đóng thông báo</span>
+                    <button type="button" class="btn" style="flex: 1; padding: 10.5px 16px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; justify-content: center;" onclick="closeModal('corsReloadModal')">
+                        <span>Đóng</span>
                     </button>
-                    <button type="button" class="btn btn-primary" style="flex: 1.8; padding: 12px; border-radius: 12px; font-weight: 800; justify-content: center; background: linear-gradient(135deg, #0da57a 0%, #0a8260 100%);" onclick="window.location.reload()">
+                    <button type="button" class="btn btn-primary" style="flex: 1.6; padding: 10.5px 16px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; justify-content: center;" onclick="window.location.reload()">
                         <i class="fa-solid fa-rotate-right"></i> <span>Tải lại trang web</span>
                     </button>
                 </div>
@@ -13914,7 +14341,7 @@
             }
         }
 
-        // Hàm mở Pop-up yêu cầu tải lại trang do sự cố CORS hoặc lỗi kết nối máy chủ
+        // Điều khiển hiển thị Pop-up yêu cầu tải lại trang
         let isCorsModalTriggered = false;
         function showCorsReloadModal() {
             if (isCorsModalTriggered) return;
@@ -13925,7 +14352,7 @@
             }
         }
 
-        // Bắt lỗi toàn cục qua Fetch Interceptor: Tự động thử lại lần 2 khi lỗi CORS/403
+        // Bắt lỗi toàn cục qua Fetch Interceptor: Tự động thử lại lần 2 khi lỗi kết nối hoặc mã 403
         const _systemOriginalFetch = window.fetch;
         window.fetch = async function(...args) {
             const reqUrl = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
@@ -13935,7 +14362,7 @@
             try {
                 const response = await _systemOriginalFetch.apply(this, args);
 
-                // Nếu gặp lỗi 403 Forbidden (nguyên nhân gây thiếu Access-Control-Allow-Origin header)
+                // Kiểm tra phản hồi 403 từ máy chủ
                 if (isResourceTarget && response.status === 403 && !isSecondAttempt) {
                     await new Promise(resolve => setTimeout(resolve, 800));
                     const retryArgs = [...args];
@@ -13966,7 +14393,7 @@
                     throw networkError;
                 }
 
-                // Khi trình duyệt chặn CORS, fetch sẽ ném ra lỗi TypeError: Failed to fetch
+                // Khi trình duyệt chặn kết nối tài nguyên, fetch sẽ ném lỗi TypeError: Failed to fetch
                 if (isResourceTarget && !isSecondAttempt) {
                     try {
                         await new Promise(resolve => setTimeout(resolve, 800));
@@ -16538,6 +16965,84 @@
             }
         }
 
+        // ================= HỆ THỐNG FORMAT BÌNH LUẬN & PHÍM TẮT =================
+        function insertCommentFormat(type, format, param = '') {
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+            const textarea = document.getElementById('commentText' + suffix);
+            if (!textarea) return;
+
+            const start = textarea.selectionStart || 0;
+            const end = textarea.selectionEnd || 0;
+            const val = textarea.value;
+            const selected = val.substring(start, end);
+
+            let before = '';
+            let after = '';
+            let placeholder = '';
+
+            switch(format) {
+                case 'bold':
+                    before = '**'; after = '**'; placeholder = 'chữ đậm';
+                    break;
+                case 'italic':
+                    before = '*'; after = '*'; placeholder = 'chữ nghiêng';
+                    break;
+                case 'underline':
+                    before = '__'; after = '__'; placeholder = 'gạch chân';
+                    break;
+                case 'strike':
+                    before = '~~'; after = '~~'; placeholder = 'gạch ngang';
+                    break;
+                case 'code':
+                    before = '`'; after = '`'; placeholder = 'code';
+                    break;
+                case 'color':
+                    before = `[color=${param}]`; after = '[/color]'; placeholder = 'chữ màu';
+                    break;
+                case 'size':
+                    before = `[size=${param}]`; after = '[/size]'; placeholder = `cỡ ${param}`;
+                    break;
+            }
+
+            const insertText = selected || placeholder;
+            textarea.value = val.substring(0, start) + before + insertText + after + val.substring(end);
+            textarea.focus();
+
+            const selStart = start + before.length;
+            const selEnd = selStart + insertText.length;
+            textarea.setSelectionRange(selStart, selEnd);
+        }
+
+        // Gán phím tắt (Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+E, Ctrl+Enter)
+        function bindCommentTextareaShortcuts(textarea, type) {
+            if (!textarea || textarea.dataset.shortcutsBound === 'true') return;
+            textarea.dataset.shortcutsBound = 'true';
+
+            textarea.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    const key = e.key.toLowerCase();
+                    if (key === 'b') {
+                        e.preventDefault();
+                        insertCommentFormat(type, 'bold');
+                    } else if (key === 'i') {
+                        e.preventDefault();
+                        insertCommentFormat(type, 'italic');
+                    } else if (key === 'u') {
+                        e.preventDefault();
+                        insertCommentFormat(type, 'underline');
+                    } else if (key === 'e') {
+                        e.preventDefault();
+                        insertCommentFormat(type, 'code');
+                    } else if (key === 'enter') {
+                        e.preventDefault();
+                        const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+                        const form = document.getElementById(type === 'proj' ? 'commentFormProj' : (type === 'prof' ? 'profCommentForm' : 'stdCommentForm'));
+                        if (form) form.requestSubmit();
+                    }
+                }
+            });
+        }
+
         function renderCommentList(type, list) {
             let containerId = 'commentListProj';
             if (type === 'prof') containerId = 'profCommentList';
@@ -16545,16 +17050,21 @@
             const container = document.getElementById(containerId);
             if (!container) return;
 
-            // Đảm bảo list luôn là mảng, nếu là chuỗi thì tự động parse
+            // Đảm bảo list luôn là mảng
             if (typeof list === 'string') {
                 try { list = JSON.parse(list); } catch(e) { list = []; }
             }
+
+            // Gán phím tắt cho textarea tương ứng
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+            const textareaEl = document.getElementById('commentText' + suffix);
+            if (textareaEl) bindCommentTextareaShortcuts(textareaEl, type);
 
             // Xử lý cờ khóa bình luận
             let isLocked = false;
             if (list.length > 0 && list[0].id === "SYSTEM_LOCK") {
                 isLocked = true;
-                list = list.slice(1); // Bỏ qua phần tử hệ thống khi render
+                list = list.slice(1);
             }
 
             // Quản lý hiển thị nút Khóa cho Chủ/Admin
@@ -16602,11 +17112,11 @@
             }
 
             if (!Array.isArray(list) || list.length === 0) {
-                container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px;">${t('proj_no_comments') || 'Chưa có bình luận nào.'}</div>`; 
+                container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:30px;"><i class="fa-solid fa-comments" style="font-size:2rem; opacity:0.3; margin-bottom:8px; display:block;"></i>${t('proj_no_comments') || 'Chưa có bình luận nào.'}</div>`; 
                 return; 
             }
 
-            // Xử lý nạp Avatar cho bình luận lưu trữ (ĐÃ TỐI ƯU BATCH)
+            // Xử lý nạp Avatar cho bình luận lưu trữ
             list.forEach(c => {
                 if (c && c.isArchived && !c.avt) {
                     if (globalUserCache[c.author]) {
@@ -16642,6 +17152,14 @@
                 return false;
             };
 
+            const isOwnerAuthor = (authorName) => {
+                if (!authorName) return false;
+                if (type === 'proj' && currentProj) return (currentProj.author || '').toLowerCase() === authorName.toLowerCase();
+                if (type === 'prof' && viewingProfileUser) return viewingProfileUser.toLowerCase() === authorName.toLowerCase();
+                if (type === 'std' && currentStudio) return (currentStudio.creator || '').toLowerCase() === authorName.toLowerCase();
+                return false;
+            };
+
             const rootHtmlArray = rootComments.map(root => {
                 const replies = repliesMap[root.id] || []; const isExpanded = expandedThreads[type][root.id] || false;
                 const visibleReplies = isExpanded ? replies : replies.slice(0, 3); const hasMore = replies.length > 3;
@@ -16653,72 +17171,84 @@
                     tipTierClass = amt >= 200 ? 'tip-comment tip-tier-3' : (amt >= 50 ? 'tip-comment tip-tier-2' : 'tip-comment tip-tier-1');
                 }
 
+                const isAuthor = isOwnerAuthor(root.author);
+
                 return `
                     <div class="comment-thread" id="${type}-thread-${root.id}">
                         <div class="comment-box ${tipTierClass}" id="comment-box-${root.id}">
                             ${renderAvtWithFrame(root.avt, root.frame, 'avt-circle', `avt-cmt-${root.id}`)}
                             <div class="comment-content-area">
                                 <div class="comment-header">
-                                    <a href="#profile/${root.author}" class="comment-author-name">${root.author}</a> 
-                                    <span class="comment-time" title="${root.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(root.time)}</span>
-                                    ${root.isArchived ? '<span style="font-size:0.65rem; background:#f1f5f9; color:#888; padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i> Cũ</span>' : ''}
+                                    <a href="#profile/${encodeURIComponent(root.author)}" class="comment-author-name">@${escapeHtml(root.author)}</a>
+                                    ${isAuthor ? `<span class="comment-author-badge"><i class="fa-solid fa-code"></i> Tác giả</span>` : ''} 
+                                    <span class="comment-time" title="${root.time || ''}">${timeAgo(root.time || '')}</span>
+                                    ${root.isArchived ? '<span style="font-size:0.65rem; background:var(--bg-secondary); color:var(--text-muted); padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i> Cũ</span>' : ''}
                                 </div>
+
                                 ${root.isTip ? `
                                 <div class="tip-badge-banner">
                                     <i class="fa-solid ${root.tipAmount >= 200 ? 'fa-crown' : 'fa-bolt'}"></i> Đã tặng ${root.tipAmount} WOW
                                 </div>` : ''}
+
                                 ${(() => {
                                     const effectiveFrame = root.chatFrame || (currentUser && root.author.toLowerCase() === currentUser.username.toLowerCase() ? currentUser.chatFrame : '');
                                     const fAttrs = (typeof getChatBubbleFrameAttributes === 'function') ? getChatBubbleFrameAttributes(effectiveFrame) : { classAttr: '', styleAttr: '' };
                                     return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(root.text || '')}">`;
                                 })()}
                                     ${root.text ? formatCommentText(root.text) : (root.isTip ? `<i style="opacity:0.85;">Đã gửi tặng ${root.tipAmount} điểm năng lượng WOW ủng hộ tác giả!</i>` : '')}
-                                    ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render">` : ''}
+                                    ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render" loading="lazy">` : ''}
                                 </div>
-                                <div style="margin-top:4px; display:flex; align-items:center; gap:8px;">
-                                    ${currentUser && !root.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${root.author}')">${t('proj_reply')}</button>` : ''}
+
+                                <div class="comment-actions-bar" style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+                                    ${currentUser && !root.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${escapeHtml(root.author)}')"><i class="fa-solid fa-reply"></i> ${t('proj_reply')}</button>` : ''}
                                     ${root.text ? `
                                     <div class="trans-menu-wrapper">
-                                        <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${root.id}')" data-i18n-title="tooltip_translate" title="${t('tooltip_translate')}"><i class="fa-solid fa-language"></i></button>
+                                        <button type="button" class="btn-action-cmt translate" onclick="openTranslateMenu(this, 'comment', '${root.id}')" data-i18n-title="tooltip_translate" title="${t('tooltip_translate')}"><i class="fa-solid fa-language"></i> Dịch</button>
                                     </div>` : ''}
-                                    ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${root.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
-                                    ${canDelete(root) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${root.id}')">${t('proj_delete')}</button>` : ''}
+                                    ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${root.id}', '${type}')" title="Báo cáo"><i class="fa-solid fa-flag"></i></button>` : ''}
+                                    ${canDelete(root) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${root.id}')"><i class="fa-solid fa-trash-can"></i> ${t('proj_delete')}</button>` : ''}
                                 </div>
                             </div>
                         </div>
 
                         ${replies.length > 0 ? `
                             <div class="replies-container">
-                                ${visibleReplies.map(rep => `
+                                ${visibleReplies.map(rep => {
+                                    const isRepAuthor = isOwnerAuthor(rep.author);
+                                    return `
                                     <div class="comment-box" id="comment-box-${rep.id}">
                                         <img id="avt-cmt-${rep.id}" src="${getAvtUrl(rep.avt)}" class="avt-circle" onerror="this.src='${DEFAULT_AVATAR}'">
                                         <div class="comment-content-area">
                                             <div class="comment-header">
-                                                <a href="#profile/${rep.author}" class="comment-author-name">${rep.author}</a> 
-                                                <span class="comment-time" title="${rep.time}" style="cursor:help; border-bottom: 1px dotted #ccc;">${timeAgo(rep.time)}</span>
-                                                ${rep.isArchived ? '<span style="font-size:0.65rem; background:#f1f5f9; color:#888; padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i></span>' : ''}
+                                                <a href="#profile/${encodeURIComponent(rep.author)}" class="comment-author-name">@${escapeHtml(rep.author)}</a>
+                                                ${isRepAuthor ? `<span class="comment-author-badge"><i class="fa-solid fa-code"></i> Tác giả</span>` : ''} 
+                                                <span class="comment-time" title="${rep.time || ''}">${timeAgo(rep.time || '')}</span>
+                                                ${rep.isArchived ? '<span style="font-size:0.65rem; background:var(--bg-secondary); color:var(--text-muted); padding:2px 6px; border-radius:4px; margin-left:6px;"><i class="fa-solid fa-box-archive"></i></span>' : ''}
                                             </div>
+
                                             ${(() => {
                                                 const effectiveFrame = rep.chatFrame || (currentUser && rep.author.toLowerCase() === currentUser.username.toLowerCase() ? currentUser.chatFrame : '');
                                                 const fAttrs = (typeof getChatBubbleFrameAttributes === 'function') ? getChatBubbleFrameAttributes(effectiveFrame) : { classAttr: '', styleAttr: '' };
                                                 return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(rep.text || '')}">`;
                                             })()}
-                                                ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:bold; margin-right:4px;">@${rep.replyToUser}</span>` : ''}
+                                                ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:800; margin-right:4px;">@${escapeHtml(rep.replyToUser)}</span>` : ''}
                                                 ${formatCommentText(rep.text)}
-                                                ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render">` : ''}
+                                                ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render" loading="lazy">` : ''}
                                             </div>
-                                            <div style="margin-top:2px; display:flex; align-items:center; gap:8px;">
-                                                ${currentUser && !rep.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${rep.author}')">${t('proj_reply')}</button>` : ''}
+
+                                            <div class="comment-actions-bar" style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+                                                ${currentUser && !rep.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${escapeHtml(rep.author)}')"><i class="fa-solid fa-reply"></i> ${t('proj_reply')}</button>` : ''}
                                                 ${rep.text ? `
                                                 <div class="trans-menu-wrapper">
-                                                    <button type="button" class="btn-action-cmt" onclick="openTranslateMenu(this, 'comment', '${rep.id}')" data-i18n-title="tooltip_translate" title="${t('tooltip_translate')}"><i class="fa-solid fa-language"></i></button>
+                                                    <button type="button" class="btn-action-cmt translate" onclick="openTranslateMenu(this, 'comment', '${rep.id}')" data-i18n-title="tooltip_translate" title="${t('tooltip_translate')}"><i class="fa-solid fa-language"></i></button>
                                                 </div>` : ''}
-                                                ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${rep.id}', '${type}')"><i class="fa-solid fa-flag"></i></button>` : ''}
-                                                ${canDelete(rep) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${rep.id}')">${t('proj_delete')}</button>` : ''}
+                                                ${currentUser ? `<button class="btn-action-cmt report" onclick="openReportModal('comment', '${rep.id}', '${type}')" title="Báo cáo"><i class="fa-solid fa-flag"></i></button>` : ''}
+                                                ${canDelete(rep) ? `<button class="btn-action-cmt delete" onclick="deleteComment('${type}', '${rep.id}')"><i class="fa-solid fa-trash-can"></i> ${t('proj_delete')}</button>` : ''}
                                             </div>
                                         </div>
                                     </div>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                                 ${hasMore ? `<button class="btn-view-more-replies" onclick="toggleExpandReplies('${type}', '${root.id}')"><i class="fa-solid ${isExpanded ? 'fa-angle-up' : 'fa-reply'}"></i> ${isExpanded ? t('comments_collapse_replies') : t('comments_more_replies', { count: replies.length - 3 })}</button>` : ''}
                             </div>
                         ` : ''}
@@ -16730,7 +17260,7 @@
             const visibleRoots = rootHtmlArray.slice(0, limit);
             const hasMoreRoots = rootHtmlArray.length > limit || hasMoreArchiveComments[type];
 
-            // BẢO VỆ KHUNG NHẬP: Rút form về vị trí an toàn trước khi Render lại bằng innerHTML (tránh bị xóa mất form)
+            // BẢO VỆ KHUNG NHẬP: Rút form về vị trí an toàn trước khi Render lại bằng innerHTML
             if (type !== 'chat' && typeof originalPlaceholders !== 'undefined' && originalPlaceholders[type]) {
                 const areaIdMap = { proj: 'comment-area-proj', prof: 'comment-area-prof', std: 'comment-area-std' };
                 const areaEl = document.getElementById(areaIdMap[type]);
@@ -16974,8 +17504,8 @@
                     // Reset lại giao diện chuẩn
                     areaEl.style.marginTop = '0';
                     areaEl.style.border = '1px solid var(--border-color)';
-                    areaEl.style.boxShadow = type === 'proj' ? 'none' : '0 2px 10px rgba(0,0,0,0.02)';
-                    areaEl.style.marginBottom = type === 'proj' ? '0' : '25px';
+                    areaEl.style.boxShadow = '0 2px 10px rgba(0,0,0,0.02)';
+                    areaEl.style.marginBottom = '22px';
                 }
             }
         }
@@ -19508,7 +20038,7 @@
             const data = event.data;
             if (!data || !data.type) return;
 
-            // Tiếp nhận sự cố tải dự án hoặc chặn quyền từ iframe trình biên tập
+            // Tiếp nhận sự cố nạp tài nguyên từ trình biên tập
             if (data.type === "DANV_PROJECT_LOAD_ERROR" || data.type === "CORS_ERROR" || data.type === "FETCH_PROJECT_FAILED") {
                 showCorsReloadModal();
                 return;
@@ -22519,7 +23049,7 @@
             return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
         }
 
-        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME (NỀN CHỮ NHẬT BO TRÒN)
+        // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME + PARSE FORMAT CHỮ
         function formatCommentText(text) {
             if (!text) return '';
             let safeText = escapeHtml(text);
@@ -22530,6 +23060,30 @@
                     safeText = joypixels.shortnameToUnicode(safeText);
                 } catch(e) {}
             }
+
+            // 📝 ĐỊNH DẠNG VĂN BẢN (BOLD, ITALIC, UNDERLINE, STRIKE, CODE)
+            safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            safeText = safeText.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            safeText = safeText.replace(/__(.*?)__/g, '<u>$1</u>');
+            safeText = safeText.replace(/~~(.*?)~~/g, '<s>$1</s>');
+            safeText = safeText.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+            // 🎨 ĐỔI MÀU CHỮ: [color=#hex]nội dung[/color]
+            safeText = safeText.replace(/\[color=(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\]([\s\S]*?)\[\/color\]/g, (m, col, content) => {
+                return `<span style="color:${col};">${content}</span>`;
+            });
+
+            // 📏 5 DẠNG KÍCH THƯỚC CHỮ: [size=1..5]nội dung[/size]
+            const sizeMap = {
+                '1': 'font-size:0.75rem;',
+                '2': 'font-size:0.85rem;',
+                '3': 'font-size:0.95rem;',
+                '4': 'font-size:1.15rem; font-weight:800;',
+                '5': 'font-size:1.4rem; font-weight:900;'
+            };
+            safeText = safeText.replace(/\[size=([1-5])\]([\s\S]*?)\[\/size\]/g, (m, sz, content) => {
+                return `<span style="${sizeMap[sz] || 'font-size:0.95rem;'}">${content}</span>`;
+            });
             
             // 1. Highlight link trang web: Chuyển thành khối chữ nhật bo tròn màu xanh dương rõ nét, kèm icon liên kết
             const linkRegex = /(https?:\/\/[^\s<]+)|((?:^|\s)(?:turbows\.pages\.dev|scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
