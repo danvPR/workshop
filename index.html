@@ -28775,14 +28775,24 @@
                     </div>
                 `;
             }
-            // 8. BGM / TRÌNH PHÁT ÂM THANH PROFILE (AUDIO PLAYER WIDGET - AN TOÀN TUYỆT ĐỐI)
+            // 8. BGM / TRÌNH PHÁT ÂM THANH PROFILE (AUDIO PLAYER WIDGET - TỰ ĐỘNG CHUẨN HÓA SANG API MỚI)
             else if (safeId.startsWith('widget_audio_')) {
                 const songTitle = item.audioTitle || t('bento_profile_music');
                 let audioUrl = item.audioUrl || '';
-                // Chỉ chấp nhận link http hoặc https hợp lệ
-                if (!audioUrl.startsWith('http://') && !audioUrl.startsWith('https://')) {
-                    audioUrl = '';
+
+                // 🔄 Tự động chuyển đổi nếu link bị dính domain cũ trong CSDL sang WORKER_URL mới
+                if (audioUrl) {
+                    if (audioUrl.includes('/api/project/')) {
+                        const relPath = audioUrl.substring(audioUrl.indexOf('/api/project/'));
+                        audioUrl = `${WORKER_URL}${relPath}`;
+                        if (!audioUrl.includes('ext=')) {
+                            audioUrl += (audioUrl.includes('?') ? '&' : '?') + 'ext=mp3';
+                        }
+                    } else if (!audioUrl.startsWith('http://') && !audioUrl.startsWith('https://')) {
+                        audioUrl = `${WORKER_URL}/api/project/${audioUrl}?ext=mp3`;
+                    }
                 }
+
                 extraAttrs += ` data-audio-url="${escapeHtml(audioUrl)}" data-audio-title="${escapeHtml(songTitle)}"`;
                 const encUrl = encodeURIComponent(audioUrl);
                 contentHtml = `
@@ -29505,38 +29515,47 @@
                     }
 
                     listEl.innerHTML = audioAssets.map(a => {
-                        const fileExt = (a.fileType || 'mp3').toLowerCase();
-                        const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
-                        return `
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-secondary); border:1.5px solid var(--border-color); border-radius:12px; margin-bottom:10px;">
-                                <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
-                                    <div style="width:38px; height:38px; border-radius:50%; background:#ea580c; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                        <i class="fa-solid fa-music"></i>
+                            const fileExt = (a.fileType || 'mp3').toLowerCase();
+                            const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
+                            const safeTitleForAttr = escapeHtml(a.title).replace(/'/g, "\\'");
+                            return `
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-secondary); border:1.5px solid var(--border-color); border-radius:12px; margin-bottom:10px;">
+                                    <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                                        <div style="width:38px; height:38px; border-radius:50%; background:#ea580c; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <i class="fa-solid fa-music"></i>
+                                        </div>
+                                        <div style="min-width:0; flex:1;">
+                                            <b style="font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(a.title)}</b>
+                                            <span style="font-size:0.75rem; color:var(--text-muted);">${t('bento_audio_by')} @${escapeHtml(a.author)} • ${a.size || 0} MB</span>
+                                        </div>
                                     </div>
-                                    <div style="min-width:0; flex:1;">
-                                        <b style="font-size:0.95rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${escapeHtml(a.title)}</b>
-                                        <span style="font-size:0.75rem; color:var(--text-muted);">${t('bento_audio_by')} @${escapeHtml(a.author)} • ${a.size || 0} MB</span>
-                                    </div>
+                                    <button class="btn btn-primary" style="padding:6px 16px; font-size:0.8rem; border-radius:18px;" onclick="selectAudioToBento('${a.assetId}', '${safeTitleForAttr}', '${fileUrl}')">
+                                        ${t('bento_choose_bgm')}
+                                    </button>
                                 </div>
-                                <button class="btn btn-primary" style="padding:6px 16px; font-size:0.8rem; border-radius:18px;" onclick="selectAudioToBento('${a.assetId}', '${escapeHtml(a.title)}', '${fileUrl}')">
-                                    ${t('bento_choose_bgm')}
-                                </button>
-                            </div>
-                        `;
-                    }).join('');
-                }).catch(() => {
-                    listEl.innerHTML = `<div style="color:#ef4444; text-align:center; padding:20px;">${t('bento_audio_error')}</div>`;
-                });
-        }
+                            `;
+                        }).join('');
+                    }).catch(() => {
+                        listEl.innerHTML = `<div style="color:#ef4444; text-align:center; padding:20px;">${t('bento_audio_error')}</div>`;
+                    });
+            }
 
-        function selectAudioToBento(assetId, songTitle, audioUrl) {
-            closeModal('bentoPickAudioModal');
-            addBentoWidget(`widget_audio_${Date.now()}`, {
-                audioTitle: songTitle,
-                audioUrl: audioUrl,
-                w: 6, h: 2, minW: 4, minH: 2
-            });
-        }
+            function selectAudioToBento(assetId, songTitle, audioUrl) {
+                closeModal('bentoPickAudioModal');
+                let cleanAudioUrl = audioUrl;
+                if (cleanAudioUrl.includes('/api/project/')) {
+                    const relPath = cleanAudioUrl.substring(cleanAudioUrl.indexOf('/api/project/'));
+                    cleanAudioUrl = `${WORKER_URL}${relPath}`;
+                    if (!cleanAudioUrl.includes('ext=')) {
+                        cleanAudioUrl += (cleanAudioUrl.includes('?') ? '&' : '?') + 'ext=mp3';
+                    }
+                }
+                addBentoWidget(`widget_audio_${Date.now()}`, {
+                    audioTitle: songTitle,
+                    audioUrl: cleanAudioUrl,
+                    w: 6, h: 2, minW: 4, minH: 2
+                });
+            }
 
         // 6. Thêm Widget Mạng xã hội
         function openBentoConfigSocialModal() {
@@ -29762,6 +29781,18 @@
         function toggleBentoBGMPlay(safeId, url, e) {
             if (e) e.stopPropagation();
             if (!url) return showToast("Không tìm thấy tệp âm thanh!", "error");
+
+            // 🔄 Tự động ép link sang WORKER_URL mới nhất ngay khi bấm Play
+            let playUrl = url;
+            if (playUrl.includes('/api/project/')) {
+                const relPath = playUrl.substring(playUrl.indexOf('/api/project/'));
+                playUrl = `${WORKER_URL}${relPath}`;
+                if (!playUrl.includes('ext=')) {
+                    playUrl += (playUrl.includes('?') ? '&' : '?') + 'ext=mp3';
+                }
+            } else if (!playUrl.startsWith('http://') && !playUrl.startsWith('https://')) {
+                playUrl = `${WORKER_URL}/api/project/${playUrl}?ext=mp3`;
+            }
 
             const box = document.getElementById(`bentoBgmBox-${safeId}`);
             const icon = document.getElementById(`bentoBgmIcon-${safeId}`);
