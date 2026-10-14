@@ -14775,7 +14775,10 @@
             if (!force && (!enabled || volume === 0)) return;
 
             try {
-                chatPingAudio.volume = force ? (volume === 0 ? 0.8 : volume) : volume;
+                // Áp dụng đường cong logarit cảm nhận âm học (Perceptual Volume Curve)
+                // Giúp mức 10% - 30% thực sự nhỏ dịu tai, không bị chói gắt
+                const perceptualVolume = Math.pow(volume, 2);
+                chatPingAudio.volume = force ? (volume === 0 ? 0.64 : perceptualVolume) : perceptualVolume;
                 chatPingAudio.currentTime = 0;
                 chatPingAudio.play().catch(() => {});
             } catch(e) {}
@@ -25494,7 +25497,8 @@
                     icon: avtUrl,
                     badge: "https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png",
                     tag: `chat-msg-${msgId}`,
-                    renotify: true
+                    renotify: true,
+                    silent: true // Tắt chuông mặc định 100% của hệ điều hành, chỉ để website phát âm lượng theo thanh trượt
                 });
 
                 notif.onclick = function() {
