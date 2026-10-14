@@ -2332,31 +2332,74 @@
             .modal { max-width: 95vw; margin: 10px; }
         }
         /* ================= CHẾ ĐỘ MÁY YẾU / TIẾT KIỆM PIN (LOW-SPEC MODE - TRULY LITE) ================= */
-        /* Ở chế độ này, chúng ta vô hiệu hóa hoàn toàn Bóng đổ, Gradients, Filters, và Animations để giải phóng GPU */
+        /* Ở chế độ này, vô hiệu hóa bóng đổ, filter nặng, chuyển động nhưng BẢO TOÀN khung Avatar và Khung Chat Customized */
         [data-lowspec="true"],
-        [data-lowspec="true"] * {
+        [data-lowspec="true"] *:not(.bubble-custom-frame):not(.avt-frame):not(.stage-frame-overlay) {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             box-shadow: none !important;
             text-shadow: none !important;
             filter: none !important;
             transition: none !important; /* Tắt chuyển động làm mượt */
-            border-image: none !important; /* Gỡ Custom Frame hình ảnh gây nặng RAM */
         }
         
+        /* Đảm bảo khung tùy biến (customized frames) hiển thị đầy đủ hình ảnh và màu sắc */
+        [data-lowspec="true"] .bubble-custom-frame {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: none !important;
+            transition: none !important;
+        }
+
         [data-lowspec="true"] .navbar {
             background: var(--bg-panel) !important;
             border-bottom: 1px solid var(--border-color) !important;
         }
         
-        /* Thay thế toàn bộ Gradients bằng màu solid cơ bản */
+        /* Thay thế toàn bộ Gradients bằng màu solid cơ bản (loại trừ khung customized) */
         [data-lowspec="true"] .btn-primary,
         [data-lowspec="true"] .nav-btn-create,
         [data-lowspec="true"] .btn-tip-WOW,
-        [data-lowspec="true"] .chat-msg-row.mine .chat-bubble {
+        [data-lowspec="true"] .chat-msg-row.mine .chat-bubble:not(.bubble-custom-frame):not([class*="bubble-"]) {
             background: var(--primary) !important;
             background-image: none !important;
             border-color: var(--primary) !important;
+        }
+
+        /* POPOVER CÀI ĐẶT ÂM THANH TIN NHẮN TRONG CHAT */
+        .chat-sound-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 290px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1005;
+            overflow: hidden;
+            animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        [data-theme="dark"] .chat-sound-popover {
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .chat-sound-popover.show {
+            display: flex;
+        }
+        .chat-sound-popover-header {
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.88rem;
+        }
+        .chat-sound-popover-body {
+            padding: 14px;
         }
         
         /* Tắt vĩnh viễn mọi nguồn sáng / Aura giả lập phía sau */
@@ -9991,6 +10034,49 @@
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 8px;">
+                        <!-- NÚT CÀI ĐẶT ÂM THANH POP TIN NHẮN -->
+                        <div class="chat-sound-control-wrap" style="position: relative;">
+                            <button type="button" class="btn" id="btnChatSoundPopoverToggle" onclick="toggleChatSoundPopover(event)" data-i18n-title="tooltip_chat_sound_settings" title="Cài đặt âm thanh tin nhắn" style="padding: 6px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-volume-high" id="chatSoundHeaderIcon"></i>
+                            </button>
+                            <div id="chatSoundPopover" class="chat-sound-popover">
+                                <div class="chat-sound-popover-header">
+                                    <span style="display:flex; align-items:center; gap:8px;">
+                                        <i class="fa-solid fa-volume-high" style="color:var(--primary);"></i>
+                                        <b>Âm Thanh Tin Nhắn</b>
+                                    </span>
+                                    <button type="button" class="btn-close" style="font-size:1.1rem; line-height:1;" onclick="closeChatSoundPopover()">&times;</button>
+                                </div>
+                                <div class="chat-sound-popover-body">
+                                    <!-- Bật/Tắt âm thanh Pop -->
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div>
+                                            <div style="font-weight:800; font-size:0.88rem; color:var(--text-title);">Tiếng Pop thông báo</div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Phát âm thanh khi có tin nhắn mới</div>
+                                        </div>
+                                        <label class="modern-toggle-switch">
+                                            <input type="checkbox" id="chatSoundToggleCheckbox" onchange="handleToggleChatSound(this.checked)">
+                                            <span class="modern-toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Thanh trượt âm lượng -->
+                                    <div style="margin-bottom:14px;">
+                                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; font-weight:700; margin-bottom:6px;">
+                                            <span style="color:var(--text-title);">Âm lượng:</span>
+                                            <span id="chatSoundVolumeDisplay" style="color:var(--primary); font-family:monospace; font-size:0.9rem;">80%</span>
+                                        </div>
+                                        <input type="range" id="chatSoundVolumeRange" min="0" max="100" step="1" value="80" style="width:100%; accent-color:var(--primary); cursor:pointer;" oninput="handleChatSoundVolumeChange(this.value)">
+                                    </div>
+
+                                    <!-- Nút nghe thử -->
+                                    <button type="button" class="btn" style="width:100%; justify-content:center; padding:8px 12px; font-size:0.84rem; font-weight:800; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-title);" onclick="testChatPopSound()">
+                                        <i class="fa-solid fa-play" style="color:var(--primary);"></i> <span>Nghe thử âm thanh</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="button" class="btn" id="btnToggleChatSidebar" onclick="toggleChatSidebar()" data-i18n-title="chat_toggle_sidebar_title" title="Ẩn/Hiện cột tiện ích bên phải" style="padding: 6px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700;">
                             <i class="fa-solid fa-table-columns"></i>
                         </button>
@@ -14615,6 +14701,89 @@
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
         let chatInterval = null; // Vòng lặp tải chat tự động
         const chatPingAudio = new Audio('https://github.com/danvPR/workshop/raw/refs/heads/main/Assets/universfield-new-notification-040-493469.mp3'); // Âm thanh Ping nhẹ
+
+        // QUẢN LÝ CÀI ĐẶT ÂM THANH POP TIN NHẮN CHAT
+        function getChatSoundSettings() {
+            const enabled = localStorage.getItem('danv_chat_sound_enabled') !== 'false';
+            const volume = parseFloat(localStorage.getItem('danv_chat_sound_volume') || '0.8');
+            return {
+                enabled: enabled,
+                volume: Math.max(0, Math.min(1, isNaN(volume) ? 0.8 : volume))
+            };
+        }
+
+        function updateChatSoundHeaderUI() {
+            const { enabled, volume } = getChatSoundSettings();
+            const icon = document.getElementById('chatSoundHeaderIcon');
+            const toggleChk = document.getElementById('chatSoundToggleCheckbox');
+            const rangeInp = document.getElementById('chatSoundVolumeRange');
+            const dispSpan = document.getElementById('chatSoundVolumeDisplay');
+
+            if (toggleChk) toggleChk.checked = enabled;
+            if (rangeInp) rangeInp.value = Math.round(volume * 100);
+            if (dispSpan) dispSpan.innerText = `${Math.round(volume * 100)}%`;
+
+            if (icon) {
+                if (!enabled || volume === 0) {
+                    icon.className = 'fa-solid fa-volume-xmark';
+                    icon.style.color = '#ef4444';
+                } else if (volume < 0.5) {
+                    icon.className = 'fa-solid fa-volume-low';
+                    icon.style.color = 'var(--text-main)';
+                } else {
+                    icon.className = 'fa-solid fa-volume-high';
+                    icon.style.color = 'var(--primary)';
+                }
+            }
+        }
+
+        function toggleChatSoundPopover(e) {
+            if (e) e.stopPropagation();
+            const pop = document.getElementById('chatSoundPopover');
+            if (!pop) return;
+            const willShow = !pop.classList.contains('show');
+            if (willShow) {
+                updateChatSoundHeaderUI();
+                pop.classList.add('show');
+            } else {
+                pop.classList.remove('show');
+            }
+        }
+
+        function closeChatSoundPopover() {
+            const pop = document.getElementById('chatSoundPopover');
+            if (pop) pop.classList.remove('show');
+        }
+
+        function handleToggleChatSound(checked) {
+            localStorage.setItem('danv_chat_sound_enabled', checked ? 'true' : 'false');
+            updateChatSoundHeaderUI();
+            showToast(checked ? "Đã bật tiếng Pop tin nhắn." : "Đã tắt tiếng Pop tin nhắn.", "info");
+        }
+
+        function handleChatSoundVolumeChange(val) {
+            const intVal = parseInt(val) || 0;
+            const floatVal = Math.max(0, Math.min(1, intVal / 100));
+            localStorage.setItem('danv_chat_sound_volume', floatVal.toString());
+            const dispSpan = document.getElementById('chatSoundVolumeDisplay');
+            if (dispSpan) dispSpan.innerText = `${intVal}%`;
+            updateChatSoundHeaderUI();
+        }
+
+        function playChatPopSound(force = false) {
+            const { enabled, volume } = getChatSoundSettings();
+            if (!force && (!enabled || volume === 0)) return;
+
+            try {
+                chatPingAudio.volume = force ? (volume === 0 ? 0.8 : volume) : volume;
+                chatPingAudio.currentTime = 0;
+                chatPingAudio.play().catch(() => {});
+            } catch(e) {}
+        }
+
+        function testChatPopSound() {
+            playChatPopSound(true);
+        }
         
         // 🚀 BỘ NHỚ ĐỆM FRONTEND BỀN VỮNG (Giữ Cache 24h bằng LocalStorage)
         let globalUserCache = {}; 
@@ -15941,7 +16110,7 @@
                                         // Phát âm thanh Ping nếu có tin nhắn từ người khác
                                         const isMine = currentUser && c.author && c.author.toLowerCase() === currentUser.username.toLowerCase();
                                         if (!isMine) {
-                                            try { chatPingAudio.play().catch(() => {}); } catch(e) {}
+                                            playChatPopSound();
                                         }
                                     }
                                 }
@@ -16903,6 +17072,9 @@
             if (!e.target.closest('.proj-more-dropdown-wrap')) {
                 closeProjMoreMenu();
                 closeProfMoreMenu();
+            }
+            if (!e.target.closest('.chat-sound-control-wrap')) {
+                closeChatSoundPopover();
             }
         });
 
@@ -24627,7 +24799,7 @@
                                     triggerChatBrowserNotification(data.message, msgId);
                                     // Phát âm thanh Ping nếu có tin nhắn từ người khác
                                     if (!isMine) {
-                                        try { chatPingAudio.play().catch(() => {}); } catch(e) {}
+                                        playChatPopSound();
                                     }
                                 }
                             }
@@ -24813,6 +24985,7 @@
             connectGlobalChatWebSocket();
             updateChatSidebarProfile();
             renderChatTrendingGames();
+            updateChatSoundHeaderUI();
             
             const list = document.getElementById('chatMessageList');
             list.innerHTML = `
