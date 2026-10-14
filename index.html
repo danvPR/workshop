@@ -17987,15 +17987,21 @@
 
                     if (type === 'proj') { 
                         if (!currentProj.comments) currentProj.comments = []; 
-                        currentProj.comments.push(res.comment); 
+                        if (!currentProj.comments.some(c => String(c.id) === String(res.comment.id))) {
+                            currentProj.comments.push(res.comment); 
+                        }
                         renderCommentList('proj', currentProj.comments); 
                     } else if (type === 'std') {
                         if (!currentStudio.comments) currentStudio.comments = []; 
-                        currentStudio.comments.push(res.comment); 
+                        if (!currentStudio.comments.some(c => String(c.id) === String(res.comment.id))) {
+                            currentStudio.comments.push(res.comment); 
+                        }
                         renderCommentList('std', currentStudio.comments);
                     } else { 
                         if (!viewingProfileData.comments) viewingProfileData.comments = []; 
-                        if (res.comment) viewingProfileData.comments.push(res.comment); 
+                        if (res.comment && !viewingProfileData.comments.some(c => String(c.id) === String(res.comment.id))) {
+                            viewingProfileData.comments.push(res.comment); 
+                        }
                         renderCommentList('prof', viewingProfileData.comments); 
                     }
                     showToast("Đã gửi!", "success");
@@ -24398,7 +24404,10 @@
 
             if (eventType === 'NEW_COMMENT') {
                 const c = data.comment;
-                if (document.getElementById(`comment-box-${c.id}`)) return; // Chống duplicate
+                if (!c || !c.id) return;
+                // Chống duplicate: kiểm tra cả trong mảng dữ liệu lẫn DOM
+                if (list.some(item => String(item.id) === String(c.id))) return;
+                if (document.getElementById(`comment-box-${c.id}`)) return;
                 
                 list.push(c);
                 if (c.parentId) {
