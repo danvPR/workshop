@@ -3714,80 +3714,209 @@
         .nav-link.active { color: var(--primary) !important; position: relative; }
         .nav-link.active::after { content: ''; position: absolute; bottom: 0; left: 10px; right: 10px; height: 3px; background: var(--primary); border-radius: 3px 3px 0 0; }
 
-        /* 📱 NAVIGATION BAR PHONE (5 TAB CHUẨN UX MOBILE VỚI NÚT SÁNG TẠO FAB Ở GIỮA) */
+        /* 📱 NAVIGATION DOCK NỔI KÍNH MỜ CHO MOBILE (FLOATING GLASS DOCK) */
         .mobile-bottom-nav { 
             display: none; 
             position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            width: 100%; 
-            background: var(--bg-panel); 
-            border-top: 1px solid var(--border-color); 
+            bottom: calc(12px + env(safe-area-inset-bottom, 0px)); 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: auto;
+            max-width: calc(100vw - 20px); 
+            background: rgba(255, 255, 255, 0.72); 
+            backdrop-filter: blur(28px) saturate(190%); 
+            -webkit-backdrop-filter: blur(28px) saturate(190%); 
+            border-radius: 28px; 
+            border: 1px solid rgba(255, 255, 255, 0.45); 
+            box-shadow: 
+                0 18px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 2px rgba(255, 255, 255, 0.6); 
             z-index: 2000; 
             align-items: center;
-            justify-content: space-around; 
-            padding: 6px 4px; 
-            padding-bottom: env(safe-area-inset-bottom, 8px); 
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.06); 
+            justify-content: center; 
+            gap: 6px; 
+            padding: 6px 8px; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
         }
+
+        [data-theme="dark"] .mobile-bottom-nav {
+            background: rgba(22, 27, 34, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 
+                0 22px 50px rgba(0, 0, 0, 0.58),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Nút Dock */
         .mobile-nav-link { 
-            flex: 1;
+            position: relative;
+            width: 50px;
+            height: 50px;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center;
+            border-radius: 20px;
+            background: transparent;
+            border: 1px solid transparent;
             color: var(--text-muted); 
             text-decoration: none; 
-            font-size: 0.72rem; 
-            gap: 4px; 
-            font-weight: 700; 
-            transition: all 0.2s ease; 
-            min-height: 44px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
+            flex-shrink: 0;
         }
-        .mobile-nav-link i { font-size: 1.25rem; }
-        .mobile-nav-link.active { color: var(--primary); }
-        .mobile-user-avt { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--border-color); }
 
-        /* Nút Sáng tạo FAB tròn nổi bật ở chính giữa */
-        .mobile-nav-create-fab {
-            flex: 0 0 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
-            color: #ffffff !important;
+        .mobile-nav-link i, .mobile-nav-link svg { 
+            font-size: 1.25rem; 
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.45);
-            border: 3px solid var(--bg-panel);
-            margin-top: -16px; /* Nhô nhẹ lên trên thanh bar */
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-decoration: none;
+            transition: transform 0.2s ease, color 0.2s ease;
         }
+
+        .mobile-nav-link:hover {
+            background: rgba(13, 165, 122, 0.08);
+            color: var(--primary);
+        }
+        [data-theme="dark"] .mobile-nav-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        /* Trạng thái Active */
+        .mobile-nav-link.active { 
+            background: rgba(13, 165, 122, 0.12) !important;
+            border: 1px solid rgba(13, 165, 122, 0.32) !important;
+            color: var(--primary) !important;
+            box-shadow: 
+                inset 0 1px 1.5px rgba(255, 255, 255, 0.4),
+                0 4px 14px rgba(13, 165, 122, 0.2) !important;
+        }
+
+        [data-theme="dark"] .mobile-nav-link.active {
+            background: rgba(16, 185, 129, 0.18) !important;
+            border: 1px solid rgba(52, 211, 153, 0.32) !important;
+            color: #34d399 !important;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.2),
+                0 4px 14px rgba(0, 0, 0, 0.38) !important;
+        }
+
+        /* Chấm tròn chỉ báo active */
+        .indicator-dot {
+            width: 3.5px;
+            height: 3.5px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin-top: 3px;
+            opacity: 0;
+            transform: scale(0.4);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="dark"] .indicator-dot {
+            background-color: #34d399;
+        }
+
+        .mobile-nav-link.active .indicator-dot {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Tooltip bay phía trên mỗi nút */
+        .dock-tooltip {
+            position: absolute;
+            top: -36px;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff !important;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2005;
+        }
+
+        .mobile-nav-link:hover .dock-tooltip,
+        .mobile-nav-create-fab:hover .dock-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nút Sáng tạo FAB chính giữa được phối hợp hòa quyện với Glass Dock */
+        .mobile-nav-create-fab {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
+            color: #ffffff !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(13, 165, 122, 0.42);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            text-decoration: none;
+            flex-shrink: 0;
+            margin: 0 2px;
+        }
+
         .mobile-nav-create-fab:active {
             transform: scale(0.92);
         }
+
         .mobile-nav-create-fab i {
-            font-size: 1.35rem !important;
+            font-size: 1.25rem !important;
             color: #ffffff !important;
             margin: 0;
         }
+
         .mobile-nav-create-fab.active {
-            box-shadow: 0 0 0 4px rgba(13, 165, 122, 0.3), 0 8px 22px rgba(13, 165, 122, 0.6);
+            box-shadow: 0 0 0 3px rgba(13, 165, 122, 0.35), 0 8px 22px rgba(13, 165, 122, 0.65) !important;
+        }
+
+        .mobile-user-avt { 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 1.5px solid var(--border-color); 
         }
 
         @media (max-width: 768px) {
             .navbar .nav-center { display: none !important; }
             .mobile-bottom-nav { display: flex; }
-            body { padding-bottom: 70px; } /* Tránh nội dung bị thanh bar che */
+            body { padding-bottom: 86px; } /* Tránh nội dung bị thanh dock nổi che */
 
-            /* Chỉ ẩn nút Studio trên Header Mobile cho đỡ chật (vì đã đưa vào trang Hồ sơ) */
+            /* Chỉ ẩn nút Studio trên Header Mobile cho đỡ chật */
             .nav-actions a[href*="creator"] {
                 display: none !important;
             }
             .nav-actions {
                 gap: 8px;
             }
+        }
+
+        /* Chế độ máy yếu cho Dock nổi */
+        [data-lowspec="true"] .mobile-bottom-nav {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: var(--bg-panel) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+        }
+        [data-lowspec="true"] .dock-tooltip {
+            display: none !important;
         }
 
         /* ================= GIAO DIỆN GLOBAL CHAT HIỆN ĐẠI (CYBER-CLEAN STREAM REDESIGN) ================= */
@@ -9879,15 +10008,36 @@
         </div>
     </div>
 
-    <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MOBILE (RÚT XUỐNG 5 TAB + NÚT SÁNG TẠO FAB CHÍNH GIỮA) -->
+    <!-- THANH ĐIỀU HƯỚNG NỔI DƯỚI ĐÁY MOBILE (FLOATING GLASS DOCK) -->
     <nav class="mobile-bottom-nav">
-        <a href="/#home" class="mobile-nav-link nav-home"><i class="fa-solid fa-house"></i><span data-i18n="nav_home">Trang chủ</span></a>
-        <a href="/#chat" class="mobile-nav-link nav-chat"><i class="fa-solid fa-earth-americas"></i><span data-i18n="nav_chat">Giao lưu</span></a>
-        <!-- Nút tròn FAB ở giữa -->
-        <a href="/#create" class="mobile-nav-create-fab nav-create" data-i18n-title="nav_create" title="Sáng tạo">
+        <!-- Home -->
+        <a href="/#home" class="mobile-nav-link nav-home" aria-label="Trang chủ">
+            <span class="dock-tooltip" data-i18n="nav_home">Trang chủ</span>
+            <i class="fa-solid fa-house"></i>
+            <span class="indicator-dot"></span>
+        </a>
+
+        <!-- Chat -->
+        <a href="/#chat" class="mobile-nav-link nav-chat" aria-label="Giao lưu">
+            <span class="dock-tooltip" data-i18n="nav_chat">Giao lưu</span>
+            <i class="fa-solid fa-earth-americas"></i>
+            <span class="indicator-dot"></span>
+        </a>
+
+        <!-- Create FAB ở giữa -->
+        <a href="/#create" class="mobile-nav-create-fab nav-create" aria-label="Sáng tạo">
+            <span class="dock-tooltip" data-i18n="nav_create">Sáng tạo</span>
             <i class="fa-solid fa-wand-magic-sparkles"></i>
         </a>
-        <a href="/#assets" class="mobile-nav-link nav-assets"><i class="fa-solid fa-box-open"></i><span data-i18n="nav_assets">Tài nguyên</span></a>
+
+        <!-- Assets -->
+        <a href="/#assets" class="mobile-nav-link nav-assets" aria-label="Tài nguyên">
+            <span class="dock-tooltip" data-i18n="nav_assets">Tài nguyên</span>
+            <i class="fa-solid fa-box-open"></i>
+            <span class="indicator-dot"></span>
+        </a>
+
+        <!-- Profile / Login Slot -->
         <div id="mobileUserNav" style="display:contents;"></div>
     </nav>
 
@@ -16429,20 +16579,21 @@
                 // Đồng bộ Profile Icon lên thanh Mobile Nav ở đáy màn hình
                 if (mobileUserNav) {
                     mobileUserNav.innerHTML = `
-                        <a href="/users/${encodeURIComponent(currentUser.username)}" class="mobile-nav-link nav-profile">
+                        <a href="/users/${encodeURIComponent(currentUser.username)}" class="mobile-nav-link nav-profile" aria-label="${t('nav_profile') || 'Hồ sơ'}">
+                            <span class="dock-tooltip" data-i18n="nav_profile">${t('nav_profile') || 'Hồ sơ'}</span>
                             <img src="${getAvtUrl(currentUser.avt)}" class="mobile-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
-                            <span data-i18n="nav_profile">${t('nav_profile') || 'Hồ sơ'}</span>
+                            <span class="indicator-dot"></span>
                         </a>
                     `;
                 }
-                fetchNotifications();
             } else { 
                 nav.innerHTML = `<button class="btn btn-primary" onclick="openModal('loginModal')"><i class="fa-solid fa-user"></i> <span>${t('nav_login') || 'Đăng nhập'}</span></button>`; 
                 if (mobileUserNav) {
                     mobileUserNav.innerHTML = `
-                        <a href="javascript:void(0)" onclick="openModal('loginModal')" class="mobile-nav-link">
+                        <a href="javascript:void(0)" onclick="openModal('loginModal')" class="mobile-nav-link" aria-label="${t('nav_login') || 'Đăng nhập'}">
+                            <span class="dock-tooltip" data-i18n="nav_login">${t('nav_login') || 'Đăng nhập'}</span>
                             <i class="fa-solid fa-circle-user"></i>
-                            <span data-i18n="nav_login">${t('nav_login') || 'Đăng nhập'}</span>
+                            <span class="indicator-dot"></span>
                         </a>
                     `;
                 }
