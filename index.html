@@ -13575,6 +13575,11 @@
                     </button>
                 </div>
 
+                <!-- KHU VỰC ĐÁ KHÔI PHỤC CHUỖI -->
+                <div id="dailyRecoveryStoneArea" style="margin-bottom:15px; display:none;">
+                    <!-- Render từ JS -->
+                </div>
+
                 <div id="partnerSetupArea" style="display:none; background:rgba(236,72,153,0.08); border:1px dashed #f472b6; padding:12px; border-radius:12px; margin-bottom:15px; text-align:center;">
                     <!-- Sẽ render UI kết đôi ở đây -->
                 </div>
@@ -27421,16 +27426,25 @@
             openModal('dailyRewardModal');
             
             const grid = document.getElementById('dailyRewardGrid');
-            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${t('daily_loading')}</div>`;
+            const partnerArea = document.getElementById('partnerSetupArea');
+            const actionButtonsWrap = document.getElementById('dailyActionButtonsWrap');
+            const recoveryArea = document.getElementById('dailyRecoveryStoneArea');
+
+            if (partnerArea) partnerArea.style.display = 'none';
+            if (actionButtonsWrap) actionButtonsWrap.style.display = 'none';
+            if (recoveryArea) recoveryArea.style.display = 'none';
+
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:35px 20px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><div style="font-size:0.9rem; color:var(--text-muted); margin-top:10px;">${t('daily_loading') || 'Đang tải dữ liệu chuỗi...'}</div></div>`;
             
             try {
                 const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
+                if (!res.ok) throw new Error("HTTP " + res.status);
                 const pData = await res.json();
                 
-                if (!pData.error) {
-                    currentUser.WOW = pData.WOW !== undefined ? pData.WOW : (pData.omg || 0);
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                }
+                if (!pData || pData.error) throw new Error(pData?.error || "Lỗi tải dữ liệu người dùng");
+
+                currentUser.WOW = pData.WOW !== undefined ? pData.WOW : (pData.omg || 0);
+                localStorage.setItem('danv_user', JSON.stringify(currentUser));
                 
                 const navWOW = document.getElementById('navWOWBalance');
                 if (navWOW) navWOW.innerText = currentUser.WOW;
@@ -27443,9 +27457,22 @@
                 if (Array.isArray(dailyInfo)) dailyInfo = {}; 
                 window.currentDailyInfo = dailyInfo;
 
-                renderDailyTab(window.currentDailyTab);
+                if (actionButtonsWrap) actionButtonsWrap.style.display = 'block';
+                renderDailyTab(window.currentDailyTab || 'single');
             } catch (err) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">${t('daily_load_error')}</div>`;
+                if (actionButtonsWrap) actionButtonsWrap.style.display = 'none';
+                if (partnerArea) partnerArea.style.display = 'none';
+                if (recoveryArea) recoveryArea.style.display = 'none';
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:35px 20px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem; color:#ef4444; margin-bottom:12px; display:block;"></i>
+                        <b style="color:var(--text-title); font-size:1.05rem; display:block; margin-bottom:6px;">Không thể tải dữ liệu điểm danh</b>
+                        <span style="font-size:0.85rem; color:var(--text-muted); display:block; max-width:320px; margin:0 auto 16px auto;">${escapeHtml(err.message || 'Mạng bị gián đoạn hoặc máy chủ bận')}</span>
+                        <button type="button" class="btn btn-primary" onclick="openDailyRewardModal()" style="border-radius:20px; padding:8px 24px; font-weight:800;">
+                            <i class="fa-solid fa-rotate-right"></i> Thử lại
+                        </button>
+                    </div>
+                `;
             }
         }
 
@@ -27454,29 +27481,59 @@
             document.getElementById('tabDailySingle').classList.toggle('active', tab === 'single');
             document.getElementById('tabDailyCouple').classList.toggle('active', tab === 'couple');
 
-            // 🚀 MỖI LẦN BẤM QUA TAB ĐÔI BẠN: ÉP TẢI MỚI 100% TỪ MÁY CHỦ, KHÔNG GIỮ NGUYÊN TRẠNG THÁI CŨ
+            // 🚀 MỖI LẦN BẤM QUA TAB ĐÔI BẠN: ÉP TẢI MỚI 100% TỪ MÁY CHỦ, CHẶN LỖI HIỂN THỊ SAI
             if (tab === 'couple' && currentUser) {
                 const partnerArea = document.getElementById('partnerSetupArea');
                 const grid = document.getElementById('dailyRewardGrid');
+                const actionButtonsWrap = document.getElementById('dailyActionButtonsWrap');
+                const recoveryArea = document.getElementById('dailyRecoveryStoneArea');
+
                 if (partnerArea) {
                     partnerArea.style.display = 'block';
-                    partnerArea.innerHTML = `<div style="text-align:center; padding:12px; color:#0284c7; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> ${t('daily_loading_buddy')}</div>`;
+                    partnerArea.innerHTML = `<div style="text-align:center; padding:12px; color:#0284c7; font-weight:700;"><i class="fa-solid fa-circle-notch fa-spin"></i> ${t('daily_loading_buddy') || 'Đang kết nối đôi bạn...'}</div>`;
                 }
                 if (grid) {
                     grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:25px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i></div>';
                 }
+                if (actionButtonsWrap) actionButtonsWrap.style.display = 'none';
+                if (recoveryArea) recoveryArea.style.display = 'none';
 
                 try {
                     const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
+                    if (!res.ok) throw new Error("HTTP " + res.status);
                     const pData = await res.json();
-                    if (pData && !pData.error) {
-                        let dailyInfo = pData.dailyLogin || {};
-                        if (Array.isArray(dailyInfo)) dailyInfo = {};
-                        window.currentDailyInfo = dailyInfo;
+                    if (!pData || pData.error) throw new Error(pData?.error || "Lỗi nạp dữ liệu đôi bạn");
+
+                    let dailyInfo = pData.dailyLogin || {};
+                    if (Array.isArray(dailyInfo)) dailyInfo = {};
+                    window.currentDailyInfo = dailyInfo;
+
+                    if (actionButtonsWrap) actionButtonsWrap.style.display = 'block';
+                    renderDailyTab('couple');
+                } catch(e) {
+                    if (actionButtonsWrap) actionButtonsWrap.style.display = 'none';
+                    if (recoveryArea) recoveryArea.style.display = 'none';
+                    if (partnerArea) {
+                        partnerArea.style.display = 'block';
+                        partnerArea.innerHTML = `
+                            <div style="background:rgba(239,68,68,0.08); border:1.5px solid rgba(239,68,68,0.3); border-radius:14px; padding:12px 14px; text-align:center;">
+                                <div style="color:#ef4444; font-weight:800; font-size:0.92rem; margin-bottom:4px;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Không thể nạp thông tin Đôi bạn
+                                </div>
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">${escapeHtml(e.message || 'Mạng gián đoạn hoặc máy chủ chưa phản hồi')}</div>
+                                <button type="button" class="btn" onclick="switchDailyTab('couple')" style="font-size:0.8rem; padding:4px 16px; border-radius:12px; font-weight:700;">
+                                    <i class="fa-solid fa-rotate-right"></i> Thử lại
+                                </button>
+                            </div>
+                        `;
                     }
-                } catch(e) {}
+                    if (grid) {
+                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:25px; color:var(--text-muted); font-size:0.85rem;"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; opacity:0.3; margin-bottom:8px; display:block;"></i>Tạm dừng hiển thị chuỗi đôi bạn do lỗi kết nối.</div>`;
+                    }
+                }
+            } else {
+                renderDailyTab(tab);
             }
-            renderDailyTab(tab);
         }
 
         function renderDailyTab(tab) {
@@ -27487,6 +27544,7 @@
             const dailyInfo = window.currentDailyInfo || {};
             const vnTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}));
             const todayStr = `${String(vnTime.getDate()).padStart(2, '0')}/${String(vnTime.getMonth() + 1).padStart(2, '0')}/${vnTime.getFullYear()}`;
+            const curMonth = `${vnTime.getMonth() + 1}/${vnTime.getFullYear()}`;
 
             let streak = 0;
             let isClaimedToday = false;
@@ -27495,14 +27553,72 @@
             streak = parseInt(tab === 'single' ? dailyInfo.streak : dailyInfo.coupleStreak) || 0;
             isClaimedToday = lastClaimStr === todayStr;
 
-            // Kiểm tra đứt chuỗi
-            if (lastClaimStr && !isClaimedToday) {
+            // ❄️ KIỂM TRA ĐỨT CHUỖI VÀ ĐIỀU KIỆN KHÔI PHỤC
+            let isStreakBroken = false;
+            let lostCount = 0;
+            let diffDays = 0;
+
+            if (lastClaimStr) {
                 try {
                     const [ld, lm, ly] = String(lastClaimStr).split('/');
                     const [td, tm, ty] = todayStr.split('/');
-                    const diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24));
-                    if (diffDays > 1 || isNaN(diffDays)) streak = 0;
-                } catch(e) { streak = 0; }
+                    diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 1 || isNaN(diffDays)) {
+                        if (streak > 0) lostCount = streak;
+                        streak = 0;
+                        isStreakBroken = true;
+                    }
+                } catch(e) { streak = 0; isStreakBroken = true; }
+            }
+
+            const storedLost = parseInt(tab === 'single' ? dailyInfo.lostStreak : dailyInfo.coupleLostStreak) || 0;
+            if (storedLost > 0) {
+                lostCount = storedLost;
+                isStreakBroken = true;
+            }
+
+            // RENDER KHỐI ĐÁ KHÔI PHỤC (STREAK RECOVERY STONE WIDGET)
+            const recoveryArea = document.getElementById('dailyRecoveryStoneArea');
+            if (recoveryArea) {
+                recoveryArea.style.display = 'block';
+                const stones = parseInt(dailyInfo.recoveryStones) || 0;
+                const buyCount = (dailyInfo.recoveryMonth === curMonth) ? (parseInt(dailyInfo.recoveryBuyCount) || 0) : 0;
+                const canBuyMore = buyCount < 5;
+
+                recoveryArea.innerHTML = `
+                    <div style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(14, 165, 233, 0.04) 100%); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 16px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="https://files.catbox.moe/qultgl.png" style="width:34px; height:34px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(56, 189, 248, 0.4));">
+                            <div style="text-align:left;">
+                                <div style="font-size:0.88rem; font-weight:800; color:var(--text-title); display:flex; align-items:center; gap:6px;">
+                                    <span>Đá khôi phục:</span>
+                                    <b style="color:#0284c7; font-size:1rem;">${stones} viên</b>
+                                </div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">
+                                    Đã mua tháng này: <b>${buyCount}/5</b> (Tối đa 5 lần/tháng)
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="buyRecoveryStone()" style="background:linear-gradient(135deg, #0284c7, #0369a1); border:none; padding:6px 14px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap;" ${!canBuyMore ? 'disabled' : ''}>
+                            <i class="fa-solid fa-plus"></i> ${canBuyMore ? 'Mua (50 WOW)' : 'Hết lượt tháng này'}
+                        </button>
+                    </div>
+
+                    ${isStreakBroken ? `
+                        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); border: 1.5px solid rgba(239, 68, 68, 0.35); border-radius: 14px; padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; text-align: left;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i class="fa-solid fa-snowflake fa-beat" style="color:#0284c7; font-size:1.4rem;"></i>
+                                <div>
+                                    <b style="color:#ef4444; font-size:0.9rem; display:block;">Chuỗi ${tab === 'couple' ? 'Đôi bạn' : 'cá nhân'} đã bị đứt! ${lostCount > 0 ? `(Đã mất ${lostCount} ngày)` : ''}</b>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Dùng 1 viên Đá khôi phục để hàn gắn lại chuỗi ngày ngay lập tức.</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="useRecoveryStone('${tab}')" style="background:linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); border:none; padding:7px 16px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
+                                <img src="https://files.catbox.moe/qultgl.png" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"> Dùng 1 Đá khôi phục
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
             }
 
             const streakEl = document.getElementById('dailyStreakDisplay');
@@ -27809,6 +27925,73 @@
         function spawnLoveBurst(originX, originY) {
             const colors = ['#0284c7', '#38bdf8', '#10b981', '#f59e0b', '#6366f1'];
             runCanvasParticleBurst(originX, originY, colors, 35);
+        }
+
+        // ================= HỆ THỐNG MUA & SỬ DỤNG ĐÁ KHÔI PHỤC =================
+        async function buyRecoveryStone() {
+            if (!currentUser) return openModal('loginModal');
+            if ((currentUser.WOW || 0) < 50) {
+                return showToast("Bạn không đủ 50 WOW để mua Đá khôi phục!", "error");
+            }
+
+            const confirmBuy = confirm("Xác nhận mua 1 viên Đá khôi phục với giá 50 WOW?\n(Loại đá lạnh giúp khôi phục chuỗi đã mất, giới hạn 5 lần/tháng)");
+            if (!confirmBuy) return;
+
+            showToast("Đang giao dịch...", "info");
+            try {
+                const res = await apiFetch(`/api/store/buy_recovery_stone`, {
+                    method: 'POST',
+                    body: JSON.stringify({})
+                });
+
+                if (res && res.success) {
+                    showToast("Đã mua thành công 1 viên Đá khôi phục!", "success");
+                    currentUser.WOW = res.newBalance;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    syncAllWOWDisplays();
+
+                    if (res.dailyInfo) window.currentDailyInfo = res.dailyInfo;
+                    renderDailyTab(window.currentDailyTab || 'single');
+                } else {
+                    showToast(res ? (res.error || "Không thể mua đá") : "Lỗi kết nối", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
+        }
+
+        async function useRecoveryStone(targetType = 'single') {
+            if (!currentUser) return openModal('loginModal');
+            const stones = parseInt(window.currentDailyInfo?.recoveryStones) || 0;
+            if (stones < 1) {
+                return showToast("Bạn chưa có viên Đá khôi phục nào. Hãy bấm Mua trước nhé!", "error");
+            }
+
+            const confirmUse = confirm(`Xác nhận dùng 1 Đá khôi phục để phục hồi chuỗi ${targetType === 'couple' ? 'Đôi bạn' : 'Cá nhân'}?`);
+            if (!confirmUse) return;
+
+            showToast("Đang khôi phục chuỗi...", "info");
+            try {
+                const res = await apiFetch(`/api/store/use_recovery_stone`, {
+                    method: 'POST',
+                    body: JSON.stringify({ targetType })
+                });
+
+                if (res && res.success) {
+                    showToast(`🎉 Đã khôi phục thành công chuỗi ngày (${res.restoredStreak} ngày)!`, "success");
+                    if (res.dailyInfo) window.currentDailyInfo = res.dailyInfo;
+                    renderDailyTab(window.currentDailyTab || 'single');
+                    const modal = document.getElementById('dailyRewardModal');
+                    if (modal && typeof runCanvasParticleBurst === 'function') {
+                        const rect = modal.getBoundingClientRect();
+                        runCanvasParticleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, ['#38bdf8', '#0284c7', '#bae6fd', '#ffffff'], 35);
+                    }
+                } else {
+                    showToast(res ? (res.error || "Không thể khôi phục chuỗi") : "Lỗi kết nối", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối máy chủ!", "error");
+            }
         }
 
         async function requestDailyPartner() {
