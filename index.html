@@ -276,6 +276,9 @@
             border-color: rgba(245, 158, 11, 0.35);
             background: rgba(245, 158, 11, 0.08);
         }
+        .mobile-switch-acc-btn {
+            display: none !important;
+        }
 
         /* ẨN HOÀN TOÀN NÚT ĐĂNG TÁC PHẨM TRÊN HEADER */
         .nav-btn-upload {
@@ -433,6 +436,125 @@
             font-size: 0.72rem;
             color: var(--text-muted);
             margin-top: 2px;
+        }
+
+        /* KHỐI CHUYỂN ĐỔI HỒ SƠ TRONG DROPDOWN */
+        .nav-sub-accounts-section {
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin: 6px 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .nav-sub-accounts-header {
+            font-size: 0.74rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-sub-accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .nav-sub-account-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 10px;
+            border-radius: 10px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.18s ease;
+            color: var(--text-main);
+        }
+        .nav-sub-account-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+            transform: translateY(-1px);
+        }
+        .nav-sub-account-item.active {
+            border-color: var(--primary);
+            background: rgba(13, 165, 122, 0.08);
+            cursor: default;
+        }
+        .nav-sub-account-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+        }
+        .nav-sub-account-avt {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+        .nav-sub-account-text {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-sub-account-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.25;
+        }
+        .nav-sub-account-tag {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+        .nav-sub-account-tag.root {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .nav-sub-account-status {
+            font-size: 0.78rem;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .nav-sub-account-create-btn {
+            width: 100%;
+            padding: 8px;
+            border-radius: 9px;
+            border: 1px dashed var(--border-color);
+            background: var(--bg-panel);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+            margin-top: 2px;
+        }
+        .nav-sub-account-create-btn:hover {
+            border-color: var(--primary);
+            background: rgba(13, 165, 122, 0.08);
         }
 
         .btn { background: #e2e8f0; border: none; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 0.9rem;}
@@ -2315,6 +2437,7 @@
             .nav-left > .nav-link { display: none !important; } /* Menu điều hướng đã có thanh dưới */
             .nav-actions { gap: 6px; }
             .nav-actions .nav-user-dropdown-wrap { display: none !important; } /* Đã có nút Hồ sơ ở bottom bar */
+            .mobile-switch-acc-btn { display: inline-flex !important; }
             .nav-btn-upload span { display: none; } /* Nút đăng bài thu về dạng icon tròn */
             .nav-btn-upload { padding: 8px 12px; border-radius: 50%; }
             .WOW-balance-pill { padding: 4px 8px; font-size: 0.78rem; }
@@ -11102,6 +11225,9 @@
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <div class="proj-dropdown-menu" id="profMoreDropdown">
+                                    <button type="button" class="proj-dropdown-item" onclick="closeProfMoreMenu(); openAccountSwitcherModal();">
+                                        <i class="fa-solid fa-arrows-rotate" style="color:var(--primary);"></i> <span>Chuyển đổi hồ sơ</span>
+                                    </button>
                                     <a href="/#creator" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
                                         <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
                                     </a>
@@ -11801,6 +11927,15 @@
                             <i class="fa-solid fa-circle-check"></i> <span data-i18n="settings_email_btn_verify">Xác thực ngay (+50 WOW)</span>
                         </button>
                     </div>
+                    <!-- THÔNG BÁO DÀNH CHO TÀI KHOẢN PHỤ -->
+                    <div id="subAccountNoticeCard" style="display:none; margin-bottom: 20px; padding: 14px 18px; border-radius: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                        <div style="font-weight: 800; color: var(--text-title); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
+                            <span>Quyền quản trị tài khoản</span>
+                        </div>
+                        <span id="subAccountNoticeText">Tài khoản này được liên kết dưới quyền tài khoản chính. Mật khẩu và bảo mật do tài khoản chính quản lý.</span>
+                    </div>
+
                     <div id="scratchLinkStatus" style="margin-bottom:25px; padding: 20px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
                         <div style="font-size:0.9rem; font-weight:bold; color:var(--text-title); margin-bottom:6px;" data-i18n="settings_scratch_title">Tài khoản Scratch:</div>
                         <!-- Sẽ render bằng JS -->
@@ -13279,6 +13414,16 @@
                             <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;">Không thể gom và chuyển điểm WOW thu được từ game vào ví cá nhân của bạn.</div>
                         </div>
                     </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;">
+                        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(13, 165, 122, 0.12); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem;">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <b style="font-size: 0.92rem; color: var(--text-title);">Tạo Tài Khoản Phụ</b>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;">Chỉ các tài khoản chính đã xác thực email mới được phép khởi tạo và liên kết các hồ sơ phụ.</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div style="background: rgba(13, 165, 122, 0.08); border: 1px dashed var(--primary); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; font-size: 0.85rem; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
@@ -14112,6 +14257,91 @@
 
             <div class="modal-body" style="overflow-y:auto; padding:12px 20px 20px 20px; display:flex; flex-direction:column; gap:10px;" id="followListContainer">
                 <!-- Danh sách 5 người và nút Xem thêm render từ JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHUYỂN ĐỔI HỒ SƠ DÀNH CHO MOBILE -->
+    <div class="modal-overlay" id="accountSwitcherModal">
+        <div class="modal" style="max-width: 440px; border-radius: 20px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color);">
+            <div class="modal-header" style="align-items: center; padding: 16px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
+                <span style="font-weight: 800; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-arrows-rotate" style="color: var(--primary);"></i>
+                    <span>Chuyển đổi hồ sơ</span>
+                </span>
+                <button type="button" class="btn-close" onclick="closeModal('accountSwitcherModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <div class="nav-sub-accounts-section" style="margin: 0 0 8px 0;">
+                    <div class="nav-sub-accounts-header">
+                        <span><i class="fa-solid fa-user-group"></i> Hồ sơ liên kết</span>
+                        <span id="mobileSubAccountsCountLabel" style="font-size:0.72rem; color:var(--text-muted);">Đang nạp</span>
+                    </div>
+                    <div class="nav-sub-accounts-list" id="mobileSubAccountsList">
+                        <div style="text-align:center; padding:12px; font-size:0.8rem; color:var(--text-muted);">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Đang nạp danh sách hồ sơ...
+                        </div>
+                    </div>
+                    <button type="button" class="nav-sub-account-create-btn" id="btnMobileCreateSubAccount" style="display:none;" onclick="closeModal('accountSwitcherModal'); openCreateSubAccountModal();">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Thêm tài khoản phụ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẠO TÀI KHOẢN PHỤ -->
+    <div class="modal-overlay" id="createSubAccountModal">
+        <div class="modal" style="max-width: 480px; border-radius: 20px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color);">
+            <div class="modal-header" style="align-items: center; padding: 18px 22px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
+                <span style="font-weight: 800; font-size: 1.1rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-user-plus" style="color: var(--primary);"></i>
+                    <span>Tạo tài khoản phụ</span>
+                </span>
+                <button type="button" class="btn-close" onclick="closeModal('createSubAccountModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body" style="padding: 22px;">
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; display: flex; gap: 10px;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary); font-size: 1rem; margin-top: 2px; flex-shrink: 0;"></i>
+                    <span>Tài khoản phụ hoạt động độc lập về tác phẩm, bình luận và tương tác. Năng lượng WOW và thiết lập bảo mật được liên kết trực tiếp với tài khoản chính.</span>
+                </div>
+
+                <form onsubmit="handleCreateSubAccountSubmit(event)" id="createSubAccountForm">
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label style="font-size: 0.84rem; font-weight: 700; color: var(--text-title); display: block; margin-bottom: 6px;">
+                            Tên tài khoản phụ
+                        </label>
+                        <div class="auth-input-group" style="margin-bottom: 0;">
+                            <i class="fa-solid fa-at auth-input-icon"></i>
+                            <input type="text" id="subAccountUsernameInput" class="auth-control-input" required minlength="3" maxlength="25" placeholder="Ví dụ: danv_art" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')">
+                        </div>
+                        <span style="font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; display: block;">
+                            Độ dài từ 3 đến 25 ký tự chữ cái thường, chữ số, gạch dưới hoặc gạch ngang.
+                        </span>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label style="font-size: 0.84rem; font-weight: 700; color: var(--text-title); display: block; margin-bottom: 6px;">
+                            Tên hiển thị
+                        </label>
+                        <div class="auth-input-group" style="margin-bottom: 0;">
+                            <i class="fa-solid fa-id-card auth-input-icon"></i>
+                            <input type="text" id="subAccountDisplayNameInput" class="auth-control-input" maxlength="40" placeholder="Tên gọi bạn muốn xuất hiện">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <button type="button" class="btn" style="flex: 1; padding: 11px; border-radius: 12px; font-weight: 700; justify-content: center;" onclick="closeModal('createSubAccountModal')">
+                            Hủy bỏ
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitCreateSubAccount" style="flex: 1.6; padding: 11px; border-radius: 12px; font-weight: 800; justify-content: center;">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Xác nhận tạo</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -16173,6 +16403,247 @@
         }
         function logout() { localStorage.removeItem('danv_user'); currentUser = null; window.location.hash = '#home'; location.reload(); }
 
+        // =========================================================================
+        // HỆ THỐNG ĐIỀU HÀNH TÀI KHOẢN PHỤ VÀ CHUYỂN ĐỔI HỒ SƠ TỨC THÌ
+        // =========================================================================
+        let cachedSubAccountsData = null;
+        let isSwitchingAccount = false;
+
+        function openAccountSwitcherModal() {
+            if (!currentUser) return openModal('loginModal');
+            openModal('accountSwitcherModal');
+            fetchSubAccountsList();
+        }
+
+        async function fetchSubAccountsList() {
+            if (!currentUser) return;
+            const listEl = document.getElementById('navSubAccountsList');
+            const countLabel = document.getElementById('navSubAccountsCountLabel');
+            const createBtn = document.getElementById('btnNavCreateSubAccount');
+
+            const mListEl = document.getElementById('mobileSubAccountsList');
+            const mCountLabel = document.getElementById('mobileSubAccountsCountLabel');
+            const mCreateBtn = document.getElementById('btnMobileCreateSubAccount');
+
+            try {
+                const res = await fetch(`${WORKER_URL}/api/user/subaccounts/list?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`, {
+                    headers: { 'X-Client-Type': 'StudioDANV-Web' }
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    const errHtml = '<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted);">Không thể nạp danh sách hồ sơ.</div>';
+                    if (listEl) listEl.innerHTML = errHtml;
+                    if (mListEl) mListEl.innerHTML = errHtml;
+                    return;
+                }
+
+                cachedSubAccountsData = data;
+                const accounts = data.accounts || [];
+                const subCount = data.subCount || 0;
+                const countText = `${subCount} trên 3 tài khoản phụ`;
+
+                if (countLabel) countLabel.innerText = countText;
+                if (mCountLabel) mCountLabel.innerText = countText;
+
+                if (createBtn) createBtn.style.display = data.canCreateMore ? 'flex' : 'none';
+                if (mCreateBtn) mCreateBtn.style.display = data.canCreateMore ? 'flex' : 'none';
+
+                if (accounts.length === 0) {
+                    const emptyHtml = '<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted);">Chưa có tài khoản liên kết.</div>';
+                    if (listEl) listEl.innerHTML = emptyHtml;
+                    if (mListEl) mListEl.innerHTML = emptyHtml;
+                    return;
+                }
+
+                const itemsHtml = accounts.map(acc => {
+                    const isCurrent = acc.isCurrent;
+                    const isRoot = acc.isRoot;
+                    const avtUrl = getAvtUrl(acc.avt);
+                    const safeName = escapeHtml(acc.displayName || acc.username);
+                    const safeUser = escapeHtml(acc.username);
+
+                    return `
+                        <div class="nav-sub-account-item ${isCurrent ? 'active' : ''}" onclick="${isCurrent ? '' : `switchSubAccount('${safeUser}')`}">
+                            <div class="nav-sub-account-info">
+                                <img src="${avtUrl}" class="nav-sub-account-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                                <div class="nav-sub-account-text">
+                                    <div class="nav-sub-account-name">${safeName}</div>
+                                    <div class="nav-sub-account-tag ${isRoot ? 'root' : ''}">
+                                        ${isRoot ? 'Tài khoản chính' : `@${safeUser}`}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-sub-account-status">
+                                ${isCurrent ? '<i class="fa-solid fa-check" title="Đang sử dụng"></i>' : '<i class="fa-solid fa-arrow-right-arrow-left" style="opacity:0.4;"></i>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                if (listEl) listEl.innerHTML = itemsHtml;
+                if (mListEl) mListEl.innerHTML = itemsHtml;
+
+            } catch (err) {
+                const failHtml = '<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted);">Lỗi kết nối danh sách hồ sơ.</div>';
+                if (listEl) listEl.innerHTML = failHtml;
+                if (mListEl) mListEl.innerHTML = failHtml;
+            }
+        }
+
+        async function switchSubAccount(targetUsername) {
+            if (!currentUser || isSwitchingAccount) return;
+            isSwitchingAccount = true;
+
+            const listEl = document.getElementById('navSubAccountsList');
+            const mListEl = document.getElementById('mobileSubAccountsList');
+            if (listEl) {
+                listEl.style.opacity = '0.5';
+                listEl.style.pointerEvents = 'none';
+            }
+            if (mListEl) {
+                mListEl.style.opacity = '0.5';
+                mListEl.style.pointerEvents = 'none';
+            }
+
+            try {
+                const res = await apiFetch('/api/user/subaccounts/switch', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: currentUser.username,
+                        sessionToken: currentUser.sessionToken,
+                        targetUsername: targetUsername
+                    })
+                });
+
+                if (res && res.success && res.user) {
+                    // Cập nhật phiên người dùng hiện tại
+                    currentUser = {
+                        username: res.user.username,
+                        displayName: res.user.displayName,
+                        sessionToken: res.user.sessionToken,
+                        avt: res.user.avt,
+                        role: res.user.role,
+                        email: res.user.email,
+                        emailVerified: res.user.emailVerified,
+                        WOW: res.user.WOW,
+                        omg: res.user.omg || res.user.WOW,
+                        frame: res.user.frame,
+                        chatFrame: res.user.chatFrame,
+                        banner: res.user.banner,
+                        parentAccount: res.user.parentAccount || null
+                    };
+
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    closeNavUserDropdown();
+                    closeModal('accountSwitcherModal');
+                    updateNav();
+
+                    // Làm mới dữ liệu hiển thị trên trang hiện tại
+                    const currentHash = window.location.hash.split('?')[0];
+                    if (currentHash === '#settings') {
+                        await openSettingsPage();
+                    } else if (currentHash.startsWith('#profile/')) {
+                        await openProfilePage(currentUser.username);
+                    } else if (currentHash === '#chat') {
+                        updateChatSidebarProfile();
+                    }
+
+                    showToast(`Đã chuyển sang tài khoản @${currentUser.username}.`, 'success');
+                } else {
+                    showToast(res ? (res.error || 'Không thể chuyển đổi tài khoản.') : 'Lỗi kết nối máy chủ.', 'error');
+                }
+            } catch (e) {
+                showToast('Lỗi kết nối khi chuyển đổi tài khoản.', 'error');
+            } finally {
+                isSwitchingAccount = false;
+                if (listEl) {
+                    listEl.style.opacity = '1';
+                    listEl.style.pointerEvents = 'auto';
+                }
+                if (mListEl) {
+                    mListEl.style.opacity = '1';
+                    mListEl.style.pointerEvents = 'auto';
+                }
+            }
+        }
+
+        function openCreateSubAccountModal() {
+            if (!currentUser) return openModal('loginModal');
+            if (currentUser.parentAccount) {
+                showToast('Chỉ tài khoản chính mới có quyền tạo thêm tài khoản phụ.', 'error');
+                return;
+            }
+            if (currentUser.emailVerified === false || currentUser.emailVerified === "false") {
+                showToast('Vui lòng xác minh email tài khoản trước khi tạo tài khoản phụ!', 'error');
+                openVerifyEmailModal();
+                return;
+            }
+
+            const userInput = document.getElementById('subAccountUsernameInput');
+            const nameInput = document.getElementById('subAccountDisplayNameInput');
+            if (userInput) userInput.value = '';
+            if (nameInput) nameInput.value = '';
+
+            openModal('createSubAccountModal');
+        }
+
+        async function handleCreateSubAccountSubmit(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const userInput = document.getElementById('subAccountUsernameInput');
+            const nameInput = document.getElementById('subAccountDisplayNameInput');
+            const subUsername = userInput ? userInput.value.trim() : '';
+            const displayName = nameInput ? nameInput.value.trim() : '';
+
+            if (!subUsername) {
+                showToast('Vui lòng nhập tên tài khoản phụ.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitCreateSubAccount');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang xử lý</span>';
+            }
+
+            try {
+                const res = await apiFetch('/api/user/subaccounts/create', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: currentUser.username,
+                        sessionToken: currentUser.sessionToken,
+                        subUsername: subUsername,
+                        displayName: displayName || subUsername,
+                        avtId: ''
+                    })
+                });
+
+                if (res && res.success) {
+                    closeModal('createSubAccountModal');
+                    showToast(`Đã tạo tài khoản phụ @${subUsername}.`, 'success');
+
+                    // Chuyển sang tài khoản mới vừa tạo
+                    if (res.subAccount && res.subAccount.sessionToken) {
+                        await switchSubAccount(res.subAccount.username);
+                    } else {
+                        await fetchSubAccountsList();
+                    }
+                } else {
+                    showToast(res ? (res.error || 'Không thể tạo tài khoản phụ.') : 'Lỗi kết nối máy chủ.', 'error');
+                }
+            } catch (err) {
+                showToast('Lỗi kết nối khi gửi yêu cầu.', 'error');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
+            }
+        }
+
         // ================= ĐỢT 3: HEARTBEAT ENGINE (ROUTING & NAV) =================
         let heartbeatTimer = null;
         let heartbeatDelay = 6000; // Khởi điểm 6 giây
@@ -16540,6 +17011,10 @@
                         <span class="notif-badge" id="notifBadge" style="display:none; right: -4px; top: -4px; z-index: 10; min-width: 17px; height: 17px; padding: 0 4px; font-size: 0.68rem; line-height: 17px;">0</span>
                     </a>
 
+                    <button type="button" class="nav-icon-btn mobile-switch-acc-btn" onclick="openAccountSwitcherModal()" title="Chuyển đổi hồ sơ">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+
                     <div class="nav-user-dropdown-wrap" id="navUserDropdownWrap">
                         <button type="button" class="nav-user-pill" onclick="toggleNavUserDropdown(event)" data-i18n-title="tooltip_account_menu" title="${t('tooltip_account_menu')}">
                             <div class="avt-wrapper" style="width: 28px; height: 28px;">
@@ -16555,6 +17030,26 @@
                                 <div class="nav-dropdown-user-name">${escapeHtml(currentUser.displayName || currentUser.username)}</div>
                                 <div class="nav-dropdown-user-role">@${escapeHtml(currentUser.username)}${currentUser.role === 'admin' ? ' • Admin' : ''}</div>
                             </div>
+                            
+                            <!-- KHU VỰC CHUYỂN ĐỔI HỒ SƠ -->
+                            <div id="navSubAccountsContainer">
+                                <div class="nav-sub-accounts-section">
+                                    <div class="nav-sub-accounts-header">
+                                        <span><i class="fa-solid fa-arrows-rotate"></i> Hồ sơ liên kết</span>
+                                        <span id="navSubAccountsCountLabel" style="font-size:0.7rem; color:var(--text-muted);">Đang tải</span>
+                                    </div>
+                                    <div class="nav-sub-accounts-list" id="navSubAccountsList">
+                                        <div style="text-align:center; padding:10px; font-size:0.75rem; color:var(--text-muted);">
+                                            <i class="fa-solid fa-spinner fa-spin"></i> Đang nạp danh sách
+                                        </div>
+                                    </div>
+                                    <button type="button" class="nav-sub-account-create-btn" id="btnNavCreateSubAccount" style="display:none;" onclick="closeNavUserDropdown(); openCreateSubAccountModal();">
+                                        <i class="fa-solid fa-plus"></i>
+                                        <span>Thêm tài khoản phụ</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <a href="/users/${encodeURIComponent(currentUser.username)}" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
                                 <i class="fa-solid fa-user" style="color:var(--primary);"></i> <span>${t('nav_profile') || 'Profile'}</span>
                             </a>
@@ -17210,7 +17705,13 @@
         function toggleNavUserDropdown(e) {
             if (e) e.stopPropagation();
             const wrap = document.getElementById('navUserDropdownWrap');
-            if (wrap) wrap.classList.toggle('open');
+            if (wrap) {
+                const willOpen = !wrap.classList.contains('open');
+                wrap.classList.toggle('open');
+                if (willOpen && currentUser) {
+                    fetchSubAccountsList();
+                }
+            }
         }
 
         function closeNavUserDropdown() {
@@ -19987,11 +20488,25 @@
 
                 if (verifyBadge && verifyBtn) {
                     if (isAccVerified) {
-                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Verified (${escapeHtml(pData.email || currentUser.email)})</span>`;
+                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Đã xác thực • ${escapeHtml(pData.email || currentUser.email)}</span>`;
                         verifyBtn.style.display = 'none';
                     } else {
-                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Unverified (${escapeHtml(pData.email || currentUser.email)})</span>`;
+                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Chưa xác thực • ${escapeHtml(pData.email || currentUser.email)}</span>`;
                         verifyBtn.style.display = 'inline-flex';
+                    }
+                }
+
+                // Hiển thị thông báo nếu đang sử dụng tài khoản phụ
+                const subNotice = document.getElementById('subAccountNoticeCard');
+                const subText = document.getElementById('subAccountNoticeText');
+                if (subNotice) {
+                    if (currentUser && currentUser.parentAccount) {
+                        subNotice.style.display = 'block';
+                        if (subText) {
+                            subText.innerText = `Tài khoản này được liên kết dưới quyền tài khoản chính @${currentUser.parentAccount}. Mật khẩu và bảo mật do tài khoản chính quản lý.`;
+                        }
+                    } else {
+                        subNotice.style.display = 'none';
                     }
                 }
                 
