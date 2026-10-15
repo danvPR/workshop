@@ -2790,6 +2790,13 @@
             margin-top: 8px;
             width: 100%;
         }
+        .notif-clean-title {
+            font-size: 0.98rem;
+            color: var(--text-title);
+            line-height: 1.55;
+            white-space: pre-line;
+            word-break: break-word;
+        }
         .notif-comment-speech {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -2798,6 +2805,7 @@
             font-size: 0.98rem;
             color: var(--text-main);
             line-height: 1.55;
+            white-space: pre-line;
             word-break: break-word;
             display: inline-block;
             max-width: 100%;
@@ -3080,6 +3088,33 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* 🌟 STYLES DÀNH CHO BỘ ẢNH EMOJI FACEBOOK */
+        .fb-emoji {
+            width: 1.3em;
+            height: 1.3em;
+            vertical-align: -0.25em;
+            display: inline-block;
+            object-fit: contain;
+            margin: 0 1.5px;
+            pointer-events: none;
+            user-select: none;
+        }
+        .emoji-grid-item .fb-emoji {
+            width: 26px;
+            height: 26px;
+            vertical-align: middle;
+        }
+        .chat-qr-btn .fb-emoji {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .chat-reaction-pill .fb-emoji {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
         }
 
         /* ================= BẢNG CHỌN EMOJI HIỆN ĐẠI (EMOJI PICKER POPOVER) ================= */
@@ -13221,7 +13256,7 @@
                                 <label style="font-size:0.8rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:5px;" data-i18n="auth_reg_user_label">Username (@handle) *</label>
                                 <div class="auth-input-group" style="margin-bottom:0;">
                                     <i class="fa-solid fa-at auth-input-icon"></i>
-                                    <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" data-i18n-ph="auth_reg_user_ph" placeholder="username" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')">
+                                    <input type="text" id="regUsername" class="auth-control-input" required pattern="[A-Za-z0-9_\-]+" minlength="3" maxlength="25" data-i18n-ph="auth_reg_user_ph" placeholder="username" oninput="this.value = this.value.replace(/[^a-zA-Z0-9_-]/g, '')">
                                 </div>
                             </div>
                             <div>
@@ -14034,6 +14069,7 @@
         <div class="modal" style="max-width:420px;">
             <div class="modal-header"><span><i class="fa-solid fa-flag"></i> <span data-i18n="report_title">Báo cáo vi phạm</span></span><button class="btn-close" onclick="closeModal('reportModal')">&times;</button></div>
             <div class="modal-body">
+                <div id="reportQuotedMessage" style="display:none; background:var(--bg-secondary); border-left:3px solid #ef4444; padding:9px 12px; border-radius:8px; font-size:0.84rem; margin-bottom:14px; word-break:break-word; max-height:130px; overflow-y:auto; line-height:1.45;"></div>
                 <form onsubmit="handleReportSubmit(event)">
                     <div class="form-group">
                         <label data-i18n="report_reason">Lý do báo cáo:</label>
@@ -14315,7 +14351,7 @@
                         </label>
                         <div class="auth-input-group" style="margin-bottom: 0;">
                             <i class="fa-solid fa-at auth-input-icon"></i>
-                            <input type="text" id="subAccountUsernameInput" class="auth-control-input" required minlength="3" maxlength="25" placeholder="Ví dụ: danv_art" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')">
+                            <input type="text" id="subAccountUsernameInput" class="auth-control-input" required minlength="3" maxlength="25" placeholder="Ví dụ: Danv_Art" oninput="this.value = this.value.replace(/[^a-zA-Z0-9_-]/g, '')">
                         </div>
                         <span style="font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; display: block;">
                             Độ dài từ 3 đến 25 ký tự chữ cái thường, chữ số, gạch dưới hoặc gạch ngang.
@@ -21286,6 +21322,7 @@
         function openReportModal(type, id = null, contextType = null) {
             if(!currentUser) return openModal('loginModal');
             reportTarget.type = type;
+            reportTarget.originalContent = "";
             
             if (type === 'project') {
                 reportTarget.id = (currentProj && (currentProj.projectId || currentProj.fileId)) || id;
@@ -21298,9 +21335,38 @@
                 } else {
                     reportTarget.id = `prof:${viewingProfileUser}:${id}`;
                 }
+            } else if (type === 'chat') {
+                reportTarget.id = id;
+                const row = document.getElementById(`chat-msg-${id}`);
+                if (row) {
+                    const authorEl = row.querySelector('.chat-author-name');
+                    const author = authorEl ? authorEl.innerText.trim() : 'Ẩn danh';
+                    const rawEncoded = row.getAttribute('data-msg-text') || '';
+                    const decodedText = rawEncoded ? decodeURIComponent(rawEncoded) : '';
+                    const timeEl = row.querySelector('.chat-time');
+                    const time = timeEl ? (timeEl.getAttribute('title') || timeEl.innerText.trim()) : '';
+                    const imgEl = row.querySelector('.chat-img-attachment');
+                    const imgSrc = imgEl ? imgEl.src : '';
+                    
+                    let snippet = `[@${author} (${time})]: "${decodedText || '(Không có văn bản)'}"`;
+                    if (imgSrc) snippet += `\n[Ảnh/Tệp đính kèm]: ${imgSrc}`;
+                    reportTarget.originalContent = snippet;
+                }
             } else {
                 // Nhận ID của asset hoặc loại khác
                 reportTarget.id = id;
+            }
+
+            // Hiển thị trích dẫn tin nhắn gốc nếu là báo cáo chat
+            const quoteEl = document.getElementById('reportQuotedMessage');
+            if (quoteEl) {
+                if (type === 'chat' && reportTarget.originalContent) {
+                    quoteEl.style.display = 'block';
+                    quoteEl.innerHTML = `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; display:block; margin-bottom:4px;">Nội dung tin nhắn bị báo cáo:</span><div style="color:var(--text-title); white-space:pre-line;">${escapeHtml(reportTarget.originalContent)}</div>`;
+                } else {
+                    quoteEl.style.display = 'none';
+                    quoteEl.innerHTML = '';
+                }
             }
 
             // Đặt lại mặc định form
@@ -21340,7 +21406,10 @@
             };
             
             // Gộp cả 2 thông tin lại để gửi cho Admin
-            const finalReason = `[${reasonSelect}] - Chi tiết: ${customDetail}`;
+            let finalReason = `[${reasonSelect}] - Chi tiết: ${customDetail}`;
+            if (reportTarget.type === 'chat' && reportTarget.originalContent) {
+                finalReason += `\n\n--- TIN NHẮN GỐC KHI BÁO CÁO ---\n${reportTarget.originalContent}`;
+            }
 
             const btn = e.target.querySelector('button[type="submit"]');
             const originalHTML = btn.innerHTML;
@@ -21486,8 +21555,8 @@
                             <button type="button" class="btn" style="padding:3px 8px; font-size:0.75rem;" onclick="navigator.clipboard.writeText('${safeTargetId}'); showToast('Đã chép ID vào bộ nhớ!', 'success')" title="Sao chép ID"><i class="fa-regular fa-copy"></i> Sao chép</button>
                         </div>
 
-                        <div style="background:rgba(245, 158, 11, 0.08); padding:10px 14px; border-radius:8px; color:var(--text-main); font-size:0.9rem; margin-bottom:15px; border:1px solid rgba(245, 158, 11, 0.3); line-height:1.5;">
-                            <i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b; margin-right:5px;"></i> <b>Lý do:</b> ${safeReason}
+                        <div style="background:rgba(245, 158, 11, 0.08); padding:10px 14px; border-radius:8px; color:var(--text-main); font-size:0.9rem; margin-bottom:15px; border:1px solid rgba(245, 158, 11, 0.3); line-height:1.5; white-space:pre-line; word-break:break-word;">
+                            <i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b; margin-right:5px;"></i> <b>Lý do & Nội dung gốc:</b> ${safeReason}
                         </div>
 
                         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
@@ -22269,9 +22338,9 @@
             if (sender === "HỆ THỐNG") {
                 actionHtml = `<b style="color:#ef4444;">${t('notif_admin_broadcast')}</b>`;
                 bubbleHtml = `
-                    <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 14px 18px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444; display:flex; align-items:center; gap:10px;">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size:1.3rem; flex-shrink:0;"></i>
-                        <span style="line-height:1.4;">${mainText}</span>
+                    <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 14px 18px; border-radius: 12px; margin-top: 6px; font-weight: 700; border: 1.5px solid #ef4444; display:flex; align-items:flex-start; gap:10px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:1.3rem; flex-shrink:0; margin-top:3px;"></i>
+                        <span style="line-height:1.55; white-space:pre-line; word-break:break-word;">${mainText}</span>
                     </div>
                 `;
                 return { actionHtml, bubbleHtml, link: linkWithTab };
@@ -23930,6 +23999,13 @@
             return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
         }
 
+        // 🌟 HÀM BIẾN ĐỔI KÝ TỰ EMOJI THÀNH ẢNH EMOJI FACEBOOK
+        function renderFacebookEmojiImg(emojiChar) {
+            if (!emojiChar) return '';
+            const encoded = encodeURIComponent(emojiChar);
+            return `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encoded}?style=facebook" alt="${escapeHtml(emojiChar)}" loading="lazy" onerror="this.outerHTML='${escapeHtml(emojiChar)}'">`;
+        }
+
         // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME + PARSE FORMAT CHỮ
         function formatCommentText(text) {
             if (!text) return '';
@@ -23941,6 +24017,14 @@
                     safeText = joypixels.shortnameToUnicode(safeText);
                 } catch(e) {}
             }
+
+            // 🌟 TỰ ĐỘNG CHUYỂN ĐỔI MỌI EMOJI THÀNH ẢNH FACEBOOK EMOJI (BẢO VỆ THẺ HTML)
+            const emojiRegex = /(<[^>]+>)|(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/gu;
+            safeText = safeText.replace(emojiRegex, (match, htmlTag, emojiPart) => {
+                if (htmlTag) return htmlTag;
+                if (!emojiPart || /^[\d#*]$/.test(emojiPart)) return emojiPart;
+                return renderFacebookEmojiImg(emojiPart);
+            });
 
             // 📝 ĐỊNH DẠNG VĂN BẢN (BOLD, ITALIC, UNDERLINE, STRIKE, CODE)
             safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
@@ -25732,9 +25816,11 @@
                 let tooltip = users.map(u => u === (currentUser?.username) ? 'Bạn' : `@${u}`).join(', ');
                 if (users.length > 5) tooltip = `${users.slice(0, 5).join(', ')} và ${users.length - 5} người khác`;
 
+                const fbImg = renderFacebookEmojiImg(emoji);
+
                 return `
                     <div class="chat-reaction-pill ${isReacted ? 'reacted' : ''}" onclick="toggleChatReaction('${msgId}', '${emoji}')" title="${escapeHtml(tooltip)}">
-                        <span>${emoji}</span>
+                        <span>${fbImg}</span>
                         <span>${users.length}</span>
                     </div>
                 `;
@@ -25756,8 +25842,8 @@
             popup.className = 'chat-quick-reaction-popup';
             
             const btns = quickEmojis.map(em => `
-                <button type="button" class="chat-qr-btn" onclick="toggleChatReaction('${msgId}', '${em}'); document.getElementById('quickReactionPopup').remove();">
-                    ${em}
+                <button type="button" class="chat-qr-btn" onclick="toggleChatReaction('${msgId}', '${em}'); document.getElementById('quickReactionPopup').remove();" title="${em}">
+                    ${renderFacebookEmojiImg(em)}
                 </button>
             `).join('');
 
@@ -31969,7 +32055,7 @@
 
             const gridHtml = emojisToDisplay.map(item => `
                 <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
-                    ${item.char}
+                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.outerHTML='${item.char}'">
                 </div>
             `).join('');
 
