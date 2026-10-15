@@ -27577,48 +27577,71 @@
                 isStreakBroken = true;
             }
 
-            // RENDER KHỐI ĐÁ KHÔI PHỤC (STREAK RECOVERY STONE WIDGET)
+            // RENDER KHỐI ĐÁ KHÔI PHỤC (CHỈ DÀNH RIÊNG CHO CHUỖI ĐÔI BẠN, GIÁ 200 WOW, GIỚI HẠN 3 NGÀY)
             const recoveryArea = document.getElementById('dailyRecoveryStoneArea');
             if (recoveryArea) {
-                recoveryArea.style.display = 'block';
-                const stones = parseInt(dailyInfo.recoveryStones) || 0;
-                const buyCount = (dailyInfo.recoveryMonth === curMonth) ? (parseInt(dailyInfo.recoveryBuyCount) || 0) : 0;
-                const canBuyMore = buyCount < 5;
+                if (tab !== 'couple') {
+                    // Ẩn hoàn toàn nếu đang ở tab cá nhân
+                    recoveryArea.style.display = 'none';
+                } else {
+                    recoveryArea.style.display = 'block';
+                    const stones = parseInt(dailyInfo.recoveryStones) || 0;
+                    const buyCount = (dailyInfo.recoveryMonth === curMonth) ? (parseInt(dailyInfo.recoveryBuyCount) || 0) : 0;
+                    const canBuyMore = buyCount < 3;
 
-                recoveryArea.innerHTML = `
-                    <div style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(14, 165, 233, 0.04) 100%); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 16px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="https://files.catbox.moe/qultgl.png" style="width:34px; height:34px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(56, 189, 248, 0.4));">
-                            <div style="text-align:left;">
-                                <div style="font-size:0.88rem; font-weight:800; color:var(--text-title); display:flex; align-items:center; gap:6px;">
-                                    <span>Đá khôi phục:</span>
-                                    <b style="color:#0284c7; font-size:1rem;">${stones} viên</b>
-                                </div>
-                                <div style="font-size:0.75rem; color:var(--text-muted);">
-                                    Đã mua tháng này: <b>${buyCount}/5</b> (Tối đa 5 lần/tháng)
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="buyRecoveryStone()" style="background:linear-gradient(135deg, #0284c7, #0369a1); border:none; padding:6px 14px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap;" ${!canBuyMore ? 'disabled' : ''}>
-                            <i class="fa-solid fa-plus"></i> ${canBuyMore ? 'Mua (50 WOW)' : 'Hết lượt tháng này'}
-                        </button>
-                    </div>
+                    // Tính thời hạn 3 ngày kể từ khi bị đứt
+                    const isWithin3Days = diffDays <= 4;
+                    const daysRemainingToRestore = Math.max(0, 4 - diffDays);
 
-                    ${isStreakBroken ? `
-                        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); border: 1.5px solid rgba(239, 68, 68, 0.35); border-radius: 14px; padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; text-align: left;">
+                    let restoreBoxHtml = '';
+                    if (isStreakBroken) {
+                        if (isWithin3Days) {
+                            restoreBoxHtml = `
+                                <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); border: 1.5px solid rgba(239, 68, 68, 0.35); border-radius: 14px; padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; text-align: left;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <i class="fa-solid fa-snowflake fa-beat" style="color:#0284c7; font-size:1.4rem;"></i>
+                                        <div>
+                                            <b style="color:#ef4444; font-size:0.9rem; display:block;">Chuỗi Đôi Bạn đã bị đứt! ${lostCount > 0 ? `(Đã mất ${lostCount} ngày)` : ''}</b>
+                                            <span style="font-size:0.78rem; color:var(--text-muted);">
+                                                Còn <b>${daysRemainingToRestore + 1} ngày</b> để dùng đá khôi phục (quá 3 ngày không cứu sẽ mất vĩnh viễn).
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="useRecoveryStone('couple')" style="background:linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); border:none; padding:7px 16px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
+                                        <img src="https://files.catbox.moe/qultgl.png" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"> Dùng 1 Đá khôi phục
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            restoreBoxHtml = `
+                                <div style="background: rgba(239, 68, 68, 0.08); border: 1px dashed #ef4444; border-radius: 14px; padding: 10px 14px; margin-top: 10px; text-align: left; font-size: 0.8rem; color: #ef4444;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> <b>Đã quá thời hạn 3 ngày:</b> Chuỗi Đôi Bạn cũ đã mất vĩnh viễn và không thể khôi phục lại nữa. Hãy cùng nhau xây dựng chuỗi mới nhé!
+                                </div>
+                            `;
+                        }
+                    }
+
+                    recoveryArea.innerHTML = `
+                        <div style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(14, 165, 233, 0.04) 100%); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 16px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <i class="fa-solid fa-snowflake fa-beat" style="color:#0284c7; font-size:1.4rem;"></i>
-                                <div>
-                                    <b style="color:#ef4444; font-size:0.9rem; display:block;">Chuỗi ${tab === 'couple' ? 'Đôi bạn' : 'cá nhân'} đã bị đứt! ${lostCount > 0 ? `(Đã mất ${lostCount} ngày)` : ''}</b>
-                                    <span style="font-size:0.78rem; color:var(--text-muted);">Dùng 1 viên Đá khôi phục để hàn gắn lại chuỗi ngày ngay lập tức.</span>
+                                <img src="https://files.catbox.moe/qultgl.png" style="width:34px; height:34px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(56, 189, 248, 0.4));">
+                                <div style="text-align:left;">
+                                    <div style="font-size:0.88rem; font-weight:800; color:var(--text-title); display:flex; align-items:center; gap:6px;">
+                                        <span>Đá khôi phục:</span>
+                                        <b style="color:#0284c7; font-size:1rem;">${stones} viên</b>
+                                    </div>
+                                    <div style="font-size:0.75rem; color:var(--text-muted);">
+                                        Đã mua tháng này: <b>${buyCount}/3</b> (Tối đa 3 lần/tháng, đá tích lũy vĩnh viễn)
+                                    </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" onclick="useRecoveryStone('${tab}')" style="background:linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); border:none; padding:7px 16px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
-                                <img src="https://files.catbox.moe/qultgl.png" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"> Dùng 1 Đá khôi phục
+                            <button type="button" class="btn btn-primary" onclick="buyRecoveryStone()" style="background:linear-gradient(135deg, #0284c7, #0369a1); border:none; padding:6px 14px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap;" ${!canBuyMore ? 'disabled' : ''}>
+                                <i class="fa-solid fa-plus"></i> ${canBuyMore ? 'Mua (200 WOW)' : 'Hết lượt tháng này'}
                             </button>
                         </div>
-                    ` : ''}
-                `;
+                        ${restoreBoxHtml}
+                    `;
+                }
             }
 
             const streakEl = document.getElementById('dailyStreakDisplay');
@@ -27927,14 +27950,14 @@
             runCanvasParticleBurst(originX, originY, colors, 35);
         }
 
-        // ================= HỆ THỐNG MUA & SỬ DỤNG ĐÁ KHÔI PHỤC =================
+        // ================= HỆ THỐNG MUA & SỬ DỤNG ĐÁ KHÔI PHỤC (ĐÃ SỬA LỖI MẤT CHUỖI) =================
         async function buyRecoveryStone() {
             if (!currentUser) return openModal('loginModal');
-            if ((currentUser.WOW || 0) < 50) {
-                return showToast("Bạn không đủ 50 WOW để mua Đá khôi phục!", "error");
+            if ((currentUser.WOW || 0) < 200) {
+                return showToast("Bạn không đủ 200 WOW để mua Đá khôi phục!", "error");
             }
 
-            const confirmBuy = confirm("Xác nhận mua 1 viên Đá khôi phục với giá 50 WOW?\n(Loại đá lạnh giúp khôi phục chuỗi đã mất, giới hạn 5 lần/tháng)");
+            const confirmBuy = confirm("Xác nhận mua 1 viên Đá khôi phục với giá 200 WOW?\n(Đá bảo hộ giúp hàn gắn chuỗi Đôi Bạn trong vòng 3 ngày kể từ khi đứt, giới hạn mua 3 lần/tháng, số đá được tích lũy sang tháng sau)");
             if (!confirmBuy) return;
 
             showToast("Đang giao dịch...", "info");
@@ -27950,8 +27973,14 @@
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
                     syncAllWOWDisplays();
 
-                    if (res.dailyInfo) window.currentDailyInfo = res.dailyInfo;
-                    renderDailyTab(window.currentDailyTab || 'single');
+                    // 🛡️ BẢN VÁ QUAN TRỌNG: Chỉ cập nhật số lượng đá và lượt mua, TUYỆT ĐỐI không ghi đè làm mất coupleStreak
+                    if (!window.currentDailyInfo) window.currentDailyInfo = {};
+                    window.currentDailyInfo.recoveryStones = res.recoveryStones;
+                    window.currentDailyInfo.recoveryBuyCount = res.recoveryBuyCount;
+                    window.currentDailyInfo.recoveryMonth = res.recoveryMonth;
+
+                    // Vẽ lại ngay lập tức mà vẫn giữ nguyên 100% chuỗi ngày của bạn
+                    renderDailyTab('couple');
                 } else {
                     showToast(res ? (res.error || "Không thể mua đá") : "Lỗi kết nối", "error");
                 }
@@ -27960,27 +27989,34 @@
             }
         }
 
-        async function useRecoveryStone(targetType = 'single') {
+        async function useRecoveryStone(targetType = 'couple') {
             if (!currentUser) return openModal('loginModal');
             const stones = parseInt(window.currentDailyInfo?.recoveryStones) || 0;
             if (stones < 1) {
                 return showToast("Bạn chưa có viên Đá khôi phục nào. Hãy bấm Mua trước nhé!", "error");
             }
 
-            const confirmUse = confirm(`Xác nhận dùng 1 Đá khôi phục để phục hồi chuỗi ${targetType === 'couple' ? 'Đôi bạn' : 'Cá nhân'}?`);
+            const confirmUse = confirm("Xác nhận dùng 1 Đá khôi phục để phục hồi chuỗi Đôi Bạn?\n(Chỉ có hiệu lực trong vòng 3 ngày kể từ ngày bị đứt chuỗi)");
             if (!confirmUse) return;
 
             showToast("Đang khôi phục chuỗi...", "info");
             try {
                 const res = await apiFetch(`/api/store/use_recovery_stone`, {
                     method: 'POST',
-                    body: JSON.stringify({ targetType })
+                    body: JSON.stringify({ targetType: 'couple' })
                 });
 
                 if (res && res.success) {
-                    showToast(`🎉 Đã khôi phục thành công chuỗi ngày (${res.restoredStreak} ngày)!`, "success");
-                    if (res.dailyInfo) window.currentDailyInfo = res.dailyInfo;
-                    renderDailyTab(window.currentDailyTab || 'single');
+                    showToast(`🎉 Đã khôi phục thành công chuỗi Đôi Bạn (${res.restoredStreak} ngày)!`, "success");
+                    
+                    // Cập nhật số đá và chuỗi mới vào bộ nhớ
+                    if (!window.currentDailyInfo) window.currentDailyInfo = {};
+                    window.currentDailyInfo.recoveryStones = res.recoveryStones;
+                    window.currentDailyInfo.coupleStreak = res.restoredStreak;
+                    delete window.currentDailyInfo.coupleLostStreak;
+
+                    renderDailyTab('couple');
+
                     const modal = document.getElementById('dailyRewardModal');
                     if (modal && typeof runCanvasParticleBurst === 'function') {
                         const rect = modal.getBoundingClientRect();
