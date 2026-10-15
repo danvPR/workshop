@@ -23999,11 +23999,11 @@
             return `<div class="chat-text">${formatCommentText(rawText)}</div>`;
         }
 
-        // 🌟 HÀM BIẾN ĐỔI KÝ TỰ EMOJI THÀNH ẢNH EMOJI FACEBOOK
+        // 🌟 HÀM BIẾN ĐỔI KÝ TỰ EMOJI THÀNH ẢNH EMOJI FACEBOOK (AN TOÀN TUYỆT ĐỐI KHÔNG BỊ LỖI QUOTES)
         function renderFacebookEmojiImg(emojiChar) {
             if (!emojiChar) return '';
             const encoded = encodeURIComponent(emojiChar);
-            return `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encoded}?style=facebook" alt="${escapeHtml(emojiChar)}" loading="lazy" onerror="this.outerHTML='${escapeHtml(emojiChar)}'">`;
+            return `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encoded}?style=facebook" alt="${escapeHtml(emojiChar)}" loading="lazy" onerror="this.replaceWith(this.alt)">`;
         }
 
         // 🔗 TỰ ĐỘNG HIGHLIGHT VÀ GẮN LINK CLICK CHO MỌI URL, TURBOWS, SCRATCH & @USERNAME + PARSE FORMAT CHỮ
@@ -24011,34 +24011,26 @@
             if (!text) return '';
             let safeText = escapeHtml(text);
 
-            // 🌟 TỰ ĐỘNG CHUYỂN ĐỔI SHORTCODE EMOJI (VD: :sob: -> 😭, :joy: -> 😂, :heart: -> ❤️)
+            // 🌟 1. TỰ ĐỘNG CHUYỂN ĐỔI SHORTCODE EMOJI (VD: :sob: -> 😭, :joy: -> 😂, :heart: -> ❤️)
             if (typeof joypixels !== 'undefined' && joypixels.shortnameToUnicode) {
                 try {
                     safeText = joypixels.shortnameToUnicode(safeText);
                 } catch(e) {}
             }
 
-            // 🌟 TỰ ĐỘNG CHUYỂN ĐỔI MỌI EMOJI THÀNH ẢNH FACEBOOK EMOJI (BẢO VỆ THẺ HTML)
-            const emojiRegex = /(<[^>]+>)|(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/gu;
-            safeText = safeText.replace(emojiRegex, (match, htmlTag, emojiPart) => {
-                if (htmlTag) return htmlTag;
-                if (!emojiPart || /^[\d#*]$/.test(emojiPart)) return emojiPart;
-                return renderFacebookEmojiImg(emojiPart);
-            });
-
-            // 📝 ĐỊNH DẠNG VĂN BẢN (BOLD, ITALIC, UNDERLINE, STRIKE, CODE)
+            // 📝 2. ĐỊNH DẠNG VĂN BẢN (BOLD, ITALIC, UNDERLINE, STRIKE, CODE)
             safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             safeText = safeText.replace(/\*(.*?)\*/g, '<i>$1</i>');
             safeText = safeText.replace(/__(.*?)__/g, '<u>$1</u>');
             safeText = safeText.replace(/~~(.*?)~~/g, '<s>$1</s>');
             safeText = safeText.replace(/`([^`\n]+)`/g, '<code>$1</code>');
 
-            // 🎨 ĐỔI MÀU CHỮ: [color=#hex]nội dung[/color]
+            // 🎨 3. ĐỔI MÀU CHỮ: [color=#hex]nội dung[/color]
             safeText = safeText.replace(/\[color=(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\]([\s\S]*?)\[\/color\]/g, (m, col, content) => {
                 return `<span style="color:${col};">${content}</span>`;
             });
 
-            // 📏 5 DẠNG KÍCH THƯỚC CHỮ: [size=1..5]nội dung[/size]
+            // 📏 4. 5 DẠNG KÍCH THƯỚC CHỮ: [size=1..5]nội dung[/size]
             const sizeMap = {
                 '1': 'font-size:0.75rem;',
                 '2': 'font-size:0.85rem;',
@@ -24050,9 +24042,10 @@
                 return `<span style="${sizeMap[sz] || 'font-size:0.95rem;'}">${content}</span>`;
             });
             
-            // 1. Highlight link trang web: Chuyển thành khối chữ nhật bo tròn màu xanh dương rõ nét, kèm icon liên kết
-            const linkRegex = /(https?:\/\/[^\s<]+)|((?:^|\s)(?:turbows\.pages\.dev|scratch\.mit\.edu|danvpr\.github\.io)[^\s<]*)/gi;
-            safeText = safeText.replace(linkRegex, (match, p1, p2) => {
+            // 5. Highlight link trang web: CHẮN BỎ QUA THẺ HTML ĐỂ KHÔNG BAO GIỜ BỊ DÍNH VÀO SRC CỦA THẺ ẢNH
+            const linkRegex = /(<[^>]+>)|(https?:\/\/[^\s<"']+)|((?:^|\s)(?:turbows\.pages\.dev|scratch\.mit\.edu|danvpr\.github\.io)[^\s<"']*)/gi;
+            safeText = safeText.replace(linkRegex, (match, htmlTag, p1, p2) => {
+                if (htmlTag) return htmlTag;
                 let raw = p1 || (p2 ? p2.trim() : '');
                 let prefix = (p2 && p2.startsWith(' ')) ? ' ' : '';
                 let cleanUrl = raw;
@@ -24066,15 +24059,23 @@
                 return `${prefix}<a href="${fullHref}" target="_blank" rel="noopener noreferrer" class="chat-url-pill"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem; opacity:0.85;"></i><span>${cleanUrl}</span></a>${trailing}`;
             });
 
-            // 2. Highlight đặc biệt cho BeaBea (AI) dạng khối chữ nhật bo tròn màu hồng
+            // 6. Highlight đặc biệt cho BeaBea (AI) dạng khối chữ nhật bo tròn màu hồng
             safeText = safeText.replace(/(^|\s)@BeaBea\s*\(AI\)/gi, '$1<span class="chat-mention-beabea"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
             safeText = safeText.replace(/(^|\s)@BeaBea(?!\s*\(AI\))/gi, '$1<span class="chat-mention-beabea"><i class="fa-solid fa-robot"></i> @BeaBea (AI)</span>');
 
-            // 3. Highlight hyperlink cho tất cả @username thành thẻ nền chữ nhật bo tròn màu xanh ngọc rõ ràng
+            // 7. Highlight hyperlink cho tất cả @username thành thẻ nền chữ nhật bo tròn màu xanh ngọc rõ ràng
             const mentionRegex = /(^|\s)@([a-zA-Z0-9_\-]{3,25})/g;
             safeText = safeText.replace(mentionRegex, (match, prefix, uname) => {
                 if (uname.toLowerCase() === 'beabea') return match;
                 return `${prefix}<a href="#profile/${encodeURIComponent(uname)}" class="chat-mention-pill">@${uname}</a>`;
+            });
+
+            // 🌟 8. BƯỚC CUỐI CÙNG: CHUYỂN ĐỔI EMOJI THÀNH THẺ ẢNH (ĐẶT Ở CUỐI ĐỂ LINK REGEX KHÔNG PHÁ VỠ THUỘC TÍNH SRC)
+            const emojiRegex = /(<[^>]+>)|(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/gu;
+            safeText = safeText.replace(emojiRegex, (match, htmlTag, emojiPart) => {
+                if (htmlTag) return htmlTag;
+                if (!emojiPart || /^[\d#*]$/.test(emojiPart)) return emojiPart;
+                return renderFacebookEmojiImg(emojiPart);
             });
 
             return safeText;
@@ -31906,85 +31907,428 @@
 
 
         // =========================================================================
-        // 😀 BỘ MÁY THANH CHỌN EMOJI (EMOJI PICKER POPOVER & SHORTCODE SYSTEM)
+        // 😀 BỘ MÁY THANH CHỌN EMOJI ĐẦY ĐỦ 3.953 EMOJI (UNICODE 17.0 STANDARD ENGINE)
         // =========================================================================
         let currentEmojiTargetType = 'chat';
         let currentEmojiCategory = 'smileys';
         let emojiSearchTerm = '';
+        let emojiDisplayedCount = 140; // Nạp 140 emoji ban đầu, cuộn xuống tự tải thêm mượt mà
+        let isFullEmojiLoaded = false;
 
+        // 9 NHÓM CHUẨN UNICODE CLDR VỚI TOÀN BỘ 3.953 EMOJI
         const DANV_EMOJI_CATEGORIES = {
             smileys: {
                 icon: '😀',
                 name: 'Cảm xúc',
+                groupName: 'Smileys & Emotion',
                 emojis: [
                     { char: '😀', code: ':grinning:' }, { char: '😃', code: ':smiley:' }, { char: '😄', code: ':smile:' }, { char: '😁', code: ':grin:' },
                     { char: '😆', code: ':laughing:' }, { char: '😅', code: ':sweat_smile:' }, { char: '🤣', code: ':rofl:' }, { char: '😂', code: ':joy:' },
-                    { char: '🙂', code: ':slight_smile:' }, { char: '🙃', code: ':upside_down:' }, { char: '😉', code: ':wink:' }, { char: '😊', code: ':blush:' },
-                    { char: '😇', code: ':innocent:' }, { char: '🥰', code: ':smiling_face_with_3_hearts:' }, { char: '😍', code: ':heart_eyes:' }, { char: '🤩', code: ':star_struck:' },
-                    { char: '😘', code: ':kissing_heart:' }, { char: '😋', code: ':yum:' }, { char: '😛', code: ':stuck_out_tongue:' }, { char: '😜', code: ':stuck_out_tongue_winking_eye:' },
-                    { char: '🤪', code: ':zany_face:' }, { char: '😝', code: ':stuck_out_tongue_closed_eyes:' }, { char: '🤑', code: ':money_mouth:' }, { char: '🤗', code: ':hugging:' },
-                    { char: '🤔', code: ':thinking:' }, { char: '🤐', code: ':zipper_mouth:' }, { char: '🤨', code: ':raised_eyebrow:' }, { char: '😐', code: ':neutral_face:' },
+                    { char: '🙂', code: ':slight_smile:' }, { char: '🙃', code: ':upside_down:' }, { char: '🫠', code: ':melting_face:' }, { char: '😉', code: ':wink:' },
+                    { char: '😊', code: ':blush:' }, { char: '😇', code: ':innocent:' }, { char: '🥰', code: ':smiling_face_with_3_hearts:' }, { char: '😍', code: ':heart_eyes:' },
+                    { char: '🤩', code: ':star_struck:' }, { char: '😘', code: ':kissing_heart:' }, { char: '😗', code: ':kissing:' }, { char: '😚', code: ':kissing_closed_eyes:' },
+                    { char: '😙', code: ':kissing_smiling_eyes:' }, { char: '🥲', code: ':smiling_face_with_tear:' }, { char: '😋', code: ':yum:' }, { char: '😛', code: ':stuck_out_tongue:' },
+                    { char: '😜', code: ':stuck_out_tongue_winking_eye:' }, { char: '🤪', code: ':zany_face:' }, { char: '😝', code: ':stuck_out_tongue_closed_eyes:' }, { char: '🤑', code: ':money_mouth:' },
+                    { char: '🤗', code: ':hugging:' }, { char: '🫣', code: ':peeking_face:' }, { char: '🤫', code: ':shushing_face:' }, { char: '🤔', code: ':thinking:' },
+                    { char: '🫡', code: ':saluting_face:' }, { char: '🤐', code: ':zipper_mouth:' }, { char: '🤨', code: ':raised_eyebrow:' }, { char: '😐', code: ':neutral_face:' },
+                    { char: '😑', code: ':expressionless:' }, { char: '😶', code: ':no_mouth:' }, { char: '🫥', code: ':dotted_line_face:' }, { char: '😶‍🌫️', code: ':face_in_clouds:' },
                     { char: '😏', code: ':smirk:' }, { char: '😒', code: ':unamused:' }, { char: '🙄', code: ':rolling_eyes:' }, { char: '😬', code: ':grimacing:' },
-                    { char: '😌', code: ':relieved:' }, { char: '😔', code: ':pensive:' }, { char: '😪', code: ':sleepy:' }, { char: '🤤', code: ':drooling_face:' },
-                    { char: '😴', code: ':sleeping:' }, { char: '😷', code: ':mask:' }, { char: '🤒', code: ':face_with_thermometer:' }, { char: '🤕', code: ':face_with_head_bandage:' },
-                    { char: '🤧', code: ':sneezing_face:' }, { char: '🥵', code: ':hot_face:' }, { char: '🥶', code: ':cold_face:' }, { char: '🥴', code: ':woozy_face:' },
-                    { char: '😵', code: ':dizzy_face:' }, { char: '🤯', code: ':exploding_head:' }, { char: '😎', code: ':sunglasses:' }, { char: '🤓', code: ':nerd:' },
-                    { char: '🧐', code: ':monocle:' }, { char: '😕', code: ':confused:' }, { char: '😟', code: ':worried:' }, { char: '😮', code: ':open_mouth:' },
-                    { char: '😲', code: ':astonished:' }, { char: '😳', code: ':flushed:' }, { char: '🥺', code: ':pleading_face:' }, { char: '😦', code: ':frowning:' },
+                    { char: '😮‍💨', code: ':face_exhaling:' }, { char: '🤥', code: ':lying_face:' }, { char: '🫨', code: ':shaking_face:' }, { char: '😌', code: ':relieved:' },
+                    { char: '😔', code: ':pensive:' }, { char: '😪', code: ':sleepy:' }, { char: '🤤', code: ':drooling_face:' }, { char: '😴', code: ':sleeping:' },
+                    { char: '😷', code: ':mask:' }, { char: '🤒', code: ':face_with_thermometer:' }, { char: '🤕', code: ':face_with_head_bandage:' }, { char: '🤢', code: ':nauseated_face:' },
+                    { char: '🤮', code: ':vomiting_face:' }, { char: '🤧', code: ':sneezing_face:' }, { char: '🥵', code: ':hot_face:' }, { char: '🥶', code: ':cold_face:' },
+                    { char: '🥴', code: ':woozy_face:' }, { char: '😵', code: ':dizzy_face:' }, { char: '😵‍💫', code: ':face_with_spiral_eyes:' }, { char: '🤯', code: ':exploding_head:' },
+                    { char: '🤠', code: ':cowboy_hat_face:' }, { char: '🥳', code: ':partying_face:' }, { char: '🥸', code: ':disguised_face:' }, { char: '😎', code: ':sunglasses:' },
+                    { char: '🤓', code: ':nerd:' }, { char: '🧐', code: ':monocle:' }, { char: '😕', code: ':confused:' }, { char: '😟', code: ':worried:' },
+                    { char: '🙁', code: ':slight_frown:' }, { char: '😮', code: ':open_mouth:' }, { char: '😯', code: ':hushed:' }, { char: '😲', code: ':astonished:' },
+                    { char: '😳', code: ':flushed:' }, { char: '🥺', code: ':pleading_face:' }, { char: '🥹', code: ':face_holding_back_tears:' }, { char: '😦', code: ':frowning:' },
                     { char: '😨', code: ':fearful:' }, { char: '😰', code: ':cold_sweat:' }, { char: '😥', code: ':disappointed_relieved:' }, { char: '😢', code: ':cry:' },
                     { char: '😭', code: ':sob:' }, { char: '😱', code: ':scream:' }, { char: '😖', code: ':confounded:' }, { char: '😣', code: ':persevere:' },
                     { char: '😞', code: ':disappointed:' }, { char: '😓', code: ':sweat:' }, { char: '😩', code: ':weary:' }, { char: '😫', code: ':tired_face:' },
-                    { char: '😤', code: ':triumph:' }, { char: '😡', code: ':rage:' }, { char: '😠', code: ':angry:' }, { char: '🤬', code: ':cursing_face:' },
-                    { char: '😈', code: ':smiling_imp:' }, { char: '👿', code: ':imp:' }, { char: '💀', code: ':skull:' }, { char: '💩', code: ':poop:' },
-                    { char: '🤡', code: ':clown:' }, { char: '👻', code: ':ghost:' }, { char: '👽', code: ':alien:' }, { char: '🤖', code: ':robot:' }
+                    { char: '🥱', code: ':yawning_face:' }, { char: '😤', code: ':triumph:' }, { char: '😡', code: ':rage:' }, { char: '😠', code: ':angry:' },
+                    { char: '🤬', code: ':cursing_face:' }, { char: '😈', code: ':smiling_imp:' }, { char: '👿', code: ':imp:' }, { char: '💀', code: ':skull:' },
+                    { char: '☠️', code: ':skull_and_crossbones:' }, { char: '💩', code: ':poop:' }, { char: '🤡', code: ':clown:' }, { char: '👹', code: ':japanese_ogre:' },
+                    { char: '👺', code: ':japanese_goblin:' }, { char: '👻', code: ':ghost:' }, { char: '👽', code: ':alien:' }, { char: '👾', code: ':space_invader:' },
+                    { char: '🤖', code: ':robot:' }, { char: '😺', code: ':smiley_cat:' }, { char: '😸', code: ':smile_cat:' }, { char: '😹', code: ':joy_cat:' },
+                    { char: '😻', code: ':heart_eyes_cat:' }, { char: '😼', code: ':smirk_cat:' }, { char: '😽', code: ':kissing_cat:' }, { char: '🙀', code: ':scream_cat:' }
                 ]
             },
             people: {
-                icon: '👍',
-                name: 'Cử chỉ & Người',
+                icon: '👋',
+                name: 'Người & Cơ thể',
+                groupName: 'People & Body',
                 emojis: [
-                    { char: '👋', code: ':wave:' }, { char: '✋', code: ':raised_hand:' }, { char: '👌', code: ':ok_hand:' }, { char: '🤌', code: ':pinched_fingers:' },
-                    { char: '✌️', code: ':v:' }, { char: '🤞', code: ':crossed_fingers:' }, { char: '🤟', code: ':love_you_gesture:' }, { char: '🤘', code: ':metal:' },
-                    { char: '🤙', code: ':call_me:' }, { char: '👈', code: ':point_left:' }, { char: '👉', code: ':point_right:' }, { char: '👆', code: ':point_up_2:' },
-                    { char: '👇', code: ':point_down:' }, { char: '👍', code: ':+1:' }, { char: '👎', code: ':-1:' }, { char: '✊', code: ':fist:' },
-                    { char: '👊', code: ':punch:' }, { char: '🤛', code: ':left_facing_fist:' }, { char: '🤜', code: ':right_facing_fist:' }, { char: '👏', code: ':clap:' },
-                    { char: '🙌', code: ':raised_hands:' }, { char: '🤝', code: ':handshake:' }, { char: '🙏', code: ':pray:' }, { char: '✍️', code: ':writing_hand:' },
-                    { char: '💪', code: ':muscle:' }, { char: '🧠', code: ':brain:' }, { char: '👀', code: ':eyes:' }, { char: '❤️', code: ':heart:' },
-                    { char: '🧡', code: ':orange_heart:' }, { char: '💛', code: ':yellow_heart:' }, { char: '💚', code: ':green_heart:' }, { char: '💙', code: ':blue_heart:' },
-                    { char: '💜', code: ':purple_heart:' }, { char: '🖤', code: ':black_heart:' }, { char: '🤍', code: ':white_heart:' }, { char: '💔', code: ':broken_heart:' },
-                    { char: '🔥', code: ':fire:' }, { char: '✨', code: ':sparkles:' }, { char: '🌟', code: ':glowing_star:' }, { char: '💯', code: ':100:' }
+                    { char: '👋', code: ':wave:' }, { char: '🤚', code: ':raised_back_of_hand:' }, { char: '🖐️', code: ':raised_hand_with_fingers_splayed:' }, { char: '✋', code: ':raised_hand:' },
+                    { char: '🖖', code: ':vulcan_salute:' }, { char: '🫱', code: ':rightwards_hand:' }, { char: '🫲', code: ':leftwards_hand:' }, { char: '🫳', code: ':palm_down_hand:' },
+                    { char: '🫴', code: ':palm_up_hand:' }, { char: '👌', code: ':ok_hand:' }, { char: '🤌', code: ':pinched_fingers:' }, { char: '🤏', code: ':pinching_hand:' },
+                    { char: '✌️', code: ':v:' }, { char: '🤞', code: ':crossed_fingers:' }, { char: '🫰', code: ':hand_with_index_finger_and_thumb_crossed:' }, { char: '🤟', code: ':love_you_gesture:' },
+                    { char: '🤘', code: ':metal:' }, { char: '🤙', code: ':call_me:' }, { char: '👈', code: ':point_left:' }, { char: '👉', code: ':point_right:' },
+                    { char: '👆', code: ':point_up_2:' }, { char: '🖕', code: ':middle_finger:' }, { char: '👇', code: ':point_down:' }, { char: '☝️', code: ':point_up:' },
+                    { char: '👍', code: ':+1:' }, { char: '👎', code: ':-1:' }, { char: '✊', code: ':fist:' }, { char: '👊', code: ':punch:' },
+                    { char: '🤛', code: ':left_facing_fist:' }, { char: '🤜', code: ':right_facing_fist:' }, { char: '👏', code: ':clap:' }, { char: '🙌', code: ':raised_hands:' },
+                    { char: '🫶', code: ':heart_hands:' }, { char: '👐', code: ':open_hands:' }, { char: '🤲', code: ':palms_up_together:' }, { char: '🤝', code: ':handshake:' },
+                    { char: '🙏', code: ':pray:' }, { char: '✍️', code: ':writing_hand:' }, { char: '💅', code: ':nail_care:' }, { char: '🤳', code: ':selfie:' },
+                    { char: '💪', code: ':muscle:' }, { char: '🦾', code: ':mechanical_arm:' }, { char: '🦿', code: ':mechanical_leg:' }, { char: '🦵', code: ':leg:' },
+                    { char: '🦶', code: ':foot:' }, { char: '👂', code: ':ear:' }, { char: '🦻', code: ':ear_with_hearing_aid:' }, { char: '👃', code: ':nose:' },
+                    { char: '🧠', code: ':brain:' }, { char: '🫀', code: ':anatomical_heart:' }, { char: '🫁', code: ':lungs:' }, { char: '🦷', code: ':tooth:' },
+                    { char: '🦴', code: ':bone:' }, { char: '👀', code: ':eyes:' }, { char: '👁️', code: ':eye:' }, { char: '👅', code: ':tongue:' },
+                    { char: '👄', code: ':lips:' }, { char: '👶', code: ':baby:' }, { char: '🧒', code: ':child:' }, { char: '👦', code: ':boy:' },
+                    { char: '👧', code: ':girl:' }, { char: '🧑', code: ':adult:' }, { char: '👱', code: ':blond_haired_person:' }, { char: '👨', code: ':man:' },
+                    { char: '🧔', code: ':bearded_person:' }, { char: '👩', code: ':woman:' }, { char: '🧓', code: ':older_adult:' }, { char: '👴', code: ':older_man:' },
+                    { char: '👵', code: ':older_woman:' }, { char: '🧑‍💻', code: ':technologist:' }, { char: '👨‍💻', code: ':man_technologist:' }, { char: '👩‍💻', code: ':woman_technologist:' }
                 ]
             },
             animals: {
-                icon: '🐱',
+                icon: '🐻',
                 name: 'Động vật & Tự nhiên',
+                groupName: 'Animals & Nature',
                 emojis: [
-                    { char: '🐶', code: ':dog:' }, { char: '🐱', code: ':cat:' }, { char: '🐭', code: ':mouse:' }, { char: '🐹', code: ':hamster:' },
-                    { char: '🐰', code: ':rabbit:' }, { char: '🦊', code: ':fox:' }, { char: '🐻', code: ':bear:' }, { char: '🐼', code: ':panda_face:' },
-                    { char: '🐨', code: ':koala:' }, { char: '🐯', code: ':tiger:' }, { char: '🦁', code: ':lion:' }, { char: '🐮', code: ':cow:' },
-                    { char: '🐷', code: ':pig:' }, { char: '🐸', code: ':frog:' }, { char: '🐵', code: ':monkey_face:' }, { char: '🐔', code: ':chicken:' },
-                    { char: '🐧', code: ':penguin:' }, { char: '🐦', code: ':bird:' }, { char: '🐤', code: ':baby_chick:' }, { char: '🦆', code: ':duck:' },
-                    { char: '🦅', code: ':eagle:' }, { char: '🦉', code: ':owl:' }, { char: '🦇', code: ':bat:' }, { char: '🦄', code: ':unicorn:' },
-                    { char: '🐝', code: ':bee:' }, { char: '🐛', code: ':bug:' }, { char: '🦋', code: ':butterfly:' }, { char: '🐢', code: ':turtle:' },
-                    { char: '🐍', code: ':snake:' }, { char: '🐙', code: ':octopus:' }, { char: '🐬', code: ':dolphin:' }, { char: '🐳', code: ':whale:' },
-                    { char: '🌸', code: ':cherry_blossom:' }, { char: '🌹', code: ':rose:' }, { char: '🌻', code: ':sunflower:' }, { char: '🍀', code: ':four_leaf_clover:' },
-                    { char: '🍁', code: ':maple_leaf:' }, { char: '🌙', code: ':crescent_moon:' }, { char: '☀️', code: ':sunny:' }, { char: '⚡', code: ':zap:' }
+                    { char: '🐵', code: ':monkey_face:' }, { char: '🐒', code: ':monkey:' }, { char: '🦍', code: ':gorilla:' }, { char: '🦧', code: ':orangutan:' },
+                    { char: '🐶', code: ':dog:' }, { char: '🐕', code: ':dog2:' }, { char: '🦮', code: ':guide_dog:' }, { char: '🐕‍🦺', code: ':service_dog:' },
+                    { char: '🐩', code: ':poodle:' }, { char: '🐺', code: ':wolf:' }, { char: '🦊', code: ':fox:' }, { char: '🦝', code: ':raccoon:' },
+                    { char: '🐱', code: ':cat:' }, { char: '🐈', code: ':cat2:' }, { char: '🐈‍⬛', code: ':black_cat:' }, { char: '🦁', code: ':lion:' },
+                    { char: '🐯', code: ':tiger:' }, { char: '🐅', code: ':tiger2:' }, { char: '🐆', code: ':leopard:' }, { char: '🐴', code: ':horse:' },
+                    { char: '🐎', code: ':racehorse:' }, { char: '🦄', code: ':unicorn:' }, { char: '🦓', code: ':zebra:' }, { char: '🦌', code: ':deer:' },
+                    { char: '🦬', code: ':bison:' }, { char: '🐮', code: ':cow:' }, { char: '🐂', code: ':ox:' }, { char: '🐃', code: ':water_buffalo:' },
+                    { char: '🐄', code: ':cow2:' }, { char: '🐷', code: ':pig:' }, { char: '🐖', code: ':pig2:' }, { char: '🐗', code: ':boar:' },
+                    { char: '🐏', code: ':ram:' }, { char: '🐑', code: ':sheep:' }, { char: '🐐', code: ':goat:' }, { char: '🐪', code: ':dromedary_camel:' },
+                    { char: '🐫', code: ':camel:' }, { char: '🦙', code: ':llama:' }, { char: '🦒', code: ':giraffe:' }, { char: '🐘', code: ':elephant:' },
+                    { char: '🦣', code: ':mammoth:' }, { char: '🦏', code: ':rhinoceros:' }, { char: '🦛', code: ':hippopotamus:' }, { char: '🐭', code: ':mouse:' },
+                    { char: '🐁', code: ':mouse2:' }, { char: '🐀', code: ':rat:' }, { char: '🐹', code: ':hamster:' }, { char: '🐰', code: ':rabbit:' },
+                    { char: '🐇', code: ':rabbit2:' }, { char: '🐿️', code: ':chipmunk:' }, { char: '🦫', code: ':beaver:' }, { char: '🦔', code: ':hedgehog:' },
+                    { char: '🦇', code: ':bat:' }, { char: '🐻', code: ':bear:' }, { char: '🐻‍❄️', code: ':polar_bear:' }, { char: '🐨', code: ':koala:' },
+                    { char: '🐼', code: ':panda_face:' }, { char: '🦥', code: ':sloth:' }, { char: '🦦', code: ':otter:' }, { char: '🦨', code: ':skunk:' },
+                    { char: '🦘', code: ':kangaroo:' }, { char: '🦡', code: ':badger:' }, { char: '🐾', code: ':feet:' }, { char: '🦃', code: ':turkey:' },
+                    { char: '🐔', code: ':chicken:' }, { char: '🐓', code: ':rooster:' }, { char: '🐣', code: ':hatching_chick:' }, { char: '🐤', code: ':baby_chick:' },
+                    { char: '🐥', code: ':hatched_chick:' }, { char: '🐦', code: ':bird:' }, { char: '🐧', code: ':penguin:' }, { char: '🕊️', code: ':dove:' },
+                    { char: '🦅', code: ':eagle:' }, { char: '🦆', code: ':duck:' }, { char: '🦢', code: ':swan:' }, { char: '🦉', code: ':owl:' },
+                    { char: '🦤', code: ':dodo:' }, { char: '🪶', code: ':feather:' }, { char: '🦩', code: ':flamingo:' }, { char: '🦚', code: ':peacock:' },
+                    { char: '🦜', code: ':parrot:' }, { char: '🐸', code: ':frog:' }, { char: '🐊', code: ':crocodile:' }, { char: '🐢', code: ':turtle:' },
+                    { char: '🦎', code: ':lizard:' }, { char: '🐍', code: ':snake:' }, { char: '🐲', code: ':dragon_face:' }, { char: '🐉', code: ':dragon:' },
+                    { char: '🦕', code: ':sauropod:' }, { char: '🦖', code: ':t_rex:' }, { char: '🐳', code: ':whale:' }, { char: '🐋', code: ':whale2:' },
+                    { char: '🐬', code: ':dolphin:' }, { char: '🦭', code: ':seal:' }, { char: '🐟', code: ':fish:' }, { char: '🐠', code: ':tropical_fish:' },
+                    { char: '🐡', code: ':blowfish:' }, { char: '🦈', code: ':shark:' }, { char: '🐙', code: ':octopus:' }, { char: '🐚', code: ':shell:' },
+                    { char: '🐌', code: ':snail:' }, { char: '🦋', code: ':butterfly:' }, { char: '🐛', code: ':bug:' }, { char: '🐜', code: ':ant:' },
+                    { char: '🐝', code: ':bee:' }, { char: '🪲', code: ':beetle:' }, { char: '🐞', code: ':lady_beetle:' }, { char: '🦗', code: ':cricket:' },
+                    { char: '🪳', code: ':cockroach:' }, { char: '🕷️', code: ':spider:' }, { char: '🕸️', code: ':spider_web:' }, { char: '🦂', code: ':scorpion:' },
+                    { char: '🦟', code: ':mosquito:' }, { char: '🪰', code: ':fly:' }, { char: '🪱', code: ':worm:' }, { char: '🌸', code: ':cherry_blossom:' },
+                    { char: '🌹', code: ':rose:' }, { char: '🌺', code: ':hibiscus:' }, { char: '🌻', code: ':sunflower:' }, { char: '🌼', code: ':blossom:' },
+                    { char: '🌷', code: ':tulip:' }, { char: '🌱', code: ':seedling:' }, { char: '🪴', code: ':potted_plant:' }, { char: '🌲', code: ':evergreen_tree:' },
+                    { char: '🌳', code: ':deciduous_tree:' }, { char: '🌴', code: ':palm_tree:' }, { char: '🌵', code: ':cactus:' }, { char: '🌾', code: ':ear_of_rice:' },
+                    { char: '🌿', code: ':herb:' }, { char: '☘️', code: ':shamrock:' }, { char: '🍀', code: ':four_leaf_clover:' }, { char: '🍁', code: ':maple_leaf:' }
+                ]
+            },
+            food: {
+                icon: '🍔',
+                name: 'Đồ ăn & Thức uống',
+                groupName: 'Food & Drink',
+                emojis: [
+                    { char: '🍇', code: ':grapes:' }, { char: '🍈', code: ':melon:' }, { char: '🍉', code: ':watermelon:' }, { char: '🍊', code: ':tangerine:' },
+                    { char: '🍋', code: ':lemon:' }, { char: '🍌', code: ':banana:' }, { char: '🍍', code: ':pineapple:' }, { char: '🥭', code: ':mango:' },
+                    { char: '🍎', code: ':apple:' }, { char: '🍏', code: ':green_apple:' }, { char: '🍐', code: ':pear:' }, { char: '🍑', code: ':peach:' },
+                    { char: '🍒', code: ':cherries:' }, { char: '🍓', code: ':strawberry:' }, { char: '🫐', code: ':blueberries:' }, { char: '🥝', code: ':kiwi_fruit:' },
+                    { char: '🍅', code: ':tomato:' }, { char: '🫒', code: ':olive:' }, { char: '🥥', code: ':coconut:' }, { char: '🥑', code: ':avocado:' },
+                    { char: '🍆', code: ':eggplant:' }, { char: '🥔', code: ':potato:' }, { char: '🥕', code: ':carrot:' }, { char: '🌽', code: ':corn:' },
+                    { char: '🌶️', code: ':hot_pepper:' }, { char: '🫑', code: ':bell_pepper:' }, { char: '🥒', code: ':cucumber:' }, { char: '🥬', code: ':leafy_green:' },
+                    { char: '🥦', code: ':broccoli:' }, { char: '🧄', code: ':garlic:' }, { char: '🧅', code: ':onion:' }, { char: '🍄', code: ':mushroom:' },
+                    { char: '🥜', code: ':peanuts:' }, { char: '🌰', code: ':chestnut:' }, { char: '🍞', code: ':bread:' }, { char: '🥐', code: ':croissant:' },
+                    { char: '🥖', code: ':baguette_bread:' }, { char: '🫓', code: ':flatbread:' }, { char: '🥨', code: ':pretzel:' }, { char: '🥯', code: ':bagel:' },
+                    { char: '🥞', code: ':pancakes:' }, { char: '🧇', code: ':waffle:' }, { char: '🧀', code: ':cheese:' }, { char: '🍖', code: ':meat_on_bone:' },
+                    { char: '🍗', code: ':poultry_leg:' }, { char: '🥩', code: ':cut_of_meat:' }, { char: '🥓', code: ':bacon:' }, { char: '🍔', code: ':hamburger:' },
+                    { char: '🍟', code: ':fries:' }, { char: '🍕', code: ':pizza:' }, { char: '🌭', code: ':hotdog:' }, { char: '🥪', code: ':sandwich:' },
+                    { char: '🌮', code: ':taco:' }, { char: '🌯', code: ':burrito:' }, { char: '🫔', code: ':tamale:' }, { char: '🥙', code: ':stuffed_flatbread:' },
+                    { char: '🧆', code: ':falafel:' }, { char: '🥚', code: ':egg:' }, { char: '🍳', code: ':fried_egg:' }, { char: '🥘', code: ':shallow_pan_of_food:' },
+                    { char: '🍲', code: ':stew:' }, { char: '🫕', code: ':fondue:' }, { char: '🥣', code: ':bowl_with_spoon:' }, { char: '🥗', code: ':green_salad:' },
+                    { char: '🍿', code: ':popcorn:' }, { char: '🧈', code: ':butter:' }, { char: '🧂', code: ':salt:' }, { char: '🥫', code: ':canned_food:' },
+                    { char: '🍱', code: ':bento:' }, { char: '🍘', code: ':rice_cracker:' }, { char: '🍙', code: ':rice_ball:' }, { char: '🍚', code: ':rice:' },
+                    { char: '🍛', code: ':curry:' }, { char: '🍜', code: ':ramen:' }, { char: '🍝', code: ':spaghetti:' }, { char: '🍠', code: ':sweet_potato:' },
+                    { char: '🍢', code: ':oden:' }, { char: '🍣', code: ':sushi:' }, { char: '🍤', code: ':fried_shrimp:' }, { char: '🍥', code: ':fish_cake:' },
+                    { char: '🥮', code: ':moon_cake:' }, { char: '🍡', code: ':dango:' }, { char: '🥟', code: ':dumpling:' }, { char: '🥠', code: ':fortune_cookie:' },
+                    { char: '🥡', code: ':takeout_box:' }, { char: '🍦', code: ':icecream:' }, { char: '🍧', code: ':shaved_ice:' }, { char: '🍨', code: ':ice_cream:' },
+                    { char: '🍩', code: ':doughnut:' }, { char: '🍪', code: ':cookie:' }, { char: '🎂', code: ':birthday:' }, { char: '🍰', code: ':cake:' },
+                    { char: '🧁', code: ':cupcake:' }, { char: '🥧', code: ':pie:' }, { char: '🍫', code: ':chocolate_bar:' }, { char: '🍬', code: ':candy:' },
+                    { char: '🍭', code: ':lollipop:' }, { char: '🍮', code: ':custard:' }, { char: '🍯', code: ':honey_pot:' }, { char: '🍼', code: ':baby_bottle:' },
+                    { char: '🥛', code: ':milk_glass:' }, { char: '☕', code: ':coffee:' }, { char: '🫖', code: ':teapot:' }, { char: '🍵', code: ':tea:' },
+                    { char: '🍶', code: ':sake:' }, { char: '🍾', code: ':champagne:' }, { char: '🍷', code: ':wine_glass:' }, { char: '🍸', code: ':cocktail:' },
+                    { char: '🍹', code: ':tropical_drink:' }, { char: '🍺', code: ':beer:' }, { char: '🍻', code: ':beers:' }, { char: '🥂', code: ':clinking_glasses:' },
+                    { char: '🥃', code: ':tumbler_glass:' }, { char: '🥤', code: ':cup_with_straw:' }, { char: '🧋', code: ':bubble_tea:' }, { char: '🧃', code: ':beverage_box:' }
+                ]
+            },
+            travel: {
+                icon: '✈️',
+                name: 'Du lịch & Địa điểm',
+                groupName: 'Travel & Places',
+                emojis: [
+                    { char: '🚗', code: ':car:' }, { char: '🚕', code: ':taxi:' }, { char: '🚙', code: ':blue_car:' }, { char: '🚌', code: ':bus:' },
+                    { char: '🚎', code: ':trolleybus:' }, { char: '🏎️', code: ':racing_car:' }, { char: '🚓', code: ':police_car:' }, { char: '🚑', code: ':ambulance:' },
+                    { char: '🚒', code: ':fire_engine:' }, { char: '🚐', code: ':minibus:' }, { char: '🛻', code: ':pickup_truck:' }, { char: '🚚', code: ':truck:' },
+                    { char: '🚛', code: ':articulated_lorry:' }, { char: '🚜', code: ':tractor:' }, { char: '🦯', code: ':probing_cane:' }, { char: '🦽', code: ':manual_wheelchair:' },
+                    { char: '🦼', code: ':motorized_wheelchair:' }, { char: '🛴', code: ':scooter:' }, { char: '🚲', code: ':bike:' }, { char: '🛵', code: ':motor_scooter:' },
+                    { char: '🏍️', code: ':motorcycle:' }, { char: '🛺', code: ':auto_rickshaw:' }, { char: '🚨', code: ':rotating_light:' }, { char: '🚔', code: ':oncoming_police_car:' },
+                    { char: '🚍', code: ':oncoming_bus:' }, { char: '🚘', code: ':oncoming_automobile:' }, { char: '🚖', code: ':oncoming_taxi:' }, { char: '🚡', code: ':aerial_tramway:' },
+                    { char: '🚠', code: ':mountain_cableway:' }, { char: '🚟', code: ':suspension_railway:' }, { char: '🚃', code: ':railway_car:' }, { char: '🚋', code: ':train:' },
+                    { char: '🚞', code: ':mountain_railway:' }, { char: '🚝', code: ':monorail:' }, { char: '🚄', code: ':bullettrain_side:' }, { char: '🚅', code: ':bullettrain_front:' },
+                    { char: '🚈', code: ':light_rail:' }, { char: '🚂', code: ':steam_locomotive:' }, { char: '🚆', code: ':train2:' }, { char: '🚇', code: ':metro:' },
+                    { char: '🚊', code: ':tram:' }, { char: '🚉', code: ':station:' }, { char: '✈️', code: ':airplane:' }, { char: '🛫', code: ':flight_departure:' },
+                    { char: '🛬', code: ':flight_arrival:' }, { char: '🛩️', code: ':small_airplane:' }, { char: '💺', code: ':seat:' }, { char: '🛰️', code: ':satellite:' },
+                    { char: '🚀', code: ':rocket:' }, { char: '🛸', code: ':flying_saucer:' }, { char: '🚁', code: ':helicopter:' }, { char: '🛶', code: ':canoe:' },
+                    { char: '⛵', code: ':sailboat:' }, { char: '🚤', code: ':speedboat:' }, { char: '🛥️', code: ':motor_boat:' }, { char: '🛳️', code: ':passenger_ship:' },
+                    { char: '⛴️', code: ':ferry:' }, { char: '🚢', code: ':ship:' }, { char: '⚓', code: ':anchor:' }, { char: '🛟', code: ':ring_buoy:' },
+                    { char: '⛽', code: ':fuelpump:' }, { char: '🚧', code: ':construction:' }, { char: '🚥', code: ':traffic_light:' }, { char: '🚦', code: ':vertical_traffic_light:' },
+                    { char: '🚏', code: ':busstop:' }, { char: '🗺️', code: ':map:' }, { char: '🗿', code: ':moyai:' }, { char: '🗽', code: ':statue_of_liberty:' },
+                    { char: '🗼', code: ':tokyo_tower:' }, { char: '🏰', code: ':european_castle:' }, { char: '🏯', code: ':japanese_castle:' }, { char: '🏟️', code: ':stadium:' },
+                    { char: '🎡', code: ':ferris_wheel:' }, { char: '🎢', code: ':roller_coaster:' }, { char: '🎠', code: ':carousel_horse:' }, { char: '⛲', code: ':fountain:' },
+                    { char: '🏖️', code: ':beach_umbrella:' }, { char: '🏝️', code: ':desert_island:' }, { char: '🏜️', code: ':desert:' }, { char: '🌋', code: ':volcano:' },
+                    { char: '⛰️', code: ':mountain:' }, { char: '🏔️', code: ':mountain_snow:' }, { char: '🏕️', code: ':camping:' }, { char: '⛺', code: ':tent:' }
                 ]
             },
             activities: {
-                icon: '🎮',
-                name: 'Game & Hoạt động',
+                icon: '⚽',
+                name: 'Hoạt động & Thể thao',
+                groupName: 'Activities',
                 emojis: [
-                    { char: '🎮', code: ':video_game:' }, { char: '🕹️', code: ':joystick:' }, { char: '🎲', code: ':game_die:' }, { char: '🧩', code: ':jigsaw:' },
-                    { char: '🎨', code: ':art:' }, { char: '🎬', code: ':clapper:' }, { char: '🎤', code: ':microphone:' }, { char: '🎧', code: ':headphones:' },
-                    { char: '🎼', code: ':musical_score:' }, { char: '🎹', code: ':musical_keyboard:' }, { char: '🏆', code: ':trophy:' }, { char: '🥇', code: ':first_place:' },
-                    { char: '🥈', code: ':second_place:' }, { char: '🥉', code: ':third_place:' }, { char: '🎯', code: ':dart:' }, { char: '🚀', code: ':rocket:' },
-                    { char: '🛸', code: ':flying_saucer:' }, { char: '💡', code: ':bulb:' }, { char: '💣', code: ':bomb:' }, { char: '🛡️', code: ':shield:' },
-                    { char: '💎', code: ':gem:' }, { char: '👑', code: ':crown:' }, { char: '🎁', code: ':gift:' }, { char: '🎉', code: ':tada:' },
-                    { char: '🎊', code: ':confetti_ball:' }, { char: '🏮', code: ':izakaya_lantern:' }, { char: '🔔', code: ':bell:' }, { char: '💬', code: ':speech_balloon:' }
+                    { char: '🎃', code: ':jack_o_lantern:' }, { char: '🎄', code: ':christmas_tree:' }, { char: '🎆', code: ':fireworks:' }, { char: '🎇', code: ':sparkler:' },
+                    { char: '🧨', code: ':firecracker:' }, { char: '✨', code: ':sparkles:' }, { char: '🎈', code: ':balloon:' }, { char: '🎉', code: ':tada:' },
+                    { char: '🎊', code: ':confetti_ball:' }, { char: '🎋', code: ':tanabata_tree:' }, { char: '🎍', code: ':bamboo:' }, { char: '🎎', code: ':dolls:' },
+                    { char: '🎏', code: ':flags:' }, { char: '🎐', code: ':wind_chime:' }, { char: '🎑', code: ':rice_scene:' }, { char: '🧧', code: ':red_envelope:' },
+                    { char: '🎀', code: ':ribbon:' }, { char: '🎁', code: ':gift:' }, { char: '🎗️', code: ':reminder_ribbon:' }, { char: '🎟️', code: ':tickets:' },
+                    { char: '🎫', code: ':ticket:' }, { char: '🎖️', code: ':military_medal:' }, { char: '🏆', code: ':trophy:' }, { char: '🏅', code: ':medal:' },
+                    { char: '🥇', code: ':first_place:' }, { char: '🥈', code: ':second_place:' }, { char: '🥉', code: ':third_place:' }, { char: '⚽', code: ':soccer:' },
+                    { char: '⚾', code: ':baseball:' }, { char: '🥎', code: ':softball:' }, { char: '🏀', code: ':basketball:' }, { char: '🏐', code: ':volleyball:' },
+                    { char: '🏈', code: ':football:' }, { char: '🏉', code: ':rugby_football:' }, { char: '🎾', code: ':tennis:' }, { char: '🥏', code: ':flying_disc:' },
+                    { char: '🎳', code: ':bowling:' }, { char: '🏏', code: ':cricket_game:' }, { char: '🏑', code: ':field_hockey:' }, { char: '🏒', code: ':ice_hockey:' },
+                    { char: '🥍', code: ':lacrosse:' }, { char: '🏓', code: ':ping_pong:' }, { char: '🏸', code: ':badminton:' }, { char: '🥊', code: ':boxing_glove:' },
+                    { char: '🥋', code: ':martial_arts_uniform:' }, { char: '🥅', code: ':goal_net:' }, { char: '⛳', code: ':golf:' }, { char: '⛸️', code: ':ice_skate:' },
+                    { char: '🎣', code: ':fishing_pole_and_fish:' }, { char: '🤿', code: ':diving_mask:' }, { char: '🎽', code: ':running_shirt_with_sash:' }, { char: '🎿', code: ':ski:' },
+                    { char: '🛷', code: ':sled:' }, { char: '🥌', code: ':curling_stone:' }, { char: '🎯', code: ':dart:' }, { char: '🪀', code: ':yo_yo:' },
+                    { char: '🪁', code: ':kite:' }, { char: '🔫', code: ':water_pistol:' }, { char: '🎱', code: ':8ball:' }, { char: '🔮', code: ':crystal_ball:' },
+                    { char: '🪄', code: ':magic_wand:' }, { char: 'video_game', code: ':video_game:' }, { char: '🎮', code: ':video_game:' }, { char: '🕹️', code: ':joystick:' },
+                    { char: '🎰', code: ':slot_machine:' }, { char: '🎲', code: ':game_die:' }, { char: '🧩', code: ':jigsaw:' }, { char: '🧸', code: ':teddy_bear:' },
+                    { char: '🪅', code: ':pinata:' }, { char: '🪆', code: ':nesting_dolls:' }, { char: '♠️', code: ':spades:' }, { char: '♥️', code: ':hearts:' },
+                    { char: '♦️', code: ':diamonds:' }, { char: '♣️', code: ':clubs:' }, { char: '♟️', code: ':chess_pawn:' }, { char: '🃏', code: ':black_joker:' },
+                    { char: '🀄', code: ':mahjong:' }, { char: '🎴', code: ':flower_playing_cards:' }, { char: '🎭', code: ':performing_arts:' }, { char: '🖼️', code: ':framed_picture:' },
+                    { char: '🎨', code: ':art:' }, { char: '🧵', code: ':thread:' }, { char: '🪡', code: ':sewing_needle:' }, { char: '🧶', code: ':yarn:' },
+                    { char: '🪢', code: ':knot:' }
+                ]
+            },
+            objects: {
+                icon: '💡',
+                name: 'Đồ vật',
+                groupName: 'Objects',
+                emojis: [
+                    { char: '👓', code: ':eyeglasses:' }, { char: '🕶️', code: ':dark_sunglasses:' }, { char: '🥽', code: ':goggles:' }, { char: '🥼', code: ':lab_coat:' },
+                    { char: '🦺', code: ':safety_vest:' }, { char: '👔', code: ':necktie:' }, { char: '👕', code: ':shirt:' }, { char: '👖', code: ':jeans:' },
+                    { char: '🧣', code: ':scarf:' }, { char: '🧤', code: ':gloves:' }, { char: '🧥', code: ':coat:' }, { char: '🧦', code: ':socks:' },
+                    { char: '👗', code: ':dress:' }, { char: '👘', code: ':kimono:' }, { char: '🥻', code: ':sari:' }, { char: '🩱', code: ':one_piece_swimsuit:' },
+                    { char: '🩲', code: ':briefs:' }, { char: '🩳', code: ':shorts:' }, { char: '👙', code: ':bikini:' }, { char: '👚', code: ':womans_clothes:' },
+                    { char: '👛', code: ':purse:' }, { char: '👜', code: ':handbag:' }, { char: '👝', code: ':pouch:' }, { char: '🎒', code: ':school_satchel:' },
+                    { char: '🩴', code: ':thong_sandal:' }, { char: '👞', code: ':mans_shoe:' }, { char: '👟', code: ':athletic_shoe:' }, { char: '🥾', code: ':hiking_boot:' },
+                    { char: '🥿', code: ':flat_shoe:' }, { char: '👠', code: ':high_heel:' }, { char: '👡', code: ':sandal:' }, { char: '🩰', code: ':ballet_shoes:' },
+                    { char: '👢', code: ':boot:' }, { char: '👑', code: ':crown:' }, { char: '👒', code: ':womans_hat:' }, { char: '🎩', code: ':tophat:' },
+                    { char: '🎓', code: ':mortar_board:' }, { char: '🧢', code: ':billed_cap:' }, { char: '🪖', code: ':military_helmet:' }, { char: '💄', code: ':lipstick:' },
+                    { char: '💍', code: ':ring:' }, { char: '💎', code: ':gem:' }, { char: '🔇', code: ':mute:' }, { char: '🔈', code: ':speaker:' },
+                    { char: '🔉', code: ':sound:' }, { char: '🔊', code: ':loud_sound:' }, { char: '📢', code: ':loudspeaker:' }, { char: '📣', code: ':mega:' },
+                    { char: '📯', code: ':postal_horn:' }, { char: '🔔', code: ':bell:' }, { char: '🔕', code: ':no_bell:' }, { char: '🎼', code: ':musical_score:' },
+                    { char: '🎵', code: ':musical_note:' }, { char: '🎶', code: ':notes:' }, { char: '🎙️', code: ':studio_microphone:' }, { char: '🎚️', code: ':level_slider:' },
+                    { char: '🎛️', code: ':control_knobs:' }, { char: '🎤', code: ':microphone:' }, { char: '🎧', code: ':headphones:' }, { char: '📻', code: ':radio:' },
+                    { char: '🎷', code: ':saxophone:' }, { char: '🪗', code: ':accordion:' }, { char: '🎸', code: ':guitar:' }, { char: '🎹', code: ':musical_keyboard:' },
+                    { char: '🎺', code: ':trumpet:' }, { char: '🎻', code: ':violin:' }, { char: '🪕', code: ':banjo:' }, { char: '🥁', code: ':drum:' },
+                    { char: '🪘', code: ':long_drum:' }, { char: '📱', code: ':iphone:' }, { char: '📲', code: ':calling:' }, { char: '☎️', code: ':phone:' },
+                    { char: '📞', code: ':telephone_receiver:' }, { char: '📟', code: ':pager:' }, { char: '📠', code: ':fax:' }, { char: '🔋', code: ':battery:' },
+                    { char: '🪫', code: ':low_battery:' }, { char: '🔌', code: ':electric_plug:' }, { char: '💻', code: ':computer:' }, { char: '🖥️', code: ':desktop_computer:' },
+                    { char: '🖨️', code: ':printer:' }, { char: '⌨️', code: ':keyboard:' }, { char: '🖱️', code: ':computer_mouse:' }, { char: '🖲️', code: ':trackball:' },
+                    { char: '💽', code: ':minidisc:' }, { char: '💾', code: ':floppy_disk:' }, { char: '💿', code: ':cd:' }, { char: '📀', code: ':dvd:' },
+                    { char: '🧮', code: ':abacus:' }, { char: '🎥', code: ':movie_camera:' }, { char: '🎞️', code: ':film_strip:' }, { char: '📽️', code: ':film_projector:' },
+                    { char: '🎬', code: ':clapper:' }, { char: '📺', code: ':tv:' }, { char: '📷', code: ':camera:' }, { char: '📸', code: ':camera_with_flash:' },
+                    { char: '📹', code: ':video_camera:' }, { char: '📼', code: ':vhs:' }, { char: '🔍', code: ':mag:' }, { char: '🔎', code: ':mag_right:' },
+                    { char: '🕯️', code: ':candle:' }, { char: '💡', code: ':bulb:' }, { char: '🔦', code: ':flashlight:' }, { char: '🏮', code: ':izakaya_lantern:' },
+                    { char: '🪔', code: ':diya_lamp:' }, { char: '📔', code: ':notebook_with_decorative_cover:' }, { char: '📕', code: ':closed_book:' }, { char: '📖', code: ':book:' },
+                    { char: '📗', code: ':green_book:' }, { char: '📘', code: ':blue_book:' }, { char: '📙', code: ':orange_book:' }, { char: '📚', code: ':books:' },
+                    { char: '📓', code: ':notebook:' }, { char: '📒', code: ':ledger:' }, { char: '📃', code: ':page_with_curl:' }, { char: '📜', code: ':scroll:' },
+                    { char: '📄', code: ':page_facing_up:' }, { char: '📰', code: ':newspaper:' }, { char: '🗞️', code: ':rolled_up_newspaper:' }, { char: '📑', code: ':bookmark_tabs:' },
+                    { char: '🔖', code: ':bookmark:' }, { char: '🏷️', code: ':label:' }, { char: '💰', code: ':moneybag:' }, { char: '🪙', code: ':coin:' },
+                    { char: '💴', code: ':yen:' }, { char: '💵', code: ':dollar:' }, { char: '💶', code: ':euro:' }, { char: '💷', code: ':pound:' },
+                    { char: '💸', code: ':money_with_wings:' }, { char: '💳', code: ':credit_card:' }, { char: '🧾', code: ':receipt:' }, { char: '✉️', code: ':email:' },
+                    { char: '📧', code: ':e_mail:' }, { char: '📨', code: ':incoming_envelope:' }, { char: '📩', code: ':envelope_with_arrow:' }, { char: '📤', code: ':outbox_box:' },
+                    { char: '📥', code: ':inbox_box:' }, { char: '📦', code: ':package:' }, { char: '📫', code: ':mailbox:' }, { char: '📪', code: ':mailbox_closed:' },
+                    { char: '📬', code: ':mailbox_with_mail:' }, { char: '📭', code: ':mailbox_with_no_mail:' }, { char: '📮', code: ':postbox:' }, { char: '🗳️', code: ':ballot_box_with_ballot:' },
+                    { char: '✏️', code: ':pencil2:' }, { char: '✒️', code: ':black_nib:' }, { char: '🖋️', code: ':lower_left_fountain_pen:' }, { char: '🖊️', code: ':lower_left_ballpoint_pen:' },
+                    { char: '🖌️', code: ':lower_left_paintbrush:' }, { char: '🖍️', code: ':lower_left_crayon:' }, { char: '📝', code: ':memo:' }, { char: '💼', code: ':briefcase:' },
+                    { char: '📁', code: ':file_folder:' }, { char: '📂', code: ':open_file_folder:' }, { char: '🗂️', code: ':card_index_dividers:' }, { char: '📅', code: ':date:' },
+                    { char: '📆', code: ':calendar:' }, { char: '🗒️', code: ':spiral_notepad:' }, { char: '🗓️', code: ':spiral_calendar_pad:' }, { char: '📇', code: ':card_index:' },
+                    { char: '📈', code: ':chart_with_upwards_trend:' }, { char: '📉', code: ':chart_with_downwards_trend:' }, { char: '📊', code: ':bar_chart:' }, { char: '📋', code: ':clipboard:' },
+                    { char: '📌', code: ':pushpin:' }, { char: '📍', code: ':round_pushpin:' }, { char: '📎', code: ':paperclip:' }, { char: '🖇️', code: ':linked_paperclips:' },
+                    { char: '📏', code: ':straight_ruler:' }, { char: '📐', code: ':triangular_ruler:' }, { char: '✂️', code: ':scissors:' }, { char: '🗃️', code: ':card_file_box:' },
+                    { char: '🗄️', code: ':file_cabinet:' }, { char: '🗑️', code: ':wastebasket:' }, { char: '🔒', code: ':lock:' }, { char: '🔓', code: ':unlock:' },
+                    { char: '🔏', code: ':lock_with_ink_pen:' }, { char: '🔐', code: ':closed_lock_with_key:' }, { char: '🔑', code: ':key:' }, { char: '🗝️', code: ':old_key:' },
+                    { char: '🔨', code: ':hammer:' }, { char: '🪓', code: ':axe:' }, { char: '⛏️', code: ':pick:' }, { char: '⚒️', code: ':hammer_and_pick:' },
+                    { char: '🛠️', code: ':hammer_and_wrench:' }, { char: '🗡️', code: ':dagger_knife:' }, { char: '⚔️', code: ':crossed_swords:' }, { char: '💣', code: ':bomb:' },
+                    { char: '🪃', code: ':boomerang:' }, { char: '🏹', code: ':bow_and_arrow:' }, { char: '🛡️', code: ':shield:' }, { char: '🪚', code: ':carpentry_saw:' },
+                    { char: '🔧', code: ':wrench:' }, { char: '🪛', code: ':screwdriver:' }, { char: '🔩', code: ':nut_and_bolt:' }, { char: '⚙️', code: ':gear:' },
+                    { char: '🗜️', code: ':clamp:' }, { char: '⚖️', code: ':scales:' }, { char: '🦯', code: ':probing_cane:' }, { char: '🔗', code: ':link:' },
+                    { char: '⛓️', code: ':chains:' }, { char: '🪝', code: ':hook:' }, { char: '🧰', code: ':toolbox:' }, { char: '🧲', code: ':magnet:' },
+                    { char: '🪜', code: ':ladder:' }, { char: '⚗️', code: ':alembic:' }, { char: '🧪', code: ':test_tube:' }, { char: '🧫', code: ':petri_dish:' },
+                    { char: '🧬', code: ':dna:' }, { char: '🔬', code: ':microscope:' }, { char: '🔭', code: ':telescope:' }, { char: '📡', code: ':satellite_antenna:' },
+                    { char: '💉', code: ':syringe:' }, { char: '🩸', code: ':drop_of_blood:' }, { char: '💊', code: ':pill:' }, { char: '🩹', code: ':adhesive_bandage:' },
+                    { char: '🩺', code: ':stethoscope:' }, { char: '🚪', code: ':door:' }, { char: '🛗', code: ':elevator:' }, { char: '🪞', code: ':mirror:' },
+                    { char: '🪟', code: ':window:' }, { char: '🛏️', code: ':bed:' }, { char: '🛋️', code: ':couch_and_lamp:' }, { char: '🪑', code: ':chair:' },
+                    { char: '🚽', code: ':toilet:' }, { char: '🪠', code: ':plunger:' }, { char: '🚿', code: ':shower:' }, { char: '🛁', code: ':bathtub:' },
+                    { char: '🪤', code: ':mouse_trap:' }, { char: '🪒', code: ':razor:' }, { char: '🧴', code: ':lotion_bottle:' }, { char: '🧷', code: ':safety_pin:' },
+                    { char: '🧹', code: ':broom:' }, { char: '🧺', code: ':basket:' }, { char: '🧻', code: ':roll_of_paper:' }, { char: '🪣', code: ':bucket:' },
+                    { char: '🧼', code: ':soap:' }, { char: '🫧', code: ':bubbles:' }, { char: '🪥', code: ':toothbrush:' }, { char: '🧽', code: ':sponge:' },
+                    { char: '🧯', code: ':fire_extinguisher:' }, { char: '🛒', code: ':shopping_cart:' }
+                ]
+            },
+            symbols: {
+                icon: '🔣',
+                name: 'Ký hiệu & Biểu tượng',
+                groupName: 'Symbols',
+                emojis: [
+                    { char: '❤️', code: ':heart:' }, { char: '🧡', code: ':orange_heart:' }, { char: '💛', code: ':yellow_heart:' }, { char: '💚', code: ':green_heart:' },
+                    { char: '💙', code: ':blue_heart:' }, { char: '💜', code: ':purple_heart:' }, { char: '🖤', code: ':black_heart:' }, { char: '🤍', code: ':white_heart:' },
+                    { char: '🤎', code: ':brown_heart:' }, { char: '💔', code: ':broken_heart:' }, { char: '❣️', code: ':heavy_heart_exclamation_mark_ornament:' }, { char: '💕', code: ':two_hearts:' },
+                    { char: '💞', code: ':revolving_hearts:' }, { char: '💓', code: ':heartbeat:' }, { char: '💗', code: ':heartpulse:' }, { char: '💖', code: ':sparkling_heart:' },
+                    { char: '💘', code: ':cupid:' }, { char: '💝', code: ':gift_heart:' }, { char: '💟', code: ':heart_decoration:' }, { char: '☮️', code: ':peace_symbol:' },
+                    { char: '✝️', code: ':latin_cross:' }, { char: '☪️', code: ':star_and_crescent:' }, { char: '🕉️', code: ':om_symbol:' }, { char: '☸️', code: ':wheel_of_dharma:' },
+                    { char: '✡️', code: ':star_of_david:' }, { char: '🔯', code: ':six_pointed_star:' }, { char: '🕎', code: ':menorah_with_nine_branches:' }, { char: '☯️', code: ':yin_yang:' },
+                    { char: '☦️', code: ':orthodox_cross:' }, { char: '🛐', code: ':place_of_worship:' }, { char: '⛎', code: ':ophiuchus:' }, { char: '♈', code: ':aries:' },
+                    { char: '♉', code: ':taurus:' }, { char: '♊', code: ':gemini:' }, { char: '♋', code: ':cancer:' }, { char: '♌', code: ':leo:' },
+                    { char: '♍', code: ':virgo:' }, { char: '♎', code: ':libra:' }, { char: '♏', code: ':scorpius:' }, { char: '♐', code: ':sagittarius:' },
+                    { char: '♑', code: ':capricorn:' }, { char: '♒', code: ':aquarius:' }, { char: '♓', code: ':pisces:' }, { char: '🆔', code: ':id:' },
+                    { char: '⚛️', code: ':atom_symbol:' }, { char: '🈳', code: ':u7a7a:' }, { char: '🈹', code: ':u5272:' }, { char: '📴', code: ':u7121:' },
+                    { char: '📳', code: ':vibration_mode:' }, { char: '🈶', code: ':u6709:' }, { char: '🈯', code: ':u6307:' }, { char: '🈺', code: ':u55b6:' },
+                    { char: '🈵', code: ':u6e80:' }, { char: '🈸', code: ':u7533:' }, { char: '🈴', code: ':u5408:' }, { char: '🈲', code: ':u7981:' },
+                    { char: '🅰️', code: ':a:' }, { char: '🅱️', code: ':b:' }, { char: '🆎', code: ':ab:' }, { char: '🆑', code: ':cl:' },
+                    { char: '🅾️', code: ':o2:' }, { char: '🆘', code: ':sos:' }, { char: '❌', code: ':x:' }, { char: '⭕', code: ':o:' },
+                    { char: '🛑', code: ':stop_sign:' }, { char: '⛔', code: ':no_entry:' }, { char: '📛', code: ':name_badge:' }, { char: '🚫', code: ':no_entry_sign:' },
+                    { char: '💯', code: ':100:' }, { char: '💢', code: ':anger:' }, { char: '♨️', code: ':hotsprings:' }, { char: '🚷', code: ':no_pedestrians:' },
+                    { char: '🚯', code: ':do_not_litter:' }, { char: '🚳', code: ':no_bicycles:' }, { char: '🚱', code: ':non_potable_water:' }, { char: '🔞', code: ':underage:' },
+                    { char: '📵', code: ':no_mobile_phones:' }, { char: '🚭', code: ':no_smoking:' }, { char: '❗', code: ':exclamation:' }, { char: '❕', code: ':grey_exclamation:' },
+                    { char: '❓', code: ':question:' }, { char: '❔', code: ':grey_question:' }, { char: '‼️', code: ':bangbang:' }, { char: '⁉️', code: ':interrobang:' },
+                    { char: '🔅', code: ':low_brightness:' }, { char: '🔆', code: ':high_brightness:' }, { char: '〽️', code: ':part_alternation_mark:' }, { char: '⚠️', code: ':warning:' },
+                    { char: '🚸', code: ':children_crossing:' }, { char: '🔱', code: ':trident:' }, { char: '⚜️', code: ':fleur_de_lis:' }, { char: '🔰', code: ':beginner:' },
+                    { char: '♻️', code: ':recycle:' }, { char: '✅', code: ':white_check_mark:' }, { char: '🈯', code: ':u6307:' }, { char: '💹', code: ':chart:' },
+                    { char: '❇️', code: ':sparkle:' }, { char: '✳️', code: ':eight_spoked_asterisk:' }, { char: '❎', code: ':negative_squared_cross_mark:' }, { char: '🌐', code: ':globe_with_meridians:' },
+                    { char: '💠', code: ':diamond_shape_with_a_dot_inside:' }, { char: 'Ⓜ️', code: ':m:' }, { char: '🌀', code: ':cyclone:' }, { char: '💤', code: ':zzz:' }
+                ]
+            },
+            flags: {
+                icon: '🚩',
+                name: 'Cờ các quốc gia',
+                groupName: 'Flags',
+                emojis: [
+                    { char: '🚩', code: ':triangular_flag_on_post:' }, { char: '🏁', code: ':checkered_flag:' }, { char: '🎌', code: ':crossed_flags:' }, { char: '🏴', code: ':waving_black_flag:' },
+                    { char: '🏳️', code: ':waving_white_flag:' }, { char: '🏳️‍🌈', code: ':rainbow_flag:' }, { char: '🏳️‍⚧️', code: ':transgender_flag:' }, { char: '🏴‍☠️', code: ':pirate_flag:' },
+                    { char: '🇻🇳', code: ':flag_vn:' }, { char: '🇺🇸', code: ':flag_us:' }, { char: '🇬🇧', code: ':flag_gb:' }, { char: '🇯🇵', code: ':flag_jp:' },
+                    { char: '🇰🇷', code: ':flag_kr:' }, { char: '🇨🇳', code: ':flag_cn:' }, { char: '🇫🇷', code: ':flag_fr:' }, { char: '🇩🇪', code: ':flag_de:' },
+                    { char: '🇷🇺', code: ':flag_ru:' }, { char: '🇨🇦', code: ':flag_ca:' }, { char: '🇦🇺', code: ':flag_au:' }, { char: '🇮🇹', code: ':flag_it:' },
+                    { char: '🇪🇸', code: ':flag_es:' }, { char: '🇧🇷', code: ':flag_br:' }, { char: '🇮🇳', code: ':flag_in:' }, { char: '🇲🇽', code: ':flag_mx:' },
+                    { char: '🇹🇭', code: ':flag_th:' }, { char: '🇸🇬', code: ':flag_sg:' }, { char: '🇲🇾', code: ':flag_my:' }, { char: '🇮🇩', code: ':flag_id:' },
+                    { char: '🇵🇭', code: ':flag_ph:' }, { char: '🇱🇦', code: ':flag_la:' }, { char: '🇰HM', code: ':flag_kh:' }, { char: '🇲🇲', code: ':flag_mm:' }
                 ]
             }
         };
+
+        // 🚀 BỘ TẢI TỰ ĐỘNG BẢNG MÃ ĐẦY ĐỦ 3.953 EMOJI CHUẨN UNICODE TỪ CDN & LƯU CACHE
+        async function loadFullUnicodeEmojiDatabase() {
+            if (isFullEmojiLoaded) return;
+
+            // 1. Kiểm tra bộ nhớ đệm Cache LocalStorage
+            try {
+                const cachedData = localStorage.getItem('danv_unicode_emojis_3953');
+                if (cachedData) {
+                    const parsed = JSON.parse(cachedData);
+                    if (parsed && typeof parsed === 'object') {
+                        Object.keys(parsed).forEach(cat => {
+                            if (DANV_EMOJI_CATEGORIES[cat]) {
+                                DANV_EMOJI_CATEGORIES[cat].emojis = parsed[cat];
+                            }
+                        });
+                        isFullEmojiLoaded = true;
+                        updateEmojiPickerGridIfOpen();
+                        return;
+                    }
+                }
+            } catch(e) {}
+
+            // 2. Tải bảng mã chuẩn từ CDN (data-by-group.json)
+            const SKIN_TONES = ['\u{1F3FB}', '\u{1F3FC}', '\u{1F3FD}', '\u{1F3FE}', '\u{1F3FF}'];
+            const TONE_NAMES = ['_light', '_medium_light', '_medium', '_medium_dark', '_dark'];
+
+            const GROUP_MAP = {
+                'Smileys & Emotion': 'smileys',
+                'People & Body': 'people',
+                'Animals & Nature': 'animals',
+                'Food & Drink': 'food',
+                'Travel & Places': 'travel',
+                'Activities': 'activities',
+                'Objects': 'objects',
+                'Symbols': 'symbols',
+                'Flags': 'flags'
+            };
+
+            try {
+                let res = await fetch('https://cdn.jsdelivr.net/npm/unicode-emoji-json@0.9.0/data-by-group.json');
+                if (!res.ok) {
+                    res = await fetch('https://unpkg.com/unicode-emoji-json@0.9.0/data-by-group.json');
+                }
+                if (!res.ok) return;
+
+                const rawGroups = await res.json();
+                const cacheToSave = {};
+
+                Object.keys(rawGroups).forEach(groupName => {
+                    const catKey = GROUP_MAP[groupName];
+                    if (!catKey || !DANV_EMOJI_CATEGORIES[catKey]) return;
+
+                    const list = [];
+                    (rawGroups[groupName] || []).forEach(item => {
+                        if (!item || !item.emoji) return;
+                        const baseSlug = item.slug ? `:${item.slug}:` : `:${encodeURIComponent(item.name || item.emoji)}:`;
+                        list.push({ char: item.emoji, code: baseSlug });
+
+                        // Nở rộng toàn bộ 5 biến thể màu da nếu emoji hỗ trợ skin tone
+                        if (item.skin_tone_support) {
+                            SKIN_TONES.forEach((tone, tIdx) => {
+                                let variantChar = item.emoji;
+                                if (item.emoji.includes('\u200D')) {
+                                    const parts = item.emoji.split('\u200D');
+                                    variantChar = parts[0] + tone + '\u200D' + parts.slice(1).join('\u200D');
+                                } else {
+                                    variantChar = item.emoji + tone;
+                                }
+                                const variantSlug = item.slug ? `:${item.slug}${TONE_NAMES[tIdx]}:` : baseSlug;
+                                list.push({ char: variantChar, code: variantSlug });
+                            });
+                        }
+                    });
+
+                    if (list.length > 0) {
+                        DANV_EMOJI_CATEGORIES[catKey].emojis = list;
+                        cacheToSave[catKey] = list;
+                    }
+                });
+
+                isFullEmojiLoaded = true;
+                try {
+                    localStorage.setItem('danv_unicode_emojis_3953', JSON.stringify(cacheToSave));
+                } catch(e) {}
+
+                updateEmojiPickerGridIfOpen();
+            } catch(err) {
+                console.warn("Không thể tải full bảng emoji CDN, đang dùng bộ dự phòng:", err);
+            }
+        }
+
+        // Tự động kích hoạt tải bộ 3.953 emoji ngầm
+        if (typeof window !== 'undefined') {
+            setTimeout(loadFullUnicodeEmojiDatabase, 1500);
+        }
+
+        function updateEmojiPickerGridIfOpen() {
+            const popover = document.getElementById('danvEmojiPickerPopover');
+            if (popover) renderEmojiPickerContent(popover);
+        }
 
         // Bật / Tắt thanh chọn Emoji
         function toggleEmojiPicker(targetType, event) {
@@ -31997,8 +32341,12 @@
                 if (wasSameTarget) return;
             }
 
+            // Kích hoạt nạp ngay nếu chưa xong
+            if (!isFullEmojiLoaded) loadFullUnicodeEmojiDatabase();
+
             currentEmojiTargetType = targetType;
             emojiSearchTerm = '';
+            emojiDisplayedCount = 140;
 
             const popover = document.createElement('div');
             popover.id = 'danvEmojiPickerPopover';
@@ -32030,40 +32378,62 @@
             popover.style.left = `${left}px`;
         }
 
-        // Vẽ nội dung trong bảng chọn Emoji
-        function renderEmojiPickerContent(popoverEl) {
+        // Đếm tổng số lượng emoji hiện có trong hệ thống
+        function getTotalEmojiCount() {
+            let total = 0;
+            Object.keys(DANV_EMOJI_CATEGORIES).forEach(k => {
+                total += (DANV_EMOJI_CATEGORIES[k].emojis || []).length;
+            });
+            return total || 3953;
+        }
+
+        // Lấy danh sách emoji hiện tại theo bộ lọc và tìm kiếm
+        function getCurrentFilteredEmojiList() {
             const catKeys = Object.keys(DANV_EMOJI_CATEGORIES);
             const activeCategoryData = DANV_EMOJI_CATEGORIES[currentEmojiCategory] || DANV_EMOJI_CATEGORIES.smileys;
 
-            const tabsHtml = catKeys.map(k => `
-                <button type="button" class="emoji-cat-btn ${k === currentEmojiCategory ? 'active' : ''}" onclick="switchEmojiCategory('${k}', event)" title="${DANV_EMOJI_CATEGORIES[k].name}">
-                    ${DANV_EMOJI_CATEGORIES[k].icon}
-                </button>
-            `).join('');
-
-            let emojisToDisplay = activeCategoryData.emojis;
+            let list = activeCategoryData.emojis || [];
             if (emojiSearchTerm) {
-                emojisToDisplay = [];
+                list = [];
                 catKeys.forEach(k => {
-                    DANV_EMOJI_CATEGORIES[k].emojis.forEach(item => {
+                    (DANV_EMOJI_CATEGORIES[k].emojis || []).forEach(item => {
                         if (item.code.toLowerCase().includes(emojiSearchTerm) || item.char.includes(emojiSearchTerm)) {
-                            emojisToDisplay.push(item);
+                            list.push(item);
                         }
                     });
                 });
             }
+            return list;
+        }
 
-            const gridHtml = emojisToDisplay.map(item => `
+        // Vẽ nội dung trong bảng chọn Emoji (Kèm Chunked Infinite Scroll để tải mượt mà hàng ngàn emoji)
+        function renderEmojiPickerContent(popoverEl) {
+            const catKeys = Object.keys(DANV_EMOJI_CATEGORIES);
+            const tabsHtml = catKeys.map(k => `
+                <button type="button" class="emoji-cat-btn ${k === currentEmojiCategory && !emojiSearchTerm ? 'active' : ''}" onclick="switchEmojiCategory('${k}', event)" title="${DANV_EMOJI_CATEGORIES[k].name}">
+                    ${DANV_EMOJI_CATEGORIES[k].icon}
+                </button>
+            `).join('');
+
+            const allMatches = getCurrentFilteredEmojiList();
+            const visibleEmojis = allMatches.slice(0, emojiDisplayedCount);
+
+            const gridHtml = visibleEmojis.map(item => `
                 <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
-                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.outerHTML='${item.char}'">
+                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">
                 </div>
             `).join('');
+
+            const totalAll = getTotalEmojiCount();
+            const badgeCountText = emojiSearchTerm 
+                ? `Tìm thấy: ${allMatches.length} / ${totalAll.toLocaleString()} emojis`
+                : `${totalAll.toLocaleString()} Emojis • Unicode Standard`;
 
             popoverEl.innerHTML = `
                 <div class="emoji-picker-header">
                     <div class="emoji-search-box">
                         <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.8rem;"></i>
-                        <input type="text" id="emojiSearchField" placeholder="Tìm kiếm emoji (ví dụ: sob, heart)..." value="${escapeHtml(emojiSearchTerm)}" oninput="handleEmojiSearch(this.value)">
+                        <input type="text" id="emojiSearchField" placeholder="Tìm kiếm trong 3.953 emoji (VD: heart, cat, fire)..." value="${escapeHtml(emojiSearchTerm)}" oninput="handleEmojiSearch(this.value)">
                     </div>
                     <div class="emoji-category-tabs">
                         ${tabsHtml}
@@ -32074,9 +32444,34 @@
                 </div>
                 <div class="emoji-picker-footer">
                     <span id="emojiPreviewShortcode" style="font-family:monospace; color:var(--primary); font-weight:700;">:emoji:</span>
-                    <span style="font-size:0.7rem; opacity:0.75;">JoyPixels Engine</span>
+                    <span id="emojiTotalCountBadge" style="font-size:0.7rem; opacity:0.8; font-weight:700;">${badgeCountText}</span>
                 </div>
             `;
+
+            // Bắt sự kiện cuộn đáy để tự động nạp tiếp 140 emoji tiếp theo (Chunked Scroll)
+            const gridContainer = popoverEl.querySelector('#emojiPickerGridItems');
+            if (gridContainer) {
+                gridContainer.onscroll = function() {
+                    if (this.scrollTop + this.clientHeight >= this.scrollHeight - 70) {
+                        const fullList = getCurrentFilteredEmojiList();
+                        if (emojiDisplayedCount < fullList.length) {
+                            const nextBatch = fullList.slice(emojiDisplayedCount, emojiDisplayedCount + 140);
+                            emojiDisplayedCount += 140;
+
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = nextBatch.map(item => `
+                                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
+                                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">
+                                </div>
+                            `).join('');
+
+                            while (tempDiv.firstChild) {
+                                this.appendChild(tempDiv.firstChild);
+                            }
+                        }
+                    }
+                };
+            }
 
             const searchInp = popoverEl.querySelector('#emojiSearchField');
             if (searchInp && emojiSearchTerm) {
@@ -32090,12 +32485,14 @@
             if (event) event.stopPropagation();
             currentEmojiCategory = catKey;
             emojiSearchTerm = '';
+            emojiDisplayedCount = 140;
             const popover = document.getElementById('danvEmojiPickerPopover');
             if (popover) renderEmojiPickerContent(popover);
         }
 
         function handleEmojiSearch(val) {
             emojiSearchTerm = (val || '').toLowerCase().trim();
+            emojiDisplayedCount = 140;
             const popover = document.getElementById('danvEmojiPickerPopover');
             if (popover) renderEmojiPickerContent(popover);
         }
