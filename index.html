@@ -14796,45 +14796,329 @@
         </div>
     </div>
 
-    <!-- POP-UP THÔNG BÁO YÊU CẦU TẢI LẠI TRANG DO SỰ CỐ KẾT NỐI -->
-    <div class="modal-overlay" id="corsReloadModal" style="z-index: 1000008; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
-        <div class="modal" style="max-width: 480px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2); background: var(--bg-panel); color: var(--text-main);">
-            <!-- Đầu mục -->
-            <div style="padding: 20px 24px 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div style="font-size: 1.12rem; font-weight: 800; color: var(--text-title); letter-spacing: -0.2px;">Yêu Cầu Tải Lại Trang</div>
-                </div>
-                <button type="button" class="btn-close" onclick="closeModal('corsReloadModal')" title="Đóng thông báo">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
+    <!-- POP-UP THÔNG BÁO YÊU CẦU TẢI LẠI TRANG: GẤU ĂN BÁNH QUY (BỐ CỤC UỐN CONG) -->
+    <style>
+        .cookie-wide-card {
+            --cookie-bg-start: #fffbeb;
+            --cookie-bg-mid: #fed7aa;
+            --cookie-bg-end: #f59e0b;
+            --cookie-glow: rgba(245, 158, 11, 0.28);
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            max-width: 820px;
+            width: 100%;
+            min-height: 380px;
+            overflow: hidden;
+            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.35), 0 0 45px var(--cookie-glow);
+            position: relative;
+            display: flex;
+            animation: cookiePopCard 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-            <!-- Thân nội dung -->
-            <div style="padding: 20px 24px 24px 24px; display: flex; flex-direction: column; gap: 14px;">
-                <div style="font-size: 0.94rem; color: var(--text-main); line-height: 1.6;">
-                    Trình duyệt không thể nạp tệp dự án sau hai lần tự động kết nối đến máy chủ. Phiên làm việc hiện tại có thể chưa được đồng bộ hoặc dữ liệu tạm thời bị gián đoạn.
+        [data-theme="dark"] .cookie-wide-card {
+            --cookie-bg-start: #451a03;
+            --cookie-bg-mid: #78350f;
+            --cookie-bg-end: #9a3412;
+            --cookie-glow: rgba(217, 119, 6, 0.35);
+        }
+
+        @keyframes cookiePopCard {
+            from { transform: scale(0.92) translateY(16px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .cookie-close-btn {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .cookie-close-btn:hover {
+            color: #ef4444;
+            border-color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .cookie-content-col {
+            flex: 1.15;
+            padding: 38px 30px 32px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cookie-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(217, 119, 6, 0.12);
+            color: #d97706;
+            border: 1px solid rgba(217, 119, 6, 0.28);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
+        }
+
+        [data-theme="dark"] .cookie-badge {
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.15);
+        }
+
+        .cookie-title {
+            font-size: 1.42rem;
+            font-weight: 900;
+            color: var(--text-title);
+            line-height: 1.3;
+            letter-spacing: -0.3px;
+        }
+
+        .cookie-desc {
+            font-size: 0.96rem;
+            color: var(--text-main);
+            line-height: 1.65;
+        }
+
+        .cookie-meta-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 7px 14px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .cookie-meta-line code {
+            font-family: monospace;
+            font-weight: 800;
+            color: var(--text-title);
+        }
+
+        .cookie-actions-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .cookie-actions-row .btn-secondary {
+            flex: 1;
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            font-weight: 800;
+            padding: 11px 16px;
+        }
+
+        .cookie-actions-row .btn-secondary:hover {
+            background: var(--border-color);
+            color: var(--text-title);
+        }
+
+        .cookie-actions-row .btn-primary {
+            flex: 1.6;
+            border-radius: 12px;
+            font-weight: 800;
+            padding: 11px 18px;
+            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.35);
+        }
+
+        /* CỘT PHẢI: KHU VỰC GẤU ĂN BÁNH QUY PHÓNG TO */
+        .cookie-mascot-col {
+            flex: 1.15;
+            background: linear-gradient(135deg, var(--cookie-bg-start) 0%, var(--cookie-bg-mid) 50%, var(--cookie-bg-end) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 10px;
+            overflow: visible;
+        }
+
+        .cookie-wave-svg {
+            position: absolute;
+            left: -1px;
+            top: 0;
+            height: 100%;
+            width: 65px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .cookie-wave-svg path {
+            fill: var(--bg-panel);
+        }
+
+        .cookie-backdrop-glow {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .cookie-img-wrap {
+            position: relative;
+            z-index: 3;
+            width: 320px;
+            height: 320px;
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+
+        .cookie-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scale(1.15);
+            filter: drop-shadow(0 14px 24px rgba(180, 83, 9, 0.3));
+            animation: cookieBearFloat 4s ease-in-out infinite;
+            user-select: none;
+        }
+
+        @keyframes cookieBearFloat {
+            0%, 100% { transform: scale(1.15) translateY(0) rotate(0deg); }
+            50% { transform: scale(1.15) translateY(-6px) rotate(-1.5deg); }
+        }
+
+        @media (max-width: 720px) {
+            .cookie-wide-card {
+                flex-direction: column-reverse;
+                max-width: 440px;
+                border-radius: 24px;
+            }
+
+            .cookie-close-btn {
+                top: 14px;
+                right: 14px;
+                left: auto;
+            }
+
+            .cookie-mascot-col {
+                padding: 26px 16px 16px 16px;
+                min-height: 220px;
+            }
+
+            .cookie-wave-svg {
+                display: none;
+            }
+
+            .cookie-img-wrap {
+                width: 210px;
+                height: 210px;
+                margin-left: 0;
+            }
+
+            .cookie-img-wrap img {
+                transform: scale(1.05);
+            }
+
+            .cookie-content-col {
+                padding: 24px 22px;
+            }
+
+            .cookie-title {
+                font-size: 1.25rem;
+            }
+
+            .cookie-actions-row {
+                flex-direction: column;
+            }
+
+            .cookie-actions-row .btn-secondary,
+            .cookie-actions-row .btn-primary {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="modal-overlay" id="corsReloadModal" style="z-index: 1000008;">
+        <div class="cookie-wide-card">
+            <!-- Nút đóng -->
+            <button type="button" class="cookie-close-btn" onclick="closeModal('corsReloadModal')" title="Đóng thông báo">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- CỘT TRÁI: THÔNG BÁO VÀ HÀNH ĐỘNG -->
+            <div class="cookie-content-col">
+                <div class="cookie-badge">
+                    <i class="fa-solid fa-cookie-bite"></i>
+                    <span>Sự cố kết nối</span>
                 </div>
 
-                <div style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">
-                    Vui lòng tải lại trang web để làm mới quyền truy cập và tiếp tục sử dụng.
+                <h3 class="cookie-title">
+                    Nhăm nhăm... !? Lỡ cắn mất rồi!
+                    <i class="fa-solid fa-cookie-bite" style="color: #d97706; margin-left: 4px;"></i>
+                </h3>
+
+                <div class="cookie-desc">
+                    Gấu mải ăn bánh quy socola ngon quá nên vô tình cắn trúng... đường truyền dữ liệu của dự án mất tiêu rồi! Bạn đừng giận Gấu nha (｡•́︿•̀｡)
                 </div>
 
-                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
-                    <span>Mã tham chiếu kết nối</span>
-                    <span style="font-family: monospace; color: var(--text-title); font-weight: 700;">ERR_CONNECTION_FAILED</span>
+                <!-- Dòng trạng thái kỹ thuật thanh thoát -->
+                <div class="cookie-meta-line">
+                    <span>Mã tham chiếu:</span>
+                    <code>ERR_CONNECTION_FAILED</code>
                 </div>
 
-                <!-- Cụm nút thao tác -->
-                <div style="display: flex; gap: 10px; margin-top: 6px;">
-                    <button type="button" class="btn" style="flex: 1; padding: 10.5px 16px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; justify-content: center;" onclick="closeModal('corsReloadModal')">
+                <!-- Cụm nút thao tác nghiêm túc, chuẩn mực UX -->
+                <div class="cookie-actions-row">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('corsReloadModal')">
+                        <i class="fa-solid fa-xmark"></i>
                         <span>Đóng</span>
                     </button>
-                    <button type="button" class="btn btn-primary" style="flex: 1.6; padding: 10.5px 16px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; justify-content: center;" onclick="window.location.reload()">
-                        <i class="fa-solid fa-rotate-right"></i> <span>Tải lại trang web</span>
+                    <button type="button" class="btn btn-primary" onclick="window.location.reload()">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Tải lại trang web</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: GẤU GẤU NẰM TRONG VÙNG UỐN CONG (PHÓNG TO) -->
+            <div class="cookie-mascot-col">
+                <!-- Dải sóng uốn lượn SVG nối tiếp màu nền của cột trái -->
+                <svg class="cookie-wave-svg" viewBox="0 0 65 400" preserveAspectRatio="none">
+                    <path d="M0,0 L65,0 C30,80 8,150 38,230 C62,290 24,350 52,400 L0,400 Z" />
+                </svg>
+
+                <div class="cookie-backdrop-glow"></div>
+
+                <!-- Hình ảnh Gấu ăn bánh quy to rõ lấp đầy vùng bên phải -->
+                <div class="cookie-img-wrap">
+                    <img 
+                        src="https://files.catbox.moe/5rds92.png" 
+                        alt="Chú gấu ăn bánh quy" 
+                    />
                 </div>
             </div>
         </div>
