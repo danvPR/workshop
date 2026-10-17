@@ -15235,6 +15235,35 @@
         const WORKER_URL = "https://turboshare.org.uk"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
 
+        const BrowserCache = {
+            set(key, data, ttlMinutes = 30, useSession = false) {
+                try {
+                    const storage = useSession ? sessionStorage : localStorage;
+                    const item = { data: data, expiry: Date.now() + ttlMinutes * 60 * 1000 };
+                    storage.setItem('danv_cache_' + key, JSON.stringify(item));
+                } catch(e) {}
+            },
+            get(key, useSession = false) {
+                try {
+                    const storage = useSession ? sessionStorage : localStorage;
+                    const raw = storage.getItem('danv_cache_' + key);
+                    if (!raw) return null;
+                    const item = JSON.parse(raw);
+                    if (Date.now() > item.expiry) {
+                        storage.removeItem('danv_cache_' + key);
+                        return null;
+                    }
+                    return item.data;
+                } catch(e) { return null; }
+            },
+            clear(key) {
+                try {
+                    localStorage.removeItem('danv_cache_' + key);
+                    sessionStorage.removeItem('danv_cache_' + key);
+                } catch(e) {}
+            }
+        };
+
         // ================= HỆ THỐNG PHÁT HIỆN LỖI SERVER & KÍCH HOẠT BẢO TRÌ CHÍNH XÁC =================
         let apiConsecutiveFailures = 0;
         let isMaintenanceModeActive = false;
@@ -15716,9 +15745,13 @@
 
         let lastStudiosFetchTime = 0;
         
-        // --- Smart Caching & Lazy Load cho Profile ---
-        let profileCache = {}; // Lưu trữ profile để load 0 giây
-        const PROF_CACHE_TTL = 3 * 60 * 1000; // Giữ Cache 3 phút
+        // --- Smart Caching & Lazy Load cho Profile (Đã nâng cấp qua Session Storage) ---
+        let profileCache = {};
+        try {
+            const rawProfCache = sessionStorage.getItem('danv_session_prof_cache');
+            if (rawProfCache) profileCache = JSON.parse(rawProfCache);
+        } catch(e) {}
+        const PROF_CACHE_TTL = 3 * 60 * 1000; // Giữ Cache 3 phút trong phiên
         let profTabState = { projects: {}, likes: {}, activities: {} }; // Trạng thái Lazy Load Tab
         const PROF_ITEMS_PER_PAGE = 12; // Tải 12 dự án mỗi lần bấm xem thêm
         
@@ -15781,13 +15814,18 @@
 
         async function setLanguage(lang) {
             try {
-                // Tải file ngôn ngữ tương thích cả GitHub cũ và Cloudflare Pages mới
                 const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
-                const noCacheUrl = `${bp}/locales/${lang}.json?v=` + new Date().getTime();
+                const cacheKey = 'i18n_' + lang;
                 
-                const res = await fetch(noCacheUrl);
-                if (!res.ok) throw new Error("Language file not found");
-                const rawLang = await res.json();
+                // 1. Kiểm tra cache từ điển ngôn ngữ trước (TTL 2 tiếng)
+                let rawLang = BrowserCache.get(cacheKey);
+
+                if (!rawLang) {
+                    const res = await fetch(`${bp}/locales/${lang}.json`);
+                    if (!res.ok) throw new Error("Language file not found");
+                    rawLang = await res.json();
+                    BrowserCache.set(cacheKey, rawLang, 120); // Lưu cache 120 phút
+                }
                 
                 // Tự động bổ sung bản dịch dự phòng cho các mục báo cáo, GIF và tải xuống
                 const i18nFallback = {
@@ -16868,7 +16906,15 @@
             localStorage.setItem('is_linking_scratch', 'true');
             loginScratch();
         }
-        function logout() { localStorage.removeItem('danv_user'); currentUser = null; window.location.hash = '#home'; location.reload(); }
+        function logout() { 
+            if (currentUser && currentUser.username) {
+                BrowserCache.clear('subaccounts_' + currentUser.username.toLowerCase());
+            }
+            localStorage.removeItem('danv_user'); 
+            currentUser = null; 
+            window.location.hash = '#home'; 
+            location.reload(); 
+        }
 
         // =========================================================================
         // HỆ THỐNG ĐIỀU HÀNH TÀI KHOẢN PHỤ VÀ CHUYỂN ĐỔI HỒ SƠ TỨC THÌ
@@ -16882,7 +16928,7 @@
             fetchSubAccountsList();
         }
 
-        async function fetchSubAccountsList() {
+        async function fetchSubAccountsList(forceRefresh = false) {
             if (!currentUser) return;
             const listEl = document.getElementById('navSubAccountsList');
             const countLabel = document.getElementById('navSubAccountsCountLabel');
@@ -16892,8 +16938,20 @@
             const mCountLabel = document.getElementById('mobileSubAccountsCountLabel');
             const mCreateBtn = document.getElementById('btnMobileCreateSubAccount');
 
+            const cacheKey = 'subaccounts_' + currentUser.username.toLowerCase();
+
+            // 1. Nếu không ép tải lại, đọc ngay từ cache trình duyệt (0 request)
+            if (!forceRefresh) {
+                const cached = BrowserCache.get(cacheKey);
+                if (cached && cached.success) {
+                    cachedSubAccountsData = cached;
+                    renderSubAccountsDOM(cached);
+                    return;
+                }
+            }
+
             try {
-                const res = await fetch(`${WORKER_URL}/api/user/subaccounts/list?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`, {
+                const res = await fetch(`${WORKER_URL}/api/user/subaccounts/list?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`, {
                     headers: { 'X-Client-Type': 'StudioDANV-Web' }
                 });
                 const data = await res.json();
@@ -16905,57 +16963,70 @@
                     return;
                 }
 
+                // Lưu vào cache 20 phút
+                BrowserCache.set(cacheKey, data, 20);
                 cachedSubAccountsData = data;
-                const accounts = data.accounts || [];
-                const subCount = data.subCount || 0;
-                const countText = `${subCount} trên 3 tài khoản phụ`;
-
-                if (countLabel) countLabel.innerText = countText;
-                if (mCountLabel) mCountLabel.innerText = countText;
-
-                if (createBtn) createBtn.style.display = data.canCreateMore ? 'flex' : 'none';
-                if (mCreateBtn) mCreateBtn.style.display = data.canCreateMore ? 'flex' : 'none';
-
-                if (accounts.length === 0) {
-                    const emptyHtml = '<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted);">Chưa có tài khoản liên kết.</div>';
-                    if (listEl) listEl.innerHTML = emptyHtml;
-                    if (mListEl) mListEl.innerHTML = emptyHtml;
-                    return;
-                }
-
-                const itemsHtml = accounts.map(acc => {
-                    const isCurrent = acc.isCurrent;
-                    const isRoot = acc.isRoot;
-                    const avtUrl = getAvtUrl(acc.avt);
-                    const safeName = escapeHtml(acc.displayName || acc.username);
-                    const safeUser = escapeHtml(acc.username);
-
-                    return `
-                        <div class="nav-sub-account-item ${isCurrent ? 'active' : ''}" onclick="${isCurrent ? '' : `switchSubAccount('${safeUser}')`}">
-                            <div class="nav-sub-account-info">
-                                <img src="${avtUrl}" class="nav-sub-account-avt" onerror="this.src='${DEFAULT_AVATAR}'">
-                                <div class="nav-sub-account-text">
-                                    <div class="nav-sub-account-name">${safeName}</div>
-                                    <div class="nav-sub-account-tag ${isRoot ? 'root' : ''}">
-                                        ${isRoot ? 'Tài khoản chính' : `@${safeUser}`}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="nav-sub-account-status">
-                                ${isCurrent ? '<i class="fa-solid fa-check" title="Đang sử dụng"></i>' : '<i class="fa-solid fa-arrow-right-arrow-left" style="opacity:0.4;"></i>'}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                if (listEl) listEl.innerHTML = itemsHtml;
-                if (mListEl) mListEl.innerHTML = itemsHtml;
-
+                renderSubAccountsDOM(data);
             } catch (err) {
                 const failHtml = '<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted);">Lỗi kết nối danh sách hồ sơ.</div>';
                 if (listEl) listEl.innerHTML = failHtml;
                 if (mListEl) mListEl.innerHTML = failHtml;
             }
+        }
+
+        function renderSubAccountsDOM(data) {
+            const listEl = document.getElementById('navSubAccountsList');
+            const countLabel = document.getElementById('navSubAccountsCountLabel');
+            const createBtn = document.getElementById('btnNavCreateSubAccount');
+
+            const mListEl = document.getElementById('mobileSubAccountsList');
+            const mCountLabel = document.getElementById('mobileSubAccountsCountLabel');
+            const mCreateBtn = document.getElementById('btnMobileCreateSubAccount');
+
+            const accounts = data.accounts || [];
+            const subCount = data.subCount || 0;
+            const countText = `${subCount} trên 3 tài khoản phụ`;
+
+            if (countLabel) countLabel.innerText = countText;
+            if (mCountLabel) mCountLabel.innerText = countText;
+
+            if (createBtn) createBtn.style.display = data.canCreateMore ? 'flex' : 'none';
+            if (mCreateBtn) mCreateBtn.style.display = data.canCreateMore ? 'flex' : 'none';
+
+            if (accounts.length === 0) {
+                const emptyHtml = '<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted);">Chưa có tài khoản liên kết.</div>';
+                if (listEl) listEl.innerHTML = emptyHtml;
+                if (mListEl) mListEl.innerHTML = emptyHtml;
+                return;
+            }
+
+            const itemsHtml = accounts.map(acc => {
+                const isCurrent = acc.isCurrent;
+                const isRoot = acc.isRoot;
+                const avtUrl = getAvtUrl(acc.avt);
+                const safeName = escapeHtml(acc.displayName || acc.username);
+                const safeUser = escapeHtml(acc.username);
+
+                return `
+                    <div class="nav-sub-account-item ${isCurrent ? 'active' : ''}" onclick="${isCurrent ? '' : `switchSubAccount('${safeUser}')`}">
+                        <div class="nav-sub-account-info">
+                            <img src="${avtUrl}" class="nav-sub-account-avt" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <div class="nav-sub-account-text">
+                                <div class="nav-sub-account-name">${safeName}</div>
+                                <div class="nav-sub-account-tag ${isRoot ? 'root' : ''}">
+                                    ${isRoot ? 'Tài khoản chính' : `@${safeUser}`}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-sub-account-status">
+                            ${isCurrent ? '<i class="fa-solid fa-check" title="Đang sử dụng"></i>' : '<i class="fa-solid fa-arrow-right-arrow-left" style="opacity:0.4;"></i>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (listEl) listEl.innerHTML = itemsHtml;
+            if (mListEl) mListEl.innerHTML = itemsHtml;
         }
 
         async function switchSubAccount(targetUsername) {
@@ -17002,6 +17073,8 @@
                     };
 
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    // 🚀 Xóa cache subaccounts để lấy danh sách theo phiên mới nhất
+                    BrowserCache.clear('subaccounts_' + currentUser.username.toLowerCase());
                     closeNavUserDropdown();
                     closeModal('accountSwitcherModal');
                     updateNav();
@@ -17125,10 +17198,13 @@
                     }
                     showToast(`Sub-account created @${subUsername}.`, 'success');
 
+                    // 🚀 XÓA CACHE CŨ VÀ ÉP LÀM MỚI NGAY LẬP TỨC
+                    BrowserCache.clear('subaccounts_' + currentUser.username.toLowerCase());
+
                     if (res.subAccount && res.subAccount.sessionToken) {
                         await switchSubAccount(res.subAccount.username);
                     } else {
-                        await fetchSubAccountsList();
+                        await fetchSubAccountsList(true);
                     }
                 } else {
                     showToast(res ? (res.error || 'Unable to create a sub-account.') : 'Server connection error.', 'error');
@@ -19425,18 +19501,24 @@
             loadStudiosList();
         }
 
-        async function loadStudiosList() {
+        async function loadStudiosList(forceRefresh = false) {
             const grid = document.getElementById('studiosGridList');
             
-            if (allStudios.length > 0 && (Date.now() - lastStudiosFetchTime < 30000)) {
-                renderStudiosGrid();
-                return;
+            // 1. Đọc ngay từ cache (10 phút)
+            if (!forceRefresh) {
+                const cached = BrowserCache.get('studios_list', true);
+                if (cached && Array.isArray(cached) && cached.length > 0) {
+                    allStudios = cached;
+                    renderStudiosGrid();
+                    return;
+                }
             }
 
             grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i></div>';
             try {
                 const res = await fetch(`${WORKER_URL}/api/studios`);
                 allStudios = await res.json();
+                BrowserCache.set('studios_list', allStudios, 10, true); // Lưu vào sessionStorage 10 phút
                 lastStudiosFetchTime = Date.now();
                 renderStudiosGrid();
             } catch(e) {
@@ -19956,6 +20038,7 @@
             });
 
             if(res && res.success) {
+                BrowserCache.clear('studios_list'); // 🚀 Xóa cache trạm để cập nhật ngay
                 resetStudioRecaptcha();
                 closeModal('createStudioModal');
                 if (res.newBalance !== undefined && currentUser) {
@@ -20045,6 +20128,7 @@
 
             const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'update_info', title, description: desc, thumbId }) });
             if(res && res.success) {
+                BrowserCache.clear('studios_list'); // 🚀 Xóa cache trạm để cập nhật ngay
                 closeModal('studioSettingsModal');
                 showToast("Lưu cài đặt thành công!", "success");
                 currentStudio.title = title;
@@ -20399,6 +20483,7 @@
                     fetchedData = await res.json();
                     if (typeof profileCache !== 'undefined') {
                         profileCache[targetUsername] = { data: fetchedData, timestamp: now }; 
+                        try { sessionStorage.setItem('danv_session_prof_cache', JSON.stringify(profileCache)); } catch(e){}
                     }
                 } catch(e) { 
                     if (viewingProfileUser !== targetUsername) return;
@@ -21348,6 +21433,7 @@
                 // Xóa Cache để khi tải lại sẽ có data mới nhất
                 if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
                     delete profileCache[currentUser.username];
+                    try { sessionStorage.setItem('danv_session_prof_cache', JSON.stringify(profileCache)); } catch(e){}
                 }
 
                 // Cập nhật lại giao diện ngay lập tức mà không cần F5
@@ -22308,6 +22394,7 @@
             });
             
             if (res && res.success) {
+                BrowserCache.clear('assets_list'); // 🚀 Xóa cache asset
                 showToast("Đã ẩn tài nguyên khỏi Cửa hàng thành công!", "success");
                 loadAdminReports(); // Làm mới danh sách báo cáo
             } else {
@@ -22400,8 +22487,9 @@
             });
 
             if (res && res.success) {
+                BrowserCache.clear('home_events'); // 🚀 Xóa cache sự kiện ngay lập tức
                 showToast("Đã cập nhật Sự kiện lên Trang chủ!", "success");
-                loadEvents(); // Tải lại sự kiện trên trang chủ của Admin để xem trước
+                loadEvents(true); // Ép nạp mới
             } else {
                 showToast("Lỗi khi lưu sự kiện!", "error");
             }
@@ -22413,10 +22501,21 @@
         }
 
         // ================= SỰ KIỆN & PLAYLISTS (CINEMATIC SLIDER) =================
-        async function loadEvents() {
+        async function loadEvents(forceRefresh = false) {
             try {
-                const res = await fetch(`${WORKER_URL}/api/events`);
-                const events = await res.json();
+                let events = null;
+                if (!forceRefresh) {
+                    events = BrowserCache.get('home_events');
+                }
+
+                if (!events) {
+                    const res = await fetch(`${WORKER_URL}/api/events`);
+                    events = await res.json();
+                    if (events && Array.isArray(events)) {
+                        BrowserCache.set('home_events', events, 30); // Lưu cache 30 phút
+                    }
+                }
+
                 const area = document.getElementById('homeEventsArea');
                 const list = document.getElementById('homeEventsList');
                 
@@ -25084,10 +25183,20 @@
         }
 
         // ================= HỆ THỐNG ASSETS STORE PRO =================
-        async function fetchAssetsList() {
+        async function fetchAssetsList(forceRefresh = false) {
             try {
+                if (!forceRefresh) {
+                    const cached = BrowserCache.get('assets_list', true);
+                    if (cached && Array.isArray(cached) && cached.length > 0) {
+                        allAssets = cached;
+                        return;
+                    }
+                }
                 const res = await (await fetch(`${WORKER_URL}/api/assets`)).json();
-                if(!res.error) allAssets = Array.isArray(res) ? res : [];
+                if(!res.error) {
+                    allAssets = Array.isArray(res) ? res : [];
+                    BrowserCache.set('assets_list', allAssets, 15, true); // Lưu sessionStorage 15 phút
+                }
             } catch(e) {
                 console.error("Lỗi tải tài nguyên:", e);
             }
@@ -25765,9 +25874,10 @@
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
                     resetAssetRecaptcha();
+                    BrowserCache.clear('assets_list'); // 🚀 Xóa cache asset để thấy ngay file mới
                     showToast("Đã chia sẻ Tài nguyên thành công!", "success"); 
                     closeModal('uploadAssetModal');
-                    await fetchAssetsList();
+                    await fetchAssetsList(true);
                     searchAssets(); 
                 } else {
                     resetAssetRecaptcha();
@@ -28060,13 +28170,26 @@
         }
 
         // Tự động kéo cấu hình khung mới nhất từ máy chủ ngầm để hiển thị tức thì
-        async function loadGlobalFramesConfig() {
+        async function loadGlobalFramesConfig(forceRefresh = false) {
             try {
+                if (!forceRefresh) {
+                    const cached = BrowserCache.get('frames_catalog');
+                    if (cached && Array.isArray(cached) && cached.length > 0) {
+                        availableFrames = cached;
+                        cached.forEach(f => {
+                            if (f.url) window.globalFramesMap[f.url] = f;
+                            if (f.id) window.globalFramesMap[f.id] = f;
+                        });
+                        return;
+                    }
+                }
+
                 const res = await fetch(`${WORKER_URL}/api/frames`);
                 if (res.ok) {
                     const frames = await res.json();
                     if (Array.isArray(frames)) {
                         availableFrames = frames;
+                        BrowserCache.set('frames_catalog', frames, 60); // Lưu cache 60 phút
                         frames.forEach(f => {
                             if (f.url) window.globalFramesMap[f.url] = f;
                             if (f.id) window.globalFramesMap[f.id] = f;
@@ -29980,6 +30103,7 @@
             });
 
             if (res && res.success) {
+                BrowserCache.clear('frames_catalog'); // 🚀 Xóa cache khung để tải mới ngay
                 showToast(isNew ? "Đã phát hành Khung mới với tọa độ chuẩn!" : "Đã cập nhật tọa độ & kích thước khung thành công!", "success");
 
                 // Cập nhật bộ nhớ đệm
@@ -30027,6 +30151,7 @@
             });
 
             if(res && res.success) {
+                BrowserCache.clear('chat_frames_catalog'); // 🚀 Xóa cache khung chat
                 showToast("Đã phát hành Khung Chat mới thành công!", "success");
                 document.getElementById('adminChatFrameName').value = "";
                 document.getElementById('adminChatFrameClass').value = "";
