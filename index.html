@@ -15285,8 +15285,8 @@
                     signal: controller.signal
                 });
                 clearTimeout(timeoutId);
-                // 200 OK hoặc bất kỳ mã phản hồi hợp lệ nào dưới 500 đều chứng tỏ Server Backend đang chạy
-                return check && check.status < 500;
+                // Chỉ coi là đang hoạt động bình thường khi phản hồi thành công (200 - 399), loại trừ 404 và lỗi 5xx
+                return check && check.status >= 200 && check.status < 400;
             } catch(e) {
                 return false;
             }
@@ -15326,11 +15326,11 @@
                 }
 
                 if (reqUrl.includes(WORKER_URL)) {
-                    // Chỉ tính lỗi sập máy chủ khi trả về mã 502, 503, 504, 521, 522, 523 (Cloudflare Server Down)
-                    if (response.status >= 502 && response.status <= 530) {
+                    // Tính lỗi máy chủ khi gặp 502-530 hoặc mã 404 (mất route API / endpoint bảo trì)
+                    if ((response.status >= 502 && response.status <= 530) || response.status === 404) {
                         registerApiNetworkFailure();
-                    } else if (response.ok || (response.status >= 200 && response.status < 500)) {
-                        // Server vẫn phản hồi bình thường (kể cả 400, 401, 404) -> Reset biến lỗi
+                    } else if (response.ok || (response.status >= 200 && response.status < 500 && response.status !== 404)) {
+                        // Server vẫn phản hồi bình thường (kể cả 400, 401, 403) -> Reset biến lỗi
                         apiConsecutiveFailures = 0;
                         if (isMaintenanceModeActive) {
                             dismissCityCleanupMaintenance();
@@ -15353,7 +15353,9 @@
                         const secondResponse = await _systemOriginalFetch.apply(this, retryArgs);
                         if (secondResponse.status === 403) {
                             showCorsReloadModal();
-                        } else if (secondResponse.ok || (secondResponse.status >= 200 && secondResponse.status < 500)) {
+                        } else if (secondResponse.status === 404 || (secondResponse.status >= 502 && secondResponse.status <= 530)) {
+                            registerApiNetworkFailure();
+                        } else if (secondResponse.ok || (secondResponse.status >= 200 && secondResponse.status < 500 && secondResponse.status !== 404)) {
                             apiConsecutiveFailures = 0;
                             if (isMaintenanceModeActive) {
                                 dismissCityCleanupMaintenance();
@@ -15380,8 +15382,8 @@
 
         async function registerApiNetworkFailure() {
             apiConsecutiveFailures++;
-            // Chỉ bắt đầu kiểm tra khi ghi nhận liên tiếp 3 lần lỗi và không trong lúc đang kiểm chứng
-            if (apiConsecutiveFailures >= 3 && !isMaintenanceModeActive && !isVerifyingServerHealth) {
+            // Bắt đầu kiểm tra ngay khi gặp lỗi mạng/404 và không trong lúc đang kiểm chứng
+            if (apiConsecutiveFailures >= 1 && !isMaintenanceModeActive && !isVerifyingServerHealth) {
                 isVerifyingServerHealth = true;
                 // Ping kiểm chứng trực tiếp xem Server có thực sự chết hay chỉ do đường truyền tạm thời
                 const isAlive = await checkServerAliveDirectly();
