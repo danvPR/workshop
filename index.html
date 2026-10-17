@@ -17670,20 +17670,40 @@
             }
         }
 
-        // 🔄 Hàm loadProjects được nâng cấp hỗ trợ tìm kiếm, phân trang và token Turnstile
+        // 🔄 Hàm loadProjects tích hợp cơ chế Stale-While-Revalidate (SWR Cache)
         async function loadProjects(isLoadMore = false, turnstileToken = "") { 
             if (!isLoadMore) {
                 homeCurrentPage = 1;
                 window.homeLoadMoreCount = 0; // Đặt lại số lần bấm xem thêm khi tìm kiếm hoặc đổi tab
+            }
+
+            // Tạo key cache phân biệt theo Chế độ sắp xếp, Từ khóa, Seed (Đề xuất) và Trang
+            const cacheKey = `feed_${homeSortMode}_${homeSearchQuery}_${homeSortMode === 'foryou' ? homeForYouSeed : ''}_p${homeCurrentPage}`;
+            let hasShownStale = false;
+
+            // 1. STALE: Đọc cache hiển thị ngay lập tức (0ms) nếu là trang 1 và không phải tab 'recent'
+            if (!isLoadMore && homeSortMode !== "recent") {
+                const cached = BrowserCache.get(cacheKey, true); // Đọc từ sessionStorage
+                if (cached && cached.projects && cached.projects.length > 0) {
+                    allProjects = cached.projects;
+                    homeHasMore = cached.hasMore;
+                    renderHomeProjects(false);
+                    hasShownStale = true; // Đã có dữ liệu cũ hiển thị mượt mà, không bật skeleton
+                }
+            }
+
+            // Nếu chưa từng có cache, bật Skeleton Loading như bình thường
+            if (!isLoadMore && !hasShownStale) {
                 document.getElementById('projectList').innerHTML = getSkeletonHTML('card');
             }
 
+            // 2. REVALIDATE: Gửi request ngầm để lấy dữ liệu mới nhất từ máy chủ
             try { 
                 let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
                 if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
                 if (turnstileToken) url += `&turnstileToken=${encodeURIComponent(turnstileToken)}`;
                 
-                // Cấu hình Cache theo yêu cầu: Recent bỏ Cache, ForYou dùng Seed ngẫu nhiên (có cache theo seed), các tab khác dùng Cache trình duyệt
+                // Recent luôn lấy realtime, ForYou duy trì seed
                 if (homeSortMode === "recent") url += `&_t=${Date.now()}`;
                 if (homeSortMode === "foryou") url += `&seed=${homeForYouSeed}`;
                 
@@ -17694,11 +17714,15 @@
                     return;
                 }
 
-                if (res.projects) {
+                if (res && res.projects) {
                     if (isLoadMore) {
                         allProjects = allProjects.concat(res.projects);
                     } else {
                         allProjects = res.projects;
+                        // Cập nhật lại cache mới vào sessionStorage (Thời gian sống: 5 phút)
+                        if (homeSortMode !== "recent") {
+                            BrowserCache.set(cacheKey, { projects: res.projects, hasMore: res.hasMore }, 5, true);
+                        }
                     }
                     homeHasMore = res.hasMore;
                     renderHomeProjects(isLoadMore);
