@@ -12795,9 +12795,14 @@
                         <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;" data-i18n="settings_image_hint">Hỗ trợ PNG, JPG, WebP, GIF, APNG (Tối đa 5MB).</div>
                     </div>
                     <div class="form-group">
-                        <label><i class="fa-solid fa-panorama" style="color:var(--primary);"></i> <span data-i18n="settings_cover_label">Đổi Ảnh bìa trang cá nhân:</span></label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label style="margin:0;"><i class="fa-solid fa-panorama" style="color:var(--primary);"></i> <span>Ảnh bìa trang cá nhân:</span></label>
+                            <button type="button" class="btn" style="padding:3px 10px; font-size:0.75rem; border-radius:10px;" onclick="resetCoverToDefault()">
+                                Đặt lại mặc định
+                            </button>
+                        </div>
                         <input type="file" id="editCoverFile" accept="image/png, image/jpeg, image/webp, image/gif, image/apng" class="form-control" style="padding:8px;">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">Ảnh nền lớn phía sau avatar (Tối đa 10MB).</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px;">Ảnh từ thiết bị tối đa 10MB • Cập nhật ảnh tùy chỉnh: 40 WOW.</div>
                     </div>
                     <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -12836,10 +12841,13 @@
 
                 <div class="form-group" style="margin-bottom: 12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin:0;" data-i18n="station_modal_id_label">Mã định danh (ID):</label>
-                        <span style="font-size:0.74rem; color:var(--text-muted);">Tùy chọn</span>
+                        <label style="font-size:0.84rem; font-weight:800; color:var(--text-title); margin:0;">Mã định danh đường dẫn</label>
+                        <span style="font-size:0.75rem; color:var(--text-muted);">Tùy chọn • Phí: <b>50 WOW</b></span>
                     </div>
-                    <input type="text" id="newStdCustomId" class="form-control" data-i18n-ph="station_modal_id_ph" placeholder="VD: rpg-studio (để trống hệ thống tạo tự động)" style="border-radius:12px;" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')">
+                    <input type="text" id="newStdCustomId" class="form-control" placeholder="Ví dụ: rpg-studio (để trống hệ thống cấp mã ngẫu nhiên miễn phí)" style="border-radius:12px;" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')">
+                    <span style="font-size:0.74rem; color:var(--text-muted); margin-top:4px; display:block;">
+                        Leave it blank to receive a random URL for free. Setting a custom link based on your brand requires 50 WOW.
+                    </span>
                 </div>
 
                 <!-- Khung Dropzone chọn ảnh bìa Station (16:9) -->
@@ -14199,12 +14207,22 @@
                     <h4 style="margin-bottom: 10px; color: #ea580c; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="proj_manage_update_tab">Cập nhật bản Game mới</span>
                     </h4>
-                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;"><span data-i18n="proj_manage_update_hint">Tải lên tệp .sb3 mới. Phiên bản hiện tại sẽ tự động lưu vào lịch sử.</span></p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Hệ thống miễn phí lưu trữ 2 phiên bản cũ gần nhất để khôi phục khi cần thiết.</p>
                     <div class="form-group">
                         <input type="text" id="updateProjChangelog" class="form-control" placeholder="Nhật ký cập nhật (VD: v1.2 - Thêm màn chơi Boss...)">
                     </div>
                     <div class="form-group">
                         <input type="file" id="updateProjFile" accept=".sb3" class="form-control" style="padding: 10px;">
+                    </div>
+
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; margin: 0;">
+                            <input type="checkbox" id="chkKeepExtendedVersion" style="width: 18px; height: 18px; accent-color: var(--primary); margin-top: 2px;">
+                            <span style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45;">
+                                <b>Store this older version in the cloud (30 WOW)</b><br>
+                                <span style="font-size: 0.78rem; color: var(--text-muted);">If you do not make a selection or do not have enough WOW, you can only save a maximum of the 2 most recent project histories.</span>
+                            </span>
+                        </label>
                     </div>
 
                     <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA KHI CẬP NHẬT DỰ ÁN -->
@@ -14377,9 +14395,14 @@
             </div>
             
             <div class="modal-body" style="padding: 22px;">
-                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; display: flex; gap: 10px;">
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; display: flex; gap: 10px;">
                     <i class="fa-solid fa-circle-info" style="color: var(--primary); font-size: 1rem; margin-top: 2px; flex-shrink: 0;"></i>
-                    <span>Tài khoản phụ hoạt động độc lập về tác phẩm, bình luận và tương tác. Năng lượng WOW và thiết lập bảo mật được liên kết trực tiếp với tài khoản chính.</span>
+                    <span>Tài khoản phụ hoạt động độc lập về tác phẩm, bình luận và tương tác. Năng lượng WOW và thiết lập bảo mật được quản lý chung qua tài khoản chính.</span>
+                </div>
+
+                <div id="subAccountFeeNoticeBox" style="background: rgba(13, 165, 122, 0.08); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.82rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+                    <span id="subAccountSlotLabel">Vị trí tài khoản phụ</span>
+                    <span id="subAccountFeeBadge" style="font-weight: 800; color: var(--primary);">Miễn phí</span>
                 </div>
 
                 <form onsubmit="handleCreateSubAccountSubmit(event)" id="createSubAccountForm">
@@ -16976,6 +16999,22 @@
             if (userInput) userInput.value = '';
             if (nameInput) nameInput.value = '';
 
+            const currentSubCount = cachedSubAccountsData ? (cachedSubAccountsData.subCount || 0) : 0;
+            const slotLabel = document.getElementById('subAccountSlotLabel');
+            const feeBadge = document.getElementById('subAccountFeeBadge');
+            const submitBtnText = document.querySelector('#btnSubmitCreateSubAccount span');
+
+            if (currentSubCount === 0) {
+                if (slotLabel) slotLabel.innerText = "Tài khoản phụ thứ 1 (Mặc định)";
+                if (feeBadge) { feeBadge.innerText = "Miễn phí"; feeBadge.style.color = "var(--primary)"; }
+                if (submitBtnText) submitBtnText.innerText = "Xác nhận tạo (Miễn phí)";
+            } else {
+                const nextSlot = currentSubCount + 1;
+                if (slotLabel) slotLabel.innerText = `Mở khóa vị trí thứ ${nextSlot} (200 WOW)`;
+                if (feeBadge) { feeBadge.innerText = "Phí: 200 WOW"; feeBadge.style.color = "#ea580c"; }
+                if (submitBtnText) submitBtnText.innerText = "Mở khóa vị trí (200 WOW)";
+            }
+
             openModal('createSubAccountModal');
         }
 
@@ -16990,6 +17029,12 @@
 
             if (!subUsername) {
                 showToast('Vui lòng nhập tên tài khoản phụ.', 'error');
+                return;
+            }
+
+            const currentSubCount = cachedSubAccountsData ? (cachedSubAccountsData.subCount || 0) : 0;
+            if (currentSubCount >= 1 && (currentUser.WOW || 0) < 200) {
+                showToast("You need at least 200 WOW to unlock an additional sub-account slot—the " + (currentSubCount + 1) + "th one.", "error");
                 return;
             }
 
@@ -17014,19 +17059,23 @@
 
                 if (res && res.success) {
                     closeModal('createSubAccountModal');
-                    showToast(`Đã tạo tài khoản phụ @${subUsername}.`, 'success');
+                    if (res.newBalance !== undefined) {
+                        currentUser.WOW = res.newBalance;
+                        localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        syncAllWOWDisplays();
+                    }
+                    showToast(`Sub-account created @${subUsername}.`, 'success');
 
-                    // Chuyển sang tài khoản mới vừa tạo
                     if (res.subAccount && res.subAccount.sessionToken) {
                         await switchSubAccount(res.subAccount.username);
                     } else {
                         await fetchSubAccountsList();
                     }
                 } else {
-                    showToast(res ? (res.error || 'Không thể tạo tài khoản phụ.') : 'Lỗi kết nối máy chủ.', 'error');
+                    showToast(res ? (res.error || 'Unable to create a sub-account.') : 'Server connection error.', 'error');
                 }
             } catch (err) {
-                showToast('Lỗi kết nối khi gửi yêu cầu.', 'error');
+                showToast('Connection error when sending the request.', 'error');
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -19805,6 +19854,10 @@
             const thumbFile = document.getElementById('newStdThumb').files[0];
             if(!title) return showToast("Vui lòng nhập tên Station", "error");
 
+            if (customId && currentUser && (currentUser.WOW || 0) < 50) {
+                return showToast("You need a minimum of 50 WOW to register a custom Station identifier.", "error");
+            }
+
             // 🛡️ LẤY TOKEN GOOGLE RECAPTCHA CHO TẠO STUDIO
             const studioRecaptchaEl = document.querySelector('#createStudioModal [name="g-recaptcha-response"]');
             let recaptchaToken = studioRecaptchaEl ? studioRecaptchaEl.value.trim() : "";
@@ -19839,8 +19892,13 @@
             if(res && res.success) {
                 resetStudioRecaptcha();
                 closeModal('createStudioModal');
-                showToast("Đã tạo Station thành công!", "success");
-                document.getElementById('newStdCustomId').value = ""; // Xóa trắng
+                if (res.newBalance !== undefined && currentUser) {
+                    currentUser.WOW = res.newBalance;
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    syncAllWOWDisplays();
+                }
+                showToast(res.message || "Đã tạo Station thành công!", "success");
+                document.getElementById('newStdCustomId').value = "";
                 navigateTo('/studio/' + res.id);
             } else if (res && res.error) {
                 resetStudioRecaptcha();
@@ -20992,16 +21050,54 @@
             if (input) input.click();
         }
 
+        async function resetCoverToDefault() {
+            if (!currentUser) return;
+            if (!confirm("Confirm resetting the cover photo to the system's default background color?")) return;
+
+            showToast("Resetting cover photo...", "info");
+            try {
+                const res = await apiFetch(`/api/user/update`, {
+                    method: 'POST',
+                    body: JSON.stringify({ bannerId: "" })
+                });
+                if (res && res.success) {
+                    currentUser.banner = "";
+                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                    if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                        delete profileCache[currentUser.username];
+                    }
+                    showToast("The default cover photo has been restored.", "success");
+                    openProfilePage(currentUser.username);
+                } else {
+                    showToast("Unable to reset the cover photo.", "error");
+                }
+            } catch(e) {
+                showToast("Server connection error.", "error");
+            }
+        }
+
         async function handleDirectCoverUpload(input) {
             if (!input.files || !input.files[0] || !currentUser) return;
             const file = input.files[0];
             if (!isFileAllowedImage(file)) {
                 input.value = '';
-                return showToast("Chỉ chấp nhận các định dạng ảnh: PNG, JPG, WebP, GIF, APNG!", "error");
+                return showToast("Only the following image formats are accepted: PNG, JPG, WebP, GIF, APNG.", "error");
             }
             if (file.size > 10 * 1024 * 1024) {
                 input.value = '';
-                return showToast("Ảnh bìa tối đa 10MB!", "error");
+                return showToast("Cover photo: maximum 10MB", "error");
+            }
+
+            const currentBalance = currentUser.WOW || 0;
+            if (currentBalance < 40) {
+                input.value = '';
+                return showToast("You need at least 40 WOW to upload a custom cover photo from your device. Current balance: " + currentBalance + " WOW.", "error");
+            }
+
+            const confirmFee = confirm(`Uploading a custom cover photo from your device costs 40 WOW. Your current balance: ${currentBalance} WOW. Do you want to continue?`);
+            if (!confirmFee) {
+                input.value = '';
+                return;
             }
 
             showToast("Đang tải ảnh bìa mới lên...", "info");
@@ -21026,15 +21122,19 @@
 
                     if (res && res.success) {
                         currentUser.banner = newBannerId;
+                        if (res.newBalance !== undefined) {
+                            currentUser.WOW = res.newBalance;
+                        }
                         localStorage.setItem('danv_user', JSON.stringify(currentUser));
+                        syncAllWOWDisplays();
 
                         if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
                             delete profileCache[currentUser.username];
                         }
-                        showToast("Đã cập nhật ảnh bìa trang cá nhân!", "success");
+                        showToast("Profile cover photo updated successfully.", "success");
                         openProfilePage(currentUser.username);
                     } else {
-                        showToast("Lỗi khi lưu ảnh bìa!", "error");
+                        showToast("Error while saving cover photo", "error");
                     }
                 } else {
                     showToast(upRes.error || "Không thể tải ảnh bìa!", "error");
@@ -24659,15 +24759,18 @@
 
                 textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang hoàn tất cập nhật...</span>';
                 
+                const isExtendedChecked = document.getElementById('chkKeepExtendedVersion') ? document.getElementById('chkKeepExtendedVersion').checked : false;
+
                 const finalForm = new FormData();
                 finalForm.append("preloadedFileId", uploadedIds.join(","));
                 finalForm.append("updateProjectId", currentProj.projectId || currentProj.fileId);
                 finalForm.append("author", currentUser.username); 
                 finalForm.append("changelog", document.getElementById('updateProjChangelog').value.trim());
+                finalForm.append("keepExtendedVersion", isExtendedChecked ? "true" : "false");
                 finalForm.append("username", currentUser.username); 
                 finalForm.append("sessionToken", currentUser.sessionToken);
-                finalForm.append("recaptchaToken", recaptchaToken); // ĐÍNH KÈM TOKEN LÊN BACKEND
-                finalForm.append("engine", localStorage.getItem('engine') || 'turboshare'); // CẬP NHẬT ENGINE MỚI
+                finalForm.append("recaptchaToken", recaptchaToken);
+                finalForm.append("engine", localStorage.getItem('engine') || 'turboshare');
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
                 if (finalRes.success) { 
