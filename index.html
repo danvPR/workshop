@@ -10090,8 +10090,8 @@
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <!-- THÊM THƯ VIỆN HCAPTCHA -->
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <!-- THÊM THƯ VIỆN HCAPTCHA (TẮT COMPAT ĐỂ KHÔNG ĐÈ LÊN GOOGLE RECAPTCHA) -->
+    <script src="https://js.hcaptcha.com/1/api.js?recaptchacompat=off" async defer></script>
     <!-- THÊM THƯ VIỆN GOOGLE RECAPTCHA V2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
@@ -13772,6 +13772,59 @@
         </div>
     </div>
 
+    <!-- UNIVERSAL WOW TRANSACTION MODAL -->
+    <div class="modal-overlay" id="wowBillingModal" style="z-index: 10003; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+        <div class="modal gamepay-modal-box">
+            <div class="gamepay-header">
+                <div class="gamepay-header-title">
+                    <span class="wow-icon" style="font-size: 1.15rem;"></span>
+                    <span id="wowBillingModalTitle">Confirm Transaction</span>
+                </div>
+                <button type="button" class="btn-close" id="btnCancelWowBillingCross">&times;</button>
+            </div>
+            
+            <div class="gamepay-body">
+                <div class="gamepay-item-card">
+                    <div class="gamepay-item-badge" id="wowBillingItemBadge">SERVICE</div>
+                    <div class="gamepay-item-name" id="wowBillingItemName">Service Name</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 12px;" id="wowBillingDescription">Service description.</div>
+                    <div class="gamepay-item-price-pill">
+                        <span id="wowBillingPriceIconSlot"><span class="wow-icon"></span></span>
+                        <span id="wowBillingCostDisplay">0</span>
+                    </div>
+                </div>
+
+                <div class="gamepay-balance-grid">
+                    <div class="gamepay-balance-box">
+                        <span class="gamepay-balance-label">Current Balance</span>
+                        <div class="gamepay-balance-val">
+                            <span id="wowBillingCurrentIconSlot"><span class="wow-icon" style="font-size:1rem;"></span></span>
+                            <span id="wowBillingCurrentBalance">0</span>
+                        </div>
+                    </div>
+                    <div class="gamepay-balance-box">
+                        <span class="gamepay-balance-label">After Transaction</span>
+                        <div class="gamepay-balance-val remaining" id="wowBillingAfterBox">
+                            <span id="wowBillingAfterIconSlot"><span class="wow-icon" style="font-size:1rem;"></span></span>
+                            <span id="wowBillingRemainingBalance">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gamepay-notice" id="wowBillingNotice" style="display:none;">
+                    <i class="fa-solid fa-circle-exclamation" style="color: #ef4444;"></i>
+                    <span id="wowBillingNoticeText" style="color: #ef4444; font-weight: 700;">Insufficient balance to complete this transaction.</span>
+                </div>
+
+                <div class="gamepay-actions">
+                    <button type="button" class="btn-gamepay-cancel" id="btnCancelWowBilling">Cancel</button>
+                    <button type="button" class="btn-gamepay-confirm" id="btnConfirmWowBilling">Confirm Transaction</button>
+                    <button type="button" class="btn-gamepay-confirm" id="btnEarnWowBilling" style="display:none; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);">Claim Daily WOW</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL XÁC NHẬN THANH TOÁN TRONG GAME (IN-GAME PAYMENT - ROBLOX PROMPT STYLE) -->
     <div class="modal-overlay" id="gamePayModal" style="z-index: 10001; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
         <div class="modal gamepay-modal-box">
@@ -17033,9 +17086,15 @@
             }
 
             const currentSubCount = cachedSubAccountsData ? (cachedSubAccountsData.subCount || 0) : 0;
-            if (currentSubCount >= 1 && (currentUser.WOW || 0) < 200) {
-                showToast("You need at least 200 WOW to unlock an additional sub-account slot—the " + (currentSubCount + 1) + "th one.", "error");
-                return;
+            if (currentSubCount >= 1) {
+                const isConfirmed = await openWowBillingModal({
+                    title: "Unlock Sub-Account Slot",
+                    badge: "ACCOUNT SYSTEM",
+                    itemName: `Sub-Account Slot ${currentSubCount + 1}`,
+                    description: "Unlock additional linked sub-account profile slot.",
+                    cost: 200
+                });
+                if (!isConfirmed) return;
             }
 
             const btn = document.getElementById('btnSubmitCreateSubAccount');
@@ -19854,8 +19913,15 @@
             const thumbFile = document.getElementById('newStdThumb').files[0];
             if(!title) return showToast("Vui lòng nhập tên Station", "error");
 
-            if (customId && currentUser && (currentUser.WOW || 0) < 50) {
-                return showToast("You need a minimum of 50 WOW to register a custom Station identifier.", "error");
+            if (customId) {
+                const isConfirmed = await openWowBillingModal({
+                    title: "Custom Station Identifier",
+                    badge: "STATION BRANDING",
+                    itemName: `Identifier: ${customId}`,
+                    description: "Register permanent custom web address for your station.",
+                    cost: 50
+                });
+                if (!isConfirmed) return;
             }
 
             // 🛡️ LẤY TOKEN GOOGLE RECAPTCHA CHO TẠO STUDIO
@@ -21050,6 +21116,100 @@
             if (input) input.click();
         }
 
+        function openWowBillingModal({ title = 'Confirm Transaction', badge = 'SERVICE', itemName = 'Service', description = '', cost = 0, costType = 'WOW' }) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('wowBillingModal');
+                if (!modal) return resolve(false);
+
+                const titleEl = document.getElementById('wowBillingModalTitle');
+                const badgeEl = document.getElementById('wowBillingItemBadge');
+                const nameEl = document.getElementById('wowBillingItemName');
+                const descEl = document.getElementById('wowBillingDescription');
+                const costEl = document.getElementById('wowBillingCostDisplay');
+                const curBalEl = document.getElementById('wowBillingCurrentBalance');
+                const remBalEl = document.getElementById('wowBillingRemainingBalance');
+                const noticeEl = document.getElementById('wowBillingNotice');
+                const noticeTextEl = document.getElementById('wowBillingNoticeText');
+                const btnCancel = document.getElementById('btnCancelWowBilling');
+                const btnCancelCross = document.getElementById('btnCancelWowBillingCross');
+                const btnConfirm = document.getElementById('btnConfirmWowBilling');
+                const btnEarn = document.getElementById('btnEarnWowBilling');
+                const afterBox = document.getElementById('wowBillingAfterBox');
+
+                const priceSlot = document.getElementById('wowBillingPriceIconSlot');
+                const curSlot = document.getElementById('wowBillingCurrentIconSlot');
+                const afterSlot = document.getElementById('wowBillingAfterIconSlot');
+
+                if (titleEl) titleEl.innerText = title;
+                if (badgeEl) badgeEl.innerText = badge;
+                if (nameEl) nameEl.innerText = itemName;
+                if (descEl) descEl.innerText = description;
+                if (costEl) costEl.innerText = cost;
+
+                const isStone = (costType === 'STONE');
+                if (isStone) {
+                    const stoneHtml = '<img src="https://files.catbox.moe/qultgl.png" style="width:18px; height:18px; vertical-align:middle;">';
+                    if (priceSlot) priceSlot.innerHTML = stoneHtml;
+                    if (curSlot) curSlot.innerHTML = stoneHtml;
+                    if (afterSlot) afterSlot.innerHTML = stoneHtml;
+                } else {
+                    if (priceSlot) priceSlot.innerHTML = '<span class="wow-icon"></span>';
+                    if (curSlot) curSlot.innerHTML = '<span class="wow-icon" style="font-size:1rem;"></span>';
+                    if (afterSlot) afterSlot.innerHTML = '<span class="wow-icon" style="font-size:1rem;"></span>';
+                }
+
+                const currentBalance = isStone
+                    ? (parseInt(window.currentDailyInfo?.recoveryStones) || 0)
+                    : (parseInt(currentUser?.WOW) || 0);
+
+                const remaining = currentBalance - cost;
+                const hasEnough = remaining >= 0;
+
+                if (curBalEl) curBalEl.innerText = currentBalance;
+                if (remBalEl) remBalEl.innerText = remaining;
+
+                if (hasEnough) {
+                    if (afterBox) { afterBox.classList.add('remaining'); afterBox.style.color = ''; }
+                    if (noticeEl) noticeEl.style.display = 'none';
+                    if (btnConfirm) { btnConfirm.style.display = 'inline-flex'; btnConfirm.disabled = false; }
+                    if (btnEarn) btnEarn.style.display = 'none';
+                } else {
+                    if (afterBox) { afterBox.classList.remove('remaining'); afterBox.style.color = '#ef4444'; }
+                    if (noticeEl) {
+                        noticeEl.style.display = 'flex';
+                        if (noticeTextEl) {
+                            noticeTextEl.innerText = isStone
+                                ? 'No recovery stones available in inventory.'
+                                : 'Insufficient WOW balance to complete this transaction.';
+                        }
+                    }
+                    if (btnConfirm) btnConfirm.style.display = 'none';
+                    if (btnEarn) {
+                        btnEarn.style.display = isStone ? 'none' : 'inline-flex';
+                        btnEarn.onclick = () => {
+                            modal.style.display = 'none';
+                            resolve(false);
+                            openDailyRewardModal();
+                        };
+                    }
+                }
+
+                const cleanup = (result) => {
+                    modal.style.display = 'none';
+                    btnCancel.onclick = null;
+                    btnCancelCross.onclick = null;
+                    btnConfirm.onclick = null;
+                    resolve(result);
+                };
+
+                btnCancel.onclick = () => cleanup(false);
+                btnCancelCross.onclick = () => cleanup(false);
+                btnConfirm.onclick = () => cleanup(true);
+
+                modal.style.display = 'flex';
+            });
+        }
+
         async function resetCoverToDefault() {
             if (!currentUser) return;
             if (!confirm("Confirm resetting the cover photo to the system's default background color?")) return;
@@ -21088,19 +21248,19 @@
                 return showToast("Cover photo: maximum 10MB", "error");
             }
 
-            const currentBalance = currentUser.WOW || 0;
-            if (currentBalance < 40) {
-                input.value = '';
-                return showToast("You need at least 40 WOW to upload a custom cover photo from your device. Current balance: " + currentBalance + " WOW.", "error");
-            }
-
-            const confirmFee = confirm(`Uploading a custom cover photo from your device costs 40 WOW. Your current balance: ${currentBalance} WOW. Do you want to continue?`);
-            if (!confirmFee) {
+            const isConfirmed = await openWowBillingModal({
+                title: "Custom Cover Photo",
+                badge: "PROFILE CUSTOMIZATION",
+                itemName: "Custom Profile Cover",
+                description: "Upload and apply custom background image from your device.",
+                cost: 40
+            });
+            if (!isConfirmed) {
                 input.value = '';
                 return;
             }
 
-            showToast("Đang tải ảnh bìa mới lên...", "info");
+            showToast("Uploading new cover photo...", "info");
             const fData = new FormData(); 
             fData.append("file", file); 
             fData.append("username", currentUser.username); 
@@ -21650,6 +21810,21 @@
             const textEl = document.getElementById('uploadHoldText') || btn;
             btn.disabled = true;
             
+            const isExtendedChecked = document.getElementById('chkKeepExtendedVersion') ? document.getElementById('chkKeepExtendedVersion').checked : false;
+            if (isExtendedChecked) {
+                const isConfirmed = await openWowBillingModal({
+                    title: "Cloud Version Storage",
+                    badge: "PROJECT STORAGE",
+                    itemName: "Permanent Cloud Version",
+                    description: "Store this older version permanently in cloud history.",
+                    cost: 30
+                });
+                if (!isConfirmed) {
+                    btn.disabled = false;
+                    return;
+                }
+            }
+
             const CHUNK_SIZE = 18 * 1024 * 1024;
             const totalChunks = Math.ceil(fileInput.size / CHUNK_SIZE);
             let uploadedIds = [];
@@ -28450,14 +28625,17 @@
         // ================= HỆ THỐNG MUA & SỬ DỤNG ĐÁ KHÔI PHỤC (ĐÃ SỬA LỖI MẤT CHUỖI) =================
         async function buyRecoveryStone() {
             if (!currentUser) return openModal('loginModal');
-            if ((currentUser.WOW || 0) < 200) {
-                return showToast("Bạn không đủ 200 WOW để mua Đá khôi phục!", "error");
-            }
 
-            const confirmBuy = confirm("Xác nhận mua 1 viên Đá khôi phục với giá 200 WOW?\n(Đá bảo hộ giúp hàn gắn chuỗi Đôi Bạn trong vòng 3 ngày kể từ khi đứt, giới hạn mua 3 lần/tháng, số đá được tích lũy sang tháng sau)");
-            if (!confirmBuy) return;
+            const isConfirmed = await openWowBillingModal({
+                title: "Purchase Recovery Stone",
+                badge: "STREAK RECOVERY",
+                itemName: "Buddy Streak Recovery Stone",
+                description: "Restores broken buddy streak within three days of streak loss.",
+                cost: 200
+            });
+            if (!isConfirmed) return;
 
-            showToast("Đang giao dịch...", "info");
+            showToast("Processing transaction...", "info");
             try {
                 const res = await apiFetch(`/api/store/buy_recovery_stone`, {
                     method: 'POST',
@@ -28488,15 +28666,18 @@
 
         async function useRecoveryStone(targetType = 'couple') {
             if (!currentUser) return openModal('loginModal');
-            const stones = parseInt(window.currentDailyInfo?.recoveryStones) || 0;
-            if (stones < 1) {
-                return showToast("Bạn chưa có viên Đá khôi phục nào. Hãy bấm Mua trước nhé!", "error");
-            }
 
-            const confirmUse = confirm("Xác nhận dùng 1 Đá khôi phục để phục hồi chuỗi Đôi Bạn?\n(Chỉ có hiệu lực trong vòng 3 ngày kể từ ngày bị đứt chuỗi)");
-            if (!confirmUse) return;
+            const isConfirmed = await openWowBillingModal({
+                title: "Use Recovery Stone",
+                badge: "STREAK RECOVERY",
+                itemName: "Buddy Streak Recovery Stone",
+                description: "Consume one recovery stone from inventory to restore streak.",
+                cost: 1,
+                costType: "STONE"
+            });
+            if (!isConfirmed) return;
 
-            showToast("Đang khôi phục chuỗi...", "info");
+            showToast("Restoring streak...", "info");
             try {
                 const res = await apiFetch(`/api/store/use_recovery_stone`, {
                     method: 'POST',
