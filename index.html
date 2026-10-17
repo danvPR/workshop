@@ -10090,6 +10090,8 @@
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- THÊM THƯ VIỆN HCAPTCHA -->
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN GOOGLE RECAPTCHA V2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
@@ -13243,8 +13245,8 @@
                             </div>
                         </div>
 
-                        <!-- Turnstile Checkbox -->
-                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" style="margin-bottom: 12px; display: flex; justify-content: center;"></div>
+                        <!-- hCaptcha Checkbox -->
+                        <div class="h-captcha" id="hcaptchaLogin" data-sitekey="YOUR_HCAPTCHA_SITE_KEY" data-theme="auto" style="margin-bottom: 12px; display: flex; justify-content: center;"></div>
 
                         <button type="submit" class="auth-submit-btn" id="btnLoginSubmit">
                             <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="auth_login_btn">Sign In</span>
@@ -13324,8 +13326,8 @@
                             </div>
                         </div>
 
-                        <!-- Turnstile Checkbox -->
-                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" style="margin: 10px 0; display: flex; justify-content: center;"></div>
+                        <!-- hCaptcha Checkbox -->
+                        <div class="h-captcha" id="hcaptchaRegister" data-sitekey="YOUR_HCAPTCHA_SITE_KEY" data-theme="auto" style="margin: 10px 0; display: flex; justify-content: center;"></div>
 
                         <button type="submit" class="auth-submit-btn" id="btnRegisterDirect">
                             <i class="fa-solid fa-user-plus"></i> <span data-i18n="auth_reg_btn_submit">Create Account (+50 WOW)</span>
@@ -13631,6 +13633,11 @@
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin: 18px 0 14px 0; line-height: 1.5;" id="dailyDescText">
                     <span data-i18n="daily_desc_single">Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.</span>
                 </p>
+
+                <!-- KHUNG HCAPTCHA CHO ĐIỂM DANH WOW CÁ NHÂN VÀ ĐÔI BẠN -->
+                <div id="dailyHcaptchaWrap" style="display:flex; justify-content:center; margin-bottom: 14px;">
+                    <div class="h-captcha" id="hcaptchaDaily" data-sitekey="YOUR_HCAPTCHA_SITE_KEY" data-theme="auto"></div>
+                </div>
 
                 <div id="dailyActionButtonsWrap">
                     <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
@@ -14447,6 +14454,28 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 0.85rem;"></i>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC MINH CLOUDFLARE TURNSTILE KHI BẤM XEM THÊM LẦN 5, 10, 15, 20... -->
+    <div class="modal-overlay" id="homeTurnstileModal" style="z-index: 10006;">
+        <div class="modal" style="max-width: 400px; border-radius: 20px; overflow: hidden; background: var(--bg-panel); border: 1.5px solid var(--border-color); text-align: center;">
+            <div class="modal-header" style="justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                <span style="font-weight: 800; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
+                    <span>Security verification</span>
+                </span>
+                <button type="button" class="btn-close" onclick="closeModal('homeTurnstileModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 22px;">
+                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                   Please verify to continue.
+                </p>
+                <div id="homeTurnstileSlot" style="display: flex; justify-content: center; margin-bottom: 16px;"></div>
+                <button type="button" class="btn" style="width: 100%; justify-content: center; border-radius: 12px;" onclick="closeModal('homeTurnstileModal')">
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
@@ -16433,10 +16462,13 @@
             // Loại bỏ hoàn toàn ký tự @ nếu người dùng cố tình dán vào
             refCode = refCode.replace(/@/g, '').trim();
 
-            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM ĐANG ĐƯỢC SUBMIT
-            const turnstileToken = e.target.querySelector('[name="cf-turnstile-response"]')?.value;
-            if (!turnstileToken) {
-                showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
+            // 🛡️ LẤY TOKEN HCAPTCHA TỪ FORM ĐĂNG KÝ
+            let hcaptchaToken = e.target.querySelector('[name="h-captcha-response"]')?.value;
+            if (!hcaptchaToken && typeof hcaptcha !== 'undefined') {
+                try { hcaptchaToken = hcaptcha.getResponse(document.getElementById('hcaptchaRegister')); } catch(err){}
+            }
+            if (!hcaptchaToken) {
+                showToast("Vui lòng hoàn thành xác thực hCaptcha!", "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
                 return;
             }
@@ -16446,8 +16478,7 @@
                 const res = await (await fetch(`${WORKER_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    // Gửi kèm turnstileToken lên Backend
-                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId, turnstileToken })
+                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId, hcaptchaToken })
                 })).json();
 
                 if (res.success) {
@@ -16468,12 +16499,15 @@
                     setTimeout(() => { OnboardingTour.start(); }, 1500);
                 } else {
                     showToast(res.error || "Không thể đăng ký tài khoản!", "error");
-                    // Đăng ký lỗi -> Reset Turnstile để user thử lại
-                    if (typeof turnstile !== 'undefined') turnstile.reset();
+                    if (typeof hcaptcha !== 'undefined') {
+                        try { hcaptcha.reset(document.getElementById('hcaptchaRegister')); } catch(err){ hcaptcha.reset(); }
+                    }
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
-                if (typeof turnstile !== 'undefined') turnstile.reset();
+                if (typeof hcaptcha !== 'undefined') {
+                    try { hcaptcha.reset(document.getElementById('hcaptchaRegister')); } catch(err){ hcaptcha.reset(); }
+                }
             }
 
             if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
@@ -16671,10 +16705,13 @@
             const loginId = document.getElementById('loginId').value.trim(); 
             const pw = document.getElementById('loginPw').value;
 
-            // 🛡️ LẤY TOKEN TURNSTILE TỪ FORM ĐANG ĐƯỢC SUBMIT
-            const turnstileToken = e.target.querySelector('[name="cf-turnstile-response"]')?.value;
-            if (!turnstileToken) {
-                showToast("Vui lòng chờ xác thực an ninh hoàn tất!", "error");
+            // 🛡️ LẤY TOKEN HCAPTCHA TỪ FORM ĐĂNG NHẬP
+            let hcaptchaToken = e.target.querySelector('[name="h-captcha-response"]')?.value;
+            if (!hcaptchaToken && typeof hcaptcha !== 'undefined') {
+                try { hcaptchaToken = hcaptcha.getResponse(document.getElementById('hcaptchaLogin')); } catch(err){}
+            }
+            if (!hcaptchaToken) {
+                showToast("Vui lòng hoàn thành xác thực hCaptcha!", "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
                 return;
             }
@@ -16684,7 +16721,7 @@
                 const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { 
                     method: 'POST', 
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" }, 
-                    body: JSON.stringify({ loginId, password: pw, deviceId, turnstileToken }) 
+                    body: JSON.stringify({ loginId, password: pw, deviceId, hcaptchaToken }) 
                 })).json();
 
                 // KIỂM TRA TÀI KHOẢN BỊ KHÓA NGAY KHI ĐĂNG NHẬP
@@ -16728,13 +16765,16 @@
                     showToast("Đăng nhập thành công!", "success"); 
                     location.reload(); 
                 } else {
-                    showToast(res.error || "Tài khoản hoặc mật khẩu không chính xác!", "error");
-                    // Đăng nhập lỗi -> Reset Turnstile để user thử lại
-                    if (typeof turnstile !== 'undefined') turnstile.reset();
+                    showToast(res.error || "Incorrect account or password.", "error");
+                    if (typeof hcaptcha !== 'undefined') {
+                        try { hcaptcha.reset(document.getElementById('hcaptchaLogin')); } catch(err){ hcaptcha.reset(); }
+                    }
                 }
             } catch(err) {
-                showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
-                if (typeof turnstile !== 'undefined') turnstile.reset();
+                showToast("Server connection error; please try again.", "error");
+                if (typeof hcaptcha !== 'undefined') {
+                    try { hcaptcha.reset(document.getElementById('hcaptchaLogin')); } catch(err){ hcaptcha.reset(); }
+                }
             }
 
             if (btn) {
@@ -17446,16 +17486,18 @@
             }
         }
 
-        // 🔄 Hàm loadProjects được nâng cấp hỗ trợ tìm kiếm và phân trang
-        async function loadProjects(isLoadMore = false) { 
+        // 🔄 Hàm loadProjects được nâng cấp hỗ trợ tìm kiếm, phân trang và token Turnstile
+        async function loadProjects(isLoadMore = false, turnstileToken = "") { 
             if (!isLoadMore) {
                 homeCurrentPage = 1;
+                window.homeLoadMoreCount = 0; // Đặt lại số lần bấm xem thêm khi tìm kiếm hoặc đổi tab
                 document.getElementById('projectList').innerHTML = getSkeletonHTML('card');
             }
 
             try { 
                 let url = `${WORKER_URL}/api/projects?username=${encodeURIComponent(currentUser?currentUser.username:'')}&page=${homeCurrentPage}&limit=${HOME_ITEMS_PER_PAGE}&sort=${homeSortMode}&search=${encodeURIComponent(homeSearchQuery)}`;
                 if (currentUser) url += `&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+                if (turnstileToken) url += `&turnstileToken=${encodeURIComponent(turnstileToken)}`;
                 
                 // Cấu hình Cache theo yêu cầu: Recent bỏ Cache, ForYou dùng Seed ngẫu nhiên (có cache theo seed), các tab khác dùng Cache trình duyệt
                 if (homeSortMode === "recent") url += `&_t=${Date.now()}`;
@@ -17463,6 +17505,11 @@
                 
                 const res = await (await fetch(url)).json();
                 
+                if (res && res.needTurnstile) {
+                    showToast("Cần xác thực Turnstile để tiếp tục!", "error");
+                    return;
+                }
+
                 if (res.projects) {
                     if (isLoadMore) {
                         allProjects = allProjects.concat(res.projects);
@@ -17730,13 +17777,50 @@
             track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
 
+        window.homeLoadMoreCount = 0;
+        window.homeTurnstileWidgetId = null;
+
         function loadMoreProjects() {
-            if (homeHasMore) {
-                homeCurrentPage++;
-                const btn = document.querySelector('#homeLoadMoreArea button');
-                const orig = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
-                loadProjects(true).then(() => btn.innerHTML = orig);
+            if (!homeHasMore) return;
+            const nextCount = (window.homeLoadMoreCount || 0) + 1;
+
+            // 🛡️ NẾU LÀ LẦN BẤM THỨ 5, 10, 15, 20... -> HIỆN MODAL CLOUDFLARE TURNSTILE
+            if (nextCount % 5 === 0) {
+                openHomeTurnstileModal();
+                return;
+            }
+
+            executeLoadMoreProjects();
+        }
+
+        function executeLoadMoreProjects(turnstileToken = "") {
+            window.homeLoadMoreCount = (window.homeLoadMoreCount || 0) + 1;
+            homeCurrentPage++;
+            const btn = document.querySelector('#homeLoadMoreArea button');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+            loadProjects(true, turnstileToken).then(() => {
+                if (btn) btn.innerHTML = orig;
+            });
+        }
+
+        function openHomeTurnstileModal() {
+            openModal('homeTurnstileModal');
+            const slot = document.getElementById('homeLoadMoreTurnstileSlot');
+            if (slot && typeof turnstile !== 'undefined') {
+                slot.innerHTML = '';
+                try {
+                    window.homeTurnstileWidgetId = turnstile.render(slot, {
+                        sitekey: '0x4AAAAAAFBN7qkTYZA_DG8S',
+                        theme: 'auto',
+                        callback: function(token) {
+                            setTimeout(() => {
+                                closeModal('homeTurnstileModal');
+                                executeLoadMoreProjects(token);
+                            }, 500);
+                        }
+                    });
+                } catch(e) {}
             }
         }
         
@@ -28866,6 +28950,17 @@
 
         async function claimDailyReward(isFromHold = false) {
             const btn = document.getElementById('btnClaimDaily');
+            
+            // 🛡️ LẤY TOKEN HCAPTCHA CHO ĐIỂM DANH WOW
+            let hcaptchaToken = document.querySelector('#dailyRewardModal [name="h-captcha-response"]')?.value;
+            if (!hcaptchaToken && typeof hcaptcha !== 'undefined') {
+                try { hcaptchaToken = hcaptcha.getResponse(document.getElementById('hcaptchaDaily')); } catch(e){}
+            }
+            if (!hcaptchaToken) {
+                showToast("Please complete the verification below to check in.", "error");
+                return;
+            }
+
             if (!isFromHold && btn) {
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...'; 
                 btn.disabled = true;
@@ -28875,7 +28970,8 @@
                 const payload = {
                     username: currentUser.username,
                     sessionToken: currentUser.sessionToken,
-                    type: window.currentDailyTab || 'single'
+                    type: window.currentDailyTab || 'single',
+                    hcaptchaToken: hcaptchaToken
                 };
                 
                 const response = await fetch(`${WORKER_URL}/api/store/daily`, {
@@ -28887,6 +28983,9 @@
                 const res = await response.json();
                 
                 if (response.ok && res && res.success) {
+                    if (typeof hcaptcha !== 'undefined') {
+                        try { hcaptcha.reset(document.getElementById('hcaptchaDaily')); } catch(e){ hcaptcha.reset(); }
+                    }
                     if (res.waitingPartner) {
                         showToast(`Đã điểm danh! Hãy nhắc bạn đồng hành vào nhận để nối chuỗi nhé!`, 'info');
                         window.currentDailyInfo = res.dailyInfo;
@@ -28915,6 +29014,9 @@
                     }
                     openDailyRewardModal(); // Tải lại giao diện modal
                 } else {
+                    if (typeof hcaptcha !== 'undefined') {
+                        try { hcaptcha.reset(document.getElementById('hcaptchaDaily')); } catch(e){ hcaptcha.reset(); }
+                    }
                     const errMsg = res.details ? `${res.error}: ${res.details}` : (res.error || "Lỗi hệ thống");
                     showToast(errMsg, "error");
                     if (!isFromHold && btn) {
