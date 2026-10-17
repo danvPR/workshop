@@ -28095,6 +28095,10 @@
 
         async function openDailyRewardModal() {
             if (!currentUser) return openModal('loginModal');
+            if (currentUser.parentAccount) {
+                showToast("Tài khoản phụ không được phép đổi hoặc nhận điểm WOW.", "error");
+                return;
+            }
             openModal('dailyRewardModal');
             
             const grid = document.getElementById('dailyRewardGrid');
@@ -28625,6 +28629,10 @@
         // ================= HỆ THỐNG MUA & SỬ DỤNG ĐÁ KHÔI PHỤC (ĐÃ SỬA LỖI MẤT CHUỖI) =================
         async function buyRecoveryStone() {
             if (!currentUser) return openModal('loginModal');
+            if (currentUser.parentAccount) {
+                showToast("Tài khoản phụ không được phép dùng điểm WOW để đổi đá khôi phục.", "error");
+                return;
+            }
 
             const isConfirmed = await openWowBillingModal({
                 title: "Purchase Recovery Stone",
@@ -28970,6 +28978,10 @@
         async function openBlindBagGacha(bagId) {
             if (!currentUser) return openModal('loginModal');
             if (isOpeningBag) return;
+            if (currentUser.parentAccount) {
+                showToast("Tài khoản phụ không được phép bóc túi mù đổi WOW.", "error");
+                return;
+            }
 
             if (currentUser.emailVerified === false) {
                 showToast("Vui lòng xác thực Email tài khoản để tham gia bóc túi mù nhé!", "error");
@@ -29069,6 +29081,10 @@
         function openTipModal() {
             if (!currentUser) return openModal('loginModal');
             if (!currentProj) return;
+            if (currentUser.parentAccount) {
+                showToast("Tài khoản phụ không được phép tặng điểm WOW. ", "error");
+                return;
+            }
             if (currentUser.emailVerified === false) {
                 showToast("Vui lòng xác thực email để sử dụng tính năng tặng WOW!", "error");
                 openVerifyEmailModal();
@@ -29679,6 +29695,10 @@
         // 🛍️ MỞ MODAL XÁC NHẬN MUA HIỆN ĐẠI
         function openFrameConfirmBuyModal() {
             if (!selectedShopItem || !currentUser) return;
+            if (currentUser.parentAccount) {
+                showToast("Tài khoản phụ không được phép dùng điểm WOW để đổi vật phẩm.", "error");
+                return;
+            }
             const item = selectedShopItem;
             const isAvatar = (currentShopType === 'avatar');
 
@@ -32172,6 +32192,10 @@
         // ================= MODAL & XỬ LÝ CHUYỂN WOW VÀO VÍ CHÍNH =================
         function openCreatorWithdrawModal() {
             if (!currentUser) return openModal('loginModal');
+            if (currentUser.parentAccount) {
+                showToast("Tài khoản phụ không được phép rút WOW.", "error");
+                return;
+            }
             if (currentUser.emailVerified === false) {
                 showToast("Vui lòng xác thực Email tài khoản trước khi chuyển WOW vào ví!", "error");
                 openVerifyEmailModal();
