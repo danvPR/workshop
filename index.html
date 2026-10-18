@@ -11827,11 +11827,6 @@
                     </div>
                 </div>
                 <div style="margin-top:25px; padding-top:20px; border-top:1px solid var(--border-color);">
-                    <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA -->
-                    <div style="display:flex; justify-content:center; margin-bottom:18px;">
-                        <div class="g-recaptcha" id="recaptchaProjectUpload" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
-                    </div>
-
                     <button type="button" class="btn-hold-send-wow" id="btnSubmitUpload" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);">
                         <div class="hold-progress-fill" id="uploadHoldFill" style="background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);"></div>
                         <div class="btn-inner-content" id="uploadHoldText">
@@ -12869,11 +12864,6 @@
                     <textarea id="newStdDesc" class="form-control" rows="3" data-i18n-ph="station_modal_desc_ph" placeholder="Giới thiệu mục tiêu, luật tham gia hoặc định hướng của Station..." style="border-radius:12px;"></textarea>
                 </div>
 
-                <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA KHI TẠO STATION -->
-                <div style="display:flex; justify-content:center; margin-bottom:14px;">
-                    <div class="g-recaptcha" id="recaptchaStudioCreate" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
-                </div>
-
                 <button type="button" class="btn-hold-send-wow" id="btnCreateStudioSubmit" style="background: linear-gradient(135deg, #10b981 0%, #0da57a 100%); box-shadow: 0 8px 25px rgba(13, 165, 122, 0.35);">
                     <div class="hold-progress-fill" id="createStudioHoldFill" style="background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #8b5cf6 100%);"></div>
                     <div class="btn-inner-content" id="createStudioHoldText">
@@ -13104,11 +13094,6 @@
                         </div>
                     </div>
 
-                    <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA KHI TẢI ASSET -->
-                    <div style="display:flex; justify-content:center; margin-bottom:14px;">
-                        <div class="g-recaptcha" id="recaptchaAssetUpload" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
-                    </div>
-                    
                     <button type="button" class="btn-hold-send-wow" id="btnSubmitUploadAsset" style="background: linear-gradient(135deg, #0da57a 0%, #0284c7 100%); box-shadow: 0 8px 25px rgba(13, 165, 122, 0.35);">
                         <div class="hold-progress-fill" id="assetUploadHoldFill" style="background: linear-gradient(90deg, #0da57a 0%, #38bdf8 50%, #6366f1 100%);"></div>
                         <div class="btn-inner-content" id="assetUploadHoldText">
@@ -13253,9 +13238,6 @@
                             </div>
                         </div>
 
-                        <!-- hCaptcha Checkbox -->
-                        <div class="h-captcha" id="hcaptchaLogin" data-sitekey="92420ffc-6b14-4126-a31e-2e707ebc7492" data-theme="auto" style="margin-bottom: 12px; display: flex; justify-content: center;"></div>
-
                         <button type="submit" class="auth-submit-btn" id="btnLoginSubmit">
                             <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="auth_login_btn">Sign In</span>
                         </button>
@@ -13334,9 +13316,6 @@
                             </div>
                         </div>
 
-                        <!-- hCaptcha Checkbox -->
-                        <div class="h-captcha" id="hcaptchaRegister" data-sitekey="92420ffc-6b14-4126-a31e-2e707ebc7492" data-theme="auto" style="margin: 10px 0; display: flex; justify-content: center;"></div>
-
                         <button type="submit" class="auth-submit-btn" id="btnRegisterDirect">
                             <i class="fa-solid fa-user-plus"></i> <span data-i18n="auth_reg_btn_submit">Create Account (+50 WOW)</span>
                         </button>
@@ -13365,8 +13344,6 @@
                                     <input type="text" id="forgotIdentifierInput" class="auth-control-input" required placeholder="Enter username or email...">
                                 </div>
                             </div>
-
-                            <div class="cf-turnstile" data-sitekey="0x4AAAAAAFBN7qkTYZA_DG8S" data-theme="auto" style="margin-bottom: 12px; display: flex; justify-content: center;"></div>
 
                             <button type="submit" class="auth-submit-btn" id="btnForgotSendOtp">
                                 <i class="fa-solid fa-paper-plane"></i> <span>Send Verification OTP</span>
@@ -13642,11 +13619,7 @@
                     <span data-i18n="daily_desc_single">Tích lũy WOW đều đặn để quy đổi Khung đại diện độc quyền hoặc ủng hộ cho các tác giả xuất sắc trong cộng đồng.</span>
                 </p>
 
-                <!-- KHUNG HCAPTCHA CHO ĐIỂM DANH WOW CÁ NHÂN VÀ ĐÔI BẠN -->
-                <div id="dailyHcaptchaWrap" style="display:flex; justify-content:center; margin-bottom: 14px;">
-                    <div class="h-captcha" id="hcaptchaDaily" data-sitekey="92420ffc-6b14-4126-a31e-2e707ebc7492" data-theme="auto"></div>
-                </div>
-
+                <!-- Đã chuyển hCaptcha sang dạng Popup nổi -->
                 <div id="dailyActionButtonsWrap">
                     <button class="btn btn-primary" id="btnClaimDaily" onclick="claimDailyReward()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1.1rem; border-radius: 12px; font-weight: 800;">
                         <span data-i18n="daily_claim_today">Nhận thưởng hôm nay</span>
@@ -13966,6 +13939,25 @@
 
     
 
+    <!-- MODAL XÁC MINH BẢO MẬT CHUNG (UNIVERSAL CAPTCHA MODAL) -->
+    <div class="modal-overlay" id="universalCaptchaModal" style="z-index: 100050; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);">
+        <div class="modal" style="max-width: 380px; border-radius: 20px; text-align: center; border: 1px solid var(--border-color); background: var(--bg-panel); box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="justify-content: space-between; border-bottom: 1px solid var(--border-color); padding: 15px 20px;">
+                <span style="font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 1.05rem;">
+                    <i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> 
+                    <span data-i18n="security_verify">Xác minh bảo mật</span>
+                </span>
+                <button class="btn-close" onclick="closeUniversalCaptcha()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 25px 20px;">
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5;">Vui lòng hoàn thành xác minh bên dưới để hệ thống biết bạn không phải là rô-bốt.</p>
+                <div id="universalCaptchaContainer" style="display: flex; justify-content: center; min-height: 78px;">
+                    <!-- Widget sẽ được render vào đây -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL XÁC NHẬN CHIA SẺ GAME VÀO KÊNH GIAO LƯU -->
     <div class="modal-overlay" id="shareGamePreviewModal">
         <div class="modal" style="max-width: 440px; border-radius: 22px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.25);">
@@ -14185,11 +14177,6 @@
                         <textarea id="reportReasonOther" class="form-control" rows="3" data-i18n-ph="report_detail_ph" placeholder="Bắt buộc nhập chi tiết để Quản trị viên xử lý..." required></textarea>
                     </div>
 
-                    <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA KHI TỐ CÁO -->
-                    <div style="display:flex; justify-content:center; margin:12px 0 10px 0;">
-                        <div class="g-recaptcha" id="recaptchaReport" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
-                    </div>
-
                     <button type="submit" class="btn btn-danger" style="width:100%; justify-content:center; margin-top:10px;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="report_btn">Gửi báo cáo</span></button>
                 </form>
             </div>
@@ -14276,11 +14263,6 @@
                                 <span style="font-size: 0.78rem; color: var(--text-muted);">If you do not make a selection or do not have enough WOW, you can only save a maximum of the 2 most recent project histories.</span>
                             </span>
                         </label>
-                    </div>
-
-                    <!-- KHUNG XÁC MINH GOOGLE RECAPTCHA KHI CẬP NHẬT DỰ ÁN -->
-                    <div style="display: flex; justify-content: center; margin: 15px 0 12px 0;">
-                        <div class="g-recaptcha" id="recaptchaProjectUpdate" data-sitekey="6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz"></div>
                     </div>
 
                     <button type="button" class="btn-hold-send-wow" id="btnUpdateProjSubmit" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); box-shadow: 0 8px 25px rgba(234, 88, 12, 0.35);">
@@ -15235,6 +15217,62 @@
         const WORKER_URL = "https://turboshare.org.uk"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
 
+        // BỘ ĐIỀU KHIỂN CAPTCHA NỔI TOÀN CỤC
+        let currentCaptchaWidgetId = null;
+        let currentCaptchaType = null;
+
+        function openUniversalCaptcha(type, siteKey, callback) {
+            const container = document.getElementById('universalCaptchaContainer');
+            container.innerHTML = ''; // Dọn sạch cũ
+            currentCaptchaType = type;
+            
+            const uModal = document.getElementById('universalCaptchaModal');
+            if(uModal) uModal.style.display = 'flex';
+
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
+            if (type === 'hcaptcha' && typeof hcaptcha !== 'undefined') {
+                currentCaptchaWidgetId = hcaptcha.render(container, {
+                    sitekey: siteKey,
+                    theme: theme,
+                    callback: function(token) {
+                        closeUniversalCaptcha();
+                        callback(token);
+                    }
+                });
+            } else if (type === 'turnstile' && typeof turnstile !== 'undefined') {
+                currentCaptchaWidgetId = turnstile.render(container, {
+                    sitekey: siteKey,
+                    theme: 'auto',
+                    callback: function(token) {
+                        closeUniversalCaptcha();
+                        callback(token);
+                    }
+                });
+            } else if (type === 'recaptcha' && typeof grecaptcha !== 'undefined') {
+                currentCaptchaWidgetId = grecaptcha.render(container, {
+                    sitekey: siteKey,
+                    theme: theme,
+                    callback: function(token) {
+                        closeUniversalCaptcha();
+                        callback(token);
+                    }
+                });
+            } else {
+                showToast("Hệ thống chống bot chưa tải xong, vui lòng chờ chút rồi thử lại!", "error");
+                closeUniversalCaptcha();
+            }
+        }
+
+        function closeUniversalCaptcha() {
+            const uModal = document.getElementById('universalCaptchaModal');
+            if(uModal) uModal.style.display = 'none';
+            const container = document.getElementById('universalCaptchaContainer');
+            container.innerHTML = '';
+            currentCaptchaWidgetId = null;
+            currentCaptchaType = null;
+        }
+
         const BrowserCache = {
             set(key, data, ttlMinutes = 30, useSession = false) {
                 try {
@@ -15377,7 +15415,7 @@
                     registerApiNetworkFailure();
                 }
                 throw networkError;
-            }
+            } 
         };
 
         async function registerApiNetworkFailure() {
@@ -15789,29 +15827,20 @@
         // ==========================================
         // BỘ MÁY ĐA NGÔN NGỮ (I18N ENGINE)
         // ==========================================
-        let currentLang = 'vi';
+        let currentLang = 'en';
         let langData = {};
 
-        // Tự động nhận diện ngôn ngữ qua IP ở lần đầu tiên
+        // Nhận diện ngôn ngữ: Mặc định tiếng Anh, chỉ đặt tiếng Việt nếu trình duyệt là tiếng Việt
         async function detectLanguage() {
             let saved = localStorage.getItem('lang');
-            if (saved) return saved; // Nếu đã từng lưu trước đó thì ưu tiên dùng
+            if (saved) return saved; // Nếu người dùng đã từng tự bấm đổi ngôn ngữ thì giữ nguyên lựa chọn đó
 
-            try {
-                // Quét IP (giới hạn 1.2 giây tránh chậm web)
-                const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 1200);
-                const res = await fetch('https://api.country.is/', { signal: ctrl.signal });
-                clearTimeout(timer);
-                const data = await res.json();
-                
-                // Ở Việt Nam (VN) thì dùng tiếng Việt, nước ngoài dùng tiếng Anh
-                const detected = (data && data.country === 'VN') ? 'vi' : 'en';
-                return detected;
-            } catch (e) {
-                // Dự phòng nếu lỗi mạng hoặc bị chặn: lấy theo ngôn ngữ thiết bị
-                return navigator.language.startsWith('vi') ? 'vi' : 'en';
-            }
+            // Quét danh sách ngôn ngữ cài đặt trong trình duyệt của người dùng
+            const browserLangs = navigator.languages || [navigator.language || navigator.userLanguage || ''];
+            const isVietnamese = browserLangs.some(lang => lang && lang.toLowerCase().startsWith('vi'));
+
+            // Chỉ dùng 'vi' nếu trình duyệt người dùng để tiếng Việt, tất cả trường hợp còn lại mặc định là 'en'
+            return isVietnamese ? 'vi' : 'en';
         }
 
         async function setLanguage(lang) {
@@ -16336,13 +16365,13 @@
                     if (!fileInput || !title) { showToast("Điền đủ trường bắt buộc", "error"); return false; }
                     if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error"); return false; }
                     if (fileInput.size > 200 * 1024 * 1024) { showToast("Kích thước tải lên tối đa là 200MB.", "error"); return false; }
-                    const recaptchaEl = document.querySelector('#uploadNewFormStep [name="g-recaptcha-response"]');
-                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
-                    if (!token && typeof grecaptcha !== 'undefined') { try { token = grecaptcha.getResponse(0); } catch(e){} }
-                    if (!token) { showToast("Xác minh rô-bốt chưa hoàn tất.", "error"); return false; }
                     return true;
                 },
-                onExecute: handleUploadBtn
+                onExecute: () => {
+                    openUniversalCaptcha('recaptcha', '6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz', (token) => {
+                        handleUploadBtn(token);
+                    });
+                }
             });
 
             // 2. NÚT CẬP NHẬT BẢN MỚI CHO DỰ ÁN
@@ -16357,12 +16386,13 @@
                     if (!fileInput) { showToast("Vui lòng chọn file .sb3", "error"); return false; }
                     if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Chỉ cho phép tải file .sb3!", "error"); return false; }
                     if (fileInput.size > 200 * 1024 * 1024) { showToast("File quá lớn! Tối đa 200MB.", "error"); return false; }
-                    const recaptchaEl = document.querySelector('#updateSectionContainer [name="g-recaptcha-response"]');
-                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
-                    if (!token) { showToast("Vui lòng xác minh reCAPTCHA trước khi cập nhật!", "error"); return false; }
                     return true;
                 },
-                onExecute: handleUpdateProjectFileBtn
+                onExecute: () => {
+                    openUniversalCaptcha('recaptcha', '6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz', (token) => {
+                        handleUpdateProjectFileBtn(token);
+                    });
+                }
             });
 
             // 3. NÚT XUẤT BẢN TÀI NGUYÊN (ASSET STORE)
@@ -16378,12 +16408,13 @@
                     const kw = document.getElementById('assetUpKeywords')?.value.trim();
                     if (!fileInput || !title || !kw) { showToast("Vui lòng điền đủ các trường bắt buộc!", "error"); return false; }
                     if (fileInput.size > 50 * 1024 * 1024) { showToast("Dung lượng tối đa là 50MB!", "error"); return false; }
-                    const recaptchaEl = document.querySelector('#uploadAssetModal [name="g-recaptcha-response"]');
-                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
-                    if (!token) { showToast("Vui lòng xác minh reCAPTCHA!", "error"); return false; }
                     return true;
                 },
-                onExecute: handleUploadAssetSubmit
+                onExecute: () => {
+                    openUniversalCaptcha('recaptcha', '6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz', (token) => {
+                        handleUploadAssetSubmit(null, token);
+                    });
+                }
             });
 
             // 4. NÚT KHỞI TẠO STATION
@@ -16396,12 +16427,13 @@
                 onValidate: () => {
                     const title = document.getElementById('newStdTitle')?.value.trim();
                     if (!title) { showToast("Vui lòng nhập tên Station", "error"); return false; }
-                    const recaptchaEl = document.querySelector('#createStudioModal [name="g-recaptcha-response"]');
-                    let token = recaptchaEl ? recaptchaEl.value.trim() : "";
-                    if (!token) { showToast("Vui lòng xác minh reCAPTCHA!", "error"); return false; }
                     return true;
                 },
-                onExecute: submitCreateStudio
+                onExecute: () => {
+                    openUniversalCaptcha('recaptcha', '6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz', (token) => {
+                        submitCreateStudio(token);
+                    });
+                }
             });
 
             // 5. NÚT TẢI VỀ ASSET TRONG POPUP XEM TRƯỚC (QUICK VIEW)
@@ -16561,13 +16593,21 @@
             }
         }
         // ĐĂNG KÝ TRỰC TIẾP & ĐĂNG NHẬP NGAY LẬP TỨC
-        async function handleRegisterDirect(e) {
-            e.preventDefault();
+        async function handleRegisterDirect(e, providedToken = null) {
+            if (e) e.preventDefault();
+            
+            if (!providedToken) {
+                openUniversalCaptcha('hcaptcha', '92420ffc-6b14-4126-a31e-2e707ebc7492', (token) => {
+                    handleRegisterDirect(null, token);
+                });
+                return;
+            }
+
             const btn = document.getElementById('btnRegisterDirect');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang khởi tạo tài khoản...</span>';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang khởi tạo...</span>';
             }
 
             const username = document.getElementById('regUsername').value.trim();
@@ -16575,26 +16615,14 @@
             const displayName = document.getElementById('regDisplayName').value.trim();
             const pw = document.getElementById('regPw').value;
             let refCode = document.getElementById('regReferralCode') ? document.getElementById('regReferralCode').value.trim() : "";
-            // Loại bỏ hoàn toàn ký tự @ nếu người dùng cố tình dán vào
             refCode = refCode.replace(/@/g, '').trim();
-
-            // 🛡️ LẤY TOKEN HCAPTCHA TỪ FORM ĐĂNG KÝ
-            let hcaptchaToken = e.target.querySelector('[name="h-captcha-response"]')?.value;
-            if (!hcaptchaToken && typeof hcaptcha !== 'undefined') {
-                try { hcaptchaToken = hcaptcha.getResponse(document.getElementById('hcaptchaRegister')); } catch(err){}
-            }
-            if (!hcaptchaToken) {
-                showToast("Vui lòng hoàn thành xác thực hCaptcha!", "error");
-                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
-                return;
-            }
 
             try {
                 const deviceId = await getDeviceFingerprint();
                 const res = await (await fetch(`${WORKER_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" },
-                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId, hcaptchaToken })
+                    body: JSON.stringify({ username, email, displayName, password: pw, referralCode: refCode, deviceId, hcaptchaToken: providedToken })
                 })).json();
 
                 if (res.success) {
@@ -16615,15 +16643,9 @@
                     setTimeout(() => { OnboardingTour.start(); }, 1500);
                 } else {
                     showToast(res.error || "Không thể đăng ký tài khoản!", "error");
-                    if (typeof hcaptcha !== 'undefined') {
-                        try { hcaptcha.reset(document.getElementById('hcaptchaRegister')); } catch(err){ hcaptcha.reset(); }
-                    }
                 }
             } catch(err) {
                 showToast("Lỗi kết nối máy chủ, vui lòng thử lại!", "error");
-                if (typeof hcaptcha !== 'undefined') {
-                    try { hcaptcha.reset(document.getElementById('hcaptchaRegister')); } catch(err){ hcaptcha.reset(); }
-                }
             }
 
             if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
@@ -16809,8 +16831,16 @@
             btn.disabled = false;
             btn.innerHTML = origHtml;
         }
-        async function handleLoginNative(e) {
-            e.preventDefault();
+        async function handleLoginNative(e, providedToken = null) {
+            if (e) e.preventDefault();
+            
+            if (!providedToken) {
+                openUniversalCaptcha('hcaptcha', '92420ffc-6b14-4126-a31e-2e707ebc7492', (token) => {
+                    handleLoginNative(null, token);
+                });
+                return;
+            }
+
             const btn = document.getElementById('btnLoginSubmit');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
@@ -16821,23 +16851,12 @@
             const loginId = document.getElementById('loginId').value.trim(); 
             const pw = document.getElementById('loginPw').value;
 
-            // 🛡️ LẤY TOKEN HCAPTCHA TỪ FORM ĐĂNG NHẬP
-            let hcaptchaToken = e.target.querySelector('[name="h-captcha-response"]')?.value;
-            if (!hcaptchaToken && typeof hcaptcha !== 'undefined') {
-                try { hcaptchaToken = hcaptcha.getResponse(document.getElementById('hcaptchaLogin')); } catch(err){}
-            }
-            if (!hcaptchaToken) {
-                showToast("Vui lòng hoàn thành xác thực hCaptcha!", "error");
-                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
-                return;
-            }
-
             try {
                 const deviceId = await getDeviceFingerprint(); // Lấy mã thiết bị
                 const res = await (await fetch(`${WORKER_URL}/api/auth/login`, { 
                     method: 'POST', 
                     headers: { "Content-Type": "application/json", "X-Client-Type": "StudioDANV-Web" }, 
-                    body: JSON.stringify({ loginId, password: pw, deviceId, hcaptchaToken }) 
+                    body: JSON.stringify({ loginId, password: pw, deviceId, hcaptchaToken: providedToken }) 
                 })).json();
 
                 // KIỂM TRA TÀI KHOẢN BỊ KHÓA NGAY KHI ĐĂNG NHẬP
@@ -16882,15 +16901,9 @@
                     location.reload(); 
                 } else {
                     showToast(res.error || "Incorrect account or password.", "error");
-                    if (typeof hcaptcha !== 'undefined') {
-                        try { hcaptcha.reset(document.getElementById('hcaptchaLogin')); } catch(err){ hcaptcha.reset(); }
-                    }
                 }
             } catch(err) {
                 showToast("Server connection error; please try again.", "error");
-                if (typeof hcaptcha !== 'undefined') {
-                    try { hcaptcha.reset(document.getElementById('hcaptchaLogin')); } catch(err){ hcaptcha.reset(); }
-                }
             }
 
             if (btn) {
@@ -20014,12 +20027,12 @@
             setTimeout(setupAllActionHoldButtons, 50);
         }
 
-        async function submitCreateStudio() {
+        async function submitCreateStudio(providedToken) {
             const title = document.getElementById('newStdTitle').value.trim();
             const customId = document.getElementById('newStdCustomId').value.trim();
             const desc = document.getElementById('newStdDesc').value.trim();
             const thumbFile = document.getElementById('newStdThumb').files[0];
-            if(!title) return showToast("Vui lòng nhập tên Station", "error");
+            if(!title) return;
 
             if (customId) {
                 const isConfirmed = await openWowBillingModal({
@@ -20032,19 +20045,7 @@
                 if (!isConfirmed) return;
             }
 
-            // 🛡️ LẤY TOKEN GOOGLE RECAPTCHA CHO TẠO STUDIO
-            const studioRecaptchaEl = document.querySelector('#createStudioModal [name="g-recaptcha-response"]');
-            let recaptchaToken = studioRecaptchaEl ? studioRecaptchaEl.value.trim() : "";
-            if (!recaptchaToken) {
-                return showToast("Vui lòng tích vào ô 'Tôi không phải là người máy' (reCAPTCHA)!", "error");
-            }
-
-            const resetStudioRecaptcha = () => {
-                if (typeof grecaptcha !== 'undefined' && studioRecaptchaEl) {
-                    const wId = parseInt(studioRecaptchaEl.id.replace('g-recaptcha-response-', '')) || 0;
-                    try { grecaptcha.reset(wId); } catch(e) { try { grecaptcha.reset(); } catch(err){} }
-                }
-            };
+            let recaptchaToken = providedToken;
 
             const btn = document.getElementById('btnCreateStudioSubmit');
             const textEl = document.getElementById('createStudioHoldText') || btn;
@@ -20065,7 +20066,6 @@
 
             if(res && res.success) {
                 BrowserCache.clear('studios_list'); // 🚀 Xóa cache trạm để cập nhật ngay
-                resetStudioRecaptcha();
                 closeModal('createStudioModal');
                 if (res.newBalance !== undefined && currentUser) {
                     currentUser.WOW = res.newBalance;
@@ -20076,7 +20076,6 @@
                 document.getElementById('newStdCustomId').value = "";
                 navigateTo('/studio/' + res.id);
             } else if (res && res.error) {
-                resetStudioRecaptcha();
                 showToast(res.error, "error");
             }
 
@@ -21901,22 +21900,11 @@
             activeGamePayRequest = null;
         }
 
-        async function handleUploadBtn() {
+        async function handleUploadBtn(providedToken) {
             const fileInput = document.getElementById('upFile').files[0];
-            if(!fileInput || !document.getElementById('upTitle').value) return showToast("Điền đủ trường bắt buộc", "error");
+            if(!fileInput || !document.getElementById('upTitle').value) return;
             
-            if(!fileInput.name.toLowerCase().endsWith('.sb3')) return showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error");
-            if(fileInput.size > 200 * 1024 * 1024) return showToast("Kích thước tải lên tối đa là 200MB.", "error");
-
-            // 🛡️ KIỂM TRA XÁC MINH GOOGLE RECAPTCHA TRƯỚC KHI TẢI FILE
-            const uploadRecaptchaEl = document.querySelector('#uploadNewFormStep [name="g-recaptcha-response"]');
-            let recaptchaToken = uploadRecaptchaEl ? uploadRecaptchaEl.value.trim() : "";
-            if (!recaptchaToken && typeof grecaptcha !== 'undefined') {
-                try { recaptchaToken = grecaptcha.getResponse(0); } catch(e) {}
-            }
-            if (!recaptchaToken) {
-                return showToast("Xác minh rô-bốt chưa hoàn tất.", "error");
-            }
+            let recaptchaToken = providedToken;
             
             const btn = document.getElementById('btnSubmitUpload');
             const textEl = document.getElementById('uploadHoldText') || btn;
@@ -21973,17 +21961,14 @@
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
-                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                     showToast("Xuất bản thành công!", "success"); 
                     clearUploadDraft(); // Xóa sạch dữ liệu tạm sau khi tải lên thành công
                     await loadProjects(); 
                     navigateTo(`/projects/${finalRes.file_id}`); 
                 } else {
-                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                     showToast(finalRes.error || "Lỗi tải lên", "error");
                 }
             } catch(err) { 
-                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
             textEl.innerHTML = `<i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>`;
@@ -22169,20 +22154,20 @@
             openModal('reportModal');
         }
 
-        async function handleReportSubmit(e) {
-            e.preventDefault();
+        async function handleReportSubmit(e, providedToken = null) {
+            if (e) e.preventDefault();
             
-            const reasonSelect = document.getElementById('reportReason').value;
             const customDetail = document.getElementById('reportReasonOther').value.trim();
-            
             if (!customDetail) return showToast("Vui lòng nhập mô tả chi tiết vi phạm!", "error");
 
-            // 🛡️ LẤY TOKEN GOOGLE RECAPTCHA CHO FORM BÁO CÁO
-            const reportRecaptchaEl = document.querySelector('#reportModal [name="g-recaptcha-response"]');
-            let recaptchaToken = reportRecaptchaEl ? reportRecaptchaEl.value.trim() : "";
-            if (!recaptchaToken) {
-                return showToast("Vui lòng tích vào ô 'Tôi không phải là người máy' (reCAPTCHA)!", "error");
+            if (!providedToken) {
+                openUniversalCaptcha('recaptcha', '6Lc5yOEtAAAAAJE4Ru2HoXXsWT69bCYYsKWAI9nz', (token) => {
+                    handleReportSubmit(null, token);
+                });
+                return;
             }
+
+            let recaptchaToken = providedToken;
 
             const resetReportRecaptcha = () => {
                 if (typeof grecaptcha !== 'undefined' && reportRecaptchaEl) {
@@ -22213,11 +22198,9 @@
             });
             
             if(res && res.success) { 
-                resetReportRecaptcha();
                 showToast("Cảm ơn bạn đã báo cáo. Quản trị viên sẽ xem xét.", "success"); 
                 closeModal('reportModal'); 
             } else if (res && res.error) {
-                resetReportRecaptcha();
                 showToast(res.error, "error");
             }
             
@@ -23436,16 +23419,20 @@
         }
 
         // BƯỚC 1: GỬI MÃ OTP VÀO EMAIL
-        async function handleForgotSendOtp(e) {
-            e.preventDefault();
+        async function handleForgotSendOtp(e, providedToken = null) {
+            if (e) e.preventDefault();
             const input = document.getElementById('forgotIdentifierInput');
             const identifier = input ? input.value.trim() : '';
             if (!identifier) return showToast("Please enter your Username or Email!", "error");
 
-            const turnstileToken = e.target.querySelector('[name="cf-turnstile-response"]')?.value;
-            if (!turnstileToken) {
-                return showToast("Please wait for security verification to finish!", "error");
+            if (!providedToken) {
+                openUniversalCaptcha('turnstile', '0x4AAAAAAFBN7qkTYZA_DG8S', (token) => {
+                    handleForgotSendOtp(null, token);
+                });
+                return;
             }
+
+            const turnstileToken = providedToken;
 
             const btn = document.getElementById('btnForgotSendOtp');
             const origHtml = btn.innerHTML;
@@ -23476,11 +23463,9 @@
                     showToast("Verification OTP sent to your email!", "success");
                 } else {
                     showToast(res.error || "Account not found!", "error");
-                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             } catch(err) {
                 showToast("Server connection error!", "error");
-                if (typeof turnstile !== 'undefined') turnstile.reset();
             }
 
             btn.disabled = false;
@@ -25013,31 +24998,15 @@
         }
 
         // 5. CẬP NHẬT FILE GAME (CÓ XÁC MINH RECAPTCHA)
-        async function handleUpdateProjectFileBtn() {
+        async function handleUpdateProjectFileBtn(providedToken) {
             const fileInput = document.getElementById('updateProjFile').files[0];
-            if (!fileInput) return showToast("Vui lòng chọn file .sb3", "error");
+            if (!fileInput) return;
 
-            if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Chỉ cho phép tải file .sb3!", "error"); document.getElementById('updateProjFile').value = ""; return; }
-            if (fileInput.size > 200 * 1024 * 1024) { showToast("File quá lớn! Tối đa 200MB.", "error"); document.getElementById('updateProjFile').value = ""; return; }
-
-            // 🛡️ LẤY TOKEN RECAPTCHA CỦA KHUNG CẬP NHẬT
-            const recaptchaRespEl = document.querySelector('#updateSectionContainer [name="g-recaptcha-response"]');
-            const recaptchaToken = recaptchaRespEl ? recaptchaRespEl.value.trim() : '';
-
-            if (!recaptchaToken) {
-                return showToast("Vui lòng tích vào ô 'Tôi không phải là người máy' (reCAPTCHA) trước khi tải bản cập nhật!", "error");
-            }
+            let recaptchaToken = providedToken;
 
             const btn = document.getElementById('btnUpdateProjSubmit');
             const textEl = document.getElementById('updateProjHoldText') || btn;
             btn.disabled = true;
-
-            const resetUpdateRecaptcha = () => {
-                if (typeof grecaptcha !== 'undefined' && recaptchaRespEl) {
-                    const widgetId = parseInt(recaptchaRespEl.id.replace('g-recaptcha-response-', '')) || 0;
-                    try { grecaptcha.reset(widgetId); } catch(e) { grecaptcha.reset(); }
-                }
-            };
 
             const CHUNK_SIZE = 18 * 1024 * 1024;
             const totalChunks = Math.ceil(fileInput.size / CHUNK_SIZE);
@@ -25074,16 +25043,13 @@
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
                 if (finalRes.success) { 
-                    resetUpdateRecaptcha();
                     showToast("Cập nhật bản mới thành công!", "success"); 
                     closeModal('projSettingsModal'); 
                     setTimeout(() => { location.reload(); }, 1000); 
                 } else {
-                    resetUpdateRecaptcha();
                     showToast(finalRes.error || "Lỗi tải lên", "error");
                 }
             } catch (err) { 
-                resetUpdateRecaptcha();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
             textEl.innerHTML = '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>'; 
@@ -25834,26 +25800,12 @@
             reader.readAsDataURL(file);
         }
 
-        async function handleUploadAssetSubmit(e) {
+        async function handleUploadAssetSubmit(e, providedToken) {
             if (e && e.preventDefault) e.preventDefault();
             const fileInput = document.getElementById('assetUpFile').files[0];
             if (!fileInput) return;
             
-            if (fileInput.size > 50 * 1024 * 1024) return showToast("Dung lượng tối đa là 50MB!", "error");
-
-            // 🛡️ LẤY TOKEN GOOGLE RECAPTCHA CHO UPLOAD ASSET
-            const assetRecaptchaEl = document.querySelector('#uploadAssetModal [name="g-recaptcha-response"]');
-            let recaptchaToken = assetRecaptchaEl ? assetRecaptchaEl.value.trim() : "";
-            if (!recaptchaToken) {
-                return showToast("Vui lòng tích vào ô 'Tôi không phải là người máy' (reCAPTCHA)!", "error");
-            }
-
-            const resetAssetRecaptcha = () => {
-                if (typeof grecaptcha !== 'undefined' && assetRecaptchaEl) {
-                    const wId = parseInt(assetRecaptchaEl.id.replace('g-recaptcha-response-', '')) || 0;
-                    try { grecaptcha.reset(wId); } catch(e) { try { grecaptcha.reset(); } catch(err){} }
-                }
-            };
+            let recaptchaToken = providedToken;
             
             const btn = document.getElementById('btnSubmitUploadAsset');
             const textEl = document.getElementById('assetUploadHoldText') || btn;
@@ -25899,18 +25851,15 @@
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
-                    resetAssetRecaptcha();
                     BrowserCache.clear('assets_list'); // 🚀 Xóa cache asset để thấy ngay file mới
                     showToast("Đã chia sẻ Tài nguyên thành công!", "success"); 
                     closeModal('uploadAssetModal');
                     await fetchAssetsList(true);
                     searchAssets(); 
                 } else {
-                    resetAssetRecaptcha();
                     showToast(finalRes.error || "Lỗi tải lên", "error");
                 }
             } catch(err) { 
-                resetAssetRecaptcha();
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
             textEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>`;
@@ -28555,24 +28504,10 @@
                             <input type="text" id="partnerInput" placeholder="${t('daily_partner_username_ph')}" class="form-control" style="width:220px; font-size:0.85rem; padding:8px 12px; border-radius:12px;">
                             <button class="btn btn-primary" style="background:#0284c7; border:none; padding:8px 16px; border-radius:12px;" onclick="requestDailyPartner()">${t('daily_send_invite')}</button>
                         </div>
-                        <div id="partnerTurnstileSlot" style="display:flex; justify-content:center;"></div>
-                    `;
+                        `;
                     grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); padding:30px;"><i class="fa-solid fa-user-group" style="font-size:2.5rem; margin-bottom:10px; opacity:0.3;"></i><br>${t('daily_wait_invite')}</div>`;
                     btn.style.display = 'none';
                     progress.style.width = '0%';
-                    setTimeout(() => {
-                        if (typeof turnstile !== 'undefined' && document.getElementById('partnerTurnstileSlot')) {
-                            try {
-                                if (window.partnerTurnstileWidgetId !== undefined) {
-                                    try { turnstile.remove(window.partnerTurnstileWidgetId); } catch(err){}
-                                }
-                                window.partnerTurnstileWidgetId = turnstile.render('#partnerTurnstileSlot', {
-                                    sitekey: '0x4AAAAAAFBN7qkTYZA_DG8S',
-                                    theme: 'auto'
-                                });
-                            } catch(e) {}
-                        }
-                    }, 50);
                     return;
                 }
 
@@ -28865,18 +28800,15 @@
             }
         }
 
-        async function requestDailyPartner() {
+        async function requestDailyPartner(providedToken = null) {
             const partnerName = document.getElementById('partnerInput').value.trim();
             if (!partnerName) return showToast("Vui lòng nhập tên tài khoản của bạn ấy!", "error");
 
-            // 🛡️ LẤY TOKEN CLOUDFLARE TURNSTILE KHI MỜI ĐÔI BẠN
-            const turnstileInput = document.querySelector('#partnerTurnstileSlot [name="cf-turnstile-response"]');
-            let turnstileToken = turnstileInput ? turnstileInput.value : '';
-            if (!turnstileToken && window.partnerTurnstileWidgetId !== undefined && typeof turnstile !== 'undefined') {
-                try { turnstileToken = turnstile.getResponse(window.partnerTurnstileWidgetId); } catch(e){}
-            }
-            if (!turnstileToken) {
-                return showToast("Vui lòng chờ xác thực chống Bot (Turnstile) hoàn tất!", "error");
+            if (!providedToken) {
+                openUniversalCaptcha('turnstile', '0x4AAAAAAFBN7qkTYZA_DG8S', (token) => {
+                    requestDailyPartner(token);
+                });
+                return;
             }
 
             const btn = document.querySelector('#partnerSetupArea button');
@@ -28885,7 +28817,7 @@
             try {
                 const res = await apiFetch(`/api/store/set_partner`, {
                     method: 'POST',
-                    body: JSON.stringify({ partnerName: partnerName, action: 'request', turnstileToken })
+                    body: JSON.stringify({ partnerName: partnerName, action: 'request', turnstileToken: providedToken })
                 });
                 if (res && res.success) {
                     showToast("Đã gửi lời mời thành công! Chờ bạn ấy đồng ý nhé.", "success");
@@ -28894,16 +28826,10 @@
                 } else {
                     showToast(res.error || "Lỗi gửi lời mời", "error");
                     if (btn) { btn.disabled = false; btn.innerHTML = 'Gửi Lời Mời'; }
-                    if (typeof turnstile !== 'undefined' && window.partnerTurnstileWidgetId !== undefined) {
-                        try { turnstile.reset(window.partnerTurnstileWidgetId); } catch(e){}
-                    }
                 }
             } catch(e) {
                 showToast("Lỗi kết nối", "error");
                 if (btn) { btn.disabled = false; btn.innerHTML = 'Gửi Lời Mời'; }
-                if (typeof turnstile !== 'undefined' && window.partnerTurnstileWidgetId !== undefined) {
-                    try { turnstile.reset(window.partnerTurnstileWidgetId); } catch(e){}
-                }
             }
         }
 
@@ -29397,18 +29323,15 @@
             }
         }
 
-        async function claimDailyReward(isFromHold = false) {
-            const btn = document.getElementById('btnClaimDaily');
-            
-            // 🛡️ LẤY TOKEN HCAPTCHA CHO ĐIỂM DANH WOW
-            let hcaptchaToken = document.querySelector('#dailyRewardModal [name="h-captcha-response"]')?.value;
-            if (!hcaptchaToken && typeof hcaptcha !== 'undefined') {
-                try { hcaptchaToken = hcaptcha.getResponse(document.getElementById('hcaptchaDaily')); } catch(e){}
-            }
-            if (!hcaptchaToken) {
-                showToast("Please complete the verification below to check in.", "error");
+        async function claimDailyReward(isFromHold = false, providedToken = null) {
+            if (!providedToken) {
+                openUniversalCaptcha('hcaptcha', '92420ffc-6b14-4126-a31e-2e707ebc7492', (token) => {
+                    claimDailyReward(isFromHold, token);
+                });
                 return;
             }
+
+            const btn = document.getElementById('btnClaimDaily');
 
             if (!isFromHold && btn) {
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...'; 
@@ -29420,7 +29343,7 @@
                     username: currentUser.username,
                     sessionToken: currentUser.sessionToken,
                     type: window.currentDailyTab || 'single',
-                    hcaptchaToken: hcaptchaToken
+                    hcaptchaToken: providedToken
                 };
                 
                 const response = await fetch(`${WORKER_URL}/api/store/daily`, {
@@ -29432,9 +29355,6 @@
                 const res = await response.json();
                 
                 if (response.ok && res && res.success) {
-                    if (typeof hcaptcha !== 'undefined') {
-                        try { hcaptcha.reset(document.getElementById('hcaptchaDaily')); } catch(e){ hcaptcha.reset(); }
-                    }
                     if (res.waitingPartner) {
                         showToast(`Đã điểm danh! Hãy nhắc bạn đồng hành vào nhận để nối chuỗi nhé!`, 'info');
                         window.currentDailyInfo = res.dailyInfo;
@@ -29463,9 +29383,6 @@
                     }
                     openDailyRewardModal(); // Tải lại giao diện modal
                 } else {
-                    if (typeof hcaptcha !== 'undefined') {
-                        try { hcaptcha.reset(document.getElementById('hcaptchaDaily')); } catch(e){ hcaptcha.reset(); }
-                    }
                     const errMsg = res.details ? `${res.error}: ${res.details}` : (res.error || "Lỗi hệ thống");
                     showToast(errMsg, "error");
                     if (!isFromHold && btn) {
