@@ -13280,25 +13280,41 @@
 
     <!-- MODAL TẠO BÌNH CHỌN (POLL) -->
     <div class="modal-overlay" id="pollModal">
-        <div class="modal" style="max-width:450px;">
+        <div class="modal" style="max-width:470px;">
             <div class="modal-header">
                 <span><i class="fa-solid fa-square-poll-vertical" style="color:#ea580c;"></i> <span data-i18n="poll_modal_title">Tạo Bình Chọn</span></span>
                 <button class="btn-close" onclick="closeModal('pollModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 14px;">
                     <label data-i18n="poll_modal_q_label">Câu hỏi bình chọn:</label>
                     <input type="text" id="pollQuestion" class="form-control" data-i18n-ph="poll_modal_q_ph" placeholder="Ví dụ: Bạn thích thể loại game gì nhất?" required>
                 </div>
-                <label data-i18n="poll_modal_opts_label">Các lựa chọn:</label>
-                <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
+
+                <!-- CÔNG TẮC CHO PHÉP CHỌN NHIỀU PHƯƠNG ÁN -->
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; margin-bottom: 14px;">
+                    <div>
+                        <b style="font-size: 0.88rem; color: var(--text-title); display: block;">Cho phép chọn nhiều lựa chọn</b>
+                        <span style="font-size: 0.76rem; color: var(--text-muted);">Người dùng có thể vote 1 hoặc nhiều phương án cùng lúc</span>
+                    </div>
+                    <label class="modern-toggle-switch">
+                        <input type="checkbox" id="pollMultipleChoice">
+                        <span class="modern-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label data-i18n="poll_modal_opts_label" style="margin: 0;">Các lựa chọn:</label>
+                    <span id="pollOptionsCountBadge" style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700;">2/10</span>
+                </div>
+                <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px; max-height: 250px; overflow-y: auto; padding-right: 2px;">
                     <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 1..." required>
                     <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 2..." required>
                 </div>
-                <button class="btn" type="button" style="width:100%; border:1px dashed var(--border-color); background:transparent; margin-bottom: 20px;" onclick="addPollOptionUI()" data-i18n="poll_modal_btn_add">
-                    <i class="fa-solid fa-plus"></i> Thêm lựa chọn
+                <button class="btn" type="button" id="btnAddPollOptionBtn" style="width:100%; border:1.5px dashed var(--border-color); background:transparent; margin-bottom: 18px; padding: 9px;" onclick="addPollOptionUI()" data-i18n="poll_modal_btn_add">
+                    <i class="fa-solid fa-plus"></i> Thêm lựa chọn (Tối đa 10)
                 </button>
-                <button class="btn btn-primary" type="button" style="width:100%; justify-content:center; background:#ea580c;" onclick="submitPollChat()" data-i18n="poll_modal_btn_submit">
+                <button class="btn btn-primary" type="button" style="width:100%; justify-content:center; background:#ea580c; border:none; padding: 11px; border-radius: 12px; font-weight: 800;" onclick="submitPollChat()" data-i18n="poll_modal_btn_submit">
                     <i class="fa-solid fa-paper-plane"></i> Gửi Bình Chọn
                 </button>
             </div>
@@ -24958,6 +24974,7 @@
             if (rawText.startsWith("[DANV_POLL]")) {
                 try {
                     const pollData = JSON.parse(rawText.replace("[DANV_POLL]", ""));
+                    const isMultiple = !!pollData.multiple;
                     
                     let totalVotes = 0;
                     pollData.options.forEach(opt => totalVotes += (opt.votes ? opt.votes.length : 0));
@@ -24978,6 +24995,11 @@
 
                     return `
                         <div class="chat-poll-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; padding:2px 8px; border-radius:6px; background:${isMultiple ? 'rgba(59, 130, 246, 0.12)' : 'rgba(234, 88, 12, 0.1)'}; color:${isMultiple ? '#3b82f6' : '#ea580c'}; border:1px solid ${isMultiple ? 'rgba(59, 130, 246, 0.3)' : 'rgba(234, 88, 12, 0.3)'};">
+                                    <i class="fa-solid ${isMultiple ? 'fa-list-check' : 'fa-circle-dot'}"></i> ${isMultiple ? 'Chọn nhiều' : 'Chọn 1'}
+                                </span>
+                            </div>
                             <div class="chat-poll-question">${escapeHtml(pollData.question)}</div>
                             <div class="chat-poll-opts-wrapper">${optsHtml}</div>
                             <div class="chat-poll-footer">
@@ -28201,29 +28223,47 @@
         }
 
         // ================= HỆ THỐNG BÌNH CHỌN (POLL) =================
+        function updatePollOptionsBadge() {
+            const container = document.getElementById('pollOptionsContainer');
+            const badge = document.getElementById('pollOptionsCountBadge');
+            const addBtn = document.getElementById('btnAddPollOptionBtn');
+            if (!container) return;
+            const count = container.children.length;
+            if (badge) badge.innerText = `${count}/10`;
+            if (addBtn) addBtn.style.display = count >= 10 ? 'none' : 'block';
+        }
+
         function openCreatePollModal() {
             document.getElementById('pollQuestion').value = "";
+            const multiToggle = document.getElementById('pollMultipleChoice');
+            if (multiToggle) multiToggle.checked = false;
+
             document.getElementById('pollOptionsContainer').innerHTML = `
                 <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 1..." required>
                 <input type="text" class="form-control poll-opt-input" placeholder="Lựa chọn 2..." required>
             `;
+            updatePollOptionsBadge();
             openModal('pollModal');
         }
 
         function addPollOptionUI() {
             const container = document.getElementById('pollOptionsContainer');
-            if (container.children.length >= 6) return showToast("Tối đa 6 lựa chọn!", "error");
+            if (container.children.length >= 10) return showToast("Tối đa 10 lựa chọn!", "error");
+            
             const input = document.createElement('input');
             input.type = "text"; 
             input.className = "form-control poll-opt-input";
             input.placeholder = `Lựa chọn ${container.children.length + 1}...`;
             container.appendChild(input);
+            updatePollOptionsBadge();
+            input.focus();
         }
 
         async function submitPollChat() {
             const question = document.getElementById('pollQuestion').value.trim();
             if (!question) return showToast("Vui lòng nhập câu hỏi!", "error");
             
+            const isMultiple = document.getElementById('pollMultipleChoice')?.checked || false;
             const inputs = document.querySelectorAll('.poll-opt-input');
             const options = [];
             inputs.forEach((inp, idx) => {
@@ -28232,8 +28272,9 @@
             });
 
             if (options.length < 2) return showToast("Cần ít nhất 2 lựa chọn!", "error");
+            if (options.length > 10) return showToast("Tối đa 10 lựa chọn!", "error");
 
-            const pollData = { question, options };
+            const pollData = { question, multiple: isMultiple, options };
             const text = "[DANV_POLL]" + JSON.stringify(pollData);
 
             const payload = { text, replyTo: null, imageId: null };
@@ -28250,26 +28291,51 @@
         async function castPollVote(el, optionId) {
             if (!currentUser) return openModal('loginModal');
             
+            const card = el.closest('.chat-poll-card');
             const msgRow = el.closest('.chat-msg-row');
             if (!msgRow) return;
             const msgId = msgRow.id.replace('chat-msg-', '');
 
-            // Chống spam click (Bỏ làm mờ toàn bộ khung gây xấu UI)
+            // 🛡️ CHỐNG CLICK NHIỀU LẦN: Nếu card đang voting hoặc lựa chọn đang processing thì chặn hoàn toàn
+            if (card && card.classList.contains('is-voting')) return;
             if (el.classList.contains('processing')) return;
+            
             el.classList.add('processing');
-
-            const res = await apiFetch(`/api/chat/vote`, { 
-                method: 'POST', 
-                body: JSON.stringify({ msgId, optionId }) 
-            });
-
-            if (res && res.success) {
-                lastChatJSONStr = ""; 
-                await loadGlobalChat(false);
-            } else {
-                showToast(res ? res.error : "Lỗi bình chọn", "error");
+            if (card) {
+                card.classList.add('is-voting');
+                card.style.pointerEvents = 'none'; // Khóa toàn bộ các nút trong poll khi đang gửi request
             }
-            el.classList.remove('processing');
+
+            // Hiện loading spinner xoay nhẹ ngay tại ô phần trăm của lựa chọn vừa bấm
+            const percentSpan = el.querySelector('.poll-opt-percent');
+            const origPercentHtml = percentSpan ? percentSpan.innerHTML : '';
+            if (percentSpan) {
+                percentSpan.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="color:var(--primary); font-size:0.85rem;"></i>';
+            }
+
+            try {
+                const res = await apiFetch(`/api/chat/vote`, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ msgId, optionId }) 
+                });
+
+                if (res && res.success) {
+                    lastChatJSONStr = ""; 
+                    await loadGlobalChat(false);
+                } else {
+                    showToast(res ? res.error : "Lỗi bình chọn", "error");
+                    if (percentSpan) percentSpan.innerHTML = origPercentHtml;
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối bình chọn", "error");
+                if (percentSpan) percentSpan.innerHTML = origPercentHtml;
+            } finally {
+                el.classList.remove('processing');
+                if (card) {
+                    card.classList.remove('is-voting');
+                    card.style.pointerEvents = '';
+                }
+            }
         }
 // ================= XỬ LÝ DỊCH THUẬT & MENU CHỌN NGÔN NGỮ (TỐI ƯU TOÀN DIỆN) =================
         // DANH SÁCH TÊN BẢN XỨ THUẦN TÚY (ENDONYM) - TUYỆT ĐỐI KHÔNG GHÉP TÊN TIẾNG KHÁC
