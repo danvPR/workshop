@@ -10479,7 +10479,7 @@
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN HCAPTCHA (TẮT COMPAT ĐỂ KHÔNG ĐÈ LÊN GOOGLE RECAPTCHA) -->
-    <script src="https://js.hcaptcha.com/1/api.js?recaptchacompat=off" async defer></script>
+    <script src="https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off" async defer></script>
     <!-- THÊM THƯ VIỆN GOOGLE RECAPTCHA V2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
@@ -15950,50 +15950,109 @@
         const WORKER_URL = "https://turboshare.org.uk"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
 
-        // BỘ ĐIỀU KHIỂN CAPTCHA NỔI TOÀN CỤC
+        // BỘ ĐIỀU KHIỂN CAPTCHA NỔI TOÀN CỤC (CÓ CƠ CHẾ CHỜ VÀ CHỐNG SẬP MODAL)
         let currentCaptchaWidgetId = null;
         let currentCaptchaType = null;
+        let lastCaptchaParams = null;
 
         function openUniversalCaptcha(type, siteKey, callback) {
             const container = document.getElementById('universalCaptchaContainer');
-            container.innerHTML = ''; // Dọn sạch cũ
+            if (!container) return;
             currentCaptchaType = type;
+            lastCaptchaParams = { type, siteKey, callback };
             
             const uModal = document.getElementById('universalCaptchaModal');
-            if(uModal) uModal.style.display = 'flex';
+            if (uModal) uModal.style.display = 'flex';
+
+            // Hiển thị vòng xoay chờ tải, giữ box mở để người dùng nhìn thấy
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:15px 0; color:var(--text-muted);">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size:1.8rem; color:var(--primary);"></i>
+                    <span style="font-size:0.86rem; font-weight:600;">Đang kết nối xác thực chống bot...</span>
+                </div>
+            `;
 
             const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            let attempts = 0;
+            const maxAttempts = 25; // Chờ tối đa 5 giây (25 lần x 200ms) để script kịp tải
 
-            if (type === 'hcaptcha' && typeof hcaptcha !== 'undefined') {
-                currentCaptchaWidgetId = hcaptcha.render(container, {
-                    sitekey: siteKey,
-                    theme: theme,
-                    callback: function(token) {
-                        closeUniversalCaptcha();
-                        callback(token);
+            const checkAndRender = () => {
+                attempts++;
+
+                if (type === 'hcaptcha' && typeof hcaptcha !== 'undefined' && typeof hcaptcha.render === 'function') {
+                    container.innerHTML = '';
+                    try {
+                        currentCaptchaWidgetId = hcaptcha.render(container, {
+                            sitekey: siteKey,
+                            theme: theme,
+                            callback: function(token) {
+                                closeUniversalCaptcha();
+                                callback(token);
+                            }
+                        });
+                    } catch(e) {
+                        showCaptchaRenderError(container, "Không thể khởi tạo hCaptcha.");
                     }
-                });
-            } else if (type === 'turnstile' && typeof turnstile !== 'undefined') {
-                currentCaptchaWidgetId = turnstile.render(container, {
-                    sitekey: siteKey,
-                    theme: 'auto',
-                    callback: function(token) {
-                        closeUniversalCaptcha();
-                        callback(token);
+                } else if (type === 'turnstile' && typeof turnstile !== 'undefined' && typeof turnstile.render === 'function') {
+                    container.innerHTML = '';
+                    try {
+                        currentCaptchaWidgetId = turnstile.render(container, {
+                            sitekey: siteKey,
+                            theme: 'auto',
+                            callback: function(token) {
+                                closeUniversalCaptcha();
+                                callback(token);
+                            }
+                        });
+                    } catch(e) {
+                        showCaptchaRenderError(container, "Không thể khởi tạo Turnstile.");
                     }
-                });
-            } else if (type === 'recaptcha' && typeof grecaptcha !== 'undefined') {
-                currentCaptchaWidgetId = grecaptcha.render(container, {
-                    sitekey: siteKey,
-                    theme: theme,
-                    callback: function(token) {
-                        closeUniversalCaptcha();
-                        callback(token);
+                } else if (type === 'recaptcha' && typeof grecaptcha !== 'undefined' && typeof grecaptcha.render === 'function') {
+                    container.innerHTML = '';
+                    try {
+                        currentCaptchaWidgetId = grecaptcha.render(container, {
+                            sitekey: siteKey,
+                            theme: theme,
+                            callback: function(token) {
+                                closeUniversalCaptcha();
+                                callback(token);
+                            }
+                        });
+                    } catch(e) {
+                        showCaptchaRenderError(container, "Không thể khởi tạo reCAPTCHA.");
                     }
-                });
-            } else {
-                showToast("Hệ thống chống bot chưa tải xong, vui lòng chờ chút rồi thử lại!", "error");
-                closeUniversalCaptcha();
+                } else {
+                    // Nếu chưa tải xong thì đợi tiếp thay vì đóng sập modal
+                    if (attempts < maxAttempts) {
+                        setTimeout(checkAndRender, 200);
+                    } else {
+                        // Sau 5 giây vẫn không có -> Chắc chắn bị AdBlock chặn hoặc mất mạng
+                        showCaptchaRenderError(container, "Hệ thống xác thực bot không thể tải về!");
+                    }
+                }
+            };
+
+            checkAndRender();
+        }
+
+        function showCaptchaRenderError(container, msg) {
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 5px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; color:#ef4444;"></i>
+                    <b style="color:#ef4444; font-size:0.92rem;">${msg}</b>
+                    <span style="font-size:0.8rem; color:var(--text-muted); line-height:1.45; max-width:280px;">
+                        Tiện ích chặn quảng cáo (AdBlock, uBlock, Brave Shields) có thể đã chặn script xác thực. Hãy thử <b>tắt AdBlock</b> hoặc kiểm tra đường truyền.
+                    </span>
+                    <button type="button" class="btn btn-primary" onclick="retryUniversalCaptcha()" style="margin-top:6px; font-size:0.82rem; padding:6px 18px; border-radius:14px; font-weight:800;">
+                        <i class="fa-solid fa-rotate-right"></i> Thử lại
+                    </button>
+                </div>
+            `;
+        }
+
+        function retryUniversalCaptcha() {
+            if (lastCaptchaParams) {
+                openUniversalCaptcha(lastCaptchaParams.type, lastCaptchaParams.siteKey, lastCaptchaParams.callback);
             }
         }
 
@@ -16001,7 +16060,7 @@
             const uModal = document.getElementById('universalCaptchaModal');
             if(uModal) uModal.style.display = 'none';
             const container = document.getElementById('universalCaptchaContainer');
-            container.innerHTML = '';
+            if (container) container.innerHTML = '';
             currentCaptchaWidgetId = null;
             currentCaptchaType = null;
         }
