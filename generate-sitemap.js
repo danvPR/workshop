@@ -3,10 +3,7 @@ const path = require('path');
 
 // Configuration
 const CONFIG = {
-  domains: [
-    'https://turboshare.org.uk',
-    'https://turbows.pages.dev'
-  ],
+  // Primary domain only - Google requires sitemap URLs to match the sitemap's domain
   primaryDomain: 'https://turboshare.org.uk',
   workerUrl: process.env.WORKER_URL || 'https://turboshare.org.uk',
   outputPath: path.join(__dirname, 'sitemap.xml'),
@@ -67,10 +64,11 @@ function escapeXml(str) {
     .replace(/'/g, '&apos;');
 }
 
-// Build URLs for a domain
-function buildUrlsForDomain(domain) {
+// Build URLs for primary domain only
+function buildUrlsForDomain() {
   const urls = [];
   const today = new Date().toISOString().split('T')[0];
+  const domain = CONFIG.primaryDomain;
   
   CONFIG.staticRoutes.forEach(route => {
     const loc = `${domain}/${route.path}`;
@@ -92,70 +90,64 @@ function buildUrlsForDomain(domain) {
 // Fetch dynamic content from API (optional - runs if API is accessible)
 async function fetchDynamicRoutes() {
   const dynamicUrls = [];
+  const domain = CONFIG.primaryDomain;
+  const apiBase = domain;
   
-  // Try to fetch from each domain's API
-  for (const domain of CONFIG.domains) {
-    const apiBase = domain;
-    
-    for (const [type, endpoint] of Object.entries(CONFIG.apiEndpoints)) {
-      try {
-        const response = await fetch(`${apiBase}${endpoint}`, {
-          headers: { 'Accept': 'application/json' },
-          // Timeout after 10 seconds
-          signal: AbortSignal.timeout(10000)
-        });
+  for (const [type, endpoint] of Object.entries(CONFIG.apiEndpoints)) {
+    try {
+      const response = await fetch(`${apiBase}${endpoint}`, {
+        headers: { 'Accept': 'application/json' },
+        // Timeout after 10 seconds
+        signal: AbortSignal.timeout(10000)
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Handle different API response formats
+        let items = [];
+        if (Array.isArray(data)) {
+          items = data;
+        } else if (data.data && Array.isArray(data.data)) {
+          items = data.data;
+        } else if (data.items && Array.isArray(data.items)) {
+          items = data.items;
+        } else if (data.results && Array.isArray(data.results)) {
+          items = data.results;
+        }
         
-        if (response.ok) {
-          const data = await response.json();
-          // Handle different API response formats
-          let items = [];
-          if (Array.isArray(data)) {
-            items = data;
-          } else if (data.data && Array.isArray(data.data)) {
-            items = data.data;
-          } else if (data.items && Array.isArray(data.items)) {
-            items = data.items;
-          } else if (data.results && Array.isArray(data.results)) {
-            items = data.results;
+        items.forEach(item => {
+          let path = '';
+          let lastmod = item.updatedAt || item.createdAt || new Date().toISOString().split('T')[0];
+          
+          switch (type) {
+            case 'projects':
+              path = `projects/${item.id || item._id || item.slug}`;
+              break;
+            case 'users':
+              path = `users/${item.username || item.slug || item._id}`;
+              break;
+            case 'studios':
+              path = `studio/${item.id || item._id || item.slug}`;
+              break;
           }
           
-          items.forEach(item => {
-            let path = '';
-            let lastmod = item.updatedAt || item.createdAt || new Date().toISOString().split('T')[0];
-            
-            switch (type) {
-              case 'projects':
-                path = `projects/${item.id || item._id || item.slug}`;
-                break;
-              case 'users':
-                path = `users/${item.username || item.slug || item._id}`;
-                break;
-              case 'studios':
-                path = `studio/${item.id || item._id || item.slug}`;
-                break;
-            }
-            
-            if (path) {
-              // Add to both domains
-              CONFIG.domains.forEach(d => {
-                dynamicUrls.push({
-                  loc: `${d}/${path}`,
-                  lastmod,
-                  changefreq: 'weekly',
-                  priority: type === 'projects' ? 0.8 : 0.7,
-                  alternates: [
-                    { hreflang: 'vi', href: `${d}/${path}?lang=vi` },
-                    { hreflang: 'en', href: `${d}/${path}?lang=en` }
-                  ]
-                });
-              });
-            }
-          });
-        }
-      } catch (error) {
-        console.log(`Could not fetch ${type} from ${domain}: ${error.message}`);
-        // Continue with other endpoints/domains
+          if (path) {
+            dynamicUrls.push({
+              loc: `${domain}/${path}`,
+              lastmod,
+              changefreq: 'weekly',
+              priority: type === 'projects' ? 0.8 : 0.7,
+              alternates: [
+                { hreflang: 'vi', href: `${domain}/${path}?lang=vi` },
+                { hreflang: 'en', href: `${domain}/${path}?lang=en` }
+              ]
+            });
+          }
+        });
       }
+    } catch (error) {
+      console.log(`Could not fetch ${type} from ${domain}: ${error.message}`);
+      // Continue with other endpoints
     }
   }
   
@@ -168,10 +160,8 @@ async function main() {
   
   let allUrls = [];
   
-  // Add static routes for all domains
-  CONFIG.domains.forEach(domain => {
-    allUrls = allUrls.concat(buildUrlsForDomain(domain));
-  });
+  // Add static routes for primary domain only
+  allUrls = allUrls.concat(buildUrlsForDomain());
   
   // Try to fetch dynamic routes
   console.log('Attempting to fetch dynamic content from API...');
