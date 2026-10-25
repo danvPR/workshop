@@ -8628,118 +8628,218 @@
         .creator-shell {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
 
-        /* 1. THANH STRIP HEADER GỌN GÀNG, SANG TRỌNG */
-        .creator-top-bar {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 16px 24px;
+        /* 1. KHUNG BANNER CREATOR STUDIO HERO CAO CẤP */
+        .creator-banner {
+            width: 100%;
+            position: relative;
+            background: radial-gradient(110% 125% at 88% 20%, #046345 0%, #03442e 45%, #012419 100%);
+            border-radius: 28px;
+            padding: 40px 48px;
+            overflow: hidden;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.18);
         }
-        .creator-brand-cluster {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            min-width: 260px;
+
+        .creator-banner::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: 18%;
+            width: 340px;
+            height: 340px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.32) 0%, transparent 70%);
+            filter: blur(50px);
+            pointer-events: none;
         }
-        .creator-brand-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(13, 165, 122, 0.06) 100%);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.35rem;
-            flex-shrink: 0;
+
+        .banner-content {
+            max-width: 630px;
+            z-index: 2;
         }
-        .creator-brand-title {
-            font-size: 1.35rem;
+
+        .banner-title {
+            font-size: 32px;
             font-weight: 900;
-            color: var(--text-title);
             line-height: 1.25;
-            margin: 0 0 3px 0;
+            color: #ffffff !important;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .banner-title span {
+            color: #34d399;
+            display: block;
+        }
+
+        .banner-desc {
+            color: #bbf7d0;
+            opacity: 0.95;
+            font-size: 14.5px;
+            line-height: 1.6;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .banner-desc b {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .banner-actions {
             display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .banner-btn-primary {
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-        }
-        .creator-badge-pill {
-            font-size: 0.68rem;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 14px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            padding: 2px 8px;
-            border-radius: 6px;
-            background: rgba(13, 165, 122, 0.12);
-            color: var(--primary);
-            border: 1px solid rgba(13, 165, 122, 0.25);
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .creator-brand-subtitle {
-            font-size: 0.84rem;
-            color: var(--text-muted);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+
+        .banner-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.58);
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            color: #ffffff !important;
         }
-        .creator-top-actions {
-            display: flex;
+
+        .banner-btn-secondary {
+            display: inline-flex;
             align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none !important;
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0 !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            transition: all 0.2s ease;
+        }
+
+        .banner-btn-secondary:hover {
+            background: rgba(15, 23, 42, 0.9);
+            color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .banner-tags {
+            display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-        .creator-btn-policy {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 9px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 700;
+
+        .banner-tag-pill {
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .creator-btn-policy:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--bg-panel);
-            transform: translateY(-1px);
-        }
-        .creator-btn-editor {
-            background: linear-gradient(135deg, #10b981 0%, #0da57a 100%) !important;
-            color: #ffffff !important;
-            padding: 9px 20px;
-            border-radius: 12px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none !important;
-            box-shadow: 0 4px 14px rgba(13, 165, 122, 0.3);
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: none;
-        }
-        .creator-btn-editor:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(13, 165, 122, 0.45);
-            color: #ffffff !important;
+            padding: 7px 15px;
+            background: rgba(2, 44, 30, 0.75);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #d1fae5;
         }
 
-        /* 2. CỤM BẢNG ĐIỀU KHIỂN TÀI CHÍNH & KÉT SẮT VAULT */
+        .banner-tag-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #34d399;
+            flex-shrink: 0;
+        }
+
+        .banner-artwork {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            min-width: 320px;
+        }
+
+        .banner-art-glow {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, rgba(16, 185, 129, 0.18) 55%, transparent 75%);
+            filter: blur(40px);
+            z-index: 1;
+        }
+
+        .banner-bear-img {
+            position: relative;
+            width: 265px;
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 18px 25px rgba(0, 0, 0, 0.45));
+            animation: creatorFloat 4.5s ease-in-out infinite;
+            user-select: none;
+        }
+
+        .banner-floating-badge {
+            position: absolute;
+            z-index: 3;
+            padding: 7px 14px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            animation: badgeFloat 3.8s ease-in-out infinite alternate;
+        }
+
+        .banner-badge-rev {
+            top: 15px;
+            left: 10px;
+            background: rgba(16, 185, 129, 0.95);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .banner-badge-code {
+            bottom: 12px;
+            right: 5px;
+            background: rgba(30, 41, 59, 0.9);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            animation-delay: -1.9s;
+        }
+
+        @keyframes creatorFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        /* 2. CỤM BẢNG ĐIỀU KHIỂN TÀI CHÍNH & KÉT SẮT VAULT ĐỒNG BỘ */
         .creator-console-grid {
             display: grid;
             grid-template-columns: 1.35fr 2.65fr;
@@ -8747,19 +8847,20 @@
             align-items: stretch;
         }
         .creator-vault-box {
-            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.02) 80%), var(--bg-panel);
+            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.14) 0%, rgba(15, 23, 42, 0.02) 80%), var(--bg-panel);
             border: 1.5px solid var(--border-color);
-            border-radius: 20px;
-            padding: 22px 24px;
+            border-radius: 24px;
+            padding: 24px 26px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            transition: all 0.2s;
+            transition: all 0.25s ease;
         }
         .creator-vault-box:hover {
             border-color: var(--primary);
+            box-shadow: 0 8px 30px rgba(13, 165, 122, 0.12);
         }
         .creator-vault-top {
             display: flex;
@@ -8836,17 +8937,18 @@
         .creator-metric-panel {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 22px;
+            padding: 20px 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            transition: border-color 0.2s, transform 0.2s;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
         }
         .creator-metric-panel:hover {
             border-color: var(--primary);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
         }
         .creator-metric-head {
             display: flex;
@@ -8862,17 +8964,17 @@
             color: var(--text-muted);
         }
         .creator-metric-ico {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.95rem;
         }
-        .creator-metric-ico.gross { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
-        .creator-metric-ico.claimed { background: rgba(16, 185, 129, 0.12); color: #10b981; }
-        .creator-metric-ico.orders { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+        .creator-metric-ico.gross { background: rgba(245, 158, 11, 0.14); color: #f59e0b; }
+        .creator-metric-ico.claimed { background: rgba(16, 185, 129, 0.14); color: #10b981; }
+        .creator-metric-ico.orders { background: rgba(59, 130, 246, 0.14); color: #3b82f6; }
 
         .creator-metric-num {
             font-size: 1.65rem;
@@ -8896,7 +8998,7 @@
         .creator-action-dock {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
+            border-radius: 20px;
             padding: 8px 12px;
             display: flex;
             align-items: center;
@@ -8909,7 +9011,7 @@
             display: inline-flex;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 3px;
             gap: 3px;
         }
@@ -8917,10 +9019,10 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            padding: 7px 16px;
-            border-radius: 9px;
-            font-size: 0.84rem;
-            font-weight: 700;
+            padding: 7px 18px;
+            border-radius: 11px;
+            font-size: 0.85rem;
+            font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -8958,8 +9060,8 @@
             align-items: center;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 3px 12px;
+            border-radius: 14px;
+            padding: 3px 14px;
             flex: 1;
             max-width: 320px;
             transition: all 0.2s;
@@ -8988,7 +9090,7 @@
         .creator-data-row {
             background: var(--bg-panel);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 16px;
             padding: 12px 18px;
             display: grid;
             grid-template-columns: 220px 1fr 180px 140px;
@@ -9271,7 +9373,46 @@
             word-break: break-all;
         }
 
+        .creator-load-more-btn {
+            background: var(--bg-secondary);
+            border: 1.5px dashed var(--border-color);
+            color: var(--text-title);
+            font-size: 0.86rem;
+            font-weight: 800;
+            padding: 9px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .creator-load-more-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-panel);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 900px) {
+            .creator-banner {
+                flex-direction: column;
+                padding: 32px 24px;
+                text-align: center;
+            }
+            .banner-content {
+                max-width: 100%;
+            }
+            .banner-actions, .banner-tags {
+                justify-content: center;
+            }
+            .banner-artwork {
+                margin-top: 28px;
+                min-width: unset;
+            }
+            .banner-bear-img {
+                width: 210px;
+            }
             .creator-console-grid {
                 grid-template-columns: 1fr;
             }
@@ -9287,9 +9428,6 @@
             }
         }
         @media (max-width: 600px) {
-            .creator-top-bar {
-                padding: 14px 16px;
-            }
             .creator-stats-triplet {
                 grid-template-columns: 1fr;
             }
@@ -12607,57 +12745,99 @@
     <div id="creatorView" class="page-view" style="max-width: 1180px; padding: 20px 20px 60px 20px;">
         <div class="creator-shell">
             
-            <!-- 1. THANH ĐIỀU HÀNH CHÍNH -->
-            <div class="creator-top-bar">
-                <div class="creator-brand-cluster">
-                    <div class="creator-brand-icon">
-                        <i class="fa-solid fa-cubes-stacked"></i>
+            <!-- 1. BANNER CREATOR STUDIO HERO CAO CẤP -->
+            <div class="creator-banner">
+                <!-- Cột nội dung bên trái -->
+                <div class="banner-content">
+                    <h1 class="banner-title">
+                        Tạo game đỉnh cao,
+                        <span>Nhận doanh thu WOW!</span>
+                    </h1>
+                    
+                    <p class="banner-desc">
+                        Tích hợp vật phẩm trong game qua <b>WOW Economy</b> dễ dàng. Nhận chia sẻ doanh thu lên đến <b>80%</b> với Turbo-IDE hoặc <b>50%</b> với Aftercode.
+                    </p>
+
+                    <!-- Các nút CTA -->
+                    <div class="banner-actions">
+                        <button type="button" class="banner-btn-primary" onclick="switchCreatorTab('toolkit'); document.getElementById('creatorPane-toolkit')?.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            <span>Tích hợp thanh toán</span>
+                        </button>
+
+                        <a href="https://editor.turboshare.org.uk/" target="_blank" rel="noopener noreferrer" class="banner-btn-secondary">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                            <span>Mở Turbo-IDE</span>
+                        </a>
                     </div>
-                    <div>
-                        <div class="creator-brand-title">
-                            <span data-i18n="creator_title">Trung Tâm Nhà Phát Triển</span>
-                            <span class="creator-badge-pill"><i class="fa-solid fa-code"></i> DEVELOPER CONSOLE</span>
-                        </div>
-                        <p class="creator-brand-subtitle">
-                            <i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i>
-                            <span data-i18n="creator_subtitle">Quản lý danh mục sản phẩm và doanh thu giao dịch</span>
-                        </p>
+
+                    <!-- Tag đặc quyền với SVG Icons chuyên biệt -->
+                    <div class="banner-tags">
+                        <span class="banner-tag-pill">
+                            <span class="banner-tag-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </span>
+                            <span>Chia sẻ tới 80%</span>
+                        </span>
+
+                        <span class="banner-tag-pill">
+                            <span class="banner-tag-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                            </span>
+                            <span>Quyết toán tự động</span>
+                        </span>
+
+                        <span class="banner-tag-pill">
+                            <span class="banner-tag-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <polyline points="9 12 11 14 15 10"></polyline>
+                                </svg>
+                            </span>
+                            <span>Minh bạch & An toàn</span>
+                        </span>
                     </div>
                 </div>
 
-                <div class="creator-top-actions">
-                    <a href="https://studiodanv.blogspot.com/2026/09/WOW.html" target="_blank" class="creator-btn-policy" data-i18n-title="tooltip_creator_policy" title="Chính sách phân chia doanh thu">
-                        <i class="fa-solid fa-percent" style="color:var(--primary);"></i>
-                        <span><span data-i18n="creator_revenue_share">Phân chia doanh thu:</span> <b>Turbo-IDE 80% • Aftercode 50%</b></span>
-                        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem; opacity:0.6;"></i>
-                    </a>
-                    <a href="https://editor.turboshare.org.uk/" target="_blank" class="creator-btn-editor">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span data-i18n="creator_open_editor">Turbo-IDE</span>
-                    </a>
-                </div>
-            </div>
+                <!-- Cột Artwork chú gấu bên phải -->
+                <div class="banner-artwork">
+                    <div class="banner-art-glow"></div>
 
-            <!-- BẢNG NÓI RÕ CHÍNH SÁCH CHIA DOANH THU WOW THEO TRÌNH BIÊN TẬP -->
-            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%); border: 1.5px solid rgba(16, 185, 129, 0.28); border-radius: 18px; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);">
-                <div style="display: flex; align-items: center; gap: 14px; min-width: 280px; flex: 1;">
-                    <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                        <i class="fa-solid fa-scale-balanced"></i>
+                    <!-- Badge 80% -->
+                    <div class="banner-floating-badge banner-badge-rev">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 20V10"></path>
+                            <path d="M12 20V4"></path>
+                            <path d="M6 20v-6"></path>
+                        </svg>
+                        <span>80% Rev-Share</span>
                     </div>
-                    <div>
-                        <div style="font-size: 0.95rem; font-weight: 800; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
-                            <span>Chính sách phân chia doanh thu vật phẩm trong game (In-Game WOW)</span>
-                        </div>
-                        <div style="font-size: 0.84rem; color: var(--text-muted); margin-top: 3px; line-height: 1.5;">
-                            • Tác phẩm lập trình bằng <b style="color: #10b981;">Turbo-IDE</b>: Tác giả nhận <b style="color: #10b981; font-size: 0.95rem;">80%</b> doanh thu WOW (Nền tảng 20%).<br>
-                            • Tác phẩm lập trình bằng <b style="color: #3b82f6;">Aftercode</b>: Tác giả nhận <b style="color: #3b82f6; font-size: 0.95rem;">50%</b> doanh thu WOW (Nền tảng 50%).
-                        </div>
+
+                    <!-- Ảnh gấu WOW -->
+                    <img 
+                        src="https://i.postimg.cc/zGXywLsG/image.png" 
+                        alt="WOW Mascot Bear" 
+                        class="banner-bear-img"
+                    />
+
+                    <!-- Badge In-game WOW -->
+                    <div class="banner-floating-badge banner-badge-code">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        <span>In-Game WOW</span>
                     </div>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <a href="https://editor.turboshare.org.uk/" target="_blank" class="btn btn-primary" style="font-size: 0.82rem; padding: 7px 16px; border-radius: 10px; font-weight: 800;">
-                        <i class="fa-solid fa-code"></i> Mở Turbo-IDE (Nhận 80%)
-                    </a>
                 </div>
             </div>
 
