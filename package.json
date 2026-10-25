@@ -1,0 +1,28 @@
+{
+  "name": "danvworkshop",
+  "version": "1.0.0",
+  "description": "DANVworkshop - Coding community, Beyond the Blocks",
+  "private": true,
+  "scripts": {
+    "build": "node generate-sitemap.js",
+    "generate:sitemap": "node generate-sitemap.js",
+    "validate:sitemap": "node -e \"const fs=require('fs'); const xml=fs.readFileSync('sitemap.xml','utf8'); const parser=require('xmldom').DOMParser; const doc=new parser().parseFromString(xml,'text/xml'); const errors=doc.getElementsByTagName('parsererror'); if(errors.length) { console.error('XML Errors:', errors[0].textContent); process.exit(1); } console.log('Sitemap XML is valid'); const urls=doc.getElementsByTagName('url'); console.log('Total URLs:', urls.length);\"",
+    "test": "npm run validate:sitemap"
+  },
+  "keywords": [
+    "workshop",
+    "coding",
+    "community",
+    "ACGN",
+    "game",
+    "animation"
+  ],
+  "author": "DANVworkshop",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "xmldom": "^0.6.0"
+  }
+}

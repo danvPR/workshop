@@ -5,75 +5,325 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DANVworkshop - Coding community, Beyond the Blocks</title>
     <meta name="description" content="DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN." id="metaDesc" />
+    <meta name="theme-color" content="#0da57a" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#10b981" media="(prefers-color-scheme: dark)">
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
     <meta property="og:title" content="DANVworkshop - Coding community" id="ogTitle" />
     <meta property="og:description" content="Nền tảng chia sẻ và sáng tạo dự án ACGN hàng đầu." id="ogDesc" />
-    <meta property="og:image" content="https://files.catbox.moe/suarwr.png" id="ogImage" /> <!-- logo vi-->
+    <meta property="og:image" content="https://files.catbox.moe/suarwr.png" id="ogImage" />
     <meta property="og:url" content="https://turboshare.org.uk/" id="ogUrl" />
-    <meta name="google-adsense-account" content="ca-pub-6459018010825989">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6459018010825989" crossorigin="anonymous"></script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EX48GV2TBG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-EX48GV2TBG');
-</script>
-    <link rel="canonical" href="https://turboshare.org.uk/" />
-    <base href="/">
+    <meta property="og:site_name" content="DANVworkshop" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@danvworkshop" />
+    <meta name="twitter:creator" content="@danvpr" />
+    
+    <!-- hreflang for internationalization -->
+    <link rel="alternate" hreflang="vi" href="https://turboshare.org.uk/?lang=vi" />
+    <link rel="alternate" hreflang="en" href="https://turboshare.org.uk/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://turboshare.org.uk/" />
+    
+    <!-- Canonical URL - will be updated dynamically -->
+    <link rel="canonical" href="https://turboshare.org.uk/" id="canonicalLink" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" crossorigin>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin>
+    <link rel="preload" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js" crossorigin>
+    <link rel="preload" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://files.catbox.moe" crossorigin>
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet"/>
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/danvPR/workshop/main/Assets/Favicon.png">
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Styles & Scripts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet" media="print" onload="this.media='all'"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js"></script>
+    
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-6459018010825989">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6459018010825989" crossorigin="anonymous"></script>
+    
+    <!-- Google Analytics / Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EX48GV2TBG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EX48GV2TBG');
+    </script>
+    
+    <!-- Base href for relative URLs -->
+    <base href="/">
     <script>
 
+        // =====================================================================
+        // SEO & STRUCTURED DATA UTILITIES
+        // =====================================================================
+        
+        // Get current domain for canonical URLs
+        function getCurrentDomain() {
+            return window.location.origin;
+        }
+        
+        // Update canonical URL dynamically
+        function updateCanonicalUrl(path) {
+            const canonicalLink = document.getElementById('canonicalLink');
+            if (canonicalLink) {
+                const url = getCurrentDomain() + (path || window.location.pathname) + window.location.search;
+                canonicalLink.href = url;
+            }
+        }
+        
+        // Update hreflang links dynamically
+        function updateHreflangLinks(path) {
+            const baseUrl = getCurrentDomain() + (path || window.location.pathname);
+            const langs = ['vi', 'en', 'x-default'];
+            langs.forEach(lang => {
+                let href = baseUrl;
+                if (lang !== 'x-default') {
+                    href += (baseUrl.includes('?') ? '&' : '?') + 'lang=' + lang;
+                }
+                let link = document.querySelector(`link[hreflang="${lang}"]`);
+                if (!link) {
+                    link = document.createElement('link');
+                    link.rel = 'alternate';
+                    link.hreflang = lang;
+                    document.head.appendChild(link);
+                }
+                link.href = href;
+            });
+        }
+
         // CẬP NHẬT SEO & OPEN GRAPH ĐỘNG
-        function updateSEO(title, desc, imageUrl, url) {
+        function updateSEO(title, desc, imageUrl, url, type, data) {
             document.title = title;
-            const setMeta = (id, content) => { if (document.getElementById(id)) document.getElementById(id).content = content; };
+            const setMeta = (id, content) => { 
+                const el = document.getElementById(id); 
+                if (el) el.content = content; 
+            };
             
             setMeta('metaDesc', desc);
             setMeta('ogTitle', title);
             setMeta('ogDescription', desc);
             setMeta('ogImage', imageUrl || "https://files.catbox.moe/ydz8mz.png"); 
             setMeta('ogUrl', url || window.location.href); 
-            if (typeof currentProj !== 'undefined' && currentProj) {
-                injectStructuredData(currentProj);
-            }
+            
+            // Update og:type based on page type
+            const ogTypeEl = document.querySelector('meta[property="og:type"]');
+            if (ogTypeEl) ogTypeEl.content = type || 'website';
+            
+            // Update canonical and hreflang
+            updateCanonicalUrl();
+            updateHreflangLinks();
+            
+            // Inject structured data based on page type
+            injectStructuredData(type, data);
         }
 
-
-        function injectStructuredData(project) {
+        function injectStructuredData(type, data) {
             let script = document.getElementById('seo-json-ld');
-            if (script) script.remove(); // Xóa cái cũ
+            if (script) script.remove();
 
             script = document.createElement('script');
             script.id = 'seo-json-ld';
             script.type = 'application/ld+json';
             
+            let schema = null;
+            const domain = getCurrentDomain();
+            const baseUrl = domain;
+            
+            switch (type) {
+                case 'home':
+                case 'projects':
+                case 'studios':
+                case 'leaderboard':
+                case 'search':
+                    // WebSite schema for main pages
+                    schema = {
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "name": "DANVworkshop",
+                        "url": baseUrl + "/",
+                        "description": "DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN.",
+                        "inLanguage": "vi-VN",
+                        "potentialAction": {
+                            "@type": "SearchAction",
+                            "target": {
+                                "@type": "EntryPoint",
+                                "urlTemplate": baseUrl + "/search?q={search_term_string}"
+                            },
+                            "query-input": "required name=search_term_string"
+                        },
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "DANVworkshop",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "https://files.catbox.moe/suarwr.png"
+                            }
+                        }
+                    };
+                    break;
+                    
+                case 'project':
+                    // SoftwareApplication schema for project detail
+                    if (data) {
+                        schema = {
+                            "@context": "https://schema.org",
+                            "@type": "SoftwareApplication",
+                            "name": data.title,
+                            "url": baseUrl + "/projects/" + (data.id || data._id || data.slug),
+                            "operatingSystem": "Web Browser",
+                            "applicationCategory": "GameApplication",
+                            "applicationSubCategory": data.category || "Game",
+                            "author": {
+                                "@type": "Person",
+                                "name": data.author,
+                                "url": baseUrl + "/users/" + (data.authorSlug || data.authorId)
+                            },
+                            "image": data.thumbId ? `${baseUrl}/api/project/${data.thumbId}` : "https://i.ibb.co/QFg1cVVD/image.png",
+                            "description": data.description || `Dự án game/hoạt hình được tạo bởi ${data.author}`,
+                            "datePublished": data.createdAt,
+                            "dateModified": data.updatedAt || data.createdAt,
+                            "aggregateRating": {
+                                "@type": "AggregateRating",
+                                "ratingValue": data.rating || "4.5",
+                                "ratingCount": data.likesCount || (data.likes ? data.likes.length : 0),
+                                "reviewCount": data.commentsCount || 0
+                            },
+                            "offers": {
+                                "@type": "Offer",
+                                "price": "0",
+                                "priceCurrency": "VND",
+                                "availability": "https://schema.org/InStock"
+                            }
+                        };
+                    }
+                    break;
+                    
+                case 'profile':
+                    // ProfilePage schema for user profile
+                    if (data) {
+                        schema = {
+                            "@context": "https://schema.org",
+                            "@type": "ProfilePage",
+                            "mainEntity": {
+                                "@type": "Person",
+                                "name": data.username,
+                                "url": baseUrl + "/users/" + (data.username || data.slug),
+                                "image": data.avatar || "https://i.ibb.co/QFg1cVVD/image.png",
+                                "description": data.bio || `Hồ sơ của ${data.username} trên DANVworkshop`,
+                                "worksFor": {
+                                    "@type": "Organization",
+                                    "name": "DANVworkshop"
+                                },
+                                "sameAs": data.links || []
+                            },
+                            "description": `Hồ sơ người dùng ${data.username} - ${data.projectsCount || 0} dự án, ${data.followersCount || 0} người theo dõi`
+                        };
+                    }
+                    break;
+                    
+                case 'studio':
+                    // CollectionPage schema for studio
+                    if (data) {
+                        schema = {
+                            "@context": "https://schema.org",
+                            "@type": "CollectionPage",
+                            "name": data.name,
+                            "url": baseUrl + "/studio/" + (data.id || data._id || data.slug),
+                            "description": data.description || `Studio ${data.name} trên DANVworkshop`,
+                            "creator": {
+                                "@type": "Person",
+                                "name": data.owner,
+                                "url": baseUrl + "/users/" + (data.ownerSlug || data.ownerId)
+                            },
+                            "about": {
+                                "@type": "ItemList",
+                                "numberOfItems": data.projectsCount || 0,
+                                "itemListElement": []
+                            }
+                        };
+                    }
+                    break;
+                    
+                default:
+                    // Default WebSite schema
+                    schema = {
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "name": "DANVworkshop",
+                        "url": baseUrl + "/",
+                        "description": "DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN."
+                    };
+            }
+            
+            if (schema) {
+                script.text = JSON.stringify(schema);
+                document.head.appendChild(script);
+            }
+        }
+
+        // Inject ItemList schema for listing pages (projects, studios, leaderboard)
+        function injectItemListSchema(type, items) {
+            let script = document.getElementById('seo-itemlist-ld');
+            if (script) script.remove();
+            
+            if (!items || !items.length) return;
+            
+            const domain = getCurrentDomain();
+            const itemListElement = items.map((item, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "item": {
+                    "@type": type === 'projects' ? "SoftwareApplication" : "CollectionPage",
+                    "name": item.title || item.name,
+                    "url": domain + "/" + (type === 'projects' ? "projects/" : "studio/") + (item.id || item._id || item.slug),
+                    "image": item.thumbId ? `${domain}/api/project/${item.thumbId}` : "https://i.ibb.co/QFg1cVVD/image.png"
+                }
+            }));
+            
             const schema = {
                 "@context": "https://schema.org",
-                "@type": "SoftwareApplication",
-                "name": project.title,
-                "operatingSystem": "Web Browser",
-                "applicationCategory": "GameApplication",
-                "author": {
-                    "@type": "Person",
-                    "name": project.author
-                },
-                "image": project.thumbId ? `${WORKER_URL}/api/project/${project.thumbId}` : "https://i.ibb.co/QFg1cVVD/image.png",
-                "description": project.description || `Dự án game/hoạt hình được tạo bởi ${project.author}`,
-                "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "5", // Có thể tính bằng thuật toán riêng
-                    "ratingCount": (project.likes ? project.likes.length : 0) + 1 // Giả lập số lượt vote
-                }
+                "@type": "ItemList",
+                "itemListElement": itemListElement
             };
             
+            script = document.createElement('script');
+            script.id = 'seo-itemlist-ld';
+            script.type = 'application/ld+json';
             script.text = JSON.stringify(schema);
             document.head.appendChild(script);
+        }
+
+        // Remove structured data for private/auth pages
+        function removeStructuredData() {
+            ['seo-json-ld', 'seo-itemlist-ld'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            });
+            // Add noindex for private pages
+            let robotsMeta = document.querySelector('meta[name="robots"]');
+            if (!robotsMeta) {
+                robotsMeta = document.createElement('meta');
+                robotsMeta.name = 'robots';
+                document.head.appendChild(robotsMeta);
+            }
+            robotsMeta.content = 'noindex, nofollow';
         }
 
         // =====================================================================
