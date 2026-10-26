@@ -10478,8 +10478,7 @@
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <!-- THÊM THƯ VIỆN HCAPTCHA (TẮT COMPAT ĐỂ KHÔNG ĐÈ LÊN GOOGLE RECAPTCHA) -->
-    <script src="https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off" async defer></script>
+    <!-- FIX THÊM THƯ VIỆN HCAPTCHA BẰNG SCRIPT -->
     <!-- THÊM THƯ VIỆN GOOGLE RECAPTCHA V2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
@@ -15946,6 +15945,16 @@
 
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
+        // FIX BUG
+        !async function(){
+		  const hcaptcha = document.createElement('script');
+		  hcaptcha.async = true;
+		  hcaptcha.defer = true;
+		  hcaptcha.textContent = await fetch("https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off").then(x=>x.text());
+		  document.head.appendChild(hcaptcha);
+		}();
+
+        
         const SCRATCH_AUTH_URL = "https://auth.itinerary.eu.org";
         const WORKER_URL = "https://turboshare.org.uk"; // API của bạn
         const DEFAULT_AVATAR = "https://i.ibb.co/QFg1cVVD/image.png";
