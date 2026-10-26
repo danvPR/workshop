@@ -15946,13 +15946,13 @@
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
         // FIX BUG
-        {
+        !async function(){
 		  const hcaptcha = document.createElement('script');
 		  hcaptcha.async = true;
 		  hcaptcha.defer = true;
 		  hcaptcha.textContent = await fetch("https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off").then(x=>x.text());
 		  document.head.appendChild(hcaptcha);
-		}
+		}();
 
         
         const SCRATCH_AUTH_URL = "https://auth.itinerary.eu.org";
