@@ -39,6 +39,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://files.catbox.moe" crossorigin>
+    <link rel="preconnect" href="https://iaelelwrjhijuvdisthi.supabase.co" crossorigin>
+    <link rel="preconnect" href="wss://iaelelwrjhijuvdisthi.supabase.co" crossorigin>
+    <link rel="preconnect" href="https://js.hcaptcha.com" crossorigin>
+    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     
@@ -52,6 +56,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet" media="print" onload="this.media='all'"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js"></script>
+    <!-- DOMPurify for sanitizing HTML in Bulletin Board -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <!-- hCaptcha - loaded via standard script tag for reliable initialization -->
+    <script src="https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off" async defer></script>
     
     <!-- Google AdSense -->
     <meta name="google-adsense-account" content="ca-pub-6459018010825989">
@@ -10506,6 +10514,30 @@
         </div>
     </div>
 
+    <!-- BULLETIN BOARD MODAL (RICH CONTENT) -->
+    <div id="bulletinModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"></div>
+        <div id="bulletinContent" style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 800px; max-height: 85vh; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column;">
+            <!-- Header -->
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-newspaper" style="color: var(--primary); font-size: 1.3rem;"></i>
+                    <span style="font-weight: 800; font-size: 1.1rem; color: var(--text-title);" data-i18n="bulletin_title">Cập nhật quan trọng</span>
+                    <span id="bulletinVersion" style="font-size: 0.7rem; background: var(--bg-secondary); color: var(--text-muted); padding: 2px 8px; border-radius: 10px;">v1</span>
+                </div>
+                <button onclick="dismissBulletin()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem;" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <!-- Body (scrollable HTML content) -->
+            <div id="bulletinBody" style="flex: 1; overflow-y: auto; padding: 20px; font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                <!-- Sanitized HTML injected here -->
+            </div>
+            <!-- Footer -->
+            <div style="padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0;">
+                <button class="btn" onclick="dismissBulletin()" style="padding: 8px 16px; border-radius: 10px;" data-i18n="bulletin_btn_ok">Đã đọc</button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-left">
             <a href="/#home" class="navbar-brand">
@@ -12960,29 +12992,65 @@
                 </button>
             </div>
 
-            <!-- KHỐI PHÁT THANH GLOBAL PING -->
+            <!-- KHỐI THÔNG BÁO (GLOBAL PING + BULLETIN BOARD) -->
             <div style="background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #855cd6; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <h4 style="margin: 0 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-tower-broadcast" style="color: #855cd6;"></i> <span data-i18n="admin_ping_box_title">Phát thanh Server (Global Ping)</span>
+                    <i class="fa-solid fa-tower-broadcast" style="color: #855cd6;"></i> <span data-i18n="admin_announcement_box_title">Hệ thống Thông báo</span>
                 </h4>
-                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;" data-i18n="admin_ping_box_desc">Treo một thông báo khẩn cấp trên cùng màn hình của mọi người dùng. Bỏ trống nội dung và bấm nút để gỡ thông báo xuống.</p>
-                
-                <div class="form-group">
-                    <label data-i18n="admin_ping_msg_label">Nội dung thông báo (Bắt buộc):</label>
-                    <textarea id="adminPingMessage" class="form-control" rows="2" data-i18n-ph="admin_ping_msg_ph" placeholder="Ví dụ: Nền tảng vừa cập nhật Chính sách Bảo mật..."></textarea>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;" data-i18n="admin_announcement_box_desc">Chọn chế độ: <b>Banner</b> = thanh mỏng trên cùng (cảnh báo khẩn cấp), <b>Bulletin Board</b> = bảng tin lớn ở giữa màn hình (cập nhật chi tiết, hỗ trợ HTML/ảnh).</p>
+
+                <!-- Chế độ hiển thị -->
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: var(--text-title);">
+                        <input type="radio" name="announcementMode" value="banner" checked onchange="toggleAnnouncementMode('banner')">
+                        <i class="fa-solid fa-broadcast-tower" style="color: #855cd6;"></i> <span data-i18n="admin_mode_banner">Banner (Thanh mỏng)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: var(--text-title);">
+                        <input type="radio" name="announcementMode" value="modal" onchange="toggleAnnouncementMode('modal')">
+                        <i class="fa-solid fa-newspaper" style="color: #10b981;"></i> <span data-i18n="admin_mode_bulletin">Bulletin Board (Bảng tin)</span>
+                    </label>
                 </div>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <div class="form-group" style="flex: 1; min-width: 200px;">
-                        <label data-i18n="admin_ping_btn_text_label">Tên nút hành động (Tùy chọn):</label>
-                        <input type="text" id="adminPingBtnText" class="form-control" data-i18n-ph="admin_ping_btn_text_ph" placeholder="Ví dụ: Xem chi tiết">
+
+                <!-- Banner Mode UI -->
+                <div id="announcementBannerMode" style="display: block;">
+                    <div class="form-group">
+                        <label data-i18n="admin_ping_msg_label">Nội dung thông báo (Bắt buộc):</label>
+                        <textarea id="adminPingMessage" class="form-control" rows="2" data-i18n-ph="admin_ping_msg_ph" placeholder="Ví dụ: Nền tảng vừa cập nhật Chính sách Bảo mật..."></textarea>
                     </div>
-                    <div class="form-group" style="flex: 1; min-width: 200px;">
-                        <label data-i18n="admin_ping_link_label">Link đính kèm (Tùy chọn):</label>
-                        <input type="text" id="adminPingBtnLink" class="form-control" placeholder="https://...">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label data-i18n="admin_ping_btn_text_label">Tên nút hành động (Tùy chọn):</label>
+                            <input type="text" id="adminPingBtnText" class="form-control" data-i18n-ph="admin_ping_btn_text_ph" placeholder="Ví dụ: Xem chi tiết">
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label data-i18n="admin_ping_link_label">Link đính kèm (Tùy chọn):</label>
+                            <input type="text" id="adminPingBtnLink" class="form-control" placeholder="https://...">
+                        </div>
                     </div>
                 </div>
-                <button id="btnSubmitGlobalPing" class="btn btn-primary" onclick="submitGlobalPing()" style="background: #855cd6; border: none; margin-top: 10px;">
-                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="admin_ping_btn_send">Gắn thông báo toàn Server</span>
+
+                <!-- Bulletin Board Mode UI -->
+                <div id="announcementBulletinMode" style="display: none;">
+                    <div class="form-group">
+                        <label data-i18n="admin_bulletin_html_label">Nội dung HTML (Hỗ trợ thẻ: p, h1-h6, ul/ol/li, img, a, table, iframe, b, i, u...):</label>
+                        <textarea id="adminBulletinHTML" class="form-control" rows="10" style="font-family: 'Fira Code', monospace; font-size: 0.85rem;" data-i18n-ph="admin_bulletin_html_ph" placeholder="<h2>Cập nhật v2.5</h2>
+<p>Chào mọi người, hôm nay chúng tôi ra mắt...</p>
+<img src="https://files.catbox.moe/xxx.png" alt="Banner" style="width:100%; max-width:600px;">
+<ul><li>Tính năng mới A</li><li>Sửa lỗi B</li></ul>"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
+                        <div class="form-group" style="flex: 1; min-width: 150px;">
+                            <label data-i18n="admin_bulletin_version_label">Version (tăng để hiển thị lại cho user đã đọc):</label>
+                            <input type="number" id="adminBulletinVersion" class="form-control" value="1" min="1" style="width: 100px;">
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="insertImageToBulletin()" style="margin-top: 24px; padding: 8px 16px; border-radius: 10px;" data-i18n="admin_bulletin_insert_img">Chèn ảnh (URL)</button>
+                        <button type="button" class="btn btn-secondary" onclick="previewBulletin()" style="margin-top: 24px; padding: 8px 16px; border-radius: 10px;" data-i18n="admin_bulletin_preview">Xem trước</button>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;" data-i18n="admin_bulletin_tip"><i class="fa-solid fa-lightbulb"></i> Tip: Dùng link ảnh từ catbox.moe, imgur, github. Version tự động tăng khi lưu, hoặc nhập số lớn hơn version hiện tại.</p>
+                </div>
+
+                <button id="btnSubmitGlobalPing" class="btn btn-primary" onclick="submitAnnouncement()" style="background: #855cd6; border: none; margin-top: 10px; width: 100%; justify-content: center; padding: 12px; font-size: 1.05rem;">
+                    <i class="fa-solid fa-paper-plane"></i> <span id="announcementSubmitBtnText" data-i18n="admin_ping_btn_send">Gắn thông báo toàn Server</span>
                 </button>
             </div>
 
@@ -15943,17 +16011,8 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT CORE ================= -->
+<!-- ================= JAVASCRIPT CORE ================= -->
     <script>
-        // FIX BUG
-        !async function(){
-		  const hcaptcha = document.createElement('script');
-		  hcaptcha.async = true;
-		  hcaptcha.defer = true;
-		  hcaptcha.textContent = await fetch("https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off").then(x=>x.text());
-		  document.head.appendChild(hcaptcha);
-		}();
-
         
         const SCRATCH_AUTH_URL = "https://auth.itinerary.eu.org";
         const WORKER_URL = "https://turboshare.org.uk"; // API của bạn
@@ -16036,7 +16095,7 @@
                         setTimeout(checkAndRender, 200);
                     } else {
                         // Sau 5 giây vẫn không có -> Chắc chắn bị AdBlock chặn hoặc mất mạng
-                        showCaptchaRenderError(container, "Hệ thống xác thực bot không thể tải về!");
+                        showCaptchaRenderError(container, "Hệ thống xác thực bot không thể tải về?");
                     }
                 }
             };
@@ -17004,7 +17063,7 @@
 
                 loadGlobalFramesConfig(); // Nạp tọa độ khung avatar đã lưu
                 await loadProjects(); updateNav(); handleRouting();
-                checkGlobalPing(); // Khởi chạy kiểm tra Global Ping
+                checkAnnouncement(); // Khởi chạy kiểm tra Thông báo (Banner + Bulletin)
                 // Kiểm tra nếu có user đăng nhập mà chưa xem Hướng dẫn tân thủ
                 if (currentUser && !localStorage.getItem('danv_tour_completed')) {
                 setTimeout(() => { OnboardingTour.start(); }, 1500);
@@ -28648,17 +28707,60 @@
             }
         }
 
-        // ================= GLOBAL PING LOGIC =================
+        // ================= ANNOUNCEMENT LOGIC (GLOBAL PING + BULLETIN BOARD) =================
         let currentPingData = null;
+        let currentBulletinData = null;
 
-        async function checkGlobalPing() {
+        // DOMPurify config for Bulletin Board sanitization
+        const BULLETIN_SANITIZE_CONFIG = {
+            ALLOWED_TAGS: [
+                'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                'ul', 'ol', 'li', 'blockquote', 'pre', 'code',
+                'a', 'img', 'div', 'span', 'hr',
+                'table', 'thead', 'tbody', 'tr', 'th', 'td',
+                'iframe'
+            ],
+            ALLOWED_ATTR: [
+                'href', 'target', 'rel', 'src', 'alt', 'width', 'height',
+                'style', 'class', 'id', 'title',
+                'colspan', 'rowspan', 'frameborder', 'allowfullscreen'
+            ],
+            FORBID_TAGS: ['script', 'style', 'object', 'embed', 'form', 'input', 'button'],
+            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'on*']
+        };
+
+        async function checkAnnouncement() {
             try {
                 const res = await (await fetch(`${WORKER_URL}/api/announcement`)).json();
+                
+                // Mode 1: Bulletin Board (Modal)
+                if (res && res.mode === 'modal' && res.bulletin) {
+                    const bulletin = res.bulletin;
+                    const dismissedVersion = localStorage.getItem('danv_dismissed_bulletin_v' + bulletin.version);
+                    
+                    if (!dismissedVersion) {
+                        currentBulletinData = bulletin;
+                        
+                        // Sanitize HTML before rendering
+                        const sanitizedHTML = typeof DOMPurify !== 'undefined' 
+                            ? DOMPurify.sanitize(bulletin.html_content, BULLETIN_SANITIZE_CONFIG)
+                            : bulletin.html_content; // fallback if DOMPurify not loaded
+                        
+                        document.getElementById('bulletinBody').innerHTML = sanitizedHTML;
+                        document.getElementById('bulletinVersion').innerText = 'v' + bulletin.version;
+                        document.getElementById('bulletinModal').style.display = 'flex';
+                    }
+                    // Hide banner if bulletin is active
+                    document.getElementById('globalPingBanner').style.display = 'none';
+                    return;
+                }
+                
+                // Mode 2: Global Ping (Banner) - existing logic
                 if (res && res.announcement) {
                     const ann = res.announcement;
                     const dismissedStamp = localStorage.getItem('danv_dismissed_ping');
                     
-                    // Nếu thời gian Ping mới hơn thời gian người dùng ấn "Đã rõ"
                     if (dismissedStamp != ann.timestamp) {
                         currentPingData = ann;
                         document.getElementById('pingMessageText').innerText = ann.message;
@@ -28676,6 +28778,11 @@
                 } else {
                     document.getElementById('globalPingBanner').style.display = 'none';
                 }
+                
+                // Hide bulletin if no active bulletin
+                if (!res.bulletin) {
+                    document.getElementById('bulletinModal').style.display = 'none';
+                }
             } catch(e) {}
         }
 
@@ -28686,30 +28793,55 @@
             document.getElementById('globalPingBanner').style.display = 'none';
         }
 
-        async function submitGlobalPing() {
+        function dismissBulletin() {
+            if (currentBulletinData) {
+                localStorage.setItem('danv_dismissed_bulletin_v' + currentBulletinData.version, currentBulletinData.version);
+            }
+            document.getElementById('bulletinModal').style.display = 'none';
+        }
+
+        async function submitAnnouncement() {
             const btn = document.getElementById('btnSubmitGlobalPing') || (window.event && window.event.currentTarget);
             let origHtml = "";
             if (btn) {
                 origHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phát thanh...';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
                 btn.disabled = true;
             }
 
-            const message = document.getElementById('adminPingMessage').value.trim();
-            const btnText = document.getElementById('adminPingBtnText').value.trim();
-            const btnLink = document.getElementById('adminPingBtnLink').value.trim();
+            const displayMode = document.querySelector('input[name="announcementMode"]:checked')?.value || 'banner';
+            
+            let message = '';
+            let btnText = '';
+            let btnLink = '';
+            let htmlContent = '';
+            let version = null;
+
+            if (displayMode === 'modal') {
+                htmlContent = document.getElementById('adminBulletinHTML').value.trim();
+                version = parseInt(document.getElementById('adminBulletinVersion').value) || Date.now();
+            } else {
+                message = document.getElementById('adminPingMessage').value.trim();
+                btnText = document.getElementById('adminPingBtnText').value.trim();
+                btnLink = document.getElementById('adminPingBtnLink').value.trim();
+            }
 
             const res = await apiFetch(`/api/admin/announcement`, { 
                 method: 'POST', 
-                body: JSON.stringify({ message, btnText, btnLink }) 
+                body: JSON.stringify({ message, btnText, btnLink, htmlContent, displayMode, version }) 
             });
 
             if (res && res.success) {
-                if (message) showToast("Đã treo thông báo toàn Server!", "success");
-                else showToast("Đã gỡ thông báo hiện tại xuống!", "info");
+                if (displayMode === 'modal') {
+                    if (htmlContent) showToast("Đã đăng Bulletin Board (Modal)!", "success");
+                    else showToast("Đã gỡ Bulletin Board!", "info");
+                } else {
+                    if (message) showToast("Đã treo thông báo toàn Server (Banner)!", "success");
+                    else showToast("Đã gỡ thông báo Banner hiện tại!", "info");
+                }
                 
                 // Tự động test luôn trên máy Admin
-                setTimeout(checkGlobalPing, 1000); 
+                setTimeout(checkAnnouncement, 1000); 
             } else {
                 showToast("Lỗi kết nối", "error");
             }
@@ -28718,6 +28850,64 @@
                 btn.innerHTML = origHtml;
                 btn.disabled = false;
             }
+        }
+
+        // ================= ADMIN ANNOUNCEMENT HELPERS =================
+        function toggleAnnouncementMode(mode) {
+            const bannerMode = document.getElementById('announcementBannerMode');
+            const bulletinMode = document.getElementById('announcementBulletinMode');
+            const btnText = document.getElementById('announcementSubmitBtnText');
+            
+            if (mode === 'modal') {
+                bannerMode.style.display = 'none';
+                bulletinMode.style.display = 'block';
+                if (btnText) btnText.textContent = 'Đăng Bulletin Board';
+            } else {
+                bannerMode.style.display = 'block';
+                bulletinMode.style.display = 'none';
+                if (btnText) btnText.textContent = 'Gắn thông báo toàn Server';
+            }
+        }
+
+        function insertImageToBulletin() {
+            const url = prompt('Nhập link ảnh (catbox.moe, imgur, github raw...):');
+            if (!url) return;
+            const textarea = document.getElementById('adminBulletinHTML');
+            const imgTag = `\n<img src="${url}" alt="Ảnh minh họa" style="width:100%; max-width:600px; border-radius:8px; margin:10px 0;">\n`;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            textarea.value = text.substring(0, start) + imgTag + text.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + imgTag.length, start + imgTag.length);
+        }
+
+        function previewBulletin() {
+            const html = document.getElementById('adminBulletinHTML').value;
+            if (!html.trim()) {
+                showToast('Chưa có nội dung để xem trước!', 'error');
+                return;
+            }
+            const sanitized = typeof DOMPurify !== 'undefined' 
+                ? DOMPurify.sanitize(html, BULLETIN_SANITIZE_CONFIG)
+                : html;
+            
+            // Tạo modal preview tạm
+            const previewModal = document.createElement('div');
+            previewModal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;';
+            previewModal.innerHTML = `
+                <div style="width:90%;max-width:800px;max-height:85vh;background:var(--bg-panel);border:1px solid var(--border-color);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;">
+                    <div style="padding:16px 20px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:800;color:var(--text-title);"><i class="fa-solid fa-eye"></i> Xem trước Bulletin</span>
+                        <button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-muted);width:36px;height:36px;border-radius:50%;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div style="flex:1;overflow:auto;padding:20px;">${sanitized}</div>
+                    <div style="padding:12px 20px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;">
+                        <button class="btn" onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="padding:8px 16px;border-radius:10px;">Đóng</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(previewModal);
         }
 
         // ================= HỆ THỐNG BÌNH CHỌN (POLL) =================
@@ -29171,6 +29361,28 @@
             const todayStr = `${String(vnTime.getDate()).padStart(2, '0')}/${String(vnTime.getMonth() + 1).padStart(2, '0')}/${vnTime.getFullYear()}`;
             const curMonth = `${vnTime.getMonth() + 1}/${vnTime.getFullYear()}`;
 
+            // 🛡️ HELPER: TÍNH diffDays UTC+7 CHUẨN (KHỚP VỚI BACKEND)
+            const calcDiffDaysUTC7 = (lastClaimStr) => {
+                if (!lastClaimStr || !lastClaimStr.includes('/')) return 999;
+                try {
+                    const [ld, lm, ly] = lastClaimStr.split('/').map(Number);
+                    if (isNaN(ld) || isNaN(lm) || isNaN(ly)) return 999;
+                    
+                    const now = new Date();
+                    const vnNow = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"}));
+                    const td = vnNow.getDate();
+                    const tm = vnNow.getMonth() + 1;
+                    const ty = vnNow.getFullYear();
+                    
+                    // UTC+7 midnight = 17:00 UTC
+                    const todayUTC7 = new Date(Date.UTC(ty, tm - 1, td, 17));
+                    const pastUTC7 = new Date(Date.UTC(ly, lm - 1, ld, 17));
+                    
+                    const diffMs = todayUTC7.getTime() - pastUTC7.getTime();
+                    return Math.floor(diffMs / 86400000);
+                } catch(e) { return 999; }
+            };
+
             let streak = 0;
             let isClaimedToday = false;
             let lastClaimStr = tab === 'single' ? dailyInfo.lastClaim : dailyInfo.coupleLastClaim;
@@ -29184,16 +29396,12 @@
             let diffDays = 0;
 
             if (lastClaimStr) {
-                try {
-                    const [ld, lm, ly] = String(lastClaimStr).split('/');
-                    const [td, tm, ty] = todayStr.split('/');
-                    diffDays = Math.ceil(Math.abs(new Date(ty, tm-1, td) - new Date(ly, lm-1, ld)) / (1000 * 60 * 60 * 24));
-                    if (diffDays > 1 || isNaN(diffDays)) {
-                        if (streak > 0) lostCount = streak;
-                        streak = 0;
-                        isStreakBroken = true;
-                    }
-                } catch(e) { streak = 0; isStreakBroken = true; }
+                diffDays = calcDiffDaysUTC7(lastClaimStr);
+                if (diffDays > 1 || diffDays === 999) {
+                    if (streak > 0) lostCount = streak;
+                    streak = 0;
+                    isStreakBroken = true;
+                }
             }
 
             const storedLost = parseInt(tab === 'single' ? dailyInfo.lostStreak : dailyInfo.coupleLostStreak) || 0;
@@ -29214,36 +29422,37 @@
                     const buyCount = (dailyInfo.recoveryMonth === curMonth) ? (parseInt(dailyInfo.recoveryBuyCount) || 0) : 0;
                     const canBuyMore = buyCount < 3;
 
-                    // Tính thời hạn 3 ngày kể từ khi bị đứt
-                    const isWithin3Days = diffDays <= 4;
-                    const daysRemainingToRestore = Math.max(0, 4 - diffDays);
+                    // 🛡️ LOGIC CỬA SỔ KHÔI PHỤC MỚI (KHỚP BACKEND):
+                    // - diffDays = 0,1,2,3: trong cửa sổ khôi phục (3 ngày kể từ ngày hôm sau ngày đứt)
+                    // - diffDays >= 4: hết hạn, chuỗi mất vĩnh viễn
+                    const inRecoveryWindow = (dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1);
+                    const isExpired = diffDays >= 4;
+                    const daysLeftInWindow = inRecoveryWindow ? Math.max(0, 3 - diffDays) : 0;
 
                     let restoreBoxHtml = '';
-                    if (isStreakBroken) {
-                        if (isWithin3Days) {
-                            restoreBoxHtml = `
-                                <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); border: 1.5px solid rgba(239, 68, 68, 0.35); border-radius: 14px; padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; text-align: left;">
-                                    <div style="display:flex; align-items:center; gap:10px;">
-                                        <i class="fa-solid fa-snowflake fa-beat" style="color:#0284c7; font-size:1.4rem;"></i>
-                                        <div>
-                                            <b style="color:#ef4444; font-size:0.9rem; display:block;">Chuỗi Đôi Bạn đã bị đứt! ${lostCount > 0 ? `(Đã mất ${lostCount} ngày)` : ''}</b>
-                                            <span style="font-size:0.78rem; color:var(--text-muted);">
-                                                Còn <b>${daysRemainingToRestore + 1} ngày</b> để dùng đá khôi phục (quá 3 ngày không cứu sẽ mất vĩnh viễn).
-                                            </span>
-                                        </div>
+                    if (inRecoveryWindow) {
+                        restoreBoxHtml = `
+                            <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); border: 1.5px solid rgba(239, 68, 68, 0.35); border-radius: 14px; padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; text-align: left;">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <i class="fa-solid fa-snowflake fa-beat" style="color:#0284c7; font-size:1.4rem;"></i>
+                                    <div>
+                                        <b style="color:#ef4444; font-size:0.9rem; display:block;">Chuỗi Đôi Bạn đã bị đứt! ${lostCount > 0 ? `(Đã mất ${lostCount} ngày)` : ''}</b>
+                                        <span style="font-size:0.78rem; color:var(--text-muted);">
+                                            Còn <b>${daysLeftInWindow + 1} ngày</b> để dùng đá khôi phục (quá 3 ngày không cứu sẽ mất vĩnh viễn).
+                                        </span>
                                     </div>
-                                    <button type="button" class="btn btn-primary" onclick="useRecoveryStone('couple')" style="background:linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); border:none; padding:7px 16px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
-                                        <img src="https://files.catbox.moe/qultgl.png" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"> Dùng 1 Đá khôi phục
-                                    </button>
                                 </div>
-                            `;
-                        } else {
-                            restoreBoxHtml = `
-                                <div style="background: rgba(239, 68, 68, 0.08); border: 1px dashed #ef4444; border-radius: 14px; padding: 10px 14px; margin-top: 10px; text-align: left; font-size: 0.8rem; color: #ef4444;">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> <b>Đã quá thời hạn 3 ngày:</b> Chuỗi Đôi Bạn cũ đã mất vĩnh viễn và không thể khôi phục lại nữa. Hãy cùng nhau xây dựng chuỗi mới nhé!
-                                </div>
-                            `;
-                        }
+                                <button type="button" class="btn btn-primary" onclick="useRecoveryStone('couple')" style="background:linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); border:none; padding:7px 16px; border-radius:14px; font-weight:800; font-size:0.82rem; white-space:nowrap; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
+                                    <img src="https://files.catbox.moe/qultgl.png" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"> Dùng 1 Đá khôi phục
+                                </button>
+                            </div>
+                        `;
+                    } else if (isExpired) {
+                        restoreBoxHtml = `
+                            <div style="background: rgba(239, 68, 68, 0.08); border: 1px dashed #ef4444; border-radius: 14px; padding: 10px 14px; margin-top: 10px; text-align: left; font-size: 0.8rem; color: #ef4444;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <b>Đã quá thời hạn 3 ngày:</b> Chuỗi Đôi Bạn cũ đã mất vĩnh viễn và không thể khôi phục lại nữa. Hãy cùng nhau xây dựng chuỗi mới nhé!
+                            </div>
+                        `;
                     }
 
                     recoveryArea.innerHTML = `
@@ -29385,6 +29594,9 @@
 
             const holdBtn = document.getElementById('btnHoldCoupleDaily');
             let isWaitingPartner = (tab === 'couple' && dailyInfo.coupleReadyDate === todayStr);
+            
+            // 🛡️ KIỂM TRA CỬA SỔ KHÔI PHỤC - CHẶN ĐIỂM DANH NẾU ĐANG TRONG CỬA SỔ
+            const inRecoveryWindow = (tab === 'couple' && ((dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1)));
 
             if (isClaimedToday) {
                 btn.style.display = 'flex';
@@ -29402,6 +29614,17 @@
                 btn.style.background = 'rgba(2, 132, 199, 0.08)';
                 btn.style.color = '#0284c7';
                 btn.style.border = '1px dashed #0284c7';
+            } else if (inRecoveryWindow) {
+                // 🛡️ TRONG CỬA SỔ KHÔI PHỤC: ẨN NÚT ĐIỂM DANH, CHỈ HIỂN THỊ THÔNG BÁO
+                btn.style.display = 'flex';
+                if(holdBtn) holdBtn.style.display = 'none';
+                btn.disabled = true;
+                const daysLeft = Math.max(0, 3 - diffDays);
+                btn.innerHTML = `<i class="fa-solid fa-snowflake"></i> Chuỗi đã đứt - Còn ${daysLeft + 1} ngày để khôi phục`;
+                btn.className = 'btn';
+                btn.style.background = 'rgba(2, 132, 199, 0.1)';
+                btn.style.color = '#0284c7';
+                btn.style.border = '1px solid #0284c7';
             } else {
                 if (tab === 'couple' && dailyInfo.partner && dailyInfo.partnerStatus === 'accepted') {
                     btn.style.display = 'none';
@@ -29630,12 +29853,10 @@
                 if (res && res.success) {
                     showToast(`🎉 Đã khôi phục thành công chuỗi Đôi Bạn (${res.restoredStreak} ngày)!`, "success");
                     
-                    // Cập nhật số đá và chuỗi mới vào bộ nhớ
+                    // Cập nhật toàn bộ dailyInfo từ backend (đã xóa coupleBrokenDate, coupleLostStreak)
                     if (!window.currentDailyInfo) window.currentDailyInfo = {};
-                    window.currentDailyInfo.recoveryStones = res.recoveryStones;
-                    window.currentDailyInfo.coupleStreak = res.restoredStreak;
-                    delete window.currentDailyInfo.coupleLostStreak;
-
+                    window.currentDailyInfo = { ...window.currentDailyInfo, ...res.dailyInfo };
+                    
                     renderDailyTab('couple');
 
                     const modal = document.getElementById('dailyRewardModal');
