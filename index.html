@@ -29698,10 +29698,11 @@
             let isStreakBroken = false;
             let lostCount = 0;
             let diffDays = 0;
+            const hasClaimHistory = !!(lastClaimStr && lastClaimStr.includes('/'));
 
-            if (lastClaimStr) {
+            if (hasClaimHistory) {
                 diffDays = calcDiffDaysUTC7(lastClaimStr);
-                if (diffDays > 1 || diffDays === 999) {
+                if (diffDays > 1 && diffDays !== 999) {
                     if (streak > 0) lostCount = streak;
                     streak = 0;
                     isStreakBroken = true;
@@ -29709,7 +29710,7 @@
             }
 
             const storedLost = parseInt(tab === 'single' ? dailyInfo.lostStreak : dailyInfo.coupleLostStreak) || 0;
-            if (storedLost > 0) {
+            if (storedLost > 0 && hasClaimHistory) {
                 lostCount = storedLost;
                 isStreakBroken = true;
             }
@@ -29726,11 +29727,9 @@
                     const buyCount = (dailyInfo.recoveryMonth === curMonth) ? (parseInt(dailyInfo.recoveryBuyCount) || 0) : 0;
                     const canBuyMore = buyCount < 3;
 
-                    // 🛡️ LOGIC CỬA SỔ KHÔI PHỤC MỚI (KHỚP BACKEND):
-                    // - diffDays = 0,1,2,3: trong cửa sổ khôi phục (3 ngày kể từ ngày hôm sau ngày đứt)
-                    // - diffDays >= 4: hết hạn, chuỗi mất vĩnh viễn
-                    const inRecoveryWindow = (dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1);
-                    const isExpired = diffDays >= 4;
+                    // 🛡️ CHỈ XÉT CỬA SỔ KHÔI PHỤC KHI ĐÃ CÓ LỊCH SỬ ĐIỂM DANH (CẶP ĐÔI MỚI THÌ LUÔN LÀ FALSE)
+                    const inRecoveryWindow = hasClaimHistory && ((dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1));
+                    const isExpired = hasClaimHistory && diffDays >= 4;
                     const daysLeftInWindow = inRecoveryWindow ? Math.max(0, 3 - diffDays) : 0;
 
                     let restoreBoxHtml = '';
@@ -29899,8 +29898,8 @@
             const holdBtn = document.getElementById('btnHoldCoupleDaily');
             let isWaitingPartner = (tab === 'couple' && dailyInfo.coupleReadyDate === todayStr);
             
-            // 🛡️ KIỂM TRA CỬA SỔ KHÔI PHỤC - CHẶN ĐIỂM DANH NẾU ĐANG TRONG CỬA SỔ
-            const inRecoveryWindow = (tab === 'couple' && ((dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1)));
+            // 🛡️ KIỂM TRA CỬA SỔ KHÔI PHỤC - CHẶN ĐIỂM DANH NẾU ĐANG TRONG CỬA SỔ (CHỈ XÉT KHI ĐÃ CÓ LỊCH SỬ CLAIM)
+            const inRecoveryWindow = (tab === 'couple') && hasClaimHistory && ((dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1));
 
             if (isClaimedToday) {
                 btn.style.display = 'flex';
