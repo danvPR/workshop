@@ -12478,9 +12478,23 @@
         </div>
     </div>
 
-    <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
+<!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
-        
+
+        <!-- LOGIN BANNER (Hiện khi chưa đăng nhập) -->
+        <div id="uploadLoginBanner" class="upload-card-wrapper" style="display: none; text-align: center; background: linear-gradient(135deg, rgba(13, 165, 122, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border-color: rgba(13, 165, 122, 0.3);">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #0da57a 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(13, 165, 122, 0.3);">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: #ffffff;"></i>
+                </div>
+                <div>
+                    <h2 style="color: var(--text-title); margin: 0; font-size: 1.5rem;" data-i18n="upload_login_banner_title">Log in to share projects</h2>
+                    <p style="color: var(--text-muted); margin: 8px 0 0 0; font-size: 1rem; max-width: 400px;" data-i18n="upload_login_banner_desc">You need to log in to publish or update projects. Join the community and start creating!</p>
+                </div>
+                <button class="btn btn-primary" onclick="location.hash='#login'" style="padding: 12px 32px; font-size: 1rem; font-weight: 800; border-radius: 12px; box-shadow: 0 4px 15px rgba(13, 165, 122, 0.3);" data-i18n="upload_login_banner_btn">Log In Now</button>
+            </div>
+        </div>
+
         <!-- BƯỚC 1: MENU CHỌN HÀNH ĐỘNG -->
         <div id="uploadChoiceStep" class="upload-card-wrapper" style="text-align: center;">
             <h2 style="color:var(--text-title); margin-bottom: 30px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_step1_title">Bạn muốn làm gì?</span></h2>
@@ -12506,6 +12520,21 @@
                 <button class="btn" onclick="resetUploadView()" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_title">Xuất bản tác phẩm mới</span></h2>
             </div>
+            
+            <!-- Project Analysis Card (shows when projectJson is available) -->
+            <div id="uploadAnalysisCard" style="display: none; background: linear-gradient(135deg, rgba(13, 165, 122, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%); border: 1px solid rgba(13, 165, 122, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--primary); font-size: 1.2rem;"></i>
+                    <span style="font-weight: 800; color: var(--text-title);" data-i18n="upload_project_analysis">Project Analysis</span>
+                </div>
+                <div id="uploadAnalysisStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                    <!-- Stats will be injected here -->
+                </div>
+                <button type="button" class="btn btn-primary" onclick="analyzeProjectWithBeaBea()" id="btnAnalyzeProject" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fa-solid fa-robot"></i> <span data-i18n="upload_analyze_btn">Analyze with BeaBea</span>
+                </button>
+            </div>
+
             <form id="uploadFormDOM" onsubmit="event.preventDefault();">
                 <div class="upload-grid">
                     <div>
@@ -12528,7 +12557,15 @@
                     <div>
                         <div class="form-group"><label data-i18n="upload_name_label">Tên tác phẩm *</label><input type="text" id="upTitle" class="form-control" required data-i18n-ph="upload_name_ph" placeholder="Ví dụ: Flappy Bird 3D..."></div>
                         <div class="form-group"><label data-i18n="upload_vis_label">Quyền hiển thị</label><select id="upVisibility" class="form-control"><option value="public" data-i18n="upload_vis_public">Công khai</option><option value="private" data-i18n="upload_vis_private">Riêng tư</option></select></div>
-                        <div class="form-group"><label data-i18n="upload_desc_label">Hướng dẫn vận hành</label><textarea id="upDesc" class="form-control" rows="4" data-i18n-ph="upload_desc_ph" placeholder="Cách chơi, điều khiển phím..."></textarea></div>
+                        <div class="form-group">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                <label data-i18n="upload_desc_label">Hướng dẫn vận hành</label>
+                                <button type="button" class="btn" onclick="analyzeProjectWithBeaBea()" id="btnAnalyzeProjectInline" style="display: none; padding: 4px 10px; font-size: 0.75rem; gap: 4px;">
+                                    <i class="fa-solid fa-robot"></i> <span data-i18n="upload_analyze_btn">Analyze with BeaBea</span>
+                                </button>
+                            </div>
+                            <textarea id="upDesc" class="form-control" rows="4" data-i18n-ph="upload_desc_ph" placeholder="Cách chơi, điều khiển phím..."></textarea>
+                        </div>
                         <div class="form-group"><label data-i18n="upload_credits_label">Đội ngũ sáng tạo / Credits</label><textarea id="upCredits" class="form-control" rows="3" data-i18n-ph="upload_credits_ph" placeholder="Ghi nhận nguồn hình ảnh, âm thanh..."></textarea></div>
                     </div>
                 </div>
@@ -22345,16 +22382,30 @@
         let isProjectImported = false;
 
         function resetUploadView() {
+            document.getElementById('uploadLoginBanner').style.display = 'none';
             document.getElementById('uploadChoiceStep').style.display = 'block';
             document.getElementById('uploadNewFormStep').style.display = 'none';
             document.getElementById('uploadUpdateStep').style.display = 'none';
         }
 
         function showUploadNew() {
+            document.getElementById('uploadLoginBanner').style.display = 'none';
             document.getElementById('uploadChoiceStep').style.display = 'none';
             document.getElementById('uploadNewFormStep').style.display = 'block';
             document.getElementById('uploadUpdateStep').style.display = 'none';
             setTimeout(setupAllActionHoldButtons, 50);
+            
+            // Show/hide analysis card based on project data availability
+            const analysisCard = document.getElementById('uploadAnalysisCard');
+            const btnAnalyzeInline = document.getElementById('btnAnalyzeProjectInline');
+            if (pendingImportedData?.projectData) {
+                analysisCard.style.display = 'block';
+                btnAnalyzeInline.style.display = 'inline-flex';
+                renderProjectAnalysisStats(pendingImportedData.projectData);
+            } else {
+                analysisCard.style.display = 'none';
+                btnAnalyzeInline.style.display = 'none';
+            }
             
             // Tự động điền dữ liệu nếu đang có File chờ (nhận từ Extension)
             if (pendingImportedData) {
@@ -22380,6 +22431,161 @@
             }
         }
 
+        // Render project analysis stats from project.json
+        function renderProjectAnalysisStats(projectData) {
+            const statsContainer = document.getElementById('uploadAnalysisStats');
+            if (!statsContainer || !projectData) return;
+            
+            const targets = projectData.targets || [];
+            const stage = targets.find(t => t.isStage);
+            const sprites = targets.filter(t => !t.isStage);
+            
+            // Count blocks
+            let totalBlocks = 0;
+            sprites.forEach(sprite => {
+                if (sprite.blocks) {
+                    totalBlocks += Object.keys(sprite.blocks).length;
+                }
+            });
+            if (stage && stage.blocks) {
+                totalBlocks += Object.keys(stage.blocks).length;
+            }
+            
+            // Count costumes
+            let totalCostumes = 0;
+            targets.forEach(t => {
+                if (t.costumes) totalCostumes += t.costumes.length;
+            });
+            
+            // Count sounds
+            let totalSounds = 0;
+            targets.forEach(t => {
+                if (t.sounds) totalSounds += t.sounds.length;
+            });
+            
+            // Count variables
+            let totalVariables = 0;
+            targets.forEach(t => {
+                if (t.variables) totalVariables += Object.keys(t.variables).length;
+            });
+            
+            // Count lists
+            let totalLists = 0;
+            targets.forEach(t => {
+                if (t.lists) totalLists += Object.keys(t.lists).length;
+            });
+            
+            // Count broadcasts
+            let totalBroadcasts = 0;
+            if (projectData.targets) {
+                projectData.targets.forEach(t => {
+                    if (t.broadcasts) totalBroadcasts += Object.keys(t.broadcasts).length;
+                });
+            }
+            
+            // Extensions
+            const extensions = projectData.extensions || [];
+            
+            statsContainer.innerHTML = `
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">${sprites.length}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_sprites_count">Sprites</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${totalBlocks}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_blocks_count">Blocks</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${totalCostumes}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_costumes_count">Costumes</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${totalSounds}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_sounds_count">Sounds</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${totalVariables}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_variables_count">Variables</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${totalLists}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_lists_count">Lists</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${totalBroadcasts}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_broadcasts_count">Broadcasts</div>
+                </div>
+                <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--text-title);">${extensions.length}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="upload_extensions_used">Extensions</div>
+                </div>
+            `;
+            
+            // Apply translations
+            applyI18n();
+        }
+
+// Analyze project with BeaBea AI
+        async function analyzeProjectWithBeaBea() {
+            if (!pendingImportedData?.projectJsonRaw) {
+                showToast(t('upload_analyze_error') || "No project data to analyze", "error");
+                return;
+            }
+            
+            const btnCard = document.getElementById('btnAnalyzeProject');
+            const btnInline = document.getElementById('btnAnalyzeProjectInline');
+            
+            const originalCardHtml = btnCard ? btnCard.innerHTML : '';
+            const originalInlineHtml = btnInline ? btnInline.innerHTML : '';
+            
+            if (btnCard) {
+                btnCard.disabled = true;
+                btnCard.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="upload_analyzing">${t('upload_analyzing')}</span>`;
+            }
+            if (btnInline) {
+                btnInline.disabled = true;
+                btnInline.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="upload_analyzing">${t('upload_analyzing')}</span>`;
+            }
+            applyI18n();
+            
+            try {
+                const res = await fetch(`${WORKER_URL}/api/project/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ projectJson: pendingImportedData.projectJsonRaw })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success && data.analysis) {
+                    // Fill description (instructions)
+                    if (data.analysis.description && document.getElementById('upDesc')) {
+                        document.getElementById('upDesc').value = data.analysis.description;
+                    }
+                    // Fill credits
+                    if (data.analysis.credits && document.getElementById('upCredits')) {
+                        document.getElementById('upCredits').value = data.analysis.credits;
+                    }
+                    showToast(t('upload_analyze_success') || "BeaBea generated description!", "success");
+                } else {
+                    showToast((data.error || t('upload_analyze_error')) + (data.detail ? ": " + data.detail : ""), "error");
+                }
+            } catch (e) {
+                console.error("Analysis error:", e);
+                showToast(t('upload_analyze_error') + ": " + e.message, "error");
+            } finally {
+                if (btnCard) {
+                    btnCard.disabled = false;
+                    btnCard.innerHTML = originalCardHtml || `<i class="fa-solid fa-robot"></i> <span data-i18n="upload_analyze_btn">${t('upload_analyze_btn')}</span>`;
+                }
+                if (btnInline) {
+                    btnInline.disabled = false;
+                    btnInline.innerHTML = originalInlineHtml || `<i class="fa-solid fa-robot"></i> <span data-i18n="upload_analyze_btn">${t('upload_analyze_btn')}</span>`;
+                }
+                applyI18n();
+            }
+        }
+
         // Hàm xử lý việc Click chọn dự án để Update
         window.handleSelectProjectToUpdate = function(id) {
             window.isNavigatingToUpdate = true;
@@ -22391,6 +22597,7 @@
         };
 
         async function showUploadUpdate() {
+            document.getElementById('uploadLoginBanner').style.display = 'none';
             document.getElementById('uploadChoiceStep').style.display = 'none';
             document.getElementById('uploadNewFormStep').style.display = 'none';
             document.getElementById('uploadUpdateStep').style.display = 'block';
@@ -22432,9 +22639,19 @@
         }
 
         function openUploadPage() {
-            if(!currentUser) { showToast("Vui lòng đăng nhập!", "error"); location.hash="#home"; return; }
+            if(!currentUser) {
+                // Hiện banner đăng nhập thay vì chuyển hướng
+                document.getElementById('uploadView').style.display = 'block';
+                document.getElementById('uploadLoginBanner').style.display = 'block';
+                document.getElementById('uploadChoiceStep').style.display = 'none';
+                document.getElementById('uploadNewFormStep').style.display = 'none';
+                document.getElementById('uploadUpdateStep').style.display = 'none';
+                applyI18n();
+                return;
+            }
             // Đã cấp quyền cho người dùng chưa xác minh tải lên tác phẩm
             document.getElementById('uploadView').style.display = 'block';
+            document.getElementById('uploadLoginBanner').style.display = 'none';
             
             // Luôn đặt lại về màn hình chọn mỗi khi mở trang
             resetUploadView();
@@ -22515,10 +22732,25 @@
                 const importLoader = document.getElementById('danv-import-loader');
                 if(importLoader) importLoader.remove();
                 
-                const { title, sb3Buffer, fileName, thumbDataUrl } = event.data;
+                const { title, sb3Buffer, fileName, thumbDataUrl, projectJson } = event.data;
+                
+                // Parse and store projectJson
+                let projectData = null;
+                if (projectJson) {
+                    try {
+                        projectData = JSON.parse(projectJson);
+                    } catch (e) {
+                        console.warn("Failed to parse projectJson:", e);
+                    }
+                }
                 
                 // Lưu dữ liệu vào biến tạm để chờ người dùng quyết định (New hay Update)
-                pendingImportedData = { title, thumbDataUrl };
+                pendingImportedData = { 
+                    title, 
+                    thumbDataUrl, 
+                    projectData,  // NEW: store parsed project data
+                    projectJsonRaw: projectJson  // NEW: store raw for AI analysis
+                };
                 
                 if (sb3Buffer) {
                     pendingImportedData.sb3File = new File([sb3Buffer], fileName || "project.sb3", { type: "application/x-scratch-project" });
