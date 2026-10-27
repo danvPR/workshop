@@ -29727,9 +29727,13 @@
                     const buyCount = (dailyInfo.recoveryMonth === curMonth) ? (parseInt(dailyInfo.recoveryBuyCount) || 0) : 0;
                     const canBuyMore = buyCount < 3;
 
-                    // 🛡️ CHỈ XÉT CỬA SỔ KHÔI PHỤC KHI ĐÃ CÓ LỊCH SỬ ĐIỂM DANH (CẶP ĐÔI MỚI THÌ LUÔN LÀ FALSE)
-                    const inRecoveryWindow = hasClaimHistory && ((dailyInfo.coupleBrokenDate && diffDays <= 3) || (isStreakBroken && diffDays <= 3 && diffDays > 1));
-                    const isExpired = hasClaimHistory && diffDays >= 4;
+                    // 🛡️ CHỈ XÉT CỬA SỔ KHÔI PHỤC KHI CHƯA CLAIM HÔM NAY VÀ BỎ QUA NGÀY (diffDays > 1)
+                    if (isClaimedToday) {
+                        delete dailyInfo.coupleBrokenDate;
+                        delete dailyInfo.coupleLostStreak;
+                    }
+                    const inRecoveryWindow = !isClaimedToday && hasClaimHistory && diffDays > 1 && diffDays <= 3;
+                    const isExpired = !isClaimedToday && hasClaimHistory && diffDays >= 4;
                     const daysLeftInWindow = inRecoveryWindow ? Math.max(0, 3 - diffDays) : 0;
 
                     let restoreBoxHtml = '';
