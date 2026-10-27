@@ -30,7 +30,10 @@
     
     <!-- Canonical URL - will be updated dynamically -->
     <link rel="canonical" href="https://turboshare.org.uk/" id="canonicalLink" />
-    
+
+    <!-- Content Security Policy - Allow trusted-types for hCaptcha/Google -->
+    <meta http-equiv="Content-Security-Policy" content="trusted-types 'allow-duplicates' goog#html YKcu9 default;">
+
     <!-- Preload critical resources -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" crossorigin>
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin>
@@ -55,7 +58,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet" media="print" onload="this.media='all'"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js" crossorigin="anonymous"></script>
     <!-- DOMPurify for sanitizing HTML in Bulletin Board -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <!-- hCaptcha - loaded via standard script tag for reliable initialization -->
@@ -22762,16 +22765,21 @@
                     hasFileName: !!fileName,
                     hasThumbDataUrl: !!thumbDataUrl,
                     hasProjectJson: !!projectJson,
-                    projectJsonLength: projectJson?.length,
-                    projectJsonPreview: projectJson?.substring(0, 100),
+                    projectJsonLength: typeof projectJson === 'string' ? projectJson.length : (projectJson ? 'object' : 'none'),
+                    projectJsonPreview: typeof projectJson === 'string' ? projectJson.substring(0, 100) : (projectJson ? JSON.stringify(projectJson).substring(0, 100) : 'N/A'),
                     thumbDataUrlPrefix: thumbDataUrl?.substring(0, 50)
                 });
                 
-                // Parse and store projectJson (robust parsing - editor may wrap JSON with extra chars)
+                // Parse and store projectJson (robust parsing - editor may wrap JSON with extra chars or send pre-parsed object)
                 let projectData = null;
                 if (projectJson) {
                     try {
-                        projectData = JSON.parse(projectJson);
+                        // Handle both string and pre-parsed object
+                        if (typeof projectJson === 'string') {
+                            projectData = JSON.parse(projectJson);
+                        } else if (typeof projectJson === 'object') {
+                            projectData = projectJson; // Already parsed
+                        }
                         console.log("[DANV_IMPORT_PROJECT] Parsed projectData:", {
                             targetsCount: projectData.targets?.length,
                             extensions: projectData.extensions,
@@ -22780,19 +22788,21 @@
                     } catch (e1) {
                         console.warn("Direct JSON.parse failed:", e1.message);
                         // Thử trích xuất JSON từ chuỗi (loại bỏ prefix/suffix nếu editor bọc thêm)
-                        try {
-                            const firstBrace = projectJson.indexOf('{');
-                            const lastBrace = projectJson.lastIndexOf('}');
-                            if (firstBrace !== -1 && lastBrace > firstBrace) {
-                                const jsonStr = projectJson.substring(firstBrace, lastBrace + 1);
-                                projectData = JSON.parse(jsonStr);
-                                console.log("[DANV_IMPORT_PROJECT] Extracted JSON successfully");
-                            } else {
-                                throw new Error("No valid JSON object found in projectJson");
+                        if (typeof projectJson === 'string') {
+                            try {
+                                const firstBrace = projectJson.indexOf('{');
+                                const lastBrace = projectJson.lastIndexOf('}');
+                                if (firstBrace !== -1 && lastBrace > firstBrace) {
+                                    const jsonStr = projectJson.substring(firstBrace, lastBrace + 1);
+                                    projectData = JSON.parse(jsonStr);
+                                    console.log("[DANV_IMPORT_PROJECT] Extracted JSON successfully");
+                                } else {
+                                    throw new Error("No valid JSON object found in projectJson");
+                                }
+                            } catch (e2) {
+                                console.warn("Failed to parse projectJson after extraction:", e2.message);
+                                console.warn("projectJson raw preview:", projectJson.substring(0, 200));
                             }
-                        } catch (e2) {
-                            console.warn("Failed to parse projectJson after extraction:", e2.message);
-                            console.warn("projectJson raw preview:", projectJson?.substring(0, 200));
                         }
                     }
                 } else {
