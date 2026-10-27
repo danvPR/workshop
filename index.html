@@ -22763,10 +22763,11 @@
                     hasThumbDataUrl: !!thumbDataUrl,
                     hasProjectJson: !!projectJson,
                     projectJsonLength: projectJson?.length,
+                    projectJsonPreview: projectJson?.substring(0, 100),
                     thumbDataUrlPrefix: thumbDataUrl?.substring(0, 50)
                 });
                 
-                // Parse and store projectJson
+                // Parse and store projectJson (robust parsing - editor may wrap JSON with extra chars)
                 let projectData = null;
                 if (projectJson) {
                     try {
@@ -22776,8 +22777,23 @@
                             extensions: projectData.extensions,
                             meta: projectData.meta
                         });
-                    } catch (e) {
-                        console.warn("Failed to parse projectJson:", e);
+                    } catch (e1) {
+                        console.warn("Direct JSON.parse failed:", e1.message);
+                        // Thử trích xuất JSON từ chuỗi (loại bỏ prefix/suffix nếu editor bọc thêm)
+                        try {
+                            const firstBrace = projectJson.indexOf('{');
+                            const lastBrace = projectJson.lastIndexOf('}');
+                            if (firstBrace !== -1 && lastBrace > firstBrace) {
+                                const jsonStr = projectJson.substring(firstBrace, lastBrace + 1);
+                                projectData = JSON.parse(jsonStr);
+                                console.log("[DANV_IMPORT_PROJECT] Extracted JSON successfully");
+                            } else {
+                                throw new Error("No valid JSON object found in projectJson");
+                            }
+                        } catch (e2) {
+                            console.warn("Failed to parse projectJson after extraction:", e2.message);
+                            console.warn("projectJson raw preview:", projectJson?.substring(0, 200));
+                        }
                     }
                 } else {
                     console.warn("[DANV_IMPORT_PROJECT] No projectJson received from editor!");
@@ -22799,12 +22815,9 @@
                     try {
                         const blob = await (await fetch(thumbDataUrl)).blob();
                         pendingImportedData.thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
-                        console.log("[DANV_IMPORT_PROJECT] Thumbnail blob created, size:", blob.size);
                     } catch (e) {
                         console.warn("Lỗi nạp blob thumbnail:", e);
                     }
-                } else {
-                    console.warn("[DANV_IMPORT_PROJECT] No thumbDataUrl received!");
                 }
                 
                 // Trả về màn hình Menu để người dùng tự chọn
