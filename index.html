@@ -22395,6 +22395,17 @@
             document.getElementById('uploadUpdateStep').style.display = 'none';
             setTimeout(setupAllActionHoldButtons, 50);
             
+            // DEBUG: Log pendingImportedData state
+            console.log("[showUploadNew] pendingImportedData:", {
+                hasData: !!pendingImportedData,
+                hasProjectData: !!pendingImportedData?.projectData,
+                hasProjectJsonRaw: !!pendingImportedData?.projectJsonRaw,
+                hasThumbDataUrl: !!pendingImportedData?.thumbDataUrl,
+                hasThumbFile: !!pendingImportedData?.thumbFile,
+                hasSb3File: !!pendingImportedData?.sb3File,
+                title: pendingImportedData?.title
+            });
+            
             // Show/hide analysis card based on project data availability
             const analysisCard = document.getElementById('uploadAnalysisCard');
             const btnAnalyzeInline = document.getElementById('btnAnalyzeProjectInline');
@@ -22402,9 +22413,11 @@
                 analysisCard.style.display = 'block';
                 btnAnalyzeInline.style.display = 'inline-flex';
                 renderProjectAnalysisStats(pendingImportedData.projectData);
+                console.log("[showUploadNew] Analysis card shown");
             } else {
                 analysisCard.style.display = 'none';
                 btnAnalyzeInline.style.display = 'none';
+                console.log("[showUploadNew] Analysis card HIDDEN - no projectData");
             }
             
             // Tự động điền dữ liệu nếu đang có File chờ (nhận từ Extension)
@@ -22426,7 +22439,15 @@
                         img.src = pendingImportedData.thumbDataUrl;
                         img.style.display = 'block';
                         document.getElementById('thumbPlaceholder').style.display = 'none';
+                        console.log("[showUploadNew] Thumbnail preview set");
                     }
+                } else if (pendingImportedData.thumbDataUrl && document.getElementById('thumbPreviewBig')) {
+                    // Fallback: use data URL directly if blob failed
+                    const img = document.getElementById('thumbPreviewBig');
+                    img.src = pendingImportedData.thumbDataUrl;
+                    img.style.display = 'block';
+                    document.getElementById('thumbPlaceholder').style.display = 'none';
+                    console.log("[showUploadNew] Thumbnail preview set from data URL (fallback)");
                 }
             }
         }
@@ -22734,14 +22755,32 @@
                 
                 const { title, sb3Buffer, fileName, thumbDataUrl, projectJson } = event.data;
                 
+                // DEBUG: Log what we received
+                console.log("[DANV_IMPORT_PROJECT] Received:", {
+                    hasTitle: !!title,
+                    hasSb3Buffer: !!sb3Buffer,
+                    hasFileName: !!fileName,
+                    hasThumbDataUrl: !!thumbDataUrl,
+                    hasProjectJson: !!projectJson,
+                    projectJsonLength: projectJson?.length,
+                    thumbDataUrlPrefix: thumbDataUrl?.substring(0, 50)
+                });
+                
                 // Parse and store projectJson
                 let projectData = null;
                 if (projectJson) {
                     try {
                         projectData = JSON.parse(projectJson);
+                        console.log("[DANV_IMPORT_PROJECT] Parsed projectData:", {
+                            targetsCount: projectData.targets?.length,
+                            extensions: projectData.extensions,
+                            meta: projectData.meta
+                        });
                     } catch (e) {
                         console.warn("Failed to parse projectJson:", e);
                     }
+                } else {
+                    console.warn("[DANV_IMPORT_PROJECT] No projectJson received from editor!");
                 }
                 
                 // Lưu dữ liệu vào biến tạm để chờ người dùng quyết định (New hay Update)
@@ -22760,9 +22799,12 @@
                     try {
                         const blob = await (await fetch(thumbDataUrl)).blob();
                         pendingImportedData.thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
+                        console.log("[DANV_IMPORT_PROJECT] Thumbnail blob created, size:", blob.size);
                     } catch (e) {
                         console.warn("Lỗi nạp blob thumbnail:", e);
                     }
+                } else {
+                    console.warn("[DANV_IMPORT_PROJECT] No thumbDataUrl received!");
                 }
                 
                 // Trả về màn hình Menu để người dùng tự chọn
