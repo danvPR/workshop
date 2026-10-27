@@ -31,8 +31,8 @@
     <!-- Canonical URL - will be updated dynamically -->
     <link rel="canonical" href="https://turboshare.org.uk/" id="canonicalLink" />
 
-    <!-- Content Security Policy - Allow trusted-types for hCaptcha/Google -->
-    <meta http-equiv="Content-Security-Policy" content="trusted-types 'allow-duplicates' goog#html YKcu9 default;">
+    <!-- Content Security Policy - Allow trusted-types for hCaptcha/Google and data: URLs for thumbnails -->
+    <meta http-equiv="Content-Security-Policy" content="trusted-types 'allow-duplicates' goog#html YKcu9 default; connect-src 'self' https: wss: data:;">
 
     <!-- Preload critical resources -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" crossorigin>
@@ -22546,7 +22546,7 @@
             `;
             
             // Apply translations
-            applyI18n();
+            updateStaticDOM();
         }
 
 // Analyze project with BeaBea AI
@@ -22570,7 +22570,7 @@
                 btnInline.disabled = true;
                 btnInline.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="upload_analyzing">${t('upload_analyzing')}</span>`;
             }
-            applyI18n();
+            updateStaticDOM();
             
             try {
                 const res = await fetch(`${WORKER_URL}/api/project/analyze`, {
@@ -22606,7 +22606,7 @@
                     btnInline.disabled = false;
                     btnInline.innerHTML = originalInlineHtml || `<i class="fa-solid fa-robot"></i> <span data-i18n="upload_analyze_btn">${t('upload_analyze_btn')}</span>`;
                 }
-                applyI18n();
+                updateStaticDOM();
             }
         }
 
@@ -22670,7 +22670,7 @@
                 document.getElementById('uploadChoiceStep').style.display = 'none';
                 document.getElementById('uploadNewFormStep').style.display = 'none';
                 document.getElementById('uploadUpdateStep').style.display = 'none';
-                applyI18n();
+                updateStaticDOM();
                 return;
             }
             // Đã cấp quyền cho người dùng chưa xác minh tải lên tác phẩm
@@ -22767,7 +22767,7 @@
                     hasProjectJson: !!projectJson,
                     projectJsonLength: typeof projectJson === 'string' ? projectJson.length : (projectJson ? 'object' : 'none'),
                     projectJsonPreview: typeof projectJson === 'string' ? projectJson.substring(0, 100) : (projectJson ? JSON.stringify(projectJson).substring(0, 100) : 'N/A'),
-                    thumbDataUrlPrefix: thumbDataUrl?.substring(0, 50)
+                    thumbDataUrlPrefix: typeof thumbDataUrl === 'string' ? thumbDataUrl.substring(0, 50) : 'N/A'
                 });
                 
                 // Parse and store projectJson (robust parsing - editor may wrap JSON with extra chars or send pre-parsed object)
@@ -22801,7 +22801,7 @@
                                 }
                             } catch (e2) {
                                 console.warn("Failed to parse projectJson after extraction:", e2.message);
-                                console.warn("projectJson raw preview:", projectJson.substring(0, 200));
+                                console.warn("projectJson raw preview:", typeof projectJson === 'string' ? projectJson.substring(0, 200) : (projectJson ? JSON.stringify(projectJson).substring(0, 200) : 'N/A'));
                             }
                         }
                     }
