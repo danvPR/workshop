@@ -22573,10 +22573,17 @@
             updateStaticDOM();
             
             try {
+                const projectPayload = typeof pendingImportedData.projectJsonRaw === 'string'
+                    ? pendingImportedData.projectJsonRaw
+                    : JSON.stringify(pendingImportedData.projectJsonRaw);
+
                 const res = await fetch(`${WORKER_URL}/api/project/analyze`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ projectJson: pendingImportedData.projectJsonRaw })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Client-Type': 'StudioDANV-Web'
+                    },
+                    body: JSON.stringify({ projectJson: projectPayload })
                 });
                 
                 const data = await res.json();
