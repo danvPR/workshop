@@ -18998,6 +18998,18 @@
             }
             currentProj.comments = projComments;
 
+            // 🚀 BỔ SUNG BÌNH LUẬN MỚI TỪ CF D1
+            try {
+                const cmtRes = await fetch(`${WORKER_URL}/api/comments?type=project&targetId=${encodeURIComponent(cleanId)}`);
+                const cmtData = await cmtRes.json();
+                if (cmtData && cmtData.success && cmtData.comments) {
+                    const existingIds = new Set(currentProj.comments.map(c => c.id));
+                    cmtData.comments.forEach(c => {
+                        if (!existingIds.has(c.id)) currentProj.comments.push(c);
+                    });
+                }
+            } catch(e) {}
+
             // 4. RESET TOÀN BỘ TRẠNG THÁI BÌNH LUẬN KHI MỞ DỰ ÁN MỚI
             commentLimits.proj = 10;
             archiveCommentPage.proj = 1;
@@ -20615,6 +20627,19 @@
                     btnInvite.style.display = 'none';
                     btnAcceptInvite.style.display = 'none';
                 }
+
+                // 🚀 BỔ SUNG BÌNH LUẬN MỚI TỪ CLOUDFLARE D1 (STATION)
+                try {
+                    const cmtRes = await fetch(`${WORKER_URL}/api/comments?type=studio&targetId=${encodeURIComponent(currentStudio.id)}`);
+                    const cmtData = await cmtRes.json();
+                    if (cmtData && cmtData.success && cmtData.comments) {
+                        if (!currentStudio.comments) currentStudio.comments = [];
+                        const existingIds = new Set(currentStudio.comments.map(c => c.id));
+                        cmtData.comments.forEach(c => {
+                            if (!existingIds.has(c.id)) currentStudio.comments.push(c);
+                        });
+                    }
+                } catch(e) {}
 
                 if (currentUser) {
                     document.getElementById('stdCommentForm').style.display = 'block';
