@@ -12718,6 +12718,21 @@
                         <div style="font-size:0.9rem; font-weight:bold; color:var(--text-title); margin-bottom:6px;" data-i18n="settings_scratch_title">Tài khoản Scratch:</div>
                         <!-- Sẽ render bằng JS -->
                     </div>
+                    
+                    <!-- THIẾT BỊ ĐĂNG NHẬP ĐA PHIÊN -->
+                    <div style="margin-bottom:25px; padding: 20px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <div style="font-size:0.9rem; font-weight:bold; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-laptop-mobile" style="color:var(--primary);"></i> Thiết bị đang đăng nhập
+                            </div>
+                            <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 10px; border-radius:10px;" onclick="revokeAllOtherSessions()">Đăng xuất tất cả thiết bị khác</button>
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Bạn có thể đăng nhập tối đa 5 thiết bị. Các thiết bị không hoạt động trên 30 ngày sẽ tự động hết hạn.</div>
+                        
+                        <div id="activeSessionsList" style="display:flex; flex-direction:column; gap:10px; max-height: 250px; overflow-y:auto; padding-right:5px;">
+                            <div style="text-align:center; padding:10px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang lấy thông tin...</div>
+                        </div>
+                    </div>
 
                     <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom: 30px;">
                         <a href="https://studiodanv.blogspot.com/2026/09/DANVworkshop-TOS.html" target="_blank" style="color:var(--primary); text-decoration:none; display:block; margin-bottom:10px;" data-i18n="settings_tos"><i class="fa-solid fa-file-contract"></i> Điều khoản sử dụng</a>
@@ -18929,7 +18944,7 @@
 
         function openHomeTurnstileModal() {
             openModal('homeTurnstileModal');
-            const slot = document.getElementById('homeLoadMoreTurnstileSlot');
+            const slot = document.getElementById('homeTurnstileSlot');
             if (slot && typeof turnstile !== 'undefined') {
                 slot.innerHTML = '';
                 try {
@@ -27071,6 +27086,8 @@
 
             if (tabName === 'wow') {
                 loadWowHistory();
+            } else if (tabName === 'account') {
+                fetchUserSessions();
             }
         }
 
@@ -34996,6 +35013,115 @@
                     closeChatImageLightbox();
                 }
             }
+        // ================= HỆ THỐNG QUẢN LÝ ĐA THIẾT BỊ =================
+        function parseDeviceAgent(uaString) {
+            if (!uaString || uaString === "Unknown Device") return "Thiết bị không xác định";
+            const ua = uaString.toLowerCase();
+            let os = "Hệ điều hành khác";
+            let browser = "Trình duyệt khác";
+            let icon = '<i class="fa-solid fa-desktop"></i>';
+
+            if (ua.includes("windows")) os = "Windows";
+            else if (ua.includes("mac os x")) os = "MacOS";
+            else if (ua.includes("android")) { os = "Android"; icon = '<i class="fa-solid fa-mobile-screen"></i>'; }
+            else if (ua.includes("iphone") || ua.includes("ipad")) { os = "iOS"; icon = '<i class="fa-solid fa-mobile-screen"></i>'; }
+            else if (ua.includes("linux")) os = "Linux";
+
+            if (ua.includes("edg/")) browser = "Edge";
+            else if (ua.includes("chrome/")) browser = "Chrome";
+            else if (ua.includes("safari/") && !ua.includes("chrome/")) browser = "Safari";
+            else if (ua.includes("firefox/")) browser = "Firefox";
+
+            return `${icon} ${os} • ${browser}`;
+        }
+
+        async function fetchUserSessions() {
+            if (!currentUser) return;
+            const listEl = document.getElementById('activeSessionsList');
+            if (!listEl) return;
+            listEl.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang lấy thông tin thiết bị...</div>';
+            
+            try {
+                const res = await apiFetch(`/api/user/sessions?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`);
+                if (res && res.success) {
+                    renderUserSessions(res.sessions);
+                } else {
+                    listEl.innerHTML = '<div style="color:#ef4444; font-size:0.85rem;">Không thể tải danh sách thiết bị.</div>';
+                }
+            } catch(e) {
+                listEl.innerHTML = '<div style="color:#ef4444; font-size:0.85rem;">Lỗi kết nối máy chủ.</div>';
+            }
+        }
+
+        function renderUserSessions(sessions) {
+            const listEl = document.getElementById('activeSessionsList');
+            if (!listEl) return;
+            
+            if (!sessions || sessions.length === 0) {
+                listEl.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Trống.</div>';
+                return;
+            }
+
+            // Sắp xếp: Thiết bị hiện tại lên đầu, sau đó theo thời gian gần nhất
+            sessions.sort((a, b) => {
+                if (a.isCurrent) return -1;
+                if (b.isCurrent) return 1;
+                return b.lastActive - a.lastActive;
+            });
+
+            listEl.innerHTML = sessions.map(s => {
+                const deviceName = parseDeviceAgent(s.device);
+                const timeStr = timeAgo(new Date(s.lastActive).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }));
+                
+                return `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-panel); border:1px solid ${s.isCurrent ? 'var(--primary)' : 'var(--border-color)'}; padding:10px 14px; border-radius:10px;">
+                    <div>
+                        <div style="font-weight:bold; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                            ${deviceName}
+                            ${s.isCurrent ? '<span style="font-size:0.65rem; background:rgba(13,165,122,0.15); color:var(--primary); padding:2px 6px; border-radius:6px; font-weight:800;">Thiết bị này</span>' : ''}
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+                            <i class="fa-solid fa-location-dot"></i> IP: ${s.ip} • Hoạt động: ${timeStr}
+                        </div>
+                    </div>
+                    ${!s.isCurrent ? `
+                        <button class="btn" style="color:#ef4444; font-size:0.75rem; padding:6px 12px; border-radius:8px;" onclick="revokeDeviceSession('${s.id}')">
+                            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                        </button>
+                    ` : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function revokeDeviceSession(targetId) {
+            if (!confirm("Bạn có chắc muốn đăng xuất tài khoản khỏi thiết bị này?")) return;
+            await executeRevokeSession(targetId);
+        }
+
+        async function revokeAllOtherSessions() {
+            if (!confirm("Hành động này sẽ đăng xuất tài khoản của bạn khỏi tất cả các thiết bị khác (Điện thoại, PC, Tablet...). Bạn có chắc chắn không?")) return;
+            await executeRevokeSession("ALL_OTHER");
+        }
+
+        async function executeRevokeSession(targetId) {
+            if (!currentUser) return;
+            showToast("Đang xử lý đăng xuất...", "info");
+            try {
+                const res = await apiFetch(`/api/user/revoke_session`, {
+                    method: 'POST',
+                    body: JSON.stringify({ targetId: targetId })
+                });
+                if (res && res.success) {
+                    showToast("Đã đăng xuất thiết bị thành công!", "success");
+                    fetchUserSessions(); // Tải lại danh sách
+                } else {
+                    showToast(res.error || "Không thể đăng xuất thiết bị", "error");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối", "error");
+            }
+        }
         });
     </script>
 </body>
