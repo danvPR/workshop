@@ -61,6 +61,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js" crossorigin="anonymous"></script>
     <!-- DOMPurify for sanitizing HTML in Bulletin Board -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- hCaptcha - loaded via standard script tag for reliable initialization -->
     <script src="https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off" async defer></script>
     
@@ -11788,6 +11789,7 @@
                                     <button type="button" class="btn-translate-icon" onclick="openTranslateMenu(this, 'block', 'projCredits')" data-i18n-title="tooltip_translate" title="Dịch"><i class="fa-solid fa-language"></i></button>
                                 </div>
                             </div>
+                            <div class="info-body" id="projForkSource" style="display:none; margin-bottom:8px;"></div>
                             <div class="info-body" id="projCredits">Tác giả gốc.</div>
                         </div>
                     </div>
@@ -19084,9 +19086,24 @@
             }
             const btnSeeInside = document.getElementById('btnSeeInside');
             const referrer = window.location.origin + window.location.pathname + window.location.search;
-            btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}&referrer=${encodeURIComponent(referrer)}`;
+            const sourceQuery = engineChoice === 'turboshare' ? `&mw_fork_source=${encodeURIComponent(JSON.stringify({
+                platform: 'turboshare',
+                projectId: String(proj.projectId || proj.fileId),
+                title: proj.title || 'Untitled',
+                author: proj.author || 'Unknown'
+            }))}` : '';
+            btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}&referrer=${encodeURIComponent(referrer)}${sourceQuery}`;
             btnSeeInside.target = (engineChoice === 'turbowarp') ? '_blank' : '_self';
             document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
+            const forkSourceEl = document.getElementById('projForkSource');
+            if (proj.forkSource && proj.forkSource.projectId) {
+                const sourceUrl = `/projects/${encodeURIComponent(proj.forkSource.projectId)}`;
+                forkSourceEl.innerHTML = `<i class="fa-solid fa-code-branch"></i> Forked from <a href="${sourceUrl}">${escapeHtml(proj.forkSource.title || 'TurboShare project')}</a> by ${escapeHtml(proj.forkSource.author || 'Unknown')}`;
+                forkSourceEl.style.display = 'block';
+            } else {
+                forkSourceEl.innerHTML = '';
+                forkSourceEl.style.display = 'none';
+            }
             document.getElementById('projCredits').innerHTML = proj.credits ? formatProjectDesc(proj.credits) : "Tác giả gốc.";
             
             updateActionBtns(); 
@@ -23105,6 +23122,23 @@
             activeGamePayRequest = null;
         }
 
+        async function extractTurboShareForkSource(file) {
+            if (!window.JSZip) throw new Error("Không thể đọc metadata fork trong tệp .sb3.");
+            const archive = await window.JSZip.loadAsync(file);
+            const projectFile = archive.file('project.json');
+            if (!projectFile) return null;
+            const project = JSON.parse(await projectFile.async('string'));
+            const source = project && project.meta && project.meta.turboshareFork;
+            if (!source || source.platform !== 'turboshare' ||
+                !/^[A-Za-z0-9_-]{1,80}$/.test(String(source.projectId || ''))) return null;
+            return {
+                platform: 'turboshare',
+                projectId: String(source.projectId),
+                title: String(source.title || 'Untitled').slice(0, 100),
+                author: String(source.author || 'Unknown').slice(0, 80)
+            };
+        }
+
         async function handleUploadBtn(providedToken) {
             const fileInput = document.getElementById('upFile').files[0];
             if(!fileInput || !document.getElementById('upTitle').value) return;
@@ -23135,6 +23169,7 @@
             let uploadedIds = [];
 
             try {
+                const forkSource = await extractTurboShareForkSource(fileInput);
                 // Tải từng mảnh lên nối tiếp nhau, vượt rào 100MB Cloudflare
                 for (let i = 0; i < totalChunks; i++) {
                     textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...</span>`;
@@ -23163,6 +23198,7 @@
                 finalForm.append("sessionToken", currentUser.sessionToken);
                 finalForm.append("recaptchaToken", recaptchaToken); // ĐÍNH KÈM TOKEN RECAPTCHA LÊN SERVER
                 finalForm.append("engine", localStorage.getItem('engine') || 'turboshare'); // ĐÍNH KÈM ENGINE HIỆN TẠI
+                if (forkSource) finalForm.append("forkSource", JSON.stringify(forkSource));
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers:{"X-Client-Type":"StudioDANV-Web"} })).json();
                 if (finalRes.success) { 
@@ -26224,6 +26260,7 @@
             let uploadedIds = [];
 
             try {
+                const forkSource = await extractTurboShareForkSource(fileInput);
                 for (let i = 0; i < totalChunks; i++) {
                     textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
@@ -26251,6 +26288,7 @@
                 finalForm.append("sessionToken", currentUser.sessionToken);
                 finalForm.append("recaptchaToken", recaptchaToken);
                 finalForm.append("engine", localStorage.getItem('engine') || 'turboshare');
+                if (forkSource) finalForm.append("forkSource", JSON.stringify(forkSource));
 
                 const finalRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: finalForm, headers: { "X-Client-Type": "StudioDANV-Web" } })).json();
                 if (finalRes.success) { 
