@@ -1466,6 +1466,23 @@
         .info-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
         .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .info-body { font-size: 0.95rem; color: var(--text-main); white-space: pre-line; line-height: 1.6; }
+        .fork-attribution { display: flex; align-items: center; gap: 12px; white-space: normal; }
+        .fork-attribution-avatar { width: 42px; height: 42px; flex: 0 0 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+        .fork-attribution-copy { min-width: 0; }
+        .fork-attribution-copy a, .fork-project-card a { color: var(--primary); font-weight: 800; text-decoration: none; }
+        .fork-attribution-copy a:hover, .fork-project-card a:hover { text-decoration: underline; }
+        .fork-root-attribution { display: block; margin-top: 3px; color: var(--text-muted); font-size: 0.86rem; }
+        .fork-root-avatar { width: 22px; height: 22px; margin-right: 4px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
+        .fork-project-list { display: grid; gap: 10px; }
+        .fork-project-card { display: flex; align-items: center; gap: 11px; padding: 9px; border: 1px solid var(--border-color); border-radius: 11px; background: var(--bg-panel); }
+        .fork-project-thumb { width: 76px; height: 48px; flex: 0 0 76px; object-fit: cover; border-radius: 7px; background: var(--bg-secondary); }
+        .fork-project-details { min-width: 0; flex: 1; }
+        .fork-project-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .fork-project-author { display: flex; align-items: center; gap: 6px; margin-top: 5px; color: var(--text-muted); font-size: 0.82rem; }
+        .fork-project-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+        .fork-project-origin { display: block; margin-top: 3px; color: var(--text-muted); font-size: 0.78rem; }
+        .fork-upload-notice { display: flex; align-items: center; gap: 12px; }
+        .fork-upload-notice img { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
 
         @media (max-width: 950px) {
             .proj-grid-content { grid-template-columns: 1fr; }
@@ -11740,6 +11757,9 @@
                         <a id="btnSeeInside" href="#" target="_blank" class="proj-pill-btn" data-i18n-title="proj_code_title" title="Xem mã nguồn khối lệnh">
                             <i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span>
                         </a>
+                        <a id="btnForkProject" href="#" class="proj-pill-btn" style="display:none; background:var(--primary); color:#fff; border-color:var(--primary);">
+                            <i class="fa-solid fa-code-branch"></i> <span>Fork dự án</span>
+                        </a>
 
                         <!-- Nhóm 4: Menu tác vụ bổ sung (...) -->
                         <div class="proj-more-dropdown-wrap">
@@ -11791,6 +11811,17 @@
                             </div>
                             <div class="info-body" id="projForkSource" style="display:none; margin-bottom:8px;"></div>
                             <div class="info-body" id="projCredits">Tác giả gốc.</div>
+                        </div>
+                    </div>
+
+                    <div class="proj-card-box" id="projForksCard" style="display:none;">
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fa-solid fa-code-branch" style="color:var(--primary);"></i>
+                                <span>Dự án fork từ đây</span>
+                                <span id="projForksCount" style="margin-left:auto;"></span>
+                            </div>
+                            <div class="fork-project-list" id="projForksList"></div>
                         </div>
                     </div>
 
@@ -18968,9 +18999,67 @@
         }
         
 
+        async function fetchForkAuthorAvatars(usernames) {
+            const uniqueNames = [...new Set(usernames.filter(Boolean).map(name => String(name).trim()))];
+            if (!uniqueNames.length) return {};
+            const response = await fetch(`${WORKER_URL}/api/users/batch?list=${encodeURIComponent(uniqueNames.join(','))}`);
+            if (!response.ok) throw new Error('Không thể tải avatar tác giả.');
+            const users = await response.json();
+            return Object.fromEntries((Array.isArray(users) ? users : []).map(user => [
+                String(user.username || '').toLowerCase(),
+                user.avt ? getAvtUrl(user.avt) : DEFAULT_AVATAR
+            ]));
+        }
+
+        async function loadProjectForks(projectId) {
+            const card = document.getElementById('projForksCard');
+            const list = document.getElementById('projForksList');
+            const count = document.getElementById('projForksCount');
+            card.style.display = 'block';
+            list.innerHTML = '<div style="color:var(--text-muted);">Đang tải danh sách fork...</div>';
+            count.textContent = '';
+            try {
+                const response = await fetch(`${WORKER_URL}/api/projects?forkedFrom=${encodeURIComponent(projectId)}&limit=24&sort=recent`);
+                if (!response.ok) throw new Error('Không thể tải danh sách dự án fork.');
+                const data = await response.json();
+                if (String(currentProj?.projectId || currentProj?.fileId) !== String(projectId)) return;
+                const projects = Array.isArray(data.projects) ? data.projects : [];
+                count.textContent = projects.length ? `${projects.length}${data.hasMore ? '+' : ''}` : '';
+                if (!projects.length) {
+                    list.innerHTML = '<div style="color:var(--text-muted);">Chưa có dự án fork nào.</div>';
+                    return;
+                }
+                const avatars = await fetchForkAuthorAvatars(projects.map(project => project.author))
+                    .catch(() => ({}));
+                if (String(currentProj?.projectId || currentProj?.fileId) !== String(projectId)) return;
+                list.innerHTML = projects.map(project => {
+                    const projectIdValue = String(project.projectId || project.fileId);
+                    const projectUrl = `/projects/${encodeURIComponent(projectIdValue)}`;
+                    const thumb = project.thumbId ?
+                        `${WORKER_URL}/api/project/${encodeURIComponent(project.thumbId)}` :
+                        'https://i.ibb.co/QFg1cVVD/image.png';
+                    const avatar = avatars[String(project.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                    const parentSource = project.forkSource;
+                    const parentMarkup = parentSource && parentSource.projectId ?
+                        `<span class="fork-project-origin">Forked from <a href="/projects/${encodeURIComponent(parentSource.projectId)}">${escapeHtml(parentSource.title || 'TurboShare project')}</a></span>` : '';
+                    return `<article class="fork-project-card">
+                        <img class="fork-project-thumb" src="${escapeHtml(thumb)}" alt="">
+                        <div class="fork-project-details">
+                            <a class="fork-project-title" href="${projectUrl}">${escapeHtml(project.title || 'Untitled')}</a>
+                            <span class="fork-project-author"><img class="fork-project-avatar" src="${escapeHtml(avatar)}" alt="">${escapeHtml(project.author || 'Unknown')}</span>
+                            ${parentMarkup}
+                        </div>
+                    </article>`;
+                }).join('');
+            } catch (error) {
+                list.textContent = error.message || 'Không thể tải danh sách fork.';
+            }
+        }
+
         // ================= DỰ ÁN & BÌNH LUẬN =================
         async function openProjectPage(idParam, urlParams = null) {
             document.getElementById('projectView').style.display = 'block';
+            document.getElementById('projForksCard').style.display = 'none';
             
             // Xóa iframe cũ và hiện loading
             document.getElementById('playerContainer').innerHTML = '<div style="text-align:center; padding: 100px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary);"></i></div>';
@@ -19089,24 +19178,64 @@
             }
             const btnSeeInside = document.getElementById('btnSeeInside');
             const referrer = window.location.origin + window.location.pathname + window.location.search;
-            const sourceQuery = engineChoice === 'turboshare' ? `&mw_fork_source=${encodeURIComponent(JSON.stringify({
+            const projectForkSource = {
                 platform: 'turboshare',
                 projectId: String(proj.projectId || proj.fileId),
                 title: proj.title || 'Untitled',
-                author: proj.author || 'Unknown'
-            }))}` : '';
-            btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}&referrer=${encodeURIComponent(referrer)}${sourceQuery}`;
+                author: proj.author || 'Unknown',
+                rootSource: proj.forkSource?.rootSource || (proj.forkSource ? {
+                    projectId: String(proj.forkSource.projectId),
+                    title: proj.forkSource.title || 'Untitled',
+                    author: proj.forkSource.author || 'Unknown'
+                } : {
+                    projectId: String(proj.projectId || proj.fileId),
+                    title: proj.title || 'Untitled',
+                    author: proj.author || 'Unknown'
+                })
+            };
+            const isProjectOwner = Boolean(currentUser && currentUser.username &&
+                String(currentUser.username).toLowerCase() === String(proj.author || '').toLowerCase());
+            const sourceQuery = engineChoice === 'turboshare' ?
+                `&mw_fork_source=${encodeURIComponent(JSON.stringify(projectForkSource))}&mw_fork_owner=${isProjectOwner ? '1' : '0'}` : '';
+            const editorUrl = `${editorBaseUrl}${encodeURIComponent(fileUrl)}&referrer=${encodeURIComponent(referrer)}${sourceQuery}`;
+            btnSeeInside.href = editorUrl;
             btnSeeInside.target = (engineChoice === 'turbowarp') ? '_blank' : '_self';
+            const btnForkProject = document.getElementById('btnForkProject');
+            btnForkProject.style.display = engineChoice === 'turboshare' ? 'inline-flex' : 'none';
+            btnForkProject.href = `${editorUrl}&mw_fork=1`;
+            btnForkProject.target = '_self';
             document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
             const forkSourceEl = document.getElementById('projForkSource');
             if (proj.forkSource && proj.forkSource.projectId) {
                 const sourceUrl = `/projects/${encodeURIComponent(proj.forkSource.projectId)}`;
-                forkSourceEl.innerHTML = `<i class="fa-solid fa-code-branch"></i> Forked from <a href="${sourceUrl}">${escapeHtml(proj.forkSource.title || 'TurboShare project')}</a> by ${escapeHtml(proj.forkSource.author || 'Unknown')}`;
+                const rootSource = proj.forkSource.rootSource;
+                const hasDifferentRoot = rootSource && String(rootSource.projectId) !== String(proj.forkSource.projectId);
+                const rootMarkup = hasDifferentRoot ?
+                    `<span class="fork-root-attribution"><img class="fork-root-avatar" id="projForkRootAvatar" src="${DEFAULT_AVATAR}" alt="">Original project: <a href="/projects/${encodeURIComponent(rootSource.projectId)}">${escapeHtml(rootSource.title || 'TurboShare project')}</a> by <a href="/users/${encodeURIComponent(rootSource.author || '')}">${escapeHtml(rootSource.author || 'Unknown')}</a></span>` : '';
+                forkSourceEl.innerHTML = `<div class="fork-attribution">
+                    <img class="fork-attribution-avatar" id="projForkSourceAvatar" src="${DEFAULT_AVATAR}" alt="">
+                    <div class="fork-attribution-copy"><strong><i class="fa-solid fa-code-branch" style="color:var(--primary);"></i> Forked from</strong>
+                        <a href="${sourceUrl}">${escapeHtml(proj.forkSource.title || 'TurboShare project')}</a>
+                        <span>by <a href="/users/${encodeURIComponent(proj.forkSource.author || '')}">${escapeHtml(proj.forkSource.author || 'Unknown')}</a></span>${rootMarkup}
+                    </div>
+                </div>`;
                 forkSourceEl.style.display = 'block';
+                fetchForkAuthorAvatars([
+                    proj.forkSource.author,
+                    hasDifferentRoot ? rootSource.author : ''
+                ]).then(avatars => {
+                    if (currentProj === proj) {
+                        const avatar = document.getElementById('projForkSourceAvatar');
+                        if (avatar) avatar.src = avatars[String(proj.forkSource.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                        const rootAvatar = document.getElementById('projForkRootAvatar');
+                        if (rootAvatar) rootAvatar.src = avatars[String(rootSource.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                    }
+                }).catch(() => {});
             } else {
                 forkSourceEl.innerHTML = '';
                 forkSourceEl.style.display = 'none';
             }
+            void loadProjectForks(String(proj.projectId || proj.fileId));
             document.getElementById('projCredits').innerHTML = proj.credits ? formatProjectDesc(proj.credits) : "Tác giả gốc.";
             
             updateActionBtns(); 
@@ -23139,7 +23268,14 @@
                 projectId: String(source.projectId),
                 title: String(source.title || 'Untitled').slice(0, 100),
                 author: String(source.author || 'Unknown').slice(0, 80),
-                ...(source.forkTitle ? { forkTitle: String(source.forkTitle).slice(0, 100) } : {})
+                ...(source.forkTitle ? { forkTitle: String(source.forkTitle).slice(0, 100) } : {}),
+                ...(source.rootSource && /^[A-Za-z0-9_-]{1,80}$/.test(String(source.rootSource.projectId || '')) ? {
+                    rootSource: {
+                        projectId: String(source.rootSource.projectId),
+                        title: String(source.rootSource.title || 'Untitled').slice(0, 100),
+                        author: String(source.rootSource.author || 'Unknown').slice(0, 80)
+                    }
+                } : {})
             };
         }
 
@@ -23156,13 +23292,33 @@
                     titleInput.value = '';
                     delete titleInput.dataset.forkPrefill;
                 }
+                if (notice) delete notice.dataset.sourceId;
                 return;
             }
             if (updateCard) updateCard.style.display = 'none';
             if (notice && noticeText) {
                 const sourceUrl = `/projects/${encodeURIComponent(source.projectId)}`;
-                noticeText.innerHTML = `Forked from <a href="${sourceUrl}">${escapeHtml(source.title)}</a> by ${escapeHtml(source.author)}. This will be uploaded as a new project.`;
+                const rootSource = source.rootSource;
+                const hasDifferentRoot = rootSource && String(rootSource.projectId) !== String(source.projectId);
+                const rootText = hasDifferentRoot ?
+                    `<div class="fork-root-attribution"><img class="fork-root-avatar" id="forkUploadRootAvatar" src="${DEFAULT_AVATAR}" alt="">Original project: <a href="/projects/${encodeURIComponent(rootSource.projectId)}">${escapeHtml(rootSource.title)}</a> by <a href="/users/${encodeURIComponent(rootSource.author)}">${escapeHtml(rootSource.author)}</a></div>` : '';
+                noticeText.innerHTML = `<div class="fork-upload-notice">
+                    <img id="forkUploadAvatar" src="${DEFAULT_AVATAR}" alt="">
+                    <div><strong><i class="fa-solid fa-code-branch" style="color:var(--primary);"></i> This project is a fork</strong>
+                        <div>Forked from <a href="${sourceUrl}">${escapeHtml(source.title)}</a> by <a href="/users/${encodeURIComponent(source.author)}">${escapeHtml(source.author)}</a>.</div>
+                        <div style="color:var(--text-muted);">It will be uploaded as a new project.</div>${rootText}
+                    </div>
+                </div>`;
+                notice.dataset.sourceId = source.projectId;
                 notice.style.display = 'block';
+                fetchForkAuthorAvatars([source.author, hasDifferentRoot ? rootSource.author : '']).then(avatars => {
+                    if (notice.dataset.sourceId === source.projectId) {
+                        const avatar = document.getElementById('forkUploadAvatar');
+                        if (avatar) avatar.src = avatars[String(source.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                        const rootAvatar = document.getElementById('forkUploadRootAvatar');
+                        if (rootAvatar) rootAvatar.src = avatars[String(rootSource.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                    }
+                }).catch(() => {});
             }
             const titleInput = document.getElementById('upTitle');
             if (titleInput) {
