@@ -36153,7 +36153,7 @@
             return await _orig_handlePostChat(e);
         };
 
-        // 4. Hook mở create/code
+        // 4. Hook mở create/code (Đã vá: Gắn hook vào cả openCreatePage và các link trực tiếp)
         const _orig_reopenEditor = reopenEditor;
         reopenEditor = function() {
             const p = getLocalQuestProgress();
@@ -36161,6 +36161,24 @@
             saveLocalQuestProgress(p);
             return _orig_reopenEditor();
         };
+
+        const _orig_openCreatePage = openCreatePage;
+        openCreatePage = function() {
+            const p = getLocalQuestProgress();
+            p.created = true;
+            saveLocalQuestProgress(p);
+            return _orig_openCreatePage();
+        };
+
+        // Bắt thêm trường hợp người dùng bấm trực tiếp vào các thẻ <a> trỏ sang Editor (như trong trang Creator Studio)
+        document.addEventListener('click', function(e) {
+            const a = e.target.closest('a');
+            if (a && a.href && (a.href.includes('editor.turboshare.org.uk') || a.href.includes('aftercode.pages.dev'))) {
+                const p = getLocalQuestProgress();
+                p.created = true;
+                saveLocalQuestProgress(p);
+            }
+        });
         
         // ================= HỆ THỐNG QUẢN LÝ ĐA THIẾT BỊ =================
         function parseDeviceAgent(uaString) {
