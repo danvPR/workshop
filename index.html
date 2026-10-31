@@ -11757,9 +11757,6 @@
                         <a id="btnSeeInside" href="#" target="_blank" class="proj-pill-btn" data-i18n-title="proj_code_title" title="Xem mã nguồn khối lệnh">
                             <i class="fa-solid fa-code"></i> <span data-i18n="proj_source">Mã nguồn</span>
                         </a>
-                        <a id="btnForkProject" href="#" class="proj-pill-btn" style="display:none; background:var(--primary); color:#fff; border-color:var(--primary);">
-                            <i class="fa-solid fa-code-branch"></i> <span>Fork dự án</span>
-                        </a>
 
                         <!-- Nhóm 4: Menu tác vụ bổ sung (...) -->
                         <div class="proj-more-dropdown-wrap">
@@ -19046,7 +19043,7 @@
                         <img class="fork-project-thumb" src="${escapeHtml(thumb)}" alt="">
                         <div class="fork-project-details">
                             <a class="fork-project-title" href="${projectUrl}">${escapeHtml(project.title || 'Untitled')}</a>
-                            <span class="fork-project-author"><img class="fork-project-avatar" src="${escapeHtml(avatar)}" alt="">${escapeHtml(project.author || 'Unknown')}</span>
+                            <span class="fork-project-author"><img class="fork-project-avatar" src="${escapeHtml(avatar)}" alt="" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}'">${escapeHtml(project.author || 'Unknown')}</span>
                             ${parentMarkup}
                         </div>
                     </article>`;
@@ -19137,12 +19134,13 @@
             }
 
             // Cập nhật SEO
-            const pageTitle = `${proj.title} - Tác phẩm bởi ${proj.author} | DANVworkshop`;
-            const pageDesc = proj.description ? proj.description.substring(0, 150) : `Chơi và trải nghiệm dự án ${proj.title} được tạo bởi ${proj.author} trên DANVworkshop.`;
+            const projectTitle = String(proj.title || proj.name || 'Untitled').trim() || 'Untitled';
+            const pageTitle = `${projectTitle} - Tác phẩm bởi ${proj.author} | DANVworkshop`;
+            const pageDesc = proj.description ? proj.description.substring(0, 150) : `Chơi và trải nghiệm dự án ${projectTitle} được tạo bởi ${proj.author} trên DANVworkshop.`;
             const pageThumb = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             updateSEO(pageTitle, pageDesc, pageThumb, window.location.href);
 
-            document.getElementById('projPageTitle').innerHTML = escapeHtml(proj.title) + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
+            document.getElementById('projPageTitle').innerHTML = escapeHtml(projectTitle) + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
             const authorCleanUrl = `/users/${encodeURIComponent(proj.author)}`;
             document.getElementById('projPageAuthor').innerText = proj.author; 
             document.getElementById('projPageAuthor').href = authorCleanUrl;
@@ -19181,29 +19179,31 @@
             const projectForkSource = {
                 platform: 'turboshare',
                 projectId: String(proj.projectId || proj.fileId),
-                title: proj.title || 'Untitled',
+                title: projectTitle,
                 author: proj.author || 'Unknown',
+                authorAvatar: '',
                 rootSource: proj.forkSource?.rootSource || (proj.forkSource ? {
                     projectId: String(proj.forkSource.projectId),
                     title: proj.forkSource.title || 'Untitled',
                     author: proj.forkSource.author || 'Unknown'
                 } : {
                     projectId: String(proj.projectId || proj.fileId),
-                    title: proj.title || 'Untitled',
+                    title: projectTitle,
                     author: proj.author || 'Unknown'
                 })
             };
             const isProjectOwner = Boolean(currentUser && currentUser.username &&
                 String(currentUser.username).toLowerCase() === String(proj.author || '').toLowerCase());
-            const sourceQuery = engineChoice === 'turboshare' ?
-                `&mw_fork_source=${encodeURIComponent(JSON.stringify(projectForkSource))}&mw_fork_owner=${isProjectOwner ? '1' : '0'}` : '';
-            const editorUrl = `${editorBaseUrl}${encodeURIComponent(fileUrl)}&referrer=${encodeURIComponent(referrer)}${sourceQuery}`;
-            btnSeeInside.href = editorUrl;
+            const getEditorUrl = () => {
+                const sourceQuery = engineChoice === 'turboshare' ?
+                    `&mw_fork_source=${encodeURIComponent(JSON.stringify(projectForkSource))}` +
+                    `&mw_fork_owner=${isProjectOwner ? '1' : '0'}` +
+                    `${isProjectOwner ? '' : '&mw_fork=1'}` : '';
+                return `${editorBaseUrl}${encodeURIComponent(fileUrl)}` +
+                    `&referrer=${encodeURIComponent(referrer)}${sourceQuery}`;
+            };
+            btnSeeInside.href = getEditorUrl();
             btnSeeInside.target = (engineChoice === 'turbowarp') ? '_blank' : '_self';
-            const btnForkProject = document.getElementById('btnForkProject');
-            btnForkProject.style.display = engineChoice === 'turboshare' ? 'inline-flex' : 'none';
-            btnForkProject.href = `${editorUrl}&mw_fork=1`;
-            btnForkProject.target = '_self';
             document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
             const forkSourceEl = document.getElementById('projForkSource');
             if (proj.forkSource && proj.forkSource.projectId) {
@@ -19211,9 +19211,9 @@
                 const rootSource = proj.forkSource.rootSource;
                 const hasDifferentRoot = rootSource && String(rootSource.projectId) !== String(proj.forkSource.projectId);
                 const rootMarkup = hasDifferentRoot ?
-                    `<span class="fork-root-attribution"><img class="fork-root-avatar" id="projForkRootAvatar" src="${DEFAULT_AVATAR}" alt="">Original project: <a href="/projects/${encodeURIComponent(rootSource.projectId)}">${escapeHtml(rootSource.title || 'TurboShare project')}</a> by <a href="/users/${encodeURIComponent(rootSource.author || '')}">${escapeHtml(rootSource.author || 'Unknown')}</a></span>` : '';
+                    `<span class="fork-root-attribution"><img class="fork-root-avatar" id="projForkRootAvatar" src="${DEFAULT_AVATAR}" alt="" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}'">Original project: <a href="/projects/${encodeURIComponent(rootSource.projectId)}">${escapeHtml(rootSource.title || 'TurboShare project')}</a> by <a href="/users/${encodeURIComponent(rootSource.author || '')}">${escapeHtml(rootSource.author || 'Unknown')}</a></span>` : '';
                 forkSourceEl.innerHTML = `<div class="fork-attribution">
-                    <img class="fork-attribution-avatar" id="projForkSourceAvatar" src="${DEFAULT_AVATAR}" alt="">
+                    <img class="fork-attribution-avatar" id="projForkSourceAvatar" src="${DEFAULT_AVATAR}" alt="" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}'">
                     <div class="fork-attribution-copy"><strong><i class="fa-solid fa-code-branch" style="color:var(--primary);"></i> Forked from</strong>
                         <a href="${sourceUrl}">${escapeHtml(proj.forkSource.title || 'TurboShare project')}</a>
                         <span>by <a href="/users/${encodeURIComponent(proj.forkSource.author || '')}">${escapeHtml(proj.forkSource.author || 'Unknown')}</a></span>${rootMarkup}
@@ -19225,10 +19225,14 @@
                     hasDifferentRoot ? rootSource.author : ''
                 ]).then(avatars => {
                     if (currentProj === proj) {
-                        const avatar = document.getElementById('projForkSourceAvatar');
-                        if (avatar) avatar.src = avatars[String(proj.forkSource.author || '').toLowerCase()] || DEFAULT_AVATAR;
-                        const rootAvatar = document.getElementById('projForkRootAvatar');
-                        if (rootAvatar) rootAvatar.src = avatars[String(rootSource.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                        setAvatarImage(
+                            document.getElementById('projForkSourceAvatar'),
+                            avatars[String(proj.forkSource.author || '').toLowerCase()]
+                        );
+                        setAvatarImage(
+                            document.getElementById('projForkRootAvatar'),
+                            avatars[String(rootSource.author || '').toLowerCase()]
+                        );
                     }
                 }).catch(() => {});
             } else {
@@ -19311,13 +19315,18 @@
                 .then(r => r.json())
                 .then(data => {
                     if (data) {
-                        if (data.avt) {
-                            const avtUrl = getAvtUrl(data.avt);
-                            document.getElementById('projPageAuthorAvt').src = avtUrl;
-                            document.getElementById('projSidebarAuthorAvt').src = avtUrl;
+                        if (currentProj === proj) {
+                            projectForkSource.authorAvatar = data.avt ? getAvtUrl(data.avt) : '';
+                            btnSeeInside.href = getEditorUrl();
+                            const avatarUrl = data.avt ? getAvtUrl(data.avt) : DEFAULT_AVATAR;
+                            setAvatarImage(document.getElementById('projPageAuthorAvt'), avatarUrl);
+                            setAvatarImage(document.getElementById('projSidebarAuthorAvt'), avatarUrl);
+                            if (data.display_name) {
+                                document.getElementById('projSidebarAuthorName').innerText = data.display_name;
+                            }
+                            document.getElementById('projSidebarAuthorBio').innerHTML =
+                                data.bio ? formatCommentText(data.bio) : 'Thành viên sáng tạo của DANVworkshop.';
                         }
-                        if (data.display_name) document.getElementById('projSidebarAuthorName').innerText = data.display_name;
-                        document.getElementById('projSidebarAuthorBio').innerHTML = data.bio ? formatCommentText(data.bio) : "Thành viên sáng tạo của DANVworkshop.";
                     }
                 }).catch(e=>{});
 
@@ -23301,9 +23310,9 @@
                 const rootSource = source.rootSource;
                 const hasDifferentRoot = rootSource && String(rootSource.projectId) !== String(source.projectId);
                 const rootText = hasDifferentRoot ?
-                    `<div class="fork-root-attribution"><img class="fork-root-avatar" id="forkUploadRootAvatar" src="${DEFAULT_AVATAR}" alt="">Original project: <a href="/projects/${encodeURIComponent(rootSource.projectId)}">${escapeHtml(rootSource.title)}</a> by <a href="/users/${encodeURIComponent(rootSource.author)}">${escapeHtml(rootSource.author)}</a></div>` : '';
+                    `<div class="fork-root-attribution"><img class="fork-root-avatar" id="forkUploadRootAvatar" src="${DEFAULT_AVATAR}" alt="" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}'">Original project: <a href="/projects/${encodeURIComponent(rootSource.projectId)}">${escapeHtml(rootSource.title)}</a> by <a href="/users/${encodeURIComponent(rootSource.author)}">${escapeHtml(rootSource.author)}</a></div>` : '';
                 noticeText.innerHTML = `<div class="fork-upload-notice">
-                    <img id="forkUploadAvatar" src="${DEFAULT_AVATAR}" alt="">
+                    <img id="forkUploadAvatar" src="${DEFAULT_AVATAR}" alt="" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}'">
                     <div><strong><i class="fa-solid fa-code-branch" style="color:var(--primary);"></i> This project is a fork</strong>
                         <div>Forked from <a href="${sourceUrl}">${escapeHtml(source.title)}</a> by <a href="/users/${encodeURIComponent(source.author)}">${escapeHtml(source.author)}</a>.</div>
                         <div style="color:var(--text-muted);">It will be uploaded as a new project.</div>${rootText}
@@ -23313,10 +23322,14 @@
                 notice.style.display = 'block';
                 fetchForkAuthorAvatars([source.author, hasDifferentRoot ? rootSource.author : '']).then(avatars => {
                     if (notice.dataset.sourceId === source.projectId) {
-                        const avatar = document.getElementById('forkUploadAvatar');
-                        if (avatar) avatar.src = avatars[String(source.author || '').toLowerCase()] || DEFAULT_AVATAR;
-                        const rootAvatar = document.getElementById('forkUploadRootAvatar');
-                        if (rootAvatar) rootAvatar.src = avatars[String(rootSource.author || '').toLowerCase()] || DEFAULT_AVATAR;
+                        setAvatarImage(
+                            document.getElementById('forkUploadAvatar'),
+                            avatars[String(source.author || '').toLowerCase()]
+                        );
+                        setAvatarImage(
+                            document.getElementById('forkUploadRootAvatar'),
+                            avatars[String(rootSource.author || '').toLowerCase()]
+                        );
                     }
                 }).catch(() => {});
             }
@@ -23406,10 +23419,16 @@
                 
                 const finalForm = new FormData(); 
                 finalForm.append("preloadedFileId", uploadedIds.join(",")); 
-                if (document.getElementById('upThumb').files[0]) finalForm.append("thumb", document.getElementById('upThumb').files[0]);
+                
+                let thumbToUpload = document.getElementById('upThumb').files[0];
+                if (!thumbToUpload && typeof pendingImportedData !== 'undefined' && pendingImportedData && pendingImportedData.thumbFile) {
+                    thumbToUpload = pendingImportedData.thumbFile;
+                }
+                if (thumbToUpload) finalForm.append("thumb", thumbToUpload);
+
                 finalForm.append("title", document.getElementById('upTitle').value); 
                 finalForm.append("visibility", document.getElementById('upVisibility').value); 
-                finalForm.append("author", currentUser.username); 
+                finalForm.append("author", currentUser.username);
                 finalForm.append("description", document.getElementById('upDesc').value); 
                 finalForm.append("credits", document.getElementById('upCredits').value);
                 finalForm.append("username", currentUser.username); 
@@ -25230,6 +25249,14 @@
                 return realId;
             }
             return `${WORKER_URL}/api/project/${realId}`; 
+        }
+        function setAvatarImage(image, url) {
+            if (!image) return;
+            image.onerror = () => {
+                image.onerror = null;
+                image.src = DEFAULT_AVATAR;
+            };
+            image.src = url || DEFAULT_AVATAR;
         }
         function escapeHtml(text) { 
             if (text === null || text === undefined) return '';
