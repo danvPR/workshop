@@ -414,19 +414,43 @@
 
 
         :root { 
-            --primary: #0da57a; --primary-dark: #0a8260;
-            --bg-body: #f3f4f6; --bg-panel: #ffffff;
-            --bg-secondary: #f8fafc; --bg-input: #ffffff;
-            --text-main: #374151; --text-muted: #6b7280; --text-title: #111827;
-            --border-color: #e5e7eb;
+            --primary: #f97316; --primary-dark: #ea580c;
+            --bg-body: #fbf7ee; --bg-panel: #ffffff;
+            --bg-secondary: #f7eed8; --bg-input: #ffffff;
+            --text-main: #2e1c14; --text-muted: #7c5e48; --text-title: #1a0a03;
+            --border-color: #ebd6be;
             --halloween-orange: #ea580c;
-            --halloween-purple: #7e22ce;
+            --halloween-purple: #8b5cf6;
+            --halloween-dark: #180b2c;
+            --halloween-glow: rgba(234, 88, 12, 0.35);
         }
 
-        /* 🎃 HALLOWEEN THEME OVERRIDES (SPOOKY VIBE) */
+        /* 🎃 HALLOWEEN THEME OVERRIDES 180 ĐỘ (SPOOKY VIBE) */
+        body {
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(234, 88, 12, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 45%);
+            background-attachment: fixed;
+        }
+
         .wow-icon {
             background-image: url('https://files.catbox.moe/3lljlr.webp') !important;
             filter: drop-shadow(0 0 6px rgba(234, 88, 12, 0.75)) !important;
+        }
+
+        .pumpkin-custom-emoji {
+            width: 1.45em !important;
+            height: 1.45em !important;
+            vertical-align: -0.32em !important;
+            display: inline-block !important;
+            object-fit: contain !important;
+            margin: 0 2px !important;
+            filter: drop-shadow(0 2px 5px rgba(234, 88, 12, 0.5));
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .pumpkin-custom-emoji:hover {
+            transform: scale(1.28) rotate(-6deg);
         }
 
         .navbar-brand {
@@ -435,15 +459,16 @@
         .navbar-brand::after {
             content: '';
             position: absolute;
-            top: -10px;
+            top: -14px;
             left: -8px;
-            width: 26px;
-            height: 26px;
-            background: url('https://files.catbox.moe/io1tlj.webp') no-fit contain no-repeat;
+            width: 32px;
+            height: 32px;
+            background: url('https://files.catbox.moe/io1tlj.webp') no-repeat center;
             background-size: contain;
             pointer-events: none;
             transform: rotate(-18deg);
             z-index: 10;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
         }
 
         .nav-spooky-btn {
@@ -457,16 +482,16 @@
             align-items: center;
             gap: 7px;
             text-decoration: none;
-            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.35);
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             position: relative;
             white-space: nowrap;
         }
         .nav-spooky-btn:hover {
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 6px 22px rgba(234, 88, 12, 0.65);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 24px rgba(234, 88, 12, 0.7);
         }
 
         /* MODAL TIỆM SPOOKY RETAIL */
@@ -476,27 +501,28 @@
             overflow: hidden !important;
             background: var(--bg-panel) !important;
             border: 2px solid var(--halloween-orange) !important;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(234, 88, 12, 0.3) !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 45px rgba(234, 88, 12, 0.4) !important;
         }
         .spooky-banner-header {
             width: 100%;
-            height: 180px;
+            height: 190px;
             background: #180b2c url('https://frightspot.com/assets/spooky-retail-BTjyyI1q.png') center/cover no-repeat;
             position: relative;
             display: flex;
             align-items: flex-end;
             padding: 20px;
-            border-bottom: 2px solid rgba(234, 88, 12, 0.4);
+            border-bottom: 2px solid rgba(234, 88, 12, 0.5);
         }
         .spooky-bats-decor {
             position: absolute;
-            top: 8px;
+            top: 10px;
             right: 15px;
-            width: 90px;
+            width: 110px;
             height: auto;
-            opacity: 0.85;
+            opacity: 0.9;
             pointer-events: none;
-            animation: floatCheerHeart 3s infinite ease-in-out alternate;
+            animation: floatCheerHeart 3.5s infinite ease-in-out alternate;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
         .spooky-nav-tabs {
             display: flex;
@@ -526,7 +552,7 @@
         .spooky-tab-btn.active {
             background: var(--halloween-orange) !important;
             color: #ffffff !important;
-            box-shadow: 0 3px 10px rgba(234, 88, 12, 0.4);
+            box-shadow: 0 3px 12px rgba(234, 88, 12, 0.45);
         }
 
         /* KHUNG ĐIỂM DANH HALLOWEEN 5 NGÀY */
@@ -551,19 +577,19 @@
         }
         .spooky-day-card.active {
             border-color: var(--halloween-orange) !important;
-            background: rgba(234, 88, 12, 0.08) !important;
+            background: rgba(234, 88, 12, 0.12) !important;
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.25);
+            box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35);
         }
         .spooky-day-card.claimed {
-            opacity: 0.6;
-            background: rgba(0,0,0,0.05);
+            opacity: 0.65;
+            background: rgba(0,0,0,0.06);
         }
 
         /* THẺ NHIỆM VỤ */
         .spooky-quest-card {
             background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             border-radius: 14px;
             padding: 12px 16px;
             display: flex;
@@ -571,13 +597,19 @@
             justify-content: space-between;
             gap: 12px;
             margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
+
         [data-theme="dark"] {
-            --primary: #10b981; --primary-dark: #34d399; /* Xanh ngọc sáng hơn */
-            --bg-body: #111827; --bg-panel: #1f2937; /* Đổi sang màu than chì Tailwind mềm mắt hơn */
-            --bg-secondary: #374151; --bg-input: #111827;
-            --text-main: #e5e7eb; --text-muted: #9ca3af; --text-title: #f9fafb;
-            --border-color: #374151;
+            --primary: #ea580c; --primary-dark: #c2410c; 
+            --bg-body: #0d0617; --bg-panel: #170d2b; 
+            --bg-secondary: #22133e; --bg-input: #100820;
+            --text-main: #f3e8ff; --text-muted: #c084fc; --text-title: #faf5ff;
+            --border-color: #3b1b68;
+            --halloween-orange: #ea580c;
+            --halloween-purple: #a855f7;
+            --halloween-dark: #090312;
+            --halloween-glow: rgba(234, 88, 12, 0.5);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', "Segoe UI", ui-rounded, system-ui, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
@@ -1470,16 +1502,29 @@
         }
         .player-iframe { width: 100%; height: 100%; border: none; }
 
-        /* THANH ĐIỀU KHIỂN & HÀNH ĐỘNG ĐƯỢC QUY HOẠCH GỌN GÀNG */
+        /* THANH ĐIỀU KHIỂN & HÀNH ĐỘNG DỰ ÁN (SPOOKY HALLOWEEN ACTION BAR) */
         .proj-action-bar { 
             background: var(--bg-panel); 
-            border: 1px solid var(--border-color); 
-            border-radius: 16px; 
+            border: 1.5px solid var(--border-color); 
+            border-radius: 20px; 
             padding: 18px 24px; 
             display: flex; 
             flex-direction: column; 
             gap: 16px; 
-            box-shadow: 0 4px 18px rgba(0,0,0,0.03); 
+            box-shadow: 0 6px 25px rgba(0,0,0,0.03), 0 0 20px rgba(234, 88, 12, 0.08); 
+            position: relative;
+            overflow: hidden;
+        }
+        .proj-action-bar::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            width: 70px;
+            height: 35px;
+            background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
+            opacity: 0.35;
+            pointer-events: none;
         }
         
         .proj-title-row { 
@@ -1496,8 +1541,8 @@
             align-items: center; 
             gap: 15px; 
             flex-wrap: wrap; 
-            padding-top: 12px; 
-            border-top: 1px solid var(--border-color); 
+            padding-top: 14px; 
+            border-top: 1.5px solid var(--border-color); 
         }
         
         .proj-btn-cluster { 
@@ -1507,58 +1552,72 @@
             flex-wrap: wrap; 
         }
 
-        /* 1. Cụm nút cảm xúc liền khối (Segmented Reaction Control) */
+        /* 1. Cụm nút cảm xúc liền khối (Spooky Halloween Segmented Control) */
         .proj-segmented-group {
             display: inline-flex;
             align-items: center;
             background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
             overflow: hidden;
-            height: 38px;
+            height: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .proj-seg-btn {
             background: none;
             border: none;
-            border-right: 1px solid var(--border-color);
+            border-right: 1.5px solid var(--border-color);
             color: var(--text-muted);
-            padding: 0 14px;
+            padding: 0 15px;
             height: 100%;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             font-size: 0.88rem;
-            font-weight: 700;
+            font-weight: 800;
             transition: all 0.2s ease;
         }
         .proj-seg-btn:last-child { border-right: none; }
-        .proj-seg-btn:hover { background: var(--border-color); color: var(--text-title); }
-        .proj-seg-btn.active.like { color: #ff4c4c; background: rgba(255, 76, 76, 0.12); }
-        .proj-seg-btn.active.star { color: #f5b041; background: rgba(245, 176, 65, 0.14); }
+        .proj-seg-btn:hover { 
+            background: rgba(234, 88, 12, 0.1); 
+            color: var(--halloween-orange); 
+        }
+        .proj-seg-btn.active.like { 
+            color: #ff3838; 
+            background: rgba(255, 56, 56, 0.15); 
+            filter: drop-shadow(0 0 6px rgba(255, 56, 56, 0.5));
+        }
+        .proj-seg-btn.active.star { 
+            color: #f59e0b; 
+            background: rgba(245, 158, 11, 0.18); 
+            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
+        }
 
-        /* 2. Quy chuẩn kích thước nút đồng bộ */
+        /* 2. Quy chuẩn nút con dạng viên thuốc ma thuật */
         .proj-pill-btn {
-            height: 38px;
+            height: 40px;
             padding: 0 16px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 0.88rem;
-            font-weight: 700;
+            font-weight: 800;
             display: inline-flex;
             align-items: center;
             gap: 7px;
             cursor: pointer;
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             background: var(--bg-secondary);
             color: var(--text-title);
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .proj-pill-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+            border-color: var(--halloween-orange);
+            color: var(--halloween-orange);
             background: var(--bg-panel);
             transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.25);
         }
 
         /* 3. Menu 3 chấm gom gọn các tác vụ quản trị / báo cáo */
@@ -1608,16 +1667,41 @@
 
         .proj-card-box {
             background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 20px;
             padding: 22px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.02), 0 0 16px rgba(139, 92, 246, 0.05);
+            transition: all 0.25s ease;
+        }
+        .proj-card-box:hover {
+            border-color: rgba(234, 88, 12, 0.35);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04), 0 0 20px rgba(234, 88, 12, 0.1);
         }
 
-        .info-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
-        .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .info-body { font-size: 0.95rem; color: var(--text-main); white-space: pre-line; line-height: 1.6; }
+        .info-card { 
+            background: var(--bg-secondary); 
+            border: 1.5px solid var(--border-color); 
+            border-radius: 14px; 
+            padding: 18px; 
+            margin-bottom: 16px; 
+            position: relative;
+        }
+        .info-header { 
+            font-size: 0.85rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: var(--halloween-orange); 
+            letter-spacing: 0.6px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            align-items: center; 
+            gap: 7px; 
+        }
+        .info-header i {
+            filter: drop-shadow(0 0 5px rgba(234, 88, 12, 0.5));
+        }
+        .info-body { font-size: 0.95rem; color: var(--text-main); white-space: pre-line; line-height: 1.65; }
         .fork-attribution { display: flex; align-items: center; gap: 12px; white-space: normal; }
         .fork-attribution-avatar { width: 42px; height: 42px; flex: 0 0 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
         .fork-attribution-copy { min-width: 0; }
@@ -1990,7 +2074,7 @@
         }
         .profile-cover-bg { 
             height: 220px; 
-            background: linear-gradient(135deg, #064e3b 0%, #0d1e2b 50%, #0f172a 100%); 
+            background: linear-gradient(135deg, #2e0854 0%, #150628 50%, #3b1103 100%); 
             background-size: cover;
             background-position: center;
             position: relative; 
@@ -2001,12 +2085,27 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
-                        radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
+            background: radial-gradient(circle at 18% 30%, rgba(234, 88, 12, 0.4) 0%, transparent 60%),
+                        radial-gradient(circle at 82% 70%, rgba(168, 85, 247, 0.35) 0%, transparent 60%);
             pointer-events: none;
         }
+        .profile-cover-bg::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            width: 140px;
+            height: 70px;
+            background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
+            opacity: 0.4;
+            pointer-events: none;
+            animation: floatCheerHeart 4s infinite ease-in-out alternate;
+        }
         .profile-cover-bg.has-custom-cover::before {
-            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+        }
+        .profile-cover-bg.has-custom-cover::after {
+            display: none;
         }
         .btn-change-cover {
             position: absolute;
@@ -2262,43 +2361,50 @@
         .bento-drawer-item b { display: block; font-size: 0.9rem; color: var(--text-title); margin-bottom: 4px; }
         .bento-drawer-item span { font-size: 0.72rem; color: var(--text-muted); }
 
-        /* THANH TABS PROFILE MỚI DẠNG FLOATING SEGMENTED CAPSULE */
+        /* THANH TABS PROFILE MỚI DẠNG FLOATING SEGMENTED CAPSULE (HALLOWEEN THEME) */
         .profile-nav-tabs { 
             display: inline-flex; 
             background: var(--bg-panel); 
-            border: 1px solid var(--border-color); 
-            border-radius: 18px; 
-            padding: 4px; 
-            gap: 4px; 
+            border: 1.5px solid var(--border-color); 
+            border-radius: 20px; 
+            padding: 5px; 
+            gap: 5px; 
             margin-bottom: 24px; 
             max-width: 100%;
             overflow-x: auto;
             scrollbar-width: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.04), 0 0 15px rgba(234, 88, 12, 0.08);
         }
         .profile-nav-tabs::-webkit-scrollbar { display: none; }
         .prof-tab-btn { 
-            background: none; 
-            border: none; 
-            padding: 8px 18px; 
-            font-weight: 700; 
+            background: transparent; 
+            border: 1px solid transparent; 
+            padding: 8px 20px; 
+            font-weight: 800; 
             color: var(--text-muted); 
             cursor: pointer; 
             border-radius: 14px; 
             font-size: 0.88rem; 
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
             gap: 7px;
         }
         .prof-tab-btn:hover { 
-            color: var(--text-title); 
+            color: var(--halloween-orange); 
+            background: rgba(234, 88, 12, 0.08);
+            transform: translateY(-1px);
         }
         .prof-tab-btn.active { 
-            background: var(--bg-secondary); 
-            color: var(--primary) !important; 
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.16) 0%, rgba(139, 92, 246, 0.14) 100%) !important; 
+            color: var(--halloween-orange) !important; 
+            border-color: rgba(234, 88, 12, 0.35) !important;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.22) !important;
+            transform: translateY(-1px);
+        }
+        .prof-tab-btn.active i {
+            filter: drop-shadow(0 0 6px rgba(234, 88, 12, 0.6));
         }
 
         .prof-tab-content { display: none; }
@@ -7688,7 +7794,7 @@
         }
         .station-banner-cover {
             height: 180px;
-            background: linear-gradient(135deg, #091a16 0%, #0d1e2b 50%, #0f172a 100%);
+            background: linear-gradient(135deg, #1b0730 0%, #0e031a 50%, #2e0d02 100%);
             position: relative;
             overflow: hidden;
         }
@@ -7696,8 +7802,19 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 15% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
-                        radial-gradient(circle at 85% 70%, rgba(56, 189, 248, 0.25) 0%, transparent 60%);
+            background: radial-gradient(circle at 15% 30%, rgba(234, 88, 12, 0.4) 0%, transparent 60%),
+                        radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.35) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .station-banner-cover::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 40px;
+            width: 130px;
+            height: 60px;
+            background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
+            opacity: 0.35;
             pointer-events: none;
         }
         .station-banner-content {
@@ -11520,9 +11637,9 @@
         .ts-banner-wide {
           width: 100%;
           min-height: 330px;
-          background-color: #c8f2de;
-          border: 1.5px solid #a7e7cb;
-          border-radius: 24px;
+          background: linear-gradient(135deg, #2a0b45 0%, #17082a 55%, #3d1405 100%);
+          border: 2px solid var(--halloween-orange);
+          border-radius: 28px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -11530,13 +11647,25 @@
           box-sizing: border-box;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 6px 20px -6px rgba(16, 185, 129, 0.15);
-          transition: background-color 0.3s ease, border-color 0.3s ease;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 35px rgba(234, 88, 12, 0.25);
+          transition: all 0.3s ease;
+        }
+        .ts-banner-wide::before {
+          content: '';
+          position: absolute;
+          top: -20px;
+          right: 30%;
+          width: 220px;
+          height: 120px;
+          background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
+          opacity: 0.55;
+          pointer-events: none;
+          animation: floatCheerHeart 4s infinite ease-in-out alternate;
         }
         [data-theme="dark"] .ts-banner-wide {
-          background-color: #064e3b;
-          border-color: #047857;
-          box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+          background: linear-gradient(135deg, #18062b 0%, #0c0217 60%, #2e0d02 100%);
+          border-color: #f97316;
+          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 45px rgba(234, 88, 12, 0.35);
         }
         .ts-content {
           flex: 0 0 54%;
@@ -14115,6 +14244,9 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL TẠO BÌNH CHỌN (POLL) -->
+    <div class="modal-overlay" id="pollModal">
         <div class="modal" style="max-width:470px;">
             <div class="modal-header">
                 <span><i class="fa-solid fa-square-poll-vertical" style="color:#ea580c;"></i> <span data-i18n="poll_modal_title">Tạo Bình Chọn</span></span>
@@ -26589,6 +26721,15 @@
             if (!text) return '';
             let safeText = escapeHtml(text);
 
+            // 🎃 0. TỰ ĐỘNG THAY THẾ 13 EMOJI BÍ NGÔ HALLOWEEN SANG THẺ ẢNH
+            if (typeof PUMPKIN_EMOJI_MAP !== 'undefined') {
+                for (const [code, imgUrl] of Object.entries(PUMPKIN_EMOJI_MAP)) {
+                    const escCode = escapeHtml(code);
+                    const regex = new RegExp(escCode.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g');
+                    safeText = safeText.replace(regex, `<img class="pumpkin-custom-emoji" src="${imgUrl}" alt="${escCode}" title="${escCode}">`);
+                }
+            }
+
             // 🌟 1. TỰ ĐỘNG CHUYỂN ĐỔI SHORTCODE EMOJI (VD: :sob: -> 😭, :joy: -> 😂, :heart: -> ❤️)
             if (typeof joypixels !== 'undefined' && joypixels.shortnameToUnicode) {
                 try {
@@ -28397,14 +28538,14 @@
             const oldPopup = document.getElementById('quickReactionPopup');
             if (oldPopup) oldPopup.remove();
 
-            // 🎃 6 Biểu cảm bí ngô ma quái thay thế dàn emoji cũ
+            // 🎃 6 Biểu cảm bí ngô ma quái gán đúng shortcode để lưu và vẽ chuẩn ảnh
             const quickPumpkinEmojis = [
-                { em: '👍', img: 'https://i.postimg.cc/25K5rv5J/image.png', title: 'Cướp biển' },
-                { em: '❤️', img: 'https://i.postimg.cc/8Ct1wvWj/image.png', title: 'Đáng yêu' },
-                { em: '😂', img: 'https://i.postimg.cc/Njt9z1yd/image.png', title: 'Cười khúc khích' },
-                { em: '😮', img: 'https://i.postimg.cc/KYg63gfv/image.png', title: 'Chóng mặt' },
-                { em: '😢', img: 'https://i.postimg.cc/Y0XnspRv/image.png', title: 'Khóc lóc' },
-                { em: '🔥', img: 'https://i.postimg.cc/9F5rDGBc/image.png', title: 'Phù thủy' }
+                { em: ':pumpkin_pirate:', img: 'https://i.postimg.cc/25K5rv5J/image.png', title: 'Bí ngô Cướp biển' },
+                { em: ':pumpkin_cute:', img: 'https://i.postimg.cc/8Ct1wvWj/image.png', title: 'Bí ngô Đáng yêu' },
+                { em: ':pumpkin_giggle:', img: 'https://i.postimg.cc/Njt9z1yd/image.png', title: 'Bí ngô Cười khúc khích' },
+                { em: ':pumpkin_dizzy:', img: 'https://i.postimg.cc/KYg63gfv/image.png', title: 'Bí ngô Chóng mặt' },
+                { em: ':pumpkin_cry:', img: 'https://i.postimg.cc/Y0XnspRv/image.png', title: 'Bí ngô Khóc lóc' },
+                { em: ':pumpkin_witch:', img: 'https://i.postimg.cc/9F5rDGBc/image.png', title: 'Bí ngô Phù thủy' }
             ];
 
             const popup = document.createElement('div');
@@ -28413,7 +28554,7 @@
             
             const btns = quickPumpkinEmojis.map(item => `
                 <button type="button" class="chat-qr-btn" onclick="toggleChatReaction('${msgId}', '${item.em}'); document.getElementById('quickReactionPopup').remove();" title="${item.title}">
-                    <img src="${item.img}" style="width:24px; height:24px; object-fit:contain;">
+                    <img src="${item.img}" style="width:24px; height:24px; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(234,88,12,0.4));">
                 </button>
             `).join('');
 
@@ -34970,6 +35111,23 @@
         let emojiDisplayedCount = 140; // Nạp 140 emoji ban đầu, cuộn xuống tự tải thêm mượt mà
         let isFullEmojiLoaded = false;
 
+        // BẢNG ÁNH XẠ 13 EMOJI BÍ NGÔ HALLOWEEN ĐẶC BIỆT
+        const PUMPKIN_EMOJI_MAP = {
+            ':pumpkin_angry:': 'https://i.postimg.cc/sXg2Rmyh/image.png',
+            ':pumpkin_cute:': 'https://i.postimg.cc/8Ct1wvWj/image.png',
+            ':pumpkin_giggle:': 'https://i.postimg.cc/Njt9z1yd/image.png',
+            ':pumpkin_dead:': 'https://i.postimg.cc/nzXCD25H/image.png',
+            ':pumpkin_witch:': 'https://i.postimg.cc/9F5rDGBc/image.png',
+            ':pumpkin_pirate:': 'https://i.postimg.cc/25K5rv5J/image.png',
+            ':pumpkin_vampire:': 'https://i.postimg.cc/xT21f90T/image.png',
+            ':pumpkin_speechless:': 'https://i.postimg.cc/T2rTHBnC/image.png',
+            ':pumpkin_dizzy:': 'https://i.postimg.cc/KYg63gfv/image.png',
+            ':pumpkin_happy:': 'https://i.postimg.cc/t4sf8VLH/image.png',
+            ':pumpkin_drool:': 'https://i.postimg.cc/K8CVb829/image.png',
+            ':pumpkin_sneeze:': 'https://i.postimg.cc/W3vHDYtq/image.png',
+            ':pumpkin_cry:': 'https://i.postimg.cc/Y0XnspRv/image.png'
+        };
+
         // 9 NHÓM CHUẨN UNICODE CLDR VỚI TOÀN BỘ 3.953 EMOJI
         const DANV_EMOJI_CATEGORIES = {
             halloween: {
@@ -34977,19 +35135,19 @@
                 name: 'Halloween 2026',
                 groupName: 'Halloween Pumpkins',
                 emojis: [
-                    { char: '🎃', code: ':pumpkin_angry:', img: 'https://i.postimg.cc/sXg2Rmyh/image.png' },
-                    { char: '🎃', code: ':pumpkin_cute:', img: 'https://i.postimg.cc/8Ct1wvWj/image.png' },
-                    { char: '🎃', code: ':pumpkin_giggle:', img: 'https://i.postimg.cc/Njt9z1yd/image.png' },
-                    { char: '🎃', code: ':pumpkin_dead:', img: 'https://i.postimg.cc/nzXCD25H/image.png' },
-                    { char: '🎃', code: ':pumpkin_witch:', img: 'https://i.postimg.cc/9F5rDGBc/image.png' },
-                    { char: '🎃', code: ':pumpkin_pirate:', img: 'https://i.postimg.cc/25K5rv5J/image.png' },
-                    { char: '🎃', code: ':pumpkin_vampire:', img: 'https://i.postimg.cc/xT21f90T/image.png' },
-                    { char: '🎃', code: ':pumpkin_speechless:', img: 'https://i.postimg.cc/T2rTHBnC/image.png' },
-                    { char: '🎃', code: ':pumpkin_dizzy:', img: 'https://i.postimg.cc/KYg63gfv/image.png' },
-                    { char: '🎃', code: ':pumpkin_happy:', img: 'https://i.postimg.cc/t4sf8VLH/image.png' },
-                    { char: '🎃', code: ':pumpkin_drool:', img: 'https://i.postimg.cc/K8CVb829/image.png' },
-                    { char: '🎃', code: ':pumpkin_sneeze:', img: 'https://i.postimg.cc/W3vHDYtq/image.png' },
-                    { char: '🎃', code: ':pumpkin_cry:', img: 'https://i.postimg.cc/Y0XnspRv/image.png' }
+                    { char: ':pumpkin_angry:', code: ':pumpkin_angry:', img: 'https://i.postimg.cc/sXg2Rmyh/image.png' },
+                    { char: ':pumpkin_cute:', code: ':pumpkin_cute:', img: 'https://i.postimg.cc/8Ct1wvWj/image.png' },
+                    { char: ':pumpkin_giggle:', code: ':pumpkin_giggle:', img: 'https://i.postimg.cc/Njt9z1yd/image.png' },
+                    { char: ':pumpkin_dead:', code: ':pumpkin_dead:', img: 'https://i.postimg.cc/nzXCD25H/image.png' },
+                    { char: ':pumpkin_witch:', code: ':pumpkin_witch:', img: 'https://i.postimg.cc/9F5rDGBc/image.png' },
+                    { char: ':pumpkin_pirate:', code: ':pumpkin_pirate:', img: 'https://i.postimg.cc/25K5rv5J/image.png' },
+                    { char: ':pumpkin_vampire:', code: ':pumpkin_vampire:', img: 'https://i.postimg.cc/xT21f90T/image.png' },
+                    { char: ':pumpkin_speechless:', code: ':pumpkin_speechless:', img: 'https://i.postimg.cc/T2rTHBnC/image.png' },
+                    { char: ':pumpkin_dizzy:', code: ':pumpkin_dizzy:', img: 'https://i.postimg.cc/KYg63gfv/image.png' },
+                    { char: ':pumpkin_happy:', code: ':pumpkin_happy:', img: 'https://i.postimg.cc/t4sf8VLH/image.png' },
+                    { char: ':pumpkin_drool:', code: ':pumpkin_drool:', img: 'https://i.postimg.cc/K8CVb829/image.png' },
+                    { char: ':pumpkin_sneeze:', code: ':pumpkin_sneeze:', img: 'https://i.postimg.cc/W3vHDYtq/image.png' },
+                    { char: ':pumpkin_cry:', code: ':pumpkin_cry:', img: 'https://i.postimg.cc/Y0XnspRv/image.png' }
                 ]
             },
             smileys: {
@@ -35493,11 +35651,20 @@
             const allMatches = getCurrentFilteredEmojiList();
             const visibleEmojis = allMatches.slice(0, emojiDisplayedCount);
 
-            const gridHtml = visibleEmojis.map(item => `
-                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
-                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">
+            const gridHtml = visibleEmojis.map(item => {
+                const isPumpkin = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
+                const imgSrc = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
+                const insertVal = isPumpkin ? (item.code || item.char) : item.char;
+
+                return `
+                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${insertVal}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
+                    ${isPumpkin 
+                        ? `<img class="pumpkin-custom-emoji" src="${imgSrc}" alt="${item.code}">`
+                        : `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">`
+                    }
                 </div>
-            `).join('');
+                `;
+            }).join('');
 
             const totalAll = getTotalEmojiCount();
             const badgeCountText = emojiSearchTerm 
@@ -35534,11 +35701,19 @@
                             emojiDisplayedCount += 140;
 
                             const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = nextBatch.map(item => `
-                                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
-                                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">
+                            tempDiv.innerHTML = nextBatch.map(item => {
+                                const isPumpkin = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
+                                const imgSrc = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
+                                const insertVal = isPumpkin ? (item.code || item.char) : item.char;
+                                return `
+                                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${insertVal}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
+                                    ${isPumpkin 
+                                        ? `<img class="pumpkin-custom-emoji" src="${imgSrc}" alt="${item.code}">`
+                                        : `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">`
+                                    }
                                 </div>
-                            `).join('');
+                                `;
+                            }).join('');
 
                             while (tempDiv.firstChild) {
                                 this.appendChild(tempDiv.firstChild);
@@ -35698,11 +35873,11 @@
             try {
                 // Tải trạng thái và tải luôn danh sách frames để lấy URL hình ảnh
                 const [statusRes, framesRes] = await Promise.all([
-                    fetch(`${WORKER_URL}/api/store/halloween_status?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`),
+                    apiFetch(`/api/store/halloween_status`, { method: 'POST', body: JSON.stringify({}) }),
                     fetch(`${WORKER_URL}/api/frames`)
                 ]);
 
-                halloweenStatusData = await statusRes.json();
+                halloweenStatusData = statusRes;
                 const allFrames = await framesRes.json() || [];
 
                 renderSpookyAttendance(allFrames);
