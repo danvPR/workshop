@@ -12511,7 +12511,7 @@
                     <p style="color: var(--text-muted); font-size: 0.95rem;" data-i18n="upload_step1_new_desc">Xuất bản một dự án Scratch (.sb3) hoàn toàn mới lên nền tảng.</p>
                 </div>
                 <!-- Nút Cập nhật -->
-                <div onclick="showUploadUpdate()" style="background: var(--bg-secondary); border: 2px solid var(--border-color); padding: 40px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='none';">
+                <div id="uploadChoiceUpdateCard" onclick="showUploadUpdate()" style="background: var(--bg-secondary); border: 2px solid var(--border-color); padding: 40px 20px; border-radius: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='none';">
                     <i class="fa-solid fa-clock-rotate-left" style="font-size: 3.5rem; color: #ea580c; margin-bottom: 15px;"></i>
                     <h3 style="margin-bottom: 10px; color: var(--text-title);" data-i18n="upload_step1_update_title">Cập nhật bản mới</h3>
                     <p style="color: var(--text-muted); font-size: 0.95rem;" data-i18n="upload_step1_update_desc">Tải lên file (.sb3) mới cho dự án đã đăng. Giữ nguyên lượt thích và bình luận.</p>
@@ -12524,6 +12524,9 @@
             <div style="display: flex; align-items: center; gap: 15px; border-bottom:1px solid var(--border-color); padding-bottom:15px; margin-bottom: 20px;">
                 <button class="btn" onclick="resetUploadView()" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 style="color:var(--text-title); margin: 0;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary);"></i> <span data-i18n="upload_title">Xuất bản tác phẩm mới</span></h2>
+            </div>
+            <div id="forkUploadNotice" class="info-card" style="display:none; margin-bottom:18px;">
+                <div class="info-body" id="forkUploadNoticeText"></div>
             </div>
             
             <!-- Project Analysis Card (shows when projectJson is available) -->
@@ -23135,9 +23138,68 @@
                 platform: 'turboshare',
                 projectId: String(source.projectId),
                 title: String(source.title || 'Untitled').slice(0, 100),
-                author: String(source.author || 'Unknown').slice(0, 80)
+                author: String(source.author || 'Unknown').slice(0, 80),
+                ...(source.forkTitle ? { forkTitle: String(source.forkTitle).slice(0, 100) } : {})
             };
         }
+
+        function setForkUploadMode(source) {
+            const updateCard = document.getElementById('uploadChoiceUpdateCard');
+            const notice = document.getElementById('forkUploadNotice');
+            const noticeText = document.getElementById('forkUploadNoticeText');
+            if (!source) {
+                if (updateCard) updateCard.style.display = '';
+                if (notice) notice.style.display = 'none';
+                const titleInput = document.getElementById('upTitle');
+                if (titleInput && titleInput.dataset.forkPrefill &&
+                    titleInput.value === titleInput.dataset.forkPrefill) {
+                    titleInput.value = '';
+                    delete titleInput.dataset.forkPrefill;
+                }
+                return;
+            }
+            if (updateCard) updateCard.style.display = 'none';
+            if (notice && noticeText) {
+                const sourceUrl = `/projects/${encodeURIComponent(source.projectId)}`;
+                noticeText.innerHTML = `Forked from <a href="${sourceUrl}">${escapeHtml(source.title)}</a> by ${escapeHtml(source.author)}. This will be uploaded as a new project.`;
+                notice.style.display = 'block';
+            }
+            const titleInput = document.getElementById('upTitle');
+            if (titleInput) {
+                const suggestedTitle = source.forkTitle || `${source.title} fork`;
+                if (!titleInput.value || titleInput.value === titleInput.dataset.forkPrefill) {
+                    titleInput.value = suggestedTitle;
+                    titleInput.dataset.forkPrefill = suggestedTitle;
+                }
+            }
+        }
+
+        document.addEventListener('change', async event => {
+            const input = event.target;
+            if (!input || (input.id !== 'upFile' && input.id !== 'updateProjFile')) return;
+            const file = input.files && input.files[0];
+            if (!file) {
+                setForkUploadMode(null);
+                return;
+            }
+            try {
+                const source = await extractTurboShareForkSource(file);
+                if (!source) {
+                    setForkUploadMode(null);
+                    return;
+                }
+                setForkUploadMode(source);
+                if (input.id === 'updateProjFile') {
+                    showUploadNew();
+                    const transfer = new DataTransfer();
+                    transfer.items.add(file);
+                    document.getElementById('upFile').files = transfer.files;
+                    setForkUploadMode(source);
+                }
+            } catch (error) {
+                showToast(error.message || 'Không thể đọc metadata fork trong tệp .sb3.', 'error');
+            }
+        });
 
         async function handleUploadBtn(providedToken) {
             const fileInput = document.getElementById('upFile').files[0];
