@@ -22573,10 +22573,35 @@
         function changeLanguage(lang) { localStorage.setItem('lang', lang); showToast("Language changed.", "success"); }
 
         // ================= UPLOAD TRỰC QUAN MỚI =================
+        // 🚀 HÀM ĐỔI BASE64 SANG FILE THUẦN TÚY (0ms, KHÔNG BỊ CHẶN CSP CONNECT-SRC)
+        function dataURLtoFile(dataurl, filename = 'thumbnail.png') {
+            if (!dataurl || typeof dataurl !== 'string' || !dataurl.startsWith('data:')) return null;
+            try {
+                const arr = dataurl.split(',');
+                const mimeMatch = arr[0].match(/:(.*?);/);
+                const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+                const bstr = atob(arr[1]);
+                let n = bstr.length;
+                const u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new File([u8arr], filename, { type: mime });
+            } catch (e) {
+                console.error("Lỗi chuyển đổi dataURL sang File:", e);
+                return null;
+            }
+        }
+
         function handleThumbnailPreviewBig(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) { const img = document.getElementById('thumbPreviewBig'); img.src = e.target.result; img.style.display = 'block'; document.getElementById('thumbPlaceholder').style.display = 'none'; };
+                reader.onload = function(e) { 
+                    const img = document.getElementById('thumbPreviewBig'); 
+                    img.src = e.target.result; 
+                    img.style.display = 'block'; 
+                    document.getElementById('thumbPlaceholder').style.display = 'none'; 
+                }; 
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -22628,28 +22653,33 @@
                     document.getElementById('upTitle').value = pendingImportedData.title;
                 }
                 if (pendingImportedData.sb3File && document.getElementById('upFile')) {
-                    const dt = new DataTransfer();
-                    dt.items.add(pendingImportedData.sb3File);
-                    document.getElementById('upFile').files = dt.files;
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(pendingImportedData.sb3File);
+                        document.getElementById('upFile').files = dt.files;
+                    } catch(e){}
                 }
+                
+                // Nếu chưa có thumbFile nhưng có chuỗi Base64 -> chuyển đổi ngay lập tức
+                if (!pendingImportedData.thumbFile && pendingImportedData.thumbDataUrl) {
+                    pendingImportedData.thumbFile = dataURLtoFile(pendingImportedData.thumbDataUrl, "thumbnail.png");
+                }
+
                 if (pendingImportedData.thumbFile && document.getElementById('upThumb')) {
-                    const dtThumb = new DataTransfer();
-                    dtThumb.items.add(pendingImportedData.thumbFile);
-                    document.getElementById('upThumb').files = dtThumb.files;
+                    try {
+                        const dtThumb = new DataTransfer();
+                        dtThumb.items.add(pendingImportedData.thumbFile);
+                        document.getElementById('upThumb').files = dtThumb.files;
+                    } catch(e){}
+                }
+
+                if (pendingImportedData.thumbDataUrl) {
                     const img = document.getElementById('thumbPreviewBig');
                     if (img) {
                         img.src = pendingImportedData.thumbDataUrl;
                         img.style.display = 'block';
                         document.getElementById('thumbPlaceholder').style.display = 'none';
-                        console.log("[showUploadNew] Thumbnail preview set");
                     }
-                } else if (pendingImportedData.thumbDataUrl && document.getElementById('thumbPreviewBig')) {
-                    // Fallback: use data URL directly if blob failed
-                    const img = document.getElementById('thumbPreviewBig');
-                    img.src = pendingImportedData.thumbDataUrl;
-                    img.style.display = 'block';
-                    document.getElementById('thumbPlaceholder').style.display = 'none';
-                    console.log("[showUploadNew] Thumbnail preview set from data URL (fallback)");
                 }
             }
         }
@@ -23029,10 +23059,10 @@
                 
                 if (thumbDataUrl) {
                     try {
-                        const blob = await (await fetch(thumbDataUrl)).blob();
-                        pendingImportedData.thumbFile = new File([blob], "thumbnail.png", { type: "image/png" });
+                        // 🚀 Dùng chuyển đổi mảng byte đồng bộ, loại bỏ hoàn toàn fetch() gây lỗi CSP
+                        pendingImportedData.thumbFile = dataURLtoFile(thumbDataUrl, "thumbnail.png");
                     } catch (e) {
-                        console.warn("Lỗi nạp blob thumbnail:", e);
+                        console.warn("Lỗi nạp file thumbnail:", e);
                     }
                 }
                 
@@ -23419,12 +23449,29 @@
                 
                 const finalForm = new FormData(); 
                 finalForm.append("preloadedFileId", uploadedIds.join(",")); 
+
+                // 🚀 LỚP BẢO VỆ 3 TẦNG: Đảm bảo có ảnh là bắt buộc phải được đóng gói gửi đi
+                let thumbToUpload = document.getElementById('upThumb')?.files[0];
                 
-                let thumbToUpload = document.getElementById('upThumb').files[0];
-                if (!thumbToUpload && typeof pendingImportedData !== 'undefined' && pendingImportedData && pendingImportedData.thumbFile) {
-                    thumbToUpload = pendingImportedData.thumbFile;
+                if (!thumbToUpload && typeof pendingImportedData !== 'undefined' && pendingImportedData) {
+                    if (pendingImportedData.thumbFile) {
+                        thumbToUpload = pendingImportedData.thumbFile;
+                    } else if (pendingImportedData.thumbDataUrl) {
+                        thumbToUpload = dataURLtoFile(pendingImportedData.thumbDataUrl, "thumbnail.png");
+                    }
                 }
-                if (thumbToUpload) finalForm.append("thumb", thumbToUpload);
+                
+                // Nếu người dùng thấy ảnh hiển thị ở khung preview nhưng input bị hụt file
+                if (!thumbToUpload) {
+                    const previewImg = document.getElementById('thumbPreviewBig');
+                    if (previewImg && previewImg.src && previewImg.src.startsWith('data:')) {
+                        thumbToUpload = dataURLtoFile(previewImg.src, "thumbnail.png");
+                    }
+                }
+
+                if (thumbToUpload) {
+                    finalForm.append("thumb", thumbToUpload, "thumbnail.png");
+                }
 
                 finalForm.append("title", document.getElementById('upTitle').value); 
                 finalForm.append("visibility", document.getElementById('upVisibility').value); 
