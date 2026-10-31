@@ -19083,7 +19083,8 @@
                 editorBaseUrl = 'https://turbowarp.org/editor?project_url=';
             }
             const btnSeeInside = document.getElementById('btnSeeInside');
-            btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}`;
+            const referrer = window.location.origin + window.location.pathname + window.location.search;
+            btnSeeInside.href = `${editorBaseUrl}${encodeURIComponent(fileUrl)}&referrer=${encodeURIComponent(referrer)}`;
             btnSeeInside.target = (engineChoice === 'turbowarp') ? '_blank' : '_self';
             document.getElementById('projDesc').innerHTML = proj.description ? formatProjectDesc(proj.description) : "Chưa có hướng dẫn.";
             document.getElementById('projCredits').innerHTML = proj.credits ? formatProjectDesc(proj.credits) : "Tác giả gốc.";
