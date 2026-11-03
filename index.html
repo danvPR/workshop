@@ -13041,6 +13041,23 @@
             </div>
         </div>
         <div style="background: #f6f7f8; border: 1px solid #d9d9d9; border-top: none; border-radius: 0 0 12px 12px; padding: 25px; min-height: 400px;">
+            <section style="background: var(--bg-panel); border: 1px solid var(--border-color); border-left: 5px solid #f5b041; border-radius: 16px; padding: 22px; margin-bottom: 28px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
+                    <div>
+                        <h3 style="color:var(--text-title); margin:0 0 6px; display:flex; align-items:center; gap:9px;">
+                            <i class="fa-solid fa-puzzle-piece" style="color:#f5b041;"></i> Extensions Store
+                        </h3>
+                        <p style="color:var(--text-muted); margin:0; font-size:0.88rem;">Duyệt mã JavaScript trước khi phát hành; cập nhật thông tin, mã nguồn hoặc gỡ extension khỏi cửa hàng.</p>
+                    </div>
+                    <button class="btn" type="button" onclick="loadAdminMarketplaceExtensions()">
+                        <i class="fa-solid fa-rotate-right"></i> Làm mới
+                    </button>
+                </div>
+                <div id="adminMarketplaceExtensionsList" aria-live="polite">
+                    <div style="color:var(--text-muted); text-align:center; padding:18px;">Đang tải extensions chờ duyệt...</div>
+                </div>
+            </section>
+
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
                 <h3 style="color: #1e293b; margin:0;"><i class="fa-solid fa-flag" style="color:#ef4444;"></i> <span data-i18n="admin_reports_title">Danh sách Tố cáo chờ xử lý</span></h3>
                 <button class="btn" onclick="loadAdminReports()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="admin_btn_refresh">Làm mới</span></button>
@@ -24136,8 +24153,195 @@
             }
             document.getElementById('adminView').style.display = 'block';
             loadAdminReports();
+            loadAdminMarketplaceExtensions();
             loadAdminEventsManager(); // <-- THÊM DÒNG NÀY VÀO ĐÂY
             setupAdminFrameStudio(); // Tự động khởi tạo phòng cân chỉnh khung
+        }
+
+        function renderAdminMarketplaceExtensions(extensions) {
+            const container = document.getElementById('adminMarketplaceExtensionsList');
+            const items = (Array.isArray(extensions) ? extensions : []).filter(extension =>
+                extension && /^[a-f0-9]{64}$/.test(String(extension.hash || '')) && extension.marketplace &&
+                /^[A-Za-z0-9_-]{1,64}$/.test(String(extension.marketplace.id || ''))
+            );
+            if (!items.length) {
+                container.innerHTML = '<div style="background:var(--bg-secondary); border:1px dashed var(--border-color); border-radius:12px; padding:24px; color:var(--text-muted); text-align:center;">Không có extensions cần xử lý.</div>';
+                return;
+            }
+            container.innerHTML = items.map(extension => {
+                const hash = String(extension.hash);
+                const marketplace = extension.marketplace;
+                const status = String(marketplace.status || 'pending');
+                const statusColor = status === 'approved' ? '#15803d' : status === 'pending' ? '#b45309' : '#64748b';
+                const safeCover = /^https:\/\/files\.catbox\.moe\/[A-Za-z0-9._-]{1,128}$/.test(String(marketplace.coverURL || '')) ?
+                    `<img src="${escapeHtml(marketplace.coverURL)}" alt="" style="width:120px; aspect-ratio:2/1; object-fit:cover; border-radius:10px; border:1px solid var(--border-color);">` :
+                    '<div style="width:120px; aspect-ratio:2/1; border-radius:10px; background:var(--bg-secondary); display:grid; place-items:center; color:var(--text-muted);"><i class="fa-regular fa-image"></i></div>';
+                const reviewActions = status === 'pending' ?
+                    `<button class="btn btn-primary" type="button" onclick="reviewAdminMarketplaceExtension('${hash}','approved')"><i class="fa-solid fa-check"></i> Duyệt và phát hành</button>
+                     <button class="btn" type="button" onclick="reviewAdminMarketplaceExtension('${hash}','rejected')"><i class="fa-solid fa-xmark"></i> Từ chối</button>` :
+                    status === 'approved' ?
+                        `<button class="btn btn-primary" type="button" onclick="toggleAdminMarketplaceEditor('${hash}')"><i class="fa-solid fa-pen"></i> Cập nhật</button>
+                         <button class="btn" type="button" onclick="removeAdminMarketplaceExtension('${escapeHtml(marketplace.id)}')"><i class="fa-solid fa-box-archive"></i> Gỡ khỏi Store</button>` :
+                        `<button class="btn" type="button" onclick="reviewAdminMarketplaceExtension('${hash}','approved')"><i class="fa-solid fa-check"></i> Duyệt lại</button>`;
+                return `<article style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:14px; padding:18px; margin-bottom:14px;">
+                    <div style="display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+                        ${safeCover}
+                        <div style="flex:1; min-width:220px;">
+                            <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;">
+                                <strong style="font-size:1.05rem; color:var(--text-title);">${escapeHtml(marketplace.name || marketplace.id)}</strong>
+                                <span style="font-size:0.75rem; font-weight:800; color:${statusColor}; background:color-mix(in srgb, ${statusColor} 12%, var(--bg-panel)); padding:4px 8px; border-radius:99px;">${escapeHtml(status.toUpperCase())}</span>
+                            </div>
+                            <div style="color:var(--text-muted); font-size:0.82rem; margin-top:5px;">
+                                ID: <code>${escapeHtml(marketplace.id)}</code> · v${escapeHtml(marketplace.version || '')} · @${escapeHtml(marketplace.author || 'unknown')}
+                            </div>
+                            <p style="color:var(--text-title); font-size:0.88rem; margin:9px 0 0; white-space:pre-wrap;">${escapeHtml(marketplace.description || 'Không có mô tả.')}</p>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">${reviewActions}</div>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <button class="btn" type="button" onclick="loadAdminMarketplaceSource('${hash}')"><i class="fa-solid fa-code"></i> Xem mã JavaScript</button>
+                    </div>
+                    <pre id="adminMarketplaceReadSource-${hash}" style="display:none; max-height:360px; overflow:auto; margin:12px 0 0; padding:14px; border-radius:10px; background:#111827; color:#e5e7eb; font:12px/1.5 monospace; white-space:pre-wrap; overflow-wrap:anywhere;"></pre>
+                    ${status === 'approved' ? `<div id="adminMarketplaceEditor-${hash}" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--border-color);">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px;">
+                            <label style="display:grid; gap:5px; font-size:0.8rem; font-weight:700;">Tên
+                                <input id="adminMarketplaceName-${hash}" class="form-control" maxlength="80" value="${escapeHtml(marketplace.name || '')}">
+                            </label>
+                            <label style="display:grid; gap:5px; font-size:0.8rem; font-weight:700;">Phiên bản
+                                <input id="adminMarketplaceVersion-${hash}" class="form-control" maxlength="40" value="${escapeHtml(marketplace.version || '')}">
+                            </label>
+                        </div>
+                        <label style="display:grid; gap:5px; margin-top:10px; font-size:0.8rem; font-weight:700;">Mô tả
+                            <textarea id="adminMarketplaceDescription-${hash}" class="form-control" maxlength="500" rows="3">${escapeHtml(marketplace.description || '')}</textarea>
+                        </label>
+                        <label style="display:grid; gap:5px; margin-top:10px; font-size:0.8rem; font-weight:700;">Thay ảnh bìa (PNG, JPEG, WebP; tối đa 2 MB)
+                            <input id="adminMarketplaceCover-${hash}" class="form-control" type="file" accept="image/png,image/jpeg,image/webp">
+                        </label>
+                        <label style="display:grid; gap:5px; margin-top:10px; font-size:0.8rem; font-weight:700;">Mã JavaScript mới (tùy chọn; tối đa 2 MB)
+                            <textarea id="adminMarketplaceSource-${hash}" class="form-control" rows="12" spellcheck="false" style="font-family:monospace; font-size:0.8rem;"></textarea>
+                        </label>
+                        <p style="color:var(--text-muted); font-size:0.78rem; margin:8px 0;">Khi lưu mã mới, hệ thống tạo phiên bản đã duyệt mới và lưu mã trên Catbox.</p>
+                        <button class="btn btn-primary" type="button" onclick="saveAdminMarketplaceExtension('${hash}')"><i class="fa-solid fa-floppy-disk"></i> Lưu và cập nhật Store</button>
+                    </div>` : ''}
+                </article>`;
+            }).join('');
+        }
+
+        async function loadAdminMarketplaceExtensions() {
+            const container = document.getElementById('adminMarketplaceExtensionsList');
+            if (!container) return;
+            container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:18px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải hàng duyệt...</div>';
+            const res = await apiFetch('/api/admin/extensions/marketplace', { method: 'POST', body: JSON.stringify({}) });
+            if (!res || !res.success) {
+                container.innerHTML = `<div role="alert" style="color:#b42318; background:#fff1f0; border-radius:10px; padding:14px;">${escapeHtml(res && res.error ? res.error : 'Không thể tải danh sách. Kiểm tra cấu hình kết nối Store của Worker.')}</div>`;
+                return;
+            }
+            renderAdminMarketplaceExtensions(res.extensions);
+        }
+
+        async function loadAdminMarketplaceSource(hash) {
+            if (!/^[a-f0-9]{64}$/.test(String(hash || ''))) return;
+            const result = await apiFetch('/api/admin/extensions/marketplace/source', {
+                method: 'POST',
+                body: JSON.stringify({ hash })
+            });
+            if (!result || !result.success) {
+                showToast((result && result.error) || 'Không thể tải mã nguồn extension.', 'error');
+                return;
+            }
+            const preview = document.getElementById(`adminMarketplaceReadSource-${hash}`);
+            if (preview) {
+                preview.textContent = result.source || '';
+                preview.style.display = 'block';
+            }
+            const editor = document.getElementById(`adminMarketplaceEditor-${hash}`);
+            const sourceField = document.getElementById(`adminMarketplaceSource-${hash}`);
+            if (editor && sourceField) {
+                sourceField.value = result.source || '';
+                sourceField.dataset.loaded = 'true';
+                editor.style.display = 'block';
+            }
+        }
+
+        function toggleAdminMarketplaceEditor(hash) {
+            const editor = document.getElementById(`adminMarketplaceEditor-${hash}`);
+            if (editor) editor.style.display = editor.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+                reader.onerror = () => reject(reader.error || new Error('Không đọc được ảnh bìa.'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function reviewAdminMarketplaceExtension(hash, status) {
+            if (!/^[a-f0-9]{64}$/.test(String(hash || ''))) return;
+            if (status === 'rejected' && !confirm('Từ chối phiên bản extension này?')) return;
+            const result = await apiFetch('/api/admin/extensions/marketplace/review', {
+                method: 'POST',
+                body: JSON.stringify({ hash, status })
+            });
+            if (!result || !result.success) {
+                showToast((result && result.error) || 'Không thể cập nhật trạng thái duyệt.', 'error');
+                return;
+            }
+            showToast(status === 'approved' ? 'Đã duyệt và phát hành extension.' : 'Đã từ chối phiên bản extension.', 'success');
+            await loadAdminMarketplaceExtensions();
+        }
+
+        async function saveAdminMarketplaceExtension(hash) {
+            if (!/^[a-f0-9]{64}$/.test(String(hash || ''))) return;
+            const coverField = document.getElementById(`adminMarketplaceCover-${hash}`);
+            const cover = coverField && coverField.files ? coverField.files[0] : null;
+            if (cover && (!['image/png', 'image/jpeg', 'image/webp'].includes(cover.type) || cover.size > 2 * 1024 * 1024)) {
+                showToast('Ảnh bìa phải là PNG, JPEG hoặc WebP và không quá 2 MB.', 'error');
+                return;
+            }
+            const sourceField = document.getElementById(`adminMarketplaceSource-${hash}`);
+            const source = sourceField && sourceField.dataset.loaded === 'true' ? sourceField.value : '';
+            if (source && new TextEncoder().encode(source).length > 2 * 1024 * 1024) {
+                showToast('Mã JavaScript không được vượt quá 2 MB.', 'error');
+                return;
+            }
+            try {
+                const result = await apiFetch('/api/admin/extensions/marketplace/update', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        hash,
+                        name: document.getElementById(`adminMarketplaceName-${hash}`).value.trim(),
+                        version: document.getElementById(`adminMarketplaceVersion-${hash}`).value.trim(),
+                        description: document.getElementById(`adminMarketplaceDescription-${hash}`).value.trim(),
+                        source,
+                        coverBase64: cover ? await fileToBase64(cover) : '',
+                        coverMime: cover ? cover.type : ''
+                    })
+                });
+                if (!result || !result.success) {
+                    showToast((result && result.error) || 'Không thể cập nhật extension.', 'error');
+                    return;
+                }
+                showToast('Đã cập nhật extension trong Store.', 'success');
+                await loadAdminMarketplaceExtensions();
+            } catch (error) {
+                showToast(error.message || 'Không thể cập nhật extension.', 'error');
+            }
+        }
+
+        async function removeAdminMarketplaceExtension(id) {
+            if (!/^[A-Za-z0-9_-]{1,64}$/.test(String(id || '')) || !confirm('Gỡ extension cùng các phiên bản của nó khỏi Extensions Store?')) return;
+            const result = await apiFetch('/api/admin/extensions/marketplace/remove', {
+                method: 'POST',
+                body: JSON.stringify({ id })
+            });
+            if (!result || !result.success) {
+                showToast((result && result.error) || 'Không thể gỡ extension khỏi Store.', 'error');
+                return;
+            }
+            showToast('Đã gỡ extension khỏi Extensions Store.', 'success');
+            await loadAdminMarketplaceExtensions();
         }
 
         // Hàm hỗ trợ tự động tìm vị trí của Báo cáo 
