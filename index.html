@@ -414,202 +414,18 @@
 
 
         :root { 
-            --primary: #f97316; --primary-dark: #ea580c;
-            --bg-body: #fbf7ee; --bg-panel: #ffffff;
-            --bg-secondary: #f7eed8; --bg-input: #ffffff;
-            --text-main: #2e1c14; --text-muted: #7c5e48; --text-title: #1a0a03;
-            --border-color: #ebd6be;
-            --halloween-orange: #ea580c;
-            --halloween-purple: #8b5cf6;
-            --halloween-dark: #180b2c;
-            --halloween-glow: rgba(234, 88, 12, 0.35);
+            --primary: #0da57a; --primary-dark: #0a8260;
+            --bg-body: #f3f4f6; --bg-panel: #ffffff;
+            --bg-secondary: #f8fafc; --bg-input: #ffffff;
+            --text-main: #374151; --text-muted: #6b7280; --text-title: #111827;
+            --border-color: #e5e7eb;
         }
-
-        /* 🎃 HALLOWEEN THEME OVERRIDES 180 ĐỘ (SPOOKY VIBE) */
-        body {
-            background-color: var(--bg-body);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(234, 88, 12, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 45%);
-            background-attachment: fixed;
-        }
-
-        .wow-icon {
-            background-image: url('https://files.catbox.moe/3lljlr.webp') !important;
-            filter: drop-shadow(0 0 6px rgba(234, 88, 12, 0.75)) !important;
-        }
-
-        .pumpkin-custom-emoji {
-            width: 1.45em !important;
-            height: 1.45em !important;
-            vertical-align: -0.32em !important;
-            display: inline-block !important;
-            object-fit: contain !important;
-            margin: 0 2px !important;
-            filter: drop-shadow(0 2px 5px rgba(234, 88, 12, 0.5));
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .pumpkin-custom-emoji:hover {
-            transform: scale(1.28) rotate(-6deg);
-        }
-
-        .navbar-brand {
-            position: relative;
-        }
-        .navbar-brand::after {
-            content: '';
-            position: absolute;
-            top: -14px;
-            left: -8px;
-            width: 32px;
-            height: 32px;
-            background: url('https://files.catbox.moe/io1tlj.webp') no-repeat center;
-            background-size: contain;
-            pointer-events: none;
-            transform: rotate(-18deg);
-            z-index: 10;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
-        }
-
-        .nav-spooky-btn {
-            background: linear-gradient(135deg, #7e22ce 0%, #ea580c 100%) !important;
-            color: #ffffff !important;
-            padding: 7px 16px;
-            border-radius: 20px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            text-decoration: none;
-            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-            position: relative;
-            white-space: nowrap;
-        }
-        .nav-spooky-btn:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 24px rgba(234, 88, 12, 0.7);
-        }
-
-        /* MODAL TIỆM SPOOKY RETAIL */
-        .spooky-modal-box {
-            max-width: 820px !important;
-            border-radius: 24px !important;
-            overflow: hidden !important;
-            background: var(--bg-panel) !important;
-            border: 2px solid var(--halloween-orange) !important;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 45px rgba(234, 88, 12, 0.4) !important;
-        }
-        .spooky-banner-header {
-            width: 100%;
-            height: 190px;
-            background: #180b2c url('https://frightspot.com/assets/spooky-retail-BTjyyI1q.png') center/cover no-repeat;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-            padding: 20px;
-            border-bottom: 2px solid rgba(234, 88, 12, 0.5);
-        }
-        .spooky-bats-decor {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            width: 110px;
-            height: auto;
-            opacity: 0.9;
-            pointer-events: none;
-            animation: floatCheerHeart 3.5s infinite ease-in-out alternate;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-        }
-        .spooky-nav-tabs {
-            display: flex;
-            gap: 8px;
-            background: var(--bg-secondary);
-            padding: 4px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            margin: 14px 20px 0 20px;
-        }
-        .spooky-tab-btn {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-weight: 800;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-        .spooky-tab-btn.active {
-            background: var(--halloween-orange) !important;
-            color: #ffffff !important;
-            box-shadow: 0 3px 12px rgba(234, 88, 12, 0.45);
-        }
-
-        /* KHUNG ĐIỂM DANH HALLOWEEN 5 NGÀY */
-        .spooky-days-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 16px 0;
-        }
-        .spooky-day-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 12px 6px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.25s;
-            position: relative;
-        }
-        .spooky-day-card.active {
-            border-color: var(--halloween-orange) !important;
-            background: rgba(234, 88, 12, 0.12) !important;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35);
-        }
-        .spooky-day-card.claimed {
-            opacity: 0.65;
-            background: rgba(0,0,0,0.06);
-        }
-
-        /* THẺ NHIỆM VỤ */
-        .spooky-quest-card {
-            background: var(--bg-secondary);
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-
         [data-theme="dark"] {
-            --primary: #ea580c; --primary-dark: #c2410c; 
-            --bg-body: #0d0617; --bg-panel: #170d2b; 
-            --bg-secondary: #22133e; --bg-input: #100820;
-            --text-main: #f3e8ff; --text-muted: #c084fc; --text-title: #faf5ff;
-            --border-color: #3b1b68;
-            --halloween-orange: #ea580c;
-            --halloween-purple: #a855f7;
-            --halloween-dark: #090312;
-            --halloween-glow: rgba(234, 88, 12, 0.5);
+            --primary: #10b981; --primary-dark: #34d399; /* Xanh ngọc sáng hơn */
+            --bg-body: #111827; --bg-panel: #1f2937; /* Đổi sang màu than chì Tailwind mềm mắt hơn */
+            --bg-secondary: #374151; --bg-input: #111827;
+            --text-main: #e5e7eb; --text-muted: #9ca3af; --text-title: #f9fafb;
+            --border-color: #374151;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', "Segoe UI", ui-rounded, system-ui, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
@@ -1502,29 +1318,16 @@
         }
         .player-iframe { width: 100%; height: 100%; border: none; }
 
-        /* THANH ĐIỀU KHIỂN & HÀNH ĐỘNG DỰ ÁN (SPOOKY HALLOWEEN ACTION BAR) */
+        /* THANH ĐIỀU KHIỂN & HÀNH ĐỘNG ĐƯỢC QUY HOẠCH GỌN GÀNG */
         .proj-action-bar { 
             background: var(--bg-panel); 
-            border: 1.5px solid var(--border-color); 
-            border-radius: 20px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
             padding: 18px 24px; 
             display: flex; 
             flex-direction: column; 
             gap: 16px; 
-            box-shadow: 0 6px 25px rgba(0,0,0,0.03), 0 0 20px rgba(234, 88, 12, 0.08); 
-            position: relative;
-            overflow: hidden;
-        }
-        .proj-action-bar::after {
-            content: '';
-            position: absolute;
-            top: -12px;
-            right: 20px;
-            width: 70px;
-            height: 35px;
-            background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
-            opacity: 0.35;
-            pointer-events: none;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.03); 
         }
         
         .proj-title-row { 
@@ -1541,8 +1344,8 @@
             align-items: center; 
             gap: 15px; 
             flex-wrap: wrap; 
-            padding-top: 14px; 
-            border-top: 1.5px solid var(--border-color); 
+            padding-top: 12px; 
+            border-top: 1px solid var(--border-color); 
         }
         
         .proj-btn-cluster { 
@@ -1552,72 +1355,58 @@
             flex-wrap: wrap; 
         }
 
-        /* 1. Cụm nút cảm xúc liền khối (Spooky Halloween Segmented Control) */
+        /* 1. Cụm nút cảm xúc liền khối (Segmented Reaction Control) */
         .proj-segmented-group {
             display: inline-flex;
             align-items: center;
             background: var(--bg-secondary);
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             overflow: hidden;
-            height: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            height: 38px;
         }
         .proj-seg-btn {
             background: none;
             border: none;
-            border-right: 1.5px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 0 15px;
+            padding: 0 14px;
             height: 100%;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             font-size: 0.88rem;
-            font-weight: 800;
+            font-weight: 700;
             transition: all 0.2s ease;
         }
         .proj-seg-btn:last-child { border-right: none; }
-        .proj-seg-btn:hover { 
-            background: rgba(234, 88, 12, 0.1); 
-            color: var(--halloween-orange); 
-        }
-        .proj-seg-btn.active.like { 
-            color: #ff3838; 
-            background: rgba(255, 56, 56, 0.15); 
-            filter: drop-shadow(0 0 6px rgba(255, 56, 56, 0.5));
-        }
-        .proj-seg-btn.active.star { 
-            color: #f59e0b; 
-            background: rgba(245, 158, 11, 0.18); 
-            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
-        }
+        .proj-seg-btn:hover { background: var(--border-color); color: var(--text-title); }
+        .proj-seg-btn.active.like { color: #ff4c4c; background: rgba(255, 76, 76, 0.12); }
+        .proj-seg-btn.active.star { color: #f5b041; background: rgba(245, 176, 65, 0.14); }
 
-        /* 2. Quy chuẩn nút con dạng viên thuốc ma thuật */
+        /* 2. Quy chuẩn kích thước nút đồng bộ */
         .proj-pill-btn {
-            height: 40px;
+            height: 38px;
             padding: 0 16px;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 0.88rem;
-            font-weight: 800;
+            font-weight: 700;
             display: inline-flex;
             align-items: center;
             gap: 7px;
             cursor: pointer;
-            border: 1.5px solid var(--border-color);
+            border: 1px solid var(--border-color);
             background: var(--bg-secondary);
             color: var(--text-title);
             text-decoration: none;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
         }
         .proj-pill-btn:hover {
-            border-color: var(--halloween-orange);
-            color: var(--halloween-orange);
+            border-color: var(--primary);
+            color: var(--primary);
             background: var(--bg-panel);
             transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.25);
         }
 
         /* 3. Menu 3 chấm gom gọn các tác vụ quản trị / báo cáo */
@@ -1667,41 +1456,16 @@
 
         .proj-card-box {
             background: var(--bg-panel);
-            border: 1.5px solid var(--border-color);
-            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
             padding: 22px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.02), 0 0 16px rgba(139, 92, 246, 0.05);
-            transition: all 0.25s ease;
-        }
-        .proj-card-box:hover {
-            border-color: rgba(234, 88, 12, 0.35);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.04), 0 0 20px rgba(234, 88, 12, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        .info-card { 
-            background: var(--bg-secondary); 
-            border: 1.5px solid var(--border-color); 
-            border-radius: 14px; 
-            padding: 18px; 
-            margin-bottom: 16px; 
-            position: relative;
-        }
-        .info-header { 
-            font-size: 0.85rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            color: var(--halloween-orange); 
-            letter-spacing: 0.6px; 
-            margin-bottom: 8px; 
-            display: flex; 
-            align-items: center; 
-            gap: 7px; 
-        }
-        .info-header i {
-            filter: drop-shadow(0 0 5px rgba(234, 88, 12, 0.5));
-        }
-        .info-body { font-size: 0.95rem; color: var(--text-main); white-space: pre-line; line-height: 1.65; }
+        .info-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+        .info-header { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .info-body { font-size: 0.95rem; color: var(--text-main); white-space: pre-line; line-height: 1.6; }
         .fork-attribution { display: flex; align-items: center; gap: 12px; white-space: normal; }
         .fork-attribution-avatar { width: 42px; height: 42px; flex: 0 0 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
         .fork-attribution-copy { min-width: 0; }
@@ -2074,7 +1838,7 @@
         }
         .profile-cover-bg { 
             height: 220px; 
-            background: linear-gradient(135deg, #2e0854 0%, #150628 50%, #3b1103 100%); 
+            background: linear-gradient(135deg, #064e3b 0%, #0d1e2b 50%, #0f172a 100%); 
             background-size: cover;
             background-position: center;
             position: relative; 
@@ -2085,27 +1849,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 18% 30%, rgba(234, 88, 12, 0.4) 0%, transparent 60%),
-                        radial-gradient(circle at 82% 70%, rgba(168, 85, 247, 0.35) 0%, transparent 60%);
+            background: radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
             pointer-events: none;
-        }
-        .profile-cover-bg::after {
-            content: '';
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            width: 140px;
-            height: 70px;
-            background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
-            opacity: 0.4;
-            pointer-events: none;
-            animation: floatCheerHeart 4s infinite ease-in-out alternate;
         }
         .profile-cover-bg.has-custom-cover::before {
-            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
-        }
-        .profile-cover-bg.has-custom-cover::after {
-            display: none;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%);
         }
         .btn-change-cover {
             position: absolute;
@@ -2361,54 +2110,122 @@
         .bento-drawer-item b { display: block; font-size: 0.9rem; color: var(--text-title); margin-bottom: 4px; }
         .bento-drawer-item span { font-size: 0.72rem; color: var(--text-muted); }
 
-        /* THANH TABS PROFILE MỚI DẠNG FLOATING SEGMENTED CAPSULE (HALLOWEEN THEME) */
+        /* THANH TABS PROFILE MỚI DẠNG FLOATING SEGMENTED CAPSULE */
         .profile-nav-tabs { 
             display: inline-flex; 
             background: var(--bg-panel); 
-            border: 1.5px solid var(--border-color); 
-            border-radius: 20px; 
-            padding: 5px; 
-            gap: 5px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 18px; 
+            padding: 4px; 
+            gap: 4px; 
             margin-bottom: 24px; 
             max-width: 100%;
             overflow-x: auto;
             scrollbar-width: none;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.04), 0 0 15px rgba(234, 88, 12, 0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
         .profile-nav-tabs::-webkit-scrollbar { display: none; }
         .prof-tab-btn { 
-            background: transparent; 
-            border: 1px solid transparent; 
-            padding: 8px 20px; 
-            font-weight: 800; 
+            background: none; 
+            border: none; 
+            padding: 8px 18px; 
+            font-weight: 700; 
             color: var(--text-muted); 
             cursor: pointer; 
             border-radius: 14px; 
             font-size: 0.88rem; 
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.2s ease;
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
             gap: 7px;
         }
         .prof-tab-btn:hover { 
-            color: var(--halloween-orange); 
-            background: rgba(234, 88, 12, 0.08);
-            transform: translateY(-1px);
+            color: var(--text-title); 
         }
         .prof-tab-btn.active { 
-            background: linear-gradient(135deg, rgba(234, 88, 12, 0.16) 0%, rgba(139, 92, 246, 0.14) 100%) !important; 
-            color: var(--halloween-orange) !important; 
-            border-color: rgba(234, 88, 12, 0.35) !important;
-            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.22) !important;
-            transform: translateY(-1px);
-        }
-        .prof-tab-btn.active i {
-            filter: drop-shadow(0 0 6px rgba(234, 88, 12, 0.6));
+            background: var(--bg-secondary); 
+            color: var(--primary) !important; 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .prof-tab-content { display: none; }
         .prof-tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+
+        /* Trang cá nhân: thao tác rõ ràng, phẳng và thân thiện với màn hình cảm ứng */
+        #profileView .profile-hero,
+        #profileView .grid-stack-item-content,
+        #profileView .bento-stat-item {
+            box-shadow: none;
+        }
+        #profileView .profile-hero { border-radius: 18px; }
+        #profileView .profile-avt-lg { box-shadow: none; }
+        #profileView .profile-username-title { line-height: 1.25; }
+        #profileView .profile-actions .btn,
+        #profileView .btn-change-cover,
+        #profileView .prof-tab-btn,
+        #profileView .bento-stat-item {
+            min-height: 44px;
+        }
+        #profileView .profile-actions .btn { padding: 10px 18px !important; }
+        #profileView .profile-actions #btnReportProf,
+        #profileView .profile-actions #profMoreMenuWrap > .btn { width: 44px !important; height: 44px !important; }
+        #profileView .profile-nav-tabs {
+            justify-content: flex-start;
+            border-radius: 14px;
+            box-shadow: none;
+            scroll-padding-inline: 8px;
+            overscroll-behavior-inline: contain;
+        }
+        #profileView .prof-tab-btn { min-height: 44px; }
+        #profileView .prof-tab-btn:focus-visible,
+        #profileView .profile-actions .btn:focus-visible,
+        #profileView .btn-change-cover:focus-visible,
+        #profileView .bento-stat-item:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+        #profileView .prof-tab-btn.active { box-shadow: none; }
+        #profileView .grid-stack-item-content:hover,
+        #profileView .bento-stat-item:hover { box-shadow: none; transform: none; }
+        #profileView .bento-featured-banner { background: #172033; }
+        #profileView .bento-featured-thumb img { opacity: 1; }
+        #profileView .bento-featured-banner h2,
+        #profileView .bento-featured-info h2 { text-shadow: none; }
+        #profileView .bento-featured-info .btn { min-height: 44px; }
+        #profileView .prof-tab-content > .project-grid,
+        #profileView .prof-tab-content > #userActivityList { scroll-margin-top: 16px; }
+
+        @media (max-width: 768px) {
+            #profileView .profile-main-content { padding-inline: 16px; }
+            #profileView .profile-top-row { gap: 8px; }
+            #profileView .profile-avt-wrapper { width: 112px; height: 112px; }
+            #profileView .profile-info-body { margin-top: 12px; }
+            #profileView .profile-username-title { font-size: 1.4rem; }
+            #profileView .profile-meta-pills { gap: 7px; }
+            #profileView .profile-nav-tabs {
+                width: 100%;
+                flex-wrap: nowrap;
+                padding: 4px;
+                margin-bottom: 18px;
+                -webkit-overflow-scrolling: touch;
+            }
+            #profileView .prof-tab-btn {
+                flex: 0 0 auto;
+                min-width: 44px;
+                padding: 9px 13px;
+            }
+            #profileView .bento-widget-inner { padding: 16px; }
+            #profileView .bento-featured-banner { flex-direction: column; }
+            #profileView .bento-featured-thumb { width: 100%; height: 180px; }
+            #profileView .bento-featured-info { padding: 18px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #profileView .prof-tab-content.active { animation: none; }
+            #profileView .prof-tab-btn,
+            #profileView .grid-stack-item-content,
+            #profileView .bento-stat-item { transition: none; }
+        }
 
         @media (max-width: 768px) {
             .profile-hero { border-radius: 18px; }
@@ -3915,6 +3732,39 @@
             gap: 10px;
             flex-wrap: wrap;
         }
+        .assets-library-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .assets-library-btn {
+            min-height: 38px;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 750;
+            cursor: pointer;
+            transition: 0.2s ease;
+            white-space: nowrap;
+        }
+        .assets-library-btn:hover,
+        .assets-library-btn.active {
+            border-color: rgba(13, 165, 122, 0.45);
+            background: rgba(13, 165, 122, 0.1);
+            color: var(--primary);
+        }
+        .assets-library-btn:focus-visible,
+        .asset-cat-chip:focus-visible {
+            outline: 3px solid rgba(13, 165, 122, 0.35);
+            outline-offset: 2px;
+        }
         .asset-select-filter {
             background: var(--bg-secondary);
             border: 1.5px solid var(--border-color);
@@ -3986,6 +3836,23 @@
             padding: 4px 12px;
             border-radius: 14px;
         }
+        .assets-load-message {
+            margin: 0 0 14px;
+            padding: 11px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-panel);
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+        .assets-load-message.is-error {
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #dc2626;
+        }
 
         .asset-grid {
             display: grid;
@@ -4008,6 +3875,32 @@
             box-shadow: 0 12px 28px rgba(0,0,0,0.06);
             border-color: var(--primary);
         }
+        .asset-card-save-btn {
+            position: absolute;
+            z-index: 4;
+            top: 10px;
+            right: 10px;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.76);
+            color: #fff;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: 0.2s ease;
+        }
+        .asset-card-save-btn:hover,
+        .asset-card-save-btn.saved {
+            background: #e11d48;
+            border-color: #e11d48;
+            color: #fff;
+            transform: scale(1.06);
+        }
+        .asset-card-save-btn .fa-heart { pointer-events: none; }
 
         /* Khung xem trước hình ảnh / Âm thanh */
         .asset-preview-stage {
@@ -4061,7 +3954,7 @@
         .asset-quick-inspect-btn {
             position: absolute;
             top: 10px;
-            right: 10px;
+            right: 50px;
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -4079,7 +3972,8 @@
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 3;
         }
-        .asset-card:hover .asset-quick-inspect-btn {
+        .asset-card:hover .asset-quick-inspect-btn,
+        .asset-quick-inspect-btn:focus-visible {
             opacity: 1;
             transform: scale(1);
         }
@@ -4384,7 +4278,10 @@
             .assets-btn-contribute { width: 100%; justify-content: center; }
             .assets-search-row { flex-direction: column; align-items: stretch; }
             .assets-controls-right { justify-content: space-between; }
-            .asset-select-filter { flex: 1; }
+            .asset-select-filter { flex: 1; min-width: 0; }
+            .assets-library-actions { width: 100%; }
+            .assets-library-actions .asset-select-filter { flex: 1; }
+            .assets-library-btn { flex: 1; }
             .asset-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
             .asset-preview-stage { height: 135px; }
             .asset-body-content { padding: 10px 12px; }
@@ -4393,6 +4290,7 @@
         @media (max-width: 480px) {
             .asset-grid { grid-template-columns: 1fr !important; }
             .asset-preview-stage { height: 165px; }
+            .assets-load-message { align-items: flex-start; flex-direction: column; }
         }
 
         /* SKELETON LOADING (GIAI ĐOẠN 4) */
@@ -7794,7 +7692,7 @@
         }
         .station-banner-cover {
             height: 180px;
-            background: linear-gradient(135deg, #1b0730 0%, #0e031a 50%, #2e0d02 100%);
+            background: linear-gradient(135deg, #091a16 0%, #0d1e2b 50%, #0f172a 100%);
             position: relative;
             overflow: hidden;
         }
@@ -7802,19 +7700,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 15% 30%, rgba(234, 88, 12, 0.4) 0%, transparent 60%),
-                        radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.35) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .station-banner-cover::after {
-            content: '';
-            position: absolute;
-            bottom: 10px;
-            right: 40px;
-            width: 130px;
-            height: 60px;
-            background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
-            opacity: 0.35;
+            background: radial-gradient(circle at 15% 30%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
+                        radial-gradient(circle at 85% 70%, rgba(56, 189, 248, 0.25) 0%, transparent 60%);
             pointer-events: none;
         }
         .station-banner-content {
@@ -10778,7 +10665,7 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- FIX THÊM THƯ VIỆN HCAPTCHA BẰNG SCRIPT -->
     <!-- THÊM THƯ VIỆN GOOGLE RECAPTCHA V2 -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
     <!-- THÊM THƯ VIỆN SUPABASE CHAT REALTIME -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -10843,10 +10730,6 @@
             <a href="/#studios" class="nav-link nav-studios"><i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_studios">Stations</span></a>
         </div>
         <div class="nav-right">
-            <button type="button" class="nav-spooky-btn" onclick="openSpookyShopModal()">
-                <img src="https://static.vecteezy.com/system/resources/previews/072/756/912/non_2x/black-bat-silhouette-for-halloween-party-and-spooky-decoration-free-png.png" style="width:16px; height:auto; filter:brightness(0) invert(1);">
-                <span>Tiệm Spooky</span>
-            </button>
             <div class="nav-actions" id="navActions"></div>
         </div>
     </nav>
@@ -10901,13 +10784,6 @@
         <a href="/#create" class="mobile-nav-create-fab nav-create" aria-label="Sáng tạo">
             <span class="dock-tooltip" data-i18n="nav_create">Sáng tạo</span>
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-        </a>
-
-        <!-- Nút Spooky Mobile -->
-        <a href="javascript:void(0)" onclick="openSpookyShopModal()" class="mobile-nav-link" aria-label="Tiệm Spooky" style="color:var(--halloween-orange);">
-            <span class="dock-tooltip">Tiệm Spooky</span>
-            <img src="https://static.vecteezy.com/system/resources/previews/072/756/912/non_2x/black-bat-silhouette-for-halloween-party-and-spooky-decoration-free-png.png" style="width:20px; height:auto; filter:brightness(0) invert(1);">
-            <span class="indicator-dot" style="background:var(--halloween-orange);"></span>
         </a>
 
         <!-- Assets -->
@@ -10972,8 +10848,11 @@
                                 <option value="png" data-i18n="assets_fmt_png">PNG (Trong suốt)</option>
                                 <option value="gif" data-i18n="assets_fmt_gif">GIF (Ảnh động)</option>
                                 <option value="svg" data-i18n="assets_fmt_svg">SVG (Vector)</option>
+                                <option value="webp" data-i18n="assets_fmt_webp">WebP</option>
+                                <option value="jpg" data-i18n="assets_fmt_jpg">JPG / JPEG</option>
                                 <option value="mp3" data-i18n="assets_fmt_mp3">MP3 (Âm thanh)</option>
                                 <option value="wav" data-i18n="assets_fmt_wav">WAV (Chất lượng cao)</option>
+                                <option value="ogg" data-i18n="assets_fmt_ogg">OGG (Âm thanh)</option>
                             </select>
 
                             <select id="assetSortFilter" class="asset-select-filter" onchange="changeAssetSortFilter(this.value)">
@@ -10981,32 +10860,42 @@
                                 <option value="top_voted" data-i18n="assets_sort_top_voted">Bình chọn cao nhất</option>
                                 <option value="smallest" data-i18n="assets_sort_smallest">Dung lượng nhẹ nhất</option>
                             </select>
+                            <div class="assets-library-actions">
+                                <button type="button" class="assets-library-btn" id="assetSavedFilterBtn" onclick="toggleSavedAssetsFilter()" aria-pressed="false">
+                                    <i class="fa-regular fa-heart"></i> <span data-i18n="assets_saved_only">Đã lưu</span>
+                                </button>
+                                <button type="button" class="assets-library-btn" onclick="fetchAssetsList(true)" data-i18n-title="assets_refresh" title="Tải lại tài nguyên">
+                                    <i class="fa-solid fa-rotate"></i> <span data-i18n="assets_refresh">Làm mới</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- 3. DẢI RIBBON THỂ LOẠI (CHIP CAPSULES) -->
                     <div class="asset-category-ribbon">
-                        <button type="button" class="asset-cat-chip active" onclick="setAssetCategory('all', this)">
+                        <button type="button" class="asset-cat-chip active" data-asset-category="all" onclick="setAssetCategory('all', this)">
                             <i class="fa-solid fa-border-all"></i> <span data-i18n="assets_cat_all">Tất cả</span>
                         </button>
-                        <button type="button" class="asset-cat-chip" onclick="setAssetCategory('sprite', this)">
+                        <button type="button" class="asset-cat-chip" data-asset-category="sprite" onclick="setAssetCategory('sprite', this)">
                             <i class="fa-solid fa-person-running" style="color:#0284c7;"></i> <span data-i18n="assets_cat_sprite">Sprites / Nhân vật</span>
                         </button>
-                        <button type="button" class="asset-cat-chip" onclick="setAssetCategory('background', this)">
+                        <button type="button" class="asset-cat-chip" data-asset-category="background" onclick="setAssetCategory('background', this)">
                             <i class="fa-solid fa-image" style="color:#10b981;"></i> <span data-i18n="assets_cat_background">Hình nền</span>
                         </button>
-                        <button type="button" class="asset-cat-chip" onclick="setAssetCategory('music', this)">
+                        <button type="button" class="asset-cat-chip" data-asset-category="music" onclick="setAssetCategory('music', this)">
                             <i class="fa-solid fa-music" style="color:#ea580c;"></i> <span data-i18n="assets_cat_music">Nhạc nền (BGM)</span>
                         </button>
-                        <button type="button" class="asset-cat-chip" onclick="setAssetCategory('sfx', this)">
+                        <button type="button" class="asset-cat-chip" data-asset-category="sfx" onclick="setAssetCategory('sfx', this)">
                             <i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> <span data-i18n="assets_cat_sfx">Âm hiệu (SFX)</span>
                         </button>
-                        <button type="button" class="asset-cat-chip" onclick="setAssetCategory('ui', this)">
+                        <button type="button" class="asset-cat-chip" data-asset-category="ui" onclick="setAssetCategory('ui', this)">
                             <i class="fa-solid fa-shapes" style="color:#8b5cf6;"></i> <span data-i18n="assets_cat_ui">Giao diện (UI)</span>
                         </button>
                     </div>
                 </div>
             </div>
+
+            <div id="assetLoadStatus" role="status" aria-live="polite" style="display:none;"></div>
 
             <!-- HEADER PHÂN VÙNG LƯỚI & SỐ LƯỢNG HIỂN THỊ -->
             <div class="assets-items-header">
@@ -11637,9 +11526,9 @@
         .ts-banner-wide {
           width: 100%;
           min-height: 330px;
-          background: linear-gradient(135deg, #2a0b45 0%, #17082a 55%, #3d1405 100%);
-          border: 2px solid var(--halloween-orange);
-          border-radius: 28px;
+          background-color: #c8f2de;
+          border: 1.5px solid #a7e7cb;
+          border-radius: 24px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -11647,25 +11536,13 @@
           box-sizing: border-box;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 35px rgba(234, 88, 12, 0.25);
-          transition: all 0.3s ease;
-        }
-        .ts-banner-wide::before {
-          content: '';
-          position: absolute;
-          top: -20px;
-          right: 30%;
-          width: 220px;
-          height: 120px;
-          background: url('https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300') no-repeat center/contain;
-          opacity: 0.55;
-          pointer-events: none;
-          animation: floatCheerHeart 4s infinite ease-in-out alternate;
+          box-shadow: 0 6px 20px -6px rgba(16, 185, 129, 0.15);
+          transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         [data-theme="dark"] .ts-banner-wide {
-          background: linear-gradient(135deg, #18062b 0%, #0c0217 60%, #2e0d02 100%);
-          border-color: #f97316;
-          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 45px rgba(234, 88, 12, 0.35);
+          background-color: #064e3b;
+          border-color: #047857;
+          box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
         }
         .ts-content {
           flex: 0 0 54%;
@@ -11987,7 +11864,13 @@
 
     <!-- TRANG 2: DỰ ÁN (BỐ CỤC MỚI KHÔNG TAB & CỤM NÚT CHUẨN HÓA) -->
     <div id="projectView" class="page-view">
-        <div class="proj-page-wrapper">
+        <div id="projectLoadError" style="display:none; text-align:center; padding:100px 20px;">
+            <i id="projectLoadErrorIcon" class="fa-solid fa-triangle-exclamation" style="font-size:4rem; color:#ef4444; opacity:0.7; margin-bottom:16px;"></i>
+            <h2 id="projectLoadErrorText" style="color:var(--text-title); margin-bottom:18px; font-weight:800;"></h2>
+            <button type="button" class="btn btn-primary" style="border-radius:20px; padding:10px 24px; font-weight:700;" onclick="handleRouting()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="route_retry">Thử tải lại</span></button>
+            <button type="button" class="btn" style="border-radius:20px; padding:10px 24px; font-weight:700; margin-left:8px;" onclick="navigateTo('#home')"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
+        </div>
+        <div class="proj-page-wrapper" id="projectPageContent">
             
             <!-- KHU VỰC CHƠI GAME CHÍNH (SÂN KHẤU) -->
             <div class="player-container" id="playerContainer"></div>
@@ -12250,10 +12133,17 @@
 
     <!-- TRANG 3: PROFILE -->
     <div id="profileView" class="page-view" style="max-width: 1180px; width: 100%; margin: 0 auto; padding: 10px 20px 50px 20px;">
-        <div id="profile404" style="display:none; text-align:center; padding:80px 20px;">
-            <img src="https://files.catbox.moe/ebtn97.webp" style="width:110px; height:auto; margin-bottom:16px; animation:floatMascot 3s infinite ease-in-out;">
+        <div id="profile404" style="display:none; text-align:center; padding:100px 20px;">
+            <i class="fa-solid fa-user-slash" style="font-size:4.5rem; color:var(--text-muted); opacity:0.4; margin-bottom:16px;"></i>
             <h2 style="color:var(--text-title); margin-bottom:10px; font-weight:800;" data-i18n="prof_404_title">404 - Không tìm thấy người dùng</h2>
+            <button type="button" class="btn btn-primary" style="border-radius:20px; padding:10px 24px; font-weight:700; margin-right:8px;" onclick="handleRouting()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="route_retry">Thử tải lại</span></button>
             <button class="btn btn-primary" style="border-radius:20px; padding:10px 24px; font-weight:700;" onclick="location.hash='#home'"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
+        </div>
+        <div id="profileLoadError" style="display:none; text-align:center; padding:100px 20px;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:4rem; color:#ef4444; opacity:0.7; margin-bottom:16px;"></i>
+            <h2 style="color:var(--text-title); margin-bottom:18px; font-weight:800;" data-i18n="profile_load_error">Không thể tải hồ sơ lúc này.</h2>
+            <button type="button" class="btn btn-primary" style="border-radius:20px; padding:10px 24px; font-weight:700;" onclick="handleRouting()"><i class="fa-solid fa-rotate-right"></i> <span data-i18n="route_retry">Thử tải lại</span></button>
+            <button type="button" class="btn" style="border-radius:20px; padding:10px 24px; font-weight:700; margin-left:8px;" onclick="navigateTo('#home')"><i class="fa-solid fa-house"></i> <span data-i18n="create_btn_home">Về Trang chủ</span></button>
         </div>
 
         <div id="profileContent">
@@ -14151,96 +14041,6 @@
                         <i class="fa-solid fa-paper-plane"></i> <span data-i18n="action_send_mail">Gửi thư</span>
                     </a>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MODAL CỬA HÀNG SPOOKY RETAIL & NHIỆM VỤ HALLOWEEN ================= -->
-    <div class="modal-overlay" id="spookyShopModal" style="z-index: 10004;">
-        <div class="modal spooky-modal-box">
-            <!-- Header Banner Spooky Retail -->
-            <div class="spooky-banner-header">
-                <img src="https://beavertownbrewery.co.uk/cdn/shop/files/Halloween_Assets_26_Bats.png?v=1789724918&width=300" class="spooky-bats-decor">
-                <button class="btn-close" onclick="closeModal('spookyShopModal')" style="position:absolute; top:12px; right:15px; color:#fff; background:rgba(0,0,0,0.5); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;">&times;</button>
-                <div style="background:rgba(15, 23, 42, 0.85); backdrop-filter:blur(6px); padding:8px 16px; border-radius:14px; border:1px solid rgba(234,88,12,0.4);">
-                    <div style="font-size:0.75rem; font-weight:800; color:#ea580c; text-transform:uppercase;"><i class="fa-solid fa-wand-magic-sparkles"></i> Lễ Hội Halloween 2026</div>
-                    <div style="font-size:1.25rem; font-weight:900; color:#fff;">Tiệm Tạp Hóa Ma Quái (Spooky Retail)</div>
-                </div>
-            </div>
-
-            <!-- Tabs Điều Hướng -->
-            <div class="spooky-nav-tabs">
-                <button type="button" class="spooky-tab-btn active" id="btnSpookyTabDaily" onclick="switchSpookyShopTab('daily')">
-                    <img src="https://files.catbox.moe/3lljlr.webp" style="width:18px; height:18px;">
-                    <span>Điểm danh 5 Khung</span>
-                </button>
-                <button type="button" class="spooky-tab-btn" id="btnSpookyTabQuests" onclick="switchSpookyShopTab('quests')">
-                    <img src="https://assets-v2.lottiefiles.com/a/bfcfa854-9394-11ef-ace0-fb93abd50f34/CiZ8qkBBfb.png" style="width:18px; height:18px;">
-                    <span>Nhiệm vụ nhận WOW</span>
-                </button>
-                <button type="button" class="spooky-tab-btn" id="btnSpookyTabSack" onclick="switchSpookyShopTab('sack')">
-                    <img src="https://images.squarespace-cdn.com/content/v1/5420d068e4b09194f76b2af6/1539974404222-IYM3K16DQMF58PI0LP1J/image-asset.png" style="width:18px; height:18px;">
-                    <span>Bao Tải Kẹo Gacha</span>
-                </button>
-            </div>
-
-            <!-- TAB 1: ĐIỂM DANH NHẬN 5 KHUNG TRONG CỬA HÀNG -->
-            <div class="modal-body" id="spookyPaneDaily" style="padding:18px 22px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <div>
-                        <b style="font-size:1rem; color:var(--text-title); display:flex; align-items:center; gap:6px;">
-                            <i class="fa-solid fa-calendar-check" style="color:var(--halloween-orange);"></i>
-                            <span>Chuỗi Đăng Nhập Halloween (5 Ngày - 5 Khung)</span>
-                        </b>
-                        <span style="font-size:0.8rem; color:var(--text-muted);">Đăng nhập mỗi ngày để nhận vĩnh viễn các khung độc quyền từ máy chủ</span>
-                    </div>
-                    <span id="spookyStreakBadge" style="font-size:0.82rem; font-weight:800; background:rgba(234,88,12,0.12); color:#ea580c; padding:3px 10px; border-radius:12px; border:1px solid rgba(234,88,12,0.3);">Chuỗi: 0/5</span>
-                </div>
-
-                <!-- 5 Thẻ Ngày tương ứng 5 Khung trong Sheet -->
-                <div class="spooky-days-grid" id="spookyDaysGrid">
-                    <!-- Render từ JS -->
-                </div>
-
-                <!-- Nút Bấm Điểm Danh Ngay Trong Cửa Hàng -->
-                <div style="margin-top:14px;">
-                    <button type="button" class="btn btn-primary" id="btnClaimSpookyDaily" onclick="handleClaimSpookyDaily()" style="width:100%; justify-content:center; padding:12px; font-weight:800; font-size:1rem; border-radius:14px; background:linear-gradient(135deg, #ea580c, #c2410c); border:none; box-shadow:0 4px 15px rgba(234,88,12,0.4);">
-                        <i class="fa-solid fa-gift"></i> <span>Điểm danh nhận Khung hôm nay</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- TAB 2: NHIỆM VỤ HALLOWEEN NHẬN WOW -->
-            <div class="modal-body" id="spookyPaneQuests" style="padding:18px 22px; display:none;">
-                <div style="display:flex; align-items:center; gap:12px; background:rgba(126, 34, 206, 0.08); border:1px solid rgba(126, 34, 206, 0.25); border-radius:14px; padding:12px 14px; margin-bottom:14px;">
-                    <img src="https://images.squarespace-cdn.com/content/v1/5737ad2a1d07c093e2787063/1761301986229-DO6QQLATDF2ERBKXKQK6/Asset%2B29Halloween.webp" style="width:44px; height:auto; flex-shrink:0;">
-                    <div style="font-size:0.85rem; color:var(--text-title); line-height:1.45;">
-                        <b>Thỏ Phù Thủy BeaBea:</b> "Hoàn thành 4 thử thách mỗi ngày để kiếm kẹo WOW và mở khóa Bao Tải Thần Bí nhé!"
-                    </div>
-                </div>
-
-                <!-- Danh sách 4 Quest -->
-                <div id="spookyQuestsList">
-                    <!-- Render từ JS -->
-                </div>
-            </div>
-
-            <!-- TAB 3: BAO TẢI KẸO GACHA -->
-            <div class="modal-body" id="spookyPaneSack" style="padding:22px; display:none; text-align:center;">
-                <img src="https://images.squarespace-cdn.com/content/v1/5420d068e4b09194f76b2af6/1539974404222-IYM3K16DQMF58PI0LP1J/image-asset.png" style="width:110px; height:auto; margin:0 auto 10px auto; display:block; filter:drop-shadow(0 8px 16px rgba(0,0,0,0.3)); animation:bagWiggle 2.5s infinite ease-in-out;">
-                <h3 style="font-size:1.25rem; font-weight:900; color:var(--text-title); margin:0 0 6px 0;">Bao Tải Kẹo Thần Bí (80 WOW)</h3>
-                <p style="font-size:0.86rem; color:var(--text-muted); max-width:440px; margin:0 auto 16px auto;">
-                    Đổi 80 WOW để thò tay vào bao tải kẹo ma quái. Có cơ hội <b>nổ hũ kẹo lên đến 300 WOW</b> và quà tặng bất ngờ!
-                </p>
-
-                <div id="spookySackResultBox" style="display:none; background:rgba(234,88,12,0.1); border:1.5px dashed var(--halloween-orange); border-radius:14px; padding:14px; margin-bottom:14px;">
-                    <div style="font-weight:900; font-size:1.3rem; color:var(--halloween-orange);" id="spookySackResultTitle">Chúc mừng!</div>
-                    <div style="font-size:0.9rem; color:var(--text-title);" id="spookySackResultDesc"></div>
-                </div>
-
-                <button type="button" class="btn btn-primary" id="btnOpenMysterySack" onclick="handleOpenMysterySack()" style="border-radius:20px; font-weight:900; padding:11px 32px; background:linear-gradient(135deg, #7e22ce, #ea580c); border:none; box-shadow:0 4px 18px rgba(126, 34, 206, 0.4);">
-                    <i class="fa-solid fa-gift"></i> <span>Mở Bao Tải Kẹo (80 WOW)</span>
-                </button>
             </div>
         </div>
     </div>
@@ -16491,11 +16291,30 @@
         // BỘ ĐIỀU KHIỂN CAPTCHA NỔI TOÀN CỤC (CÓ CƠ CHẾ CHỜ VÀ CHỐNG SẬP MODAL)
         let currentCaptchaWidgetId = null;
         let currentCaptchaType = null;
+        let currentCaptchaMount = null;
         let lastCaptchaParams = null;
+        let captchaRenderTimer = null;
+        let captchaRenderGeneration = 0;
 
         function openUniversalCaptcha(type, siteKey, callback) {
             const container = document.getElementById('universalCaptchaContainer');
             if (!container) return;
+            const generation = ++captchaRenderGeneration;
+            if (captchaRenderTimer) {
+                clearTimeout(captchaRenderTimer);
+                captchaRenderTimer = null;
+            }
+            if (currentCaptchaWidgetId !== null) {
+                try {
+                    if (currentCaptchaType === 'recaptcha' && typeof grecaptcha !== 'undefined') grecaptcha.reset(currentCaptchaWidgetId);
+                    else if (currentCaptchaType === 'hcaptcha' && typeof hcaptcha !== 'undefined') hcaptcha.reset(currentCaptchaWidgetId);
+                    else if (currentCaptchaType === 'turnstile' && typeof turnstile !== 'undefined') turnstile.reset(currentCaptchaWidgetId);
+                } catch(e) {
+                    console.warn("Không thể reset captcha cũ:", e);
+                }
+            }
+            currentCaptchaWidgetId = null;
+            currentCaptchaMount = null;
             currentCaptchaType = type;
             lastCaptchaParams = { type, siteKey, callback };
             
@@ -16512,65 +16331,75 @@
 
             const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
             let attempts = 0;
-            const maxAttempts = 25; // Chờ tối đa 5 giây (25 lần x 200ms) để script kịp tải
+            let waitingForRecaptchaReady = false;
+            const maxAttempts = 60;
 
             const checkAndRender = () => {
+                if (generation !== captchaRenderGeneration) return;
                 attempts++;
+                let captchaApi = null;
 
                 if (type === 'hcaptcha' && typeof hcaptcha !== 'undefined' && typeof hcaptcha.render === 'function') {
-                    container.innerHTML = '';
-                    try {
-                        currentCaptchaWidgetId = hcaptcha.render(container, {
-                            sitekey: siteKey,
-                            theme: theme,
-                            callback: function(token) {
-                                closeUniversalCaptcha();
-                                callback(token);
-                            }
-                        });
-                    } catch(e) {
-                        showCaptchaRenderError(container, "Không thể khởi tạo hCaptcha.");
-                    }
+                    captchaApi = hcaptcha;
                 } else if (type === 'turnstile' && typeof turnstile !== 'undefined' && typeof turnstile.render === 'function') {
-                    container.innerHTML = '';
-                    try {
-                        currentCaptchaWidgetId = turnstile.render(container, {
-                            sitekey: siteKey,
-                            theme: 'auto',
-                            callback: function(token) {
-                                closeUniversalCaptcha();
-                                callback(token);
-                            }
-                        });
-                    } catch(e) {
-                        showCaptchaRenderError(container, "Không thể khởi tạo Turnstile.");
-                    }
+                    captchaApi = turnstile;
                 } else if (type === 'recaptcha' && typeof grecaptcha !== 'undefined' && typeof grecaptcha.render === 'function') {
-                    container.innerHTML = '';
-                    try {
-                        currentCaptchaWidgetId = grecaptcha.render(container, {
-                            sitekey: siteKey,
-                            theme: theme,
-                            callback: function(token) {
-                                closeUniversalCaptcha();
-                                callback(token);
-                            }
-                        });
-                    } catch(e) {
-                        showCaptchaRenderError(container, "Không thể khởi tạo reCAPTCHA.");
-                    }
-                } else {
-                    // Nếu chưa tải xong thì đợi tiếp thay vì đóng sập modal
+                    captchaApi = grecaptcha;
+                }
+
+                if (!captchaApi) {
                     if (attempts < maxAttempts) {
-                        setTimeout(checkAndRender, 200);
+                        captchaRenderTimer = setTimeout(checkAndRender, 250);
                     } else {
-                        // Sau 5 giây vẫn không có -> Chắc chắn bị AdBlock chặn hoặc mất mạng
                         showCaptchaRenderError(container, "Hệ thống xác thực bot không thể tải về?");
                     }
+                    return;
                 }
+
+                if (type === 'recaptcha' && typeof captchaApi.ready === 'function') {
+                    if (waitingForRecaptchaReady) return;
+                    waitingForRecaptchaReady = true;
+                    captchaApi.ready(() => {
+                        waitingForRecaptchaReady = false;
+                        if (generation !== captchaRenderGeneration) return;
+                        renderCaptchaWidget(captchaApi, container, type, siteKey, theme, callback, generation);
+                    });
+                    return;
+                }
+                renderCaptchaWidget(captchaApi, container, type, siteKey, theme, callback, generation);
             };
 
             checkAndRender();
+        }
+
+        function renderCaptchaWidget(captchaApi, container, type, siteKey, theme, callback, generation) {
+            if (generation !== captchaRenderGeneration) return;
+            const mount = document.createElement('div');
+            container.replaceChildren(mount);
+            currentCaptchaMount = mount;
+            let callbackDelivered = false;
+            try {
+                const options = {
+                    sitekey: siteKey,
+                    theme: type === 'turnstile' ? 'auto' : theme,
+                    callback: function(token) {
+                        if (generation !== captchaRenderGeneration || callbackDelivered || !token) return;
+                        callbackDelivered = true;
+                        closeUniversalCaptcha();
+                        callback(token);
+                    }
+                };
+                currentCaptchaWidgetId = captchaApi.render(mount, options);
+            } catch(e) {
+                console.error(`Không thể khởi tạo ${type}:`, e);
+                currentCaptchaWidgetId = null;
+                currentCaptchaMount = null;
+                showCaptchaRenderError(container, type === 'recaptcha'
+                    ? "Không thể khởi tạo reCAPTCHA."
+                    : type === 'turnstile'
+                        ? "Không thể khởi tạo Turnstile."
+                        : "Không thể khởi tạo hCaptcha.");
+            }
         }
 
         function showCaptchaRenderError(container, msg) {
@@ -16589,18 +16418,74 @@
         }
 
         function retryUniversalCaptcha() {
-            if (lastCaptchaParams) {
-                openUniversalCaptcha(lastCaptchaParams.type, lastCaptchaParams.siteKey, lastCaptchaParams.callback);
+            if (!lastCaptchaParams) return;
+            const params = lastCaptchaParams;
+            const hasApi = params.type === 'recaptcha'
+                ? typeof grecaptcha !== 'undefined' && typeof grecaptcha.render === 'function'
+                : params.type === 'hcaptcha'
+                    ? typeof hcaptcha !== 'undefined' && typeof hcaptcha.render === 'function'
+                    : typeof turnstile !== 'undefined' && typeof turnstile.render === 'function';
+            const isCurrentAttempt = () => lastCaptchaParams
+                && lastCaptchaParams.type === params.type
+                && lastCaptchaParams.siteKey === params.siteKey
+                && lastCaptchaParams.callback === params.callback;
+
+            openUniversalCaptcha(params.type, params.siteKey, params.callback);
+            if (hasApi) return;
+
+            const scriptSelector = params.type === 'recaptcha'
+                ? 'script[src*="google.com/recaptcha/api.js"]'
+                : params.type === 'hcaptcha'
+                    ? 'script[src*="js.hcaptcha.com"]'
+                    : 'script[src*="challenges.cloudflare.com/turnstile/"]';
+            const oldScript = document.querySelector(scriptSelector);
+            if (!oldScript || !oldScript.parentNode) {
+                console.warn("Không tìm thấy script captcha để tải lại:", params.type);
+                return;
             }
+
+            const scriptUrl = new URL(oldScript.src);
+            scriptUrl.searchParams.set('_retry', String(Date.now()));
+            const replacement = document.createElement('script');
+            replacement.src = scriptUrl.toString();
+            replacement.async = oldScript.async;
+            replacement.defer = oldScript.defer;
+            replacement.onload = () => {
+                if (isCurrentAttempt()) {
+                    openUniversalCaptcha(params.type, params.siteKey, params.callback);
+                }
+            };
+            replacement.onerror = () => {
+                const container = document.getElementById('universalCaptchaContainer');
+                if (container && isCurrentAttempt()) {
+                    showCaptchaRenderError(container, "Không thể tải lại script xác thực.");
+                }
+            };
+            oldScript.parentNode.replaceChild(replacement, oldScript);
         }
 
         function closeUniversalCaptcha() {
+            captchaRenderGeneration++;
+            if (captchaRenderTimer) {
+                clearTimeout(captchaRenderTimer);
+                captchaRenderTimer = null;
+            }
             const uModal = document.getElementById('universalCaptchaModal');
             if(uModal) uModal.style.display = 'none';
+            if (currentCaptchaWidgetId !== null) {
+                try {
+                    if (currentCaptchaType === 'recaptcha' && typeof grecaptcha !== 'undefined') grecaptcha.reset(currentCaptchaWidgetId);
+                    else if (currentCaptchaType === 'hcaptcha' && typeof hcaptcha !== 'undefined') hcaptcha.reset(currentCaptchaWidgetId);
+                    else if (currentCaptchaType === 'turnstile' && typeof turnstile !== 'undefined') turnstile.reset(currentCaptchaWidgetId);
+                } catch(e) {
+                    console.warn("Không thể reset captcha:", e);
+                }
+            }
             const container = document.getElementById('universalCaptchaContainer');
             if (container) container.innerHTML = '';
             currentCaptchaWidgetId = null;
             currentCaptchaType = null;
+            currentCaptchaMount = null;
         }
 
         const BrowserCache = {
@@ -17141,6 +17026,16 @@
         let currentAssetCategory = "all";
         let currentAssetFormat = "all";
         let currentAssetSort = "newest";
+        let showSavedAssetsOnly = false;
+        let assetLoadError = "";
+        let assetIsLoading = false;
+        let savedAssetIds = new Set();
+        try {
+            const storedSavedAssetIds = JSON.parse(localStorage.getItem('savedAssetIds') || '[]');
+            if (Array.isArray(storedSavedAssetIds)) savedAssetIds = new Set(storedSavedAssetIds.filter(id => typeof id === 'string'));
+        } catch (e) {
+            console.warn("Không thể đọc danh sách tài nguyên đã lưu:", e);
+        }
         let activeAudioPlaying = null; // Trình phát âm thanh đang hoạt động
         let activeQuickViewAsset = null;
         // --------------------------
@@ -17439,6 +17334,26 @@
                 console.warn("Lỗi kết nối Worker:", endpoint); 
                 return null; 
             }
+        }
+
+        async function fetchReadWithRetry(url, options = {}) {
+            const method = String(options.method || 'GET').toUpperCase();
+            if (method !== 'GET') return fetch(url, options);
+
+            for (let attempt = 0; attempt < 2; attempt++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (attempt === 0 && response.status >= 500 && response.status < 600) {
+                        await sleep(350);
+                        continue;
+                    }
+                    return response;
+                } catch(error) {
+                    if (attempt === 1) throw error;
+                    await sleep(350);
+                }
+            }
+            throw new Error('Không thể tải dữ liệu sau khi thử lại.');
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -18542,17 +18457,24 @@
                         syncAllWOWDisplays();
                     }
                     showToast(`Sub-account created @${subUsername}.`, 'success');
+                    if (res.familyIndexUpdated === false) {
+                        showToast('Tài khoản đã tạo nhưng thông tin liên kết phụ chưa đồng bộ; danh sách sẽ tự rà soát lại.', 'info');
+                    }
 
                     // 🚀 XÓA CACHE CŨ VÀ ÉP LÀM MỚI NGAY LẬP TỨC
                     BrowserCache.clear('subaccounts_' + currentUser.username.toLowerCase());
 
-                    if (res.subAccount && res.subAccount.sessionToken) {
+                    if (res.subAccount && res.subAccount.username) {
                         await switchSubAccount(res.subAccount.username);
                     } else {
                         await fetchSubAccountsList(true);
                     }
                 } else {
                     showToast(res ? (res.error || 'Unable to create a sub-account.') : 'Server connection error.', 'error');
+                    if (res && res.resultUnknown) {
+                        BrowserCache.clear('subaccounts_' + currentUser.username.toLowerCase());
+                        await fetchSubAccountsList(true);
+                    }
                 }
             } catch (err) {
                 showToast('Connection error when sending the request.', 'error');
@@ -18569,6 +18491,8 @@
         let heartbeatDelay = 6000; // Khởi điểm 6 giây
         const MAX_HEARTBEAT_DELAY = 35000; // Nếu AFK hoặc ở tab khác, giãn ra tối đa 35 giây
         let lastChatTimestamp = Date.now(); // Mốc thời gian để chỉ lấy tin nhắn mới
+        let isGlobalChatRealtimeConnected = false;
+        let lastChatReconcileAt = 0;
 
         function startUnifiedHeartbeat() {
             if (heartbeatTimer) clearTimeout(heartbeatTimer);
@@ -18582,10 +18506,17 @@
 
         async function executeHeartbeat() {
             const isChatTab = window.location.hash.split('?')[0] === '#chat';
+            const shouldReconcileChat = isChatTab && (
+                !isGlobalChatRealtimeConnected ||
+                Date.now() - lastChatReconcileAt >= 60000
+            );
             
             let url = `${WORKER_URL}/api/heartbeat?_t=${Date.now()}`;
             if (currentUser) url += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
-            if (isChatTab) url += `&since=${lastChatTimestamp}`;
+            if (isChatTab) {
+                url += `&since=${lastChatTimestamp}`;
+                if (!shouldReconcileChat) url += '&chatRealtime=1';
+            }
 
             try {
                 const res = await fetch(url, {
@@ -18593,6 +18524,7 @@
                 });
 
                 const data = await res.json();
+                if (shouldReconcileChat && res.ok) lastChatReconcileAt = Date.now();
                 
                 // 1. XỬ LÝ GLOBAL PING
                 if (data.ping) {
@@ -18614,7 +18546,7 @@
 
                 // 2. XỬ LÝ THÔNG BÁO CHƯA ĐỌC (Chỉ lấy số, cập nhật cục bộ nhanh)
                 if (data.unreadNotifs !== null && data.unreadNotifs !== undefined) {
-                    if (window.justMarkedNotifsRead && Date.now() - window.justMarkedNotifsRead < 5000) {
+                    if (window.justMarkedNotifsRead && Date.now() - window.justMarkedNotifsRead < 65000) {
                         // 🚀 Bỏ qua làm mới nếu user vừa bấm Đánh dấu đọc xong (Chờ server đồng bộ xong)
                     } else {
                         const badge = document.getElementById('notifBadge');
@@ -18676,8 +18608,11 @@
 
                 // ĐIỀU CHỈNH KHOẢNG CÁCH GỌI API (ADAPTIVE POLLING)
                 if (isChatTab) {
-                    // Nếu đang ở phòng Chat mà không có tin nhắn -> Giãn dần ra tối đa 15s
-                    if (!data.chat || data.chat.length === 0) heartbeatDelay = Math.min(heartbeatDelay + 2000, 15000);
+                    if (isGlobalChatRealtimeConnected) {
+                        heartbeatDelay = MAX_HEARTBEAT_DELAY;
+                    } else if (!data.chat || data.chat.length === 0) {
+                        heartbeatDelay = Math.min(heartbeatDelay + 2000, 15000);
+                    }
                 } else {
                     // Nếu ở tab khác -> Giãn dần ra tối đa 35s (Chỉ để nuôi Ping và Notifs)
                     heartbeatDelay = Math.min(heartbeatDelay + 5000, MAX_HEARTBEAT_DELAY);
@@ -18826,6 +18761,7 @@
             // ĐÓNG KẾT NỐI WEBSOCKET KHI RỜI KHỎI TAB CHAT ĐỂ TIẾT KIỆM BĂNG THÔNG CHO MÁY CHỦ
             if (hash !== '#chat') {
                 if (typeof chatInterval !== 'undefined' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+                isGlobalChatRealtimeConnected = false;
                 if (window.globalChatChannel && window.supabaseClient) { 
                     window.supabaseClient.removeChannel(window.globalChatChannel); 
                     window.globalChatChannel = null; 
@@ -18878,7 +18814,7 @@
             document.getElementById('playerContainer').innerHTML = '';
             
             // Tải dữ liệu trước nếu cần
-            if (hash === '#home' || hash === '' || hash.startsWith('#project/') || hash.startsWith('#profile/') || hash === '#chat') {
+            if (hash === '#home' || hash === '' || hash === '#chat') {
                 if (allProjects.length === 0) await loadProjects(); 
             }
             if (hash.startsWith('#assets')) {
@@ -19439,11 +19375,21 @@
         async function openProjectPage(idParam, urlParams = null) {
             document.getElementById('projectView').style.display = 'block';
             document.getElementById('projForksCard').style.display = 'none';
+            const projectError = document.getElementById('projectLoadError');
+            const projectContent = document.getElementById('projectPageContent');
+            const projectErrorText = document.getElementById('projectLoadErrorText');
+            if (projectError) projectError.style.display = 'none';
+            if (projectContent) projectContent.style.display = '';
             
             // Xóa iframe cũ và hiện loading
             document.getElementById('playerContainer').innerHTML = '<div style="text-align:center; padding: 100px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary);"></i></div>';
 
             const cleanId = String(idParam || '').trim();
+            const showProjectError = message => {
+                if (projectContent) projectContent.style.display = 'none';
+                if (projectErrorText) projectErrorText.textContent = message;
+                if (projectError) projectError.style.display = 'block';
+            };
 
             // 1. TÌM CHÍNH XÁC THEO KIỂU CHUỖI STRING (CHỐNG LỆCH NUMBER VÀ STRING)
             let proj = allProjects.find(p => (p.projectId && String(p.projectId) === cleanId) || (p.fileId && String(p.fileId) === cleanId));
@@ -19453,22 +19399,35 @@
                 try {
                     let fetchUrl = `${WORKER_URL}/api/projects?id=${encodeURIComponent(cleanId)}`;
                     if (currentUser) fetchUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
-                    const res = await (await fetch(fetchUrl)).json();
-                    if (res && res.projects && res.projects.length > 0) {
-                        const matched = res.projects.find(p => (p.projectId && String(p.projectId) === cleanId) || (p.fileId && String(p.fileId) === cleanId));
+                    const response = await fetchReadWithRetry(fetchUrl);
+                    if (response.status === 404) {
+                        showProjectError(t('project_not_found'));
+                        return;
+                    }
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    if (data?.error) throw new Error(data.error);
+                    if (!Array.isArray(data?.projects)) throw new Error("Phản hồi dự án không hợp lệ");
+                    if (data.projects.length > 0) {
+                        const matched = data.projects.find(p => (p.projectId && String(p.projectId) === cleanId) || (p.fileId && String(p.fileId) === cleanId));
                         if (matched) {
                             proj = matched;
                             allProjects.push(proj);
                         }
                     }
-                } catch(e) {}
+                } catch(e) {
+                    console.warn("Lỗi tải trang dự án:", e);
+                    showProjectError(t('project_load_error'));
+                    return;
+                }
             }
 
             if (!proj) { 
-                showToast("Không tìm thấy dự án hoặc bạn không có quyền", "error"); 
-                location.hash = "#home"; 
+                showProjectError(t('project_not_found'));
                 return; 
             }
+            if (projectError) projectError.style.display = 'none';
+            if (projectContent) projectContent.style.display = '';
             
             currentProj = proj;
 
@@ -19488,12 +19447,21 @@
 
             // 🚀 BỔ SUNG BÌNH LUẬN MỚI TỪ CF D1
             try {
-                const cmtRes = await fetch(`${WORKER_URL}/api/comments?type=project&targetId=${encodeURIComponent(cleanId)}`);
+                const commentTargetId = currentProj.projectId || cleanId;
+                const commentParams = new URLSearchParams({
+                    type: 'project',
+                    targetId: String(commentTargetId),
+                    fileId: String(currentProj.fileId || '')
+                });
+                const cmtRes = await fetch(`${WORKER_URL}/api/comments?${commentParams}`);
                 const cmtData = await cmtRes.json();
                 if (cmtData && cmtData.success && cmtData.comments) {
                     const existingIds = new Set(currentProj.comments.map(c => c.id));
                     cmtData.comments.forEach(c => {
-                        if (!existingIds.has(c.id)) currentProj.comments.push(c);
+                        if (!existingIds.has(c.id)) {
+                            currentProj.comments.push(c);
+                            existingIds.add(c.id);
+                        }
                     });
                 }
             } catch(e) {}
@@ -21968,6 +21936,11 @@
 
             document.getElementById('profileContent').style.display = 'none';
             const p404 = document.getElementById('profile404'); if(p404) p404.style.display = 'none';
+            const profileLoadError = document.getElementById('profileLoadError');
+            if (profileLoadError) profileLoadError.style.display = 'none';
+            const showProfileLoadError = () => {
+                if (profileLoadError) profileLoadError.style.display = 'block';
+            };
 
             // 2. BỘ NHỚ ĐỆM (CACHE)
             const isCurrentUser = currentUser && currentUser.username.toLowerCase() === targetUsername.toLowerCase();
@@ -21978,29 +21951,39 @@
                 fetchedData = profileCache[targetUsername].data; 
             } else {
                 try {
-                    const res = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(targetUsername)}`);
+                    const res = await fetchReadWithRetry(`${WORKER_URL}/api/user/${encodeURIComponent(targetUsername)}`);
                     
                     // Chốt chặn 1
                     if (viewingProfileUser !== targetUsername) return;
 
                     if(res.status === 404) { if(p404) p404.style.display = 'block'; return; }
-                    if(!res.ok) { showToast("Máy chủ đang bận!", "error"); location.hash = "#home"; return; }
+                    if(!res.ok) {
+                        console.warn("Lỗi tải hồ sơ:", res.status);
+                        showProfileLoadError();
+                        return;
+                    }
                     
                     fetchedData = await res.json();
+                    if (!fetchedData || fetchedData.error || typeof fetchedData !== 'object') {
+                        showProfileLoadError();
+                        return;
+                    }
                     if (typeof profileCache !== 'undefined') {
                         profileCache[targetUsername] = { data: fetchedData, timestamp: now }; 
                         try { sessionStorage.setItem('danv_session_prof_cache', JSON.stringify(profileCache)); } catch(e){}
                     }
                 } catch(e) { 
                     if (viewingProfileUser !== targetUsername) return;
-                    if(p404) p404.style.display = 'block'; return; 
+                    console.warn("Lỗi kết nối khi tải hồ sơ:", e);
+                    showProfileLoadError();
+                    return;
                 }
             }
             
             // Chốt chặn 2
             if (viewingProfileUser !== targetUsername) return;
-            if (!fetchedData) {
-                if(p404) p404.style.display = 'block'; 
+            if (!fetchedData || fetchedData.error || typeof fetchedData !== 'object') {
+                showProfileLoadError();
                 return;
             }
 
@@ -23197,7 +23180,26 @@
                     body: JSON.stringify({ projectJson: projectPayload })
                 });
                 
-                const data = await res.json();
+                const responseText = await res.text();
+                if (!responseText.trim()) {
+                    throw new Error(t('upload_analyze_empty_response'));
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch(parseError) {
+                    console.error("BeaBea API returned a non-JSON response:", res.status, responseText.slice(0, 300));
+                    throw new Error(t('upload_analyze_invalid_response'));
+                }
+
+                if (!res.ok) {
+                    const serverMessage = data && typeof data.error === 'string' ? data.error : t('upload_analyze_server_error');
+                    throw new Error(`${serverMessage} (HTTP ${res.status})`);
+                }
+                if (!data || typeof data !== 'object' || Array.isArray(data)) {
+                    throw new Error(t('upload_analyze_invalid_response'));
+                }
                 
                 if (data.success && data.analysis) {
                     // Fill description (instructions)
@@ -23210,7 +23212,8 @@
                     }
                     showToast(t('upload_analyze_success') || "BeaBea generated description!", "success");
                 } else {
-                    showToast((data.error || t('upload_analyze_error')) + (data.detail ? ": " + data.detail : ""), "error");
+                    const errorMessage = data.error || t('upload_analyze_error');
+                    showToast(errorMessage + (data.detail ? ": " + data.detail : ""), "error");
                 }
             } catch (e) {
                 console.error("Analysis error:", e);
@@ -25097,32 +25100,45 @@
             const btn = event.currentTarget;
             const origHtml = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('notif_processing')}`;
-            
-            await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) });
-            showToast(t('toast_all_notifs_read'), "success");
-            
-            const badge = document.getElementById('notifBadge');
-            if(badge) {
-                badge.innerText = '0';
-                badge.style.display = 'none';
+            btn.disabled = true;
+
+            try {
+                const result = await apiFetch(`/api/notifications/read`, { method: 'POST', body: JSON.stringify({}) });
+                if (!result || result.success !== true) {
+                    throw new Error(result?.error || t('notif_mark_read_error'));
+                }
+
+                showToast(t('toast_all_notifs_read'), "success");
+                const badge = document.getElementById('notifBadge');
+                if(badge) {
+                    badge.innerText = '0';
+                    badge.style.display = 'none';
+                }
+
+                window.justMarkedNotifsRead = Date.now();
+                if(Array.isArray(window.cachedNotifs)) {
+                    window.cachedNotifs = window.cachedNotifs.map(n => ({...n, read: true}));
+                    renderNotifList();
+                }
+            } catch(error) {
+                showToast(error.message || t('notif_mark_read_error'), "error");
+            } finally {
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
             }
-            
-            window.justMarkedNotifsRead = Date.now();
-            
-            if(window.cachedNotifs) {
-                window.cachedNotifs = window.cachedNotifs.map(n => ({...n, read: true}));
-                renderNotifList();
-            }
-            btn.innerHTML = origHtml;
         }
 
         async function fetchNotifications(silent = false) {
             if(!currentUser) return;
             try {
                 const data = await apiFetch(`/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`);
-                if (!data || data.error) return;
+                if (!Array.isArray(data)) {
+                    console.warn("Không thể tải hộp thư thông báo.", data?.error || "Phản hồi không hợp lệ");
+                    return;
+                }
 
                 window.cachedNotifs = Array.isArray(data) ? data : [];
+                window.notificationsLoadState = 'loaded';
                 const unreadCount = window.cachedNotifs.filter(n => n && n.read !== true && n.read !== "true").length;
                 const badge = document.getElementById('notifBadge');
                 
@@ -25138,7 +25154,9 @@
                 if (window.location.hash.split('?')[0] === '#notifications') {
                     renderNotifList();
                 }
-            } catch(e) {}
+            } catch(e) {
+                console.warn("Lỗi tải hộp thư thông báo:", e);
+            }
         }
         
         async function openNotificationsPage() {
@@ -25146,21 +25164,43 @@
             document.getElementById('notificationsView').style.display = 'block';
             notifDisplayLimit = 50;
             currentNotifFilter = 'all';
-            
-            const container = document.getElementById('notifPageList');
-            container.innerHTML = `<div style="padding:50px; text-align:center; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">${t('notif_loading')}</span></div>`;
+            window.notificationsLoadState = 'loading';
+            renderNotifList();
 
             try {
                 const data = await apiFetch(`/api/notifications?username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}&_t=${Date.now()}`);
-                window.cachedNotifs = (!data || data.error) ? [] : (Array.isArray(data) ? data : []);
+                if (!Array.isArray(data)) {
+                    throw new Error(data?.error || t('notif_load_error'));
+                }
+                window.cachedNotifs = data;
+                window.notificationsLoadState = 'loaded';
             } catch(e) {
-                window.cachedNotifs = [];
+                window.notificationsLoadState = 'error';
+                console.warn("Lỗi tải trang hộp thư:", e);
             }
             renderNotifList();
         }
 
         function renderNotifList() {
             const container = document.getElementById('notifPageList');
+            if (!container) return;
+
+            if (window.notificationsLoadState === 'loading') {
+                container.innerHTML = `<div style="padding:50px; text-align:center; color:var(--primary);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.92rem; color:var(--text-muted);">${t('notif_loading')}</span></div>`;
+                return;
+            }
+
+            if (window.notificationsLoadState === 'error') {
+                container.innerHTML = `
+                    <div style="padding:65px 20px; text-align:center; color:var(--text-muted);">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:3rem; color:#ef4444; margin-bottom:12px; display:block;"></i>
+                        <b style="font-size:1.05rem; color:var(--text-title); display:block; margin-bottom:8px;">${t('notif_load_error')}</b>
+                        <button type="button" class="btn btn-primary" onclick="openNotificationsPage()">${t('notif_retry')}</button>
+                    </div>
+                `;
+                return;
+            }
+
             let notifs = window.cachedNotifs;
             if (!Array.isArray(notifs)) notifs = [];
 
@@ -26524,20 +26564,20 @@
                 }
             }
 
-            // 🎁 1. TÚI MÙ CHƯA BÓC - CHỈ TỪ BEABEA (TÚI GIẤY HALLOWEEN TRICK OR TREAT)
+            // 🎁 1. TÚI MÙ CHƯA BÓC - CHỈ TỪ BEABEA
             const bagMatch = isBeaBea ? rawText.match(/\[BEABEA_BLIND_BAG:([a-zA-Z0-9_\-]+)\]/) : null;
             if (bagMatch) {
                 const bagId = bagMatch[1];
                 return `
-                    <div class="beabea-blindbag-card" style="border-color:#ea580c; background:linear-gradient(135deg, #2e1065 0%, #431407 100%);">
-                        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#ea580c; margin-bottom:4px;">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Trick or Treat! Kẹo Rơi Xuất Hiện!
+                    <div class="beabea-blindbag-card">
+                        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#f472b6; margin-bottom:4px;">
+                            <i class="fa-solid fa-sparkles"></i> Lộc Vũ Trụ Xuất Hiện!
                         </div>
-                        <img src="https://images.squarespace-cdn.com/content/v1/5737ad2a1d07c093e2787063/1759789875756-ONFO8GIELZMCZTL4UZV5/Asset+88Halloween.png" style="width:68px; height:auto; margin:6px auto; display:block; filter:drop-shadow(0 6px 14px rgba(234,88,12,0.6)); animation:bagWiggle 2s infinite ease-in-out;">
-                        <div style="font-weight:900; font-size:1.15rem; color:#fff;">Túi Kẹo Halloween Bí Mật</div>
-                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>1 đến 20 WOW</b>. Nhanh tay thò tay vào lấy kẹo nhé!</div>
-                        <button type="button" class="btn-open-blindbag" onclick="openBlindBagGacha('${bagId}')" style="background:linear-gradient(135deg, #ea580c, #7e22ce); box-shadow:0 4px 15px rgba(234,88,12,0.5);">
-                            <i class="fa-solid fa-candy-cane"></i> Thò Tay Nhặt Kẹo
+                        <i class="fa-solid fa-gift bag-icon-anim"></i>
+                        <div style="font-weight:900; font-size:1.15rem; color:#fff;">Túi Mù Năng Lượng</div>
+                        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:4px;">Bên trong chứa từ <b>1 đến 20 WOW</b>. Ai nhanh tay mở trước sẽ nhận được!</div>
+                        <button type="button" class="btn-open-blindbag" onclick="openBlindBagGacha('${bagId}')">
+                            <i class="fa-solid fa-bolt"></i> Bóc Túi Mù Ngay
                         </button>
                     </div>
                 `;
@@ -26624,15 +26664,10 @@
                 }
             }
             
-            // 🤖 HIỆU ỨNG TYPING CỦA AI BEABEA (BÍ NGÔ SUY NGHĨ HALLOWEEN)
+            // 🤖 HIỆU ỨNG TYPING CỦA AI BEABEA
             if (rawText.startsWith("[TYPING]")) {
                 const typingText = rawText.replace("[TYPING]", "").trim();
-                return `
-                    <div class="chat-text" style="display:flex; align-items:center; gap:8px; color:#ea580c; font-weight:700; font-style:italic;">
-                        <img src="https://assets-v2.lottiefiles.com/a/bfcfa854-9394-11ef-ace0-fb93abd50f34/CiZ8qkBBfb.png" style="width:28px; height:28px; object-fit:contain; animation:cookieBearFloat 2s infinite ease-in-out;">
-                        <span>${escapeHtml(typingText)}</span>
-                    </div>
-                `;
+                return `<div class="chat-text" style="color: #ec4899; font-weight: 600; font-style: italic;"><i class="fa-solid fa-ellipsis fa-fade" style="font-size: 1.2rem; margin-right: 5px;"></i> ${escapeHtml(typingText)}</div>`;
             }
 
             // Nhận diện tag đóng gói [DANV_PROJECT_SHARE:id:title:author:thumb:views:likes:stars] hoặc link #project/id
@@ -26720,15 +26755,6 @@
         function formatCommentText(text) {
             if (!text) return '';
             let safeText = escapeHtml(text);
-
-            // 🎃 0. TỰ ĐỘNG THAY THẾ 13 EMOJI BÍ NGÔ HALLOWEEN SANG THẺ ẢNH
-            if (typeof PUMPKIN_EMOJI_MAP !== 'undefined') {
-                for (const [code, imgUrl] of Object.entries(PUMPKIN_EMOJI_MAP)) {
-                    const escCode = escapeHtml(code);
-                    const regex = new RegExp(escCode.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g');
-                    safeText = safeText.replace(regex, `<img class="pumpkin-custom-emoji" src="${imgUrl}" alt="${escCode}" title="${escCode}">`);
-                }
-            }
 
             // 🌟 1. TỰ ĐỘNG CHUYỂN ĐỔI SHORTCODE EMOJI (VD: :sob: -> 😭, :joy: -> 😂, :heart: -> ❤️)
             if (typeof joypixels !== 'undefined' && joypixels.shortnameToUnicode) {
@@ -27112,27 +27138,40 @@
         }
 
         // ================= HỆ THỐNG ASSETS STORE PRO =================
+        let assetsIDEEmbedMode = false;
+
         async function fetchAssetsList(forceRefresh = false) {
             try {
                 if (!forceRefresh) {
                     const cached = BrowserCache.get('assets_list', true);
                     if (cached && Array.isArray(cached) && cached.length > 0) {
                         allAssets = cached;
+                        assetLoadError = "";
+                        renderAssetGrid();
                         return;
                     }
                 }
-                const res = await (await fetch(`${WORKER_URL}/api/assets`)).json();
-                if(!res.error) {
-                    allAssets = Array.isArray(res) ? res : [];
-                    BrowserCache.set('assets_list', allAssets, 15, true); // Lưu sessionStorage 15 phút
-                }
+                assetLoadError = "";
+                assetIsLoading = true;
+                renderAssetGrid();
+                const response = await fetch(`${WORKER_URL}/api/assets`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const result = await response.json();
+                if (!Array.isArray(result)) throw new Error(result.error || "Phản hồi tài nguyên không hợp lệ");
+                allAssets = result;
+                BrowserCache.set('assets_list', allAssets, 15, true);
             } catch(e) {
                 console.error("Lỗi tải tài nguyên:", e);
+                assetLoadError = e.message || String(e);
+            } finally {
+                assetIsLoading = false;
+                renderAssetGrid();
             }
         }
 
         function openAssetsPage(urlParams) {
             document.getElementById('assetsView').style.display = 'block';
+            assetsIDEEmbedMode = Boolean(urlParams && urlParams.get('editor') === '1');
             
             // Xử lý query từ URL nếu có (VD: #assets?search=pixel)
             currentAssetSearchQuery = urlParams ? (urlParams.get('search') || "").toLowerCase().trim() : "";
@@ -27170,9 +27209,35 @@
 
         function setAssetCategory(cat, btnEl) {
             currentAssetCategory = cat;
-            document.querySelectorAll('.asset-cat-pill').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.asset-cat-chip').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
             displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        function toggleSavedAssetsFilter() {
+            showSavedAssetsOnly = !showSavedAssetsOnly;
+            const button = document.getElementById('assetSavedFilterBtn');
+            if (button) {
+                button.classList.toggle('active', showSavedAssetsOnly);
+                button.setAttribute('aria-pressed', String(showSavedAssetsOnly));
+                const icon = button.querySelector('i');
+                if (icon) icon.className = showSavedAssetsOnly ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+            }
+            displayedAssetsCount = ASSETS_PER_PAGE;
+            renderAssetGrid();
+        }
+
+        function toggleSavedAsset(assetId, event) {
+            if (event) event.stopPropagation();
+            if (savedAssetIds.has(assetId)) savedAssetIds.delete(assetId);
+            else savedAssetIds.add(assetId);
+            try {
+                localStorage.setItem('savedAssetIds', JSON.stringify([...savedAssetIds]));
+            } catch (e) {
+                console.error("Không thể lưu danh sách tài nguyên:", e);
+                showToast(t('assets_save_error'), "error");
+            }
             renderAssetGrid();
         }
 
@@ -27270,6 +27335,27 @@
             const loadMoreBtn = document.getElementById('assetLoadMoreArea');
             const counterEl = document.getElementById('assetCounterDisplay');
             if (!container) return;
+            const statusEl = document.getElementById('assetLoadStatus');
+            if (statusEl) {
+                if (assetIsLoading) {
+                    statusEl.style.display = 'block';
+                    statusEl.setAttribute('role', 'status');
+                    statusEl.innerHTML = `<div class="assets-load-message"><i class="fa-solid fa-spinner fa-spin"></i> ${t('assets_loading')}</div>`;
+                } else if (assetLoadError) {
+                    statusEl.style.display = 'block';
+                    statusEl.setAttribute('role', 'alert');
+                    statusEl.innerHTML = `<div class="assets-load-message is-error"><span><i class="fa-solid fa-triangle-exclamation"></i> ${t('assets_load_error')}</span><button type="button" class="assets-library-btn" onclick="fetchAssetsList(true)"><i class="fa-solid fa-rotate-right"></i> ${t('assets_retry')}</button></div>`;
+                } else {
+                    statusEl.style.display = 'none';
+                    statusEl.innerHTML = '';
+                }
+            }
+            if (!allAssets.length && (assetIsLoading || assetLoadError)) {
+                container.innerHTML = '';
+                if (counterEl) counterEl.innerText = '—';
+                if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                return;
+            }
 
             // 1. Lọc theo từ khóa tìm kiếm
             let filtered = allAssets.filter(a => {
@@ -27287,8 +27373,12 @@
 
             // 3. Lọc theo định dạng (Format)
             if (currentAssetFormat !== 'all') {
-                filtered = filtered.filter(a => (a.fileType || '').toLowerCase() === currentAssetFormat);
+                filtered = filtered.filter(a => {
+                    const ext = (a.fileType || '').toLowerCase();
+                    return currentAssetFormat === 'jpg' ? ['jpg', 'jpeg'].includes(ext) : ext === currentAssetFormat;
+                });
             }
+            if (showSavedAssetsOnly) filtered = filtered.filter(a => savedAssetIds.has(String(a.assetId || '')));
 
             // 4. Sắp xếp (Sorting)
             filtered.sort((a, b) => {
@@ -27300,8 +27390,9 @@
                 if (currentAssetSort === 'smallest') {
                     return (parseFloat(a.size) || 0) - (parseFloat(b.size) || 0);
                 }
-                // Mặc định: Mới nhất
-                return 0;
+                const dateA = Date.parse(a.date || '');
+                const dateB = Date.parse(b.date || '');
+                return Number.isFinite(dateA) && Number.isFinite(dateB) ? dateB - dateA : 0;
             });
 
             if (counterEl) {
@@ -27381,12 +27472,16 @@
                 const upActive = currentUser && upvotes.includes(currentUser.username) ? 'active' : '';
                 const downActive = currentUser && downvotes.includes(currentUser.username) ? 'active' : '';
                 const netScore = upvotes.length - downvotes.length;
+                const isSaved = savedAssetIds.has(String(a.assetId || ''));
 
                 // Avatar tác giả từ bộ nhớ đệm
                 const cachedAvt = globalUserCache[a.author] ? getAvtUrl(globalUserCache[a.author]) : DEFAULT_AVATAR;
 
                 return `
                 <div class="asset-card">
+                    <button type="button" class="asset-card-save-btn ${isSaved ? 'saved' : ''}" onclick="toggleSavedAsset('${a.assetId}', event)" aria-label="${t(isSaved ? 'assets_unsave' : 'assets_save')}" aria-pressed="${isSaved}" data-i18n-title="${isSaved ? 'assets_unsave' : 'assets_save'}" title="${t(isSaved ? 'assets_unsave' : 'assets_save')}">
+                        <i class="${isSaved ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                    </button>
                     <div class="asset-preview-stage" ${!isAudio ? `onclick="openAssetQuickView('${a.assetId}', event)"` : ''}>
                         <span class="asset-fmt-badge ${badgeClass}">${fileExt}</span>
                         ${previewHtml}
@@ -27422,6 +27517,10 @@
                                 <button type="button" class="asset-action-btn-circle" onclick="shareAssetToGlobalChat('${a.assetId}')" data-i18n-title="tooltip_asset_share" title="${t('tooltip_asset_share')}">
                                     <i class="fa-solid fa-earth-americas"></i>
                                 </button>
+                                ${assetsIDEEmbedMode && ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg', 'mp3', 'wav', 'ogg'].includes(fileExt) ? `
+                                <button type="button" class="asset-action-btn-circle" onclick="sendAssetToTurboIDE(this, event)" data-asset-id="${escapeHtml(a.fileId)}" data-asset-format="${escapeHtml(fileExt)}" data-asset-title="${escapeHtml(a.title)}" title="Thêm vào Turbo-IDE">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>` : ''}
                                 <button type="button" class="asset-action-btn-circle" onclick="copyAssetDirectUrl('${fileUrl}')" data-i18n-title="tooltip_asset_copy_direct" title="${t('tooltip_asset_copy_direct')}">
                                     <i class="fa-solid fa-link"></i>
                                 </button>
@@ -27454,15 +27553,62 @@
             });
         }
 
+        async function sendAssetToTurboIDE(button, event) {
+            if (event) event.stopPropagation();
+            if (!assetsIDEEmbedMode || !window.parent || window.parent === window) return;
+            const format = String(button.dataset.assetFormat || '').toLowerCase();
+            const allowedFormats = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg', 'mp3', 'wav', 'ogg'];
+            if (!allowedFormats.includes(format) || !button.dataset.assetId) return;
+
+            button.disabled = true;
+            try {
+                const assetUrl = `${WORKER_URL}/api/project/${encodeURIComponent(button.dataset.assetId || '')}?ext=${encodeURIComponent(format)}`;
+                const response = await fetch(assetUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.arrayBuffer();
+                if (!data.byteLength || data.byteLength > 20 * 1024 * 1024) {
+                    throw new Error('Tệp không hợp lệ hoặc vượt quá 20 MB.');
+                }
+                const mimeTypes = {
+                    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif',
+                    bmp: 'image/bmp', webp: 'image/webp', svg: 'image/svg+xml',
+                    mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg'
+                };
+                window.parent.postMessage({
+                    type: 'turbo-ide:import-asset',
+                    asset: {
+                        name: button.dataset.assetTitle || `Asset.${format}`,
+                        format,
+                        mimeType: mimeTypes[format],
+                        data
+                    }
+                }, 'https://editor.turboshare.org.uk', [data]);
+                showToast("Đang thêm tài nguyên vào Turbo-IDE…", "success");
+            } catch (error) {
+                console.error("Không thể gửi tài nguyên sang Turbo-IDE:", error);
+                showToast(error.message || "Không thể tải tài nguyên.", "error");
+            } finally {
+                button.disabled = false;
+            }
+        }
+
         function resetAssetFilters() {
             currentAssetCategory = 'all';
             currentAssetFormat = 'all';
             currentAssetSort = 'newest';
             currentAssetSearchQuery = '';
+            showSavedAssetsOnly = false;
             document.getElementById('assetSearchInput').value = '';
             document.getElementById('assetFormatFilter').value = 'all';
             document.getElementById('assetSortFilter').value = 'newest';
-            document.querySelectorAll('.asset-cat-pill').forEach((b, idx) => b.classList.toggle('active', idx === 0));
+            document.querySelectorAll('.asset-cat-chip').forEach(b => b.classList.toggle('active', b.dataset.assetCategory === 'all'));
+            const savedFilterButton = document.getElementById('assetSavedFilterBtn');
+            if (savedFilterButton) {
+                savedFilterButton.classList.remove('active');
+                savedFilterButton.setAttribute('aria-pressed', 'false');
+                const icon = savedFilterButton.querySelector('i');
+                if (icon) icon.className = 'fa-regular fa-heart';
+            }
             toggleAssetClearSearchBtn();
             displayedAssetsCount = ASSETS_PER_PAGE;
             renderAssetGrid();
@@ -28224,12 +28370,17 @@
 
         function connectGlobalChatWebSocket() {
             if (!supabaseClient) {
+                isGlobalChatRealtimeConnected = false;
                 console.error("Supabase client chưa được tải!");
                 return;
             }
 
             // Nếu đang kết nối rồi thì bỏ qua
-            if (globalChatChannel && globalChatChannel.state === 'joined') return;
+            if (globalChatChannel && globalChatChannel.state === 'joined') {
+                isGlobalChatRealtimeConnected = true;
+                return;
+            }
+            isGlobalChatRealtimeConnected = false;
 
             // Đăng ký Presence Key để tránh trùng lặp
             const presenceKey = currentUser 
@@ -28355,6 +28506,7 @@
                     } catch(e) { console.error("Lỗi đồng bộ Realtime:", e); }
                 })
                 .subscribe(async (status) => {
+                    isGlobalChatRealtimeConnected = status === 'SUBSCRIBED';
                     if (status === 'SUBSCRIBED') {
                         // Gửi danh tính của mình vào Presence phòng chat
                         const myTrackData = {
@@ -28538,47 +28690,6 @@
             const oldPopup = document.getElementById('quickReactionPopup');
             if (oldPopup) oldPopup.remove();
 
-            // 🎃 6 Biểu cảm bí ngô ma quái gán đúng shortcode để lưu và vẽ chuẩn ảnh
-            const quickPumpkinEmojis = [
-                { em: ':pumpkin_pirate:', img: 'https://i.postimg.cc/25K5rv5J/image.png', title: 'Bí ngô Cướp biển' },
-                { em: ':pumpkin_cute:', img: 'https://i.postimg.cc/8Ct1wvWj/image.png', title: 'Bí ngô Đáng yêu' },
-                { em: ':pumpkin_giggle:', img: 'https://i.postimg.cc/Njt9z1yd/image.png', title: 'Bí ngô Cười khúc khích' },
-                { em: ':pumpkin_dizzy:', img: 'https://i.postimg.cc/KYg63gfv/image.png', title: 'Bí ngô Chóng mặt' },
-                { em: ':pumpkin_cry:', img: 'https://i.postimg.cc/Y0XnspRv/image.png', title: 'Bí ngô Khóc lóc' },
-                { em: ':pumpkin_witch:', img: 'https://i.postimg.cc/9F5rDGBc/image.png', title: 'Bí ngô Phù thủy' }
-            ];
-
-            const popup = document.createElement('div');
-            popup.id = 'quickReactionPopup';
-            popup.className = 'chat-quick-reaction-popup';
-            
-            const btns = quickPumpkinEmojis.map(item => `
-                <button type="button" class="chat-qr-btn" onclick="toggleChatReaction('${msgId}', '${item.em}'); document.getElementById('quickReactionPopup').remove();" title="${item.title}">
-                    <img src="${item.img}" style="width:24px; height:24px; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(234,88,12,0.4));">
-                </button>
-            `).join('');
-
-            // Nút (+) mở bảng Emoji Picker gốc
-            const moreBtn = `
-                <button type="button" class="chat-qr-btn more-btn" onclick="document.getElementById('quickReactionPopup').remove(); toggleEmojiPicker('react_${msgId}', event);" data-i18n-title="tooltip_chat_more_emoji" title="${t('tooltip_chat_more_emoji')}">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            `;
-
-            popup.innerHTML = btns + moreBtn;
-            document.body.appendChild(popup);
-
-            // Định vị popup bám theo nút (Hiện ở phía trên nút thả cảm xúc)
-            const rect = e.currentTarget.getBoundingClientRect();
-            popup.style.top = `${rect.top - 45 + window.scrollY}px`;
-            
-            let leftPos = rect.left - 100;
-            if (leftPos + popup.offsetWidth > window.innerWidth - 10) leftPos = window.innerWidth - popup.offsetWidth - 10;
-            if (leftPos < 10) leftPos = 10;
-            popup.style.left = `${leftPos}px`;
-            return;
-        }
-        function _legacy_openQuickReactionPicker(msgId, e) {
             const quickEmojis = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
             const popup = document.createElement('div');
             popup.id = 'quickReactionPopup';
@@ -29727,35 +29838,70 @@
             submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
             submitBtn.disabled = true;
 
-            let imgId = gifUrl || null;
-            if (imgFile) { 
-                const fd = new FormData(); fd.append("file", imgFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
-                const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
-                if (upRes.success) imgId = upRes.file_id; 
-            }
+            try {
+                let imgId = gifUrl || null;
+                if (imgFile) {
+                    const fd = new FormData();
+                    fd.append("file", imgFile);
+                    fd.append("username", currentUser.username);
+                    fd.append("sessionToken", currentUser.sessionToken);
+                    fd.append("uploadPurpose", "chat-image");
 
-            const payload = { text, replyTo: replyState.chat.user, imageId: imgId };
-            const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
-            
-            if (res && res.success) {
-                textInput.value = ''; 
-                removeCommentImage('chat'); 
-                cancelReply('chat');
-                lastChatJSONStr = "";
-                await loadGlobalChat(true);
+                    const uploadController = new AbortController();
+                    const uploadTimeout = setTimeout(() => uploadController.abort(), 55000);
+                    let uploadResponse;
+                    try {
+                        uploadResponse = await fetch(`${WORKER_URL}/api/upload`, {
+                            method: 'POST',
+                            body: fd,
+                            headers: {"X-Client-Type":"StudioDANV-Web"},
+                            signal: uploadController.signal
+                        });
+                    } catch(error) {
+                        if (error.name === "AbortError") {
+                            throw new Error(t('chat_image_upload_timeout'));
+                        }
+                        throw new Error(t('chat_image_upload_failed'));
+                    } finally {
+                        clearTimeout(uploadTimeout);
+                    }
 
-                // ⚡ NẾU GỌI BEABEA: Kích hoạt quét ngay để lấy trạng thái [TYPING], sau đó hàm loadGlobalChat sẽ tự lặp quét liên tục 1.5s cho đến khi BeaBea trả lời xong
-                if (/@beabea/i.test(text)) {
-                    setTimeout(() => loadGlobalChat(true), 600);
-                    setTimeout(() => loadGlobalChat(true), 1500);
+                    let uploadResult;
+                    try {
+                        uploadResult = await uploadResponse.json();
+                    } catch(error) {
+                        throw new Error(t('chat_image_upload_failed'));
+                    }
+                    if (!uploadResponse.ok || !uploadResult?.success || !uploadResult.file_id) {
+                        throw new Error(uploadResult?.error || t('chat_image_upload_failed'));
+                    }
+                    imgId = uploadResult.file_id;
                 }
-            } else {
-                showToast("Lỗi gửi tin nhắn", "error");
+
+                const payload = { text, replyTo: replyState.chat.user, imageId: imgId };
+                const res = await apiFetch(`/api/chat`, { method: 'POST', body: JSON.stringify(payload) });
+
+                if (res && res.success) {
+                    textInput.value = '';
+                    removeCommentImage('chat');
+                    cancelReply('chat');
+                    lastChatJSONStr = "";
+                    await loadGlobalChat(true);
+
+                    if (/@beabea/i.test(text)) {
+                        setTimeout(() => loadGlobalChat(true), 600);
+                        setTimeout(() => loadGlobalChat(true), 1500);
+                    }
+                } else {
+                    showToast((res && res.error) || t('chat_send_failed'), "error");
+                }
+            } catch(error) {
+                showToast(error.message || t('chat_send_failed'), "error");
+            } finally {
+                isPosting.chat = false;
+                submitBtn.innerHTML = origHtml;
+                submitBtn.disabled = false;
             }
-            
-            isPosting.chat = false;
-            submitBtn.innerHTML = origHtml;
-            submitBtn.disabled = false;
         }
 
         // 📋 SAO CHÉP LIÊN KẾT ĐẾN TIN NHẮN
@@ -31737,11 +31883,19 @@
                 const currentEquipped = availableFrames.find(f => f.url === currentUser.frame);
                 selectShopItemToTry(currentEquipped ? currentEquipped.id : 'none');
             } else {
-                const currentEquipped = availableChatFrames.find(f => f.cssClass === currentUser.chatFrame);
+                const currentEquipped = availableChatFrames.find(isChatFrameEquipped);
                 selectShopItemToTry(currentEquipped ? currentEquipped.id : 'none');
             }
 
             renderShopGrid();
+        }
+
+        function isChatFrameEquipped(item) {
+            if (!currentUser || !currentUser.chatFrame) return item.id === 'none';
+            const [equippedClass = '', equippedColor = ''] = String(currentUser.chatFrame).split('|||');
+            const itemColor = item.textColor || '';
+            if (equippedClass.trim() !== String(item.cssClass || '').trim()) return false;
+            return !equippedColor.trim() || !itemColor.trim() || equippedColor.trim().toLowerCase() === itemColor.trim().toLowerCase();
         }
 
         function filterFrameShop(filter, btnEl) {
@@ -31776,7 +31930,7 @@
 
             const isEquipped = isAvatar 
                 ? ((currentUser.frame && currentUser.frame === item.url) || (!currentUser.frame && item.id === 'none'))
-                : ((currentUser.chatFrame && currentUser.chatFrame === item.cssClass) || (!currentUser.chatFrame && item.id === 'none'));
+                : (isChatFrameEquipped(item) || (!currentUser.chatFrame && item.id === 'none'));
 
             const isOwned = item.id === 'none' || (isAvatar ? myOwnedFrames.includes(item.id) : myOwnedChatFrames.includes(item.id));
 
@@ -31900,7 +32054,7 @@
                 const isSelected = selectedShopItem && selectedShopItem.id === item.id;
                 const isEquipped = isAvatar 
                     ? ((equippedVal && equippedVal === item.url) || (!equippedVal && item.id === 'none'))
-                    : ((equippedVal && equippedVal === item.cssClass) || (!equippedVal && item.id === 'none'));
+                    : (isChatFrameEquipped(item) || (!equippedVal && item.id === 'none'));
                 const isOwned = item.id === 'none' || ownedList.includes(item.id);
 
                 let badgeHtml = '';
@@ -32018,7 +32172,7 @@
                 const endpoint = isAvatar ? '/api/store/buy' : '/api/store/buy_chat_frame';
                 const res = await apiFetch(endpoint, {
                     method: 'POST',
-                    body: JSON.stringify({ frameId: item.id })
+                    body: JSON.stringify({ frameId: item.id, equipAfterPurchase: true })
                 });
 
                 if (res && res.success) {
@@ -32027,15 +32181,27 @@
                     
                     if (isAvatar) {
                         myOwnedFrames = res.ownedFrames || [];
+                        if (res.equipped) currentUser.frame = res.frameUrl || item.url;
                     } else {
                         myOwnedChatFrames = res.ownedChatFrames || [];
+                        if (res.equipped) currentUser.chatFrame = res.chatFrame || item.cssClass;
                     }
 
+                    if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                        profileCache[currentUser.username].data.frame = currentUser.frame;
+                        profileCache[currentUser.username].data.chatFrame = currentUser.chatFrame;
+                        try { sessionStorage.setItem('danv_session_prof_cache', JSON.stringify(profileCache)); } catch(e) {}
+                    }
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
                     syncAllWOWDisplays();
-
-                    // Tự động trang bị luôn sau khi mua
-                    await equipSelectedShopItem();
+                    updateNav();
+                    if (currentShopType === (isAvatar ? 'avatar' : 'chat')) {
+                        selectShopItemToTry(item.id);
+                    }
+                    renderShopGrid();
+                    if (res.equipped && viewingProfileUser && viewingProfileUser.toLowerCase() === currentUser.username.toLowerCase()) {
+                        openProfilePage(currentUser.username);
+                    }
                 } else {
                     showToast((res && res.error) ? res.error : t('frame_purchase_error'), "error");
                     if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
@@ -32073,6 +32239,11 @@
 
                     localStorage.setItem('danv_user', JSON.stringify(currentUser));
                     updateNav();
+                    if (typeof profileCache !== 'undefined' && profileCache[currentUser.username]) {
+                        profileCache[currentUser.username].data.frame = currentUser.frame;
+                        profileCache[currentUser.username].data.chatFrame = currentUser.chatFrame;
+                        try { sessionStorage.setItem('danv_session_prof_cache', JSON.stringify(profileCache)); } catch(e) {}
+                    }
 
                     // Cập nhật lại giao diện shop
                     selectShopItemToTry(item.id);
@@ -35111,45 +35282,8 @@
         let emojiDisplayedCount = 140; // Nạp 140 emoji ban đầu, cuộn xuống tự tải thêm mượt mà
         let isFullEmojiLoaded = false;
 
-        // BẢNG ÁNH XẠ 13 EMOJI BÍ NGÔ HALLOWEEN ĐẶC BIỆT
-        const PUMPKIN_EMOJI_MAP = {
-            ':pumpkin_angry:': 'https://i.postimg.cc/sXg2Rmyh/image.png',
-            ':pumpkin_cute:': 'https://i.postimg.cc/8Ct1wvWj/image.png',
-            ':pumpkin_giggle:': 'https://i.postimg.cc/Njt9z1yd/image.png',
-            ':pumpkin_dead:': 'https://i.postimg.cc/nzXCD25H/image.png',
-            ':pumpkin_witch:': 'https://i.postimg.cc/9F5rDGBc/image.png',
-            ':pumpkin_pirate:': 'https://i.postimg.cc/25K5rv5J/image.png',
-            ':pumpkin_vampire:': 'https://i.postimg.cc/xT21f90T/image.png',
-            ':pumpkin_speechless:': 'https://i.postimg.cc/T2rTHBnC/image.png',
-            ':pumpkin_dizzy:': 'https://i.postimg.cc/KYg63gfv/image.png',
-            ':pumpkin_happy:': 'https://i.postimg.cc/t4sf8VLH/image.png',
-            ':pumpkin_drool:': 'https://i.postimg.cc/K8CVb829/image.png',
-            ':pumpkin_sneeze:': 'https://i.postimg.cc/W3vHDYtq/image.png',
-            ':pumpkin_cry:': 'https://i.postimg.cc/Y0XnspRv/image.png'
-        };
-
         // 9 NHÓM CHUẨN UNICODE CLDR VỚI TOÀN BỘ 3.953 EMOJI
         const DANV_EMOJI_CATEGORIES = {
-            halloween: {
-                icon: '🎃',
-                name: 'Halloween 2026',
-                groupName: 'Halloween Pumpkins',
-                emojis: [
-                    { char: ':pumpkin_angry:', code: ':pumpkin_angry:', img: 'https://i.postimg.cc/sXg2Rmyh/image.png' },
-                    { char: ':pumpkin_cute:', code: ':pumpkin_cute:', img: 'https://i.postimg.cc/8Ct1wvWj/image.png' },
-                    { char: ':pumpkin_giggle:', code: ':pumpkin_giggle:', img: 'https://i.postimg.cc/Njt9z1yd/image.png' },
-                    { char: ':pumpkin_dead:', code: ':pumpkin_dead:', img: 'https://i.postimg.cc/nzXCD25H/image.png' },
-                    { char: ':pumpkin_witch:', code: ':pumpkin_witch:', img: 'https://i.postimg.cc/9F5rDGBc/image.png' },
-                    { char: ':pumpkin_pirate:', code: ':pumpkin_pirate:', img: 'https://i.postimg.cc/25K5rv5J/image.png' },
-                    { char: ':pumpkin_vampire:', code: ':pumpkin_vampire:', img: 'https://i.postimg.cc/xT21f90T/image.png' },
-                    { char: ':pumpkin_speechless:', code: ':pumpkin_speechless:', img: 'https://i.postimg.cc/T2rTHBnC/image.png' },
-                    { char: ':pumpkin_dizzy:', code: ':pumpkin_dizzy:', img: 'https://i.postimg.cc/KYg63gfv/image.png' },
-                    { char: ':pumpkin_happy:', code: ':pumpkin_happy:', img: 'https://i.postimg.cc/t4sf8VLH/image.png' },
-                    { char: ':pumpkin_drool:', code: ':pumpkin_drool:', img: 'https://i.postimg.cc/K8CVb829/image.png' },
-                    { char: ':pumpkin_sneeze:', code: ':pumpkin_sneeze:', img: 'https://i.postimg.cc/W3vHDYtq/image.png' },
-                    { char: ':pumpkin_cry:', code: ':pumpkin_cry:', img: 'https://i.postimg.cc/Y0XnspRv/image.png' }
-                ]
-            },
             smileys: {
                 icon: '😀',
                 name: 'Cảm xúc',
@@ -35651,20 +35785,11 @@
             const allMatches = getCurrentFilteredEmojiList();
             const visibleEmojis = allMatches.slice(0, emojiDisplayedCount);
 
-            const gridHtml = visibleEmojis.map(item => {
-                const isPumpkin = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
-                const imgSrc = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
-                const insertVal = isPumpkin ? (item.code || item.char) : item.char;
-
-                return `
-                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${insertVal}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
-                    ${isPumpkin 
-                        ? `<img class="pumpkin-custom-emoji" src="${imgSrc}" alt="${item.code}">`
-                        : `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">`
-                    }
+            const gridHtml = visibleEmojis.map(item => `
+                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
+                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">
                 </div>
-                `;
-            }).join('');
+            `).join('');
 
             const totalAll = getTotalEmojiCount();
             const badgeCountText = emojiSearchTerm 
@@ -35701,19 +35826,11 @@
                             emojiDisplayedCount += 140;
 
                             const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = nextBatch.map(item => {
-                                const isPumpkin = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
-                                const imgSrc = item.img || PUMPKIN_EMOJI_MAP[item.code] || PUMPKIN_EMOJI_MAP[item.char];
-                                const insertVal = isPumpkin ? (item.code || item.char) : item.char;
-                                return `
-                                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${insertVal}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
-                                    ${isPumpkin 
-                                        ? `<img class="pumpkin-custom-emoji" src="${imgSrc}" alt="${item.code}">`
-                                        : `<img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">`
-                                    }
+                            tempDiv.innerHTML = nextBatch.map(item => `
+                                <div class="emoji-grid-item" onclick="insertSelectedEmoji('${item.char}')" onmouseenter="previewEmojiCode('${item.code}')" onmouseleave="previewEmojiCode('')" title="${item.code}">
+                                    <img class="fb-emoji" src="https://emojicdn.elk.sh/${encodeURIComponent(item.char)}?style=facebook" alt="${item.char}" loading="lazy" onerror="this.replaceWith(this.alt)">
                                 </div>
-                                `;
-                            }).join('');
+                            `).join('');
 
                             while (tempDiv.firstChild) {
                                 this.appendChild(tempDiv.firstChild);
@@ -35836,349 +35953,6 @@
                 }
             }
         });
-
-        // =========================================================================
-        // 🎃 HỆ THỐNG TIỆM SPOOKY RETAIL, ĐIỂM DANH 5 KHUNG & THEO DÕI NHIỆM VỤ
-        // =========================================================================
-        let halloweenStatusData = null;
-
-        // 5 Khung Halloween theo Sheet của bạn
-        const HALLOWEEN_FRAME_NAMES = ['Halloween 2026', 'Candies', 'Boo Boo!', 'Ghostyy!', 'Rocky!!'];
-
-        function openSpookyShopModal() {
-            if (!currentUser) return openModal('loginModal');
-            openModal('spookyShopModal');
-            switchSpookyShopTab('daily');
-            loadHalloweenStatus();
-        }
-
-        function switchSpookyShopTab(tab) {
-            document.querySelectorAll('.spooky-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('spookyPaneDaily').style.display = (tab === 'daily') ? 'block' : 'none';
-            document.getElementById('spookyPaneQuests').style.display = (tab === 'quests') ? 'block' : 'none';
-            document.getElementById('spookyPaneSack').style.display = (tab === 'sack') ? 'block' : 'none';
-
-            if (tab === 'daily') document.getElementById('btnSpookyTabDaily').classList.add('active');
-            if (tab === 'quests') {
-                document.getElementById('btnSpookyTabQuests').classList.add('active');
-                renderHalloweenQuests();
-            }
-            if (tab === 'sack') document.getElementById('btnSpookyTabSack').classList.add('active');
-        }
-
-        async function loadHalloweenStatus() {
-            const daysGrid = document.getElementById('spookyDaysGrid');
-            if (daysGrid) daysGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--halloween-orange);"></i></div>';
-
-            try {
-                // Tải trạng thái và tải luôn danh sách frames để lấy URL hình ảnh
-                const [statusRes, framesRes] = await Promise.all([
-                    apiFetch(`/api/store/halloween_status`, { method: 'POST', body: JSON.stringify({}) }),
-                    fetch(`${WORKER_URL}/api/frames`)
-                ]);
-
-                halloweenStatusData = statusRes;
-                const allFrames = await framesRes.json() || [];
-
-                renderSpookyAttendance(allFrames);
-            } catch(e) {
-                if (daysGrid) daysGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:20px;">Lỗi kết nối tiệm Spooky.</div>';
-            }
-        }
-
-        function renderSpookyAttendance(allFrames) {
-            const grid = document.getElementById('spookyDaysGrid');
-            const streakBadge = document.getElementById('spookyStreakBadge');
-            const btnClaim = document.getElementById('btnClaimSpookyDaily');
-            if (!grid || !halloweenStatusData) return;
-
-            const streak = halloweenStatusData.streak || 0;
-            const isClaimedToday = halloweenStatusData.isClaimedToday;
-            const claimedDays = halloweenStatusData.claimedDays || [];
-
-            if (streakBadge) streakBadge.innerText = `Chuỗi: ${streak}/5 Ngày`;
-
-            if (btnClaim) {
-                if (isClaimedToday) {
-                    btnClaim.disabled = true;
-                    btnClaim.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận phần thưởng hôm nay';
-                    btnClaim.style.background = 'var(--bg-secondary)';
-                    btnClaim.style.color = 'var(--text-muted)';
-                } else {
-                    btnClaim.disabled = false;
-                    btnClaim.innerHTML = '<i class="fa-solid fa-gift"></i> Điểm danh nhận Khung hôm nay';
-                    btnClaim.style.background = 'linear-gradient(135deg, #ea580c, #c2410c)';
-                    btnClaim.style.color = '#fff';
-                }
-            }
-
-            const wowDayBonus = [25, 30, 35, 45, 100];
-
-            grid.innerHTML = HALLOWEEN_FRAME_NAMES.map((name, idx) => {
-                const dayNum = idx + 1;
-                const isClaimed = claimedDays.includes(dayNum);
-                const isActive = (streak === idx && !isClaimedToday);
-
-                // Tìm hình ảnh tương ứng trong sheet frames
-                const frameObj = allFrames.find(f => f.name && f.name.toLowerCase().trim() === name.toLowerCase().trim());
-                const frameUrl = frameObj ? frameObj.url : 'https://files.catbox.moe/3lljlr.webp';
-
-                return `
-                    <div class="spooky-day-card ${isClaimed ? 'claimed' : ''} ${isActive ? 'active' : ''}">
-                        <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">Ngày ${dayNum}</span>
-                        <div style="width:50px; height:50px; position:relative; display:flex; align-items:center; justify-content:center; margin:4px 0;">
-                            <img src="${getAvtUrl(currentUser.avt)}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
-                            <img src="${frameUrl}" style="position:absolute; top:50%; left:50%; width:135%; height:135%; transform:translate(-50%,-50%); object-fit:contain; pointer-events:none;">
-                        </div>
-                        <b style="font-size:0.78rem; color:var(--text-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;" title="${escapeHtml(name)}">${escapeHtml(name)}</b>
-                        <span style="font-size:0.72rem; color:#ea580c; font-weight:800;">+${wowDayBonus[idx]} WOW</span>
-                        ${isClaimed ? `<span style="font-size:0.65rem; color:#10b981; font-weight:800;"><i class="fa-solid fa-check"></i> Đã nhận</span>` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function handleClaimSpookyDaily() {
-            if (!currentUser) return;
-            const btn = document.getElementById('btnClaimSpookyDaily');
-            const origHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang nhận quà...';
-
-            try {
-                const res = await apiFetch(`/api/store/halloween_daily`, {
-                    method: 'POST',
-                    body: JSON.stringify({})
-                });
-
-                if (res && res.success) {
-                    showToast(`🎉 Nhận thành công Khung "${res.awardedFrame.name}" và +${res.bonusWow} WOW!`, "success");
-                    currentUser.WOW = res.newBalance;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    syncAllWOWDisplays();
-
-                    // Bắn pháo hoa kẹo
-                    spawnWOWEnergyBurst(window.innerWidth / 2, window.innerHeight / 2);
-
-                    loadHalloweenStatus();
-                } else {
-                    showToast((res && res.error) ? res.error : "Không thể điểm danh lúc này", "error");
-                    btn.disabled = false;
-                    btn.innerHTML = origHtml;
-                }
-            } catch(e) {
-                showToast("Lỗi kết nối máy chủ!", "error");
-                btn.disabled = false;
-                btn.innerHTML = origHtml;
-            }
-        }
-
-        // ================= THEO DÕI & NHẬN THƯỞNG NHIỆM VỤ =================
-        function getLocalQuestProgress() {
-            const todayKey = new Date().toLocaleDateString('vi-VN');
-            let data = {};
-            try { data = JSON.parse(localStorage.getItem('danv_hw_quests_' + todayKey) || '{}'); } catch(e){}
-            return {
-                explored: data.explored || 0,
-                liked: data.liked || false,
-                chatted: data.chatted || false,
-                created: data.created || false
-            };
-        }
-
-        function saveLocalQuestProgress(prog) {
-            const todayKey = new Date().toLocaleDateString('vi-VN');
-            localStorage.setItem('danv_hw_quests_' + todayKey, JSON.stringify(prog));
-        }
-
-        function renderHalloweenQuests() {
-            const listEl = document.getElementById('spookyQuestsList');
-            if (!listEl) return;
-
-            const prog = getLocalQuestProgress();
-            const claimed = (halloweenStatusData && halloweenStatusData.questsClaimed) || [];
-
-            const quests = [
-                { id: 'q_explore', title: 'Cho Kẹo Hay Bị Ghẹo', desc: `Xem 3 dự án game bất kỳ (${prog.explored}/3)`, done: prog.explored >= 3, reward: 15 },
-                { id: 'q_like', title: 'Trái Tim Bí Ngô', desc: 'Thả Tim hoặc gắn Sao cho 1 dự án', done: !!prog.liked, reward: 10 },
-                { id: 'q_chat', title: 'Tiếng Gọi Đêm Trăng', desc: 'Gửi 1 tin nhắn vào Kênh Giao Lưu', done: !!prog.chatted, reward: 10 },
-                { id: 'q_create', title: 'Phù Thủy Lập Trình', desc: 'Mở trình chỉnh sửa Code game', done: !!prog.created, reward: 15 }
-            ];
-
-            const allDone = quests.every(q => q.done);
-            const allClaimed = quests.every(q => claimed.includes(q.id));
-            const isAllClearClaimed = claimed.includes('q_all_clear');
-
-            let html = quests.map(q => {
-                const isClaimed = claimed.includes(q.id);
-                return `
-                    <div class="spooky-quest-card">
-                        <div>
-                            <b style="font-size:0.95rem; color:var(--text-title);">${escapeHtml(q.title)}</b>
-                            <div style="font-size:0.78rem; color:var(--text-muted);">${escapeHtml(q.desc)}</div>
-                        </div>
-                        <div>
-                            ${isClaimed ? `
-                                <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-radius:12px; opacity:0.6;" disabled><i class="fa-solid fa-check"></i> Đã nhận</button>
-                            ` : (q.done ? `
-                                <button class="btn btn-primary" style="font-size:0.78rem; padding:6px 14px; border-radius:14px; background:#10b981; font-weight:800;" onclick="handleClaimQuest('${q.id}')">Nhận +${q.reward} WOW</button>
-                            ` : `
-                                <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-radius:12px; opacity:0.5;" disabled>Chưa xong</button>
-                            `)}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Thẻ phần thưởng hoàn thành toàn bộ (Túi bao tải vải)
-            html += `
-                <div class="spooky-quest-card" style="background:linear-gradient(135deg, rgba(234,88,12,0.12), rgba(126,34,206,0.1)); border:1.5px solid var(--halloween-orange); margin-top:14px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="https://images.squarespace-cdn.com/content/v1/5420d068e4b09194f76b2af6/1539974404222-IYM3K16DQMF58PI0LP1J/image-asset.png" style="width:36px; height:auto;">
-                        <div>
-                            <b style="font-size:0.95rem; color:var(--halloween-orange);">Bao Tải No Nê (Hoàn thành 4/4 Quest)</b>
-                            <div style="font-size:0.78rem; color:var(--text-muted);">Thưởng lớn thêm +40 WOW khi xong hết</div>
-                        </div>
-                    </div>
-                    <div>
-                        ${isAllClearClaimed ? `
-                            <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-radius:12px; opacity:0.6;" disabled><i class="fa-solid fa-check"></i> Đã nhận</button>
-                        ` : (allDone ? `
-                            <button class="btn btn-primary" style="font-size:0.78rem; padding:6px 14px; border-radius:14px; background:linear-gradient(135deg,#7e22ce,#ea580c); font-weight:900;" onclick="handleClaimQuest('q_all_clear')">Mở Bao Tải (+40 WOW)</button>
-                        ` : `
-                            <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-radius:12px; opacity:0.5;" disabled>Chưa đủ 4/4</button>
-                        `)}
-                    </div>
-                </div>
-            `;
-
-            listEl.innerHTML = html;
-        }
-
-        async function handleClaimQuest(questId) {
-            try {
-                const res = await apiFetch(`/api/store/halloween_quest`, {
-                    method: 'POST',
-                    body: JSON.stringify({ questId })
-                });
-
-                if (res && res.success) {
-                    showToast(`Nhận thành công +${res.reward} WOW!`, "success");
-                    currentUser.WOW = res.newBalance;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    syncAllWOWDisplays();
-                    if (!halloweenStatusData.questsClaimed) halloweenStatusData.questsClaimed = [];
-                    halloweenStatusData.questsClaimed.push(questId);
-                    renderHalloweenQuests();
-                } else {
-                    showToast((res && res.error) ? res.error : "Không thể nhận thưởng", "error");
-                }
-            } catch(e) {
-                showToast("Lỗi kết nối", "error");
-            }
-        }
-
-        // ================= MỞ BAO TẢI KẸO GACHA =================
-        async function handleOpenMysterySack() {
-            if (!currentUser) return;
-            if ((currentUser.WOW || 0) < 80) return showToast("Bạn không đủ 80 WOW!", "error");
-
-            const btn = document.getElementById('btnOpenMysterySack');
-            const origHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang mở bao tải kẹo...';
-
-            try {
-                const res = await apiFetch(`/api/store/halloween_mystery_sack`, {
-                    method: 'POST',
-                    body: JSON.stringify({})
-                });
-
-                if (res && res.success) {
-                    currentUser.WOW = res.newBalance;
-                    localStorage.setItem('danv_user', JSON.stringify(currentUser));
-                    syncAllWOWDisplays();
-
-                    const resBox = document.getElementById('spookySackResultBox');
-                    const resTitle = document.getElementById('spookySackResultTitle');
-                    const resDesc = document.getElementById('spookySackResultDesc');
-
-                    resBox.style.display = 'block';
-                    if (res.jackpot) {
-                        resTitle.innerHTML = `🔥 NỔ HŨ KẸO ĐỘC ĐẮC! +${res.wonWow} WOW!`;
-                        resDesc.innerText = `Bạn quá may mắn khi trúng giải đặc biệt trong bao tải kẹo! (Lãi +${res.netGain} WOW)`;
-                        spawnWOWEnergyBurst(window.innerWidth / 2, window.innerHeight / 2);
-                    } else {
-                        resTitle.innerHTML = `🍬 Bạn bốc được +${res.wonWow} WOW!`;
-                        resDesc.innerText = res.netGain >= 0 ? `Chúc mừng bạn có thêm kẹo ngọt! (Lãi +${res.netGain} WOW)` : `Nhận được ${res.wonWow} WOW từ bao tải kẹo ma quái!`;
-                    }
-                } else {
-                    showToast((res && res.error) ? res.error : "Không thể mở bao tải", "error");
-                }
-            } catch(e) {
-                showToast("Lỗi kết nối", "error");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = origHtml;
-            }
-        }
-
-        // ================= HOOK TỰ ĐỘNG ĐẾM NHIỆM VỤ =================
-        // 1. Hook mở xem dự án
-        const _orig_openProjectPage = openProjectPage;
-        openProjectPage = async function(idParam, urlParams = null) {
-            const p = getLocalQuestProgress();
-            if (p.explored < 3) {
-                p.explored += 1;
-                saveLocalQuestProgress(p);
-            }
-            return await _orig_openProjectPage(idParam, urlParams);
-        };
-
-        // 2. Hook thích/gắn sao
-        const _orig_toggleAction = toggleAction;
-        toggleAction = async function(type) {
-            const p = getLocalQuestProgress();
-            p.liked = true;
-            saveLocalQuestProgress(p);
-            return await _orig_toggleAction(type);
-        };
-
-        // 3. Hook chat
-        const _orig_handlePostChat = handlePostChat;
-        handlePostChat = async function(e) {
-            const p = getLocalQuestProgress();
-            p.chatted = true;
-            saveLocalQuestProgress(p);
-            return await _orig_handlePostChat(e);
-        };
-
-        // 4. Hook mở create/code (Đã vá: Gắn hook vào cả openCreatePage và các link trực tiếp)
-        const _orig_reopenEditor = reopenEditor;
-        reopenEditor = function() {
-            const p = getLocalQuestProgress();
-            p.created = true;
-            saveLocalQuestProgress(p);
-            return _orig_reopenEditor();
-        };
-
-        const _orig_openCreatePage = openCreatePage;
-        openCreatePage = function() {
-            const p = getLocalQuestProgress();
-            p.created = true;
-            saveLocalQuestProgress(p);
-            return _orig_openCreatePage();
-        };
-
-        // Bắt thêm trường hợp người dùng bấm trực tiếp vào các thẻ <a> trỏ sang Editor (như trong trang Creator Studio)
-        document.addEventListener('click', function(e) {
-            const a = e.target.closest('a');
-            if (a && a.href && (a.href.includes('editor.turboshare.org.uk') || a.href.includes('aftercode.pages.dev'))) {
-                const p = getLocalQuestProgress();
-                p.created = true;
-                saveLocalQuestProgress(p);
-            }
-        });
         
         // ================= HỆ THỐNG QUẢN LÝ ĐA THIẾT BỊ =================
         function parseDeviceAgent(uaString) {
@@ -36239,6 +36013,8 @@
             listEl.innerHTML = sessions.map(s => {
                 const deviceName = parseDeviceAgent(s.device);
                 const timeStr = timeAgo(new Date(s.lastActive).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }));
+                const location = escapeHtml(s.location || 'Chưa xác định');
+                const ip = escapeHtml(s.ip || 'Unknown');
                 
                 return `
                 <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-panel); border:1px solid ${s.isCurrent ? 'var(--primary)' : 'var(--border-color)'}; padding:10px 14px; border-radius:10px;">
@@ -36248,7 +36024,7 @@
                             ${s.isCurrent ? '<span style="font-size:0.65rem; background:rgba(13,165,122,0.15); color:var(--primary); padding:2px 6px; border-radius:6px; font-weight:800;">Thiết bị này</span>' : ''}
                         </div>
                         <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
-                            <i class="fa-solid fa-location-dot"></i> IP: ${s.ip} • Hoạt động: ${timeStr}
+                            <i class="fa-solid fa-location-dot"></i> ${location} • IP: ${ip} • Hoạt động: ${timeStr}
                         </div>
                     </div>
                     ${!s.isCurrent ? `
