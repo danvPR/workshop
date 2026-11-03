@@ -24192,7 +24192,7 @@
                                 <span style="font-size:0.75rem; font-weight:800; color:${statusColor}; background:color-mix(in srgb, ${statusColor} 12%, var(--bg-panel)); padding:4px 8px; border-radius:99px;">${escapeHtml(status.toUpperCase())}</span>
                             </div>
                             <div style="color:var(--text-muted); font-size:0.82rem; margin-top:5px;">
-                                ID: <code>${escapeHtml(marketplace.id)}</code> · v${escapeHtml(marketplace.version || '')} · @${escapeHtml(marketplace.author || 'unknown')}
+                                ID: <code>${escapeHtml(marketplace.id)}</code> · v${escapeHtml(marketplace.version || '')} · ${escapeHtml(marketplace.author || 'unknown')}
                             </div>
                             <p style="color:var(--text-title); font-size:0.88rem; margin:9px 0 0; white-space:pre-wrap;">${escapeHtml(marketplace.description || 'Không có mô tả.')}</p>
                         </div>
@@ -24209,6 +24209,9 @@
                             </label>
                             <label style="display:grid; gap:5px; font-size:0.8rem; font-weight:700;">Phiên bản
                                 <input id="adminMarketplaceVersion-${hash}" class="form-control" maxlength="40" value="${escapeHtml(marketplace.version || '')}">
+                            </label>
+                            <label style="display:grid; gap:5px; font-size:0.8rem; font-weight:700;">Tác giả hiển thị
+                                <input id="adminMarketplaceAuthor-${hash}" class="form-control" maxlength="80" value="${escapeHtml(marketplace.author || '')}">
                             </label>
                         </div>
                         <label style="display:grid; gap:5px; margin-top:10px; font-size:0.8rem; font-weight:700;">Mô tả
@@ -24312,6 +24315,7 @@
                     body: JSON.stringify({
                         hash,
                         name: document.getElementById(`adminMarketplaceName-${hash}`).value.trim(),
+                        author: document.getElementById(`adminMarketplaceAuthor-${hash}`).value.trim(),
                         version: document.getElementById(`adminMarketplaceVersion-${hash}`).value.trim(),
                         description: document.getElementById(`adminMarketplaceDescription-${hash}`).value.trim(),
                         source,
