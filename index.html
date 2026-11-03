@@ -24173,8 +24173,9 @@
                 const marketplace = extension.marketplace;
                 const status = String(marketplace.status || 'pending');
                 const statusColor = status === 'approved' ? '#15803d' : status === 'pending' ? '#b45309' : '#64748b';
-                const safeCover = /^https:\/\/files\.catbox\.moe\/[A-Za-z0-9._-]{1,128}$/.test(String(marketplace.coverURL || '')) ?
-                    `<img src="${escapeHtml(marketplace.coverURL)}" alt="" style="width:120px; aspect-ratio:2/1; object-fit:cover; border-radius:10px; border:1px solid var(--border-color);">` :
+                const coverURL = `${window.location.origin}/api/extensions/marketplace/cover/${hash}`;
+                const safeCover = String(marketplace.coverURL || '') === coverURL ?
+                    `<img src="${escapeHtml(coverURL)}" alt="" style="width:120px; aspect-ratio:2/1; object-fit:cover; border-radius:10px; border:1px solid var(--border-color);">` :
                     '<div style="width:120px; aspect-ratio:2/1; border-radius:10px; background:var(--bg-secondary); display:grid; place-items:center; color:var(--text-muted);"><i class="fa-regular fa-image"></i></div>';
                 const reviewActions = status === 'pending' ?
                     `<button class="btn btn-primary" type="button" onclick="reviewAdminMarketplaceExtension('${hash}','approved')"><i class="fa-solid fa-check"></i> Duyệt và phát hành</button>
@@ -24223,7 +24224,7 @@
                         <label style="display:grid; gap:5px; margin-top:10px; font-size:0.8rem; font-weight:700;">Mã JavaScript mới (tùy chọn; tối đa 2 MB)
                             <textarea id="adminMarketplaceSource-${hash}" class="form-control" rows="12" spellcheck="false" style="font-family:monospace; font-size:0.8rem;"></textarea>
                         </label>
-                        <p style="color:var(--text-muted); font-size:0.78rem; margin:8px 0;">Khi lưu mã mới, hệ thống tạo phiên bản đã duyệt mới và lưu mã trên Catbox.</p>
+                        <p style="color:var(--text-muted); font-size:0.78rem; margin:8px 0;">Khi lưu mã mới, hệ thống tạo phiên bản đã duyệt mới và lưu mã trên Telegram.</p>
                         <button class="btn btn-primary" type="button" onclick="saveAdminMarketplaceExtension('${hash}')"><i class="fa-solid fa-floppy-disk"></i> Lưu và cập nhật Store</button>
                     </div>` : ''}
                 </article>`;
