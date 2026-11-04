@@ -5936,6 +5936,75 @@
             box-shadow: 0 6px 18px rgba(0,0,0,0.18);
         }
 
+        /* STICKER RENDER CHO CHAT & BÌNH LUẬN (TRONG SUỐT, KHÔNG KHUNG VIỀN) */
+        .chat-sticker-img {
+            max-width: 120px;
+            max-height: 120px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 6px;
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chat-sticker-img:hover {
+            transform: scale(1.08);
+        }
+        .sticker-category-pills {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+        .sticker-category-pills::-webkit-scrollbar { display: none; }
+        .sticker-cat-pill {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+        .sticker-cat-pill:hover, .sticker-cat-pill.active {
+            background: var(--primary);
+            color: #ffffff !important;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .sticker-grid-item {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.15s, background-color 0.15s;
+        }
+        .sticker-grid-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+            background: var(--bg-panel);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+        .sticker-grid-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
         /* KHUNG LIGHTBOX XEM ẢNH GIAO LƯU FULL MÀN HÌNH */
         .chat-image-lightbox-overlay {
             position: fixed;
@@ -10672,7 +10741,7 @@
 <body>
     <div id="globalLoader">
         <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
-        <h3 style="color: #666; font-weight:normal;" id="loaderText" data-i18n="loader_text">Thank you!</h3>
+        <h3 style="color: #666; font-weight:normal;" id="loaderText" data-i18n="loader_text">Waiting...</h3>
     </div>
 
     <div id="toastContainer"></div>
@@ -11062,6 +11131,10 @@
                                         <i class="fa-solid fa-film" style="color: #8b5cf6;"></i>
                                     </button>
 
+                                    <button type="button" class="chat-dock-icon-btn" onclick="openStickerModal('chat')" title="Chèn Sticker">
+                                        <i class="fa-solid fa-icons" style="color: #06b6d4;"></i>
+                                    </button>
+
                                     <button type="button" class="chat-dock-icon-btn" onclick="toggleEmojiPicker('chat', event)" data-i18n-title="tooltip_emoji" title="Chèn biểu tượng Emoji">
                                         <i class="fa-regular fa-face-smile" style="color: #f59e0b;"></i>
                                     </button>
@@ -11416,6 +11489,10 @@
 
                                 <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('std')" title="Chèn GIF">
                                     <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                </button>
+
+                                <button type="button" class="cmt-tool-btn" onclick="openStickerModal('std')" title="Chèn Sticker">
+                                    <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Sticker</span>
                                 </button>
 
                                 <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('std', event)" title="Chèn Emoji">
@@ -12064,6 +12141,10 @@
                                             <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
                                         </button>
 
+                                        <button type="button" class="cmt-tool-btn" onclick="openStickerModal('proj')" title="Chèn Sticker">
+                                            <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Sticker</span>
+                                        </button>
+
                                         <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('proj', event)" title="Chèn Emoji">
                                             <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
                                         </button>
@@ -12321,6 +12402,10 @@
 
                                 <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('prof')" title="Chèn GIF">
                                     <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                </button>
+
+                                <button type="button" class="cmt-tool-btn" onclick="openStickerModal('prof')" title="Chèn Sticker">
+                                    <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Sticker</span>
                                 </button>
 
                                 <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('prof', event)" title="Chèn Emoji">
@@ -14129,6 +14214,56 @@
         </div>
     </div>
 
+    <!-- MODAL CHATSTICKER PICKER (KHO STICKER CHAT) -->
+    <div class="modal-overlay" id="chatStickerModal">
+        <div class="modal" style="max-width:540px; display: flex; flex-direction: column; max-height: 85vh; border-radius: 20px;">
+            <div class="modal-header" style="padding: 16px 20px;">
+                <span style="font-weight: 800; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Kho Sticker Chat</span>
+                </span>
+                <button class="btn-close" onclick="closeModal('chatStickerModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; padding: 16px 20px; background: var(--bg-panel); display:flex; flex-direction:column; gap:12px; height: 530px;">
+                <!-- Ô tìm kiếm sticker -->
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="stickerSearchInput" class="form-control" placeholder="Tìm sticker (VD: cat, dog, sad, happy, wow)..." onkeyup="if(event.key==='Enter') searchStickers()">
+                    <button type="button" class="btn btn-primary" onclick="searchStickers()" style="border-radius:10px; padding:0 18px; font-weight:800;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+
+                <!-- Dải nút chọn nhanh cảm xúc / thể loại -->
+                <div class="sticker-category-pills">
+                    <button type="button" class="sticker-cat-pill active" onclick="setStickerCategory('top', this)">🔥 Thịnh hành</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('hello', this)">👋 Chào</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('love', this)">❤️ Yêu</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('cat', this)">🐱 Mèo</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('dog', this)">🐶 Chó</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('sad', this)">😭 Khóc</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('angry', this)">😡 Giận</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('happy', this)">🎉 Vui</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('wow', this)">⚡ Wow</button>
+                    <button type="button" class="sticker-cat-pill" onclick="setStickerCategory('bye', this)">👋 Tạm biệt</button>
+                </div>
+
+                <!-- Lưới hiển thị Sticker -->
+                <div id="stickerItemsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px; overflow-y: auto; flex: 1; align-content: flex-start; padding-right: 4px;">
+                    <!-- Render Stickers -->
+                </div>
+
+                <!-- Ghi nhận nguồn chuẩn Chatsticker / LINE Store -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: auto;">
+                    <a href="https://chatsticker.com" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; gap:6px; text-decoration:none; font-size:0.82rem; color:var(--text-muted);" title="Duyệt kho Chatsticker">
+                        <span>Powered by</span>
+                        <b style="color: #06b6d4; font-size: 0.9rem; letter-spacing: 0.3px;">chatsticker.com</b>
+                        <span>• LINE Store</span>
+                    </a>
+                    <span id="stickerStatusCount" style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">LINE Stickers</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL UPLOAD TÀI NGUYÊN (PRO DROPZONE STUDIO) -->
     <div class="modal-overlay" id="uploadAssetModal">
         <div class="modal modal-studio-box">
@@ -14285,7 +14420,7 @@
                 <div class="auth-panel-topbar">
                     <div class="auth-nav-tabs">
                         <button type="button" class="auth-nav-tab-btn active" id="authTabBtnLogin" onclick="switchAuthTab('login')">
-                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="nav_login">Sign In</span>
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="nav_login">Log In</span>
                         </button>
                         <button type="button" class="auth-nav-tab-btn" id="authTabBtnRegister" onclick="switchAuthTab('register')">
                             <i class="fa-solid fa-user-plus"></i> <span data-i18n="auth_login_reg_now">Sign Up</span>
@@ -14326,7 +14461,7 @@
                         </div>
 
                         <button type="submit" class="auth-submit-btn" id="btnLoginSubmit">
-                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="auth_login_btn">Sign In</span>
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="auth_login_btn">Log In</span>
                         </button>
                     </form>
 
@@ -14838,7 +14973,7 @@
             <div class="gamepay-header">
                 <div class="gamepay-header-title">
                     <span class="wow-icon" style="font-size: 1.15rem;"></span>
-                    <span id="wowBillingModalTitle">Confirm Transaction</span>
+                    <span id="wowBillingModalTitle" data-i18n="wowbilling_modal_title">Confirm Transaction</span>
                 </div>
                 <button type="button" class="btn-close" id="btnCancelWowBillingCross">&times;</button>
             </div>
@@ -14856,14 +14991,14 @@
 
                 <div class="gamepay-balance-grid">
                     <div class="gamepay-balance-box">
-                        <span class="gamepay-balance-label">Current Balance</span>
+                        <span class="gamepay-balance-label" data-i18n="wowbilling_balance_before">Current Balance</span>
                         <div class="gamepay-balance-val">
                             <span id="wowBillingCurrentIconSlot"><span class="wow-icon" style="font-size:1rem;"></span></span>
                             <span id="wowBillingCurrentBalance">0</span>
                         </div>
                     </div>
                     <div class="gamepay-balance-box">
-                        <span class="gamepay-balance-label">After Transaction</span>
+                        <span class="gamepay-balance-label" data-i18n="wowbilling_balance_after">After Transaction</span>
                         <div class="gamepay-balance-val remaining" id="wowBillingAfterBox">
                             <span id="wowBillingAfterIconSlot"><span class="wow-icon" style="font-size:1rem;"></span></span>
                             <span id="wowBillingRemainingBalance">0</span>
@@ -14873,13 +15008,13 @@
 
                 <div class="gamepay-notice" id="wowBillingNotice" style="display:none;">
                     <i class="fa-solid fa-circle-exclamation" style="color: #ef4444;"></i>
-                    <span id="wowBillingNoticeText" style="color: #ef4444; font-weight: 700;">Insufficient balance to complete this transaction.</span>
+                    <span id="wowBillingNoticeText" style="color: #ef4444; font-weight: 700;" data-i18n="wowbilling_insufficient_balance">Insufficient balance to complete this transaction.</span>
                 </div>
 
                 <div class="gamepay-actions">
-                    <button type="button" class="btn-gamepay-cancel" id="btnCancelWowBilling">Cancel</button>
-                    <button type="button" class="btn-gamepay-confirm" id="btnConfirmWowBilling">Confirm Transaction</button>
-                    <button type="button" class="btn-gamepay-confirm" id="btnEarnWowBilling" style="display:none; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);">Claim Daily WOW</button>
+                    <button type="button" class="btn-gamepay-cancel" id="btnCancelWowBilling" data-i18n="wowbilling_btn_cancel">Cancel</button>
+                    <button type="button" class="btn-gamepay-confirm" id="btnConfirmWowBilling" data-i18n="wowbilling_btn_confirm">Confirm Transaction</button>
+                    <button type="button" class="btn-gamepay-confirm" id="btnEarnWowBilling" style="display:none; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);" data-i18n="wowbilling_btn_claim_daily">Claim Daily WOW</button>
                 </div>
             </div>
         </div>
@@ -15609,16 +15744,14 @@
             <div class="modal-header" style="justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
                 <span style="font-weight: 800; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
-                    <span>Security verification</span>
+                    <span data-i18n="turnstile_title">Security verification</span>
                 </span>
                 <button type="button" class="btn-close" onclick="closeModal('homeTurnstileModal')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 22px;">
-                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
-                   Please verify to continue.
-                </p>
+                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;" data-i18n="turnstile_verify_text">Please verify to continue.</p>
                 <div id="homeTurnstileSlot" style="display: flex; justify-content: center; margin-bottom: 16px;"></div>
-                <button type="button" class="btn" style="width: 100%; justify-content: center; border-radius: 12px;" onclick="closeModal('homeTurnstileModal')">
+                <button type="button" class="btn" style="width: 100%; justify-content: center; border-radius: 12px;" onclick="closeModal('homeTurnstileModal')" data-i18n="turnstile_btn_cancel">
                     Cancel
                 </button>
             </div>
@@ -16832,7 +16965,8 @@
         }
         const KLIPY_API_KEY = "u5fpMSE07ITa9E5Nxh9meqnGez7Km7PCC2mj3V6NviVocR7nBEThpAZQEFOn4S1S";
         
-        let attachedGifUrls = { proj: null, prof: null, chat: null }; // Biến nhớ GIF đang chọn (Hỗ trợ cả Chat)
+        let attachedGifUrls = { proj: null, prof: null, chat: null, std: null }; // Biến nhớ GIF đang chọn (Hỗ trợ cả Chat)
+        let attachedStickerUrls = { proj: null, prof: null, chat: null, std: null }; // Biến nhớ Sticker đang chọn
         let currentUser = JSON.parse(localStorage.getItem('danv_user') || 'null');
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Hàm tạo timeout giả lập
         let allProjects = []; let currentProj = null; let viewingProfileUser = null; let viewingProfileData = null;
@@ -20137,11 +20271,12 @@
                                 ${(() => {
                                     const effectiveFrame = root.chatFrame || (currentUser && root.author.toLowerCase() === currentUser.username.toLowerCase() ? currentUser.chatFrame : '');
                                     const fAttrs = (typeof getChatBubbleFrameAttributes === 'function') ? getChatBubbleFrameAttributes(effectiveFrame) : { classAttr: '', styleAttr: '' };
-                                    return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(root.text || '')}">`;
+                                    const isRootSticker = root.imageId && (root.imageId.includes('stickershop.line-scdn.net') || root.imageId.includes('chatsticker.com'));
+                                    return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(root.text || '')}">
+                                        ${root.text ? formatCommentText(root.text) : (root.isTip ? `<i style="opacity:0.85;">Đã gửi tặng ${root.tipAmount} điểm năng lượng WOW ủng hộ tác giả!</i>` : '')}
+                                        ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="${isRootSticker ? 'chat-sticker-img' : 'comment-img-render'}" loading="lazy" ${isRootSticker ? 'title="LINE Sticker via chatsticker.com"' : ''}>` : ''}
+                                    </div>`;
                                 })()}
-                                    ${root.text ? formatCommentText(root.text) : (root.isTip ? `<i style="opacity:0.85;">Đã gửi tặng ${root.tipAmount} điểm năng lượng WOW ủng hộ tác giả!</i>` : '')}
-                                    ${root.imageId ? `<br><img src="${root.imageId.startsWith('http') ? root.imageId : `${WORKER_URL}/api/project/${root.imageId}`}" class="comment-img-render" loading="lazy">` : ''}
-                                </div>
 
                                 <div class="comment-actions-bar" style="display:flex; align-items:center; gap:6px; margin-top:4px;">
                                     ${currentUser && !root.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${escapeHtml(root.author)}')"><i class="fa-solid fa-reply"></i> ${t('proj_reply')}</button>` : ''}
@@ -20173,12 +20308,13 @@
                                             ${(() => {
                                                 const effectiveFrame = rep.chatFrame || (currentUser && rep.author.toLowerCase() === currentUser.username.toLowerCase() ? currentUser.chatFrame : '');
                                                 const fAttrs = (typeof getChatBubbleFrameAttributes === 'function') ? getChatBubbleFrameAttributes(effectiveFrame) : { classAttr: '', styleAttr: '' };
-                                                return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(rep.text || '')}">`;
+                                                const isRepSticker = rep.imageId && (rep.imageId.includes('stickershop.line-scdn.net') || rep.imageId.includes('chatsticker.com'));
+                                                return `<div class="comment-text-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr} data-raw-text="${encodeURIComponent(rep.text || '')}">
+                                                    ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:800; margin-right:4px;">@${escapeHtml(rep.replyToUser)}</span>` : ''}
+                                                    ${formatCommentText(rep.text)}
+                                                    ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="${isRepSticker ? 'chat-sticker-img' : 'comment-img-render'}" loading="lazy" ${isRepSticker ? 'title="LINE Sticker via chatsticker.com"' : ''}>` : ''}
+                                                </div>`;
                                             })()}
-                                                ${rep.replyToUser ? `<span style="color:var(--primary); font-weight:800; margin-right:4px;">@${escapeHtml(rep.replyToUser)}</span>` : ''}
-                                                ${formatCommentText(rep.text)}
-                                                ${rep.imageId ? `<br><img src="${rep.imageId.startsWith('http') ? rep.imageId : `${WORKER_URL}/api/project/${rep.imageId}`}" class="comment-img-render" loading="lazy">` : ''}
-                                            </div>
 
                                             <div class="comment-actions-bar" style="display:flex; align-items:center; gap:6px; margin-top:4px;">
                                                 ${currentUser && !rep.isArchived ? `<button class="btn-action-cmt reply" onclick="startReply('${type}', '${root.id}', '${escapeHtml(rep.author)}')"><i class="fa-solid fa-reply"></i> ${t('proj_reply')}</button>` : ''}
@@ -20467,6 +20603,7 @@
 
         function handleCommentImagePreview(input, type) { 
             attachedGifUrls[type] = null;
+            if (attachedStickerUrls) attachedStickerUrls[type] = null;
             const suffix = type.charAt(0).toUpperCase() + type.slice(1);
             if (input.files && input.files[0]) { 
                 const file = input.files[0];
@@ -20495,6 +20632,7 @@
             if (previewSrc) previewSrc.src = ''; 
             if (previewBox) previewBox.style.display = 'none'; 
             attachedGifUrls[type] = null;
+            if (attachedStickerUrls) attachedStickerUrls[type] = null;
         }
 
         // ================= KLIPY GIF API (NATIVE & TRACKING) =================
@@ -20657,6 +20795,7 @@
             if (uploadEl) uploadEl.value = '';
             
             attachedGifUrls[type] = url;
+            if (attachedStickerUrls) attachedStickerUrls[type] = null;
             
             const previewSrc = document.getElementById('commentImgPreviewSrc' + suffix);
             if (previewSrc) previewSrc.src = url;
@@ -20682,6 +20821,109 @@
             }
         }
 
+        // ================= HỆ THỐNG CHATSTICKER (LINE STICKERS PROXY) =================
+        let currentStickerType = 'chat';
+        let currentStickerKeyword = 'top';
+
+        function openStickerModal(type) {
+            currentStickerType = type;
+            const searchInp = document.getElementById('stickerSearchInput');
+            if (searchInp) searchInp.value = '';
+            
+            document.querySelectorAll('.sticker-cat-pill').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === 0);
+            });
+
+            openModal('chatStickerModal');
+            loadStickers('/api/stickers/top?range=week');
+        }
+
+        function setStickerCategory(cat, btnEl) {
+            currentStickerKeyword = cat;
+            document.querySelectorAll('.sticker-cat-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            const searchInp = document.getElementById('stickerSearchInput');
+            if (searchInp) searchInp.value = '';
+
+            if (cat === 'top') {
+                loadStickers('/api/stickers/top?range=week');
+            } else {
+                loadStickers(`/api/stickers/keyword/${encodeURIComponent(cat)}`);
+            }
+        }
+
+        function searchStickers() {
+            const searchInp = document.getElementById('stickerSearchInput');
+            const q = searchInp ? searchInp.value.trim() : '';
+            document.querySelectorAll('.sticker-cat-pill').forEach(b => b.classList.remove('active'));
+
+            if (!q) {
+                loadStickers('/api/stickers/top?range=week');
+            } else {
+                loadStickers(`/api/stickers/search?q=${encodeURIComponent(q)}`);
+            }
+        }
+
+        async function loadStickers(endpoint) {
+            const grid = document.getElementById('stickerItemsGrid');
+            const statusCount = document.getElementById('stickerStatusCount');
+            if (!grid) return;
+
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px 10px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:#06b6d4;"></i><div style="font-size:0.85rem; margin-top:8px;">Đang tải sticker...</div></div>';
+
+            try {
+                const res = await fetch(`${WORKER_URL}${endpoint}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                let items = Array.isArray(data) ? data : (data.results || data.items || data.stickers || data.data || []);
+
+                if (items.length === 0) {
+                    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 10px; color:var(--text-muted);"><i class="fa-regular fa-face-frown" style="font-size:2.5rem; opacity:0.3; margin-bottom:8px; display:block;"></i>Không tìm thấy sticker nào phù hợp.</div>';
+                    if (statusCount) statusCount.innerText = '0 stickers';
+                    return;
+                }
+
+                if (statusCount) statusCount.innerText = `${items.length} stickers`;
+
+                grid.innerHTML = items.map(st => {
+                    const imgUrl = st.image_url || '';
+                    if (!imgUrl) return '';
+                    const safeName = escapeHtml(st.name || 'Sticker');
+                    const permalink = st.permalink || '';
+
+                    return `
+                        <div class="sticker-grid-item" onclick="attachChatSticker('${escapeHtml(imgUrl)}', '${safeName}', '${escapeHtml(permalink)}')" title="${safeName}">
+                            <img src="${escapeHtml(imgUrl)}" loading="lazy" alt="${safeName}" onerror="this.parentElement.remove()">
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:35px 10px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.8rem; margin-bottom:8px; display:block;"></i>Không thể nạp sticker lúc này. Vui lòng thử lại.</div>`;
+            }
+        }
+
+        function attachChatSticker(imageUrl, name, permalink) {
+            const type = currentStickerType || 'chat';
+            const suffix = type.charAt(0).toUpperCase() + type.slice(1);
+
+            const uploadEl = document.getElementById('commentImgUpload' + suffix);
+            if (uploadEl) uploadEl.value = '';
+
+            attachedGifUrls[type] = null;
+            attachedStickerUrls[type] = imageUrl;
+
+            const previewSrc = document.getElementById('commentImgPreviewSrc' + suffix);
+            if (previewSrc) previewSrc.src = imageUrl;
+
+            const previewBox = document.getElementById('commentImgPreview' + suffix);
+            if (previewBox) previewBox.style.display = 'flex';
+
+            closeModal('chatStickerModal');
+        }
+
         async function handlePostComment(e, type) {
             e.preventDefault(); if (isPosting[type]) return; if (!currentUser) return openModal('loginModal');
             
@@ -20702,8 +20944,9 @@
             const text = textInput.value.trim(); 
             const imgFile = document.getElementById(imgUploadId).files[0];
             const gifUrl = attachedGifUrls[type];
+            const stickerUrl = (typeof attachedStickerUrls !== 'undefined') ? attachedStickerUrls[type] : null;
             
-            if (!text && !imgFile && !gifUrl) return;
+            if (!text && !imgFile && !gifUrl && !stickerUrl) return;
             
             // Giới hạn dung lượng ảnh 20MB
             if (imgFile && imgFile.size > 20 * 1024 * 1024) {
@@ -20720,8 +20963,8 @@
             
             submitBtn.disabled = true; const origHtml = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
 
-            let imgId = gifUrl || null; 
-            if (imgFile) { 
+            let imgId = gifUrl || stickerUrl || null; 
+            if (imgFile) {
                 const fd = new FormData(); fd.append("file", imgFile); fd.append("username", currentUser.username); fd.append("sessionToken", currentUser.sessionToken);
                 const upRes = await (await fetch(`${WORKER_URL}/api/upload`, { method: 'POST', body: fd, headers:{"X-Client-Type":"StudioDANV-Web"} })).json(); 
                 if (upRes.success) imgId = upRes.file_id; 
@@ -29528,13 +29771,14 @@
                                 const myChatFrame = (isMine && currentUser) ? (currentUser.chatFrame || '') : '';
                                 const effectiveFrame = c.chatFrame || c.chat_frame || myChatFrame;
                                 const fAttrs = getChatBubbleFrameAttributes(effectiveFrame);
-                                return `<div class="chat-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr}>`;
+                                const isSticker = hasValidImg && (c.imageId.includes('stickershop.line-scdn.net') || c.imageId.includes('chatsticker.com'));
+                                return `<div class="chat-bubble ${fAttrs.classAttr}" ${fAttrs.styleAttr}>
+                                    ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
+                                    ${renderChatContent(c.text || '', c.author, c)}
+                                    ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="${isSticker ? 'chat-sticker-img' : 'chat-img-attachment'}" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="${isSticker ? 'LINE Sticker • chatsticker.com' : t('tooltip_chat_image_zoom')}">` : ''}
+                                    ${transBoxHtml}
+                                </div>`;
                             })()}
-                                ${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}
-                                ${renderChatContent(c.text || '', c.author, c)}
-                                ${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : ''}
-                                ${transBoxHtml}
-                            </div>
 
                             ${renderReactionChipsHTML(c.reactions, messageId)}
 
@@ -29688,8 +29932,9 @@
                             const bubbleContainer = existingRow.querySelector('.chat-bubble');
                             if (bubbleContainer) {
                                 const hasValidImg = c.imageId && c.imageId !== 'null' && c.imageId !== 'undefined' && String(c.imageId).trim() !== '';
+                                const isSticker = hasValidImg && (c.imageId.includes('stickershop.line-scdn.net') || c.imageId.includes('chatsticker.com'));
                                 const replyHtml = c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>Trả lời <b>@${escapeHtml(c.replyTo)}</b></span></div>` : '';
-                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : '';
+                                const imgHtml = hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="${isSticker ? 'chat-sticker-img' : 'chat-img-attachment'}" loading="lazy" onerror="this.remove()" onclick="openChatImageLightbox(this.src)" title="${isSticker ? 'LINE Sticker • chatsticker.com' : t('tooltip_chat_image_zoom')}">` : '';
                                 bubbleContainer.innerHTML = `${replyHtml}${renderChatContent(c.text || '', c.author, c)}${imgHtml}`;
                             }
                         }
@@ -29882,7 +30127,10 @@
                                 ${isMine ? `<span class="chat-author-you-badge">${t('chat_you')}</span>` : ''}
                                 <span class="chat-time"><i class="fa-solid fa-box-archive"></i> ${c.time || ''}</span>
                             </div>
-                            <div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>${t('chat_action_reply')} <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="chat-img-attachment" loading="lazy" onclick="openChatImageLightbox(this.src)" data-i18n-title="tooltip_chat_image_zoom" title="${t('tooltip_chat_image_zoom')}">` : ''}</div>
+                            ${(() => {
+                                const isSticker = hasValidImg && (c.imageId.includes('stickershop.line-scdn.net') || c.imageId.includes('chatsticker.com'));
+                                return `<div class="chat-bubble">${c.replyTo ? `<div class="chat-reply-quote"><i class="fa-solid fa-reply"></i><span>${t('chat_action_reply')} <b>@${escapeHtml(c.replyTo)}</b></span></div>` : ''}${renderChatContent(c.text || '', c.author, c)}${hasValidImg ? `<img src="${c.imageId.startsWith('http') ? c.imageId : `${WORKER_URL}/api/project/${c.imageId}`}" class="${isSticker ? 'chat-sticker-img' : 'chat-img-attachment'}" loading="lazy" onclick="openChatImageLightbox(this.src)" title="${isSticker ? 'LINE Sticker • chatsticker.com' : t('tooltip_chat_image_zoom')}">` : ''}</div>`;
+                            })()}
                         </div>
                     </div>
                     `;
@@ -30026,8 +30274,9 @@
             let text = textInput.value.trim();
             const imgFile = document.getElementById('commentImgUploadChat').files[0];
             const gifUrl = attachedGifUrls.chat;
+            const stickerUrl = (typeof attachedStickerUrls !== 'undefined') ? attachedStickerUrls.chat : null;
             
-            if (!text && !imgFile && !gifUrl) return;
+            if (!text && !imgFile && !gifUrl && !stickerUrl) return;
 
             if (text.includes('[DANV_SPONSOR_AD]')) {
                 showToast("Vui lòng dùng nút 'Tài trợ' trên thanh công cụ để gửi thẻ tài trợ!", "error");
@@ -30048,7 +30297,7 @@
             submitBtn.disabled = true;
 
             try {
-                let imgId = gifUrl || null;
+                let imgId = gifUrl || stickerUrl || null;
                 if (imgFile) {
                     const fd = new FormData();
                     fd.append("file", imgFile);
