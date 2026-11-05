@@ -10729,6 +10729,285 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* DẤU CHẤM THAN ĐỎ CẢNH BÁO TRÊN Ô AFTERCODE */
+        .engine-warn-badge {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            width: 22px;
+            height: 22px;
+            background: #ef4444;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.45);
+            border: 2px solid var(--bg-panel);
+            z-index: 5;
+            animation: pulseWarnBadge 2s infinite ease-in-out;
+        }
+        @keyframes pulseWarnBadge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); box-shadow: 0 0 10px rgba(239, 68, 68, 0.7); }
+        }
+
+        /* MODAL KHUYẾN NGHỊ ĐỔI ENGINE */
+        #engineRecommendModal {
+            z-index: 1000010 !important;
+        }
+        #engineRecommendModal .engine-modal-box {
+            position: relative;
+            background: var(--bg-panel);
+            width: 100%;
+            max-width: 530px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            padding: 26px 24px 20px;
+            animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        #engineRecommendModal .engine-btn-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        #engineRecommendModal .engine-btn-close:hover {
+            background: var(--bg-secondary);
+            color: var(--text-title);
+        }
+        #engineRecommendModal .engine-header {
+            margin-bottom: 20px;
+            padding-right: 32px;
+        }
+        #engineRecommendModal .engine-header-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        #engineRecommendModal .engine-header-sub {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+        #engineRecommendModal .compare-outer {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 14px;
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        #engineRecommendModal .engine-card-col {
+            flex: 1;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 12px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        #engineRecommendModal .engine-card-col.recommended {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        #engineRecommendModal .badge-pill-custom {
+            position: absolute;
+            top: -10px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 10px;
+            border-radius: 99px;
+            letter-spacing: 0.4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        #engineRecommendModal .badge-pill-custom.current {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+        #engineRecommendModal .badge-pill-custom.best {
+            background: #059669;
+            color: #ffffff;
+        }
+        #engineRecommendModal .engine-logo-box {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            width: 100%;
+        }
+        #engineRecommendModal .engine-logo-box img {
+            max-height: 38px;
+            max-width: 90%;
+            object-fit: contain;
+        }
+        #engineRecommendModal .engine-name-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-title);
+            margin-bottom: 10px;
+        }
+        #engineRecommendModal .engine-card-col.recommended .engine-name-title {
+            color: #059669;
+        }
+        #engineRecommendModal .card-divider-line {
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+            margin-bottom: 10px;
+        }
+        #engineRecommendModal .specs-list-group {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        #engineRecommendModal .spec-item-row {
+            font-size: 11.5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.35;
+        }
+        #engineRecommendModal .engine-card-col.current .spec-item-row {
+            color: var(--text-muted);
+        }
+        #engineRecommendModal .engine-card-col.current .spec-icon {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        #engineRecommendModal .engine-card-col.recommended .spec-item-row {
+            color: #065f46;
+            font-weight: 600;
+        }
+        [data-theme="dark"] #engineRecommendModal .engine-card-col.recommended .spec-item-row {
+            color: #6ee7b7;
+        }
+        #engineRecommendModal .engine-card-col.recommended .spec-icon {
+            color: #059669;
+            flex-shrink: 0;
+        }
+        #engineRecommendModal .arrow-separator-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        #engineRecommendModal .engine-modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+        #engineRecommendModal .dont-ask-row {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+        #engineRecommendModal .dont-ask-row input {
+            accent-color: #059669;
+            cursor: pointer;
+        }
+        #engineRecommendModal .actions-group-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #engineRecommendModal .btn-switch-primary {
+            background: #059669;
+            border: 1px solid transparent;
+            color: #ffffff !important;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        #engineRecommendModal .btn-switch-primary:hover {
+            background: #047857;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+        }
+        #engineRecommendModal .btn-keep-ghost {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        #engineRecommendModal .btn-keep-ghost:hover {
+            background: var(--border-color);
+            color: var(--text-title);
+        }
+        @media (max-width: 480px) {
+            #engineRecommendModal .compare-outer {
+                flex-direction: column;
+            }
+            #engineRecommendModal .arrow-separator-box {
+                transform: rotate(90deg);
+                padding: 4px 0;
+            }
+            #engineRecommendModal .engine-modal-footer {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            #engineRecommendModal .actions-group-box {
+                flex-direction: column-reverse;
+            }
+            #engineRecommendModal .actions-group-box button {
+                width: 100%;
+                justify-content: center;
+            }
+            #engineRecommendModal .dont-ask-row {
+                justify-content: center;
+            }
+        }
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -12981,7 +13260,8 @@
                                 <img src="https://editor.turboshare.org.uk/assets/Turbo-IDE-Dewc6i7p.png" style="height:38px; width:auto; max-width:125px; object-fit:contain;">
                                 <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Turbo IDE </br><span data-i18n="settings_engine_default">(Mặc định)</span></span>
                             </button>
-                            <button type="button" id="btnEngineAftercode" onclick="changeEngine('aftercode')" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s;">
+                            <button type="button" id="btnEngineAftercode" onclick="onSelectAftercodeFromSettings()" style="flex:1; min-width: 140px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:15px; border:2px solid var(--border-color); border-radius:12px; background:var(--bg-panel); cursor:pointer; transition:0.2s; position:relative;">
+                                <span class="engine-warn-badge" title="Khuyến nghị đổi sang Turbo IDE"><i class="fa-solid fa-exclamation"></i></span>
                                 <img src="https://i.ibb.co/7dLkRJKZ/ezgif-1f45d90f66f6c39a.png" width="38" style="border-radius:8px;">
                                 <span style="font-weight:bold; font-size:0.9rem; color:var(--text-main);">Aftercode</span>
                             </button>
@@ -16426,6 +16706,114 @@
                         src="https://files.catbox.moe/5rds92.png" 
                         alt="Chú gấu ăn bánh quy" 
                     />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+<!-- MODAL KHUYẾN NGHỊ ĐỔI ENGINE (AFTERCODE -> TURBO IDE) -->
+    <div class="modal-overlay" id="engineRecommendModal">
+        <div class="engine-modal-box">
+            <!-- Nút đóng -->
+            <button type="button" class="engine-btn-close" onclick="closeEngineRecommendModal()" aria-label="Đóng">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <!-- Header -->
+            <div class="engine-header">
+                <h2 class="engine-header-title">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span>Khuyến nghị đổi trình chỉnh sửa</span>
+                </h2>
+                <p class="engine-header-sub">Aftercode hiện không còn tương thích tốt với các tính năng mới trên nền tảng.</p>
+            </div>
+
+            <!-- KHUNG SO SÁNH -->
+            <div class="compare-outer">
+                <!-- Cột Aftercode -->
+                <div class="engine-card-col current">
+                    <span class="badge-pill-custom current">Đang dùng</span>
+                    <div class="engine-logo-box">
+                        <img src="https://i.ibb.co/7dLkRJKZ/ezgif-1f45d90f66f6c39a.png" alt="Aftercode">
+                    </div>
+                    <span class="engine-name-title">Aftercode</span>
+                    <div class="card-divider-line"></div>
+                    
+                    <ul class="specs-list-group">
+                        <li class="spec-item-row">
+                            <svg class="spec-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            <span>Không hỗ trợ WOW Economy</span>
+                        </li>
+                        <li class="spec-item-row">
+                            <svg class="spec-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            <span>Thiếu bản vá bảo mật mới</span>
+                        </li>
+                        <li class="spec-item-row">
+                            <svg class="spec-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            <span>Chưa tối ưu hóa hiệu năng</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mũi tên ở giữa -->
+                <div class="arrow-separator-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+
+                <!-- Cột Turbo IDE -->
+                <div class="engine-card-col recommended">
+                    <span class="badge-pill-custom best">Đề xuất</span>
+                    <div class="engine-logo-box">
+                        <img src="https://editor.turboshare.org.uk/assets/Turbo-IDE-Dewc6i7p.png" alt="Turbo IDE">
+                    </div>
+                    <span class="engine-name-title">Turbo IDE</span>
+                    <div class="card-divider-line"></div>
+                    
+                    <ul class="specs-list-group">
+                        <li class="spec-item-row">
+                            <svg class="spec-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Tích hợp sẵn WOW Economy</span>
+                        </li>
+                        <li class="spec-item-row">
+                            <svg class="spec-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Chuẩn bảo mật an toàn</span>
+                        </li>
+                        <li class="spec-item-row">
+                            <svg class="spec-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Tối ưu FPS & tải siêu tốc</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer & Nút bấm -->
+            <div class="engine-modal-footer">
+                <label class="dont-ask-row">
+                    <input type="checkbox" id="dontRemindEngineCheck">
+                    <span>Không nhắc lại lần sau</span>
+                </label>
+
+                <div class="actions-group-box">
+                    <button type="button" class="btn-keep-ghost" onclick="handleKeepAftercode()">
+                        Vẫn dùng Aftercode
+                    </button>
+                    <button type="button" class="btn-switch-primary" onclick="handleSwitchToTurbo()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        <span>Đổi sang Turbo IDE</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -27544,16 +27932,80 @@
             }
         }
 
+        // ================= XỬ LÝ MODAL KHUYẾN NGHỊ ĐỔI ENGINE =================
+        let engineRecommendSource = 'create'; // 'create' hoặc 'settings'
+
+        function openEngineRecommendModal(source = 'create') {
+            engineRecommendSource = source;
+            const modal = document.getElementById('engineRecommendModal');
+            const dontRemindChk = document.getElementById('dontRemindEngineCheck');
+            if (dontRemindChk) {
+                dontRemindChk.checked = localStorage.getItem('danv_dont_remind_aftercode') === 'true';
+            }
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeEngineRecommendModal() {
+            const modal = document.getElementById('engineRecommendModal');
+            if (modal) modal.style.display = 'none';
+            // Nếu đóng modal khi bấm từ Settings mà không xác nhận chuyển thì khôi phục lại viền engine hiện tại
+            if (engineRecommendSource === 'settings') {
+                const curEngine = localStorage.getItem('engine') || 'turboshare';
+                updateEngineUI(curEngine);
+            }
+        }
+
+        function onSelectAftercodeFromSettings() {
+            openEngineRecommendModal('settings');
+        }
+
+        function handleSwitchToTurbo() {
+            const dontRemindChk = document.getElementById('dontRemindEngineCheck');
+            if (dontRemindChk && dontRemindChk.checked) {
+                localStorage.setItem('danv_dont_remind_aftercode', 'true');
+            }
+            changeEngine('turboshare');
+            closeEngineRecommendModal();
+
+            if (engineRecommendSource === 'create') {
+                window.location.href = 'https://editor.turboshare.org.uk/';
+            } else {
+                showToast("Đã chọn và giữ Turbo IDE làm trình chỉnh sửa mặc định!", "success");
+            }
+        }
+
+        function handleKeepAftercode() {
+            const dontRemindChk = document.getElementById('dontRemindEngineCheck');
+            if (dontRemindChk && dontRemindChk.checked) {
+                localStorage.setItem('danv_dont_remind_aftercode', 'true');
+            }
+            changeEngine('aftercode');
+            closeEngineRecommendModal();
+
+            if (engineRecommendSource === 'create') {
+                window.location.href = 'https://aftercode.pages.dev/editor.html';
+            } else {
+                showToast("Đã chuyển sang trình chỉnh sửa Aftercode.", "info");
+            }
+        }
+
         // Hàm mở trang Sáng tạo editor
         function openCreatePage() {
             const engineChoice = localStorage.getItem('engine') || 'turboshare';
             
-            // 🚀 Nếu là Turbo IDE hoặc Aftercode: Chuyển hướng trực tiếp trên tab hiện tại (Redirect thẳng)
+            // 🚀 Nếu là Turbo IDE: Chuyển hướng trực tiếp sang Turbo IDE
             if (engineChoice === 'turboshare') {
                 window.location.href = 'https://editor.turboshare.org.uk/';
                 return;
             }
+
+            // Nếu đang dùng Aftercode: Kiểm tra nếu chưa bật "Không nhắc lại" thì hiện bảng khuyến nghị
             if (engineChoice === 'aftercode') {
+                const dontRemind = localStorage.getItem('danv_dont_remind_aftercode') === 'true';
+                if (!dontRemind) {
+                    openEngineRecommendModal('create');
+                    return;
+                }
                 window.location.href = 'https://aftercode.pages.dev/editor.html';
                 return;
             }
