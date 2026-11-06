@@ -10729,6 +10729,222 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ================= GIAO DIỆN MY STUFF PHẲNG & TỐI GIẢN ================= */
+        .mystuff-shell {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .mystuff-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+        .mystuff-sidebar {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .mystuff-nav-header {
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            padding: 6px 10px 4px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .mystuff-folder-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: transparent;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .mystuff-folder-item:hover {
+            background: var(--bg-secondary);
+            color: var(--text-title);
+        }
+        .mystuff-folder-item.active {
+            background: rgba(13, 165, 122, 0.1);
+            color: var(--primary) !important;
+            border-color: rgba(13, 165, 122, 0.3);
+        }
+        .mystuff-folder-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mystuff-count-pill {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .mystuff-folder-item.active .mystuff-count-pill {
+            background: var(--primary);
+            color: #ffffff;
+        }
+        .mystuff-main-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mystuff-toolbar {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .mystuff-search-input {
+            flex: 1;
+            min-width: 220px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 5px 12px;
+        }
+        .mystuff-search-input input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 0.86rem;
+            color: var(--text-main);
+            width: 100%;
+        }
+        .mystuff-project-row {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: border-color 0.15s ease, background 0.15s ease;
+        }
+        .mystuff-project-row:hover {
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+        }
+        .mystuff-row-thumb {
+            width: 120px;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #000000;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        .mystuff-row-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .mystuff-row-title {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+        .mystuff-row-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .mystuff-row-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        .mystuff-badge-vis {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .mystuff-badge-vis.public {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .mystuff-badge-vis.private {
+            background: rgba(234, 88, 12, 0.12);
+            color: #ea580c;
+            border: 1px solid rgba(234, 88, 12, 0.3);
+        }
+        .mystuff-badge-vis.deleted {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        @media (max-width: 820px) {
+            .mystuff-layout {
+                grid-template-columns: 1fr;
+            }
+            .mystuff-project-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .mystuff-row-thumb {
+                width: 100%;
+                aspect-ratio: 16 / 9;
+            }
+            .mystuff-row-actions {
+                justify-content: stretch;
+                margin-top: 8px;
+            }
+            .mystuff-row-actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
     </style>
     <!-- THÊM THƯ VIỆN CLOUDFLARE TURNSTILE CHỐNG BOT -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -10855,10 +11071,10 @@
             <i class="fa-solid fa-wand-magic-sparkles"></i>
         </a>
 
-        <!-- Assets -->
-        <a href="/#assets" class="mobile-nav-link nav-assets" aria-label="Tài nguyên">
-            <span class="dock-tooltip" data-i18n="nav_assets">Tài nguyên</span>
-            <i class="fa-solid fa-box-open"></i>
+        <!-- My Stuff -->
+        <a href="/#mystuff" class="mobile-nav-link nav-mystuff" aria-label="Kho của tôi">
+            <span class="dock-tooltip">Kho của tôi</span>
+            <i class="fa-solid fa-folder-open"></i>
             <span class="indicator-dot"></span>
         </a>
 
@@ -12267,14 +12483,20 @@
                                     <button type="button" class="proj-dropdown-item" onclick="closeProfMoreMenu(); openAccountSwitcherModal();">
                                         <i class="fa-solid fa-arrows-rotate" style="color:var(--primary);"></i> <span>Chuyển đổi hồ sơ</span>
                                     </button>
+                                    <a href="/#mystuff" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
+                                        <i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> <span>Kho của tôi</span>
+                                    </a>
                                     <a href="/#creator" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
                                         <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
                                     </a>
+                                    <a href="/#assets" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
+                                        <i class="fa-solid fa-box-open" style="color:#3b82f6;"></i> <span>Cửa hàng tài nguyên</span>
+                                    </a>
                                     <a href="/#settings" class="proj-dropdown-item" style="text-decoration:none;" onclick="closeProfMoreMenu()">
-                                        <i class="fa-solid fa-gear"></i> <span>Cài đặt tài khoản</span>
+                                        <i class="fa-solid fa-gear" style="color:var(--text-muted);"></i> <span>Cài đặt tài khoản</span>
                                     </a>
                                     <button type="button" class="proj-dropdown-item" onclick="closeProfMoreMenu(); copyProfileShareLink();">
-                                        <i class="fa-solid fa-link" style="color:#3b82f6;"></i> <span>Sao chép link hồ sơ</span>
+                                        <i class="fa-solid fa-link" style="color:#64748b;"></i> <span>Sao chép link hồ sơ</span>
                                     </button>
                                 </div>
                             </div>
@@ -12778,7 +13000,149 @@
         </div>
     </div>
 
-<!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
+<!-- TRANG QUẢN LÝ TÁC PHẨM & THƯ MỤC (MY STUFF) -->
+    <div id="myStuffView" class="page-view" style="max-width: 1220px; padding: 16px 20px 40px 20px;">
+        <div class="mystuff-shell">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+                <div>
+                    <h2 style="font-size: 1.55rem; font-weight: 900; margin: 0; color: var(--text-title); display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-folder-open" style="color: var(--primary);"></i>
+                        <span>Kho tác phẩm</span>
+                    </h2>
+                    <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Phân loại thư mục, quản lý quyền hiển thị và phát triển tác phẩm</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn" style="border-radius: 10px; font-weight: 700; font-size: 0.85rem;" onclick="openCreateFolderModal()">
+                        <i class="fa-solid fa-folder-plus" style="color: #f59e0b;"></i> <span>Thư mục mới</span>
+                    </button>
+                    <a href="/#create" class="btn btn-primary" style="border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none;">
+                        <i class="fa-solid fa-plus"></i> <span>Dự án mới</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mystuff-layout">
+                <!-- Cột trái: Cây Thư Mục & Lọc Trạng Thái -->
+                <div class="mystuff-sidebar">
+                    <div class="mystuff-nav-header">
+                        <span>Danh mục dự án</span>
+                    </div>
+                    <div class="mystuff-folder-item active" data-folder="all" onclick="selectMyStuffFolder('all', this)">
+                        <span class="mystuff-folder-label">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>Tất cả tác phẩm</span>
+                        </span>
+                        <span class="mystuff-count-pill" id="cntMyStuffAll">0</span>
+                    </div>
+                    <div class="mystuff-folder-item" data-folder="shared" onclick="selectMyStuffFolder('shared', this)">
+                        <span class="mystuff-folder-label">
+                            <i class="fa-solid fa-earth-americas" style="color: #10b981;"></i>
+                            <span>Đã chia sẻ</span>
+                        </span>
+                        <span class="mystuff-count-pill" id="cntMyStuffShared">0</span>
+                    </div>
+                    <div class="mystuff-folder-item" data-folder="unshared" onclick="selectMyStuffFolder('unshared', this)">
+                        <span class="mystuff-folder-label">
+                            <i class="fa-solid fa-lock" style="color: #ea580c;"></i>
+                            <span>Chưa chia sẻ</span>
+                        </span>
+                        <span class="mystuff-count-pill" id="cntMyStuffUnshared">0</span>
+                    </div>
+                    <div class="mystuff-folder-item" data-folder="trash" onclick="selectMyStuffFolder('trash', this)">
+                        <span class="mystuff-folder-label">
+                            <i class="fa-solid fa-trash-can" style="color: #ef4444;"></i>
+                            <span>Thùng rác</span>
+                        </span>
+                        <span class="mystuff-count-pill" id="cntMyStuffTrash">0</span>
+                    </div>
+
+                    <div class="mystuff-nav-header" style="margin-top: 14px;">
+                        <span>Thư mục tự tạo</span>
+                        <button type="button" class="btn" style="padding: 2px 6px; font-size: 0.72rem; border-radius: 6px;" onclick="openCreateFolderModal()" title="Thêm thư mục">+</button>
+                    </div>
+                    <div id="myStuffFoldersList" style="display: flex; flex-direction: column; gap: 4px;">
+                        <!-- Đổ danh sách thư mục cá nhân từ JS -->
+                    </div>
+                </div>
+
+                <!-- Cột phải: Toolbar tìm kiếm + Danh sách Project Strip Rows -->
+                <div class="mystuff-main-area">
+                    <div class="mystuff-toolbar">
+                        <div class="mystuff-search-input">
+                            <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.82rem;"></i>
+                            <input type="text" id="myStuffSearchInput" placeholder="Tìm tác phẩm trong thư mục này..." oninput="handleMyStuffSearch(this.value)">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <select id="myStuffSortSelect" class="asset-select-filter" style="padding: 6px 12px; font-size: 0.82rem;" onchange="handleMyStuffSort(this.value)">
+                                <option value="newest">Mới cập nhật</option>
+                                <option value="oldest">Cũ nhất</option>
+                                <option value="views">Lượt xem cao</option>
+                                <option value="likes">Nhiều lượt thích</option>
+                                <option value="title">Tên A - Z</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="myStuffProjectRowsList" style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Đổ danh sách project strips từ JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẠO THƯ MỤC MỚI TRONG MY STUFF -->
+    <div class="modal-overlay" id="createFolderModal">
+        <div class="modal" style="max-width: 420px; border-radius: 14px;">
+            <div class="modal-header">
+                <span style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-folder-plus" style="color: var(--primary);"></i> <span>Tạo thư mục mới</span>
+                </span>
+                <button type="button" class="btn-close" onclick="closeModal('createFolderModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label style="font-size: 0.84rem; font-weight: 700;">Tên thư mục *:</label>
+                    <input type="text" id="newFolderTitleInput" class="form-control" placeholder="Ví dụ: Game Platformer, Dự án nhóm..." maxlength="60" required>
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 0.84rem; font-weight: 700;">Chế độ hiển thị:</label>
+                    <select id="newFolderVisSelect" class="form-control">
+                        <option value="private">Riêng tư (Chỉ hiển thị trong Kho của tôi)</option>
+                        <option value="public">Công khai (Hiển thị thành Bộ sưu tập trên trang cá nhân)</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" id="btnSubmitCreateFolder" style="width: 100%; justify-content: center; padding: 11px; font-weight: 800; border-radius: 10px; margin-top: 6px;" onclick="submitCreateMyStuffFolder()">
+                    <i class="fa-solid fa-check"></i> <span>Tạo thư mục</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GÁN DỰ ÁN VÀO THƯ MỤC -->
+    <div class="modal-overlay" id="assignFolderModal">
+        <div class="modal" style="max-width: 440px; border-radius: 14px;">
+            <div class="modal-header">
+                <span style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-folder" style="color: var(--primary);"></i> <span>Quản lý thư mục chứa</span>
+                </span>
+                <button type="button" class="btn-close" onclick="closeModal('assignFolderModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;">
+                    Chọn các thư mục lưu trữ tác phẩm: <b id="assignFolderProjectTitle" style="color: var(--text-title);"></b>
+                </p>
+                <div id="assignFolderOptionsList" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+                    <!-- Đổ danh sách checkbox thư mục từ JS -->
+                </div>
+                <button type="button" class="btn" style="width: 100%; border: 1px dashed var(--border-color); font-weight: 700; padding: 9px; border-radius: 10px; justify-content: center;" onclick="closeModal('assignFolderModal'); openCreateFolderModal();">
+                    <i class="fa-solid fa-plus"></i> Tạo thư mục mới
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANG 4: UPLOAD MỚI (CÓ MENU CHỌN) -->
     <div id="uploadView" class="page-view" style="max-width: 900px;">
 
         <!-- LOGIN BANNER (Hiện khi chưa đăng nhập) -->
@@ -18957,6 +19321,10 @@
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
             else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
             else if (hash === '#creator') document.title = "Studio Nhà Sáng Tạo | " + brandName;
+            else if (hash === '#mystuff') {
+                document.querySelectorAll('.nav-mystuff').forEach(el => el.classList.add('active'));
+                document.title = "Kho Tác Phẩm | " + brandName;
+            }
             else if (hash === '#banned') document.title = "Tài khoản bị đình chỉ | " + brandName;
             else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
 
@@ -18980,6 +19348,7 @@
             else if (hash === '#settings') await openSettingsPage();
             else if (hash === '#notifications') await openNotificationsPage();
             else if (hash === '#create') openCreatePage();
+            else if (hash === '#mystuff') await openMyStuffPage();
             else if (hash === '#studios') openStudiosPage();
             else if (hash === '#leaderboard') openLeaderboardPage();
             else if (hash.startsWith('#studio/')) await openStudioDetailPage(hash.replace('#studio/', ''), urlParams);
@@ -19012,6 +19381,10 @@
                     <button class="WOW-balance-pill" onclick="openDailyRewardModal()" data-i18n-title="tooltip_daily_checkin" title="${t('tooltip_daily_checkin')}">
                         <span class="wow-icon"></span> <span id="navWOWBalance">${currentUser.WOW || 0}</span>
                     </button>
+
+                    <a href="/#mystuff" class="nav-icon-btn nav-mystuff" title="Kho tác phẩm của tôi">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </a>
 
                     <a href="/#notifications" class="nav-icon-btn" data-i18n-title="tooltip_notifications" title="${t('tooltip_notifications')}">
                         <i class="fa-solid fa-bell"></i>
@@ -19060,11 +19433,17 @@
                             <a href="/users/${encodeURIComponent(currentUser.username)}" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
                                 <i class="fa-solid fa-user" style="color:var(--primary);"></i> <span>${t('nav_profile') || 'Profile'}</span>
                             </a>
-                            <a href="/#leaderboard" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
-                                <i class="fa-solid fa-crown" style="color:#f59e0b;"></i> <span>${t('nav_leaderboard') || 'Leaderboard'}</span>
+                            <a href="/#mystuff" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-folder-open" style="color:#0284c7;"></i> <span>Kho của tôi</span>
                             </a>
                             <a href="/#creator" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
-                                <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>${t('nav_creator') || 'Creator Studio'}</span>
+                                <i class="fa-solid fa-chart-line" style="color:#10b981;"></i> <span>Studio Nhà sáng tạo</span>
+                            </a>
+                            <a href="/#assets" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-box-open" style="color:#6366f1;"></i> <span>Cửa hàng tài nguyên</span>
+                            </a>
+                            <a href="/#leaderboard" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
+                                <i class="fa-solid fa-crown" style="color:#f59e0b;"></i> <span>${t('nav_leaderboard') || 'Leaderboard'}</span>
                             </a>
                             <a href="/#settings" class="nav-dropdown-item" onclick="closeNavUserDropdown()">
                                 <i class="fa-solid fa-gear" style="color:var(--text-muted);"></i> <span>${t('settings_options') || 'Cài đặt'}</span>
@@ -36521,6 +36900,476 @@
                 }
             } catch(e) {
                 showToast("Lỗi kết nối", "error");
+            }
+        }
+
+        // =========================================================================
+        // HỆ THỐNG QUẢN LÝ TÁC PHẨM & THƯ MỤC MY STUFF
+        // =========================================================================
+        let myStuffAllProjects = [];
+        let myStuffCustomFolders = [];
+        let myStuffActiveFolder = 'all'; // 'all', 'shared', 'unshared', 'trash', hoặc folder ID
+        let myStuffSearchTerm = '';
+        let myStuffSortOrder = 'newest';
+        let targetAssignProjectId = null;
+
+        async function openMyStuffPage() {
+            if (!currentUser) {
+                showToast("Vui lòng đăng nhập để mở Kho tác phẩm.", "info");
+                openModal('loginModal');
+                navigateTo('#home');
+                return;
+            }
+
+            document.getElementById('myStuffView').style.display = 'block';
+            myStuffActiveFolder = 'all';
+            myStuffSearchTerm = '';
+            myStuffSortOrder = 'newest';
+
+            const searchInp = document.getElementById('myStuffSearchInput');
+            if (searchInp) searchInp.value = '';
+
+            const rowsContainer = document.getElementById('myStuffProjectRowsList');
+            if (rowsContainer) {
+                rowsContainer.innerHTML = '<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i><div style="font-size:0.85rem; margin-top:8px;">Đang tải kho tác phẩm...</div></div>';
+            }
+
+            await loadMyStuffData();
+        }
+
+        async function loadMyStuffData() {
+            if (!currentUser) return;
+            try {
+                let projUrl = `${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=150`;
+                if (currentUser.sessionToken) projUrl += `&username=${encodeURIComponent(currentUser.username)}&sessionToken=${encodeURIComponent(currentUser.sessionToken)}`;
+
+                const [projRes, userRes] = await Promise.all([
+                    fetch(projUrl).then(r => r.json()),
+                    fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`).then(r => r.json())
+                ]);
+
+                myStuffAllProjects = (projRes && projRes.projects) ? projRes.projects : (Array.isArray(projRes) ? projRes : []);
+                
+                // Đồng bộ vào mảng allProjects
+                myStuffAllProjects.forEach(item => {
+                    const itemId = item.projectId || item.fileId;
+                    if (!allProjects.some(p => (p.projectId || p.fileId) === itemId)) {
+                        allProjects.push(item);
+                    }
+                });
+
+                let playlists = userRes && userRes.playlists ? userRes.playlists : [];
+                if (typeof playlists === 'string') {
+                    try { playlists = JSON.parse(playlists); } catch(e) { playlists = []; }
+                }
+                myStuffCustomFolders = Array.isArray(playlists) ? playlists.filter(pl => pl.title !== "Deleted") : [];
+
+                renderMyStuffSidebar();
+                renderMyStuffProjectRows();
+            } catch (err) {
+                const rowsContainer = document.getElementById('myStuffProjectRowsList');
+                if (rowsContainer) {
+                    rowsContainer.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.8rem; margin-bottom:8px; display:block;"></i>Không thể tải danh sách dự án. Vui lòng thử lại.</div>';
+                }
+            }
+        }
+
+        function renderMyStuffSidebar() {
+            let countAll = 0;
+            let countShared = 0;
+            let countUnshared = 0;
+            let countTrash = 0;
+
+            myStuffAllProjects.forEach(p => {
+                const vis = String(p.visibility || 'public').toLowerCase();
+                if (vis === 'deleted') {
+                    countTrash++;
+                } else if (vis === 'private') {
+                    countUnshared++;
+                    countAll++;
+                } else {
+                    countShared++;
+                    countAll++;
+                }
+            });
+
+            const elAll = document.getElementById('cntMyStuffAll');
+            const elShared = document.getElementById('cntMyStuffShared');
+            const elUnshared = document.getElementById('cntMyStuffUnshared');
+            const elTrash = document.getElementById('cntMyStuffTrash');
+            if (elAll) elAll.innerText = countAll;
+            if (elShared) elShared.innerText = countShared;
+            if (elUnshared) elUnshared.innerText = countUnshared;
+            if (elTrash) elTrash.innerText = countTrash;
+
+            const folderListContainer = document.getElementById('myStuffFoldersList');
+            if (!folderListContainer) return;
+
+            if (myStuffCustomFolders.length === 0) {
+                folderListContainer.innerHTML = '<div style="padding:8px 10px; font-size:0.78rem; color:var(--text-muted); font-style:italic;">Chưa có thư mục tự tạo.</div>';
+                return;
+            }
+
+            folderListContainer.innerHTML = myStuffCustomFolders.map(folder => {
+                const isSelected = myStuffActiveFolder === folder.id;
+                const projectCount = Array.isArray(folder.projects) ? folder.projects.length : 0;
+                const isPublic = folder.isPublic !== false;
+
+                return `
+                    <div class="mystuff-folder-item ${isSelected ? 'active' : ''}" onclick="selectMyStuffFolder('${folder.id}', this)">
+                        <span class="mystuff-folder-label" title="${escapeHtml(folder.title)}">
+                            <i class="fa-solid fa-folder" style="color:${isPublic ? '#0284c7' : '#ea580c'}; font-size:0.85rem;"></i>
+                            <span>${escapeHtml(folder.title)}</span>
+                        </span>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <span class="mystuff-count-pill">${projectCount}</span>
+                            <button type="button" class="btn" style="padding:2px 5px; font-size:0.7rem; border:none; background:transparent; color:var(--text-muted);" onclick="event.stopPropagation(); deleteMyStuffFolder('${folder.id}', '${escapeHtml(folder.title)}')" title="Xóa thư mục">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectMyStuffFolder(folderId, el) {
+            myStuffActiveFolder = folderId;
+            document.querySelectorAll('.mystuff-folder-item').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            renderMyStuffProjectRows();
+        }
+
+        function handleMyStuffSearch(val) {
+            myStuffSearchTerm = (val || '').toLowerCase().trim();
+            renderMyStuffProjectRows();
+        }
+
+        function handleMyStuffSort(order) {
+            myStuffSortOrder = order;
+            renderMyStuffProjectRows();
+        }
+
+        function renderMyStuffProjectRows() {
+            const container = document.getElementById('myStuffProjectRowsList');
+            if (!container) return;
+
+            let filtered = myStuffAllProjects.filter(p => {
+                const vis = String(p.visibility || 'public').toLowerCase();
+                const pid = String(p.projectId || p.fileId);
+
+                // Lọc theo folder được chọn
+                if (myStuffActiveFolder === 'trash') {
+                    if (vis !== 'deleted') return false;
+                } else if (vis === 'deleted') {
+                    return false; // Các folder khác không hiện dự án đã xóa
+                } else if (myStuffActiveFolder === 'shared') {
+                    if (vis !== 'public') return false;
+                } else if (myStuffActiveFolder === 'unshared') {
+                    if (vis !== 'private') return false;
+                } else if (myStuffActiveFolder !== 'all') {
+                    // Lọc theo folder tự tạo (kiểm tra targetProject trong danh sách playlist)
+                    const activePl = myStuffCustomFolders.find(f => String(f.id) === String(myStuffActiveFolder));
+                    if (!activePl || !Array.isArray(activePl.projects) || !activePl.projects.map(String).includes(pid)) {
+                        return false;
+                    }
+                }
+
+                // Lọc theo tìm kiếm từ khóa
+                if (myStuffSearchTerm) {
+                    const title = (p.title || '').toLowerCase();
+                    const desc = (p.description || '').toLowerCase();
+                    if (!title.includes(myStuffSearchTerm) && !desc.includes(myStuffSearchTerm)) return false;
+                }
+
+                return true;
+            });
+
+            // Sắp xếp
+            filtered.sort((a, b) => {
+                if (myStuffSortOrder === 'oldest') {
+                    return (Date.parse(a.date || '') || 0) - (Date.parse(b.date || '') || 0);
+                }
+                if (myStuffSortOrder === 'views') {
+                    return (b.views || 0) - (a.views || 0);
+                }
+                if (myStuffSortOrder === 'likes') {
+                    return ((b.likes || []).length) - ((a.likes || []).length);
+                }
+                if (myStuffSortOrder === 'title') {
+                    return (a.title || '').localeCompare(b.title || '');
+                }
+                return (Date.parse(b.date || '') || 0) - (Date.parse(a.date || '') || 0);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="background:var(--bg-panel); border:1px dashed var(--border-color); border-radius:14px; padding:45px 20px; text-align:center; color:var(--text-muted);">
+                        <i class="fa-solid fa-folder-open" style="font-size:2.4rem; opacity:0.3; margin-bottom:8px; display:block;"></i>
+                        <b style="color:var(--text-title); font-size:0.95rem; display:block;">Không có tác phẩm nào</b>
+                        <span style="font-size:0.82rem;">Không tìm thấy dự án trong phân mục hiện tại.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(p => {
+                const pid = String(p.projectId || p.fileId);
+                const thumbUrl = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
+                const vis = String(p.visibility || 'public').toLowerCase();
+                const isDeleted = vis === 'deleted';
+                const isPrivate = vis === 'private';
+                const engine = p.engine || 'turboshare';
+
+                let badgeHtml = '<span class="mystuff-badge-vis public">Đã chia sẻ</span>';
+                if (isDeleted) badgeHtml = '<span class="mystuff-badge-vis deleted">Thùng rác</span>';
+                else if (isPrivate) badgeHtml = '<span class="mystuff-badge-vis private">Chưa chia sẻ</span>';
+
+                // Đường dẫn chỉnh sửa code
+                const fileUrl = `${WORKER_URL}/api/project/${p.fileId}`;
+                let editorUrl = `https://editor.turboshare.org.uk/?project_url=${encodeURIComponent(fileUrl)}`;
+                if (engine === 'aftercode') editorUrl = `https://aftercode.pages.dev/editor.html?project_url=${encodeURIComponent(fileUrl)}`;
+                else if (engine === 'turbowarp') editorUrl = `https://turbowarp.org/editor?project_url=${encodeURIComponent(fileUrl)}`;
+
+                return `
+                    <div class="mystuff-project-row" id="mystuff-row-${pid}">
+                        <img src="${thumbUrl}" class="mystuff-row-thumb" onclick="navigateTo('/projects/${pid}')" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
+                        
+                        <div class="mystuff-row-info">
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                ${badgeHtml}
+                                <span class="mystuff-row-title" title="${escapeHtml(p.title)}">${escapeHtml(p.title)}</span>
+                            </div>
+                            <div class="mystuff-row-meta">
+                                <span><i class="fa-regular fa-clock"></i> ${timeAgo(p.date || '')}</span>
+                                <span><i class="fa-solid fa-play"></i> ${p.views || 0} lượt xem</span>
+                                <span><i class="fa-solid fa-heart" style="color:#ff4c4c;"></i> ${(p.likes || []).length} thích</span>
+                                <span><i class="fa-solid fa-star" style="color:#f59e0b;"></i> ${(p.stars || []).length} sao</span>
+                            </div>
+                        </div>
+
+                        <div class="mystuff-row-actions">
+                            ${!isDeleted ? `
+                                <a href="${editorUrl}" class="btn btn-primary" style="padding:6px 14px; font-size:0.82rem; border-radius:8px; font-weight:700; text-decoration:none;" target="_blank">
+                                    <i class="fa-solid fa-code"></i> <span>Chỉnh sửa</span>
+                                </a>
+                                <button type="button" class="btn" style="padding:6px 12px; font-size:0.82rem; border-radius:8px;" onclick="navigateTo('/projects/${pid}')" title="Xem trang tác phẩm">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </button>
+                                <button type="button" class="btn" style="padding:6px 12px; font-size:0.82rem; border-radius:8px;" onclick="openAssignFolderModal('${pid}')" title="Bỏ vào thư mục">
+                                    <i class="fa-solid fa-folder"></i>
+                                </button>
+                                <button type="button" class="btn" style="padding:6px 12px; font-size:0.82rem; border-radius:8px;" onclick="toggleMyStuffVisibility('${pid}', '${vis}')" title="${isPrivate ? 'Chia sẻ công khai' : 'Chuyển về riêng tư'}">
+                                    <i class="fa-solid ${isPrivate ? 'fa-earth-americas' : 'fa-lock'}"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger" style="padding:6px 10px; font-size:0.82rem; border-radius:8px;" onclick="moveMyStuffToTrash('${pid}')" title="Chuyển vào thùng rác">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            ` : `
+                                <button type="button" class="btn btn-primary" style="padding:6px 14px; font-size:0.82rem; border-radius:8px; font-weight:700;" onclick="restoreMyStuffFromTrash('${pid}')">
+                                    <i class="fa-solid fa-rotate-left"></i> <span>Khôi phục</span>
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // BẬT / TẮT TRẠNG THÁI CHIA SẺ DỰ ÁN
+        async function toggleMyStuffVisibility(pid, currentVis) {
+            const nextVis = currentVis === 'public' ? 'private' : 'public';
+            const actionText = nextVis === 'public' ? 'chia sẻ công khai' : 'chuyển về riêng tư';
+            if (!confirm(`Xác nhận ${actionText} tác phẩm này?`)) return;
+
+            const res = await apiFetch(`/api/project/action`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fileId: pid,
+                    action: "change_visibility",
+                    payload: { visibility: nextVis }
+                })
+            });
+
+            if (res && res.success) {
+                const target = myStuffAllProjects.find(p => (p.projectId || p.fileId) === pid);
+                if (target) target.visibility = nextVis;
+                showToast(`Đã ${actionText} tác phẩm.`, "success");
+                renderMyStuffSidebar();
+                renderMyStuffProjectRows();
+            } else {
+                showToast(res ? res.error : "Không thể thay đổi quyền hiển thị.", "error");
+            }
+        }
+
+        // CHUYỂN DỰ ÁN VÀO THÙNG RÁC
+        async function moveMyStuffToTrash(pid) {
+            if (!confirm("Xác nhận chuyển tác phẩm này vào thùng rác?")) return;
+
+            const res = await apiFetch(`/api/project/action`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fileId: pid,
+                    action: "soft_delete"
+                })
+            });
+
+            if (res && res.success) {
+                const target = myStuffAllProjects.find(p => (p.projectId || p.fileId) === pid);
+                if (target) target.visibility = 'deleted';
+                showToast("Đã chuyển tác phẩm vào thùng rác.", "info");
+                renderMyStuffSidebar();
+                renderMyStuffProjectRows();
+            } else {
+                showToast(res ? res.error : "Không thể xóa tác phẩm.", "error");
+            }
+        }
+
+        // KHÔI PHỤC TÁC PHẨM TỪ THÙNG RÁC
+        async function restoreMyStuffFromTrash(pid) {
+            const res = await apiFetch(`/api/project/action`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fileId: pid,
+                    action: "change_visibility",
+                    payload: { visibility: "private" }
+                })
+            });
+
+            if (res && res.success) {
+                const target = myStuffAllProjects.find(p => (p.projectId || p.fileId) === pid);
+                if (target) target.visibility = 'private';
+                showToast("Đã khôi phục tác phẩm ở trạng thái riêng tư.", "success");
+                renderMyStuffSidebar();
+                renderMyStuffProjectRows();
+            } else {
+                showToast(res ? res.error : "Không thể khôi phục tác phẩm.", "error");
+            }
+        }
+
+        // TẠO THƯ MỤC MỚI TRONG MY STUFF
+        function openCreateFolderModal() {
+            const inp = document.getElementById('newFolderTitleInput');
+            if (inp) inp.value = '';
+            openModal('createFolderModal');
+        }
+
+        async function submitCreateMyStuffFolder() {
+            const titleInput = document.getElementById('newFolderTitleInput');
+            const title = titleInput ? titleInput.value.trim() : '';
+            const vis = document.getElementById('newFolderVisSelect')?.value || 'private';
+
+            if (!title) return showToast("Vui lòng nhập tên thư mục.", "error");
+            if (title.toLowerCase() === 'deleted') return showToast("Tên này được hệ thống bảo lưu.", "error");
+
+            const btn = document.getElementById('btnSubmitCreateFolder');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...'; }
+
+            const res = await apiFetch('/api/user/playlist', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'create',
+                    title: title,
+                    isPublic: (vis === 'public')
+                })
+            });
+
+            if (res && res.success) {
+                showToast("Đã tạo thư mục mới.", "success");
+                closeModal('createFolderModal');
+                myStuffCustomFolders = (res.playlists || []).filter(pl => pl.title !== "Deleted");
+                renderMyStuffSidebar();
+            } else {
+                showToast(res ? (res.error || "Không thể tạo thư mục.") : "Lỗi kết nối máy chủ.", "error");
+            }
+
+            if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+        }
+
+        async function deleteMyStuffFolder(folderId, folderTitle) {
+            if (!confirm(`Xác nhận xóa thư mục "${folderTitle}"?\n(Các tác phẩm bên trong vẫn được bảo toàn nguyên vẹn).`)) return;
+
+            const res = await apiFetch('/api/user/playlist', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'delete',
+                    playlistId: folderId
+                })
+            });
+
+            if (res && res.success) {
+                showToast("Đã xóa thư mục.", "info");
+                if (myStuffActiveFolder === folderId) myStuffActiveFolder = 'all';
+                myStuffCustomFolders = (res.playlists || []).filter(pl => pl.title !== "Deleted");
+                renderMyStuffSidebar();
+                renderMyStuffProjectRows();
+            } else {
+                showToast(res ? res.error : "Không thể xóa thư mục.", "error");
+            }
+        }
+
+        // GÁN / GỠ DỰ ÁN VÀO CÁC THƯ MỤC
+        function openAssignFolderModal(pid) {
+            targetAssignProjectId = pid;
+            const project = myStuffAllProjects.find(p => (p.projectId || p.fileId) === pid);
+            const titleEl = document.getElementById('assignFolderProjectTitle');
+            if (titleEl) titleEl.innerText = project ? `"${project.title}"` : '';
+
+            const listContainer = document.getElementById('assignFolderOptionsList');
+            if (!listContainer) return;
+
+            if (myStuffCustomFolders.length === 0) {
+                listContainer.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.84rem;">Bạn chưa có thư mục tự tạo nào.</div>';
+            } else {
+                listContainer.innerHTML = myStuffCustomFolders.map(folder => {
+                    const isInside = Array.isArray(folder.projects) && folder.projects.map(String).includes(String(pid));
+                    const isPublic = folder.isPublic !== false;
+
+                    return `
+                        <label style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-secondary); border:1px solid var(--border-color); padding:10px 14px; border-radius:10px; cursor:pointer;">
+                            <div style="font-size:0.88rem; font-weight:700; color:var(--text-title); display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-folder" style="color:${isPublic ? '#0284c7' : '#ea580c'}; font-size:0.84rem;"></i>
+                                <span>${escapeHtml(folder.title)}</span>
+                                <span style="font-size:0.72rem; color:var(--text-muted); font-weight:normal;">(${isPublic ? 'Công khai' : 'Riêng tư'})</span>
+                            </div>
+                            <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary); cursor:pointer;" ${isInside ? 'checked' : ''} onchange="toggleProjectFolderAssignment('${folder.id}', this.checked)">
+                        </label>
+                    `;
+                }).join('');
+            }
+
+            openModal('assignFolderModal');
+        }
+
+        async function toggleProjectFolderAssignment(folderId, isChecked) {
+            if (!targetAssignProjectId) return;
+            const pid = targetAssignProjectId;
+
+            const res = await apiFetch('/api/user/playlist', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'toggle_project',
+                    playlistId: folderId,
+                    targetProject: String(pid)
+                })
+            });
+
+            if (res && res.success) {
+                showToast(isChecked ? "Đã thêm tác phẩm vào thư mục." : "Đã gỡ tác phẩm khỏi thư mục.", "info");
+                
+                const folder = myStuffCustomFolders.find(f => String(f.id) === String(folderId));
+                if (folder) {
+                    if (!folder.projects) folder.projects = [];
+                    if (isChecked) {
+                        if (!folder.projects.map(String).includes(String(pid))) folder.projects.unshift(String(pid));
+                    } else {
+                        folder.projects = folder.projects.filter(id => String(id) !== String(pid));
+                    }
+                }
+                renderMyStuffSidebar();
+                if (myStuffActiveFolder === folderId) renderMyStuffProjectRows();
+            } else {
+                showToast(res ? res.error : "Không thể cập nhật thư mục.", "error");
             }
         }
     </script>
