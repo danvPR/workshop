@@ -17956,6 +17956,7 @@
         // ==========================================
         let currentLang = 'en';
         let langData = {};
+        let langReady = false;
 
         // Nhận diện ngôn ngữ: Mặc định tiếng Anh, chỉ đặt tiếng Việt nếu trình duyệt là tiếng Việt
         async function detectLanguage() {
@@ -17971,6 +17972,7 @@
         }
 
         async function setLanguage(lang) {
+            langReady = false;
             try {
                 const bp = window.location.pathname.includes('/workshop') ? '/workshop' : '';
                 const cacheKey = 'i18n_' + lang;
@@ -17988,6 +17990,26 @@
                 // Tự động bổ sung bản dịch dự phòng cho các mục báo cáo, GIF và tải xuống
                 const i18nFallback = {
                     en: {
+                        brand_title: "TurboShare - ACGN Programming Community",
+                        brand_name: "TurboShare",
+                        nav_explore: "Explore",
+                        nav_create: "Create",
+                        nav_upload: "Upload",
+                        nav_login: "Log In",
+                        nav_chat: "Community",
+                        nav_home: "Home",
+                        nav_profile: "Profile",
+                        nav_assets: "Assets",
+                        nav_studios: "Stations",
+                        nav_admin: "Admin Panel",
+                        nav_leaderboard: "Leaderboard",
+                        nav_creator: "Creator Studio",
+                        nav_mystuff: "My Stuff",
+                        nav_banned: "Account Banned",
+                        settings_title: "Account Settings",
+                        notif_title: "Messages",
+                        profile_page_title: "Profile {name} (@{username}) on DANVworkshop",
+                        page_title_project: "{projectTitle} - Project by {author} | DANVworkshop",
                         report_reason_spam: "Spam / Commercial advertising",
                         report_reason_hate: "Hate speech / Harassment",
                         report_reason_copyright: "Copyright infringement (Uncredited)",
@@ -18000,6 +18022,26 @@
                         action_download: "Download"
                     },
                     vi: {
+                        brand_title: "TurboShare - Cộng đồng lập trình ACGN",
+                        brand_name: "TurboShare",
+                        nav_explore: "Khám phá",
+                        nav_create: "Sáng tạo",
+                        nav_upload: "Đăng tác phẩm",
+                        nav_login: "Đăng nhập",
+                        nav_chat: "Giao lưu",
+                        nav_home: "Trang chủ",
+                        nav_profile: "Hồ sơ",
+                        nav_assets: "Tài nguyên",
+                        nav_studios: "Các trạm",
+                        nav_admin: "Bảng điều khiển quản trị",
+                        nav_leaderboard: "Bảng xếp hạng",
+                        nav_creator: "Trung tâm Nhà phát triển",
+                        nav_mystuff: "Kho Tác Phẩm",
+                        nav_banned: "Tài khoản bị đình chỉ",
+                        settings_title: "Cài đặt tài khoản",
+                        notif_title: "Tin nhắn",
+                        profile_page_title: "Hồ sơ {name} (@{username}) trên DANVworkshop",
+                        page_title_project: "{projectTitle} - Dự án bởi {author} | DANVworkshop",
                         report_reason_spam: "Spam / Quảng cáo rác",
                         report_reason_hate: "Ngôn từ đả kích, xúc phạm",
                         report_reason_copyright: "Vi phạm bản quyền (Không ghi nguồn)",
@@ -18063,15 +18105,20 @@
                 }
                 
                 // Load lại dữ liệu dự án nếu đang ở trang chủ
-                if(allProjects && allProjects.length > 0) handleRouting(); 
-            } catch (e) { 
+                langReady = true;
+                if(allProjects && allProjects.length > 0) handleRouting();
+            } catch (e) {
                 console.error("Lỗi tải ngôn ngữ:", e); 
                 // Hiện thông báo lỗi trực tiếp trên web cho dễ biết
                 showToast("Không tìm thấy tệp ngôn ngữ: " + lang, "error");
+                // Fallback: đảm bảo langData không rỗng để tránh hiển thị raw key
+                langData = Object.assign({}, i18nFallback[lang] || {});
+                langReady = true;
             }
         }
 
         function t(key, params = {}) {
+            if (!langReady) return key;
             let str = langData[key] || key;
             for (const [k, v] of Object.entries(params)) {
                 str = str.replace(new RegExp(`{${k}}`, 'g'), v);
@@ -19759,22 +19806,22 @@
             }
             else if (hash === '#studios' || hash.startsWith('#studio/')) {
                 document.querySelectorAll('.nav-studios').forEach(el => el.classList.add('active'));
-                document.title = "Stations | " + brandName;
+                document.title = t('nav_studios') + " | " + brandName;
             }
             else if (hash === '#leaderboard') {
                 document.querySelectorAll('.nav-leaderboard').forEach(el => el.classList.add('active'));
-                document.title = "Bảng Xếp Hạng | " + brandName;
+                document.title = t('nav_leaderboard') + " | " + brandName;
             }
             else if (hash === '#upload') document.title = t('nav_upload') + " | " + brandName;
             else if (hash === '#settings') document.title = t('settings_title') + " | " + brandName;
             else if (hash === '#notifications') document.title = t('notif_title') + " | " + brandName;
-            else if (hash === '#admin') document.title = "Admin Panel | " + brandName;
-            else if (hash === '#creator') document.title = "Studio Nhà Sáng Tạo | " + brandName;
+            else if (hash === '#admin')                 document.title = t('nav_admin') + " | " + brandName;
+            else if (hash === '#creator')                 document.title = t('nav_creator') + " | " + brandName;
             else if (hash === '#mystuff') {
                 document.querySelectorAll('.nav-mystuff').forEach(el => el.classList.add('active'));
-                document.title = "Kho Tác Phẩm | " + brandName;
+                document.title = t('nav_mystuff') + " | " + brandName;
             }
-            else if (hash === '#banned') document.title = "Tài khoản bị đình chỉ | " + brandName;
+            else if (hash === '#banned')                 document.title = t('nav_banned') + " | " + brandName;
             else if (hash.startsWith('#profile/')) { document.querySelectorAll('.nav-profile').forEach(el => el.classList.add('active')); }
 
             // Ẩn tất cả các trang
