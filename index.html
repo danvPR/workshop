@@ -29407,6 +29407,8 @@
         }
 
         function handleIncomingRealtimeComment(eventType, data, contextType) {
+            if (data._server_auth !== "DANV_VERIFIED_BROADCAST_8899") return;
+
             let list = [];
             if (contextType === 'project' && currentProj) list = currentProj.comments;
             else if (contextType === 'profile' && viewingProfileData) list = viewingProfileData.comments;
@@ -29779,13 +29781,12 @@
                 ? currentUser.username.toLowerCase() 
                 : ('guest_' + Math.random().toString(36).substring(2, 8));
 
-            globalChatChannel = supabaseClient.channel('realtime:global_chat', {
+            globalChatChannel = supabaseClient.channel('realtime:public_chat_secure', {
                 config: {
                     presence: { key: presenceKey }
                 }
             });
 
-            // Lắng nghe sự kiện đồng bộ danh sách online qua WebSocket
             globalChatChannel
                 .on('presence', { event: 'sync' }, () => {
                     const state = globalChatChannel.presenceState();
@@ -29796,6 +29797,11 @@
                         const eventType = payload.event;
                         const data = payload.payload;
                         
+                        if (data._server_auth !== "DANV_VERIFIED_BROADCAST_8899") {
+                            console.warn("Phát hiện gói tin rác từ Hacker, đã tự động chặn!");
+                            return;
+                        }
+
                         const liveWrapper = document.getElementById('chatLiveWrapper');
                         if (!liveWrapper) return;
 
