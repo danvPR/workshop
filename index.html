@@ -67,7 +67,7 @@
     
     <!-- Google AdSense -->
     <meta name="google-adsense-account" content="ca-pub-6459018010825989">
-    <meta name="monetag" content="ea3ae5443b667c4e9c3bc0f67956aa94">
+    <meta name="monetag" content="2cef0ab0af55f026c2447e529f058a99">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6459018010825989" crossorigin="anonymous"></script>
     
     <!-- Google Analytics / Tag Manager -->
@@ -25413,7 +25413,7 @@
             try {
                 const res = await apiFetch(`/api/admin/get_reports`, { method: 'POST', body: JSON.stringify({}) });
                 if(!res || !res.success) {
-                    container.innerHTML = `<div style="color:#ef4444; text-align:center; padding: 20px;"><i class="fa-solid fa-triangle-exclamation"></i> Lỗi lấy dữ liệu: ${escapeHtml(res?.error || 'Bạn không có quyền Admin hoặc kết nối bị từ chối')}</div>`;
+                    container.innerHTML = `<div style="color:#ef4444; text-align:center; padding: 20px;"><i class="fa-solid fa-triangle-exclamation"></i> Error loading data: ${escapeHtml(res?.error || t('admin_no_rights'))}</div>`;
                     return;
                 }
 
@@ -25421,7 +25421,7 @@
                 const reports = rawList.filter(r => r && String(r.status || 'pending').toLowerCase().trim() === "pending");
 
                 if(reports.length === 0) {
-                    container.innerHTML = `<div style="text-align:center; color:#64748b; padding: 30px; font-size:1.1rem;"><i class="fa-solid fa-check-circle" style="font-size:3rem; color:#10b981; margin-bottom:10px; display:block;"></i>Tuyệt vời! Không có báo cáo vi phạm nào đang chờ xử lý.</div>`;
+                    container.innerHTML = `<div style="text-align:center; color:#64748b; padding: 30px; font-size:1.1rem;"><i class="fa-solid fa-check-circle" style="font-size:3rem; color:#10b981; margin-bottom:10px; display:block;"></i>${t('admin_no_reports')}</div>`;
                     return;
                 }
 
@@ -25471,7 +25471,7 @@
                 `;}).join('');
             } catch(renderErr) {
                 console.error("Lỗi vẽ giao diện báo cáo Admin:", renderErr);
-                container.innerHTML = `<div style="color:#ef4444; text-align:center; padding: 25px;"><i class="fa-solid fa-circle-exclamation"></i> Lỗi hiển thị danh sách báo cáo: ${escapeHtml(renderErr.message)}</div>`;
+                container.innerHTML = `<div style="color:#ef4444; text-align:center; padding: 25px;"><i class="fa-solid fa-circle-exclamation"></i> ${t('admin_report_list_error', { error: renderErr.message })}</div>`;
             }
         }
 
@@ -27099,10 +27099,10 @@
             // 7. SỰ KIỆN & TRỰC TIẾP (Broadcast / Events / TV / Streamers)
             const liveMatch = pathname.match(/^\/(events(?:\/([a-zA-Z0-9_\-]+))?|tv|streamers(?:\/([a-zA-Z0-9_\-]+))?)/i);
             if (liveMatch) {
-                let eventTitle = "Trực tiếp Chess.com";
+                let eventTitle = "Live Chess.com";
                 if (pathname.includes('/tv')) eventTitle = "Chess.com TV";
-                else if (liveMatch[2]) eventTitle = `Sự kiện: ${liveMatch[2].replace(/[-_]/g, ' ')}`;
-                else if (liveMatch[3]) eventTitle = `Kênh Streamer: ${liveMatch[3]}`;
+                else if (liveMatch[2]) eventTitle = `Event: ${liveMatch[2].replace(/[-_]/g, ' ')}`;
+                else if (liveMatch[3]) eventTitle = t('streamer_channel', { name: liveMatch[3] });
                 return {
                     category: 'broadcast',
                     title: eventTitle,
@@ -29112,7 +29112,7 @@
             }
 
             const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-            if (mainText) mainText.innerHTML = `Đã chọn: <b>${escapeHtml(file.name)}</b> (${sizeMB} MB)`;
+            if (mainText) mainText.innerHTML = t('file_selected', { name: escapeHtml(file.name), size: sizeMB });
 
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -29184,7 +29184,7 @@
 
             try {
                 for (let i = 0; i < totalChunks; i++) {
-                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Phần ${i + 1}/${totalChunks}...</span>`;
+                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${t('upload_chunk_uploading', { i: i + 1, total: totalChunks })}</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `asset_part_${i}.${fileExt}`);
@@ -29414,7 +29414,7 @@
             }
 
             if (users.length === 0) {
-                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;">${window.presenceSearchTerm ? 'Không tìm thấy kết quả' : 'Chưa có ai kết nối'}</div>`;
+                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;">${window.presenceSearchTerm ? t('presence_no_results') : t('presence_no_one')}</div>`;
                 return;
             }
 
@@ -29506,7 +29506,7 @@
             }
 
             if (!allProjects || allProjects.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">Chưa có tác phẩm nào</div>`;
+                container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">${t('no_projects')}</div>`;
                 return;
             }
 
@@ -29950,8 +29950,8 @@
                 
                 const isReacted = currentUser && users.includes(currentUser.username);
                 // Hiển thị danh sách user khi hover
-                let tooltip = users.map(u => u === (currentUser?.username) ? 'Bạn' : `@${u}`).join(', ');
-                if (users.length > 5) tooltip = `${users.slice(0, 5).join(', ')} và ${users.length - 5} người khác`;
+                let tooltip = users.map(u => u === (currentUser?.username) ? t('presence_you') : `@${u}`).join(', ');
+                if (users.length > 5) tooltip = `${users.slice(0, 5).join(', ')} ${t('presence_and_others', { count: users.length - 5 })}`;
 
                 const fbImg = renderFacebookEmojiImg(emoji);
 
@@ -30196,7 +30196,7 @@
             if (!currentUser) return openModal('loginModal');
             const textarea = document.getElementById('commentTextChat');
             if (!textarea) return;
-            textarea.value = `@BeaBea (AI) Hãy gợi ý cho mình một ý tưởng cơ chế game hoặc cốt truyện độc lạ để làm trên DANVworkshop đi!`;
+            textarea.value = t('beabea_default_prompt');
             textarea.focus();
             const len = textarea.value.length;
             textarea.setSelectionRange(len, len);
@@ -31892,7 +31892,7 @@
                         `;
                     }
                     if (grid) {
-                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:25px; color:var(--text-muted); font-size:0.85rem;"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; opacity:0.3; margin-bottom:8px; display:block;"></i>Tạm dừng hiển thị chuỗi đôi bạn do lỗi kết nối.</div>`;
+                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:25px; color:var(--text-muted); font-size:0.85rem;"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; opacity:0.3; margin-bottom:8px; display:block;"></i>${t('daily_buddy_pause_error')}</div>`;
                     }
                 }
             } else {
@@ -32172,7 +32172,7 @@
                 if(holdBtn) holdBtn.style.display = 'none';
                 btn.disabled = true;
                 const daysLeft = Math.max(0, 3 - diffDays);
-                btn.innerHTML = `<i class="fa-solid fa-snowflake"></i> Chuỗi đã đứt - Còn ${daysLeft + 1} ngày để khôi phục`;
+                btn.innerHTML = `<i class="fa-solid fa-snowflake"></i> ${t('daily_chain_broken', { days: daysLeft + 1 })}`;
                 btn.className = 'btn';
                 btn.style.background = 'rgba(2, 132, 199, 0.1)';
                 btn.style.color = '#0284c7';
@@ -32660,13 +32660,13 @@
                     }
                 });
                 feedbackEl.className = 'bb-quiz-feedback show-correct';
-                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <b>Chính xác!</b> ${escapeHtml(explainText)}`;
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <b>${t('quiz_correct')}</b> ${escapeHtml(explainText)}`;
             } else {
                 // Người dùng trả lời CHƯA ĐÚNG
                 btnEl.className = 'bb-quiz-opt-btn wrong';
                 btnEl.querySelector('i').className = 'fa-solid fa-circle-xmark';
                 feedbackEl.className = 'bb-quiz-feedback show-wrong';
-                feedbackEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>Chưa đúng rồi!</b> Hãy suy nghĩ thêm và thử lại đáp án khác xem nhé!`;
+                feedbackEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>${t('quiz_incorrect')}</b> ${t('quiz_try_again')}`;
             }
         }
 
@@ -32849,7 +32849,7 @@
                     holdProgress += 4; // Tăng dần theo mỗi 40ms (~1 giây đầy)
                     const curPct = Math.min(100, holdProgress);
                     if (fillEl) fillEl.style.width = `${curPct}%`;
-                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.25rem; color:#fef08a;"></i> <span>ĐANG NẠP ${curPct}%</span>`;
+                    if (textEl) textEl.innerHTML = `<i class="fa-solid fa-atom fa-spin" style="font-size:1.25rem; color:#fef08a;"></i> <span>${t('uploading_pct', { pct: curPct })}</span>`;
 
                     if (holdProgress >= 100) {
                         clearInterval(holdInterval);
@@ -33561,9 +33561,9 @@
             const selectEl = document.getElementById('adminFrameSelect');
             if (!selectEl) return;
 
-            let optionsHtml = `<option value="new">➕ Thêm Khung Avatar Mới</option>`;
+            let optionsHtml = `<option value="new">${t('frame_add_new')}</option>`;
             if (Array.isArray(availableFrames) && availableFrames.length > 0) {
-                optionsHtml += `<optgroup label="Khung đang có trong hệ thống">`;
+                optionsHtml += `<optgroup label="${t('frame_group_owned')}">`;
                 optionsHtml += availableFrames.map(f => `
                     <option value="${f.id}">${escapeHtml(f.name)} (${f.price || 0} WOW)</option>
                 `).join('');
@@ -34486,7 +34486,7 @@
             try { ids = typeof ownedFramesJSON === 'string' ? JSON.parse(ownedFramesJSON) : (ownedFramesJSON || []); } catch(e){}
 
             if (ids.length === 0) {
-                box.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.85rem;">Tác giả chưa sở hữu Khung Avatar nào.</div>`;
+                box.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.85rem;">${t('wardrobe_no_frames')}</div>`;
                 return;
             }
 
@@ -34496,7 +34496,7 @@
                     const framesRes = await fetch(`${WORKER_URL}/api/frames`);
                     availableFrames = await framesRes.json();
                 } catch(e) {
-                    box.innerHTML = `<div style="text-align:center; color:#ef4444; font-size:0.85rem;">Lỗi tải dữ liệu tủ đồ.</div>`;
+                    box.innerHTML = `<div style="text-align:center; color:#ef4444; font-size:0.85rem;">${t('wardrobe_load_error')}</div>`;
                     return;
                 }
             }
@@ -34812,7 +34812,7 @@
                 customWrap.style.display = 'block';
                 const customInput = document.getElementById('bentoCustomRoleInput');
                 customInput.focus();
-                bentoSelectedUserRole = customInput.value.trim() || 'Tùy chỉnh';
+                bentoSelectedUserRole = customInput.value.trim() || t('role_custom');
             } else {
                 customWrap.style.display = 'none';
                 bentoSelectedUserRole = role;
@@ -35144,7 +35144,7 @@
                     </div>
                 `;
             } else if (box) {
-                box.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">Tác phẩm không khả dụng.</div>`;
+                box.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">${t('project_unavailable')}</div>`;
             }
         }
 
@@ -35201,7 +35201,7 @@
                     </div>
                 `;
             } else if (box) {
-                box.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">Station không khả dụng.</div>`;
+                box.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">${t('station_unavailable')}</div>`;
             }
         }
 
