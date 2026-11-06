@@ -171,7 +171,7 @@
                         "@type": "WebSite",
                         "name": "DANVworkshop",
                         "url": baseUrl + "/",
-                        "description": "DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN.",
+                        "description": "DANVworkshop is a community platform for sharing, discussing, and creating ACGN programming projects.",
                         "inLanguage": "vi-VN",
                         "potentialAction": {
                             "@type": "SearchAction",
@@ -209,7 +209,7 @@
                                 "url": baseUrl + "/users/" + (data.authorSlug || data.authorId)
                             },
                             "image": data.thumbId ? `${baseUrl}/api/project/${data.thumbId}` : "https://i.ibb.co/QFg1cVVD/image.png",
-                            "description": data.description || `Dự án game/hoạt hình được tạo bởi ${data.author}`,
+                            "description": data.description || `Game/animation project created by ${data.author}`,
                             "datePublished": data.createdAt,
                             "dateModified": data.updatedAt || data.createdAt,
                             "aggregateRating": {
@@ -239,14 +239,14 @@
                                 "name": data.username,
                                 "url": baseUrl + "/users/" + (data.username || data.slug),
                                 "image": data.avatar || "https://i.ibb.co/QFg1cVVD/image.png",
-                                "description": data.bio || `Hồ sơ của ${data.username} trên DANVworkshop`,
+                                "description": data.bio || `Profile of ${data.username} on DANVworkshop`,
                                 "worksFor": {
                                     "@type": "Organization",
                                     "name": "DANVworkshop"
                                 },
                                 "sameAs": data.links || []
                             },
-                            "description": `Hồ sơ người dùng ${data.username} - ${data.projectsCount || 0} dự án, ${data.followersCount || 0} người theo dõi`
+                            "description": `User profile ${data.username} - ${data.projectsCount || 0} projects, ${data.followersCount || 0} followers`
                         };
                     }
                     break;
@@ -259,7 +259,7 @@
                             "@type": "CollectionPage",
                             "name": data.name,
                             "url": baseUrl + "/studio/" + (data.id || data._id || data.slug),
-                            "description": data.description || `Studio ${data.name} trên DANVworkshop`,
+                            "description": data.description || `Studio ${data.name} on DANVworkshop`,
                             "creator": {
                                 "@type": "Person",
                                 "name": data.owner,
@@ -281,7 +281,7 @@
                         "@type": "WebSite",
                         "name": "DANVworkshop",
                         "url": baseUrl + "/",
-                        "description": "DANVworkshop là nền tảng cộng đồng chia sẻ, thảo luận và sáng tạo các dự án lập trình ACGN."
+                        "description": "DANVworkshop is a community platform for sharing, discussing, and creating ACGN programming projects."
                     };
             }
             
@@ -12452,7 +12452,7 @@
                     <div>
                         <h2 id="projPageTitle" style="color: var(--text-title); margin: 0; font-size: 1.7rem; font-weight: 900; line-height: 1.3; word-break: break-word;">Tên dự án</h2>
                         <div style="display: flex; align-items: center; gap: 14px; margin-top: 6px; flex-wrap: wrap;">
-                            <span id="projPageDate" style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-regular fa-clock"></i> Đang cập nhật...</span>
+                            <span id="projPageDate" style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-regular fa-clock"></i> Updating...</span>
                             <span style="color: var(--text-muted); font-size: 0.86rem;"><i class="fa-solid fa-play" style="color:var(--primary);"></i> <b id="projViewCountDisplay" style="color:var(--text-title);">0</b> <span data-i18n="proj_views_unit">lượt chơi</span></span>
                             <span id="projVersionBadge" style="display:none; font-size: 0.75rem; background: rgba(13,165,122,0.12); color: var(--primary); padding: 2px 8px; border-radius: 12px; font-weight: bold; border: 1px solid rgba(13,165,122,0.25);"><i class="fa-solid fa-code-commit"></i> <span id="projVersionText"></span></span>
                         </div>
@@ -12673,7 +12673,7 @@
                         </div>
                         <h4 id="projSidebarAuthorName" style="font-size:1.15rem; font-weight:800; margin-bottom:4px; color:var(--text-title);">Author</h4>
                         <div id="projSidebarAuthorUser" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">@author</div>
-                        <p id="projSidebarAuthorBio" style="font-size:0.88rem; color:var(--text-main); line-height:1.5; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Đang tải thông tin tác giả...</p>
+                        <p id="projSidebarAuthorBio" style="font-size:0.88rem; color:var(--text-main); line-height:1.5; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Loading author info...</p>
                         <div style="display:flex; gap:8px; justify-content:center;">
                             <a id="btnVisitAuthorProf" href="#" class="btn" style="flex:1; justify-content:center; border-radius:20px; font-size:0.85rem;"><i class="fa-solid fa-user"></i> <span data-i18n="proj_btn_view_profile">Xem hồ sơ</span></a>
                         </div>
@@ -12800,7 +12800,7 @@
                         <div class="profile-handle-sub">@<span id="profUsername">username</span></div>
 
                         <div class="profile-meta-pills">
-                            <div class="profile-location" id="profLocation"><i class="fa-solid fa-location-dot" style="color:var(--text-muted);"></i> Đang cập nhật...</div>
+                            <div class="profile-location" id="profLocation"><i class="fa-solid fa-location-dot" style="color:var(--text-muted);"></i> Updating...</div>
                             <div class="profile-status-badge" id="profStatus"><i class="fa-solid fa-comment-dots"></i> ...</div>
                         </div>
                     </div>
@@ -13701,7 +13701,7 @@
                     </h4>
                     
                     <div id="wowHistoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
-                        <div style="text-align: center; color: var(--text-muted); padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+                        <div style="text-align: center; color: var(--text-muted); padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
                     </div>
                 </div>
 
@@ -13782,7 +13782,7 @@
                     </button>
                 </div>
                 <div id="adminMarketplaceExtensionsList" aria-live="polite">
-                    <div style="color:var(--text-muted); text-align:center; padding:18px;">Đang tải extensions chờ duyệt...</div>
+                    <div style="color:var(--text-muted); text-align:center; padding:18px;">Loading extensions awaiting approval...</div>
                 </div>
             </section>
 
@@ -16144,7 +16144,7 @@
                         <i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="proj_manage_history_tab">Lịch sử các phiên bản cũ</span>
                     </h4>
                     <div id="projectVersionList" style="max-height: 200px; overflow-y: auto; padding-right: 5px;">
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Đang tải danh sách...</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Loading list...</p>
                     </div>
                 </div>
 
@@ -17226,7 +17226,7 @@
             container.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:15px 0; color:var(--text-muted);">
                     <i class="fa-solid fa-circle-notch fa-spin" style="font-size:1.8rem; color:var(--primary);"></i>
-                    <span style="font-size:0.86rem; font-weight:600;">Đang kết nối xác thực chống bot...</span>
+                    <span style="font-size:0.86rem; font-weight:600;">Connecting to bot verification...</span>
                 </div>
             `;
 
@@ -18165,7 +18165,69 @@
             "Xác nhận xóa bình luận này?": "confirm_delete_comment",
             "Bạn có chắc chắn muốn xóa tin nhắn này?": "confirm_delete_chat",
             "Xác nhận gỡ dự án này khỏi Station?": "confirm_remove_station_proj",
-            "Xác nhận gỡ tác phẩm này khỏi bộ sưu tập?": "confirm_remove_col_item"
+            "Xác nhận gỡ tác phẩm này khỏi bộ sưu tập?": "confirm_remove_col_item",
+            "Máy chủ đã hoạt động bình thường trở lại!": "toast_server_restored",
+            "Phiên đăng nhập không hợp lệ hoặc đã hết hạn.": "toast_session_expired",
+            "Lỗi kết nối khi xác thực tài khoản Scratch!": "toast_scratch_auth_error",
+            "Chỉ cho phép tải file .sb3!": "toast_only_sb3",
+            "Vui lòng điền đủ các trường bắt buộc!": "toast_fill_required",
+            "Vui lòng nhập tên Station": "toast_station_name_required",
+            "Không tìm thấy tệp tài nguyên": "toast_asset_not_found",
+            "🎉 Chào mừng bạn gia nhập! Vui lòng xác minh email để nhận +50 WOW.": "toast_welcome_verify",
+            "🎉 Xác minh thành công! Bạn và người giới thiệu đã nhận +50 WOW!": "toast_verify_referral_success",
+            "🎉 Email của bạn đã được xác minh thành công!": "toast_email_verified",
+            "Vui lòng chờ xác thực chống Bot (Turnstile) hoàn tất trước khi gửi lại mã!": "toast_turnstile_wait_resend",
+            "Đã gửi mã xác nhận mới vào email của bạn!": "toast_otp_resent",
+            "Vui lòng nhập địa chỉ email hợp lệ!": "toast_invalid_email",
+            "Đã cập nhật email! Mã xác minh mới đã được gửi.": "toast_email_updated",
+            "Lỗi kết nối khi chuyển đổi tài khoản.": "toast_sub_account_switch_error",
+            "Chỉ tài khoản chính mới có quyền tạo thêm tài khoản phụ.": "toast_sub_account_main_only",
+            "Vui lòng xác minh email tài khoản trước khi tạo tài khoản phụ!": "toast_sub_account_verify_required",
+            "Vui lòng nhập tên tài khoản phụ.": "toast_sub_account_name_required",
+            "Tài khoản đã tạo nhưng thông tin liên kết phụ chưa đồng bộ; danh sách sẽ tự rà soát lại.": "toast_sub_account_created_unsynced",
+            "Cần xác thực Turnstile để tiếp tục!": "toast_turnstile_required",
+            "Vui lòng đợi 3 giây trước khi làm mới tiếp nhé!": "toast_wait_refresh",
+            "Đã hiển thị tất cả bình luận.": "toast_comments_shown_all",
+            "Lỗi tải bình luận cũ": "toast_comments_load_error",
+            "Chỉ chấp nhận các định dạng ảnh: PNG, JPG, WebP, GIF, APNG, SVG!": "toast_image_formats",
+            "Vui lòng cấu hình KLIPY_API_KEY trong Code trước!": "toast_klipy_config",
+            "Đã gửi! Vui lòng tải lại trang nếu không thấy.": "toast_sent_resend",
+            "Đã sao chép nội dung mẫu đơn kháng cáo!": "toast_appeal_copied",
+            "Vui lòng sao chép thủ công các mục trên màn hình": "toast_appeal_manual_copy",
+            "Không tìm thấy Station": "toast_station_not_found",
+            "Vui lòng xác thực email tài khoản trước khi tạo Station.": "toast_verify_create_station",
+            "Lưu cài đặt thành công!": "toast_settings_saved",
+            "Đã thêm dự án vào Station!": "toast_station_added_proj",
+            "Đã thêm tác phẩm vào Station!": "toast_station_added_proj",
+            "Đã gỡ dự án khỏi Station": "toast_station_removed_proj",
+            "Lỗi kết nối máy chủ!": "toast_server_error",
+            "Ảnh đại diện chỉ nhận: PNG, JPG, WebP, GIF, APNG!": "toast_avatar_formats",
+            "Ảnh vượt quá 5MB!": "toast_avatar_size",
+            "Ảnh bìa chỉ nhận: PNG, JPG, WebP, GIF, APNG!": "toast_cover_formats",
+            "Ảnh bìa vượt quá 10MB!": "toast_cover_size",
+            "Đã cập nhật hồ sơ!": "toast_profile_updated",
+            "Lỗi khi lưu thông tin!": "toast_profile_save_error",
+            "Đang tải dữ liệu dự án...": "toast_project_loading",
+            "Vui lòng đăng nhập DANVworkshop để thanh toán trong game!": "toast_pay_login",
+            "Vui lòng xác thực email để thực hiện giao dịch!": "toast_pay_verify",
+            "Số dư WOW không đủ để mua vật phẩm này!": "toast_pay_insufficient",
+            "Đang chia sẻ Station...": "toast_sharing_station",
+            "Đã chia sẻ Station vào Kênh Giao Lưu!": "toast_station_shared_chat",
+            "Đang chia sẻ tài nguyên...": "toast_sharing_asset",
+            "Đã chia sẻ Tài nguyên vào Kênh Giao Lưu!": "toast_asset_shared_chat",
+            "Đã gửi dự án vào Kênh Giao lưu!": "toast_project_shared_chat",
+            "Vui lòng nhập mô tả chi tiết vi phạm!": "toast_report_detail_required",
+            "Bạn không có quyền truy cập khu vực này!": "toast_admin_no_access",
+            "Ảnh bìa phải là PNG, JPEG hoặc WebP và không quá 2 MB.": "toast_ext_cover_format",
+            "Mã JavaScript không được vượt quá 2 MB.": "toast_ext_js_size",
+            "Đã cập nhật extension trong Store.": "toast_ext_published",
+            "Đã gỡ extension khỏi Extensions Store.": "toast_ext_removed",
+            "Đã chép ID vào bộ nhớ!": "toast_id_copied",
+            "Có lỗi xảy ra khi xử lý!": "toast_processing_error",
+            "Không thể ẩn tài nguyên. Vui lòng thử lại!": "toast_asset_hide_error",
+            "Phải nhập lý do cảnh cáo": "toast_warn_reason_required",
+            "Đang tải ảnh đại diện lên...": "uploading_avatar",
+            "Đang xử lý đăng xuất...": "processing_logout"
         };
 
         // Hàm tự động tìm và dịch thông qua file JSON đang kích hoạt (langData)
@@ -19147,7 +19209,7 @@
 
             const accounts = data.accounts || [];
             const subCount = data.subCount || 0;
-            const countText = `${subCount} trên 3 tài khoản phụ`;
+            const countText = t('sub_account_count_3', { count: subCount });
 
             if (countLabel) countLabel.innerText = countText;
             if (mCountLabel) mCountLabel.innerText = countText;
@@ -19336,7 +19398,7 @@
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang xử lý</span>';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>' + t('processing') + '</span>';
             }
 
             try {
@@ -19803,7 +19865,7 @@
                                 <div class="nav-sub-accounts-section">
                                     <div class="nav-sub-accounts-header">
                                         <span><i class="fa-solid fa-arrows-rotate"></i> Hồ sơ liên kết</span>
-                                        <span id="navSubAccountsCountLabel" style="font-size:0.7rem; color:var(--text-muted);">Đang tải</span>
+                                        <span id="navSubAccountsCountLabel" style="font-size:0.7rem; color:var(--text-muted);">Loading</span>
                                     </div>
                                     <div class="nav-sub-accounts-list" id="navSubAccountsList">
                                         <div style="text-align:center; padding:10px; font-size:0.75rem; color:var(--text-muted);">
@@ -19931,7 +19993,7 @@
         // ================= XỬ LÝ RENDER TRANG CHỦ & THẺ DỰ ÁN MỚI =================
         // 🏷️ Bóc tách thông minh: Ưu tiên tag tiêu đề, nếu không có sẽ lấy tag từ Cột Tags / Description / Credits
         function parseProjectTitleAndTags(p) {
-            const rawTitle = (typeof p === 'string' ? p : (p ? p.title : '')) || 'Không có tiêu đề';
+            const rawTitle = (typeof p === 'string' ? p : (p ? p.title : '')) || t('no_title');
             
             // 1. Quét tag từ tiêu đề
             let tagMatches = rawTitle.match(/#[^\s#]+/g) || [];
@@ -20204,7 +20266,7 @@
             homeCurrentPage++;
             const btn = document.querySelector('#homeLoadMoreArea button');
             const orig = btn ? btn.innerHTML : '';
-            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('loading');
             loadProjects(true, turnstileToken).then(() => {
                 if (btn) btn.innerHTML = orig;
             });
@@ -20248,7 +20310,7 @@
             const list = document.getElementById('projForksList');
             const count = document.getElementById('projForksCount');
             card.style.display = 'block';
-            list.innerHTML = '<div style="color:var(--text-muted);">Đang tải danh sách fork...</div>';
+            list.innerHTML = '<div style="color:var(--text-muted);">' + t('loading_fork_list') + '</div>';
             count.textContent = '';
             try {
                 const response = await fetch(`${WORKER_URL}/api/projects?forkedFrom=${encodeURIComponent(projectId)}&limit=24&sort=recent`);
@@ -20284,7 +20346,7 @@
                     </article>`;
                 }).join('');
             } catch (error) {
-                list.textContent = error.message || 'Không thể tải danh sách fork.';
+                list.textContent = error.message || t('fork_metadata_error');
             }
         }
 
@@ -20592,7 +20654,7 @@
                                 document.getElementById('projSidebarAuthorName').innerText = data.display_name;
                             }
                             document.getElementById('projSidebarAuthorBio').innerHTML =
-                                data.bio ? formatCommentText(data.bio) : 'Thành viên sáng tạo của DANVworkshop.';
+                                data.bio ? formatCommentText(data.bio) : t('member_creator');
                         }
                     }
                 }).catch(e=>{});
@@ -21636,7 +21698,7 @@
             const statusCount = document.getElementById('stickerStatusCount');
             if (!grid) return;
 
-            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px 10px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:#06b6d4;"></i><div style="font-size:0.85rem; margin-top:8px;">Đang tải sticker...</div></div>';
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px 10px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:#06b6d4;"></i><div style="font-size:0.85rem; margin-top:8px;">' + t('loading_sticker') + '</div></div>';
 
             try {
                 const res = await fetch(`${WORKER_URL}${endpoint}`);
@@ -21819,11 +21881,11 @@
             if (uEl) uEl.innerText = `@${bannedInfo.username}`;
             if (rEl) rEl.innerText = bannedInfo.reason || "Vi phạm tiêu chuẩn cộng đồng DANVworkshop";
 
-            const subject = `[Kháng cáo tài khoản] - ${bannedInfo.username}`;
+                    const subject = t('appeal_email_subject', { username: bannedInfo.username });
             if (subCode) subCode.innerText = subject;
 
             if (btnMail) {
-                const mailBody = `Kính gửi Ban Quản Trị DANVworkshop,%0D%0A%0D%0ATôi gửi thư này để yêu cầu xem xét lại quyết định đình chỉ tài khoản của tôi:%0D%0A- Tên tài khoản: ${bannedInfo.username}%0D%0A- Lý do ghi nhận: ${bannedInfo.reason}%0D%0A%0D%0ANội dung trình bày giải trình/cam kết:%0D%0A[Vui lòng nhập nội dung giải trình tại đây]`;
+                const mailBody = `Hello%20DANVworkshop%20Admin%20Team,%0D%0A%0D%0AI%20am%20writing%20to%20request%20a%20review%20of%20the%20decision%20to%20suspend%20my%20account:%0D%0A-%20Username:%20${bannedInfo.username}%0D%0A-:%20Reason%20recorded:%20${bannedInfo.reason}%0D%0A%0D%0AExplanation%20and%20commitment:%0D%0A%5BPlease%20enter%20your%20explanation%20here%5D`;
                 btnMail.href = `mailto:studiodanv@gmail.com?subject=${encodeURIComponent(subject)}&body=${mailBody}`;
             }
         }
@@ -21844,7 +21906,7 @@
                 }
             } catch(e) {}
 
-            const template = `Kính gửi Ban Quản Trị DANVworkshop,\n\nTôi gửi thư này để yêu cầu xem xét lại quyết định đình chỉ tài khoản:\n- Tên tài khoản (Username): ${uName}\n- Email tài khoản:\n- Lý do ghi nhận đình chỉ: ${uReason}\n\nNội dung giải trình và cam kết tuân thủ quy chuẩn:\n[Nhập nội dung giải trình của bạn tại đây]`;
+            const template = t('appeal_email_plain', { username: bannedInfo.username, reason: bannedInfo.reason });
 
             navigator.clipboard.writeText(template).then(() => {
                 showToast("Đã sao chép nội dung mẫu đơn kháng cáo!", "success");
@@ -22093,7 +22155,7 @@
                         </div>
                         <div class="station-card-body">
                             <div class="station-card-title" title="${escapeHtml(s.title)}">${escapeHtml(s.title)}</div>
-                            <div class="station-card-desc">${escapeHtml(s.description || 'Chưa có mô tả cho Station này.')}</div>
+                            <div class="station-card-desc">${escapeHtml(s.description || t('station_no_description'))}</div>
                             <div class="station-card-footer">
                                 <span class="station-card-creator">
                                     <img src="${creatorAvt}" id="std-creator-avt-${escapeHtml(s.creator)}-${s.id}" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border:1px solid var(--border-color);" onerror="this.src='${DEFAULT_AVATAR}'">
@@ -22406,7 +22468,7 @@
                 <div>
                     <h4 style="margin: 0 0 14px 0; color:var(--text-title); display:flex; align-items:center; gap:8px; font-size:1.05rem;">
                         <i class="fa-solid fa-users"></i> 
-                        <span>Phi hành đoàn / Thành viên</span>
+                        <span>Crew / Member</span>
                         <span style="font-size:0.75rem; background:var(--bg-secondary); color:var(--text-muted); padding:2px 8px; border-radius:12px; font-weight:800;">${pureMembers.length}</span>
                     </h4>
             `;
@@ -22422,7 +22484,7 @@
                                 <div class="station-member-info-col">
                                     <div class="station-member-name" title="@${escapeHtml(m)}">@${escapeHtml(m)}</div>
                                     <span class="station-role-badge member">
-                                        <i class="fa-solid fa-user"></i> <span>Thành viên</span>
+                                        <i class="fa-solid fa-user"></i> <span>${t('author_unknown')}</span>
                                     </span>
                                 </div>
                             </a>
@@ -22653,7 +22715,7 @@
         async function loadMyProjectsForStudioModal() {
             const listEl = document.getElementById('myProjectsForStudioList');
             const countEl = document.getElementById('myProjCountInModal');
-            listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải tác phẩm của bạn...</div>';
+            listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> ' + t('loading_your_projects') + '</div>';
 
             try {
                 const res = await fetch(`${WORKER_URL}/api/projects?author=${encodeURIComponent(currentUser.username)}&limit=100`);
@@ -22761,7 +22823,7 @@
             openModal('addCurrentProjToStationModal');
 
             const listEl = document.getElementById('userStationsForProjList');
-            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách Station của bạn...</div>';
+            listEl.innerHTML = '<div style="text-align:center; padding:25px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> ' + t('loading_your_stations') + '</div>';
 
             try {
                 if (!allStudios || allStudios.length === 0) {
@@ -22859,7 +22921,7 @@
         }
 
         async function removeProjectFromStudio(pid) {
-            if(!confirm("Xác nhận gỡ dự án này khỏi Station?")) return;
+            if(!confirm(t('confirm_remove_station_proj'))) return;
             const res = await apiFetch('/api/studio/action', { method: 'POST', body: JSON.stringify({ studioId: currentStudio.id, action: 'remove_project', targetProject: pid }) });
             if(res && res.success) {
                 currentStudio.projects = currentStudio.projects.filter(p=>p!==pid);
@@ -23181,13 +23243,13 @@
                 if (tab === 'activities') {
                     container.innerHTML = getSkeletonHTML('activity');
                 } else if (tab === 'playlists') {
-                    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">Đang tải danh sách phát...</span></div>';
+                    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">' + t('loading_playlist') + '</span></div>';
                 } else {
                     container.innerHTML = getSkeletonHTML('card');
                 }
             } else if (loadMoreBtn) {
                 const btnOrig = loadMoreBtn.innerHTML;
-                loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...';
+                loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> ' + t('loading');
                 loadMoreBtn.setAttribute('data-orig', btnOrig);
             }
 
@@ -23270,7 +23332,7 @@
                                     </div>
                                     <div class="col-card-body">
                                         <div class="col-card-title" title="${escapeHtml(pl.title)}">${escapeHtml(pl.title)}</div>
-                                        <div class="col-card-meta"><span><i class="fa-regular fa-clock"></i> ${pl.createdAt || 'Gần đây'}</span><span style="color:var(--primary); font-weight:700;"><i class="fa-solid fa-arrow-right"></i> Xem</span></div>
+                                         <div class="col-card-meta"><span><i class="fa-regular fa-clock"></i> ${pl.createdAt || t('recently')}</span><span style="color:var(--primary); font-weight:700;"><i class="fa-solid fa-arrow-right"></i> Xem</span></div>
                                     </div>
                                 </div>
                             `;
@@ -23390,13 +23452,13 @@
                 if (tab === 'activities') {
                     container.innerHTML = getSkeletonHTML('activity');
                 } else if (tab === 'playlists') {
-                    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">Đang tải danh sách phát...</span></div>';
+                    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem;">' + t('loading_playlist') + '</span></div>';
                 } else {
                     container.innerHTML = getSkeletonHTML('card');
                 }
             } else if (loadMoreBtn) {
                 const btnOrig = loadMoreBtn.innerHTML;
-                loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...';
+                loadMoreBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> ' + t('loading');
                 loadMoreBtn.setAttribute('data-orig', btnOrig);
             }
 
@@ -23487,7 +23549,7 @@
                                     <div class="col-card-body">
                                         <div class="col-card-title" title="${escapeHtml(pl.title)}">${escapeHtml(pl.title)}</div>
                                         <div class="col-card-meta">
-                                            <span><i class="fa-regular fa-clock"></i> ${pl.createdAt || 'Gần đây'}</span>
+                                            <span><i class="fa-regular fa-clock"></i> ${pl.createdAt || t('recently')}</span>
                                             <span style="color:var(--primary); font-weight:700;"><i class="fa-solid fa-arrow-right"></i> Xem</span>
                                         </div>
                                     </div>
@@ -24659,7 +24721,7 @@
 
             const btn = document.getElementById('btnGamePayConfirm');
             const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('processing_ellipsis') + '...';
             btn.disabled = true;
 
             const payload = {
@@ -24705,7 +24767,7 @@
         }
 
         async function extractTurboShareForkSource(file) {
-            if (!window.JSZip) throw new Error("Không thể đọc metadata fork trong tệp .sb3.");
+            if (!window.JSZip) throw new Error(t('fork_metadata_error'));
             const archive = await window.JSZip.loadAsync(file);
             const projectFile = archive.file('project.json');
             if (!projectFile) return null;
@@ -24807,7 +24869,7 @@
                     setForkUploadMode(source);
                 }
             } catch (error) {
-                showToast(error.message || 'Không thể đọc metadata fork trong tệp .sb3.', 'error');
+                showToast(error.message || t('fork_metadata_error'), 'error');
             }
         });
 
@@ -25069,7 +25131,7 @@
             if (quoteEl) {
                 if (type === 'chat' && reportTarget.originalContent) {
                     quoteEl.style.display = 'block';
-                    quoteEl.innerHTML = `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; display:block; margin-bottom:4px;">Nội dung tin nhắn bị báo cáo:</span><div style="color:var(--text-title); white-space:pre-line;">${escapeHtml(reportTarget.originalContent)}</div>`;
+                    quoteEl.innerHTML = `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; display:block; margin-bottom:4px;">${t('report_quoted_content_label')}</span><div style="color:var(--text-title); white-space:pre-line;">${escapeHtml(reportTarget.originalContent)}</div>`;
                 } else {
                     quoteEl.style.display = 'none';
                     quoteEl.innerHTML = '';
@@ -25174,7 +25236,7 @@
                 /^[A-Za-z0-9_-]{1,64}$/.test(String(extension.marketplace.id || ''))
             );
             if (!items.length) {
-                container.innerHTML = '<div style="background:var(--bg-secondary); border:1px dashed var(--border-color); border-radius:12px; padding:24px; color:var(--text-muted); text-align:center;">Không có extensions cần xử lý.</div>';
+                container.innerHTML = '<div style="background:var(--bg-secondary); border:1px dashed var(--border-color); border-radius:12px; padding:24px; color:var(--text-muted); text-align:center;">' + t('extensions_pending') + '</div>';
                 return;
             }
             container.innerHTML = items.map(extension => {
@@ -25204,7 +25266,7 @@
                             <div style="color:var(--text-muted); font-size:0.82rem; margin-top:5px;">
                                 ID: <code>${escapeHtml(marketplace.id)}</code> · v${escapeHtml(marketplace.version || '')} · ${escapeHtml(marketplace.author || 'unknown')}
                             </div>
-                            <p style="color:var(--text-title); font-size:0.88rem; margin:9px 0 0; white-space:pre-wrap;">${escapeHtml(marketplace.description || 'Không có mô tả.')}</p>
+                            <p style="color:var(--text-title); font-size:0.88rem; margin:9px 0 0; white-space:pre-wrap;">${escapeHtml(marketplace.description || t('no_description_marketplace'))}</p>
                         </div>
                         <div style="display:flex; gap:8px; flex-wrap:wrap;">${reviewActions}</div>
                     </div>
@@ -25292,7 +25354,7 @@
 
         async function reviewAdminMarketplaceExtension(hash, status) {
             if (!/^[a-f0-9]{64}$/.test(String(hash || ''))) return;
-            if (status === 'rejected' && !confirm('Từ chối phiên bản extension này?')) return;
+            if (status === 'rejected' && !confirm(t('confirm_reject_extension'))) return;
             const result = await apiFetch('/api/admin/extensions/marketplace/review', {
                 method: 'POST',
                 body: JSON.stringify({ hash, status })
@@ -25345,7 +25407,7 @@
         }
 
         async function removeAdminMarketplaceExtension(id) {
-            if (!/^[A-Za-z0-9_-]{1,64}$/.test(String(id || '')) || !confirm('Gỡ extension cùng các phiên bản của nó khỏi Extensions Store?')) return;
+            if (!/^[A-Za-z0-9_-]{1,64}$/.test(String(id || '')) || !confirm(t('confirm_remove_extension_all'))) return;
             const result = await apiFetch('/api/admin/extensions/marketplace/remove', {
                 method: 'POST',
                 body: JSON.stringify({ id })
@@ -25408,7 +25470,7 @@
         async function loadAdminReports() {
             const container = document.getElementById('adminReportsList');
             if (!container) return;
-            container.innerHTML = '<div style="text-align:center; padding: 30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><div style="font-size:0.85rem; color:var(--text-muted); margin-top:8px;">Đang tải danh sách báo cáo...</div></div>';
+            container.innerHTML = '<div style="text-align:center; padding: 30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><div style="font-size:0.85rem; color:var(--text-muted); margin-top:8px;">Loading report list...</div></div>';
             
             try {
                 const res = await apiFetch(`/api/admin/get_reports`, { method: 'POST', body: JSON.stringify({}) });
@@ -25431,7 +25493,7 @@
                     const safeDate = escapeHtml(r.date || "Vừa xong");
                     const safeTargetType = escapeHtml(String(r.targetType || "KHÁC").toUpperCase());
                     const safeTargetId = escapeHtml(String(r.targetId || ""));
-                    const safeReason = escapeHtml(r.reason || "Không có lý do");
+                    const safeReason = escapeHtml(r.reason || t('report_no_reason'));
                     const rawTargetId = String(r.targetId || "");
 
                     return `
@@ -25489,7 +25551,7 @@
         async function submitResolveAdminReport() {
             const btn = document.getElementById('btnSubmitResolveReport');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('processing_ellipsis') + '...';
             btn.disabled = true;
 
             const feedback = document.getElementById('adminResolveFeedbackInput').value.trim();
@@ -25552,7 +25614,7 @@
 
         async function loadAdminEventsManager() {
             const listEl = document.getElementById('adminEventsPreviewList');
-            listEl.innerHTML = '<div style="text-align:center; padding:10px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
+            listEl.innerHTML = '<div style="text-align:center; padding:10px;"><i class="fa-solid fa-spinner fa-spin"></i> ' + t('loading_data') + '</div>';
             try {
                 const res = await fetch(`${WORKER_URL}/api/events`);
                 adminCurrentEvents = await res.json() || [];
@@ -25575,7 +25637,7 @@
                         <img src="${ev.bgImage}" style="width:60px; height:34px; object-fit:cover; border-radius:4px; background:#000;">
                         <div>
                             <div style="font-weight:bold; color:#1e293b;">${escapeHtml(ev.title)}</div>
-                            <div style="font-size:0.8rem; color:#64748b;">Tag: <b style="color:var(--primary);">${escapeHtml(ev.searchTag)}</b> | Hết hạn: ${ev.endDate || 'Không có'}</div>
+                            <div style="font-size:0.8rem; color:#64748b;">Tag: <b style="color:var(--primary);">${escapeHtml(ev.searchTag)}</b> | Expired: ${ev.endDate || t('report_no_reason')}</div>
                         </div>
                     </div>
                     <button class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;" onclick="adminRemoveEventItem(${index})"><i class="fa-solid fa-trash"></i></button>
@@ -25693,7 +25755,7 @@
             if (!currentUser) return openModal('loginModal');
             openModal('saveToPlaylistModal');
             const listEl = document.getElementById('playlistOptionsList');
-            listEl.innerHTML = '<div style="text-align:center; color:var(--primary); padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải...</div>';
+            listEl.innerHTML = '<div style="text-align:center; color:var(--primary); padding:20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> ' + t('loading') + '</div>';
             
             try {
                 const userRes = await fetch(`${WORKER_URL}/api/user/${encodeURIComponent(currentUser.username)}?_t=${Date.now()}`);
@@ -25982,7 +26044,7 @@
 
         async function removeProjectFromInsideCollection(projId) {
             if (!activeViewingCollection) return;
-            if (!confirm("Xác nhận gỡ tác phẩm này khỏi bộ sưu tập?")) return;
+            if (!confirm(t('confirm_remove_col_item'))) return;
 
             const res = await apiFetch('/api/user/playlist', {
                 method: 'POST',
@@ -27276,7 +27338,7 @@
                             <span style="font-size:0.8rem; line-height:1.45; max-width:240px;">Hiện tại hệ thống đã gỡ bỏ hiển thị quảng cáo từ đối tác bên thứ ba.</span>
                         </div>
                         <div class="chat-sponsor-footer">
-                            <span>Người đăng: <b style="color:var(--text-title);">@${escapeHtml(author || 'Thành viên')}</b></span>
+                            <span>Người đăng: <b style="color:var(--text-title);">@${escapeHtml(author || t('author_unknown'))}</b></span>
                             <span style="font-size:0.7rem; color:var(--text-muted);">ID: Ads (Tạm dừng)</span>
                         </div>
                     </div>
@@ -27766,7 +27828,7 @@
                             </button>
                         `).join('');
 
-                        const encExplain = encodeURIComponent(quizData.explain || 'Chính xác rồi bạn ơi!');
+                        const encExplain = encodeURIComponent(quizData.explain || t('quiz_correct_explain'));
                         const extraMsg = rawText.replace(quizRawTag, '').trim();
 
                         return (extraMsg ? `<div class="chat-text">${formatCommentText(extraMsg)}</div>` : '') + `
@@ -27915,7 +27977,7 @@
                 const p = (typeof allProjects !== 'undefined') ? allProjects.find(item => item.projectId === projId || item.fileId === projId) : null;
                 
                 const title = p ? p.title : (tagTitle || "Tác phẩm Scratch");
-                const author = p ? p.author : (tagAuthor || "Cộng đồng");
+                const author = p ? p.author : (tagAuthor || t('community'));
                 const thumbId = p ? p.thumbId : tagThumb;
                 const thumbSrc = thumbId ? `${WORKER_URL}/api/project/${thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
                 const views = p && p.views !== undefined ? p.views : tagViews;
@@ -28118,7 +28180,7 @@
 
             listEl.innerHTML = versions.map((v, idx) => {
                 const fid = typeof v === 'string' ? v : v.fileId;
-                const timeStr = typeof v === 'string' ? 'Phiên bản gốc' : (v.time || 'Không rõ ngày');
+                const timeStr = typeof v === 'string' ? t('version_original') : (v.time || t('date_unknown'));
                 const cLog = v.changelog ? `<div style="font-size:0.85rem; color:var(--primary); font-weight:600; margin-top:4px;">"${escapeHtml(v.changelog)}"</div>` : '';
                 
                 return `
@@ -28979,7 +29041,7 @@
             const fileUrl = `${WORKER_URL}/api/project/${a.fileId}?ext=${fileExt}`;
             const isAudio = ['mp3', 'wav', 'ogg'].includes(fileExt);
 
-            document.getElementById('quickViewHeading').innerText = a.title || 'Không có tên';
+            document.getElementById('quickViewHeading').innerText = a.title || t('no_title');
             document.getElementById('quickViewAuthorLink').innerText = `@${a.author}`;
             document.getElementById('quickViewAuthorLink').href = `#profile/${encodeURIComponent(a.author)}`;
             document.getElementById('quickViewExt').innerText = fileExt.toUpperCase();
@@ -29570,7 +29632,7 @@
             const thumbSrc = p.thumbId ? `${WORKER_URL}/api/project/${p.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             document.getElementById('sharePreviewThumb').src = thumbSrc;
             document.getElementById('sharePreviewTitle').innerText = p.title || "Tác phẩm";
-            document.getElementById('sharePreviewAuthor').innerText = `@${p.author || "Cộng đồng"}`;
+            document.getElementById('sharePreviewAuthor').innerText = `@${p.author || t('community')}`;
             document.getElementById('sharePreviewViews').innerText = p.views || 0;
             document.getElementById('sharePreviewLikes').innerText = (p.likes || []).length;
             document.getElementById('sharePreviewStars').innerText = (p.stars || []).length;
@@ -30215,7 +30277,7 @@
                 return;
             }
 
-            const isConfirmed = confirm("Bạn có muốn gửi thẻ tài trợ vào kênh Giao lưu không? Mỗi thẻ tài trợ sẽ giúp TurboShare duy trì một nền tảng miễn phí.");
+            const isConfirmed = confirm(t('confirm_sponsor_card'));
             if (!isConfirmed) return;
 
             const textarea = document.getElementById('commentTextChat');
@@ -30265,7 +30327,7 @@
             if (giftMatch) {
                 const amt = giftMatch[1];
                 const msg = giftMatch[2].trim();
-                return `🎁 BeaBea vừa phát lộc +${amt} WOW: "${msg || 'Nhận quà may mắn!'}"`;
+                return `🎁 BeaBea vừa phát lộc +${amt} WOW: "${msg || t('beabea_lucky_gift')}"`;
             }
 
             // 3. Widget Túi Mù Vũ Trụ ([BEABEA_BLIND_BAG:id])
@@ -30312,7 +30374,7 @@
                     if (endIdx !== -1) {
                         const jsonStr = raw.substring(startIdx + 13, endIdx).trim();
                         const qData = JSON.parse(jsonStr);
-                        return `🎯 Thử thách trí tuệ: "${qData.q || 'Đố vui cùng BeaBea!'}"`;
+                        return `🎯 Thử thách trí tuệ: "${qData.q || t('beabea_quiz')}"`;
                     }
                 } catch(e) {}
                 return `🎯 BeaBea vừa đưa ra một thử thách đố vui trí tuệ!`;
@@ -30322,7 +30384,7 @@
             if (raw.startsWith('[DANV_POLL]')) {
                 try {
                     const pollData = JSON.parse(raw.replace('[DANV_POLL]', ''));
-                    return `📊 Cuộc bình chọn mới: "${pollData.question || 'Tham gia bình chọn'}"`;
+                    return `📊 Cuộc bình chọn mới: "${pollData.question || t('poll_new')}"`;
                 } catch(e) {}
                 return `📊 Một cuộc bình chọn mới vừa được mở`;
             }
@@ -30387,7 +30449,7 @@
             if (clean.length > 130) {
                 clean = clean.substring(0, 127) + '...';
             }
-            return clean || 'Đã gửi một tin nhắn';
+            return clean || t('message_sent_default');
         }
 
         // PHÁT THÔNG BÁO RA MÀN HÌNH TRÌNH DUYỆT (NATIVE DESKTOP NOTIFICATION)
@@ -30412,7 +30474,7 @@
             if (!sanitizedBody) return;
 
             const isBeaBea = (c.author === 'BeaBea (AI)');
-            const senderTitle = isBeaBea ? 'BeaBea (AI)' : `@${c.author || 'Thành viên'}`;
+            const senderTitle = isBeaBea ? 'BeaBea (AI)' : `@${c.author || t('author_unknown')}`;
             const avtUrl = isBeaBea 
                 ? "https://raw.githubusercontent.com/danvPR/workshop/refs/heads/main/Assets/BeaBea.jpg" 
                 : getAvtUrl(c.avt);
@@ -31043,7 +31105,7 @@
                     document.querySelectorAll('#chatLiveWrapper .chat-author-name').forEach(el => {
                         const u = el.innerText.trim();
                         if (u && u !== "BeaBea (AI)" && (!currentUser || u !== currentUser.username) && !candidates.some(c => c.name === u)) {
-                            candidates.push({ name: u, avt: DEFAULT_AVATAR, isAI: false, desc: "Thành viên" });
+                            candidates.push({ name: u, avt: DEFAULT_AVATAR, isAI: false, desc: t('author_unknown') });
                         }
                     });
 
@@ -31218,7 +31280,7 @@
                 reason = prompt("[Quản trị viên] XÓA CHAT. Nhập lý do để gửi vào hộp thư người dùng:", "Vi phạm quy định Kênh giao lưu");
                 if (reason === null) return; // Hủy
             } else {
-                if (!confirm("Bạn có chắc chắn muốn xóa tin nhắn này?")) return;
+                if (!confirm(t('confirm_delete_chat'))) return;
             }
 
             // 1. Thử gửi qua Admin Action trước (truyền đầy đủ các định dạng tên biến)
@@ -31831,7 +31893,7 @@
                     <div style="grid-column:1/-1; text-align:center; padding:35px 20px;">
                         <i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem; color:#ef4444; margin-bottom:12px; display:block;"></i>
                         <b style="color:var(--text-title); font-size:1.05rem; display:block; margin-bottom:6px;">Không thể tải dữ liệu điểm danh</b>
-                        <span style="font-size:0.85rem; color:var(--text-muted); display:block; max-width:320px; margin:0 auto 16px auto;">${escapeHtml(err.message || 'Mạng bị gián đoạn hoặc máy chủ bận')}</span>
+                            <span style="font-size:0.85rem; color:var(--text-muted); display:block; max-width:320px; margin:0 auto 16px auto;">${escapeHtml(err.message || t('network_error_busy'))}</span>
                         <button type="button" class="btn btn-primary" onclick="openDailyRewardModal()" style="border-radius:20px; padding:8px 24px; font-weight:800;">
                             <i class="fa-solid fa-rotate-right"></i> Thử lại
                         </button>
@@ -31884,7 +31946,7 @@
                                 <div style="color:#ef4444; font-weight:800; font-size:0.92rem; margin-bottom:4px;">
                                     <i class="fa-solid fa-circle-exclamation"></i> Không thể nạp thông tin Đôi bạn
                                 </div>
-                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">${escapeHtml(e.message || 'Mạng gián đoạn hoặc máy chủ chưa phản hồi')}</div>
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">${escapeHtml(e.message || t('network_error_no_response'))}</div>
                                 <button type="button" class="btn" onclick="switchDailyTab('couple')" style="font-size:0.8rem; padding:4px 16px; border-radius:12px; font-weight:700;">
                                     <i class="fa-solid fa-rotate-right"></i> Thử lại
                                 </button>
@@ -32958,7 +33020,7 @@
             const btn = document.getElementById('btnClaimDaily');
 
             if (!isFromHold && btn) {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...'; 
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + t('processing_ellipsis') + '...';
                 btn.disabled = true;
             }
             
@@ -33116,7 +33178,7 @@
             if (baseAvt) baseAvt.src = getAvtUrl(currentUser.avt);
 
             const grid = document.getElementById('frameShopContainer');
-            if (grid) grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">Đang kết nối Studio thời trang...</span></div>';
+            if (grid) grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><span style="margin-top:10px; display:inline-block; font-size:0.9rem; color:var(--text-muted);">Connecting to Fashion Studio...</span></div>';
 
             await loadFrameShopData();
             switchShopType('avatar');
@@ -34540,7 +34602,7 @@
         }
 
         function resetBentoLayout() {
-            if (!confirm("Bạn có chắc muốn khôi phục bố cục về mặc định không? Layout hiện tại sẽ bị xóa.")) return;
+            if (!confirm(t('confirm_reset_layout'))) return;
             currentBentoData.customLayout = null; 
             renderBentoGrid(currentBentoData);
             toggleBentoEditMode();
@@ -34844,7 +34906,7 @@
             
             let effectiveRole = bentoSelectedUserRole;
             if (effectiveRole === 'custom' || document.getElementById('bentoRoleChipCustom')?.classList.contains('active')) {
-                effectiveRole = document.getElementById('bentoCustomRoleInput')?.value.trim() || 'Tùy chỉnh';
+                effectiveRole = document.getElementById('bentoCustomRoleInput')?.value.trim() || t('role_custom');
             }
 
             const nameEl = document.getElementById('bentoPreviewUserName');
@@ -34868,7 +34930,7 @@
 
             let effectiveRole = bentoSelectedUserRole;
             if (effectiveRole === 'custom' || document.getElementById('bentoRoleChipCustom')?.classList.contains('active')) {
-                effectiveRole = document.getElementById('bentoCustomRoleInput')?.value.trim() || 'Bạn bè';
+                effectiveRole = document.getElementById('bentoCustomRoleInput')?.value.trim() || t('role_friend');
             }
 
             closeModal('bentoConfigUserModal');
@@ -36315,7 +36377,7 @@
                         if (finalTrans) voiceRecordedTranscript += " " + finalTrans;
                         voiceRecordedTranscript = voiceRecordedTranscript.trim();
                         if (previewText) {
-                            previewText.innerText = (voiceRecordedTranscript + " " + interimTrans).trim() || "Đang lắng nghe...";
+                            previewText.innerText = (voiceRecordedTranscript + " " + interimTrans).trim() || t('chat_listening');
                         }
                     };
 
@@ -37096,7 +37158,7 @@
                     </div>
                 </div>
                 <div class="emoji-picker-grid" id="emojiPickerGridItems">
-                    ${gridHtml || '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px; font-size:0.85rem;">Không tìm thấy emoji nào</div>'}
+                    ${gridHtml || '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px; font-size:0.85rem;">' + t('emoji_search_empty') + '</div>'}
                 </div>
                 <div class="emoji-picker-footer">
                     <span id="emojiPreviewShortcode" style="font-family:monospace; color:var(--primary); font-weight:700;">:emoji:</span>
@@ -37302,7 +37364,7 @@
             listEl.innerHTML = sessions.map(s => {
                 const deviceName = parseDeviceAgent(s.device);
                 const timeStr = timeAgo(new Date(s.lastActive).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }));
-                const location = escapeHtml(s.location || 'Chưa xác định');
+                const location = escapeHtml(s.location || t('location_unknown'));
                 const ip = escapeHtml(s.ip || 'Unknown');
                 
                 return `
@@ -37327,12 +37389,12 @@
         }
 
         async function revokeDeviceSession(targetId) {
-            if (!confirm("Bạn có chắc muốn đăng xuất tài khoản khỏi thiết bị này?")) return;
+            if (!confirm(t('confirm_logout_device'))) return;
             await executeRevokeSession(targetId);
         }
 
         async function revokeAllOtherSessions() {
-            if (!confirm("Hành động này sẽ đăng xuất tài khoản của bạn khỏi tất cả các thiết bị khác (Điện thoại, PC, Tablet...). Bạn có chắc chắn không?")) return;
+            if (!confirm(t('confirm_logout_all_devices'))) return;
             await executeRevokeSession("ALL_OTHER");
         }
 
@@ -37383,7 +37445,7 @@
 
             const rowsContainer = document.getElementById('myStuffProjectRowsList');
             if (rowsContainer) {
-                rowsContainer.innerHTML = '<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i><div style="font-size:0.85rem; margin-top:8px;">Đang tải kho tác phẩm...</div></div>';
+                rowsContainer.innerHTML = '<div style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i><div style="font-size:0.85rem; margin-top:8px;">Loading asset library...</div></div>';
             }
 
             await loadMyStuffData();
@@ -37557,8 +37619,8 @@
                 container.innerHTML = `
                     <div style="background:var(--bg-panel); border:1px dashed var(--border-color); border-radius:14px; padding:45px 20px; text-align:center; color:var(--text-muted);">
                         <i class="fa-solid fa-folder-open" style="font-size:2.4rem; opacity:0.3; margin-bottom:8px; display:block;"></i>
-                        <b style="color:var(--text-title); font-size:0.95rem; display:block;">Không có tác phẩm nào</b>
-                        <span style="font-size:0.82rem;">Không tìm thấy dự án trong phân mục hiện tại.</span>
+                        <b style="color:var(--text-title); font-size:0.95rem; display:block;">${t('no_projects_bold')}</b>
+                        <span style="font-size:0.82rem;">No projects found in the current category.</span>
                     </div>
                 `;
                 return;
@@ -37655,7 +37717,7 @@
 
         // CHUYỂN DỰ ÁN VÀO THÙNG RÁC
         async function moveMyStuffToTrash(pid) {
-            if (!confirm("Xác nhận chuyển tác phẩm này vào thùng rác?")) return;
+            if (!confirm(t('confirm_move_to_trash'))) return;
 
             const res = await apiFetch(`/api/project/action`, {
                 method: 'POST',
