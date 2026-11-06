@@ -67,6 +67,7 @@
     
     <!-- Google AdSense -->
     <meta name="google-adsense-account" content="ca-pub-6459018010825989">
+    <meta name="monetag" content="ea3ae5443b667c4e9c3bc0f67956aa94">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6459018010825989" crossorigin="anonymous"></script>
     
     <!-- Google Analytics / Tag Manager -->
@@ -18635,11 +18636,11 @@
         }
         async function handleLegacyUpdate(e) {
             e.preventDefault();
-            const btn = document.getElementById('btnLegacyUpdate'); btn.disabled = true; btn.innerText = "Đang cập nhật...";
+            const btn = document.getElementById('btnLegacyUpdate'); btn.disabled = true; btn.innerText = t('sub_account_updating');
             const email = document.getElementById('legEmail').value; const pw = document.getElementById('legPw').value;
             const res = await apiFetch(`/api/auth/legacy_update`, { method: 'POST', body: JSON.stringify({ email, password: pw }) });
             if(res && res.success) { showToast("Cập nhật bảo mật thành công!", "success"); closeModal('legacyUpdateModal'); location.reload(); }
-            else { btn.disabled = false; btn.innerText = "Cập nhật ngay"; }
+            else { btn.disabled = false; btn.innerText = t('legacy_btn_update'); }
         }
 
         // ================= AUTHENTICATION & EMAIL VERIFICATION =================
@@ -18805,7 +18806,7 @@
             const otpInput = document.getElementById('verifyEmailOtpInput');
             if (otpInput) otpInput.value = '';
             document.getElementById('changeEmailSubForm').style.display = 'none';
-            document.getElementById('toggleChangeEmailBtnText').innerText = "Đổi sang email khác";
+            document.getElementById('toggleChangeEmailBtnText').innerText = t('auth_verify_toggle_change');
             openModal('verifyEmailModal');
         }
 
@@ -18937,7 +18938,7 @@
                 if (inp) { inp.value = ''; inp.focus(); }
             } else {
                 form.style.display = 'none';
-                textBtn.innerText = "Đổi sang email khác";
+                textBtn.innerText = t('auth_verify_toggle_change');
             }
         }
 
@@ -19292,14 +19293,14 @@
             const submitBtnText = document.querySelector('#btnSubmitCreateSubAccount span');
 
             if (currentSubCount === 0) {
-                if (slotLabel) slotLabel.innerText = "Tài khoản phụ thứ 1 (Mặc định)";
-                if (feeBadge) { feeBadge.innerText = "Miễn phí"; feeBadge.style.color = "var(--primary)"; }
-                if (submitBtnText) submitBtnText.innerText = "Xác nhận tạo (Miễn phí)";
+                if (slotLabel) slotLabel.innerText = t('sub_account_slot1_default');
+                if (feeBadge) { feeBadge.innerText = t('sub_account_free'); feeBadge.style.color = "var(--primary)"; }
+                if (submitBtnText) submitBtnText.innerText = t('sub_account_confirm_create_free');
             } else {
                 const nextSlot = currentSubCount + 1;
-                if (slotLabel) slotLabel.innerText = `Mở khóa vị trí thứ ${nextSlot} (200 WOW)`;
-                if (feeBadge) { feeBadge.innerText = "Phí: 200 WOW"; feeBadge.style.color = "#ea580c"; }
-                if (submitBtnText) submitBtnText.innerText = "Mở khóa vị trí (200 WOW)";
+                if (slotLabel) slotLabel.innerText = t('sub_account_unlock_slot_n', { n: nextSlot });
+                if (feeBadge) { feeBadge.innerText = t('sub_account_fee_wow'); feeBadge.style.color = "#ea580c"; }
+                if (submitBtnText) submitBtnText.innerText = t('sub_account_unlock_slot');
             }
 
             openModal('createSubAccountModal');
@@ -20401,7 +20402,7 @@
 
             // Cập nhật SEO
             const projectTitle = String(proj.title || proj.name || 'Untitled').trim() || 'Untitled';
-            const pageTitle = `${projectTitle} - Tác phẩm bởi ${proj.author} | DANVworkshop`;
+            const pageTitle = t('page_title_project', { projectTitle, author: proj.author });
             const pageDesc = proj.description ? proj.description.substring(0, 150) : `Chơi và trải nghiệm dự án ${projectTitle} được tạo bởi ${proj.author} trên DANVworkshop.`;
             const pageThumb = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             updateSEO(pageTitle, pageDesc, pageThumb, window.location.href);
@@ -20537,7 +20538,7 @@
                 dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeAgo(proj.date)}`;
                 dateSpan.title = proj.date;
             } else {
-                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> Đang cập nhật...`;
+                dateSpan.innerHTML = `<i class="fa-regular fa-clock"></i> ${t('proj_specs_date_updating')}`;
             }
 
             const badge = document.getElementById('projVersionBadge');
@@ -21666,7 +21667,7 @@
                 }).join('');
 
             } catch (err) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:35px 10px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.8rem; margin-bottom:8px; display:block;"></i>Không thể nạp sticker lúc này. Vui lòng thử lại.</div>`;
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:35px 10px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.8rem; margin-bottom:8px; display:block;"></i>${t('sticker_load_error')}</div>`;
             }
         }
 
@@ -22169,7 +22170,7 @@
                     btnInvite.style.display = isManager ? 'inline-flex' : 'none';
                 } else {
                     btnFollow.style.display = 'inline-flex';
-                    btnFollow.innerHTML = `<i class="fa-solid fa-plus"></i> Theo dõi`;
+                    btnFollow.innerHTML = `<i class="fa-solid fa-plus"></i> ${t('prof_btn_follow')}`;
                     btnFollow.className = 'btn btn-primary';
                     btnSettings.style.display = 'none';
                     btnAddProj.style.display = 'none';
@@ -22244,7 +22245,7 @@
             const grid = document.getElementById('stdProjectList');
             const loadMoreArea = document.getElementById('stdLoadMoreProjectsArea');
             const projs = currentStudio.projects || [];
-            document.getElementById('stdProjCountDisplay').innerText = `Tổng số: ${projs.length} tác phẩm`;
+            document.getElementById('stdProjCountDisplay').innerText = t('station_total_projects_raw', { count: projs.length });
             studioProjectsLimit = STD_PROJECTS_PER_PAGE; // Reset lại số lượng hiển thị ban đầu
             
             if(projs.length === 0) { 
@@ -22638,7 +22639,7 @@
                 document.getElementById('stdDetailDesc').innerHTML = desc ? formatProjectDesc(desc) : 'Chủ Stations này thật lười biến, chả chịu viết mô tả gì cả.';
                 document.getElementById('stdDetailThumb').src = thumbId ? `${WORKER_URL}/api/project/${thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             }
-            btn.innerHTML = 'Lưu Cài đặt';
+            btn.innerHTML = t('station_modal_settings_save');
             btn.disabled = false;
         }
 
@@ -22661,7 +22662,7 @@
                 // Lọc lấy các tác phẩm công khai
                 const publicProjs = allMine.filter(p => p.visibility !== 'private');
 
-                if (countEl) countEl.innerText = `${publicProjs.length} tác phẩm`;
+                if (countEl) countEl.innerText = t('station_projects_count_raw', { count: publicProjs.length });
 
                 if (publicProjs.length === 0) {
                     listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.9rem;">Bạn chưa có tác phẩm công khai nào.</div>';
@@ -23016,7 +23017,7 @@
             document.getElementById('profileContent').style.display = 'block';
             
             // 3. Đổ thông tin chữ cơ bản
-            document.title = `Hồ sơ ${viewingProfileData.display_name || targetUsername} (@${targetUsername}) trên DANVworkshop`;
+            document.title = t('profile_page_title', { name: viewingProfileData.display_name || targetUsername, username: targetUsername });
             const elName = document.getElementById('profDisplayName'); if(elName) elName.innerText = viewingProfileData.display_name || targetUsername;
             const elUser = document.getElementById('profUsername'); if(elUser) elUser.innerText = viewingProfileData.username || targetUsername;
             const elAvt = document.getElementById('profAvt'); if(elAvt) elAvt.src = getAvtUrl(viewingProfileData.avt);
@@ -23030,7 +23031,7 @@
             try {
                 const pDaily = viewingProfileData.dailyLogin ? (typeof viewingProfileData.dailyLogin === 'string' ? JSON.parse(viewingProfileData.dailyLogin) : viewingProfileData.dailyLogin) : {};
                 if (pDaily.partner && pDaily.partnerStatus === 'accepted') {
-                    const badgeHtml = `<div id="profCoupleBadge" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1px solid #bae6fd; background: #f0f9ff; color: #0284c7; margin-left: 8px; cursor: pointer;" onclick="navigateTo('/users/${encodeURIComponent(pDaily.partner)}')"><i class="fa-solid fa-user-group"></i> Đôi bạn cùng tiến: @${escapeHtml(pDaily.partner)}</div>`;
+                    const badgeHtml = `<div id="profCoupleBadge" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1px solid #bae6fd; background: #f0f9ff; color: #0284c7; margin-left: 8px; cursor: pointer;" onclick="navigateTo('/users/${encodeURIComponent(pDaily.partner)}')"><i class="fa-solid fa-user-group"></i> ${t('daily_pair_together', { user: escapeHtml(pDaily.partner) })}</div>`;
                     document.querySelector('.profile-meta-pills').insertAdjacentHTML('beforeend', badgeHtml);
                 }
             } catch(e) {}
@@ -23102,7 +23103,7 @@
             // Xử lý hiển thị Banner cảnh báo nếu tài khoản này đã bị khóa
             if (viewingProfileData.isBanned) {
                 if (banAlert) banAlert.style.display = 'flex';
-                if (banReasonText) banReasonText.innerText = `Lý do: "${viewingProfileData.banReason || 'Vi phạm tiêu chuẩn cộng đồng'}"`;
+                if (banReasonText) banReasonText.innerText = `Reason: "${viewingProfileData.banReason || t('ban_reason_default')}"`;
             } else {
                 if (banAlert) banAlert.style.display = 'none';
             }
@@ -23223,7 +23224,7 @@
                     }
                     
                     if (!isLoadMore && items.length === 0) {
-                        html = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:30px;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
+                        html = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:30px;">${t('profile_no_projects_likes', { type: tab === 'projects' ? 'projects' : 'likes' })}</p>`;
                     } else {
                         html = items.map(p => `
                             <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
@@ -23245,7 +23246,7 @@
                     if (!isOwner) playlists = playlists.filter(pl => pl.isPublic);
 
                     if (playlists.length === 0) {
-                        html = `<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:3rem; margin-bottom:12px; opacity:0.35; display:block;"></i>Chưa có bộ sưu tập nào.</div>`;
+                        html = `<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:3rem; margin-bottom:12px; opacity:0.35; display:block;"></i>${t('prof_empty_playlists')}</div>`;
                     } else {
                         html = playlists.map(pl => {
                             let coverImgSrc = '';
@@ -23285,7 +23286,7 @@
                     state.hasMore = endIndex < allActivities.length;
 
                     if (!isLoadMore && items.length === 0) {
-                        html = `<p style="color:var(--text-muted); text-align:center; padding:30px;">Chưa có hoạt động nào.</p>`;
+                        html = `<p style="color:var(--text-muted); text-align:center; padding:30px;">${t('prof_empty_activities')}</p>`;
                     } else {
                         html = items.map(a => `
                             <div class="timeline-item">
@@ -23431,7 +23432,7 @@
                     }
                     
                     if (!isLoadMore && items.length === 0) {
-                        html = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:30px;">Chưa có ${tab === 'projects' ? 'tác phẩm' : 'lượt thích'} nào.</p>`;
+                        html = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:30px;">${t('profile_no_projects_likes', { type: tab === 'projects' ? 'projects' : 'likes' })}</p>`;
                     } else {
                         html = items.map(p => `
                             <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
@@ -23456,7 +23457,7 @@
                     }
 
                     if (playlists.length === 0) {
-                        html = `<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:3rem; margin-bottom:12px; opacity:0.35; display:block;"></i>Chưa có bộ sưu tập nào.</div>`;
+                        html = `<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-solid fa-layer-group" style="font-size:3rem; margin-bottom:12px; opacity:0.35; display:block;"></i>${t('prof_empty_playlists')}</div>`;
                     } else {
                         html = playlists.map(pl => {
                             // Tìm ảnh thumbnail của dự án đầu tiên trong bộ sưu tập (nếu có)
@@ -23505,7 +23506,7 @@
                     state.hasMore = endIndex < allActivities.length;
 
                     if (!isLoadMore && items.length === 0) {
-                        html = `<p style="color:var(--text-muted); text-align:center; padding:30px;">Chưa có hoạt động nào.</p>`;
+                        html = `<p style="color:var(--text-muted); text-align:center; padding:30px;">${t('prof_empty_activities')}</p>`;
                     } else {
                         html = items.map(a => `
                             <div class="timeline-item">
@@ -23617,7 +23618,7 @@
                 switchSettingsTab('pref');
                 const scratchStatus = document.getElementById('scratchLinkStatus');
                 if (scratchStatus) {
-                    scratchStatus.innerHTML = `<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">Vui lòng đăng nhập để xem thông tin liên kết tài khoản.</p><button type="button" class="btn btn-primary" onclick="openModal('loginModal')">Đăng nhập ngay</button>`;
+                    scratchStatus.innerHTML = `<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">${t('profile_login_to_view')}</p><button type="button" class="btn btn-primary" onclick="openModal('loginModal')">${t('profile_login_now')}</button>`;
                 }
                 return;
             }
@@ -23646,10 +23647,10 @@
 
                 if (verifyBadge && verifyBtn) {
                     if (isAccVerified) {
-                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Đã xác thực • ${escapeHtml(pData.email || currentUser.email)}</span>`;
+                        verifyBadge.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> ${t('profile_verified', { email: escapeHtml(pData.email || currentUser.email) })}</span>`;
                         verifyBtn.style.display = 'none';
                     } else {
-                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Chưa xác thực • ${escapeHtml(pData.email || currentUser.email)}</span>`;
+                        verifyBadge.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> ${t('profile_unverified', { email: escapeHtml(pData.email || currentUser.email) })}</span>`;
                         verifyBtn.style.display = 'inline-flex';
                     }
                 }
@@ -23661,7 +23662,7 @@
                     if (currentUser && currentUser.parentAccount) {
                         subNotice.style.display = 'block';
                         if (subText) {
-                            subText.innerText = `Tài khoản này được liên kết dưới quyền tài khoản chính @${currentUser.parentAccount}. Mật khẩu và bảo mật do tài khoản chính quản lý.`;
+                            subText.innerText = t('profile_sub_account_link', { parent: currentUser.parentAccount });
                         }
                     } else {
                         subNotice.style.display = 'none';
@@ -23687,7 +23688,7 @@
                     if (pData.scratch_linked) {
                         scratchStatus.innerHTML = `<div style="padding:10px; background:#e6f4ea; color:#0a8260; border-radius:8px; border:1px solid #bbf7d0; font-weight:bold; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check"></i> Scratch Connected: @${pData.scratch_linked}</div>`;
                     } else {
-                        scratchStatus.innerHTML = `<p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Lấy thẻ huy hiệu chính chủ bằng cách liên kết tài khoản Scratch.</p><button type="button" class="btn btn-primary" onclick="linkScratchAuth()"><img src="https://scratch.mit.edu/favicon.ico" width="16"> Liên kết ngay</button>`;
+                        scratchStatus.innerHTML = `<p style="font-size:0.85rem; color:#666; margin-bottom:10px;">${t('profile_scratch_link')}</p><button type="button" class="btn btn-primary" onclick="linkScratchAuth()"><img src="https://scratch.mit.edu/favicon.ico" width="16"> ${t('profile_scratch_link_now')}</button>`;
                     }
                 }
             } catch(e) {
@@ -24627,7 +24628,7 @@
             gamePayCountdownTimer = setInterval(() => {
                 gamePayCountdownSec--;
                 if (gamePayCountdownSec > 0) {
-                    confirmBtn.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Xác nhận mua (${gamePayCountdownSec}s)</span>`;
+            confirmBtn.innerHTML = `<i class="fa-solid fa-clock"></i> <span>${t('wowbilling_confirm_countdown', { n: gamePayCountdownSec })}</span>`;
                 } else {
                     clearInterval(gamePayCountdownTimer);
                     confirmBtn.disabled = false;
@@ -24843,7 +24844,7 @@
                 const forkSource = await extractTurboShareForkSource(fileInput);
                 // Tải từng mảnh lên nối tiếp nhau, vượt rào 100MB Cloudflare
                 for (let i = 0; i < totalChunks; i++) {
-                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...</span>`;
+                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${t('upload_chunk_uploading', { i: i + 1, total: totalChunks })}</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `part_${i}.sb3`);
@@ -25054,8 +25055,8 @@
                     const imgEl = row.querySelector('.chat-img-attachment');
                     const imgSrc = imgEl ? imgEl.src : '';
                     
-                    let snippet = `[@${author} (${time})]: "${decodedText || '(Không có văn bản)'}"`;
-                    if (imgSrc) snippet += `\n[Ảnh/Tệp đính kèm]: ${imgSrc}`;
+                    let snippet = t('report_snippet', { author, time, text: decodedText || '(No text)' });
+                    if (imgSrc) snippet += `\n${t('report_attachment', { src: imgSrc })}`;
                     reportTarget.originalContent = snippet;
                 }
             } else {
@@ -25242,10 +25243,10 @@
         async function loadAdminMarketplaceExtensions() {
             const container = document.getElementById('adminMarketplaceExtensionsList');
             if (!container) return;
-            container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:18px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải hàng duyệt...</div>';
+            container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:18px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading approval queue...</div>';
             const res = await apiFetch('/api/admin/extensions/marketplace', { method: 'POST', body: JSON.stringify({}) });
             if (!res || !res.success) {
-                container.innerHTML = `<div role="alert" style="color:#b42318; background:#fff1f0; border-radius:10px; padding:14px;">${escapeHtml(res && res.error ? res.error : 'Không thể tải danh sách. Kiểm tra cấu hình kết nối Store của Worker.')}</div>`;
+                container.innerHTML = `<div role="alert" style="color:#b42318; background:#fff1f0; border-radius:10px; padding:14px;">${escapeHtml(res && res.error ? res.error : t('store_list_load_error'))}</div>`;
                 return;
             }
             renderAdminMarketplaceExtensions(res.extensions);
@@ -27258,7 +27259,6 @@
             // THẺ TÀI TRỢ QUẢNG CÁO (SPONSORED AD CARD - FLAT & FORMAL)
             if (rawText.includes('[DANV_SPONSOR_AD]')) {
                 const userMsg = rawText.replace('[DANV_SPONSOR_AD]', '').trim();
-                const adSrcDoc = `<!DOCTYPE html><html><head><base target="_blank"><style>body{margin:0;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;overflow:hidden;}</style></head><body><script>(function(hfbok){var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1]; s.settings = hfbok || {}; s.src = "\\/\\/unfoldedtrade.com\\/bRXTV.s\\/dIG\\/l\\/0PYjWvcV\\/vecmK9eu\\/ZvU-lXk\\/PETCcw1-M\\/DKgOw-M\\/TDMWtVNLzGUMwwO\\/DnA\\/xlNTwv"; s.async = true; s.referrerPolicy = 'no-referrer-when-downgrade'; l.parentNode.insertBefore(s, l);})({})<\/script></body></html>`;
 
                 return (userMsg ? `<div class="chat-text" style="margin-bottom:6px;">${formatCommentText(userMsg)}</div>` : '') + `
                     <div class="chat-sponsor-card">
@@ -27267,15 +27267,17 @@
                                 <i class="fa-solid fa-rectangle-ad"></i> TÀI TRỢ
                             </span>
                             <span style="font-size:0.72rem; color:var(--text-muted);">
-                                Nội dung quảng cáo
+                                Trạng thái
                             </span>
                         </div>
-                        <div class="chat-sponsor-ad-frame">
-                            <iframe srcdoc="${escapeHtml(adSrcDoc)}" style="width:300px; height:250px; border:none; display:block; margin:0 auto; overflow:hidden;" scrolling="no"></iframe>
+                        <div class="chat-sponsor-ad-frame" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 16px; text-align:center; min-height:180px; color:var(--text-muted); gap:8px;">
+                            <i class="fa-solid fa-circle-pause" style="font-size:2.2rem; opacity:0.4;"></i>
+                            <b style="font-size:0.95rem; color:var(--text-title);">Tính năng quảng cáo đang tạm đóng</b>
+                            <span style="font-size:0.8rem; line-height:1.45; max-width:240px;">Hiện tại hệ thống đã gỡ bỏ hiển thị quảng cáo từ đối tác bên thứ ba.</span>
                         </div>
                         <div class="chat-sponsor-footer">
                             <span>Người đăng: <b style="color:var(--text-title);">@${escapeHtml(author || 'Thành viên')}</b></span>
-                            <span style="font-size:0.7rem; color:var(--text-muted);">ID: Ads</span>
+                            <span style="font-size:0.7rem; color:var(--text-muted);">ID: Ads (Tạm dừng)</span>
                         </div>
                     </div>
                 `;
@@ -28193,7 +28195,7 @@
             try {
                 const forkSource = await extractTurboShareForkSource(fileInput);
                 for (let i = 0; i < totalChunks; i++) {
-                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang tải lên: Mảnh ${i + 1} / ${totalChunks}...</span>`;
+                    textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${t('upload_chunk_uploading', { i: i + 1, total: totalChunks })}</span>`;
                     const chunk = fileInput.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                     const chunkForm = new FormData();
                     chunkForm.append("file", chunk, `part_${i}.sb3`);
@@ -29081,7 +29083,7 @@
             const mainText = document.getElementById('assetDropMainText');
             if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
             if (dropIcon) dropIcon.style.display = 'block';
-            if (mainText) mainText.innerText = 'Nhấp để chọn hoặc kéo thả tệp vào đây';
+            if (mainText) mainText.innerText = t('asset_drop_label');
 
             // Reset reCAPTCHA khi mở modal
             const assetRecaptchaEl = document.querySelector('#uploadAssetModal [name="g-recaptcha-response"]');
@@ -32690,8 +32692,8 @@
             openModal('blindBagModal');
 
             // Reset UI Modal
-            document.getElementById('gachaStatusTitle').innerText = "Đang kết nối ngân khố...";
-            document.getElementById('gachaSubText').innerText = "Đang khóa túi mù và chuẩn bị xé...";
+            document.getElementById('gachaStatusTitle').innerText = t('gacha_connecting');
+            document.getElementById('gachaSubText').innerText = t('gacha_opening');
             document.getElementById('gachaCounterValue').innerText = "??";
             document.getElementById('gachaFinalMsg').style.display = "none";
             document.getElementById('btnGachaDone').style.display = "none";
@@ -33008,14 +33010,14 @@
                     const errMsg = res.details ? `${res.error}: ${res.details}` : (res.error || "Lỗi hệ thống");
                     showToast(errMsg, "error");
                     if (!isFromHold && btn) {
-                        btn.innerHTML = 'Nhận thưởng hôm nay'; 
+                        btn.innerHTML = t('daily_claim_today'); 
                         btn.disabled = false;
                     }
                 }
             } catch (err) {
                 showToast("Lỗi mạng: Không thể kết nối đến máy chủ", 'error');
                 if (!isFromHold && btn) {
-                    btn.innerHTML = 'Nhận thưởng hôm nay'; 
+                    btn.innerHTML = t('daily_claim_today'); 
                     btn.disabled = false;
                 }
             }
@@ -33582,7 +33584,7 @@
                 document.getElementById('adminFrameUrl').value = "";
                 document.getElementById('adminFramePrice').value = "100";
                 resetAdminFrameTransform();
-                if (btnText) btnText.innerText = "Phát hành Khung mới";
+                if (btnText) btnText.innerText = t('admin_frame_btn_submit');
                 if (btnSubmit) btnSubmit.style.background = "#3b82f6";
             } else {
                 const found = availableFrames.find(f => f.id === frameId);
@@ -33593,7 +33595,7 @@
                     document.getElementById('adminFrameScaleInput').value = found.scale !== undefined ? found.scale : 135;
                     document.getElementById('adminFrameXInput').value = found.offsetX !== undefined ? found.offsetX : 0;
                     document.getElementById('adminFrameYInput').value = found.offsetY !== undefined ? found.offsetY : 0;
-                    if (btnText) btnText.innerText = "Lưu tinh chỉnh khung này";
+                    if (btnText) btnText.innerText = t('admin_frame_save_tweak');
                     if (btnSubmit) btnSubmit.style.background = "#10b981";
                 }
             }
@@ -36373,7 +36375,7 @@
                 btn.style.color = '#ef4444';
                 
                 if (liveBar) liveBar.style.display = 'flex';
-                if (previewText) previewText.innerText = "Đang lắng nghe...";
+                if (previewText) previewText.innerText = t('chat_listening');
 
                 voiceSeconds = 0;
                 if (timerSpan) {
