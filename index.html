@@ -29390,7 +29390,11 @@
             if (!targetId) return;
 
             const topicName = `realtime:comments:${targetType}:${String(targetId).toLowerCase()}`;
-            activeCommentChannel = supabaseClient.channel(topicName);
+            activeCommentChannel = supabaseClient.channel(topicName, {
+                config: {
+                    private: true
+                }
+            });
             
             activeCommentChannel
                 .on('broadcast', { event: '*' }, (payload) => {
@@ -29407,7 +29411,7 @@
         }
 
         function handleIncomingRealtimeComment(eventType, data, contextType) {
-            if (data._server_auth !== "DANV_VERIFIED_BROADCAST_8899") return;
+            if (data._server_auth !== "DANV_SECURE_BROADCAST_v2_9981") return;
 
             let list = [];
             if (contextType === 'project' && currentProj) list = currentProj.comments;
@@ -29783,6 +29787,7 @@
 
             globalChatChannel = supabaseClient.channel('realtime:public_chat_secure', {
                 config: {
+                    private: true,
                     presence: { key: presenceKey }
                 }
             });
@@ -29797,8 +29802,8 @@
                         const eventType = payload.event;
                         const data = payload.payload;
                         
-                        if (data._server_auth !== "DANV_VERIFIED_BROADCAST_8899") {
-                            console.warn("Phát hiện gói tin rác từ Hacker, đã tự động chặn!");
+                        if (data._server_auth !== "DANV_SECURE_BROADCAST_v2_9981") {
+                            console.warn("ồ, không được rồi?");
                             return;
                         }
 
