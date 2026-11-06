@@ -16,9 +16,15 @@
     --panel-transparency: 0.94;
 }
 
-/* Áp dụng font chữ toàn trang khi có tùy biến */
-body, * {
-    font-family: var(--font-custom) !important;
+body, input, textarea, select, button, div, p, span:not([class*="fa-"]), a:not([class*="fa-"]), h1, h2, h3, h4, h5, h6, b, strong, i:not([class*="fa-"]) {
+    font-family: var(--font-custom, 'Nunito', "Segoe UI", ui-rounded, system-ui, sans-serif);
+}
+
+.fa, .fas, .far, .fal, .fad, .fab, .fa-solid, .fa-regular, .fa-brands, [class*="fa-"], .fa-shake, .fa-spin, .fa-bounce, .fa-beat, .fa-fade {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
+.fa-brands {
+    font-family: "Font Awesome 6 Brands" !important;
 }
 
 /* 1. Lớp hình nền cố định toàn màn hình (Hiệu năng cao, chống giật khi cuộn) */
