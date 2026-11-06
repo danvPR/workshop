@@ -1,0 +1,250 @@
+/* ==========================================================================
+   CUSTOME-UI.CSS - HỆ THỐNG GIAO DIỆN & TÙY BIẾN THEME / WALLPAPER / FONT
+   DANVworkshop / TurboShare Platform
+   ========================================================================== */
+
+:root {
+    /* Biến tùy biến màu sắc */
+    --accent-custom: #0da57a;
+    --accent-dark-custom: #0a8260;
+    --font-custom: 'Nunito', "Segoe UI", ui-rounded, system-ui, sans-serif;
+    
+    /* Biến hình nền & độ trong suốt */
+    --app-wallpaper: none;
+    --app-wallpaper-blur: 0px;
+    --app-overlay-opacity: 0.88;
+    --panel-transparency: 0.94;
+}
+
+/* Áp dụng font chữ toàn trang khi có tùy biến */
+body, * {
+    font-family: var(--font-custom) !important;
+}
+
+/* 1. Lớp hình nền cố định toàn màn hình (Hiệu năng cao, chống giật khi cuộn) */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: var(--app-wallpaper);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: blur(var(--app-wallpaper-blur));
+    transform: scale(1.03); /* Chống lộ mép viền trắng khi dùng blur */
+    z-index: -2;
+    pointer-events: none;
+    transition: background-image 0.4s ease, filter 0.2s ease;
+}
+
+/* 2. Lớp mặt nạ bảo vệ tương phản (Đảm bảo chữ luôn đọc rõ trên mọi ảnh nền) */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-color: var(--bg-body);
+    opacity: var(--app-overlay-opacity);
+    z-index: -1;
+    pointer-events: none;
+    transition: background-color 0.3s ease, opacity 0.25s ease;
+}
+
+/* 3. Hiệu ứng Glassmorphism cho các khung/thẻ khi bật hình nền */
+body.has-custom-wallpaper .card,
+body.has-custom-wallpaper .chat-main-card,
+body.has-custom-wallpaper .upload-card-wrapper,
+body.has-custom-wallpaper .grid-stack-item-content,
+body.has-custom-wallpaper .mystuff-sidebar,
+body.has-custom-wallpaper .mystuff-project-row,
+body.has-custom-wallpaper .creator-vault-box,
+body.has-custom-wallpaper .creator-metric-panel,
+body.has-custom-wallpaper .creator-data-row,
+body.has-custom-wallpaper .notif-hub-wrapper,
+body.has-custom-wallpaper .assets-hero-card,
+body.has-custom-wallpaper .asset-card,
+body.has-custom-wallpaper .station-hero-banner,
+body.has-custom-wallpaper .station-card,
+body.has-custom-wallpaper .station-detail-banner {
+    background: color-mix(in srgb, var(--bg-panel) calc(var(--panel-transparency) * 100%), transparent) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Tương thích chế độ máy yếu: Tắt toàn bộ Blur & Layer mờ */
+[data-lowspec="true"] body::before {
+    filter: none !important;
+    transform: none !important;
+}
+[data-lowspec="true"] body.has-custom-wallpaper * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* ================= GIAO DIỆN KHU VỰC CÀI ĐẶT TÙY BIẾN ================= */
+.theme-config-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.theme-config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+.theme-config-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-title);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Cụm Palette Swatch */
+.theme-swatch-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.theme-color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 0.85rem;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.theme-color-swatch:hover {
+    transform: scale(1.15);
+}
+.theme-color-swatch.active {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px var(--primary), 0 4px 12px rgba(0,0,0,0.25);
+    transform: scale(1.1);
+}
+.theme-picker-input-wrap {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px dashed var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-panel);
+    transition: border-color 0.2s;
+}
+.theme-picker-input-wrap:hover {
+    border-color: var(--primary);
+}
+.theme-picker-input-wrap input[type="color"] {
+    position: absolute;
+    inset: -10px;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Thư viện hình nền mẫu */
+.theme-wp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+}
+.theme-wp-card {
+    height: 65px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+.theme-wp-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+.theme-wp-card.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary);
+}
+.theme-wp-card.none-wp {
+    background: var(--bg-panel);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    gap: 4px;
+}
+
+/* Lựa chọn font chữ */
+.theme-font-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.theme-font-chip {
+    padding: 7px 15px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-color);
+    background: var(--bg-panel);
+    color: var(--text-title);
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.theme-font-chip:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+.theme-font-chip.active {
+    border-color: var(--primary);
+    background: rgba(13, 165, 122, 0.12);
+    color: var(--primary);
+}
+
+/* Khung thêm font tùy chỉnh */
+.custom-font-input-wrap {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+.theme-font-preview-box {
+    background: var(--bg-panel);
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: var(--text-title);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

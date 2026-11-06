@@ -57,6 +57,9 @@
     <!-- Styles & Scripts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet" media="print" onload="this.media='all'"/>
+    <!-- Nạp sẵn các phông chữ chuẩn & Giao diện tùy chỉnh riêng -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&family=VT323&display=swap">
+    <link rel="stylesheet" href="custome-ui.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-toolkit/6.0.1/js/joypixels.min.js" crossorigin="anonymous"></script>
     <!-- DOMPurify for sanitizing HTML in Bulletin Board -->
@@ -13632,14 +13635,151 @@
                     <button class="set-tab-btn" id="setTabBtn-wow" onclick="switchSettingsTab('wow')"><i class="fa-solid fa-coins" style="color:#f59e0b;"></i> <span>Lịch sử WOW</span></button>
                 </div>
 
-                <!-- TAB: TÙY CHỌN & HIỂN THỊ -->
+                <!-- TAB: TÙY CHỌN & HIỂN THỊ (THEME & WALLPAPER CUSTOMIZATION) -->
                 <div id="setTab-pref" class="set-tab-content active">
-                    <div class="form-group" style="margin-bottom: 25px;">
-                        <label data-i18n="settings_theme">Giao diện (Theme):</label>
+                    <!-- 1. Chế độ Sáng / Tối -->
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label data-i18n="settings_theme">Giao diện:</label>
                         <div style="display: flex; gap: 10px; margin-top: 8px;">
-                            <button type="button" class="btn" onclick="toggleTheme('light')" style="flex:1; justify-content:center; padding: 12px;"><i class="fa-solid fa-sun"></i> <span data-i18n="settings_theme_light">Sáng</span></button>
-                            <button type="button" class="btn" onclick="toggleTheme('dark')" style="flex:1; justify-content:center; padding: 12px;"><i class="fa-solid fa-moon"></i> <span data-i18n="settings_theme_dark">Tối</span></button>
+                            <button type="button" class="btn" id="btnThemeLight" onclick="toggleTheme('light')" style="flex:1; justify-content:center; padding: 12px;"><i class="fa-solid fa-sun" style="color:#f59e0b;"></i> <span data-i18n="settings_theme_light">Sáng</span></button>
+                            <button type="button" class="btn" id="btnThemeDark" onclick="toggleTheme('dark')" style="flex:1; justify-content:center; padding: 12px;"><i class="fa-solid fa-moon" style="color:#818cf8;"></i> <span data-i18n="settings_theme_dark">Tối</span></button>
                         </div>
+                    </div>
+
+                    <!-- 2. Bảng Màu Chủ Đạo (Accent Color Swatches) -->
+                    <div class="theme-config-box">
+                        <div class="theme-config-header">
+                            <span class="theme-config-title">
+                                <i class="fa-solid fa-palette" style="color:var(--primary);"></i>
+                                <span>Màu Sắc Chủ Đạo</span>
+                            </span>
+                            <span id="themeAccentHexLabel" style="font-family:monospace; font-size:0.82rem; color:var(--primary); font-weight:800;">#0da57a</span>
+                        </div>
+                        <div class="theme-swatch-row">
+                            <div class="theme-color-swatch active" style="background:#0da57a;" onclick="ThemeManager.setAccent('#0da57a', '#0a8260', this)" title="Emerald (Mặc định)"></div>
+                            <div class="theme-color-swatch" style="background:#0284c7;" onclick="ThemeManager.setAccent('#0284c7', '#0369a1', this)" title="Ocean Sapphire"></div>
+                            <div class="theme-color-swatch" style="background:#8b5cf6;" onclick="ThemeManager.setAccent('#8b5cf6', '#6d28d9', this)" title="Cyber Violet"></div>
+                            <div class="theme-color-swatch" style="background:#ec4899;" onclick="ThemeManager.setAccent('#ec4899', '#be185d', this)" title="Sakura Pink"></div>
+                            <div class="theme-color-swatch" style="background:#f59e0b;" onclick="ThemeManager.setAccent('#f59e0b', '#d97706', this)" title="Solar Amber"></div>
+                            <div class="theme-color-swatch" style="background:#ef4444;" onclick="ThemeManager.setAccent('#ef4444', '#dc2626', this)" title="Ruby Crimson"></div>
+                            
+                            <!-- Nút tự chọn mã màu bất kỳ -->
+                            <div class="theme-picker-input-wrap" title="Tự chọn màu khác">
+                                <i class="fa-solid fa-eye-dropper" style="font-size:0.8rem; color:var(--text-muted);"></i>
+                                <input type="color" id="themeCustomColorInput" value="#0da57a" oninput="ThemeManager.setCustomColor(this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Tùy Biến Hình Nền (Wallpaper & Dimmer) -->
+                    <div class="theme-config-box">
+                        <div class="theme-config-header">
+                            <span class="theme-config-title">
+                                <i class="fa-solid fa-image" style="color:#0284c7;"></i>
+                                <span>Hình Nền Toàn Trang</span>
+                            </span>
+                            <button type="button" class="btn" style="padding:3px 10px; font-size:0.75rem; border-radius:10px;" onclick="ThemeManager.clearWallpaper()">
+                                <i class="fa-solid fa-xmark"></i> Xóa nền
+                            </button>
+                        </div>
+
+                        <!-- Lưới hình nền chọn nhanh -->
+                        <div class="theme-wp-grid" id="themeWallpaperPresetGrid">
+                            <div class="theme-wp-card none-wp active" onclick="ThemeManager.clearWallpaper(this)">
+                                <i class="fa-solid fa-ban"></i>
+                                <span>Mặc định</span>
+                            </div>
+                            <div class="theme-wp-card" style="background-image:url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&auto=format&fit=crop&q=80');" onclick="ThemeManager.setWallpaper('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&auto=format&fit=crop&q=80', this)" title="Gradient Pastel"></div>
+                            <div class="theme-wp-card" style="background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80');" onclick="ThemeManager.setWallpaper('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&auto=format&fit=crop&q=80', this)" title="Lofi Neon City"></div>
+                            <div class="theme-wp-card" style="background-image:url('https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80');" onclick="ThemeManager.setWallpaper('https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&auto=format&fit=crop&q=80', this)" title="Fantasy Aurora"></div>
+                            <div class="theme-wp-card" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80');" onclick="ThemeManager.setWallpaper('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&auto=format&fit=crop&q=80', this)" title="Tropical Beach"></div>
+                        </div>
+
+                        <!-- Ô dán URL hoặc tải từ máy -->
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <input type="text" id="themeWpUrlInput" class="form-control" placeholder="Dán link ảnh trực tiếp (Catbox, ImgBB, Unsplash...)" style="flex:1; min-width:200px; font-size:0.86rem;">
+                            <button type="button" class="btn btn-primary" onclick="ThemeManager.applyCustomUrlWallpaper()" style="padding:8px 16px; font-size:0.84rem; white-space:nowrap; border-radius:10px;">
+                                <i class="fa-solid fa-check"></i> Áp dụng
+                            </button>
+                            <label for="themeLocalWpUpload" class="btn" style="padding:8px 14px; font-size:0.84rem; cursor:pointer; white-space:nowrap; border-radius:10px;" title="Tải ảnh từ máy">
+                                <i class="fa-solid fa-folder-open"></i> Tải ảnh lên
+                            </label>
+                            <input type="file" id="themeLocalWpUpload" accept="image/*" style="display:none;" onchange="ThemeManager.handleLocalWallpaper(this)">
+                        </div>
+
+                        <!-- 2 Thanh trượt: Độ phủ mờ & Độ mờ ảnh (Blur) -->
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:4px;">
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; margin-bottom:4px;">
+                                    <span>Lớp phủ che mờ & Độ rõ chữ:</span>
+                                    <span id="themeOverlayVal" style="color:var(--primary); font-family:monospace;">88%</span>
+                                </div>
+                                <input type="range" id="themeOverlayRange" min="30" max="98" step="1" value="88" style="width:100%; accent-color:var(--primary); cursor:pointer;" oninput="ThemeManager.setOverlayOpacity(this.value)">
+                            </div>
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; margin-bottom:4px;">
+                                    <span>Độ mờ hình nền:</span>
+                                    <span id="themeBlurVal" style="color:var(--primary); font-family:monospace;">0px</span>
+                                </div>
+                                <input type="range" id="themeBlurRange" min="0" max="16" step="1" value="0" style="width:100%; accent-color:var(--primary); cursor:pointer;" oninput="ThemeManager.setWallpaperBlur(this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Tùy Biến Phông Chữ & Thêm Font Riêng -->
+                    <div class="theme-config-box">
+                        <div class="theme-config-header">
+                            <span class="theme-config-title">
+                                <i class="fa-solid fa-font" style="color:#8b5cf6;"></i>
+                                <span>Phông Chữ Hiển Thị</span>
+                            </span>
+                            <span id="themeCurrentFontName" style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Nunito</span>
+                        </div>
+
+                        <!-- Các phông có sẵn -->
+                        <div class="theme-font-chips">
+                            <button type="button" class="theme-font-chip active" onclick="ThemeManager.setFont('Nunito', this)">
+                                <span>Nunito</span> <small style="opacity:0.6;">(Mặc định)</small>
+                            </button>
+                            <button type="button" class="theme-font-chip" style="font-family:'Plus Jakarta Sans', sans-serif !important;" onclick="ThemeManager.setFont('Plus Jakarta Sans', this)">
+                                <span>Plus Jakarta Sans</span>
+                            </button>
+                            <button type="button" class="theme-font-chip" style="font-family:'Be Vietnam Pro', sans-serif !important;" onclick="ThemeManager.setFont('Be Vietnam Pro', this)">
+                                <span>Be Vietnam Pro</span>
+                            </button>
+                            <button type="button" class="theme-font-chip" style="font-family:'VT323', monospace !important; font-size:1.1rem;" onclick="ThemeManager.setFont('VT323', this)">
+                                <span>VT323 (Pixel 8-bit)</span>
+                            </button>
+                        </div>
+
+                        <!-- KHU VỰC THÊM PHÔNG CHỮ TÙY CHỈNH (GOOGLE FONTS HOẶC LINK FILE) -->
+                        <div>
+                            <label style="font-size:0.8rem; font-weight:700; color:var(--text-title); display:block; margin-bottom:4px;">
+                                <i class="fa-solid fa-circle-plus" style="color:var(--primary);"></i> Thêm phông chữ tùy chỉnh:
+                            </label>
+                            <div class="custom-font-input-wrap">
+                                <input type="text" id="themeCustomFontInput" class="form-control" placeholder="Tên font trên Google Fonts (VD: Pacifico, Orbitron, Montserrat) hoặc link tệp .woff2..." style="font-size:0.86rem;">
+                                <button type="button" class="btn btn-primary" onclick="ThemeManager.addCustomFontFromInput()" style="padding:8px 18px; font-weight:800; font-size:0.84rem; white-space:nowrap; border-radius:10px;">
+                                    <i class="fa-solid fa-plus"></i> Áp dụng phông
+                                </button>
+                            </div>
+                            <span style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; display:block;">
+                                Phông chữ tùy chỉnh
+                            </span>
+                        </div>
+
+                        <!-- Hộp thử nghiệm font trực tiếp -->
+                        <div class="theme-font-preview-box">
+                            <span id="themeFontPreviewText">DANVworkshop: Sáng tạo game không giới hạn • 0123456789</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:bold;">Preview</span>
+                        </div>
+                    </div>
+
+                    <!-- Nút đặt lại toàn bộ về mặc định -->
+                    <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+                        <button type="button" class="btn" onclick="ThemeManager.resetToDefault()" style="border-radius:12px; font-weight:700; font-size:0.82rem; color:#ef4444;">
+                            <i class="fa-solid fa-rotate-left"></i> Khôi phục giao diện mặc định
+                        </button>
                     </div>
 
                     <!-- THIẾT LẬP CHẾ ĐỘ MÁY YẾU / TIẾT KIỆM PIN -->
@@ -18460,6 +18600,11 @@
             // Khởi tạo Chế độ máy yếu ngay lập tức
             const isLowSpec = localStorage.getItem('danv_lowspec') === 'true';
             document.documentElement.setAttribute('data-lowspec', isLowSpec ? 'true' : 'false');
+
+            // Khởi tạo Hệ thống giao diện tùy chỉnh (Màu sắc, Hình nền & Font chữ)
+            if (typeof ThemeManager !== 'undefined') {
+                ThemeManager.init();
+            }
 
             // ĐẶT LẠI ENGINE MẶC ĐỊNH 1 LẦN DUY NHẤT CHO TOÀN BỘ USER SANG TURBO-IDE
             try {
@@ -23804,6 +23949,18 @@
             updateChatNotifSettingUI(); // Đồng bộ trạng thái công tắc thông báo màn hình
             const lowSpecChk = document.getElementById('lowSpecToggleCheckbox');
             if (lowSpecChk) lowSpecChk.checked = (localStorage.getItem('danv_lowspec') === 'true');
+
+            // Đồng bộ bộ công cụ tùy chỉnh giao diện ThemeManager
+            if (typeof ThemeManager !== 'undefined') {
+                ThemeManager.syncSettingsUI();
+            }
+            const curTheme = localStorage.getItem('danv_theme') || 'light';
+            const btnThemeL = document.getElementById('btnThemeLight');
+            const btnThemeD = document.getElementById('btnThemeDark');
+            if (btnThemeL && btnThemeD) {
+                btnThemeL.classList.toggle('btn-primary', curTheme === 'light');
+                btnThemeD.classList.toggle('btn-primary', curTheme === 'dark');
+            }
 
             // 2. Nếu chưa đăng nhập: tự động chuyển sang tab Tùy chọn (Theme / Ngôn ngữ / Engine) mà không đá về Home
             if (!currentUser) {
@@ -29442,8 +29599,257 @@
         function toggleTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('danv_theme', theme);
+            const btnL = document.getElementById('btnThemeLight');
+            const btnD = document.getElementById('btnThemeDark');
+            if (btnL && btnD) {
+                btnL.classList.toggle('btn-primary', theme === 'light');
+                btnD.classList.toggle('btn-primary', theme === 'dark');
+            }
             showToast(`Đã chuyển sang chế độ ${theme === 'dark' ? 'Tối' : 'Sáng'}`, "success");
         }
+
+        // =========================================================================
+        // 🎨 BỘ MÁY ĐIỀU HÀNH TÙY CHỈNH GIAO DIỆN, HÌNH NỀN & FONT CHỮ (THEME MANAGER)
+        // =========================================================================
+        const ThemeManager = {
+            STORAGE_KEY: 'danv_custom_ui_config',
+            defaultConfig: {
+                accent: '#0da57a',
+                accentDark: '#0a8260',
+                wallpaper: '',
+                overlayOpacity: 0.88,
+                wallpaperBlur: 0,
+                font: 'Nunito',
+                customFontName: '',
+                customFontUrl: ''
+            },
+            current: {},
+
+            init() {
+                let saved = {};
+                try {
+                    saved = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '{}');
+                } catch(e) {}
+                this.current = Object.assign({}, this.defaultConfig, saved);
+                this.apply(this.current);
+            },
+
+            apply(cfg) {
+                const root = document.documentElement;
+                
+                // 1. Áp dụng màu Accent
+                root.style.setProperty('--primary', cfg.accent);
+                root.style.setProperty('--primary-dark', cfg.accentDark);
+                root.style.setProperty('--accent-custom', cfg.accent);
+
+                // 2. Áp dụng Wallpaper & Lớp phủ
+                if (cfg.wallpaper && cfg.wallpaper.trim() !== '') {
+                    root.style.setProperty('--app-wallpaper', `url('${cfg.wallpaper}')`);
+                    root.style.setProperty('--app-overlay-opacity', cfg.overlayOpacity);
+                    root.style.setProperty('--app-wallpaper-blur', `${cfg.wallpaperBlur}px`);
+                    document.body.classList.add('has-custom-wallpaper');
+                } else {
+                    root.style.setProperty('--app-wallpaper', 'none');
+                    root.style.setProperty('--app-overlay-opacity', '1');
+                    root.style.setProperty('--app-wallpaper-blur', '0px');
+                    document.body.classList.remove('has-custom-wallpaper');
+                }
+
+                // 3. Áp dụng Phông chữ
+                if (cfg.customFontUrl) {
+                    this.injectFontFace(cfg.font, cfg.customFontUrl);
+                } else if (cfg.font && !['Nunito', 'Plus Jakarta Sans', 'Be Vietnam Pro', 'VT323'].includes(cfg.font)) {
+                    this.injectGoogleFont(cfg.font);
+                }
+
+                const fontRule = `'${cfg.font}', 'Nunito', "Segoe UI", ui-rounded, sans-serif`;
+                root.style.setProperty('--font-custom', fontRule);
+
+                this.syncSettingsUI();
+            },
+
+            save() {
+                this.apply(this.current);
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.current));
+                } catch(e) {}
+            },
+
+            setAccent(color, darkColor, el) {
+                this.current.accent = color;
+                this.current.accentDark = darkColor || color;
+                this.save();
+                showToast("Đã đổi màu chủ đạo!", "success");
+            },
+
+            setCustomColor(hex) {
+                this.current.accent = hex;
+                this.current.accentDark = hex;
+                this.save();
+            },
+
+            setWallpaper(url, cardEl) {
+                this.current.wallpaper = url || '';
+                this.save();
+                showToast(url ? "Đã áp dụng hình nền mới!" : "Đã gỡ hình nền.", "success");
+            },
+
+            clearWallpaper(el) {
+                this.setWallpaper('', el);
+            },
+
+            applyCustomUrlWallpaper() {
+                const inp = document.getElementById('themeWpUrlInput');
+                const url = (inp ? inp.value : '').trim();
+                if (!url) return showToast("Vui lòng dán link hình ảnh hợp lệ!", "error");
+                this.setWallpaper(url);
+            },
+
+            handleLocalWallpaper(input) {
+                if (!input.files || !input.files[0]) return;
+                const file = input.files[0];
+                if (file.size > 15 * 1024 * 1024) return showToast("Tệp ảnh không được vượt quá 15MB!", "error");
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.setWallpaper(e.target.result);
+                };
+                reader.readAsDataURL(file);
+                input.value = '';
+            },
+
+            setOverlayOpacity(val) {
+                const floatVal = (parseInt(val) / 100);
+                this.current.overlayOpacity = floatVal;
+                document.documentElement.style.setProperty('--app-overlay-opacity', floatVal);
+                const disp = document.getElementById('themeOverlayVal');
+                if (disp) disp.innerText = `${val}%`;
+                this.saveDelayed();
+            },
+
+            setWallpaperBlur(px) {
+                this.current.wallpaperBlur = parseInt(px) || 0;
+                document.documentElement.style.setProperty('--app-wallpaper-blur', `${this.current.wallpaperBlur}px`);
+                const disp = document.getElementById('themeBlurVal');
+                if (disp) disp.innerText = `${px}px`;
+                this.saveDelayed();
+            },
+
+            saveDelayed() {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = setTimeout(() => this.save(), 400);
+            },
+
+            // ✍️ XỬ LÝ PHÔNG CHỮ & THÊM FONT TÙY CHỈNH
+            setFont(fontName, el) {
+                this.current.font = fontName;
+                this.current.customFontUrl = '';
+                this.save();
+                showToast(`Đã áp dụng phông chữ: ${fontName}`, "success");
+            },
+
+            injectGoogleFont(fontName) {
+                const id = 'gfont-' + fontName.replace(/\s+/g, '-');
+                if (!document.getElementById(id)) {
+                    const link = document.createElement('link');
+                    link.id = id;
+                    link.rel = 'stylesheet';
+                    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontName)}:wght@400;600;700;800;900&display=swap`;
+                    document.head.appendChild(link);
+                }
+            },
+
+            injectFontFace(fontFamily, fontUrl) {
+                const id = 'custom-font-face-style';
+                let style = document.getElementById(id);
+                if (!style) {
+                    style = document.createElement('style');
+                    style.id = id;
+                    document.head.appendChild(style);
+                }
+                style.textContent = `
+                    @font-face {
+                        font-family: '${fontFamily}';
+                        src: url('${fontUrl}') format('woff2'), url('${fontUrl}') format('truetype');
+                        font-display: swap;
+                    }
+                `;
+            },
+
+            addCustomFontFromInput() {
+                const input = document.getElementById('themeCustomFontInput');
+                const rawVal = (input ? input.value : '').trim();
+                if (!rawVal) return showToast("Vui lòng nhập tên Google Font hoặc dán link tệp font!", "error");
+
+                // Nếu là link tệp (.woff2, .ttf, .otf, hoặc bắt đầu bằng http)
+                if (rawVal.startsWith('http://') || rawVal.startsWith('https://')) {
+                    const customFamilyName = 'UserFont_' + Math.floor(Math.random() * 1000);
+                    this.current.font = customFamilyName;
+                    this.current.customFontUrl = rawVal;
+                    this.save();
+                    showToast("Đã tải và áp dụng phông chữ từ liên kết!", "success");
+                } else {
+                    // Nếu là tên Google Font (VD: Pacifico, Orbitron, Montserrat)
+                    this.injectGoogleFont(rawVal);
+                    this.current.font = rawVal;
+                    this.current.customFontUrl = '';
+                    this.save();
+                    showToast(`Đã kết nối và áp dụng phông "${rawVal}" từ Google Fonts!`, "success");
+                }
+                input.value = '';
+            },
+
+            syncSettingsUI() {
+                const cfg = this.current;
+                
+                // Đồng bộ màu
+                const hexLabel = document.getElementById('themeAccentHexLabel');
+                if (hexLabel) hexLabel.innerText = cfg.accent;
+                const customColorInp = document.getElementById('themeCustomColorInput');
+                if (customColorInp && cfg.accent.startsWith('#')) customColorInp.value = cfg.accent;
+
+                document.querySelectorAll('.theme-color-swatch').forEach(swatch => {
+                    const bg = swatch.style.backgroundColor;
+                    // Chuyển hex sang rgb để so sánh
+                    swatch.classList.toggle('active', swatch.title && swatch.title.includes('Mặc định') ? cfg.accent === '#0da57a' : false);
+                });
+
+                // Đồng bộ Wallpaper sliders
+                const oRange = document.getElementById('themeOverlayRange');
+                const oVal = document.getElementById('themeOverlayVal');
+                if (oRange) oRange.value = Math.round(cfg.overlayOpacity * 100);
+                if (oVal) oVal.innerText = `${Math.round(cfg.overlayOpacity * 100)}%`;
+
+                const bRange = document.getElementById('themeBlurRange');
+                const bVal = document.getElementById('themeBlurVal');
+                if (bRange) bRange.value = cfg.wallpaperBlur || 0;
+                if (bVal) bVal.innerText = `${cfg.wallpaperBlur || 0}px`;
+
+                // Đồng bộ Font Chips
+                const fontDisplay = document.getElementById('themeCurrentFontName');
+                if (fontDisplay) fontDisplay.innerText = cfg.font;
+                document.querySelectorAll('.theme-font-chip').forEach(chip => {
+                    const chipFont = chip.innerText.split('(')[0].trim();
+                    chip.classList.toggle('active', chipFont === cfg.font);
+                });
+
+                // Đồng bộ Preset Wallpaper Cards
+                document.querySelectorAll('.theme-wp-card').forEach(card => {
+                    if (card.classList.contains('none-wp')) {
+                        card.classList.toggle('active', !cfg.wallpaper);
+                    } else {
+                        card.classList.toggle('active', cfg.wallpaper && card.style.backgroundImage.includes(encodeURI(cfg.wallpaper)));
+                    }
+                });
+            },
+
+            resetToDefault() {
+                if (!confirm("Khôi phục toàn bộ Màu sắc, Hình nền và Phông chữ về mặc định?")) return;
+                this.current = Object.assign({}, this.defaultConfig);
+                this.save();
+                showToast("Đã khôi phục giao diện mặc định!", "success");
+            }
+        };
 
         function handleToggleLowSpec(enabled) {
             document.documentElement.setAttribute('data-lowspec', enabled ? 'true' : 'false');
