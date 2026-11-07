@@ -11528,7 +11528,7 @@
                                 <div class="chat-sound-popover-header">
                                     <span style="display:flex; align-items:center; gap:8px;">
                                         <i class="fa-solid fa-volume-high" style="color:var(--primary);"></i>
-                                        <b data-i18n="chat_sound_title">Âm Thanh Tin Nhắn</b>
+                                        <b>Âm Thanh Tin Nhắn</b>
                                     </span>
                                     <button type="button" class="btn-close" style="font-size:1.1rem; line-height:1;" onclick="closeChatSoundPopover()">&times;</button>
                                 </div>
@@ -11536,8 +11536,8 @@
                                     <!-- Bật/Tắt âm thanh Pop -->
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                                         <div>
-                                            <div style="font-weight:800; font-size:0.88rem; color:var(--text-title);" data-i18n="chat_sound_pop_label">Tiếng Pop thông báo</div>
-                                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;" data-i18n="chat_sound_pop_desc">Phát âm thanh khi có tin nhắn mới</div>
+                                            <div style="font-weight:800; font-size:0.88rem; color:var(--text-title);">Tiếng Pop thông báo</div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Phát âm thanh khi có tin nhắn mới</div>
                                         </div>
                                         <label class="modern-toggle-switch">
                                             <input type="checkbox" id="chatSoundToggleCheckbox" onchange="handleToggleChatSound(this.checked)">
@@ -11548,7 +11548,7 @@
                                     <!-- Thanh trượt âm lượng -->
                                     <div style="margin-bottom:14px;">
                                         <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; font-weight:700; margin-bottom:6px;">
-                                            <span style="color:var(--text-title);" data-i18n="chat_sound_volume_label">Âm lượng:</span>
+                                            <span style="color:var(--text-title);">Âm lượng:</span>
                                             <span id="chatSoundVolumeDisplay" style="color:var(--primary); font-family:monospace; font-size:0.9rem;">80%</span>
                                         </div>
                                         <input type="range" id="chatSoundVolumeRange" min="0" max="100" step="1" value="80" style="width:100%; accent-color:var(--primary); cursor:pointer;" oninput="handleChatSoundVolumeChange(this.value)">
@@ -11556,10 +11556,11 @@
 
                                     <!-- Nút nghe thử -->
                                     <button type="button" class="btn" style="width:100%; justify-content:center; padding:8px 12px; font-size:0.84rem; font-weight:800; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-title);" onclick="testChatPopSound()">
-                                        <i class="fa-solid fa-play" style="color:var(--primary);"></i> <span data-i18n="chat_sound_test_btn">Nghe thử âm thanh</span>
+                                        <i class="fa-solid fa-play" style="color:var(--primary);"></i> <span>Nghe thử âm thanh</span>
                                     </button>
                                 </div>
                             </div>
+                        </div>
 
                         <button type="button" class="btn" id="btnToggleChatSidebar" onclick="toggleChatSidebar()" data-i18n-title="chat_toggle_sidebar_title" title="Ẩn/Hiện cột tiện ích bên phải" style="padding: 6px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700;">
                             <i class="fa-solid fa-table-columns"></i>
@@ -11679,18 +11680,18 @@
                 <div class="chat-sidebar-mobile-header">
                     <div style="font-weight: 900; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-table-columns" style="color: var(--primary);"></i>
-                        <span data-i18n="chat_sidebar_mobile_title">Tiện Ích & Thành Viên</span>
+                        <span>Tiện Ích & Thành Viên</span>
                     </div>
-                    <button type="button" class="btn-close" onclick="closeChatSidebarMobile()" data-i18n-title="chat_sidebar_mobile_close" title="Đóng panel">&times;</button>
+                    <button type="button" class="btn-close" onclick="closeChatSidebarMobile()" title="Đóng panel">&times;</button>
                 </div>
 
                 <!-- 1. Trạm Năng Lượng & Cá Nhân Hóa (Dynamic HUD) -->
                 <div class="chat-side-card" id="chatSideUserHUDCard">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <span class="chat-side-title">
-                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span data-i18n="chat_sidebar_energy_title">Năng Lượng & Ví</span>
+                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span>Năng Lượng & Ví</span>
                         </span>
-                        <div class="chat-side-balance-badge" onclick="openDailyRewardModal()" data-i18n-title="chat_sidebar_badge_title" title="Nhấn để mở điểm danh & nạp WOW">
+                        <div class="chat-side-balance-badge" onclick="openDailyRewardModal()" title="Nhấn để mở điểm danh & nạp WOW">
                             <span class="wow-icon"></span>
                             <span id="chatSidebarWOWBalance">0</span>
                         </div>
@@ -11702,10 +11703,10 @@
 
                     <div class="chat-side-quick-btns">
                         <button type="button" class="chat-side-pill-btn" onclick="openDailyRewardModal()">
-                            <i class="fa-solid fa-calendar-check" style="color:#10b981;"></i> <span data-i18n="chat_sidebar_daily_btn">Điểm danh</span>
+                            <i class="fa-solid fa-calendar-check" style="color:#10b981;"></i> <span>Điểm danh</span>
                         </button>
                         <button type="button" class="chat-side-pill-btn" onclick="openFrameShopModal()">
-                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> <span data-i18n="chat_sidebar_skin_btn">Skin Chat</span>
+                            <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> <span>Skin Chat</span>
                         </button>
                     </div>
                 </div>
@@ -11714,7 +11715,7 @@
                 <div class="chat-side-card" style="display: flex; flex-direction: column;">
                     <div class="chat-presence-header">
                         <span class="chat-side-title">
-                            <span class="chat-online-dot"></span> <span data-i18n="chat_sidebar_online_title">Đang Kết Nối</span>
+                            <span class="chat-online-dot"></span> <span>Đang Kết Nối</span>
                         </span>
                         <span id="chatOnlineUsersCount" style="font-size: 0.74rem; font-weight: 800; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 12px;">0 online</span>
                     </div>
@@ -11722,11 +11723,11 @@
                     <!-- Thanh tìm kiếm nhanh thành viên đang online -->
                     <div class="chat-presence-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="chatPresenceSearchInput" data-i18n-ph="chat_sidebar_search_ph" placeholder="Tìm thành viên online..." oninput="handlePresenceFilter(this.value)">
+                        <input type="text" id="chatPresenceSearchInput" placeholder="Tìm thành viên online..." oninput="handlePresenceFilter(this.value)">
                     </div>
                     
                     <div id="chatOnlineUsersList" class="chat-online-users-list">
-                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;" data-i18n="chat_sidebar_syncing">
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;">
                             <i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ...
                         </div>
                     </div>
@@ -11736,12 +11737,12 @@
                 <div class="chat-side-card" id="chatSidebarTrendingCard">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <span class="chat-side-title">
-                            <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span data-i18n="chat_sidebar_trending_title">Game Hot Cộng Đồng</span>
+                            <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span>Game Hot Cộng Đồng</span>
                         </span>
-                        <a href="/#home" class="btn" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 10px; text-decoration: none;" data-i18n="chat_sidebar_view_all">Xem tất cả</a>
+                        <a href="/#home" class="btn" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 10px; text-decoration: none;">Xem tất cả</a>
                     </div>
                     <div id="chatSidebarTrendingContent" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 0;" data-i18n="chat_sidebar_scanning_games">
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 0;">
                             <i class="fa-solid fa-spinner fa-spin"></i> Đang quét game hot...
                         </div>
                     </div>
@@ -11750,9 +11751,9 @@
                 <!-- 4. Mẹo Nhanh Phòng Chat (Quick Tips) -->
                 <div class="chat-side-card" style="background: linear-gradient(135deg, rgba(13, 165, 122, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%); border-style: dashed;">
                     <div style="font-size: 0.78rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-lightbulb"></i> <span data-i18n="chat_sidebar_tips_title">Mẹo Giao Lưu Nhanh</span>
+                        <i class="fa-solid fa-lightbulb"></i> <span>Mẹo Giao Lưu Nhanh</span>
                     </div>
-                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;" data-i18n="chat_sidebar_tips_body">
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
                         • Gõ <b>@BeaBea</b> để nhờ AI giải đáp thắc mắc hoặc gợi ý ý tưởng.<br>
                         • Dán link <b>youtube.com</b> hoặc <b>tiktok.com</b> để nhúng video xem chung trực tiếp.
                     </div>
@@ -12054,10 +12055,10 @@
           <div class="banner-container">
             <div class="danv-banner">
               <div class="banner-left">
-                <div class="event-badge"><span class="badge-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg></span> <span data-i18n="banner_event_collab_badge">SỰ KIỆN HỢP TÁC ĐẶC BIỆT</span></div>
-                <div class="event-logo-wrap" id="eventLogoWrap" data-i18n-title="banner_event_logo_title" title="Bấm vào để nổ hiệu ứng WOW!"><img src="https://i.postimg.cc/ZnXb3KWX/banner-sk.png" alt="TurboShare x Aftercode BEAT" class="event-logo" id="eventLogo"></div>
-                <p class="banner-desc" data-i18n="banner_event_collab_desc">Bùng nổ Game Jam lớn nhất năm! Sẵn sàng sáng tạo dự án để rinh ngay <b>Khung Avatar đặc quyền</b>, danh hiệu <b>Chat Room</b> độc nhất cùng vô số phần thưởng <b>Coin W</b>!</p>
-                <div class="coming-soon-card"><div class="status-light"><span class="pulse-dot"></span> <span data-i18n="banner_event_starting_soon">SẮP KHỞI TRANH</span></div><div class="date-separator"></div><div class="launch-date"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b21a8" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 11 • 11 • 2026</div></div>
+                <div class="event-badge"><span class="badge-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg></span> SỰ KIỆN HỢP TÁC ĐẶC BIỆT</div>
+                <div class="event-logo-wrap" id="eventLogoWrap" title="Bấm vào để nổ hiệu ứng WOW!"><img src="https://i.postimg.cc/ZnXb3KWX/banner-sk.png" alt="TurboShare x Aftercode BEAT" class="event-logo" id="eventLogo"></div>
+                <p class="banner-desc">Bùng nổ Game Jam lớn nhất năm! Sẵn sàng sáng tạo dự án để rinh ngay <b>Khung Avatar đặc quyền</b>, danh hiệu <b>Chat Room</b> độc nhất cùng vô số phần thưởng <b>Coin W</b>!</p>
+                <div class="coming-soon-card"><div class="status-light"><span class="pulse-dot"></span> SẮP KHỞI TRANH</div><div class="date-separator"></div><div class="launch-date"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b21a8" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 11 • 11 • 2026</div></div>
               </div>
               <div class="banner-right"><img src="https://i.postimg.cc/0NCy3sBF/minibackground.png" class="ghost-minibg" alt="Ghost Pixel Decor"><img src="https://i.postimg.cc/tg9XFc4S/beaxkat.png" class="mascot-hero" alt="Katboizz & DANV Bear"></div>
               <div class="retro-checkerboard"></div>
@@ -12104,12 +12105,12 @@
             
             <!-- CỘT NỘI DUNG CHỮ (BÊN TRÁI) -->
             <div class="ts-content">
-              <h1 class="ts-title" data-i18n="banner_wide_title">
+              <h1 class="ts-title">
                 Tự do làm game, vẽ ý tưởng<br/>
                 <span class="ts-highlight">Cùng chia sẻ với bạn bè!</span>
               </h1>
               
-              <p class="ts-desc" data-i18n="banner_wide_desc">
+              <p class="ts-desc">
                 Sáng tạo không giới hạn với trình dựng khối lệnh siêu tốc. Tương thích hoàn toàn và giúp <strong>chạy dự án Scratch nhanh hơn</strong>, mượt mà hơn.
               </p>
 
@@ -12120,7 +12121,7 @@
                   <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/>
                   </svg>
-                  <span data-i18n="banner_wide_btn_create">Khởi tạo</span>
+                  <span>Khởi tạo</span>
                 </a>
 
                 <!-- Nút Khám Phá (Cuộn mượt mà xuống danh sách game) -->
@@ -12128,7 +12129,7 @@
                   <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="6 4 20 12 6 20 6 4"></polygon>
                   </svg>
-                  <span data-i18n="banner_wide_btn_explore">Khám phá dự án</span>
+                  <span>Khám phá dự án</span>
                 </button>
               </div>
 
@@ -12138,13 +12139,13 @@
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 6L9 17l-5-5"/>
                   </svg>
-                  <span data-i18n="banner_wide_feat_free">Miễn phí</span>
+                  <span>Miễn phí</span>
                 </div>
                 <div class="feature-item feature-speed">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                   </svg>
-                  <span data-i18n="banner_wide_feat_speed">Tốc độ cao</span>
+                  <span>Tốc độ cao</span>
                 </div>
                 <div class="feature-item">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -12153,7 +12154,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                   </svg>
-                  <span data-i18n="banner_wide_feat_community">Cộng đồng mở</span>
+                  <span>Cộng đồng mở</span>
                 </div>
               </div>
             </div>
@@ -13370,16 +13371,16 @@
                 <div>
                     <h2 style="font-size: 1.55rem; font-weight: 900; margin: 0; color: var(--text-title); display: flex; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-folder-open" style="color: var(--primary);"></i>
-                        <span data-i18n="mystuff_title">Kho tác phẩm</span>
+                        <span>Kho tác phẩm</span>
                     </h2>
-                    <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.85rem;" data-i18n="mystuff_desc">Phân loại thư mục, quản lý quyền hiển thị và phát triển tác phẩm</p>
+                    <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Phân loại thư mục, quản lý quyền hiển thị và phát triển tác phẩm</p>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button type="button" class="btn" style="border-radius: 10px; font-weight: 700; font-size: 0.85rem;" onclick="openCreateFolderModal()">
-                        <i class="fa-solid fa-folder-plus" style="color: #f59e0b;"></i> <span data-i18n="mystuff_btn_new_folder">Thư mục mới</span>
+                        <i class="fa-solid fa-folder-plus" style="color: #f59e0b;"></i> <span>Thư mục mới</span>
                     </button>
                     <a href="/#create" class="btn btn-primary" style="border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none;">
-                        <i class="fa-solid fa-plus"></i> <span data-i18n="mystuff_btn_new_project">Dự án mới</span>
+                        <i class="fa-solid fa-plus"></i> <span>Dự án mới</span>
                     </a>
                 </div>
             </div>
@@ -13388,39 +13389,39 @@
                 <!-- Cột trái: Cây Thư Mục & Lọc Trạng Thái -->
                 <div class="mystuff-sidebar">
                     <div class="mystuff-nav-header">
-                        <span data-i18n="mystuff_nav_categories">Danh mục dự án</span>
+                        <span>Danh mục dự án</span>
                     </div>
                     <div class="mystuff-folder-item active" data-folder="all" onclick="selectMyStuffFolder('all', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-layer-group"></i>
-                            <span data-i18n="mystuff_folder_all">Tất cả tác phẩm</span>
+                            <span>Tất cả tác phẩm</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffAll">0</span>
                     </div>
                     <div class="mystuff-folder-item" data-folder="shared" onclick="selectMyStuffFolder('shared', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-earth-americas" style="color: #10b981;"></i>
-                            <span data-i18n="mystuff_folder_shared">Đã chia sẻ</span>
+                            <span>Đã chia sẻ</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffShared">0</span>
                     </div>
                     <div class="mystuff-folder-item" data-folder="unshared" onclick="selectMyStuffFolder('unshared', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-lock" style="color: #ea580c;"></i>
-                            <span data-i18n="mystuff_folder_unshared">Chưa chia sẻ</span>
+                            <span>Chưa chia sẻ</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffUnshared">0</span>
                     </div>
                     <div class="mystuff-folder-item" data-folder="trash" onclick="selectMyStuffFolder('trash', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-trash-can" style="color: #ef4444;"></i>
-                            <span data-i18n="mystuff_folder_trash">Thùng rác</span>
+                            <span>Thùng rác</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffTrash">0</span>
                     </div>
 
                     <div class="mystuff-nav-header" style="margin-top: 14px;">
-                        <span data-i18n="mystuff_nav_custom_folders">Thư mục tự tạo</span>
+                        <span>Thư mục tự tạo</span>
                         <button type="button" class="btn" style="padding: 2px 6px; font-size: 0.72rem; border-radius: 6px;" onclick="openCreateFolderModal()" title="Thêm thư mục">+</button>
                     </div>
                     <div id="myStuffFoldersList" style="display: flex; flex-direction: column; gap: 4px;">
@@ -13433,15 +13434,15 @@
                     <div class="mystuff-toolbar">
                         <div class="mystuff-search-input">
                             <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.82rem;"></i>
-                            <input type="text" id="myStuffSearchInput" data-i18n-ph="mystuff_search_ph" placeholder="Tìm tác phẩm trong thư mục này..." oninput="handleMyStuffSearch(this.value)">
+                            <input type="text" id="myStuffSearchInput" placeholder="Tìm tác phẩm trong thư mục này..." oninput="handleMyStuffSearch(this.value)">
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <select id="myStuffSortSelect" class="asset-select-filter" style="padding: 6px 12px; font-size: 0.82rem;" onchange="handleMyStuffSort(this.value)">
-                                <option value="newest" data-i18n="mystuff_sort_newest">Mới cập nhật</option>
-                                <option value="oldest" data-i18n="mystuff_sort_oldest">Cũ nhất</option>
-                                <option value="views" data-i18n="mystuff_sort_views">Lượt xem cao</option>
-                                <option value="likes" data-i18n="mystuff_sort_likes">Nhiều lượt thích</option>
-                                <option value="title" data-i18n="mystuff_sort_title">Tên A - Z</option>
+                                <option value="newest">Mới cập nhật</option>
+                                <option value="oldest">Cũ nhất</option>
+                                <option value="views">Lượt xem cao</option>
+                                <option value="likes">Nhiều lượt thích</option>
+                                <option value="title">Tên A - Z</option>
                             </select>
                         </div>
                     </div>
@@ -17245,21 +17246,21 @@
             <div class="cookie-content-col">
                 <div class="cookie-badge">
                     <i class="fa-solid fa-cookie-bite"></i>
-                    <span data-i18n="cors_modal_badge">Sự cố kết nối</span>
+                    <span>Sự cố kết nối</span>
                 </div>
 
                 <h3 class="cookie-title">
-                    <span data-i18n="cors_modal_title">Nhăm nhăm... !? Lỡ cắn mất rồi!</span>
+                    Nhăm nhăm... !? Lỡ cắn mất rồi!
                     <i class="fa-solid fa-cookie-bite" style="color: #d97706; margin-left: 4px;"></i>
                 </h3>
 
-                <div class="cookie-desc" data-i18n="cors_modal_desc">
+                <div class="cookie-desc">
                     Gấu mải ăn bánh quy socola ngon quá nên vô tình cắn trúng... đường truyền dữ liệu của dự án mất tiêu rồi! Bạn đừng giận Gấu nha (｡•́︿•̀｡)
                 </div>
 
                 <!-- Dòng trạng thái kỹ thuật thanh thoát -->
                 <div class="cookie-meta-line">
-                    <span data-i18n="cors_modal_ref">Mã tham chiếu:</span>
+                    <span>Mã tham chiếu:</span>
                     <code>ERR_CONNECTION_FAILED</code>
                 </div>
 
@@ -17267,11 +17268,11 @@
                 <div class="cookie-actions-row">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('corsReloadModal')">
                         <i class="fa-solid fa-xmark"></i>
-                        <span data-i18n="cors_modal_btn_close">Đóng</span>
+                        <span>Đóng</span>
                     </button>
                     <button type="button" class="btn btn-primary" onclick="window.location.reload()">
                         <i class="fa-solid fa-rotate-right"></i>
-                        <span data-i18n="cors_modal_btn_reload">Tải lại trang web</span>
+                        <span>Tải lại trang web</span>
                     </button>
                 </div>
             </div>
@@ -18718,14 +18719,12 @@
             let holdInterval = null;
             let isHolding = false;
 
-            const getDefaultHtml = () => typeof defaultHtml === 'function' ? defaultHtml() : defaultHtml;
-
             const resetBtnUI = () => {
                 holdProgress = 0;
                 isHolding = false;
                 btn.classList.remove('is-holding');
                 if (fillEl) fillEl.style.width = '0%';
-                if (textEl && !btn.disabled) textEl.innerHTML = getDefaultHtml();
+                if (textEl && !btn.disabled) textEl.innerHTML = defaultHtml;
             };
 
             const startHold = (e) => {
@@ -18842,14 +18841,14 @@
                 btnId: 'btnSubmitUpload',
                 fillId: 'uploadHoldFill',
                 textId: 'uploadHoldText',
-                defaultHtml: () => `<i class="fa-solid fa-rocket"></i> <span>${t('upload_submit')}</span>`,
+                defaultHtml: '<i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>',
                 durationMs: 1100,
                 onValidate: () => {
                     const fileInput = document.getElementById('upFile')?.files[0];
                     const title = document.getElementById('upTitle')?.value.trim();
-                    if (!fileInput || !title) { showToast(t('toast_fill_required'), "error"); return false; }
-                    if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast(t('toast_only_sb3'), "error"); return false; }
-                    if (fileInput.size > 200 * 1024 * 1024) { showToast(t('toast_max_upload_size'), "error"); return false; }
+                    if (!fileInput || !title) { showToast("Điền đủ trường bắt buộc", "error"); return false; }
+                    if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Lỗi: Chỉ cho phép tải lên file .sb3!", "error"); return false; }
+                    if (fileInput.size > 200 * 1024 * 1024) { showToast("Kích thước tải lên tối đa là 200MB.", "error"); return false; }
                     return true;
                 },
                 onExecute: () => {
@@ -18864,13 +18863,13 @@
                 btnId: 'btnUpdateProjSubmit',
                 fillId: 'updateProjHoldFill',
                 textId: 'updateProjHoldText',
-                defaultHtml: () => `<i class="fa-solid fa-rocket"></i> <span>${t('proj_manage_btn_update')}</span>`,
+                defaultHtml: '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>',
                 durationMs: 1100,
                 onValidate: () => {
                     const fileInput = document.getElementById('updateProjFile')?.files[0];
-                    if (!fileInput) { showToast(t('toast_select_sb3'), "error"); return false; }
-                    if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast(t('toast_only_sb3'), "error"); return false; }
-                    if (fileInput.size > 200 * 1024 * 1024) { showToast(t('toast_file_too_large'), "error"); return false; }
+                    if (!fileInput) { showToast("Vui lòng chọn file .sb3", "error"); return false; }
+                    if (!fileInput.name.toLowerCase().endsWith('.sb3')) { showToast("Chỉ cho phép tải file .sb3!", "error"); return false; }
+                    if (fileInput.size > 200 * 1024 * 1024) { showToast("File quá lớn! Tối đa 200MB.", "error"); return false; }
                     return true;
                 },
                 onExecute: () => {
@@ -18885,14 +18884,14 @@
                 btnId: 'btnSubmitUploadAsset',
                 fillId: 'assetUploadHoldFill',
                 textId: 'assetUploadHoldText',
-                defaultHtml: () => `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${t('asset_upload_btn')}</span>`,
+                defaultHtml: '<i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>',
                 durationMs: 1100,
                 onValidate: () => {
                     const fileInput = document.getElementById('assetUpFile')?.files[0];
                     const title = document.getElementById('assetUpTitle')?.value.trim();
                     const kw = document.getElementById('assetUpKeywords')?.value.trim();
-                    if (!fileInput || !title || !kw) { showToast(t('toast_fill_required'), "error"); return false; }
-                    if (fileInput.size > 50 * 1024 * 1024) { showToast(t('toast_asset_max_size'), "error"); return false; }
+                    if (!fileInput || !title || !kw) { showToast("Vui lòng điền đủ các trường bắt buộc!", "error"); return false; }
+                    if (fileInput.size > 50 * 1024 * 1024) { showToast("Dung lượng tối đa là 50MB!", "error"); return false; }
                     return true;
                 },
                 onExecute: () => {
@@ -18907,11 +18906,11 @@
                 btnId: 'btnCreateStudioSubmit',
                 fillId: 'createStudioHoldFill',
                 textId: 'createStudioHoldText',
-                defaultHtml: () => `<i class="fa-solid fa-satellite-dish"></i> <span>${t('station_modal_btn_create')}</span>`,
+                defaultHtml: '<i class="fa-solid fa-satellite-dish"></i> <span data-i18n="station_modal_btn_create">Tạo Station</span>',
                 durationMs: 1100,
                 onValidate: () => {
                     const title = document.getElementById('newStdTitle')?.value.trim();
-                    if (!title) { showToast(t('toast_station_name_required'), "error"); return false; }
+                    if (!title) { showToast("Vui lòng nhập tên Station", "error"); return false; }
                     return true;
                 },
                 onExecute: () => {
@@ -18926,10 +18925,10 @@
                 btnId: 'quickViewDownloadBtn',
                 fillId: 'qvDownloadHoldFill',
                 textId: 'qvDownloadHoldText',
-                defaultHtml: () => `<i class="fa-solid fa-download"></i> <span>${t('assets_qv_btn_download')}</span>`,
+                defaultHtml: '<i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Giữ để tải về máy</span>',
                 durationMs: 1000,
                 onValidate: () => {
-                    if (!activeQuickViewAsset) { showToast(t('toast_asset_not_found'), "error"); return false; }
+                    if (!activeQuickViewAsset) { showToast("Không tìm thấy tệp tài nguyên", "error"); return false; }
                     return true;
                 },
                 onExecute: downloadCurrentQuickViewAsset
@@ -20864,7 +20863,7 @@
             const viewCountEl = document.getElementById('projViewCountDisplay');
             if (viewCountEl) viewCountEl.innerText = proj.views || 0;
             const metaVis = document.getElementById('projMetaVis');
-            if (metaVis) metaVis.innerText = proj.visibility === 'private' ? t('upload_vis_private') : t('upload_vis_public');
+            if (metaVis) metaVis.innerText = proj.visibility === 'private' ? 'Riêng tư' : 'Công khai';
             const metaEngine = document.getElementById('projMetaEngine');
             if (metaEngine) metaEngine.innerText = (engineChoice === 'turbowarp') ? 'TurboWarp / SB3' : ((engineChoice === 'aftercode') ? 'Aftercode / SB3' : 'Turbo IDE / SB3');
             const metaDate = document.getElementById('projMetaDate');
@@ -23054,7 +23053,7 @@
                 if(!currentStudio.projects.includes(pid)) currentStudio.projects.push(pid);
 
                 btnEl.className = 'btn';
-                btnEl.innerHTML = `<i class="fa-solid fa-check"></i> ${t('station_modal_added_badge')}`;
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Đã thêm';
                 btnEl.disabled = true;
                 btnEl.style.opacity = '0.75';
 
@@ -23184,7 +23183,7 @@
                 }
 
                 btnEl.className = 'btn';
-                btnEl.innerHTML = `<i class="fa-solid fa-check"></i> ${t('station_modal_already_has')}`;
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Đã có';
                 btnEl.disabled = true;
                 btnEl.style.opacity = '0.8';
 
@@ -29419,7 +29418,7 @@
         function openUploadAssetModal() {
             if (!currentUser) return openModal('loginModal');
             if (currentUser.emailVerified === false) {
-                showToast(t('toast_verify_create_asset') || "Please verify your email before sharing assets.", "error");
+                showToast("Vui lòng xác thực email tài khoản trước khi chia sẻ Tài nguyên.", "error");
                 openVerifyEmailModal();
                 return;
             }
@@ -29433,7 +29432,7 @@
             const mainText = document.getElementById('assetDropMainText');
             if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
             if (dropIcon) dropIcon.style.display = 'block';
-            if (mainText) mainText.innerText = t('asset_upload_drop_label');
+            if (mainText) mainText.innerText = t('asset_drop_label');
 
             // Reset reCAPTCHA khi mở modal
             const assetRecaptchaEl = document.querySelector('#uploadAssetModal [name="g-recaptcha-response"]');
@@ -29549,7 +29548,7 @@
                     uploadedIds.push(res.file_id);
                 }
 
-                textEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${t('saving_info') || 'Saving...'}</span>`;
+                textEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang lưu thông tin...</span>';
                 
                 const fileSizeMB = (fileInput.size / (1024 * 1024)).toFixed(2);
 
@@ -29578,7 +29577,7 @@
             } catch(err) { 
                 showToast("Lỗi kết nối: " + err.message, "error"); 
             }
-            textEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${t('asset_upload_btn')}</span>`;
+            textEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>`;
             btn.disabled = false;
         }
         
@@ -29985,7 +29984,7 @@
             const totalCount = window.cachedPresenceUsers.length;
 
             if (countBadge) countBadge.innerText = `${totalCount} online`;
-            if (headerCountText) headerCountText.innerText = `${totalCount} ${t('chat_online_count_suffix') || 'online'}`;
+            if (headerCountText) headerCountText.innerText = `${totalCount} trực tuyến`;
 
             // Sắp xếp: Admin lên đầu -> Thành viên đăng nhập -> Khách vãng lai
             window.cachedPresenceUsers.sort((a, b) => {
@@ -30032,7 +30031,7 @@
                 const isAdmin = u.role === 'admin';
 
                 return `
-                    <div class="chat-online-user-item" onclick="quickMentionOnlineUser('${isGuest ? '' : safeUser}')" title="${isGuest ? (t('chat_presence_guest_tooltip') || 'Guest') : (t('chat_presence_mention_tooltip', { user: safeUser }) || `@${safeUser}`)}">
+                    <div class="chat-online-user-item" onclick="quickMentionOnlineUser('${isGuest ? '' : safeUser}')" title="${isGuest ? 'Khách ghé thăm' : `@${safeUser} (Bấm để nhắc tên)`}">
                         <div class="chat-online-user-info">
                             <div class="chat-online-user-avt-wrap">
                                 <img src="${avtUrl}" class="chat-online-user-avt" onerror="this.src='${DEFAULT_AVATAR}'">
@@ -30043,13 +30042,13 @@
                                 <div class="chat-online-user-name">
                                     ${safeName}
                                     ${isAdmin ? ' <span style="font-size:0.65rem; background:rgba(245,158,11,0.2); color:#f59e0b; padding:1px 5px; border-radius:6px; font-weight:800;">ADMIN</span>' : ''}
-                                    ${isMe ? ` <span style="font-size:0.7rem; color:var(--primary); font-weight:800;">${t('chat_presence_you') || '(You)'}</span>` : ''}
+                                    ${isMe ? ' <span style="font-size:0.7rem; color:var(--primary); font-weight:800;">(Bạn)</span>' : ''}
                                 </div>
-                                <div class="chat-online-user-tag">${isGuest ? (t('chat_presence_guest') || 'Guest') : `@${safeUser}`}</div>
+                                <div class="chat-online-user-tag">${isGuest ? 'Khách vãng lai' : `@${safeUser}`}</div>
                             </div>
                         </div>
                         ${!isGuest ? `
-                            <button type="button" class="chat-online-mention-btn" onclick="event.stopPropagation(); quickMentionOnlineUser('${safeUser}')" title="${t('chat_presence_mention_btn', { user: safeUser }) || `Mention @${safeUser}`}">
+                            <button type="button" class="chat-online-mention-btn" onclick="event.stopPropagation(); quickMentionOnlineUser('${safeUser}')" title="Nhắc đến @${safeUser}">
                                 <i class="fa-solid fa-at"></i>
                             </button>
                         ` : ''}
@@ -30078,7 +30077,7 @@
                             <div class="chat-side-profile-name">${displayName}</div>
                             <div class="chat-side-profile-user">@${username}${currentUser.role === 'admin' ? ' • <span style="color:#f59e0b; font-weight:800;">Admin</span>' : ''}</div>
                         </div>
-                        <a href="/users/${encodeURIComponent(currentUser.username)}" class="btn" style="padding:5px 9px; font-size:0.75rem; border-radius:10px;" title="${t('chat_sidebar_view_profile') || 'View your profile'}">
+                        <a href="/users/${encodeURIComponent(currentUser.username)}" class="btn" style="padding:5px 9px; font-size:0.75rem; border-radius:10px;" title="Xem hồ sơ của bạn">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </a>
                     </div>
@@ -30086,9 +30085,9 @@
             } else {
                 wrap.innerHTML = `
                     <div style="background:var(--bg-secondary); border:1px dashed var(--border-color); border-radius:14px; padding:12px; text-align:center; margin-bottom:12px;">
-                        <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:8px;">${t('chat_sidebar_guest_title') || 'You are viewing as a Guest'}</span>
+                        <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:8px;">Bạn đang xem với tư cách Khách</span>
                         <button type="button" class="btn btn-primary" onclick="openModal('loginModal')" style="font-size:0.78rem; padding:6px 14px; border-radius:16px; font-weight:800;">
-                            <i class="fa-solid fa-user"></i> ${t('chat_sidebar_guest_login_btn') || 'Log in now'}
+                            <i class="fa-solid fa-user"></i> Đăng nhập ngay
                         </button>
                     </div>
                 `;
@@ -30128,7 +30127,7 @@
 
                 return `
                     <div class="chat-trending-item">
-                        <img src="${thumb}" class="chat-trending-thumb" onclick="navigateTo('/projects/${pid}')" title="${t('chat_trending_play_tooltip') || 'Click to play'}" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
+                        <img src="${thumb}" class="chat-trending-thumb" onclick="navigateTo('/projects/${pid}')" title="Nhấn để mở chơi" onerror="this.src='https://i.ibb.co/QFg1cVVD/image.png'">
                         <div class="chat-trending-info">
                             <a href="/projects/${pid}" class="chat-trending-title" title="${escapeHtml(p.title)}">
                                 <i class="fa-solid fa-trophy" style="color:${rankColor}; font-size:0.7rem; margin-right:2px;"></i> ${escapeHtml(p.title)}
@@ -30139,10 +30138,10 @@
                             </div>
                         </div>
                         <div class="chat-trending-actions">
-                            <button type="button" class="chat-trending-btn" onclick="openShareGameToChatModal('${pid}')" title="${t('chat_trending_share_tooltip') || 'Share into chat'}">
+                            <button type="button" class="chat-trending-btn" onclick="openShareGameToChatModal('${pid}')" title="Chia sẻ thẻ game vào phòng chat">
                                 <i class="fa-solid fa-share-nodes"></i>
                             </button>
-                            <a href="/projects/${pid}" class="chat-trending-btn" title="${t('chat_trending_play_btn') || 'Play'}">
+                            <a href="/projects/${pid}" class="chat-trending-btn" title="Chơi game">
                                 <i class="fa-solid fa-play"></i>
                             </a>
                         </div>
