@@ -11528,7 +11528,7 @@
                                 <div class="chat-sound-popover-header">
                                     <span style="display:flex; align-items:center; gap:8px;">
                                         <i class="fa-solid fa-volume-high" style="color:var(--primary);"></i>
-                                        <b>Âm Thanh Tin Nhắn</b>
+                                        <b data-i18n="chat_sound_title">Âm Thanh Tin Nhắn</b>
                                     </span>
                                     <button type="button" class="btn-close" style="font-size:1.1rem; line-height:1;" onclick="closeChatSoundPopover()">&times;</button>
                                 </div>
@@ -11536,8 +11536,8 @@
                                     <!-- Bật/Tắt âm thanh Pop -->
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                                         <div>
-                                            <div style="font-weight:800; font-size:0.88rem; color:var(--text-title);">Tiếng Pop thông báo</div>
-                                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Phát âm thanh khi có tin nhắn mới</div>
+                                            <div style="font-weight:800; font-size:0.88rem; color:var(--text-title);" data-i18n="chat_sound_pop_label">Tiếng Pop thông báo</div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;" data-i18n="chat_sound_pop_desc">Phát âm thanh khi có tin nhắn mới</div>
                                         </div>
                                         <label class="modern-toggle-switch">
                                             <input type="checkbox" id="chatSoundToggleCheckbox" onchange="handleToggleChatSound(this.checked)">
@@ -11548,7 +11548,7 @@
                                     <!-- Thanh trượt âm lượng -->
                                     <div style="margin-bottom:14px;">
                                         <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; font-weight:700; margin-bottom:6px;">
-                                            <span style="color:var(--text-title);">Âm lượng:</span>
+                                            <span style="color:var(--text-title);" data-i18n="chat_sound_volume_label">Âm lượng:</span>
                                             <span id="chatSoundVolumeDisplay" style="color:var(--primary); font-family:monospace; font-size:0.9rem;">80%</span>
                                         </div>
                                         <input type="range" id="chatSoundVolumeRange" min="0" max="100" step="1" value="80" style="width:100%; accent-color:var(--primary); cursor:pointer;" oninput="handleChatSoundVolumeChange(this.value)">
@@ -11556,7 +11556,7 @@
 
                                     <!-- Nút nghe thử -->
                                     <button type="button" class="btn" style="width:100%; justify-content:center; padding:8px 12px; font-size:0.84rem; font-weight:800; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-title);" onclick="testChatPopSound()">
-                                        <i class="fa-solid fa-play" style="color:var(--primary);"></i> <span>Nghe thử âm thanh</span>
+                                        <i class="fa-solid fa-play" style="color:var(--primary);"></i> <span data-i18n="chat_sound_test_btn">Nghe thử âm thanh</span>
                                     </button>
                                 </div>
                             </div>
@@ -11649,7 +11649,7 @@
                                         <i class="fa-solid fa-lightbulb" style="color: #f59e0b; margin-right: 4px;"></i> <span data-i18n="chat_btn_idea">Ý tưởng</span>
                                     </button>
                                     <button type="button" id="btnSponsorAdChat" class="chat-dock-icon-btn" onclick="sendSponsorAdChat()" data-i18n-title="chat_sponsor_btn_title" title="Gửi thẻ tài trợ tiếp sức cộng đồng" style="width: auto; padding: 0 8px; font-size: 0.76rem; font-weight: 700; color: #10b981;">
-                                        <i class="fa-solid fa-rectangle-ad" style="color: #10b981; margin-right: 4px;"></i> <span>Tài trợ</span>
+                                        <i class="fa-solid fa-rectangle-ad" style="color: #10b981; margin-right: 4px;"></i> <span data-i18n="chat_sponsor_btn_label">Tài trợ</span>
                                     </button>
                                 </div>
 
@@ -11680,18 +11680,18 @@
                 <div class="chat-sidebar-mobile-header">
                     <div style="font-weight: 900; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-table-columns" style="color: var(--primary);"></i>
-                        <span>Tiện Ích & Thành Viên</span>
+                        <span data-i18n="chat_sidebar_header">Tiện Ích & Thành Viên</span>
                     </div>
-                    <button type="button" class="btn-close" onclick="closeChatSidebarMobile()" title="Đóng panel">&times;</button>
+                    <button type="button" class="btn-close" onclick="closeChatSidebarMobile()" data-i18n-title="chat_sidebar_mobile_close" title="Đóng panel">&times;</button>
                 </div>
 
                 <!-- 1. Trạm Năng Lượng & Cá Nhân Hóa (Dynamic HUD) -->
                 <div class="chat-side-card" id="chatSideUserHUDCard">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <span class="chat-side-title">
-                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span>Năng Lượng & Ví</span>
+                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span data-i18n="chat_sidebar_energy_wallet">Năng Lượng & Ví</span>
                         </span>
-                        <div class="chat-side-balance-badge" onclick="openDailyRewardModal()" title="Nhấn để mở điểm danh & nạp WOW">
+                        <div class="chat-side-balance-badge" onclick="openDailyRewardModal()" data-i18n-title="chat_sidebar_badge_title" title="Nhấn để mở điểm danh & nạp WOW">
                             <span class="wow-icon"></span>
                             <span id="chatSidebarWOWBalance">0</span>
                         </div>
@@ -11702,10 +11702,10 @@
                     </div>
 
                     <div class="chat-side-quick-btns">
-                        <button type="button" class="chat-side-pill-btn" onclick="openDailyRewardModal()">
+                        <button type="button" class="chat-side-pill-btn" onclick="openDailyRewardModal()" data-i18n="chat_sidebar_btn_checkin">
                             <i class="fa-solid fa-calendar-check" style="color:#10b981;"></i> <span>Điểm danh</span>
                         </button>
-                        <button type="button" class="chat-side-pill-btn" onclick="openFrameShopModal()">
+                        <button type="button" class="chat-side-pill-btn" onclick="openFrameShopModal()" data-i18n="chat_sidebar_btn_skin">
                             <i class="fa-solid fa-shirt" style="color:#8b5cf6;"></i> <span>Skin Chat</span>
                         </button>
                     </div>
@@ -11715,7 +11715,7 @@
                 <div class="chat-side-card" style="display: flex; flex-direction: column;">
                     <div class="chat-presence-header">
                         <span class="chat-side-title">
-                            <span class="chat-online-dot"></span> <span>Đang Kết Nối</span>
+                            <span class="chat-online-dot"></span> <span data-i18n="chat_sidebar_connected">Đang Kết Nối</span>
                         </span>
                         <span id="chatOnlineUsersCount" style="font-size: 0.74rem; font-weight: 800; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 12px;">0 online</span>
                     </div>
@@ -11723,12 +11723,12 @@
                     <!-- Thanh tìm kiếm nhanh thành viên đang online -->
                     <div class="chat-presence-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="chatPresenceSearchInput" placeholder="Tìm thành viên online..." oninput="handlePresenceFilter(this.value)">
+                        <input type="text" id="chatPresenceSearchInput" data-i18n-ph="chat_sidebar_search_ph" placeholder="Tìm thành viên online..." oninput="handlePresenceFilter(this.value)">
                     </div>
                     
                     <div id="chatOnlineUsersList" class="chat-online-users-list">
                         <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 18px 0;">
-                            <i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ...
+                            <i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_sidebar_loading">Đang đồng bộ...</span>
                         </div>
                     </div>
                 </div>
@@ -11737,13 +11737,13 @@
                 <div class="chat-side-card" id="chatSidebarTrendingCard">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <span class="chat-side-title">
-                            <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span>Game Hot Cộng Đồng</span>
+                            <i class="fa-solid fa-fire" style="color: #ef4444;"></i> <span data-i18n="chat_sidebar_hot_games">Game Hot Cộng Đồng</span>
                         </span>
-                        <a href="/#home" class="btn" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 10px; text-decoration: none;">Xem tất cả</a>
+                        <a href="/#home" class="btn" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 10px; text-decoration: none;" data-i18n="chat_sidebar_link_view_all">Xem tất cả</a>
                     </div>
                     <div id="chatSidebarTrendingContent" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 0;">
-                            <i class="fa-solid fa-spinner fa-spin"></i> Đang quét game hot...
+                            <i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="chat_sidebar_scanning">Đang quét game hot...</span>
                         </div>
                     </div>
                 </div>
@@ -11751,9 +11751,9 @@
                 <!-- 4. Mẹo Nhanh Phòng Chat (Quick Tips) -->
                 <div class="chat-side-card" style="background: linear-gradient(135deg, rgba(13, 165, 122, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%); border-style: dashed;">
                     <div style="font-size: 0.78rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-lightbulb"></i> <span>Mẹo Giao Lưu Nhanh</span>
+                        <i class="fa-solid fa-lightbulb"></i> <span data-i18n="chat_sidebar_tips_title">Mẹo Giao Lưu Nhanh</span>
                     </div>
-                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;" data-i18n="chat_sidebar_tips_body">
                         • Gõ <b>@BeaBea</b> để nhờ AI giải đáp thắc mắc hoặc gợi ý ý tưởng.<br>
                         • Dán link <b>youtube.com</b> hoặc <b>tiktok.com</b> để nhúng video xem chung trực tiếp.
                     </div>
@@ -11951,19 +11951,19 @@
 
                             <!-- 5 Kích thước chữ -->
                             <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('std', 'size', this.value); this.selectedIndex=0; }">
-                                <option value="">Cỡ chữ</option>
-                                <option value="1">1 - Cực nhỏ</option>
-                                <option value="2">2 - Nhỏ</option>
-                                <option value="3">3 - Vừa (Mặc định)</option>
-                                <option value="4">4 - Lớn</option>
-                                <option value="5">5 - Tiêu đề</option>
+                                <option value="" data-i18n="comment_fmt_font_size">Cỡ chữ</option>
+                                <option value="1" data-i18n="comment_fmt_size_1">1 - Cực nhỏ</option>
+                                <option value="2" data-i18n="comment_fmt_size_2">2 - Nhỏ</option>
+                                <option value="3" data-i18n="comment_fmt_size_3">3 - Vừa (Mặc định)</option>
+                                <option value="4" data-i18n="comment_fmt_size_4">4 - Lớn</option>
+                                <option value="5" data-i18n="comment_fmt_size_5">5 - Tiêu đề</option>
                             </select>
 
                             <!-- Đổi màu chữ -->
                             <div class="cmt-color-wrap">
-                                <button type="button" class="cmt-color-btn" title="Chọn màu chữ">
+                                <button type="button" class="cmt-color-btn" data-i18n-title="comment_fmt_color" title="Chọn màu chữ">
                                     <span class="cmt-color-circle" id="cmtColorCircleStd"></span>
-                                    <span>Màu</span>
+                                    <span data-i18n="comment_fmt_color">Màu</span>
                                 </button>
                                 <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('std', 'color', this.value); document.getElementById('cmtColorCircleStd').style.background=this.value;">
                             </div>
@@ -11979,25 +11979,25 @@
 
                         <div class="comment-composer-bottom">
                             <div class="comment-composer-tools">
-                                <label for="commentImgUploadStd" class="cmt-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
-                                    <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span>Ảnh</span>
+                                <label for="commentImgUploadStd" class="cmt-tool-btn" style="margin:0; cursor:pointer;" data-i18n-title="comment_fmt_image" title="Đính kèm ảnh">
+                                    <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_fmt_image">Ảnh</span>
                                 </label>
                                 <input type="file" id="commentImgUploadStd" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'std')">
 
-                                <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('std')" title="Chèn GIF">
-                                    <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('std')" data-i18n-title="comment_fmt_gif" title="Chèn GIF">
+                                    <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span data-i18n="comment_fmt_gif">GIF</span>
                                 </button>
 
-                                <button type="button" class="cmt-tool-btn" onclick="openStickerModal('std')" title="Chèn Sticker">
-                                    <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Sticker</span>
+                                <button type="button" class="cmt-tool-btn" onclick="openStickerModal('std')" data-i18n-title="comment_fmt_sticker" title="Chèn Sticker">
+                                    <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span data-i18n="comment_fmt_sticker">Sticker</span>
                                 </button>
 
-                                <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('std', event)" title="Chèn Emoji">
-                                    <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
+                                <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('std', event)" data-i18n-title="comment_fmt_emoji" title="Chèn Emoji">
+                                    <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span data-i18n="comment_fmt_emoji">Emoji</span>
                                 </button>
                             </div>
 
-                            <button type="submit" id="btnSubmitCommentStd" class="cmt-submit-btn">
+                            <button type="submit" id="btnSubmitCommentStd" class="cmt-submit-btn" data-i18n="comment_fmt_send">
                                 <i class="fa-solid fa-paper-plane"></i> <span>Gửi thảo luận</span>
                             </button>
                         </div>
@@ -12055,10 +12055,10 @@
           <div class="banner-container">
             <div class="danv-banner">
               <div class="banner-left">
-                <div class="event-badge"><span class="badge-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg></span> SỰ KIỆN HỢP TÁC ĐẶC BIỆT</div>
-                <div class="event-logo-wrap" id="eventLogoWrap" title="Bấm vào để nổ hiệu ứng WOW!"><img src="https://i.postimg.cc/ZnXb3KWX/banner-sk.png" alt="TurboShare x Aftercode BEAT" class="event-logo" id="eventLogo"></div>
-                <p class="banner-desc">Bùng nổ Game Jam lớn nhất năm! Sẵn sàng sáng tạo dự án để rinh ngay <b>Khung Avatar đặc quyền</b>, danh hiệu <b>Chat Room</b> độc nhất cùng vô số phần thưởng <b>Coin W</b>!</p>
-                <div class="coming-soon-card"><div class="status-light"><span class="pulse-dot"></span> SẮP KHỞI TRANH</div><div class="date-separator"></div><div class="launch-date"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b21a8" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 11 • 11 • 2026</div></div>
+                <div class="event-badge"><span class="badge-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg></span> <span data-i18n="banner_event_collab_badge">SỰ KIỆN HỢP TÁC ĐẶC BIỆT</span></div>
+                <div class="event-logo-wrap" id="eventLogoWrap" data-i18n-title="banner_event_logo_title" title="Bấm vào để nổ hiệu ứng WOW!"><img src="https://i.postimg.cc/ZnXb3KWX/banner-sk.png" alt="TurboShare x Aftercode BEAT" class="event-logo" id="eventLogo"></div>
+                <p class="banner-desc" data-i18n="banner_event_collab_desc">Bùng nổ Game Jam lớn nhất năm! Sẵn sàng sáng tạo dự án để rinh ngay <b>Khung Avatar đặc quyền</b>, danh hiệu <b>Chat Room</b> độc nhất cùng vô số phần thưởng <b>Coin W</b>!</p>
+                <div class="coming-soon-card"><div class="status-light"><span class="pulse-dot"></span> <span data-i18n="banner_event_starting_soon">SẮP KHỞI TRANH</span></div><div class="date-separator"></div><div class="launch-date"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b21a8" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 11 • 11 • 2026</div></div>
               </div>
               <div class="banner-right"><img src="https://i.postimg.cc/0NCy3sBF/minibackground.png" class="ghost-minibg" alt="Ghost Pixel Decor"><img src="https://i.postimg.cc/tg9XFc4S/beaxkat.png" class="mascot-hero" alt="Katboizz & DANV Bear"></div>
               <div class="retro-checkerboard"></div>
@@ -12105,12 +12105,12 @@
             
             <!-- CỘT NỘI DUNG CHỮ (BÊN TRÁI) -->
             <div class="ts-content">
-              <h1 class="ts-title">
+              <h1 class="ts-title" data-i18n="banner_wide_title">
                 Tự do làm game, vẽ ý tưởng<br/>
                 <span class="ts-highlight">Cùng chia sẻ với bạn bè!</span>
               </h1>
               
-              <p class="ts-desc">
+              <p class="ts-desc" data-i18n="banner_wide_desc">
                 Sáng tạo không giới hạn với trình dựng khối lệnh siêu tốc. Tương thích hoàn toàn và giúp <strong>chạy dự án Scratch nhanh hơn</strong>, mượt mà hơn.
               </p>
 
@@ -12121,7 +12121,7 @@
                   <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/>
                   </svg>
-                  <span>Khởi tạo</span>
+                  <span data-i18n="banner_wide_btn_create">Khởi tạo</span>
                 </a>
 
                 <!-- Nút Khám Phá (Cuộn mượt mà xuống danh sách game) -->
@@ -12129,7 +12129,7 @@
                   <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="6 4 20 12 6 20 6 4"></polygon>
                   </svg>
-                  <span>Khám phá dự án</span>
+                  <span data-i18n="banner_wide_btn_explore">Khám phá dự án</span>
                 </button>
               </div>
 
@@ -12139,13 +12139,13 @@
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 6L9 17l-5-5"/>
                   </svg>
-                  <span>Miễn phí</span>
+                  <span data-i18n="banner_wide_feat_free">Miễn phí</span>
                 </div>
                 <div class="feature-item feature-speed">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                   </svg>
-                  <span>Tốc độ cao</span>
+                  <span data-i18n="banner_wide_feat_speed">Tốc độ cao</span>
                 </div>
                 <div class="feature-item">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -12154,7 +12154,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                   </svg>
-                  <span>Cộng đồng mở</span>
+                  <span data-i18n="banner_wide_feat_community">Cộng đồng mở</span>
                 </div>
               </div>
             </div>
@@ -12684,19 +12684,19 @@
 
                                     <!-- 5 Kích thước chữ -->
                                     <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('proj', 'size', this.value); this.selectedIndex=0; }">
-                                        <option value="">Cỡ chữ</option>
-                                        <option value="1">1 - Cực nhỏ</option>
-                                        <option value="2">2 - Nhỏ</option>
-                                        <option value="3">3 - Vừa (Mặc định)</option>
-                                        <option value="4">4 - Lớn</option>
-                                        <option value="5">5 - Tiêu đề</option>
+                                        <option value="" data-i18n="comment_fmt_font_size">Cỡ chữ</option>
+                                        <option value="1" data-i18n="comment_fmt_size_1">1 - Cực nhỏ</option>
+                                        <option value="2" data-i18n="comment_fmt_size_2">2 - Nhỏ</option>
+                                        <option value="3" data-i18n="comment_fmt_size_3">3 - Vừa (Mặc định)</option>
+                                        <option value="4" data-i18n="comment_fmt_size_4">4 - Lớn</option>
+                                        <option value="5" data-i18n="comment_fmt_size_5">5 - Tiêu đề</option>
                                     </select>
 
                                     <!-- Đổi màu chữ -->
                                     <div class="cmt-color-wrap">
-                                        <button type="button" class="cmt-color-btn" title="Chọn màu chữ">
+                                        <button type="button" class="cmt-color-btn" data-i18n-title="comment_fmt_color" title="Chọn màu chữ">
                                             <span class="cmt-color-circle" id="cmtColorCircleProj"></span>
-                                            <span>Màu</span>
+                                            <span data-i18n="comment_fmt_color">Màu</span>
                                         </button>
                                         <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('proj', 'color', this.value); document.getElementById('cmtColorCircleProj').style.background=this.value;">
                                     </div>
@@ -12712,29 +12712,29 @@
 
                                 <div class="comment-composer-bottom">
                                     <div class="comment-composer-tools">
-                                        <label for="commentImgUploadProj" class="cmt-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
-                                            <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span>Ảnh</span>
+                                        <label for="commentImgUploadProj" class="cmt-tool-btn" style="margin:0; cursor:pointer;" data-i18n-title="comment_fmt_image" title="Đính kèm ảnh">
+                                            <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_fmt_image">Ảnh</span>
                                         </label>
                                         <input type="file" id="commentImgUploadProj" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'proj')">
 
-                                        <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('proj')" title="Chèn GIF">
-                                            <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
+                                        <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('proj')" data-i18n-title="comment_fmt_gif" title="Chèn GIF">
+                                            <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span data-i18n="comment_fmt_gif">GIF</span>
                                         </button>
 
-                                        <button type="button" class="cmt-tool-btn" onclick="openStickerModal('proj')" title="Chèn Sticker">
-                                            <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Sticker</span>
+                                        <button type="button" class="cmt-tool-btn" onclick="openStickerModal('proj')" data-i18n-title="comment_fmt_sticker" title="Chèn Sticker">
+                                            <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span data-i18n="comment_fmt_sticker">Sticker</span>
                                         </button>
 
-                                        <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('proj', event)" title="Chèn Emoji">
-                                            <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
+                                        <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('proj', event)" data-i18n-title="comment_fmt_emoji" title="Chèn Emoji">
+                                            <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span data-i18n="comment_fmt_emoji">Emoji</span>
                                         </button>
 
-                                        <button type="button" class="cmt-tool-btn" onclick="openTipModal()" title="Tặng WOW">
-                                            <span class="wow-icon" style="font-size:1rem;"></span> <span>Tặng WOW</span>
+                                        <button type="button" class="cmt-tool-btn" onclick="openTipModal()" data-i18n-title="comment_fmt_tip_wow" title="Tặng WOW">
+                                            <span class="wow-icon" style="font-size:1rem;"></span> <span data-i18n="comment_fmt_tip_wow">Tặng WOW</span>
                                         </button>
                                     </div>
 
-                                    <button type="submit" id="btnSubmitCommentProj" class="cmt-submit-btn">
+                                    <button type="submit" id="btnSubmitCommentProj" class="cmt-submit-btn" data-i18n="comment_fmt_send">
                                         <i class="fa-solid fa-paper-plane"></i> <span>Gửi</span>
                                     </button>
                                 </div>
@@ -12940,70 +12940,70 @@
                         <span data-i18n="comment_replying">Đang trả lời</span> <span id="replyUserLabelProf"></span> <i class="fa-solid fa-xmark" style="cursor:pointer; color:#888; float:right;" onclick="cancelReply('prof')" data-i18n-title="chat_cancel_reply_title" title="Hủy trả lời"></i>
                     </div>
 
-                    <form onsubmit="handlePostComment(event, 'prof')" id="profCommentForm" style="display:none;">
-                        <!-- Thanh công cụ Format & Phím tắt -->
-                        <div class="comment-format-toolbar">
-                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'bold')" title="In đậm (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
-                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'italic')" title="In nghiêng (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
-                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'underline')" title="Gạch chân (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
-                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'strike')" title="Gạch ngang"><i class="fa-solid fa-strikethrough"></i></button>
-                            <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'code')" title="Mã code (Ctrl+E)"><i class="fa-solid fa-code"></i></button>
-                            
-                            <div style="width:1px; height:18px; background:var(--border-color); margin:0 4px;"></div>
+<form onsubmit="handlePostComment(event, 'prof')" id="profCommentForm" style="display:none;">
+                            <!-- Thanh công cụ Format & Phím tắt -->
+                            <div class="comment-format-toolbar">
+                                <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'bold')" title="In đậm (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+                                <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'italic')" title="In nghiêng (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+                                <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'underline')" title="Gạch chân (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+                                <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'strike')" title="Gạch ngang"><i class="fa-solid fa-strikethrough"></i></button>
+                                <button type="button" class="cmt-fmt-btn" onclick="insertCommentFormat('prof', 'code')" title="Mã code (Ctrl+E)"><i class="fa-solid fa-code"></i></button>
+                                
+                                <div style="width:1px; height:18px; background:var(--border-color); margin:0 4px;"></div>
 
-                            <!-- 5 Kích thước chữ -->
-                            <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('prof', 'size', this.value); this.selectedIndex=0; }">
-                                <option value="">Cỡ chữ</option>
-                                <option value="1">1 - Cực nhỏ</option>
-                                <option value="2">2 - Nhỏ</option>
-                                <option value="3">3 - Vừa (Mặc định)</option>
-                                <option value="4">4 - Lớn</option>
-                                <option value="5">5 - Tiêu đề</option>
-                            </select>
+                                <!-- 5 Kích thước chữ -->
+                                <select class="cmt-size-select" onchange="if(this.value){ insertCommentFormat('prof', 'size', this.value); this.selectedIndex=0; }">
+                                    <option value="" data-i18n="comment_fmt_font_size">Cỡ chữ</option>
+                                    <option value="1" data-i18n="comment_fmt_size_1">1 - Cực nhỏ</option>
+                                    <option value="2" data-i18n="comment_fmt_size_2">2 - Nhỏ</option>
+                                    <option value="3" data-i18n="comment_fmt_size_3">3 - Vừa (Mặc định)</option>
+                                    <option value="4" data-i18n="comment_fmt_size_4">4 - Lớn</option>
+                                    <option value="5" data-i18n="comment_fmt_size_5">5 - Tiêu đề</option>
+                                </select>
 
-                            <!-- Đổi màu chữ -->
-                            <div class="cmt-color-wrap">
-                                <button type="button" class="cmt-color-btn" title="Chọn màu chữ">
-                                    <span class="cmt-color-circle" id="cmtColorCircleProf"></span>
-                                    <span>Màu</span>
-                                </button>
-                                <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('prof', 'color', this.value); document.getElementById('cmtColorCircleProf').style.background=this.value;">
-                            </div>
-                        </div>
-
-                        <textarea id="commentTextProf" class="comment-composer-textarea" rows="2" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này... (Ctrl+Enter để gửi)"></textarea>
-
-                        <div id="commentImgPreviewProf" class="comment-img-preview-box">
-                            <img id="commentImgPreviewSrcProf" src="" alt="preview">
-                            <span style="font-size:0.8rem; color:var(--text-muted);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
-                            <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
-                        </div>
-
-                        <div class="comment-composer-bottom">
-                            <div class="comment-composer-tools">
-                                <label for="commentImgUploadProf" class="cmt-tool-btn" style="margin:0; cursor:pointer;" title="Đính kèm ảnh">
-                                    <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span>Ảnh</span>
-                                </label>
-                                <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
-
-                                <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('prof')" title="Chèn GIF">
-                                    <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span>GIF</span>
-                                </button>
-
-                                <button type="button" class="cmt-tool-btn" onclick="openStickerModal('prof')" title="Chèn Sticker">
-                                    <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span>Sticker</span>
-                                </button>
-
-                                <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('prof', event)" title="Chèn Emoji">
-                                    <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span>Emoji</span>
-                                </button>
+                                <!-- Đổi màu chữ -->
+                                <div class="cmt-color-wrap">
+                                    <button type="button" class="cmt-color-btn" data-i18n-title="comment_fmt_color" title="Chọn màu chữ">
+                                        <span class="cmt-color-circle" id="cmtColorCircleProf"></span>
+                                        <span data-i18n="comment_fmt_color">Màu</span>
+                                    </button>
+                                    <input type="color" class="cmt-color-input" value="#ef4444" onchange="insertCommentFormat('prof', 'color', this.value); document.getElementById('cmtColorCircleProf').style.background=this.value;">
+                                </div>
                             </div>
 
-                            <button type="submit" id="btnSubmitCommentProf" class="cmt-submit-btn">
-                                <i class="fa-solid fa-paper-plane"></i> <span>Gửi lời nhắn</span>
-                            </button>
-                        </div>
-                    </form>
+                            <textarea id="commentTextProf" class="comment-composer-textarea" rows="2" data-i18n-ph="prof_comment_ph" placeholder="Để lại lời nhắn công khai trên hồ sơ này... (Ctrl+Enter để gửi)"></textarea>
+
+                            <div id="commentImgPreviewProf" class="comment-img-preview-box">
+                                <img id="commentImgPreviewSrcProf" src="" alt="preview">
+                                <span style="font-size:0.8rem; color:var(--text-muted);" data-i18n="comment_attached_img">Đã đính kèm ảnh</span>
+                                <button type="button" class="btn-remove-preview" onclick="removeCommentImage('prof')" data-i18n-title="tooltip_remove_image" title="Gỡ ảnh">&times;</button>
+                            </div>
+
+                            <div class="comment-composer-bottom">
+                                <div class="comment-composer-tools">
+                                    <label for="commentImgUploadProf" class="cmt-tool-btn" style="margin:0; cursor:pointer;" data-i18n-title="comment_fmt_image" title="Đính kèm ảnh">
+                                        <i class="fa-regular fa-image" style="color:#0284c7;"></i> <span data-i18n="comment_fmt_image">Ảnh</span>
+                                    </label>
+                                    <input type="file" id="commentImgUploadProf" accept="image/*" style="display:none;" onchange="handleCommentImagePreview(this, 'prof')">
+
+                                    <button type="button" class="cmt-tool-btn" onclick="openKlipyModal('prof')" data-i18n-title="comment_fmt_gif" title="Chèn GIF">
+                                        <i class="fa-solid fa-film" style="color:#8b5cf6;"></i> <span data-i18n="comment_fmt_gif">GIF</span>
+                                    </button>
+
+                                    <button type="button" class="cmt-tool-btn" onclick="openStickerModal('prof')" data-i18n-title="comment_fmt_sticker" title="Chèn Sticker">
+                                        <i class="fa-solid fa-icons" style="color:#06b6d4;"></i> <span data-i18n="comment_fmt_sticker">Sticker</span>
+                                    </button>
+
+                                    <button type="button" class="cmt-tool-btn" onclick="toggleEmojiPicker('prof', event)" data-i18n-title="comment_fmt_emoji" title="Chèn Emoji">
+                                        <i class="fa-regular fa-face-smile" style="color:#f59e0b;"></i> <span data-i18n="comment_fmt_emoji">Emoji</span>
+                                    </button>
+                                </div>
+
+                                <button type="submit" id="btnSubmitCommentProf" class="cmt-submit-btn" data-i18n="comment_fmt_send">
+                                    <i class="fa-solid fa-paper-plane"></i> <span>Gửi lời nhăn</span>
+                                </button>
+                            </div>
+                        </form>
 
                     <div id="loginPromptProf" style="text-align:center; color:var(--text-muted); font-size:0.95rem;">
                         <button class="btn btn-primary" onclick="openModal('loginModal')" data-i18n="comment_login" style="border-radius:16px; padding:10px 22px; font-weight:800;">Đăng nhập để bình luận</button>
@@ -13371,16 +13371,16 @@
                 <div>
                     <h2 style="font-size: 1.55rem; font-weight: 900; margin: 0; color: var(--text-title); display: flex; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-folder-open" style="color: var(--primary);"></i>
-                        <span>Kho tác phẩm</span>
+                        <span data-i18n="mystuff_title">Kho tác phẩm</span>
                     </h2>
-                    <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Phân loại thư mục, quản lý quyền hiển thị và phát triển tác phẩm</p>
+                    <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.85rem;" data-i18n="mystuff_desc">Phân loại thư mục, quản lý quyền hiển thị và phát triển tác phẩm</p>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button type="button" class="btn" style="border-radius: 10px; font-weight: 700; font-size: 0.85rem;" onclick="openCreateFolderModal()">
-                        <i class="fa-solid fa-folder-plus" style="color: #f59e0b;"></i> <span>Thư mục mới</span>
+                        <i class="fa-solid fa-folder-plus" style="color: #f59e0b;"></i> <span data-i18n="mystuff_btn_new_folder">Thư mục mới</span>
                     </button>
                     <a href="/#create" class="btn btn-primary" style="border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none;">
-                        <i class="fa-solid fa-plus"></i> <span>Dự án mới</span>
+                        <i class="fa-solid fa-plus"></i> <span data-i18n="mystuff_btn_new_project">Dự án mới</span>
                     </a>
                 </div>
             </div>
@@ -13389,39 +13389,39 @@
                 <!-- Cột trái: Cây Thư Mục & Lọc Trạng Thái -->
                 <div class="mystuff-sidebar">
                     <div class="mystuff-nav-header">
-                        <span>Danh mục dự án</span>
+                        <span data-i18n="mystuff_nav_categories">Danh mục dự án</span>
                     </div>
                     <div class="mystuff-folder-item active" data-folder="all" onclick="selectMyStuffFolder('all', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-layer-group"></i>
-                            <span>Tất cả tác phẩm</span>
+                            <span data-i18n="mystuff_folder_all">Tất cả tác phẩm</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffAll">0</span>
                     </div>
                     <div class="mystuff-folder-item" data-folder="shared" onclick="selectMyStuffFolder('shared', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-earth-americas" style="color: #10b981;"></i>
-                            <span>Đã chia sẻ</span>
+                            <span data-i18n="mystuff_folder_shared">Đã chia sẻ</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffShared">0</span>
                     </div>
                     <div class="mystuff-folder-item" data-folder="unshared" onclick="selectMyStuffFolder('unshared', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-lock" style="color: #ea580c;"></i>
-                            <span>Chưa chia sẻ</span>
+                            <span data-i18n="mystuff_folder_unshared">Chưa chia sẻ</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffUnshared">0</span>
                     </div>
                     <div class="mystuff-folder-item" data-folder="trash" onclick="selectMyStuffFolder('trash', this)">
                         <span class="mystuff-folder-label">
                             <i class="fa-solid fa-trash-can" style="color: #ef4444;"></i>
-                            <span>Thùng rác</span>
+                            <span data-i18n="mystuff_folder_trash">Thùng rác</span>
                         </span>
                         <span class="mystuff-count-pill" id="cntMyStuffTrash">0</span>
                     </div>
 
                     <div class="mystuff-nav-header" style="margin-top: 14px;">
-                        <span>Thư mục tự tạo</span>
+                        <span data-i18n="mystuff_nav_custom_folders">Thư mục tự tạo</span>
                         <button type="button" class="btn" style="padding: 2px 6px; font-size: 0.72rem; border-radius: 6px;" onclick="openCreateFolderModal()" title="Thêm thư mục">+</button>
                     </div>
                     <div id="myStuffFoldersList" style="display: flex; flex-direction: column; gap: 4px;">
@@ -13434,15 +13434,15 @@
                     <div class="mystuff-toolbar">
                         <div class="mystuff-search-input">
                             <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.82rem;"></i>
-                            <input type="text" id="myStuffSearchInput" placeholder="Tìm tác phẩm trong thư mục này..." oninput="handleMyStuffSearch(this.value)">
+                            <input type="text" id="myStuffSearchInput" data-i18n-ph="mystuff_search_ph" placeholder="Tìm tác phẩm trong thư mục này..." oninput="handleMyStuffSearch(this.value)">
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <select id="myStuffSortSelect" class="asset-select-filter" style="padding: 6px 12px; font-size: 0.82rem;" onchange="handleMyStuffSort(this.value)">
-                                <option value="newest">Mới cập nhật</option>
-                                <option value="oldest">Cũ nhất</option>
-                                <option value="views">Lượt xem cao</option>
-                                <option value="likes">Nhiều lượt thích</option>
-                                <option value="title">Tên A - Z</option>
+                                <option value="newest" data-i18n="mystuff_sort_newest">Mới cập nhật</option>
+                                <option value="oldest" data-i18n="mystuff_sort_oldest">Cũ nhất</option>
+                                <option value="views" data-i18n="mystuff_sort_views">Lượt xem cao</option>
+                                <option value="likes" data-i18n="mystuff_sort_likes">Nhiều lượt thích</option>
+                                <option value="title" data-i18n="mystuff_sort_title">Tên A - Z</option>
                             </select>
                         </div>
                     </div>
@@ -13460,24 +13460,24 @@
         <div class="modal" style="max-width: 420px; border-radius: 14px;">
             <div class="modal-header">
                 <span style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-folder-plus" style="color: var(--primary);"></i> <span>Tạo thư mục mới</span>
+                    <i class="fa-solid fa-folder-plus" style="color: var(--primary);"></i> <span data-i18n="mystuff_modal_create_folder_title">Tạo thư mục mới</span>
                 </span>
                 <button type="button" class="btn-close" onclick="closeModal('createFolderModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label style="font-size: 0.84rem; font-weight: 700;">Tên thư mục *:</label>
-                    <input type="text" id="newFolderTitleInput" class="form-control" placeholder="Ví dụ: Game Platformer, Dự án nhóm..." maxlength="60" required>
+                    <label style="font-size: 0.84rem; font-weight: 700;" data-i18n="mystuff_modal_folder_name_label">Tên thư mục *:</label>
+                    <input type="text" id="newFolderTitleInput" class="form-control" data-i18n-ph="mystuff_modal_folder_name_ph" placeholder="Ví dụ: Game Platformer, Dự án nhóm..." maxlength="60" required>
                 </div>
                 <div class="form-group">
-                    <label style="font-size: 0.84rem; font-weight: 700;">Chế độ hiển thị:</label>
+                    <label style="font-size: 0.84rem; font-weight: 700;" data-i18n="mystuff_modal_visibility_label">Chế độ hiển thị:</label>
                     <select id="newFolderVisSelect" class="form-control">
-                        <option value="private">Riêng tư (Chỉ hiển thị trong Kho của tôi)</option>
-                        <option value="public">Công khai (Hiển thị thành Bộ sưu tập trên trang cá nhân)</option>
+                        <option value="private" data-i18n="mystuff_modal_vis_private">Riêng tư (Chỉ hiển thị trong Kho của tôi)</option>
+                        <option value="public" data-i18n="mystuff_modal_vis_public">Công khai (Hiển thị thành Bộ sưu tập trên trang cá nhân)</option>
                     </select>
                 </div>
                 <button type="button" class="btn btn-primary" id="btnSubmitCreateFolder" style="width: 100%; justify-content: center; padding: 11px; font-weight: 800; border-radius: 10px; margin-top: 6px;" onclick="submitCreateMyStuffFolder()">
-                    <i class="fa-solid fa-check"></i> <span>Tạo thư mục</span>
+                    <i class="fa-solid fa-check"></i> <span data-i18n="mystuff_modal_btn_create">Tạo thư mục</span>
                 </button>
             </div>
         </div>
@@ -13488,19 +13488,19 @@
         <div class="modal" style="max-width: 440px; border-radius: 14px;">
             <div class="modal-header">
                 <span style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-folder" style="color: var(--primary);"></i> <span>Quản lý thư mục chứa</span>
+                    <i class="fa-solid fa-folder" style="color: var(--primary);"></i> <span data-i18n="mystuff_modal_assign_title">Quản lý thư mục chứa</span>
                 </span>
                 <button type="button" class="btn-close" onclick="closeModal('assignFolderModal')">&times;</button>
             </div>
             <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;">
+                <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;" data-i18n="mystuff_modal_assign_desc">
                     Chọn các thư mục lưu trữ tác phẩm: <b id="assignFolderProjectTitle" style="color: var(--text-title);"></b>
                 </p>
                 <div id="assignFolderOptionsList" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
                     <!-- Đổ danh sách checkbox thư mục từ JS -->
                 </div>
                 <button type="button" class="btn" style="width: 100%; border: 1px dashed var(--border-color); font-weight: 700; padding: 9px; border-radius: 10px; justify-content: center;" onclick="closeModal('assignFolderModal'); openCreateFolderModal();">
-                    <i class="fa-solid fa-plus"></i> Tạo thư mục mới
+                    <i class="fa-solid fa-plus"></i> <span data-i18n="mystuff_modal_btn_new_folder">Tạo thư mục mới</span>
                 </button>
             </div>
         </div>
@@ -18700,7 +18700,7 @@
         });
 
         // ================= BỘ ĐIỀU KHIỂN NHẤN GIỮ CHUNG CHO CÁC NÚT HÀNH ĐỘNG (CHUẨN TẶNG WOW) =================
-        function setupGenericHoldButton({ btnId, fillId, textId, defaultHtml, onValidate, onExecute, durationMs = 1100 }) {
+        function setupGenericHoldButton({ btnId, fillId, textId, defaultHtml, i18nKey, onValidate, onExecute, durationMs = 1100 }) {
             const btn = document.getElementById(btnId);
             const fillEl = document.getElementById(fillId);
             const textEl = document.getElementById(textId);
@@ -18719,12 +18719,22 @@
             let holdInterval = null;
             let isHolding = false;
 
+            const buildDefaultHtml = () => {
+                if (i18nKey) {
+                    return defaultHtml.replace(/data-i18n="([^"]+)">[^<]+/, `data-i18n="$1">${t(i18nKey)}`);
+                }
+                return defaultHtml;
+            };
+
             const resetBtnUI = () => {
                 holdProgress = 0;
                 isHolding = false;
                 btn.classList.remove('is-holding');
                 if (fillEl) fillEl.style.width = '0%';
-                if (textEl && !btn.disabled) textEl.innerHTML = defaultHtml;
+                if (textEl && !btn.disabled) {
+                    textEl.innerHTML = buildDefaultHtml();
+                    updateStaticDOM(btn);
+                }
             };
 
             const startHold = (e) => {
@@ -18842,6 +18852,7 @@
                 fillId: 'uploadHoldFill',
                 textId: 'uploadHoldText',
                 defaultHtml: '<i class="fa-solid fa-rocket"></i> <span data-i18n="upload_submit">Đăng lên nền tảng</span>',
+                i18nKey: 'upload_submit',
                 durationMs: 1100,
                 onValidate: () => {
                     const fileInput = document.getElementById('upFile')?.files[0];
@@ -18864,6 +18875,7 @@
                 fillId: 'updateProjHoldFill',
                 textId: 'updateProjHoldText',
                 defaultHtml: '<i class="fa-solid fa-rocket"></i> <span data-i18n="proj_manage_btn_update">Tải bản cập nhật lên</span>',
+                i18nKey: 'proj_manage_btn_update',
                 durationMs: 1100,
                 onValidate: () => {
                     const fileInput = document.getElementById('updateProjFile')?.files[0];
@@ -18885,6 +18897,7 @@
                 fillId: 'assetUploadHoldFill',
                 textId: 'assetUploadHoldText',
                 defaultHtml: '<i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="asset_upload_btn">Xuất bản Tài nguyên</span>',
+                i18nKey: 'asset_upload_btn',
                 durationMs: 1100,
                 onValidate: () => {
                     const fileInput = document.getElementById('assetUpFile')?.files[0];
@@ -18907,6 +18920,7 @@
                 fillId: 'createStudioHoldFill',
                 textId: 'createStudioHoldText',
                 defaultHtml: '<i class="fa-solid fa-satellite-dish"></i> <span data-i18n="station_modal_btn_create">Tạo Station</span>',
+                i18nKey: 'station_modal_btn_create',
                 durationMs: 1100,
                 onValidate: () => {
                     const title = document.getElementById('newStdTitle')?.value.trim();
@@ -18926,6 +18940,7 @@
                 fillId: 'qvDownloadHoldFill',
                 textId: 'qvDownloadHoldText',
                 defaultHtml: '<i class="fa-solid fa-download"></i> <span data-i18n="assets_qv_btn_download">Giữ để tải về máy</span>',
+                i18nKey: 'assets_qv_btn_download',
                 durationMs: 1000,
                 onValidate: () => {
                     if (!activeQuickViewAsset) { showToast("Không tìm thấy tệp tài nguyên", "error"); return false; }
@@ -20744,7 +20759,7 @@
             const pageThumb = proj.thumbId ? `${WORKER_URL}/api/project/${proj.thumbId}` : 'https://i.ibb.co/QFg1cVVD/image.png';
             updateSEO(pageTitle, pageDesc, pageThumb, window.location.href);
 
-            document.getElementById('projPageTitle').innerHTML = escapeHtml(projectTitle) + (proj.visibility === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
+            document.getElementById('projPageTitle').innerHTML = escapeHtml(projectTitle) + (proj.visibility === 'private' ? ` <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</span>` : '');
             const authorCleanUrl = `/users/${encodeURIComponent(proj.author)}`;
             document.getElementById('projPageAuthor').innerText = proj.author; 
             document.getElementById('projPageAuthor').href = authorCleanUrl;
@@ -20863,7 +20878,7 @@
             const viewCountEl = document.getElementById('projViewCountDisplay');
             if (viewCountEl) viewCountEl.innerText = proj.views || 0;
             const metaVis = document.getElementById('projMetaVis');
-            if (metaVis) metaVis.innerText = proj.visibility === 'private' ? 'Riêng tư' : 'Công khai';
+            if (metaVis) metaVis.innerText = proj.visibility === 'private' ? t('upload_vis_private') : t('upload_vis_public');
             const metaEngine = document.getElementById('projMetaEngine');
             if (metaEngine) metaEngine.innerText = (engineChoice === 'turbowarp') ? 'TurboWarp / SB3' : ((engineChoice === 'aftercode') ? 'Aftercode / SB3' : 'Turbo IDE / SB3');
             const metaDate = document.getElementById('projMetaDate');
@@ -23025,11 +23040,11 @@
                             <div>
                                 ${isAlreadyIn ? `
                                     <button class="btn" style="font-size:0.8rem; padding:5px 12px; border-radius:16px; opacity:0.75;" disabled>
-                                        <i class="fa-solid fa-check"></i> Đã thêm
+                                        <i class="fa-solid fa-check"></i> ${t('station_modal_added_badge')}
                                     </button>
                                 ` : `
                                     <button class="btn btn-primary" style="font-size:0.8rem; padding:5px 14px; border-radius:16px;" onclick="quickAddMyProjectToStudio('${pid}', this)">
-                                        <i class="fa-solid fa-plus"></i> Thêm
+                                        <i class="fa-solid fa-plus"></i> ${t('station_modal_btn_add')}
                                     </button>
                                 `}
                             </div>
@@ -23053,11 +23068,11 @@
                 if(!currentStudio.projects.includes(pid)) currentStudio.projects.push(pid);
 
                 btnEl.className = 'btn';
-                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Đã thêm';
+                btnEl.innerHTML = `<i class="fa-solid fa-check"></i> ${t('station_modal_added_badge')}`;
                 btnEl.disabled = true;
                 btnEl.style.opacity = '0.75';
 
-                showToast("Đã thêm vào Station!", "success");
+                showToast(t('toast_station_added_proj'), "success");
                 renderStudioProjects();
                 document.getElementById('stdProjCount').innerText = currentStudio.projects.length;
                 document.getElementById('stdProjCountBadge').innerText = currentStudio.projects.length;
@@ -23146,11 +23161,11 @@
                             <div>
                                 ${isAlreadyIn ? `
                                     <button class="btn" style="font-size:0.82rem; padding:6px 14px; border-radius:16px; opacity:0.8;" disabled>
-                                        <i class="fa-solid fa-check"></i> Đã có
+                                        <i class="fa-solid fa-check"></i> ${t('station_modal_already_has')}
                                     </button>
                                 ` : `
                                     <button class="btn btn-primary" style="font-size:0.82rem; padding:6px 16px; border-radius:16px;" onclick="addCurrentProjToSpecificStudio('${s.id}', this)">
-                                        <i class="fa-solid fa-plus"></i> Thêm
+                                        <i class="fa-solid fa-plus"></i> ${t('station_modal_btn_add')}
                                     </button>
                                 `}
                             </div>
@@ -23183,11 +23198,11 @@
                 }
 
                 btnEl.className = 'btn';
-                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Đã có';
+                btnEl.innerHTML = `<i class="fa-solid fa-check"></i> ${t('station_modal_already_has')}`;
                 btnEl.disabled = true;
                 btnEl.style.opacity = '0.8';
 
-                showToast("Đã thêm tác phẩm vào Station!", "success");
+                showToast(t('toast_station_added_proj'), "success");
             } else {
                 btnEl.innerHTML = origHtml;
                 btnEl.disabled = false;
@@ -23565,7 +23580,7 @@
                     } else {
                         html = items.map(p => `
                             <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
-                                ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
+                                ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
                                 <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
                                 <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
                             </div>
@@ -23595,8 +23610,8 @@
 
                             const isPublic = pl.isPublic !== false;
                             const badgeHtml = isPublic
-                                ? `<span class="col-overlay-badge public"><i class="fa-solid fa-earth-americas"></i> Công khai</span>`
-                                : `<span class="col-overlay-badge private"><i class="fa-solid fa-lock"></i> Riêng tư</span>`;
+                                ? `<span class="col-overlay-badge public"><i class="fa-solid fa-earth-americas"></i> ${t('col_badge_pub')}</span>`
+                                : `<span class="col-overlay-badge private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</span>`;
 
                             return `
                                 <div class="collection-card" onclick="openCollectionDetail('${pl.id}')">
@@ -23773,7 +23788,7 @@
                     } else {
                         html = items.map(p => `
                             <div class="card" onclick="navigateTo('/projects/${p.projectId || p.fileId}')">
-                                ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
+                                ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
                                 <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
                                 <div class="card-body"><div class="card-title">${escapeHtml(p.title)}</div><div class="card-author">${t('author_by', { author: escapeHtml(p.author) })}</div></div>
                             </div>
@@ -23809,8 +23824,8 @@
 
                             const isPublic = pl.isPublic !== false;
                             const badgeHtml = isPublic
-                                ? `<span class="col-overlay-badge public"><i class="fa-solid fa-earth-americas"></i> Công khai</span>`
-                                : `<span class="col-overlay-badge private"><i class="fa-solid fa-lock"></i> Riêng tư</span>`;
+                                ? `<span class="col-overlay-badge public"><i class="fa-solid fa-earth-americas"></i> ${t('col_badge_pub')}</span>`
+                                : `<span class="col-overlay-badge private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</span>`;
 
                             return `
                                 <div class="collection-card" onclick="openCollectionDetail('${pl.id}')">
@@ -24643,7 +24658,7 @@
                 // VẪN GIỮ ĐƯỢC CHỨC NĂNG TỰ ĐỘNG DÁN FILE BẰNG handleSelectProjectToUpdate
                 listEl.innerHTML = myProjs.map(p => `
                     <div class="card" onclick="handleSelectProjectToUpdate('${p.projectId || p.fileId}')">
-                        ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> Riêng tư</div>` : ''}
+                        ${p.visibility === 'private' ? `<div class="badge-private"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</div>` : ''}
                         <div class="card-thumb">${p.thumbId ? `<img src="${WORKER_URL}/api/project/${p.thumbId}">` : `<i class="fa-solid fa-image" style="font-size:2rem; color:#ccc;"></i>`}</div>
                         <div class="card-body">
                             <div class="card-title">${escapeHtml(p.title)}</div>
@@ -26156,7 +26171,7 @@
             const badge = document.getElementById('colDetailBadge');
             const isPub = col.isPublic !== false;
             badge.className = isPub ? 'col-overlay-badge public' : 'col-overlay-badge private';
-            badge.innerHTML = isPub ? '<i class="fa-solid fa-earth-americas"></i> Công khai' : '<i class="fa-solid fa-lock"></i> Riêng tư';
+            badge.innerHTML = isPub ? `<i class="fa-solid fa-earth-americas"></i> ${t('col_badge_pub')}` : `<i class="fa-solid fa-lock"></i> ${t('badge_private')}`;
             
             const authorLink = document.getElementById('colDetailAuthorLink');
             authorLink.innerText = `@${ownerName}`;
@@ -26287,7 +26302,7 @@
                 document.getElementById('colDetailTitle').innerText = newTitle;
                 const badge = document.getElementById('colDetailBadge');
                 badge.className = activeViewingCollection.isPublic ? 'col-overlay-badge public' : 'col-overlay-badge private';
-                badge.innerHTML = activeViewingCollection.isPublic ? '<i class="fa-solid fa-earth-americas"></i> Công khai' : '<i class="fa-solid fa-lock"></i> Riêng tư';
+                badge.innerHTML = activeViewingCollection.isPublic ? `<i class="fa-solid fa-earth-americas"></i> ${t('col_badge_pub')}` : `<i class="fa-solid fa-lock"></i> ${t('badge_private')}`;
 
                 closeModal('editPlaylistModal');
 
@@ -27621,8 +27636,8 @@
                         </div>
                         <div class="chat-sponsor-ad-frame" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 16px; text-align:center; min-height:180px; color:var(--text-muted); gap:8px;">
                             <i class="fa-solid fa-circle-pause" style="font-size:2.2rem; opacity:0.4;"></i>
-                            <b style="font-size:0.95rem; color:var(--text-title);">Tính năng quảng cáo đang tạm đóng</b>
-                            <span style="font-size:0.8rem; line-height:1.45; max-width:240px;">Hiện tại hệ thống đã gỡ bỏ hiển thị quảng cáo từ đối tác bên thứ ba.</span>
+                            <b style="font-size:0.95rem; color:var(--text-title);">${t('chat_sponsor_ad_closed_title')}</b>
+                            <span style="font-size:0.8rem; line-height:1.45; max-width:240px;">${t('chat_sponsor_ad_closed_desc')}</span>
                         </div>
                         <div class="chat-sponsor-footer">
                             <span>Người đăng: <b style="color:var(--text-title);">@${escapeHtml(author || t('author_unknown'))}</b></span>
@@ -28024,7 +28039,7 @@
                     transcriptHtml = `
                         <div class="voice-transcript-box">
                             <div class="voice-transcript-header">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Lời thoại nhận diện</span>
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span>${t('voice_recognized')}</span>
                             </div>
                             <div class="voice-transcript-words" id="voice-words-${safeMsgId}">
                                 ${spans}
@@ -28035,9 +28050,9 @@
                     transcriptHtml = `
                         <div class="voice-transcript-box">
                             <div class="voice-transcript-header" style="justify-content:space-between;">
-                                <span><i class="fa-solid fa-microphone"></i> Tin nhắn thoại</span>
+                                <span><i class="fa-solid fa-microphone"></i> ${t('voice_message')}</span>
                                 <button type="button" class="btn" style="padding:2px 8px; font-size:0.72rem; border-radius:10px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-muted);" onclick="transcribeVoiceAudio('${safeMsgId}', '${audioUrl}')">
-                                    <i class="fa-solid fa-closed-captioning"></i> Hiện phụ đề
+                                    <i class="fa-solid fa-closed-captioning"></i> ${t('voice_show_subtitles')}
                                 </button>
                             </div>
                             <div class="voice-transcript-words" id="voice-words-${safeMsgId}" style="display:none; font-size:0.85rem; color:var(--text-main);"></div>
@@ -28519,7 +28534,7 @@
 
                 document.getElementById('projDesc').innerHTML = desc ? formatProjectDesc(desc) : "Chưa có hướng dẫn.";
                 document.getElementById('projCredits').innerHTML = cred ? formatProjectDesc(cred) : "Tác giả gốc.";
-                document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ' <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> Riêng tư</span>' : '');
+                document.getElementById('projPageTitle').innerHTML = currentProj.title + (vis === 'private' ? ` <span style="font-size:0.8rem; background:#333; color:#fff; padding:2px 6px; border-radius:4px; vertical-align:middle;"><i class="fa-solid fa-lock"></i> ${t('badge_private')}</span>` : '');
                 
                 closeModal('projSettingsModal'); showToast("Đã lưu thông tin!", "success");
             }
@@ -29432,7 +29447,7 @@
             const mainText = document.getElementById('assetDropMainText');
             if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
             if (dropIcon) dropIcon.style.display = 'block';
-            if (mainText) mainText.innerText = t('asset_drop_label');
+            if (mainText) mainText.innerText = t('asset_upload_drop_label');
 
             // Reset reCAPTCHA khi mở modal
             const assetRecaptchaEl = document.querySelector('#uploadAssetModal [name="g-recaptcha-response"]');
@@ -30980,7 +30995,7 @@
 
             // 8.5 Tin nhắn thoại (Voice Chat)
             if (raw === '[VOICE_MESSAGE]' && c.imageId && c.imageId !== 'null') {
-                return `🎤 [Tin nhắn thoại]`;
+                return `🎤 [${t('voice_message')}]`;
             }
 
             // 9. Tin nhắn thuần hình ảnh / GIF
@@ -38391,7 +38406,7 @@
                             <div style="font-size:0.88rem; font-weight:700; color:var(--text-title); display:flex; align-items:center; gap:8px;">
                                 <i class="fa-solid fa-folder" style="color:${isPublic ? '#0284c7' : '#ea580c'}; font-size:0.84rem;"></i>
                                 <span>${escapeHtml(folder.title)}</span>
-                                <span style="font-size:0.72rem; color:var(--text-muted); font-weight:normal;">(${isPublic ? 'Công khai' : 'Riêng tư'})</span>
+                                <span style="font-size:0.72rem; color:var(--text-muted); font-weight:normal;">(${isPublic ? t('col_badge_pub') : t('badge_private')})</span>
                             </div>
                             <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary); cursor:pointer;" ${isInside ? 'checked' : ''} onchange="toggleProjectFolderAssignment('${folder.id}', this.checked)">
                         </label>
